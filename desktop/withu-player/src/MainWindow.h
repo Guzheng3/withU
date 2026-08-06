@@ -1,0 +1,243 @@
+﻿#pragma once
+
+#include <QMainWindow>
+#include <QMediaPlayer>
+#include <QNetworkAccessManager>
+#include <QUrl>
+#include <QVector>
+
+class QAudioOutput;
+class QButtonGroup;
+class QDoubleSpinBox;
+class QFrame;
+class QJsonObject;
+class QJsonArray;
+class QLabel;
+class QLineEdit;
+class QListWidget;
+class QListWidgetItem;
+class QNetworkReply;
+class QLibrary;
+class QPushButton;
+class QResizeEvent;
+class QSlider;
+class QStackedWidget;
+class QTimer;
+class QTextBrowser;
+class QVideoWidget;
+class QWidget;
+class WebView2Host;
+struct mpv_handle;
+
+class MainWindow final : public QMainWindow
+{
+    Q_OBJECT
+
+public:
+    explicit MainWindow(QWidget *parent = nullptr);
+    ~MainWindow() override;
+
+protected:
+    void resizeEvent(QResizeEvent *event) override;
+
+private slots:
+    void switchSection(int index);
+    void connectToServer();
+    void logoutFromServer();
+    void chooseLocalFile();
+    void openSource();
+    void togglePlayback();
+    void stopPlayback();
+    void toggleVideoFullscreen();
+    void playPreviousEpisode();
+    void playNextEpisode();
+    void seekBackward();
+    void seekForward();
+    void positionChanged(qint64 position);
+    void durationChanged(qint64 duration);
+    void mediaStateChanged(QMediaPlayer::PlaybackState state);
+    void mediaStatusChanged(QMediaPlayer::MediaStatus status);
+    void mediaErrorOccurred(QMediaPlayer::Error error, const QString &errorString);
+    void seekSliderPressed();
+    void seekSliderReleased();
+    void volumeChanged(int value);
+    void playbackRateChanged(double value);
+    void joinTogether();
+    void pollTogether();
+    void heartbeatTogether();
+    void leaveTogether();
+    void sendChatMessage();
+    void openCoupleItem(QListWidgetItem *item);
+    void generateTravelPlan();
+    void loadTravelPlans();
+    void loadTravelWeather();
+    void loadMessages();
+    void sendMessage();
+    void loadHistory();
+    bool startMpvPlayback(const QUrl &source, bool autoplay);
+    bool startEmbeddedMpvPlayback(const QUrl &source, bool autoplay);
+    void stopEmbeddedMpvPlayback();
+    void pollEmbeddedMpvPlayback();
+    void stopMpvPlayback();
+    void pollMpvPlayback();
+    void sendMpvCommand(const QByteArray &command);
+    void resolvePlayableSource(const QUrl &source, bool autoplay);
+    void startPlaybackWithSource(const QUrl &source, bool autoplay);
+    void handleWebMessage(const QJsonObject &message);
+    void syncWebViewCookies();
+    void updateWebMpvOverlay();
+    QWidget *activeMpvHostWidget() const;
+
+private:
+    void buildUi();
+    QWidget *buildHomePage();
+    QWidget *buildTogetherPage();
+    QWidget *buildLibraryPage();
+    QWidget *buildPlayerPage();
+    QWidget *buildSettingsPage();
+    QWidget *buildContentPage();
+    QWidget *buildTravelPage();
+    QWidget *buildMessagesPage();
+    QWidget *buildHistoryPage();
+    QWidget *buildWebShellPage();
+    QPushButton *makeNavButton(const QString &text, int index);
+    QUrl apiUrl(const QString &pathAndQuery) const;
+    void applyBootstrapData(const QJsonObject &root);
+    void applyTheme(const QJsonObject &theme);
+    void handleTogetherEvents(const QJsonArray &events);
+    void requestCoupleSpace();
+    void applyCoupleSpace(const QJsonObject &root);
+    void requestCoupleContent(const QString &type, int id);
+    void requestLibrary(const QString &query = QString());
+    void renderLibraryDetail(const QJsonObject &item);
+    void openLibraryMedia(const QString &playUrl, const QString &name, int mediaId = 0, qint64 resumePositionMs = 0);
+    void applySource(const QUrl &source, bool autoplay = true);
+    void sendTogetherEvent(const QString &eventType);
+    void sendTogetherEvent(const QString &eventType, const QJsonObject &payload);
+    void appendChatMessage(const QString &text, bool mine);
+    void applyTogetherState(const QJsonObject &root);
+    void updatePlayButton(QMediaPlayer::PlaybackState state);
+    void updateTimeLabel(qint64 position, qint64 duration);
+    void showStatus(const QString &message, int timeout = 4000);
+    void updateLoveCounter();
+    void clearDesktopSession();
+    static QString formatTime(qint64 milliseconds);
+
+    QMediaPlayer *m_player = nullptr;
+    QTimer *m_mpvPollTimer = nullptr;
+    QAudioOutput *m_audioOutput = nullptr;
+    QNetworkAccessManager *m_network = nullptr;
+    QStackedWidget *m_pages = nullptr;
+    WebView2Host *m_webShell = nullptr;
+    QButtonGroup *m_navGroup = nullptr;
+    QFrame *m_globalHero = nullptr;
+    QFrame *m_globalNav = nullptr;
+    QFrame *m_librarySidebar = nullptr;
+    QPushButton *m_librarySidebarToggle = nullptr;
+    QListWidgetItem *m_hoveredMediaItem = nullptr;
+    bool m_librarySidebarExpanded = true;
+    QVideoWidget *m_videoWidget = nullptr;
+    QStackedWidget *m_videoSurfaceStack = nullptr;
+    QWidget *m_mpvHostWidget = nullptr;
+    QWidget *m_webMpvHostWidget = nullptr;
+    QLineEdit *m_serverEdit = nullptr;
+    QLineEdit *m_usernameEdit = nullptr;
+    QLineEdit *m_passwordEdit = nullptr;
+    QLineEdit *m_sourceEdit = nullptr;
+    QPushButton *m_openButton = nullptr;
+    QPushButton *m_playButton = nullptr;
+    QPushButton *m_stopButton = nullptr;
+    QPushButton *m_backButton = nullptr;
+    QPushButton *m_forwardButton = nullptr;
+    QPushButton *m_fullscreenButton = nullptr;
+    QPushButton *m_previousEpisodeButton = nullptr;
+    QPushButton *m_nextEpisodeButton = nullptr;
+    QSlider *m_seekSlider = nullptr;
+    QSlider *m_volumeSlider = nullptr;
+    QDoubleSpinBox *m_speedBox = nullptr;
+    QLabel *m_timeLabel = nullptr;
+    QLabel *m_statusLabel = nullptr;
+    QLabel *m_connectionLabel = nullptr;
+    QLabel *m_heroAvatarPrimary = nullptr;
+    QLabel *m_heroAvatarPartner = nullptr;
+    QLabel *m_heroTitle = nullptr;
+    QLabel *m_homeSummaryLabel = nullptr;
+    QLabel *m_statArticles = nullptr;
+    QLabel *m_statAlbums = nullptr;
+    QLabel *m_statEvents = nullptr;
+    QLabel *m_statMessages = nullptr;
+    QLabel *m_loveCounterLabel = nullptr;
+    QLabel *m_loveDaysLabel = nullptr;
+    QLabel *m_loveHoursLabel = nullptr;
+    QLabel *m_loveMinutesLabel = nullptr;
+    QLabel *m_loveSecondsLabel = nullptr;
+    QTimer *m_loveCounterTimer = nullptr;
+    QLabel *m_contentTitle = nullptr;
+    QLabel *m_togetherStateLabel = nullptr;
+    QLabel *m_libraryDetailLabel = nullptr;
+    QListWidget *m_mediaList = nullptr;
+    QLineEdit *m_librarySearch = nullptr;
+    QListWidget *m_episodeList = nullptr;
+    int m_libraryTypeId = 0;
+    int m_libraryRequestSerial = 0;
+    int m_resolveSerial = 0;
+    QListWidget *m_homeFeedList = nullptr;
+    QTextBrowser *m_contentView = nullptr;
+    QLineEdit *m_travelDestination = nullptr;
+    QLineEdit *m_travelStart = nullptr;
+    QLineEdit *m_travelEnd = nullptr;
+    QLineEdit *m_travelPrompt = nullptr;
+    QLineEdit *m_travelLat = nullptr;
+    QLineEdit *m_travelLng = nullptr;
+    QTextBrowser *m_travelView = nullptr;
+    QTextBrowser *m_travelWeatherView = nullptr;
+    QTextBrowser *m_travelHistory = nullptr;
+    QTextBrowser *m_messagesView = nullptr;
+    QLineEdit *m_messageEdit = nullptr;
+    QListWidget *m_historyList = nullptr;
+    QWidget *m_chatPanel = nullptr;
+    QListWidget *m_chatList = nullptr;
+    QLineEdit *m_chatEdit = nullptr;
+    QPushButton *m_joinTogetherButton = nullptr;
+    QPushButton *m_leaveTogetherButton = nullptr;
+    QTimer *m_watchPollTimer = nullptr;
+    QTimer *m_watchHeartbeatTimer = nullptr;
+    QString m_csrfToken;
+    QString m_loveStartDate;
+    int m_userId = 0;
+    QString m_watchRoomCode = QStringLiteral("WithU Watch");
+    int m_lastWatchEventId = 0;
+    int m_currentWatchMediaId = 0;
+    bool m_togetherJoined = false;
+    bool m_watchPollInFlight = false;
+    qint64 m_syncThresholdMs = 1000;
+    bool m_autoplayEnabled = true;
+    bool m_applyingRemote = false;
+    bool m_pendingRemoteState = false;
+    bool m_aspectAdjusting = false;
+    QSize m_lastWindowSize;
+    bool m_pendingRemotePlaying = false;
+    qint64 m_pendingRemotePosition = 0;
+    double m_pendingRemoteSpeed = 1.0;
+    bool m_userSeeking = false;
+    qint64 m_duration = 0;
+    qint64 m_pendingLocalPosition = -1;
+    QVector<QString> m_episodePlayUrls;
+    QVector<QString> m_episodeNames;
+    QVector<int> m_episodeMediaIds;
+    int m_currentEpisodeIndex = -1;
+    bool m_usingMpv = false;
+    bool m_usingEmbeddedMpv = false;
+    // Do not cover the web player's loading animation until libmpv confirms
+    // that the requested media itself has loaded.
+    bool m_mpvMediaReady = false;
+    mpv_handle *m_embeddedMpv = nullptr;
+    QLibrary *m_embeddedMpvLibrary = nullptr;
+    bool m_mpvIntentionalStop = false;
+    bool m_mpvPlaying = false;
+    double m_mpvRate = 1.0;
+    qint64 m_mpvPosition = 0;
+    qint64 m_mpvDuration = 0;
+    QRect m_webMpvRect;
+    bool m_webMpvOverlayRequested = false;
+};
