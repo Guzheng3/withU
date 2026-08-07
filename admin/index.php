@@ -282,8 +282,8 @@ include __DIR__ . '/header.php';
         </div>
     </div>
 
-    <section class="admin-grid" style="margin-bottom: 0.75rem;">
-        <div class="admin-card">
+    <section class="admin-grid admin-dashboard-stats" style="margin-bottom: 0.75rem;">
+        <div class="admin-card admin-dashboard-stat-card">
             <div class="admin-card-header">
                 <div>
                     <div class="admin-card-title">文章 · 日记</div>
@@ -299,7 +299,7 @@ include __DIR__ . '/header.php';
             </div>
         </div>
 
-        <div class="admin-card">
+        <div class="admin-card admin-dashboard-stat-card">
             <div class="admin-card-header">
                 <div>
                     <div class="admin-card-title">相册</div>
@@ -315,7 +315,7 @@ include __DIR__ . '/header.php';
             </div>
         </div>
 
-        <div class="admin-card">
+        <div class="admin-card admin-dashboard-stat-card">
             <div class="admin-card-header">
                 <div>
                     <div class="admin-card-title">纪念事件</div>
@@ -331,7 +331,7 @@ include __DIR__ . '/header.php';
             </div>
         </div>
 
-        <div class="admin-card">
+        <div class="admin-card admin-dashboard-stat-card">
             <div class="admin-card-header">
                 <div>
                     <div class="admin-card-title">留言</div>
@@ -348,8 +348,8 @@ include __DIR__ . '/header.php';
         </div>
     </section>
 
-    <section class="admin-grid">
-        <div class="admin-card">
+    <section class="admin-grid admin-dashboard-panels">
+        <div class="admin-card admin-dashboard-panel">
             <div class="admin-card-header">
                 <div>
                     <div class="admin-card-title">快捷设置</div>
@@ -404,7 +404,7 @@ include __DIR__ . '/header.php';
             </ul>
         </div>
 
-        <div class="admin-card">
+        <div class="admin-card admin-dashboard-panel">
             <div class="admin-card-header">
                 <div>
                     <div class="admin-card-title">图片概览</div>

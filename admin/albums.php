@@ -264,7 +264,7 @@ include __DIR__ . '/header.php';
             </p>
         </div>
     <?php else: ?>
-        <section class="admin-grid">
+        <section class="admin-grid admin-album-grid">
             <?php foreach ($albums as $album): ?>
                 <?php
                 $isOwner = $album['user_id'] == $currentUser['id'];
@@ -276,8 +276,8 @@ include __DIR__ . '/header.php';
                     ? $album['creator_nickname']
                     : (!empty($album['creator_username']) ? $album['creator_username'] : '未知用户');
                 ?>
-                <article class="admin-card">
-                    <div style="display:flex;gap:0.75rem;">
+                <article class="admin-card admin-album-card">
+                    <div class="admin-album-card-media">
                         <div style="width:90px;height:90px;border-radius:0.9rem;overflow:hidden;flex-shrink:0;background:#f3f4f6;display:flex;align-items:center;justify-content:center;">
                             <?php if (!empty($album['cover_image'])): ?>
                                 <img src="<?php echo e(upload_url($album['cover_image'])); ?>" alt="<?php echo e($album['name']); ?>" style="width:100%;height:100%;object-fit:cover;">
@@ -285,8 +285,8 @@ include __DIR__ . '/header.php';
                                 <i class="fas fa-image" style="font-size:1.8rem;color:#cbd5f5;"></i>
                             <?php endif; ?>
                         </div>
-                        <div style="flex:1;min-width:0;">
-                            <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:0.5rem;">
+                        <div class="admin-album-card-body">
+                            <div class="admin-album-card-heading">
                                 <div>
                                     <div class="admin-card-title" style="max-width:12rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">
                                         <?php echo e($album['name']); ?>
@@ -313,7 +313,7 @@ include __DIR__ . '/header.php';
                         </div>
                     </div>
 
-                    <div style="margin-top:0.75rem;display:flex;gap:0.5rem;flex-wrap:wrap;">
+                    <div class="admin-album-card-actions">
                         <a href="/album.php?id=<?php echo $album['id']; ?>" target="_blank" class="btn btn-secondary">
                             <i class="fas fa-eye"></i>
                             <span>前台查看</span>

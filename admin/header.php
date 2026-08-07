@@ -62,10 +62,10 @@ foreach (($themeConfig['colors'] ?? []) as $themeName => $themeValue) {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>管理后台 - <?php echo e(SITE_NAME); ?></title>
     <link rel="stylesheet" href="/assets/css/style.css?v=withu-logo-20260718">
-    <link rel="stylesheet" href="/assets/css/admin_v2.css?v=withu-admin-20260724-1">
+    <link rel="stylesheet" href="/assets/css/admin_v2.css?v=glass-v5">
     <link rel="stylesheet" href="/assets/css/theme.css?v=withu-theme-20260724-1">
-    <link rel="stylesheet" href="/assets/css/admin_pages.css?v=withu-admin-pages-20260724-2">
-    <link rel="stylesheet" href="/assets/css/admin_apple.css?v=withu-admin-apple-20260724-11">
+    <link rel="stylesheet" href="/assets/css/admin_pages.css?v=glass-v5">
+    <link rel="stylesheet" href="/assets/css/admin_apple.css?v=glass-v5">
     <link rel="stylesheet"
           href="https://cdn.bootcdn.net/ajax/libs/font-awesome/6.4.0/css/all.min.css"
           onerror="this.onerror=null;this.href='https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css';">

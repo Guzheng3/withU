@@ -65,134 +65,7 @@ input:focus, textarea:focus, select:focus, button:focus-visible, a:focus-visible
     box-shadow: var(--withu-focus);
 }
 
-body.admin-v2 {
-    background: var(--withu-bg) !important;
-    color: var(--withu-text) !important;
-}
-body.admin-v2 .admin-appbar,
-body.admin-v2 .admin-drawer,
-body.admin-v2 .admin-tabbar,
-body.admin-v2 .admin-card {
-    background: var(--withu-surface) !important;
-    border-color: var(--withu-border) !important;
-    color: var(--withu-text) !important;
-}
-body.admin-v2 .admin-drawer-link,
-body.admin-v2 .admin-logo,
-body.admin-v2 .admin-icon-btn { color: var(--withu-text) !important; }
-body.admin-v2 .admin-drawer-link-active {
-    background: linear-gradient(135deg, color-mix(in srgb, var(--withu-primary-soft) 50%, white), color-mix(in srgb, var(--withu-secondary-soft) 25%, white)) !important;
-    color: var(--withu-text) !important;
-    box-shadow: inset 3px 0 0 var(--withu-primary), 0 4px 12px color-mix(in srgb, var(--withu-primary) 15%, transparent);
-    border: 1px solid color-mix(in srgb, var(--withu-primary-soft) 40%, transparent);
-}
-
-/* Modern admin surface: quiet white panels in light mode, high-contrast
-   surfaces in dark mode, with the same palette used by the main site. */
-body.admin-v2 {
-    min-height: 100vh;
-    background:
-        radial-gradient(ellipse 80% 60% at 20% 10%, rgba(255, 182, 193, .35) 0%, transparent 60%),
-        radial-gradient(ellipse 70% 50% at 80% 20%, rgba(181, 240, 213, .3) 0%, transparent 55%),
-        radial-gradient(ellipse 60% 45% at 50% 70%, rgba(168, 216, 234, .3) 0%, transparent 55%),
-        linear-gradient(180deg, #fdf2f6 0%, #f0f9f4 35%, #f0f5ff 65%, #fdf2f6 100%) !important;
-    color: var(--withu-text) !important;
-    color-scheme: light;
-}
-body.admin-v2 .admin-shell,
-body.admin-v2 .admin-appbar-inner,
-body.admin-v2 .admin-tabbar-inner {
-    max-width: 1280px;
-}
-body.admin-v2 .admin-appbar {
-    background: color-mix(in srgb, var(--withu-surface) 88%, transparent) !important;
-    border-color: var(--withu-border) !important;
-    box-shadow: 0 1px 0 color-mix(in srgb, var(--withu-border) 70%, transparent), 0 10px 30px rgba(38, 50, 56, .04);
-}
-body.admin-v2 .admin-drawer {
-    background: var(--withu-surface) !important;
-    border-right: 1px solid var(--withu-border);
-    box-shadow: 12px 0 30px rgba(38, 50, 56, .06);
-}
-body.admin-v2 .admin-drawer-title,
-body.admin-v2 .admin-page-title h1,
-body.admin-v2 .admin-card-title { color: var(--withu-text) !important; }
-body.admin-v2 .admin-drawer-section-title,
-body.admin-v2 .admin-page-title p,
-body.admin-v2 .admin-card-subtitle,
-body.admin-v2 .admin-stat-label,
-body.admin-v2 .admin-drawer-footer { color: var(--withu-text-muted) !important; }
-body.admin-v2 .admin-drawer-link { color: var(--withu-text-muted) !important; }
-body.admin-v2 .admin-drawer-link:hover { background: var(--withu-surface-soft) !important; color: var(--withu-text) !important; }
-body.admin-v2 .admin-drawer-link-active {
-    background: linear-gradient(135deg, color-mix(in srgb, var(--withu-primary-soft) 50%, white), color-mix(in srgb, var(--withu-secondary-soft) 25%, white)) !important;
-    color: var(--withu-text) !important;
-    box-shadow: inset 3px 0 0 var(--withu-primary), 0 4px 12px color-mix(in srgb, var(--withu-primary) 15%, transparent);
-    border: 1px solid color-mix(in srgb, var(--withu-primary-soft) 40%, transparent);
-}
-body.admin-v2 .admin-card {
-    background: var(--withu-surface) !important;
-    border: 1px solid var(--withu-border);
-    border-radius: 12px;
-    box-shadow: 0 8px 24px rgba(38, 50, 56, .05);
-}
-body.admin-v2 .admin-card:hover { box-shadow: 0 12px 30px rgba(38, 50, 56, .08); }
-body.admin-v2 .admin-page-title { padding: .25rem 0 .5rem; }
-body.admin-v2 .admin-page-title h1 {
-    background: linear-gradient(135deg, var(--withu-primary), var(--withu-accent));
-    -webkit-background-clip: text !important;
-    -webkit-text-fill-color: transparent !important;
-    background-clip: text !important;
-    font-size: clamp(1.35rem, 2vw, 1.8rem);
-    letter-spacing: 0;
-}
-body.admin-v2 textarea,
-body.admin-v2 select {
-    background: var(--withu-surface) !important;
-    border-color: var(--withu-border) !important;
-    color: var(--withu-text) !important;
-}
-body.admin-v2 input::placeholder,
-body.admin-v2 textarea::placeholder { color: var(--withu-text-muted) !important; }
-body.admin-v2 .btn-primary,
-body.admin-v2 .switch input:checked + .switch-track {
-    background: var(--withu-primary) !important;
-    border-color: var(--withu-primary) !important;
-    box-shadow: 0 8px 18px color-mix(in srgb, var(--withu-primary) 25%, transparent);
-}
-body.admin-v2 .btn-secondary {
-    background: var(--withu-surface) !important;
-    border-color: var(--withu-border) !important;
-    color: var(--withu-text) !important;
-}
-body.admin-v2 .admin-tabbar {
-    background: color-mix(in srgb, var(--withu-surface) 92%, transparent) !important;
-    border-color: var(--withu-border) !important;
-}
-body.admin-v2 .admin-tab-item { color: var(--withu-text-muted); }
-body.admin-v2 .admin-tab-item-active { color: var(--withu-primary) !important; }
-body.admin-v2 .admin-modal-backdrop { background: color-mix(in srgb, #101716 38%, transparent); }
-body.admin-v2 .admin-modal { background: var(--withu-surface) !important; border: 1px solid var(--withu-border); color: var(--withu-text); }
-
-@media (min-width: 1100px) {
-    body.admin-v2 .admin-appbar { padding-left: 252px; }
-    body.admin-v2 .admin-appbar-inner { padding-left: 1.5rem; padding-right: 1.5rem; }
-    body.admin-v2 .admin-appbar .admin-icon-btn[data-admin-toggle="drawer"] { display: none; }
-    body.admin-v2 .admin-drawer {
-        top: 0;
-        width: 252px;
-        transform: translateX(0);
-        padding: 1.25rem 1rem 1.5rem;
-    }
-    body.admin-v2 .admin-drawer .admin-icon-btn[data-admin-toggle="drawer"] { display: none; }
-    body.admin-v2 .admin-shell { max-width: none; margin-left: 252px; }
-    body.admin-v2 .admin-main { max-width: 1280px; margin: 0 auto; padding: 1.5rem 2rem 2rem; }
-    body.admin-v2 .admin-tabbar { display: none; }
-}
-
-@media (max-width: 1099px) {
-    body.admin-v2 .admin-main { max-width: 960px; margin: 0 auto; }
-}
+/* Admin v2 layout & glass surface styles now live in admin_v2.css. */
 
 .theme-preview-strip {
     display: grid;
@@ -200,15 +73,16 @@ body.admin-v2 .admin-modal { background: var(--withu-surface) !important; border
     gap: .35rem;
     min-height: 42px;
     padding: .35rem;
-    border: 1px solid var(--withu-border);
+    border: 1px solid rgba(255,255,255,.75);
     border-radius: 10px;
-    background: var(--withu-bg);
+    background: rgba(255,255,255,.5);
+    box-shadow: inset 0 1px 0 rgba(255,255,255,.75);
 }
 .theme-preview-strip span { display: block; min-height: 30px; border-radius: 7px; }
 .theme-color-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: .6rem; }
 .theme-color-grid label { display: grid; gap: .3rem; color: var(--withu-text); font-size: .8rem; }
-.theme-color-grid input[type="color"] { width: 100%; height: 36px; padding: .15rem; border: 1px solid var(--withu-border); border-radius: 8px; background: var(--withu-surface); }
-.theme-hex-input { width: 100%; min-width: 0; padding: .45rem .5rem; border: 1px solid var(--withu-border); border-radius: 7px; background: var(--withu-surface); color: var(--withu-text); font: inherit; text-transform: uppercase; }
+.theme-color-grid input[type="color"] { width: 100%; height: 36px; padding: .15rem; border: 1px solid rgba(255,255,255,.8); border-radius: 8px; background: rgba(255,255,255,.5); }
+.theme-hex-input { width: 100%; min-width: 0; padding: .45rem .5rem; border: 1px solid rgba(255,255,255,.8); border-radius: 7px; background: rgba(255,255,255,.5); color: var(--withu-text); font: inherit; text-transform: uppercase; }
 @media (max-width: 640px) { .theme-color-grid { grid-template-columns: 1fr; } }
 
 @media (prefers-reduced-motion: reduce) {
