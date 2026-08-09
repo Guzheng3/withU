@@ -186,7 +186,7 @@ if ($headerDb && (string)get_setting('front_animation_enabled', '1') !== '1') {
     <meta property="og:title" content="<?php echo e($fullTitle); ?>">
     <link rel="stylesheet" href="/assets/css/style.css?v=withu-logo-20260718">
     <link rel="stylesheet" href="/assets/css/theme.css?v=withu-theme-20260719-3">
-    <link rel="stylesheet" href="/assets/css/withu_lg_ui.css?v=withu-lg-20260808-2">
+    <link rel="stylesheet" href="/assets/css/withu_lg_ui.css?v=withu-lg-20260809-2">
     <?php if (!empty($isArticleDetail)): ?>
     <link rel="stylesheet" href="/assets/css/article-detail.css">
     <?php endif; ?>
@@ -359,23 +359,14 @@ if ($headerDb && (string)get_setting('front_animation_enabled', '1') !== '1') {
                 <span>纪念事件</span>
             </a>
             <?php if ($currentUser): ?>
-            <a href="/watch.php" class="nav-button gradient-pink">
+            <a href="/watch.php" class="nav-button lgnewui-nav-island-item gradient-pink">
                 <i class="fas fa-film"></i>
                 <span>同步观影</span>
             </a>
-            <a href="/travel.php" class="nav-button gradient-blue">
+            <a href="/travel.php" class="nav-button lgnewui-nav-island-item gradient-blue">
                 <i class="fas fa-cloud-sun"></i>
                 <span>天气旅行</span>
             </a>
-            <a href="/cz_player.php" class="nav-button lgnewui-nav-island-item gradient-orange">
-                <i class="fas fa-clapperboard"></i>
-                <span>厂长影视</span>
-                <small class="cz-nav-tag">CZ</small>
-            </a>
-            <form class="nav-search-form" action="/cz_player.php" method="get" autocomplete="off">
-                <input type="text" name="q" placeholder="搜影视…" aria-label="搜索影视资源">
-                <button type="submit" aria-label="搜索"><i class="fas fa-magnifying-glass"></i></button>
-            </form>
             <?php endif; ?>
         </div>
     </nav>
