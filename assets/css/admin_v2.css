@@ -1322,3 +1322,100 @@ body.admin-v2 .image-item-card {
         grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
     }
 }
+
+
+/* ============================================================
+   WithU Admin UI polish v1 — desktop clarity / mobile ergonomics
+   ============================================================ */
+body.admin-v2 {
+    --admin-sidebar-w: 248px;
+    --admin-content-max: 1440px;
+    --admin-focus: #c84f7e;
+}
+
+body.admin-v2 .admin-appbar-inner { min-height: var(--admin-topbar-h); }
+body.admin-v2 .admin-appbar-context { padding-left: .15rem; }
+body.admin-v2 .admin-appbar-context strong { font-size: 1rem; }
+body.admin-v2 .admin-drawer-header { padding: 0 1.35rem; }
+body.admin-v2 .admin-drawer-menu { padding-left: .9rem; padding-right: .9rem; }
+body.admin-v2 .admin-drawer-link { min-height: 42px; padding: .56rem .75rem; }
+body.admin-v2 .admin-drawer-link-active { position: relative; }
+body.admin-v2 .admin-drawer-link-active::before {
+    content: '';
+    position: absolute;
+    left: -1px;
+    top: 9px;
+    bottom: 9px;
+    width: 3px;
+    border-radius: 0 4px 4px 0;
+    background: linear-gradient(180deg, var(--admin-pink), var(--admin-blue));
+}
+body.admin-v2 .admin-drawer-section-title {
+    padding-top: 1.05rem;
+    color: #8592a0;
+    letter-spacing: .14em;
+}
+body.admin-v2 .admin-drawer-footer {
+    background: rgba(248,250,252,.72);
+    color: #687789;
+}
+body.admin-v2 .admin-main { padding-top: 1.85rem; }
+body.admin-v2 .admin-page-title { padding-bottom: 1.25rem; }
+body.admin-v2 .admin-page-title h1 { font-size: clamp(1.35rem, 1.2rem + .4vw, 1.72rem); }
+body.admin-v2 .admin-card,
+body.admin-v2 .admin-stat-card { border-radius: 16px; }
+body.admin-v2 .admin-card-header { margin-bottom: .75rem; }
+body.admin-v2 .admin-card-title { font-size: .96rem; }
+body.admin-v2 .admin-table,
+body.admin-v2 .admin-card table { font-variant-numeric: tabular-nums; }
+body.admin-v2 .admin-table td,
+body.admin-v2 .admin-card table td { vertical-align: middle; }
+body.admin-v2 .btn { min-height: 38px; border-radius: 10px; }
+body.admin-v2 .admin-field label,
+body.admin-v2 .form-group label { font-weight: 650; color: #526273; }
+body.admin-v2 :is(a,button,input,select,textarea):focus-visible {
+    outline: 3px solid rgba(200,79,126,.28);
+    outline-offset: 2px;
+}
+
+@media (min-width: 1100px) {
+    body.admin-v2 .admin-drawer { box-shadow: 10px 0 34px rgba(45,62,82,.09); }
+    body.admin-v2 .admin-appbar { box-shadow: 0 1px 0 rgba(255,255,255,.8), 0 8px 26px rgba(45,62,82,.08); }
+    body.admin-v2 .admin-main { padding-left: 2.25rem; padding-right: 2.25rem; }
+}
+
+@media (max-width: 700px) {
+    body.admin-v2 .admin-main { padding-top: 1.05rem; }
+    body.admin-v2 .admin-card,
+    body.admin-v2 .admin-stat-card { padding: 1rem; border-radius: 14px; }
+    body.admin-v2 .admin-page-actions { width: 100%; }
+    body.admin-v2 .admin-page-actions .btn { flex: 1 1 auto; }
+    body.admin-v2 .admin-card-header { align-items: flex-start; }
+    body.admin-v2 .admin-table-wrap { margin-left: -.25rem; margin-right: -.25rem; }
+    body.admin-v2 .admin-tab-item { min-height: 58px; padding-bottom: calc(.65rem + env(safe-area-inset-bottom)); }
+    body.admin-v2 .admin-tabbar-inner { padding-bottom: env(safe-area-inset-bottom); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    body.admin-v2::before, body.admin-v2::after { animation: none !important; }
+}
+
+
+/* ============================================================
+   Alignment fix — desktop content must occupy the area beside the drawer
+   ============================================================ */
+@media (min-width: 1100px) {
+    body.admin-v2 .admin-shell {
+        width: calc(100% - var(--admin-sidebar-w));
+        max-width: none;
+        margin-left: var(--admin-sidebar-w);
+        margin-right: 0;
+        box-sizing: border-box;
+    }
+
+    body.admin-v2 .admin-main {
+        width: 100%;
+        max-width: var(--admin-content-max);
+        box-sizing: border-box;
+    }
+}

@@ -41,8 +41,11 @@ if ($currentUser && $partner) {
                         $roleMap[$u['role']] = $u;
                     }
                 }
-                if (isset($roleMap['user1']) && isset($roleMap['user2'])) {
+                // 分别保留已存在的用户；仅配置一位时由首页 Hero 使用另一半占位。
+                if (isset($roleMap['user1'])) {
                     $headerUser1 = $roleMap['user1'];
+                }
+                if (isset($roleMap['user2'])) {
                     $headerUser2 = $roleMap['user2'];
                 }
             }
@@ -138,13 +141,34 @@ foreach (($themeConfig['colors'] ?? []) as $themeName => $themeValue) {
     $themeInlineStyle .= '--withu-custom-' . $themeName . ':' . $themeValue . ';';
 }
 
-// 根据页面类型设置 body class
-$bodyClass = '';
+// 所有前台页面共享 LG-inspired 视觉壳，页面类型只作为附加 class
+$bodyClass = 'withu-front-modern';
 if (!empty($isAlbumDetail)) {
-    $bodyClass = 'page-album-detail';
+    $bodyClass .= ' page-album-detail';
 } elseif (!empty($isArticleDetail)) {
-    $bodyClass = 'page-article-detail';
+    $bodyClass .= ' page-article-detail';
 }
+$isWithuHomePage = in_array(basename((string)($_SERVER['SCRIPT_NAME'] ?? '')), ['index.php', ''], true);
+$heroDistance = trim((string)get_setting('couple_distance', ''));
+$heroDistance = $heroDistance !== '' ? $heroDistance : '心在一起';
+$heroDays = isset($daysTogether) && $loveDateSet ? (int)$daysTogether : null;
+$heroTagline = $siteDescription !== '' ? $siteDescription : '把平凡的日子，过成只属于我们的浪漫。';
+
+// Hero 即使在只完成一位用户配置时也保持完整展示；第二位用户注册后自动使用真实资料。
+$heroAvatarFallback = '/assets/images/default-avatar.svg';
+if ($headerUser1 && empty($headerUser1['avatar'])) {
+    $headerUser1['avatar'] = $heroAvatarFallback;
+}
+if ($isWithuHomePage && $headerUser1 && !$headerUser2) {
+    $headerUser2 = [
+        'nickname' => '另一半',
+        'avatar' => $heroAvatarFallback,
+    ];
+}
+if ($headerUser2 && empty($headerUser2['avatar'])) {
+    $headerUser2['avatar'] = $heroAvatarFallback;
+}
+
 if ($headerDb && (string)get_setting('front_animation_enabled', '1') !== '1') {
     $bodyClass = trim($bodyClass . ' withu-no-front-effects');
 }
@@ -162,6 +186,7 @@ if ($headerDb && (string)get_setting('front_animation_enabled', '1') !== '1') {
     <meta property="og:title" content="<?php echo e($fullTitle); ?>">
     <link rel="stylesheet" href="/assets/css/style.css?v=withu-logo-20260718">
     <link rel="stylesheet" href="/assets/css/theme.css?v=withu-theme-20260719-3">
+    <link rel="stylesheet" href="/assets/css/withu_lg_ui.css?v=withu-lg-20260808-2">
     <?php if (!empty($isArticleDetail)): ?>
     <link rel="stylesheet" href="/assets/css/article-detail.css">
     <?php endif; ?>
@@ -248,15 +273,43 @@ if ($headerDb && (string)get_setting('front_animation_enabled', '1') !== '1') {
                             <?php endif; ?>
                         </div>
                     </div>
+                <?php elseif ($isWithuHomePage && $headerUser1 && $headerUser2): ?>
+                <section class="withu-lg-hero" aria-label="情侣主页">
+                    <div class="withu-hero-glow withu-hero-glow-a"></div>
+                    <div class="withu-hero-glow withu-hero-glow-b"></div>
+                    <div class="withu-hero-particles" id="withu-hero-particles" aria-hidden="true"></div>
+                    <div class="withu-hero-orbit withu-hero-orbit-one"></div>
+                    <div class="withu-hero-orbit withu-hero-orbit-two"></div>
+                    <div class="withu-hero-copy">
+                        <span class="withu-hero-eyebrow"><i class="fas fa-sparkles"></i> OUR LITTLE UNIVERSE</span>
+                        <h1><?php echo e($siteTitle); ?></h1>
+                        <p><?php echo e($heroTagline); ?></p>
+                    </div>
+                    <div class="withu-hero-couple">
+                        <div class="withu-hero-person withu-hero-person-left">
+                            <img src="<?php echo e($headerUser1['avatar']); ?>" alt="<?php echo e($headerUser1['nickname']); ?>" class="withu-hero-avatar">
+                            <strong><?php echo e($headerUser1['nickname']); ?></strong>
+                        </div>
+                        <div class="withu-hero-heart" aria-label="相爱"><i class="fas fa-heart"></i><span>together</span></div>
+                        <div class="withu-hero-person withu-hero-person-right">
+                            <img src="<?php echo e($headerUser2['avatar']); ?>" alt="<?php echo e($headerUser2['nickname']); ?>" class="withu-hero-avatar">
+                            <strong><?php echo e($headerUser2['nickname']); ?></strong>
+                        </div>
+                    </div>
+                    <div class="withu-hero-facts">
+                        <div class="withu-hero-fact"><i class="fas fa-heart"></i><span>相爱</span><b><?php echo $heroDays !== null ? $heroDays : '—'; ?></b><small>天</small></div>
+                        <div class="withu-hero-fact"><i class="fas fa-location-dot"></i><span>相距</span><b><?php echo e($heroDistance); ?></b></div>
+                        <div class="withu-hero-fact"><i class="fas fa-wand-magic-sparkles"></i><span>记录</span><b>每一天</b></div>
+                    </div>
+                    <div class="withu-hero-actions"><a href="/events.php"><i class="fas fa-calendar-plus"></i> 查看我们的纪念日</a><a href="/albums.php" class="is-ghost"><i class="fas fa-images"></i> 打开相册</a></div>
+                </section>
                 <?php elseif ($headerUser1 && $headerUser2): ?>
                 <div class="avatar-pair">
                     <div class="avatar-container">
                         <img src="<?php echo e($headerUser1['avatar']); ?>" alt="<?php echo e($headerUser1['nickname']); ?>" class="avatar">
                         <div class="avatar-label"><?php echo e($headerUser1['nickname']); ?></div>
                     </div>
-                    <div class="heart-icon">
-                        <i class="fas fa-heart"></i>
-                    </div>
+                    <div class="heart-icon"><i class="fas fa-heart"></i></div>
                     <div class="avatar-container">
                         <img src="<?php echo e($headerUser2['avatar']); ?>" alt="<?php echo e($headerUser2['nickname']); ?>" class="avatar">
                         <div class="avatar-label"><?php echo e($headerUser2['nickname']); ?></div>
@@ -287,21 +340,21 @@ if ($headerDb && (string)get_setting('front_animation_enabled', '1') !== '1') {
         </div>
     </header>
 
-    <nav class="main-nav">
-        <div class="nav-buttons">
-            <a href="/articles.php" class="nav-button gradient-green">
+    <nav class="main-nav lgnewui-nav-wrapper" aria-label="情侣功能导航">
+        <div class="nav-buttons lgnewui-nav-island-container">
+            <a href="/articles.php" class="nav-button lgnewui-nav-island-item gradient-green">
                 <i class="fas fa-book"></i>
                 <span>点点滴滴</span>
             </a>
-            <a href="/messages.php" class="nav-button gradient-pink">
+            <a href="/messages.php" class="nav-button lgnewui-nav-island-item gradient-pink">
                 <i class="fas fa-comment"></i>
                 <span>留言墙</span>
             </a>
-            <a href="/albums.php" class="nav-button gradient-blue">
+            <a href="/albums.php" class="nav-button lgnewui-nav-island-item gradient-blue">
                 <i class="fas fa-images"></i>
                 <span>爱情相册</span>
             </a>
-            <a href="/events.php" class="nav-button gradient-purple">
+            <a href="/events.php" class="nav-button lgnewui-nav-island-item gradient-purple">
                 <i class="fas fa-calendar-days"></i>
                 <span>纪念事件</span>
             </a>
@@ -314,6 +367,15 @@ if ($headerDb && (string)get_setting('front_animation_enabled', '1') !== '1') {
                 <i class="fas fa-cloud-sun"></i>
                 <span>天气旅行</span>
             </a>
+            <a href="/cz_player.php" class="nav-button lgnewui-nav-island-item gradient-orange">
+                <i class="fas fa-clapperboard"></i>
+                <span>厂长影视</span>
+                <small class="cz-nav-tag">CZ</small>
+            </a>
+            <form class="nav-search-form" action="/cz_player.php" method="get" autocomplete="off">
+                <input type="text" name="q" placeholder="搜影视…" aria-label="搜索影视资源">
+                <button type="submit" aria-label="搜索"><i class="fas fa-magnifying-glass"></i></button>
+            </form>
             <?php endif; ?>
         </div>
     </nav>

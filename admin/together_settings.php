@@ -127,7 +127,7 @@ include __DIR__ . '/header.php';
 
     <div class="admin-page-actions">
         <button class="btn btn-primary" type="submit">保存一起看设置</button>
-        <a class="btn btn-secondary" href="/admin/media.php">打开媒体库</a>
+        <a class="btn btn-secondary" href="/admin/player_art.php">打开播放器设置</a>
     </div>
 </form>
 

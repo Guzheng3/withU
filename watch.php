@@ -19,7 +19,7 @@ $mediaError = '';
 try {
     $mediaDb = withu_media_db();
 } catch (Throwable $e) {
-    $mediaError = '影视资源库未初始化：请先用数据库管理员执行 deploy/init-media-db.sql，然后刷新页面。';
+    $mediaError = '影视库暂时不可用，请稍后再试。';
 }
 $historyMinMs = withu_watch_history_min_ms();
 
@@ -92,244 +92,516 @@ $themeConfig = ['preset' => 'light', 'mode' => 'light', 'custom' => false, 'colo
 $themeInlineStyle = '';
 ?>
 <!doctype html>
-<html lang="zh-CN" data-withu-theme="<?php echo e($themeConfig['preset']); ?>" data-withu-mode="<?php echo e($themeConfig['mode']); ?>"<?php if (!empty($themeConfig['custom'])): ?> data-withu-theme-custom="1" style="<?php echo e($themeInlineStyle); ?>"<?php endif; ?>>
+<html lang="zh-CN">
 <head>
-<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title><?php echo e($pageTitle); ?> - withU</title>
-<link rel="stylesheet" href="/assets/css/style.css">
-<link rel="stylesheet" href="/assets/css/theme.css?v=withu-theme-20260719-3">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title><?php echo e($pageTitle); ?> - withU 共享观影</title>
 <style>
-.watch-page{background:#0b0f14;color:#f4f7f5}.watch-page a{color:inherit}.watch-loading{position:fixed;inset:0;z-index:100;display:flex;align-items:center;justify-content:center;gap:.65rem;background:#0b0f14;color:#a8b4ad;transition:opacity .25s,visibility .25s}.watch-loading.is-hidden{opacity:0;visibility:hidden;pointer-events:none}.watch-spinner{width:18px;height:18px;border:2px solid #34423a;border-top-color:#9be15d;border-radius:50%;animation:watch-spin .8s linear infinite}@keyframes watch-spin{to{transform:rotate(360deg)}}.watch-home{max-width:1380px;margin:0 auto;padding:0 1.25rem 4rem}.watch-nav{height:70px;display:flex;align-items:center;gap:2rem;border-bottom:1px solid #1b2420}.watch-brand{display:inline-flex;align-items:baseline;gap:.45rem;text-decoration:none}.watch-brand strong{font-size:1.45rem;letter-spacing:0;color:#fff}.watch-brand span{font-size:.82rem;color:#9be15d}.watch-nav nav{display:flex;align-items:center;gap:1.35rem;font-size:.92rem;color:#93a19a}.watch-nav nav a{padding:25px 0 22px;text-decoration:none;border-bottom:2px solid transparent}.watch-nav nav a:hover,.watch-nav nav a.active{color:#fff;border-color:#9be15d}.watch-home-actions{margin-left:auto;display:flex;align-items:center;gap:.6rem}.watch-search-wrap{display:flex;align-items:center;gap:.5rem;width:min(310px,32vw);padding:.48rem .7rem;border:1px solid #29352e;border-radius:5px;background:#121a16;color:#819087}.watch-search{width:100%;border:0;outline:0;background:transparent;color:#f4f7f5}.watch-search::placeholder{color:#68766e}.watch-hero{position:relative;min-height:390px;margin:1.35rem 0 2.15rem;display:flex;align-items:flex-end;overflow:hidden;border-radius:4px;background-color:#17201b;background-image:var(--hero-image);background-size:cover;background-position:center}.watch-hero-shade{position:absolute;inset:0;background:linear-gradient(90deg,rgba(7,12,10,.88),rgba(7,12,10,.56) 42%,rgba(7,12,10,.18))}.watch-hero-content{position:relative;z-index:2;max-width:620px;padding:3rem 3.2rem}.watch-eyebrow{color:#9be15d;font-size:.76rem;letter-spacing:.08em}.watch-hero h1{margin:.65rem 0 .55rem;font-size:clamp(1.8rem,4vw,3.2rem);color:#fff}.watch-hero p{max-width:560px;margin:0;color:#d0d9d3;line-height:1.7}.watch-hero-meta{margin:1rem 0;color:#a9b8ae;font-size:.85rem}.watch-primary-action{display:inline-flex;align-items:center;gap:.45rem;padding:.68rem 1.1rem;border-radius:4px;background:#9be15d;color:#101710!important;font-weight:700;text-decoration:none}.watch-section{margin:2.1rem 0 2.7rem}.watch-section-head{display:flex;justify-content:space-between;align-items:center;gap:1rem;margin-bottom:1rem}.watch-section-head h2{margin:0;font-size:1.2rem;color:#fff}.watch-section-head h2:before{content:"";display:inline-block;width:3px;height:1.05em;margin-right:.55rem;vertical-align:-.14em;background:#9be15d}.watch-section-head span{color:#77857c;font-size:.8rem}.watch-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(170px,1fr));gap:1rem}.watch-grid-continue{grid-template-columns:repeat(auto-fill,minmax(250px,1fr))}.watch-card{display:block;overflow:hidden;background:#121916;border:1px solid #202c25;border-radius:4px;color:inherit;text-decoration:none;transition:transform .2s,border-color .2s,background .2s}.watch-card:hover{transform:translateY(-3px);border-color:#6fa74b;background:#172119}.watch-card-cover{position:relative;aspect-ratio:2/3;background:#1b2520;overflow:hidden}.watch-card-cover img{width:100%;height:100%;object-fit:cover;display:block}.watch-card-badge{position:absolute;left:.5rem;bottom:.5rem;padding:.2rem .42rem;border-radius:3px;background:#0b0f14d9;color:#fff;font-size:.7rem}.watch-card-body{padding:.65rem .7rem}.watch-card-title{font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;color:#f3f7f4}.watch-card-meta{margin-top:.35rem;color:#89988e;font-size:.77rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.watch-progress{height:3px;background:#29352e;margin-top:.55rem}.watch-progress i{display:block;height:100%;background:#9be15d}.watch-empty{padding:1.2rem;background:#121916;border:1px dashed #36453b;border-radius:4px;color:#819087}.watch-home-note{font-size:.8rem;color:#68776d;margin-top:.5rem}@media(max-width:720px){.watch-home{padding:0 .8rem 2rem}.watch-nav{height:auto;min-height:62px;gap:1rem;flex-wrap:wrap;padding:.7rem 0}.watch-nav nav{order:3;width:100%;gap:1rem}.watch-nav nav a{padding:0 0 .55rem}.watch-search-wrap{width:42vw}.watch-hero{min-height:330px}.watch-hero-content{padding:2rem 1.3rem}.watch-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:.7rem}.watch-grid-continue{grid-template-columns:repeat(2,minmax(0,1fr))}.watch-card-body{padding:.55rem}.watch-card-title{font-size:.88rem}.watch-card-meta{font-size:.7rem}}
- .watch-hero-art{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:.9}
- .resolution-badge{position:absolute;right:.52rem;top:.52rem;z-index:3;display:inline-flex;align-items:center;justify-content:center;min-width:2.15rem;height:1.35rem;padding:0 .48rem;border:1px solid rgba(255,255,255,.52);border-radius:999px;color:#fff;font-size:.72rem;font-weight:900;line-height:1;letter-spacing:.02em;text-shadow:0 1px 2px rgba(0,0,0,.34);box-shadow:0 8px 18px rgba(0,0,0,.22),inset 0 1px 0 rgba(255,255,255,.34);backdrop-filter:blur(10px) saturate(150%);-webkit-backdrop-filter:blur(10px) saturate(150%)}
- .resolution-badge.is-4k{background:linear-gradient(135deg,#fff1a8,#d69a17 56%,#8a5a05)}
-   .resolution-badge.is-2k{background:linear-gradient(135deg,#ffd7eb,#f08abb 58%,#be5775);color:#fff}
- .resolution-badge.is-1k{background:linear-gradient(135deg,#f6c799,#b87333 58%,#704214)}
- .watch-hero .resolution-badge{right:1rem;top:1rem}
-</style>
-<style>
-:root{--watch-bg:#0b0f14;--watch-panel:#121916;--watch-panel-2:#172119;--watch-border:#202c25;--watch-text:#f4f7f5;--watch-muted:#89988e;--watch-accent:#9be15d;--watch-shadow:rgba(0,0,0,.32)}
- body.watch-page{background:var(--watch-bg)!important;color:var(--watch-text)!important;transition:background .25s,color .25s}.watch-nav{border-color:var(--watch-border)}
- .watch-card{background:var(--watch-panel);border-color:var(--watch-border);box-shadow:0 8px 22px transparent}.watch-card:hover{background:var(--watch-panel-2);box-shadow:0 14px 30px var(--watch-shadow)}
-.watch-card-cover{isolation:isolate}.watch-card-cover:after{content:'▶';position:absolute;z-index:4;left:50%;top:50%;width:3.2rem;height:3.2rem;display:flex;align-items:center;justify-content:center;transform:translate(-50%,-50%) scale(.72);border:1px solid rgba(255,255,255,.72);border-radius:50%;background:rgba(10,15,12,.72);color:#fff;font-size:1.2rem;padding-left:.12rem;opacity:0;transition:opacity .18s ease,transform .22s cubic-bezier(.2,.8,.2,1);pointer-events:none}.watch-card:hover .watch-card-cover:after,.watch-card:focus-visible .watch-card-cover:after{opacity:1;transform:translate(-50%,-50%) scale(1)}.watch-card-cover img{transition:transform .35s cubic-bezier(.2,.8,.2,1),filter .35s}.watch-card:hover .watch-card-cover>img{transform:scale(1.055);filter:saturate(1.06)}
-.resolution-badge img{display:block;width:2.55rem;height:1.55rem;object-fit:contain;filter:drop-shadow(0 2px 3px rgba(0,0,0,.35))}.resolution-badge:has(img){padding:0;background:transparent;border:0;backdrop-filter:none}
-.resolution-badge.is-bluray{background:linear-gradient(135deg,#91d8ff,#2476c7 58%,#17437a);color:#fff}
-.watch-card-added{margin-top:.3rem;color:var(--watch-muted);font-size:.68rem}.watch-load-more{display:block;margin:1rem auto 0;border:1px solid var(--watch-border);background:var(--watch-panel);color:var(--watch-text);border-radius:999px;padding:.6rem 1rem;cursor:pointer}.watch-load-more:hover{border-color:var(--watch-accent)}
- @media(max-width:720px){.watch-card-cover:after{opacity:.92;transform:translate(-50%,-50%) scale(.78);width:2.55rem;height:2.55rem}}
-</style>
-<style>
-:root{--watch-bg:#f3f6f2;--watch-panel:#ffffff;--watch-panel-2:#edf5ea;--watch-border:#dbe4d8;--watch-text:#172019;--watch-muted:#607064;--watch-accent:#5f9d37;--watch-shadow:rgba(40,70,45,.12)}
-body.watch-page{background:linear-gradient(180deg,#f8fbf7 0%,#f3f6f2 100%)!important;color:#172019!important}
-.watch-page a{color:inherit}
-.watch-loading{background:#f3f6f2;color:#7c8b81}
-.watch-nav{position:sticky;top:0;z-index:20;min-height:76px;padding:1rem 0;border-bottom:1px solid rgba(219,228,216,.9);background:rgba(243,246,242,.86);backdrop-filter:blur(18px) saturate(140%);-webkit-backdrop-filter:blur(18px) saturate(140%);align-items:center;flex-wrap:wrap}
-.watch-brand strong{color:#172019}
-.watch-brand span{color:#5f9d37}
- .watch-nav-links{display:flex;align-items:center;gap:.5rem;flex-wrap:wrap}
- .watch-nav nav.watch-nav-links a{padding:.58rem .94rem;color:#607064;border:1px solid transparent;border-radius:999px;text-decoration:none}
- .watch-nav nav.watch-nav-links a:hover,.watch-nav nav.watch-nav-links a.active{color:#172019;background:#fff;border-color:#dbe4d8;box-shadow:0 8px 22px rgba(40,70,45,.06)}
- .watch-nav-links a{padding:.58rem .94rem;border:1px solid transparent;border-radius:999px;text-decoration:none;color:#607064;transition:background .18s ease,border-color .18s ease,color .18s ease,transform .18s ease}
-.watch-nav-links a:hover,.watch-nav-links a.active{color:#172019;background:#fff;border-color:#dbe4d8;box-shadow:0 8px 22px rgba(40,70,45,.06)}
-.watch-home-actions{margin-left:auto;display:flex;align-items:center;gap:.7rem;justify-content:flex-end}
-.watch-search-wrap{width:min(360px,36vw);padding:.62rem .82rem;border:1px solid #dbe4d8;border-radius:999px;background:#fff;color:#7d8a80;box-shadow:0 8px 22px rgba(40,70,45,.06)}
-.watch-search{color:#172019}
-.watch-hero{min-height:400px;border:1px solid rgba(219,228,216,.92);border-radius:28px;background-color:#fff;box-shadow:0 22px 60px rgba(40,70,45,.12)}
-.watch-hero-shade{background:linear-gradient(90deg,rgba(248,251,247,.94),rgba(248,251,247,.82) 42%,rgba(248,251,247,.34))}
-.watch-hero-content{max-width:640px}
-.watch-eyebrow{color:#5f9d37}
-.watch-hero h1{color:#172019}
-.watch-hero p,.watch-hero-meta{color:#52646c}
-.watch-primary-action{background:linear-gradient(135deg,#5f9d37,#77b14b);color:#fff!important;box-shadow:0 14px 28px rgba(95,157,55,.22)}
-.watch-section-head h2{color:#172019}
-.watch-section-head span{color:#7d8a80}
-.watch-section-head h2:before{background:#5f9d37}
-.watch-grid{gap:1rem}
-.watch-card{background:#fff;border:1px solid #dde4db;border-radius:24px;box-shadow:0 12px 30px rgba(40,70,45,.06)}
-.watch-card:hover{transform:translateY(-4px);border-color:#b9d5aa;background:#fff;box-shadow:0 18px 38px rgba(40,70,45,.12)}
-.watch-card-cover{background:#edf4ea}
-.watch-card-badge{background:rgba(23,32,25,.82);border-radius:999px}
-.watch-card-title{color:#172019}
-.watch-card-meta{color:#6b786e}
-.watch-progress{background:#dbe4d8}
-.watch-progress i{background:linear-gradient(90deg,#5f9d37,#7ac04f)}
-.watch-empty{background:#fff;border-color:#dde4db;color:#607064;box-shadow:0 10px 28px rgba(40,70,45,.06)}
-.watch-load-more{background:#fff;border-color:#dbe4d8;color:#172019;box-shadow:0 10px 24px rgba(40,70,45,.06)}
-.watch-load-more:hover{border-color:#5f9d37;background:#f6fbf4}
-.watch-home-note{color:#6c7a71}
-.resolution-badge.is-4k{padding:0;min-width:0;height:auto;background:transparent;border:0;box-shadow:none;backdrop-filter:none;-webkit-backdrop-filter:none}
-.resolution-badge.is-4k img{display:block;width:2.6rem;height:1.62rem;object-fit:contain;filter:drop-shadow(0 2px 3px rgba(0,0,0,.25))}
-.resolution-badge.is-2k{background:linear-gradient(135deg,#ffd7eb,#f08abb 58%,#be5775);color:#fff}
-.resolution-badge.is-bluray{background:linear-gradient(135deg,#91d8ff,#2476c7 58%,#17437a);color:#fff}
-@media(max-width:720px){
-  .watch-nav{padding:.75rem 0}
-  .watch-nav-links{width:100%;order:3}
-  .watch-home-actions{width:100%;order:2}
-  .watch-search-wrap{width:100%}
-  .watch-hero{min-height:340px;border-radius:22px}
-  .watch-hero-content{padding:2rem 1.3rem}
-  .watch-grid,.watch-grid-continue{grid-template-columns:repeat(2,minmax(0,1fr))}
-  .watch-card-body{padding:.58rem .62rem}
-  .watch-card-title{font-size:.9rem}
- .watch-card-meta{font-size:.72rem}
- }
- body.watch-page{background:
-   radial-gradient(circle at 9% -8%,rgba(255,205,225,.82),transparent 34%),
-   radial-gradient(circle at 96% 10%,rgba(255,229,239,.74),transparent 32%),
-   linear-gradient(180deg,#fff7fb 0%,#fffdfd 48%,#fff5fa 100%)!important;
-   background-attachment:fixed!important;
- }
- .watch-loading{background:rgba(255,247,251,.96)}
- .watch-nav{background:rgba(255,248,251,.86);border-bottom-color:rgba(241,214,224,.92);box-shadow:0 10px 28px rgba(176,91,122,.06)}
- .watch-search-wrap{border-color:#efd9e2;box-shadow:0 8px 22px rgba(176,91,122,.07)}
- .watch-nav nav.watch-nav-links a:hover,.watch-nav nav.watch-nav-links a.active{border-color:#efd9e2;box-shadow:0 8px 22px rgba(176,91,122,.09)}
-</style>
-<style>
-/* Hallmark · pre-emit critique: P5 H4 E4 S4 R4 V4 */
 :root{
-  --background-base:#FFFAFB;
-  --background-pink:rgba(255,183,197,.15);
-  --background-blue:rgba(135,206,235,.12);
-  --background-green:rgba(144,238,144,.10);
-  --background-cyan:rgba(168,216,234,.08);
-  --cherry-canvas:var(--background-base);
-  --cherry-canvas-secondary:#fff5f7;
-  --cherry-surface:#ffffff;
-  --cherry-text:#2d1b2e;
-  --cherry-text-secondary:#6b5b6d;
-  --cherry-text-muted:#9b8b9d;
-  --cherry-pink-100:#ffe0e6;
-  --cherry-pink-300:#ffb3c6;
-  --cherry-pink-400:#ff9bb5;
-  --cherry-pink-500:#ff85a2;
-  --cherry-blue-200:#a8d8ea;
-  --cherry-blue-300:#87ceeb;
-  --cherry-green-300:#90ee90;
-  --cherry-border:rgba(255,183,197,.28);
-  --cherry-border-focus:rgba(255,133,162,.52);
-  --cherry-shadow:rgba(255,133,162,.12);
-  --cherry-shadow-hover:rgba(255,133,162,.2);
-  --cherry-brand-gradient:linear-gradient(135deg,var(--cherry-pink-500),var(--cherry-blue-300),var(--cherry-green-300));
-  --cherry-active-gradient:linear-gradient(135deg,rgba(255,183,197,.28),rgba(135,206,235,.2));
-  --cherry-atmosphere:radial-gradient(ellipse at 10% 20%,var(--background-pink) 0%,transparent 50%),radial-gradient(ellipse at 85% 15%,var(--background-blue) 0%,transparent 50%),radial-gradient(ellipse at 50% 80%,var(--background-green) 0%,transparent 50%),radial-gradient(ellipse at 30% 60%,var(--background-cyan) 0%,transparent 40%);
+  --pink:#f78da7; --pink-soft:#ffe9ef;
+  --blue:#7ec8e3; --blue-soft:#e6f5fb;
+  --green:#7fbf9d; --green-soft:#e8f6ee;
+  --ink:#3d3038; --ink-soft:#8a7a83;
+  --bg:#fff7fa;
+  --shadow:0 10px 30px rgba(247,141,167,.14);
+  --shadow-hover:0 20px 44px rgba(247,141,167,.28);
+  --ease:cubic-bezier(.22,.8,.28,1);
 }
-html,body{min-height:100%;overflow-x:clip}
-body.watch-page{position:relative;isolation:isolate;min-height:100vh;background:var(--cherry-canvas)!important;color:var(--cherry-text)!important;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Hiragino Sans GB","Microsoft YaHei","Helvetica Neue",Helvetica,Arial,sans-serif}
-body.watch-page::before{content:"";position:fixed;inset:0;z-index:0;pointer-events:none;background:var(--cherry-atmosphere)}
-body.watch-page .watch-home{position:relative;z-index:1;max-width:1400px;padding:24px 24px 60px}
-body.watch-page .watch-nav{min-height:64px;height:auto;padding:0;border-bottom:1px solid var(--cherry-border);background:rgba(255,250,251,.85);box-shadow:0 4px 16px var(--cherry-shadow);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px)}
- body.watch-page .watch-brand{width:56px;height:56px;flex:0 0 56px;align-items:center;justify-content:center}
- body.watch-page .watch-brand-logo{display:block;width:56px;height:56px;object-fit:contain;background:transparent;border:0}
-body.watch-page .watch-brand span{color:var(--cherry-pink-500);font-weight:600}
-body.watch-page .watch-nav nav.watch-nav-links a{padding:8px 18px;color:var(--cherry-text-secondary);font-weight:500;border:1px solid transparent;border-radius:20px;transition:background .2s ease,border-color .2s ease,color .2s ease,transform .2s ease}
-body.watch-page .watch-nav nav.watch-nav-links a:hover{color:var(--cherry-pink-600,var(--cherry-pink-500));background:rgba(255,183,197,.12);border-color:var(--cherry-border)}
-body.watch-page .watch-nav nav.watch-nav-links a.active{color:var(--cherry-pink-500);font-weight:600;background:var(--cherry-active-gradient);border-color:var(--cherry-border)}
-body.watch-page .watch-search-wrap{min-width:220px;width:min(360px,36vw);padding:8px 16px;color:var(--cherry-text-muted);background:rgba(255,183,197,.08);border:1px solid var(--cherry-border);border-radius:20px;box-shadow:none}
-body.watch-page .watch-search{color:var(--cherry-text)}
-body.watch-page .watch-search::placeholder{color:var(--cherry-text-muted)}
-body.watch-page .watch-search-wrap:focus-within{border-color:var(--cherry-border-focus);box-shadow:0 0 0 3px rgba(255,133,162,.1)}
-body.watch-page .watch-hero{min-height:420px;margin:24px 0 40px;border:0;border-radius:20px;box-shadow:0 8px 32px var(--cherry-shadow-hover)}
-body.watch-page .watch-hero-shade{background:linear-gradient(to top,rgba(0,0,0,.82),rgba(0,0,0,.34) 58%,rgba(0,0,0,.08))}
-body.watch-page .watch-hero-content{max-width:600px;padding:48px}
-body.watch-page .watch-eyebrow{color:rgba(255,255,255,.78)}
-body.watch-page .watch-hero h1{color:#fff;font-weight:800;letter-spacing:normal}
-body.watch-page .watch-hero p{color:rgba(255,255,255,.84);line-height:1.6}
-body.watch-page .watch-hero-meta{color:rgba(255,255,255,.78)}
-body.watch-page .watch-primary-action{padding:10px 24px;border-radius:10px;background:linear-gradient(135deg,var(--cherry-pink-500),var(--cherry-pink-400));box-shadow:0 2px 10px rgba(255,133,162,.3);transition:transform .2s ease,box-shadow .2s ease}
-body.watch-page .watch-primary-action:hover{transform:scale(1.03);box-shadow:0 4px 16px rgba(255,133,162,.4)}
-body.watch-page .watch-section{margin:36px 0}
-body.watch-page .watch-section-head{margin-bottom:10px;align-items:center}
- body.watch-page .watch-section-head h2{font-size:1.1rem;font-weight:700;color:var(--cherry-text)}
- body.watch-page .watch-section-head h2::before{width:4px;height:24px;margin-right:10px;vertical-align:-6px;border-radius:2px;background:var(--cherry-brand-gradient)}
- body.watch-page .watch-section-head span{color:var(--cherry-text-muted)}
- body.watch-page .watch-more-link{display:inline-flex;align-items:center;gap:6px;margin-left:auto;padding:6px 12px;border:1px solid var(--cherry-border);border-radius:999px;color:var(--cherry-pink-500);font-size:.82rem;font-weight:600;text-decoration:none;white-space:nowrap;transition:background .2s ease,border-color .2s ease,box-shadow .2s ease,transform .2s ease}
- body.watch-page .watch-more-link::after{content:'›';font-size:1.05rem;line-height:.8;transition:transform .2s ease}
- body.watch-page .watch-more-link:hover,body.watch-page .watch-more-link:focus-visible{background:rgba(255,183,197,.16);border-color:var(--cherry-border-focus);box-shadow:0 6px 16px var(--cherry-shadow);transform:translateY(-1px)}
- body.watch-page .watch-more-link:hover::after,body.watch-page .watch-more-link:focus-visible::after{transform:translateX(2px)}
-body.watch-page .watch-grid{grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:20px}
-body.watch-page .watch-card{border:1px solid var(--cherry-border);border-radius:12px;background:var(--cherry-surface);box-shadow:0 2px 12px var(--cherry-shadow);transition:transform .35s cubic-bezier(.4,0,.2,1),box-shadow .35s,border-color .35s}
-body.watch-page .watch-card:hover{transform:translateY(-6px);border-color:rgba(255,133,162,.42);background:var(--cherry-surface);box-shadow:0 12px 32px var(--cherry-shadow-hover)}
-body.watch-page .watch-card-cover{background:linear-gradient(135deg,var(--cherry-pink-100),var(--cherry-blue-200));border-radius:12px 12px 0 0}
-body.watch-page .watch-card-cover img{transition:transform .5s ease,filter .5s ease}
-body.watch-page .watch-card:hover .watch-card-cover>img{transform:scale(1.08);filter:saturate(1.06)}
-body.watch-page .watch-card-cover::after{width:40px;height:40px;border:0;background:rgba(255,255,255,.92);color:var(--cherry-pink-500);font-size:1rem;box-shadow:0 4px 16px rgba(255,133,162,.3)}
-body.watch-page .watch-card-badge{left:8px;bottom:8px;padding:5px 10px;border-radius:16px;background:rgba(45,27,46,.68);font-size:.75rem}
-body.watch-page .watch-card-body{padding:12px 14px}
-body.watch-page .watch-card-title{font-size:.95rem;font-weight:600;color:var(--cherry-text)}
-body.watch-page .watch-card-meta{margin-top:6px;color:var(--cherry-text-secondary);font-size:.85rem}
-body.watch-page .watch-progress{height:3px;margin-top:10px;background:var(--cherry-pink-100)}
-body.watch-page .watch-progress i{background:linear-gradient(90deg,var(--cherry-pink-500),var(--cherry-blue-300))}
-body.watch-page .watch-empty{background:var(--cherry-surface);border:1px dashed var(--cherry-border);border-radius:12px;color:var(--cherry-text-secondary);box-shadow:0 2px 12px var(--cherry-shadow)}
-body.watch-page .watch-load-more{padding:10px 24px;border:0;border-radius:10px;background:linear-gradient(135deg,var(--cherry-pink-500),var(--cherry-pink-400));color:#fff;box-shadow:0 2px 10px rgba(255,133,162,.3)}
-body.watch-page .watch-load-more:hover{border:0;background:linear-gradient(135deg,var(--cherry-pink-500),var(--cherry-pink-400));box-shadow:0 4px 16px rgba(255,133,162,.4);transform:scale(1.03)}
-body.watch-page .resolution-badge.is-4k{padding:0;min-width:0;height:auto;background:transparent;border:0;box-shadow:none;backdrop-filter:none}
- body.watch-page .resolution-badge.is-4k img{display:block;width:2.6rem;height:1.62rem;object-fit:contain;filter:drop-shadow(0 2px 3px rgba(255,133,162,.24))}
-@media(max-width:720px){
-  body.watch-page .watch-home{padding:16px 16px 48px}
-  body.watch-page .watch-nav{min-height:64px}
-  body.watch-page .watch-nav-links{width:auto;order:2}
-  body.watch-page .watch-home-actions{width:100%;order:3}
-  body.watch-page .watch-search-wrap{width:100%;min-width:0}
-  body.watch-page .watch-hero{min-height:360px;margin:20px 0 32px}
-  body.watch-page .watch-hero-content{padding:24px}
-  body.watch-page .watch-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
-  body.watch-page .watch-card-body{padding:10px 12px}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+html,body{margin:0;padding:0}
+body.watch-page{
+  min-height:100vh;
+  background:
+    radial-gradient(circle at 12% 8%, rgba(126,200,227,.20), transparent 34%),
+    radial-gradient(circle at 90% 18%, rgba(247,141,167,.20), transparent 34%),
+    radial-gradient(circle at 55% 92%, rgba(127,191,157,.20), transparent 38%),
+    var(--bg);
+  background-attachment:fixed;
+  color:var(--ink);
+  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Hiragino Sans GB","Microsoft YaHei","Helvetica Neue",Arial,sans-serif;
+  overflow-x:hidden;
 }
- @media(max-width:520px){
-    body.watch-page .watch-section-head{align-items:flex-start;flex-direction:column;gap:6px}
-    body.watch-page .watch-section-head h2{font-size:1rem}
-    body.watch-page .watch-more-link{margin-left:0;margin-top:2px}
-  }
- body.watch-page .watch-grid.watch-grid-last-watched{grid-template-columns:repeat(8,minmax(0,1fr));gap:16px}
- @media(max-width:1100px){body.watch-page .watch-grid.watch-grid-last-watched{grid-template-columns:repeat(4,minmax(0,1fr))}}
- @media(max-width:520px){body.watch-page .watch-grid.watch-grid-last-watched{grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}}
+body.watch-page a{color:inherit}
+.watch-loading{position:fixed;inset:0;z-index:200;display:flex;align-items:center;justify-content:center;gap:.6rem;background:var(--bg);color:var(--ink-soft);transition:opacity .3s,visibility .3s}
+.watch-loading.is-hidden{opacity:0;visibility:hidden;pointer-events:none}
+.watch-spinner{width:18px;height:18px;border:2px solid rgba(247,141,167,.3);border-top-color:var(--pink);border-radius:50%;animation:watch-spin .8s linear infinite}
+@keyframes watch-spin{to{transform:rotate(360deg)}}
+
+/* ===== 顶部品牌 + 搜索 ===== */
+.site-header{position:sticky;top:0;z-index:60;display:flex;align-items:center;gap:1.2rem;padding:.85rem 2rem;background:rgba(255,247,250,.82);backdrop-filter:blur(18px) saturate(150%);-webkit-backdrop-filter:blur(18px) saturate(150%);border-bottom:1px solid rgba(247,141,167,.16)}
+.site-header .brand{display:inline-flex;align-items:center;gap:.45rem;font-size:1.25rem;font-weight:800;text-decoration:none;letter-spacing:.02em}
+.site-header .brand .brand-mark{font-size:1.3rem}
+.site-header .brand em{font-style:normal;font-size:.78rem;font-weight:600;color:var(--ink-soft)}
+.site-header .search-box{flex:1;max-width:480px;margin-left:auto;display:flex;align-items:center;gap:.5rem;padding:.5rem 1rem;border-radius:999px;background:rgba(255,255,255,.82);border:1px solid rgba(247,141,167,.22);box-shadow:0 6px 18px rgba(247,141,167,.08);transition:border-color .2s,box-shadow .2s}
+.site-header .search-box:focus-within{border-color:var(--pink);box-shadow:0 8px 24px rgba(247,141,167,.18)}
+.site-header .search-box .s-icon{color:var(--pink);font-size:.95rem}
+.site-header .search-box input{flex:1;border:0;outline:0;background:transparent;color:var(--ink);font-size:.92rem}
+.site-header .search-box input::placeholder{color:var(--ink-soft)}
+.site-header .header-links{display:flex;align-items:center;gap:.5rem}
+.site-header .header-links a{font-size:.85rem;color:var(--ink-soft);text-decoration:none;padding:.4rem .7rem;border-radius:999px;transition:background .2s,color .2s}
+.site-header .header-links a:hover{background:var(--pink-soft);color:var(--pink)}
+
+/* ===== Hero 全宽横幅轮播 ===== */
+.hero{position:relative;height:clamp(380px,52vh,520px);margin:0;overflow:hidden;background:#ffe9ef}
+.hero .slide{position:absolute;inset:0;opacity:0;visibility:hidden;transition:opacity .8s ease,visibility .8s}
+.hero .slide.active{opacity:1;visibility:visible;z-index:2}
+.hero .slide .bg{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center 22%;transform:scale(1.12);transition:transform 6.5s linear}
+.hero .slide.active .bg{transform:scale(1)}
+.hero .slide .shade{position:absolute;inset:0;background:linear-gradient(90deg,rgba(61,48,56,.78),rgba(61,48,56,.42) 46%,rgba(61,48,56,.1) 78%),linear-gradient(0deg,rgba(61,48,56,.55),transparent 46%)}
+.hero .slide .content{position:absolute;z-index:3;left:0;top:0;bottom:0;display:flex;flex-direction:column;justify-content:center;padding-left:240px;padding-right:3rem;max-width:820px}
+.hero .elem{opacity:0;transform:translateY(26px);transition:opacity .7s var(--ease),transform .7s var(--ease)}
+.hero .slide.active .elem{opacity:1;transform:none}
+.hero .slide.active .elem:nth-child(1){transition-delay:.15s}
+.hero .slide.active .elem:nth-child(2){transition-delay:.28s}
+.hero .slide.active .elem:nth-child(3){transition-delay:.41s}
+.hero .slide.active .elem:nth-child(4){transition-delay:.54s}
+.hero .slide.active .elem:nth-child(5){transition-delay:.67s}
+.hero .badge{display:inline-flex;align-items:center;gap:.4rem;width:max-content;padding:.3rem .85rem;border-radius:999px;font-size:.78rem;font-weight:700;letter-spacing:.06em;color:#fff;background:linear-gradient(135deg,var(--pink),var(--blue));box-shadow:0 8px 20px rgba(247,141,167,.4)}
+.hero h1{margin:.7rem 0 .5rem;font-size:clamp(1.7rem,4.4vw,3.1rem);line-height:1.15;color:#fff;font-weight:800;text-shadow:0 2px 18px rgba(0,0,0,.35)}
+.hero .rating{color:#ffe9ef;font-size:.95rem;font-weight:600}
+.hero .desc{max-width:540px;margin:.4rem 0 1.1rem;color:rgba(255,255,255,.88);font-size:.95rem;line-height:1.65;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.hero .cta{display:inline-flex;align-items:center;gap:.5rem;width:max-content;padding:.72rem 1.5rem;border-radius:999px;background:linear-gradient(135deg,var(--pink),#ff9ab5);color:#fff;font-weight:700;font-size:.95rem;text-decoration:none;box-shadow:0 14px 30px rgba(247,141,167,.45);transition:transform .2s var(--ease),box-shadow .2s}
+.hero .cta:hover{transform:translateY(-2px) scale(1.03);box-shadow:0 18px 38px rgba(247,141,167,.55)}
+.hero .arrow{position:absolute;z-index:4;top:50%;transform:translateY(-50%);width:44px;height:44px;border-radius:50%;border:1px solid rgba(255,255,255,.55);background:rgba(255,255,255,.14);color:#fff;font-size:1.5rem;line-height:1;cursor:pointer;backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);transition:background .2s,transform .2s;display:flex;align-items:center;justify-content:center}
+.hero .arrow.prev{left:216px}
+.hero .arrow.next{right:1.4rem}
+.hero .arrow:hover{background:rgba(255,255,255,.32)}
+.hero .dots{position:absolute;z-index:4;left:240px;bottom:1.2rem;display:flex;gap:.5rem}
+.hero .dots i{width:9px;height:9px;border-radius:999px;background:rgba(255,255,255,.5);cursor:pointer;transition:width .3s var(--ease),background .3s}
+.hero .dots i.active{width:26px;background:#fff}
+
+/* ===== 左侧液态玻璃导航 ===== */
+.side-nav{position:fixed;left:26px;z-index:50;display:flex;flex-direction:column;gap:.35rem;padding:.7rem;border-radius:22px;background:linear-gradient(135deg,rgba(255,255,255,.6),rgba(255,255,255,.28));backdrop-filter:blur(22px) saturate(170%);-webkit-backdrop-filter:blur(22px) saturate(170%);border:1px solid rgba(255,255,255,.72);box-shadow:inset 0 1px 0 rgba(255,255,255,.8),inset 1px 0 0 rgba(255,255,255,.4),inset -1px -1px 0 rgba(255,255,255,.2),0 22px 46px rgba(247,141,167,.18);top:50%;transform:translateY(-50%);transition:top .7s cubic-bezier(.34,1.56,.64,1),transform .7s cubic-bezier(.34,1.56,.64,1)}
+.side-nav::before{content:"";position:absolute;left:14%;right:14%;top:0;height:1px;background:linear-gradient(90deg,transparent,rgba(255,255,255,.95),transparent)}
+.side-nav.is-down{top:var(--recent-center,50%);transform:translateY(-50%)}
+.side-link{position:relative;display:flex;align-items:center;gap:.6rem;padding:.62rem .95rem;border-radius:14px;color:var(--ink);font-size:.9rem;font-weight:600;text-decoration:none;overflow:hidden;transition:transform .22s var(--ease),color .22s}
+.side-link::before{content:"";position:absolute;inset:0;background:linear-gradient(135deg,var(--pink),var(--blue));border-radius:14px;transform:scaleX(0);transform-origin:left;transition:transform .3s var(--ease);z-index:0}
+.side-link::after{content:"";position:absolute;left:50%;top:50%;width:26px;height:26px;margin:-13px 0 0 -13px;border-radius:50%;background:radial-gradient(circle,rgba(255,255,255,.85),transparent 65%);transform:scale(0);transition:transform .5s var(--ease);z-index:0}
+.side-link:hover::before,.side-link.active::before{transform:scaleX(1)}
+.side-link:hover::after{transform:scale(2.7)}
+.side-link .side-icon{position:relative;z-index:1;display:inline-flex;align-items:center;justify-content:center;width:26px;height:26px;border-radius:9px;background:var(--pink-soft);color:var(--pink);font-size:.82rem;transition:transform .25s var(--ease),background .25s,color .25s}
+.side-link:nth-child(2) .side-icon{background:var(--blue-soft);color:var(--blue)}
+.side-link:nth-child(3) .side-icon{background:var(--green-soft);color:var(--green)}
+.side-link:hover .side-icon,.side-link.active .side-icon{transform:translateY(-2px) rotate(-8deg);background:#fff;color:var(--pink)}
+.side-link:hover,.side-link.active{color:#fff;transform:translateX(4px)}
+
+/* ===== 主布局 ===== */
+.page{position:relative;display:flex;gap:2rem;max-width:1380px;margin:0 auto;padding:1.6rem 2rem 4rem}
+.main-col{flex:1;min-width:0;padding-left:8px}
+.section{margin:2.2rem 0 3rem}
+.section-head{display:flex;align-items:center;gap:.7rem;margin-bottom:1.05rem}
+.section-head h2{margin:0;font-size:1.18rem;font-weight:800;color:var(--ink)}
+.section-head .sec-accent{width:5px;height:22px;border-radius:3px;background:var(--sec-accent,var(--pink))}
+.section-head .sec-note{font-size:.82rem;color:var(--ink-soft)}
+.section-head .sec-more{margin-left:auto;font-size:.82rem;color:var(--ink-soft);text-decoration:none;transition:color .2s}
+.section-head .sec-more:hover{color:var(--pink)}
+
+/* ===== 竖版封面卡片 ===== */
+.card{position:relative;display:block;border-radius:16px;overflow:hidden;background:#fff;box-shadow:var(--shadow);text-decoration:none;aspect-ratio:2/3;opacity:0;transform:translateY(0);transition:box-shadow .35s var(--ease),transform .35s var(--ease)}
+.card.in{opacity:1;animation:cardIn .6s var(--ease) both;animation-delay:var(--stagger,0s)}
+@keyframes cardIn{from{opacity:0;transform:translateY(28px)}to{opacity:1;transform:none}}
+.card:hover{box-shadow:var(--shadow-hover);transform:translateY(-6px)}
+.card .poster{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;transition:transform .45s var(--ease)}
+.card:hover .poster{transform:scale(1.07)}
+.card .rate{position:absolute;top:.55rem;left:.55rem;z-index:2;padding:.22rem .6rem;border-radius:999px;font-size:.72rem;font-weight:800;color:#fff;background:linear-gradient(135deg,var(--pink),#ffb3c6);box-shadow:0 6px 14px rgba(247,141,167,.45)}
+.card .rate.none{background:rgba(61,48,56,.55);box-shadow:none}
+.card .mask{position:absolute;inset:auto 0 0 0;height:52%;background:linear-gradient(0deg,rgba(61,48,56,.72),transparent)}
+.card .play-btn{position:absolute;left:50%;top:46%;z-index:2;width:44px;height:44px;border-radius:50%;background:rgba(255,255,255,.94);color:var(--pink);display:flex;align-items:center;justify-content:center;font-size:1rem;transform:translate(-50%,-50%) scale(.6);opacity:0;box-shadow:0 10px 24px rgba(247,141,167,.5);transition:opacity .25s var(--ease),transform .25s var(--ease)}
+.card:hover .play-btn,.card:focus-visible .play-btn{opacity:1;transform:translate(-50%,-50%) scale(1)}
+.card .tag{position:absolute;left:.55rem;bottom:.55rem;z-index:2;padding:.18rem .55rem;border-radius:999px;font-size:.7rem;font-weight:700;color:#fff;background:rgba(61,48,56,.45);backdrop-filter:blur(6px)}
+.card .name{position:absolute;left:.7rem;right:.7rem;bottom:.62rem;z-index:2;color:#fff;font-size:.88rem;font-weight:700;line-height:1.3;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;text-shadow:0 1px 6px rgba(0,0,0,.5)}
+.card .name:has(+ .tag){bottom:2.2rem}
+.card .eps{position:absolute;right:.55rem;bottom:.55rem;z-index:2;color:rgba(255,255,255,.9);font-size:.68rem;text-shadow:0 1px 4px rgba(0,0,0,.6)}
+
+/* ===== 网格 ===== */
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:1.05rem}
+
+/* ===== 最近播放横向轨道 ===== */
+.rail-wrap{position:relative}
+.rail{display:flex;gap:1rem;overflow-x:auto;padding:.6rem .2rem 1.2rem;scroll-behavior:smooth;scrollbar-width:none;-ms-overflow-style:none}
+.rail::-webkit-scrollbar{display:none}
+.rail .card{flex:0 0 190px;aspect-ratio:2/3}
+.rail .progress-bar{position:absolute;left:0;right:0;bottom:0;z-index:2;height:4px;background:rgba(255,255,255,.28)}
+.rail .progress-bar i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--pink),var(--blue));transition:width 1.1s var(--ease)}
+.rail .card.in .progress-bar i{width:var(--pct,0%)}
+.rail .cont-badge{position:absolute;right:.55rem;bottom:.55rem;z-index:2;padding:.16rem .5rem;border-radius:999px;font-size:.66rem;font-weight:700;color:#fff;background:rgba(61,48,56,.55);backdrop-filter:blur(6px);transform:translateX(8px);opacity:0;transition:opacity .25s,transform .25s}
+.rail .card:hover .cont-badge{opacity:1;transform:none}
+.rail-arrow{position:absolute;top:38%;z-index:3;width:38px;height:38px;border-radius:50%;border:1px solid rgba(247,141,167,.35);background:rgba(255,255,255,.85);color:var(--pink);font-size:1.1rem;cursor:pointer;box-shadow:0 8px 20px rgba(247,141,167,.25);display:flex;align-items:center;justify-content:center;transition:background .2s,transform .2s}
+.rail-arrow:hover{background:#fff;transform:scale(1.08)}
+.rail-arrow.prev{left:-8px}
+.rail-arrow.next{right:-8px}
+
+/* ===== 空态 ===== */
+.empty{padding:2.2rem 1rem;border:1.5px dashed rgba(247,141,167,.4);border-radius:16px;color:var(--ink-soft);text-align:center;font-size:.9rem;background:rgba(255,255,255,.5)}
+
+/* ===== cz / 豆瓣 徽标 ===== */
+.src-badge{display:inline-flex;align-items:center;justify-content:center;min-width:2rem;height:1.3rem;padding:0 .5rem;border-radius:6px;background:linear-gradient(135deg,#0ea5e9,#6366f1);color:#fff;font-size:.72rem;font-weight:900;letter-spacing:.05em}
+.badge-cz{position:absolute;right:.55rem;top:.55rem;z-index:2;padding:.2rem .55rem;border-radius:8px;font-size:.7rem;font-weight:800;color:#fff;background:linear-gradient(135deg,#0ea5e9,#6366f1);box-shadow:0 6px 14px rgba(14,165,233,.4)}
+.badge-douban{position:absolute;right:.55rem;top:.55rem;z-index:2;padding:.18rem .5rem;border-radius:8px;font-size:.68rem;font-weight:700;color:#fff;background:rgba(61,48,56,.5);backdrop-filter:blur(6px)}
+.card-cz{cursor:pointer;overflow:hidden;background:#101a24}
+.card-cz .ph{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;background:radial-gradient(circle at 50% 40%,#1b3a52,#0c1520);color:#9be15d;font-size:2rem}
+.card-cz .poster{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.card-cz .eps{position:absolute;left:.55rem;bottom:.45rem;z-index:2;max-width:calc(100% - 1.1rem);padding:.14rem .42rem;border-radius:999px;font-size:.66rem;font-weight:600;color:#e6f5fb;background:rgba(12,21,32,.72);backdrop-filter:blur(4px);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.card-douban{cursor:pointer;border:1px solid rgba(126,200,227,.35)}
+.card-douban:hover{border-color:var(--blue);transform:translateY(-6px)}
+
+/* ===== 响应式 ===== */
+@media(max-width:1000px){
+  .page{flex-direction:column;padding:1.2rem 1rem 3.5rem}
+  .main-col{padding-left:0}
+  .side-nav{position:sticky;top:76px;left:auto;flex-direction:row;width:100%;justify-content:space-around;border-radius:18px;transform:none;margin-bottom:1.2rem;z-index:40}
+  .side-nav.is-down{top:76px;transform:none}
+  .side-link{flex:1;justify-content:center}
+  .side-link .side-txt{display:none}
+  .hero .slide .content{padding-left:2rem}
+  .hero .arrow.prev{left:22px}
+  .hero .dots{left:2rem}
+}
+@media(max-width:760px){
+  .site-header{padding:.7rem 1rem;flex-wrap:wrap;gap:.6rem}
+  .site-header .search-box{order:3;max-width:100%;width:100%}
+  .header-links .hide-m{display:none}
+  .hero{height:320px}
+  .hero .slide .content{padding:0 1.2rem}
+  .hero .desc{display:none}
+  .hero .cta{display:none}
+  .hero h1{font-size:1.35rem}
+  .grid{grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:.7rem}
+  .rail .card{flex-basis:120px}
+  .section{margin:1.7rem 0 2.2rem}
+}
 </style>
 </head>
 <body class="watch-page">
-<div id="watchLoading" class="watch-loading" aria-hidden="true"><span class="watch-spinner"></span><span>正在加载影视库</span></div>
-<main class="watch-home">
-  <header class="watch-nav"><a class="watch-brand" href="/watch.php"><img class="watch-brand-logo" src="/assets/images/withu-logo.png" alt="withU"></a><nav class="watch-nav-links"><a class="<?php echo $isBrowsePage ? '' : 'active'; ?>" href="/watch.php">首页</a><a href="/watch_history.php">历史</a><a href="/">情侣空间</a></nav><div class="watch-home-actions"><label class="watch-search-wrap"><span aria-hidden="true">⌕</span><input id="watchSearch" class="watch-search" placeholder="<?php echo e($isBrowsePage ? '在' . $pageTitle . '中搜索片名、演员或集标题' : '模糊搜索片名、演员、年份或集标题'); ?>"></label></div></header>
-  <?php if ($mediaError !== ''): ?><div class="watch-empty" style="margin-top:1rem"><?php echo e($mediaError); ?></div><?php endif; ?>
+<div id="watchLoading" class="watch-loading"><span class="watch-spinner"></span><span>正在加载影视库</span></div>
 
-  <?php if (!$isBrowsePage && $featured && $featuredItem): ?>
-  <section class="watch-hero" style="--hero-image:url('/api/media_backdrop.php?id=<?php echo (int)$featuredItem['id']; ?>')"><img class="watch-hero-art" src="/api/media_backdrop.php?id=<?php echo (int)$featuredItem['id']; ?>" alt=""><?php echo withu_media_quality_badge_html($featuredItem); ?><div class="watch-hero-shade"></div><div class="watch-hero-content"><span class="watch-eyebrow">WITHU WATCH · 今日推荐</span><h1><?php echo e($featured['name']); ?></h1><p><?php echo e(mb_substr((string)($featuredItem['summary'] ?? ''), 0, 100)); ?></p><div class="watch-hero-meta"><?php echo e($featuredItem['rating'] ? '评分 ' . $featuredItem['rating'] : ''); ?><?php echo $featuredItem['rating'] ? ' · ' : ''; ?><?php echo e($featuredItem['resolution'] ?: ''); ?><?php echo count($featured['items']) > 1 ? ' · ' . count($featured['items']) . ' 集' : ''; ?></div><a class="watch-primary-action" href="/watch_play.php?media_id=<?php echo (int)$featuredItem['id']; ?>"><span aria-hidden="true">▶</span> 立即播放</a></div></section>
-  <?php endif; ?>
+<header class="site-header">
+  <a class="brand" href="/watch.php"><span class="brand-mark">🌸</span>樱视<em>withU 共享观影</em></a>
+  <label class="search-box"><span class="s-icon">⌕</span><input id="watchSearch" placeholder="模糊搜索片名、演员、年份 或 直接搜 cz 厂长资源"></label>
+  <nav class="header-links">
+    <a href="/watch_history.php">历史</a>
+    <a class="hide-m" href="#cz">cz 资源</a>
+    <a class="hide-m" href="/">情侣空间</a>
+  </nav>
+</header>
 
-  <?php if (!$isBrowsePage): ?>
-  <section id="watchLastWatchedSection" class="watch-section"><div class="watch-section-head"><h2>上次观看</h2><span>按最新观看记录显示 · <?php echo count($recent); ?> 部</span><a class="watch-more-link" href="/watch_history.php">显示更多</a></div><div class="watch-grid watch-grid-last-watched">
-    <?php foreach ($recentGroups as $item): $duration = max(0, (int)($item['duration_ms'] ?? 0)); $position = max(0, (int)($item['last_position_ms'] ?? 0)); $progress = $duration > 0 ? min(100, round($position / $duration * 100)) : 0; ?>
-     <a class="watch-card" data-watch-title="<?php echo e(($item['series_name'] ?? '') . ' ' . $item['file_name']); ?>" href="/watch_play.php?media_id=<?php echo (int)$item['id']; ?>"><div class="watch-card-cover"><img loading="lazy" src="/api/media_cover.php?id=<?php echo (int)$item['id']; ?>" alt=""><?php echo withu_media_quality_badge_html($item); ?><span class="watch-card-badge"><?php echo e($item['episode_number'] ? '第 ' . $item['episode_number'] . ' 集' : '继续观看'); ?></span></div><div class="watch-card-body"><div class="watch-card-title"><?php echo e($item['series_name']); ?></div><div class="watch-card-meta"><?php echo e($item['episode_number'] ? '第 ' . $item['episode_number'] . ' 集' : $item['file_name']); ?></div><div class="watch-progress"><i style="width:<?php echo $progress; ?>%"></i></div></div></a>
-    <?php endforeach; ?>
-  </div><?php if (empty($recentGroups)): ?><div class="watch-empty">还没有达到记录条件的观看历史。</div><?php endif; ?></section>
-  <?php endif; ?>
+<?php if (!$isBrowsePage): ?>
+<section class="hero" id="hero"></section>
+<?php endif; ?>
 
-  <?php if (!$isBrowsePage): ?><div id="watchCategorySections">
-  <?php foreach ($categoryOrder as $typeId): $typeName = $typeNames[$typeId]; $category = array_slice($categoryGroups[$typeId] ?? [], 0, 14); if (!$category && $typeId !== 1) continue; ?>
-  <section class="watch-section watch-category-section" data-watch-type="<?php echo $typeId; ?>"><div class="watch-section-head"><h2><?php echo e($typeName); ?></h2><span><?php echo count($categoryGroups[$typeId] ?? []); ?> 部</span><a class="watch-more-link" href="/watch.php?type=<?php echo $typeId; ?>">显示更多</a></div><div class="watch-grid">
-    <?php foreach ($category as $group): $item = $group['items'][0]; $episodeCount = count($group['items']); ?><a class="watch-card" data-watch-title="<?php echo e($group['name']); ?>" href="/watch_play.php?media_id=<?php echo (int)$item['id']; ?>"><div class="watch-card-cover"><img loading="lazy" src="/api/media_cover.php?id=<?php echo (int)$item['id']; ?>" alt=""><?php echo withu_media_quality_badge_html($item); ?><span class="watch-card-badge"><?php echo $episodeCount > 1 ? $episodeCount . ' 集' : '播放'; ?></span></div><div class="watch-card-body"><div class="watch-card-title"><?php echo e($group['name']); ?></div><div class="watch-card-meta"><?php echo e($item['rating'] ? '评分 ' . $item['rating'] . ' · ' : ''); ?><?php echo e($item['resolution'] ?: '分辨率未知'); ?></div></div></a><?php endforeach; ?>
-  </div><?php if (!$category): ?><div class="watch-empty">暂无已识别的<?php echo e($typeName); ?>资源。</div><?php endif; ?></section>
-  <?php endforeach; ?>
-  </div><?php endif; ?>
+<div class="page">
+  <nav class="side-nav" id="sideNav">
+    <a class="side-link" href="#recent"><span class="side-icon">▶</span><span class="side-txt">最近播放</span></a>
+    <a class="side-link" href="#movie"><span class="side-icon">🎬</span><span class="side-txt">热门电影</span></a>
+    <a class="side-link" href="#tv"><span class="side-icon">📺</span><span class="side-txt">热门剧集</span></a>
+    <a class="side-link" href="#library"><span class="side-icon">🗂</span><span class="side-txt">影视库</span></a>
+  </nav>
 
-  <section id="watchAllSection" class="watch-section"><div class="watch-section-head"><h2 id="watchGridTitle"><?php echo e($isBrowsePage ? $pageTitle : '全部影片'); ?></h2><span id="watchGridCount"><?php echo count($groups); ?> 部</span><?php if ($isBrowsePage): ?><a class="watch-more-link" href="/watch.php">返回资源库</a><?php else: ?><a class="watch-more-link" href="/watch.php?all=1">显示更多</a><?php endif; ?></div><div id="watchGrid" class="watch-grid">
-    <?php foreach (($isBrowsePage ? $groups : $allGroups) as $group): $first = $group['items'][0]; $episodeCount = count($group['items']); ?>
-    <a class="watch-card" data-watch-title="<?php echo e($group['name']); ?>" href="/watch_play.php?media_id=<?php echo (int)$first['id']; ?>"><div class="watch-card-cover"><img loading="lazy" src="/api/media_cover.php?id=<?php echo (int)$first['id']; ?>" alt=""><?php echo withu_media_quality_badge_html($first); ?><span class="watch-card-badge"><?php echo $episodeCount > 1 ? $episodeCount . ' 集' : '播放'; ?></span></div><div class="watch-card-body"><div class="watch-card-title"><?php echo e($group['name']); ?></div><div class="watch-card-meta"><?php echo e($first['rating'] ? '评分 ' . $first['rating'] . ' · ' : ''); ?><?php echo e($first['resolution'] ?: '分辨率未知'); ?></div></div></a>
-    <?php endforeach; ?>
-  </div><div id="watchSearchState" class="watch-home-note" hidden></div><?php if (empty($groups)): ?><div class="watch-empty"><?php echo $isBrowsePage && $isCategoryPage ? '该分类暂无已识别影视资源。' : ($isAllPage ? '暂无已识别影视资源。' : '媒体库暂无影片，请在后台扫描 OpenList。'); ?></div><?php endif; ?></section>
-  <button id="watchLoadMore" class="watch-load-more" type="button" hidden>加载更多</button>
-</main>
+  <div class="main-col">
+    <?php if (!$isBrowsePage): ?>
+    <section class="section" id="recent" style="--sec-accent:var(--pink);--sec-soft:var(--pink-soft)">
+      <div class="section-head"><span class="sec-accent"></span><h2>最近播放</h2><span class="sec-note">继续上次的进度</span><a class="sec-more" href="/watch_history.php">全部历史 ›</a></div>
+      <?php if (empty($recentGroups)): ?>
+        <div class="empty">还没有达到记录条件的观看历史，去看一部片吧。</div>
+      <?php else: ?>
+      <div class="rail-wrap">
+        <button class="rail-arrow prev" type="button" aria-label="向左">‹</button>
+        <div class="rail" id="recentRail">
+          <?php foreach ($recentGroups as $item): $duration = max(0, (int)($item['duration_ms'] ?? 0)); $position = max(0, (int)($item['last_position_ms'] ?? 0)); $progress = $duration > 0 ? min(100, round($position / $duration * 100)) : 0; ?>
+          <a class="card" href="/watch_play.php?media_id=<?php echo (int)$item['id']; ?>" data-watch-title="<?php echo e(($item['series_name'] ?? '') . ' ' . $item['file_name']); ?>">
+            <img class="poster" loading="lazy" src="/api/media_cover.php?id=<?php echo (int)$item['id']; ?>" alt="">
+            <span class="tag"><?php echo e($item['episode_number'] ? '第 ' . $item['episode_number'] . ' 集' : '继续观看'); ?></span>
+            <span class="name"><?php echo e($item['series_name']); ?></span>
+            <span class="cont-badge">继续观看 · <?php echo $progress; ?>%</span>
+            <span class="progress-bar"><i style="--pct:<?php echo $progress; ?>%"></i></span>
+          </a>
+          <?php endforeach; ?>
+        </div>
+        <button class="rail-arrow next" type="button" aria-label="向右">›</button>
+      </div>
+      <?php endif; ?>
+    </section>
+    <?php endif; ?>
+
+    <section class="section" id="movie" style="--sec-accent:var(--blue);--sec-soft:var(--blue-soft)">
+      <div class="section-head"><span class="sec-accent"></span><h2>热门电影</h2><span class="sec-note">豆瓣新片 · 点击卡片用 cz 源搜索资源</span><a class="sec-more" href="/cz_player.php" target="_blank">cz 播放器 ›</a></div>
+      <div class="grid" id="movieGrid"><div class="empty">正在加载豆瓣新片…</div></div>
+    </section>
+
+    <section class="section" id="tv" style="--sec-accent:var(--green);--sec-soft:var(--green-soft)">
+      <div class="section-head"><span class="sec-accent"></span><h2>热门剧集</h2><span class="sec-note">豆瓣新剧 · 点击卡片用 cz 源搜索资源</span></div>
+      <div class="grid" id="tvGrid"><div class="empty">正在加载豆瓣新剧…</div></div>
+    </section>
+
+    <section class="section" id="cz" hidden style="--sec-accent:var(--pink);--sec-soft:var(--pink-soft)">
+      <div class="section-head"><span class="sec-accent"></span><h2><span class="src-badge">cz</span> 厂长资源</h2><span class="sec-note" id="czResultNote"></span></div>
+      <div class="grid" id="czResultGrid"></div>
+    </section>
+
+    <section class="section" id="library" style="--sec-accent:var(--pink);--sec-soft:var(--pink-soft)">
+      <div class="section-head"><span class="sec-accent"></span><h2 id="libraryTitle"><?php echo e($isBrowsePage ? $pageTitle : '影视库'); ?></h2><span class="sec-note" id="libraryCount"><?php echo count($groups); ?> 部</span><?php if ($isBrowsePage): ?><a class="sec-more" href="/watch.php">返回首页 ›</a><?php else: ?><a class="sec-more" href="/watch.php?all=1">显示更多 ›</a><?php endif; ?></div>
+      <div class="grid" id="libraryGrid">
+        <?php foreach (($isBrowsePage ? $groups : $allGroups) as $group): $first = $group['items'][0]; $episodeCount = count($group['items']); ?>
+        <a class="card" href="/watch_play.php?media_id=<?php echo (int)$first['id']; ?>" data-watch-title="<?php echo e($group['name']); ?>">
+          <img class="poster" loading="lazy" src="/api/media_cover.php?id=<?php echo (int)$first['id']; ?>" alt="">
+          <?php if ($first['rating']): ?><span class="rate"><?php echo e($first['rating']); ?></span><?php endif; ?>
+          <span class="mask"></span><span class="play-btn">▶</span>
+          <span class="tag"><?php echo $episodeCount > 1 ? $episodeCount . ' 集' : '播放'; ?></span>
+          <span class="name"><?php echo e($group['name']); ?></span>
+        </a>
+        <?php endforeach; ?>
+      </div>
+      <div id="libraryState" class="sec-note" style="margin-top:.6rem" hidden></div>
+      <?php if (empty($groups)): ?><div class="empty"><?php echo $isBrowsePage && $isCategoryPage ? '该分类暂无已识别影视资源。' : ($isAllPage ? '暂无已识别影视资源。' : '媒体库暂无影片，稍后再来看看吧。'); ?></div><?php endif; ?>
+    </section>
+  </div>
+</div>
+
 <script>
 (function(){
-  var search=document.getElementById('watchSearch'), grid=document.getElementById('watchGrid'), title=document.getElementById('watchGridTitle'), count=document.getElementById('watchGridCount'), state=document.getElementById('watchSearchState'), more=document.getElementById('watchLoadMore'), recentSection=document.getElementById('watchLastWatchedSection'), categorySections=document.getElementById('watchCategorySections'), categoryTypeId=<?php echo (int)$requestedTypeId; ?>, categoryTitle=<?php echo json_encode($pageTitle, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES); ?>, browseTitle=<?php echo json_encode($isBrowsePage ? $pageTitle : '全部影片', JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES); ?>, controller=null, searchPage=1, searching=false;
-  function esc(value){return String(value==null?'':value).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];});}
-  function badge(item){var text=String((item&&item.quality_text)||((item&&item.resolution)||'')).toUpperCase();if(/4K|2160P|UHD/.test(text))return '<span class="resolution-badge is-4k"><img src="/assets/images/4k-badge.png" alt="4K"></span>';if(/2K|1440P|QHD/.test(text))return '<span class="resolution-badge is-2k">2K</span>';if(/蓝光|BLU/.test(text))return '<span class="resolution-badge is-bluray">蓝光</span>';return '';}
-  function card(item){var name=item.group_name||item.series_name||item.file_name||'未命名影视';var countText=(item.episode_count||1)>1?item.episode_count+' 集':'播放';return '<a class="watch-card" data-watch-title="'+esc(name)+'" href="/watch_play.php?media_id='+Number(item.id)+'"><div class="watch-card-cover"><img loading="lazy" src="/api/media_cover.php?id='+Number(item.id)+'" alt="">'+badge(item)+'<span class="watch-card-badge">'+countText+'</span></div><div class="watch-card-body"><div class="watch-card-title">'+esc(name)+'</div><div class="watch-card-meta">'+(item.rating?'评分 '+esc(item.rating)+' · ':'')+esc(item.resolution||'分辨率未知')+'</div></div></a>';}
-  function bindImages(){}
-  function setSearchView(active){searching=active; if(recentSection)recentSection.hidden=active; if(categorySections)categorySections.hidden=active; if(more)more.hidden=!active; if(title)title.textContent=active?(categoryTypeId?categoryTitle+'搜索结果':'搜索结果'):browseTitle;}
-  async function loadSearch(append){var q=search.value.trim();if(!q){if(searching)location.reload();return;}if(controller)controller.abort();controller=new AbortController();if(!append)searchPage=1;var url='/api/media.php?action=library&q='+encodeURIComponent(q)+'&page='+searchPage+'&limit=24';if(categoryTypeId)url+='&type_id='+categoryTypeId;if(!append){grid.innerHTML='<div class="watch-empty">正在搜索…</div>';setSearchView(true);}try{var response=await fetch(url,{credentials:'same-origin',signal:controller.signal});var data=await response.json();if(!data.success)throw new Error(data.message||'搜索失败');if(!append)grid.innerHTML='';(data.items||[]).forEach(function(item){grid.insertAdjacentHTML('beforeend',card(item));});if(count)count.textContent=(data.items||[]).length+' 条';if(state){state.hidden=false;state.textContent=(data.items||[]).length?'支持片名、别名、演员、年份和集标题的模糊匹配':'没有找到匹配的影视资源';}if(more){more.hidden=!data.has_more;more.textContent='加载更多';}bindImages();}catch(error){if(error.name==='AbortError')return;grid.innerHTML='<div class="watch-empty">'+esc(error.message||'搜索失败，请重试')+'</div>';if(more)more.hidden=true;}}
-  var timer=null;if(search)search.addEventListener('input',function(){clearTimeout(timer);timer=setTimeout(function(){loadSearch(false);},280);});if(more)more.addEventListener('click',function(){searchPage++;loadSearch(true);});
-  if(grid)grid.addEventListener('error',function(event){var image=event.target;if(!image||image.tagName!=='IMG'||image.dataset.fallback)return;image.dataset.fallback='1';image.src='/assets/images/Coverloaderror.jpg';},true);
-  document.querySelectorAll('.watch-card-cover img').forEach(function(image){image.decoding='async';});
-  document.addEventListener('DOMContentLoaded',function(){requestAnimationFrame(function(){var loading=document.getElementById('watchLoading');if(loading)loading.classList.add('is-hidden');});});
+  'use strict';
+  var isBrowse = <?php echo $isBrowsePage ? 'true' : 'false'; ?>;
+  var categoryTypeId = <?php echo (int)$requestedTypeId; ?>;
+  var searchPage = 1, controller = null, searching = false;
+
+  function esc(v){return String(v==null?'':v).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];});}
+
+  /* ============ 豆瓣数据 ============ */
+  var movieGrid=document.getElementById('movieGrid'), tvGrid=document.getElementById('tvGrid');
+  var heroEl=document.getElementById('hero'), heroTimer=null, heroIdx=0, heroSlides=[];
+  function doubanCard(item){
+    var r = item.rate ? Number(item.rate).toFixed(1) : 0;
+    var eps = item.episodes_info || '';
+    return '<a class="card card-douban" data-cz-title="'+esc(item.title)+'" href="javascript:void(0)" onclick="withuCzSearch(this.dataset.czTitle)">'
+      + '<img class="poster" loading="lazy" src="'+esc(item.cover)+'" alt="">'
+      + '<span class="rate'+(r?'':' none')+'">'+(r?'评分 '+r:'暂无评分')+'</span>'
+      + '<span class="mask"></span><span class="play-btn">▶</span>'
+      + '<span class="badge-douban">豆瓣</span>'
+      + '<span class="name">'+esc(item.title)+'</span>'
+      + (eps ? '<span class="eps">'+esc(eps)+'</span>' : '')
+      + '</a>';
+  }
+  function renderDoubanGrid(type,list){
+    var grid = type==='movie' ? movieGrid : tvGrid;
+    if(!grid) return;
+    if(!list || !list.length){grid.innerHTML='<div class="empty">豆瓣榜单暂时无法获取。</div>';return;}
+    grid.innerHTML = list.map(doubanCard).join('');
+    revealIn(grid);
+  }
+  function buildHero(){
+    if(!heroEl || !heroSlides.length) return;
+    heroEl.innerHTML = heroSlides.map(function(s,i){
+      return '<div class="slide'+(i===0?' active':'')+'" data-idx="'+i+'">'
+        + '<img class="bg" src="'+esc(s.bg)+'" alt="">'
+        + '<div class="shade"></div>'
+        + '<div class="content">'
+        + '<span class="badge elem">'+esc(s.badge)+'</span>'
+        + '<h1 class="elem">'+esc(s.title)+'</h1>'
+        + '<div class="rating elem">'+esc(s.rating)+'</div>'
+        + '<p class="desc elem">'+esc(s.desc)+'</p>'
+        + '<a class="cta elem" href="javascript:void(0)" onclick="withuCzSearch(\''+esc(s.title).replace(/'/g,"\\'")+'\')">▶ 用 cz 源搜索资源</a>'
+        + '</div></div>';
+    }).join('');
+    heroEl.insertAdjacentHTML('beforeend','<button class="arrow prev" type="button">‹</button><button class="arrow next" type="button">›</button><div class="dots">'+heroSlides.map(function(_,i){return '<i data-i="'+i+'"'+(i===0?' class="active"':'')+'></i>';}).join('')+'</div>');
+    heroEl.querySelector('.arrow.prev').addEventListener('click',function(){gotoHero(heroIdx-1);});
+    heroEl.querySelector('.arrow.next').addEventListener('click',function(){gotoHero(heroIdx+1);});
+    heroEl.querySelectorAll('.dots i').forEach(function(dot){dot.addEventListener('click',function(){gotoHero(Number(dot.dataset.i));});});
+    heroEl.addEventListener('mouseenter',stopHero);
+    heroEl.addEventListener('mouseleave',startHero);
+    startHero();
+  }
+  function gotoHero(i){
+    if(!heroSlides.length) return;
+    heroIdx = (i + heroSlides.length) % heroSlides.length;
+    heroEl.querySelectorAll('.slide').forEach(function(s){s.classList.toggle('active', Number(s.dataset.idx)===heroIdx);});
+    heroEl.querySelectorAll('.dots i').forEach(function(d,i2){d.classList.toggle('active', i2===heroIdx);});
+  }
+  function startHero(){ if(heroTimer||!heroSlides.length) return; heroTimer=setInterval(function(){gotoHero(heroIdx+1);},5800); }
+  function stopHero(){ if(heroTimer){clearInterval(heroTimer);heroTimer=null;} }
+  function loadDouban(){
+    function done(type,d){
+      if(d && d.success && d.list && d.list.length){
+        if(type==='movie'){
+          renderDoubanGrid('movie', d.list.slice(0,12));
+          heroSlides = heroSlides.concat(d.list.slice(0,3).map(function(m){return {bg:m.cover,badge:'豆瓣新片',title:m.title,rating:m.rate?'评分 '+Number(m.rate).toFixed(1):'',desc:m.desc||'',src:'movie'};}));
+        } else {
+          renderDoubanGrid('tv', d.list.slice(0,12));
+          heroSlides = heroSlides.concat(d.list.slice(0,3).map(function(m){return {bg:m.cover,badge:'豆瓣新剧',title:m.title,rating:m.rate?'评分 '+Number(m.rate).toFixed(1):'',desc:m.desc||'',src:'tv'};}));
+        }
+        if(heroSlides.length) buildHero();
+      } else if(type==='movie' && movieGrid){
+        movieGrid.innerHTML='<div class="empty">'+(d&&d.message?esc(d.message):'豆瓣榜单加载失败')+'</div>';
+      } else if(type==='tv' && tvGrid){
+        tvGrid.innerHTML='<div class="empty">'+(d&&d.message?esc(d.message):'豆瓣榜单加载失败')+'</div>';
+      }
+    }
+    fetch('/api/douban_chart.php?type=movie&limit=12',{credentials:'same-origin'}).then(function(r){return r.json();}).then(function(d){done('movie',d);}).catch(function(){done('movie',null);});
+    fetch('/api/douban_chart.php?type=tv&limit=12',{credentials:'same-origin'}).then(function(r){return r.json();}).then(function(d){done('tv',d);}).catch(function(){done('tv',null);});
+  }
+
+  /* ============ cz 联动 ============ */
+  var czSec=document.getElementById('cz'), czGrid=document.getElementById('czResultGrid'), czNote=document.getElementById('czResultNote');
+  function czCard(item){
+    var poster = item.poster || '';
+    var metaLine = [item.year, (item.types||[]).join('、')].filter(Boolean).join(' · ');
+    return '<a class="card card-cz" href="/watch_play.php?source=cz&url='+encodeURIComponent(item.url)+'">'
+      + (poster
+          ? '<img class="poster" loading="lazy" src="'+esc(poster)+'" alt="">'
+          : '<div class="ph">▶</div>')
+      + '<span class="badge-cz">cz</span>'
+      + '<span class="mask"></span>'
+      + '<span class="tag">厂长资源</span>'
+      + '<span class="name">'+esc(item.title)+'</span>'
+      + (metaLine ? '<span class="eps">'+esc(metaLine)+'</span>' : '')
+      + '</a>';
+  }
+  function renderCz(list,q){
+    if(!czSec) return;
+    if(!list || !list.length){
+      czSec.hidden=false;
+      czGrid.innerHTML='<div class="empty">cz 源未找到「'+esc(q)+'」的匹配资源。</div>';
+      czNote.textContent='';
+      return;
+    }
+    czSec.hidden=false;
+    czGrid.innerHTML=list.map(czCard).join('');
+    czNote.textContent='「'+q+'」匹配 '+list.length+' 条 · 编码 cz';
+    revealIn(czGrid);
+  }
+  function czSearch(title){
+    if(!title) return;
+    if(czSec){czSec.hidden=false;czGrid.innerHTML='<div class="empty">正在用 cz 源搜索「'+esc(title)+'」…</div>';czNote.textContent='';}
+    fetch('/api/cz.php?action=search&q='+encodeURIComponent(title),{credentials:'same-origin'})
+      .then(function(r){return r.json();})
+      .then(function(d){ if(d && d.success) renderCz(d.list,title); else renderCz(null,title); })
+      .catch(function(){ renderCz(null,title); });
+    if(czSec) czSec.scrollIntoView({behavior:'smooth',block:'start'});
+  }
+  window.withuCzSearch = czSearch;
+
+  /* ============ 本地库搜索 ============ */
+  var search=document.getElementById('watchSearch'), libGrid=document.getElementById('libraryGrid'),
+      libTitle=document.getElementById('libraryTitle'), libCount=document.getElementById('libraryCount'), libState=document.getElementById('libraryState');
+  function badgeHtml(item){
+    var text=String((item&&item.quality_text)||((item&&item.resolution)||'')).toUpperCase();
+    if(/4K|2160P|UHD/.test(text)) return '<span class="rate" style="background:linear-gradient(135deg,#fff1a8,#d69a17)">4K</span>';
+    return '';
+  }
+  function libCard(item){
+    var name=item.group_name||item.series_name||item.file_name||'未命名影视';
+    var countText=(item.episode_count||1)>1?item.episode_count+' 集':'播放';
+    return '<a class="card" data-watch-title="'+esc(name)+'" href="/watch_play.php?media_id='+Number(item.id)+'">'
+      + '<img class="poster" loading="lazy" src="/api/media_cover.php?id='+Number(item.id)+'" alt="">'
+      + (item.rating?'<span class="rate">'+esc(item.rating)+'</span>':'')
+      + '<span class="mask"></span><span class="play-btn">▶</span>'
+      + '<span class="tag">'+countText+'</span>'
+      + '<span class="name">'+esc(name)+'</span>'
+      + '</a>';
+  }
+  async function loadSearch(append){
+    var q=search.value.trim();
+    if(!q){ if(searching) location.reload(); return; }
+    if(controller) controller.abort();
+    controller=new AbortController();
+    if(!append) searchPage=1;
+    var url='/api/media.php?action=library&q='+encodeURIComponent(q)+'&page='+searchPage+'&limit=24';
+    if(categoryTypeId) url+='&type_id='+categoryTypeId;
+    if(!append){libGrid.innerHTML='<div class="empty">正在搜索…</div>';searching=true;libTitle.textContent=categoryTypeId?'搜索结果':'搜索结果';}
+    try{
+      var response=await fetch(url,{credentials:'same-origin',signal:controller.signal});
+      var data=await response.json();
+      if(!data.success) throw new Error(data.message||'搜索失败');
+      if(!append) libGrid.innerHTML='';
+      (data.items||[]).forEach(function(item){libGrid.insertAdjacentHTML('beforeend',libCard(item));});
+      if(libCount) libCount.textContent=(data.items||[]).length+' 条';
+      if(libState){libState.hidden=false;libState.textContent=(data.items||[]).length?'支持片名、别名、演员、年份和集标题的模糊匹配':'没有找到匹配的影视资源';}
+      revealIn(libGrid);
+    }catch(error){
+      if(error.name==='AbortError') return;
+      libGrid.innerHTML='<div class="empty">'+esc(error.message||'搜索失败，请重试')+'</div>';
+    }
+  }
+  function loadCzSearch(q){
+    if(!q){ if(czSec) czSec.hidden=true; return; }
+    czSearch(q);
+  }
+  var timer=null;
+  if(search) search.addEventListener('input',function(){
+    clearTimeout(timer);
+    timer=setTimeout(function(){ loadSearch(false); loadCzSearch(search.value.trim()); },320);
+  });
+
+  /* ============ 入场动画 ============ */
+  var io=null;
+  function revealIn(wrap){
+    var cards = wrap.querySelectorAll('.card:not(.in)');
+    if(!cards.length) return;
+    cards.forEach(function(c,i){ c.style.setProperty('--stagger', (i%10)*55+'ms'); });
+    if(!('IntersectionObserver' in window)){ cards.forEach(function(c){c.classList.add('in');}); return; }
+    io = io || new IntersectionObserver(function(entries){
+      entries.forEach(function(en){
+        if(en.isIntersecting){ en.target.classList.add('in'); io.unobserve(en.target); }
+      });
+    },{rootMargin:'0px 0px -40px 0px'});
+    cards.forEach(function(c){ io.observe(c); });
+  }
+
+  /* ============ 侧边导航滚动联动 + scroll spy ============ */
+  var sideNav=document.getElementById('sideNav'), recentSec=document.getElementById('recent');
+  function placeNav(){
+    if(!sideNav || !recentSec) return;
+    if(window.innerWidth<=1000){ sideNav.classList.remove('is-down'); return; }
+    var rect=recentSec.getBoundingClientRect();
+    var center=rect.top + rect.height/2;
+    sideNav.style.setProperty('--recent-center', center+'px');
+    var heroRect=document.getElementById('hero') ? document.getElementById('hero').getBoundingClientRect() : {height:0,top:0};
+    if(window.scrollY < heroRect.height*0.6){ sideNav.classList.add('is-down'); } else { sideNav.classList.remove('is-down'); }
+  }
+  var rafPending=false;
+  window.addEventListener('scroll',function(){ if(rafPending) return; rafPending=true; requestAnimationFrame(function(){ rafPending=false; placeNav(); }); },{passive:true});
+  window.addEventListener('resize',function(){ placeNav(); });
+  if(sideNav && document.querySelectorAll('.section').length){
+    var spy=new IntersectionObserver(function(entries){
+      entries.forEach(function(en){
+        if(en.isIntersecting){
+          sideNav.querySelectorAll('.side-link').forEach(function(a){ a.classList.toggle('active', a.getAttribute('href')==='#'+en.target.id); });
+        }
+      });
+    },{rootMargin:'-40% 0px -55% 0px'});
+    document.querySelectorAll('.section').forEach(function(s){ spy.observe(s); });
+  }
+
+  /* ============ 轨道滚动 ============ */
+  document.querySelectorAll('.rail-wrap').forEach(function(wrap){
+    var rail=wrap.querySelector('.rail');
+    var prev=wrap.querySelector('.rail-arrow.prev'), next=wrap.querySelector('.rail-arrow.next');
+    if(prev) prev.addEventListener('click',function(){ rail.scrollBy({left:-600,behavior:'smooth'}); });
+    if(next) next.addEventListener('click',function(){ rail.scrollBy({left:600,behavior:'smooth'}); });
+  });
+
+  /* ============ 图片错误 fallback ============ */
+  document.addEventListener('error',function(event){
+    var image=event.target;
+    if(!image || image.tagName!=='IMG' || image.dataset.fallback) return;
+    if(image.src.indexOf('Coverloaderror')>=0) return;
+    image.dataset.fallback='1';
+    image.src='/assets/images/Coverloaderror.jpg';
+  },true);
+
+  /* ============ 启动 ============ */
+  document.addEventListener('DOMContentLoaded',function(){
+    requestAnimationFrame(function(){
+      var loading=document.getElementById('watchLoading');
+      if(loading) loading.classList.add('is-hidden');
+      revealIn(document.getElementById('recentRail')||document.body);
+      revealIn(document.getElementById('libraryGrid'));
+      if(!isBrowse) loadDouban();
+      placeNav();
+    });
+  });
+  window.addEventListener('load',placeNav);
 })();
 </script>
 </body>

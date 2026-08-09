@@ -129,15 +129,8 @@ $logoPreviewUrl = $logoImage !== '' ? upload_url($logoImage) : '/assets/images/w
 $logoBgStyle = withu_player_logo_bg_style($logoBgPreset, $logoBgColor);
 ?>
 <section class="admin-page-title player-settings-title">
-    <div class="player-settings-breadcrumb">
-        <a href="/admin/index.php">后台首页</a>
-        <span>/</span>
-        <span>影视与播放</span>
-        <span>/</span>
-        <strong>播放器设置</strong>
-    </div>
-    <h1>wituUPlayer 播放器设置</h1>
-    <p>播放器仅从 WebDAV 获取 OpenList 签名直链，不包含采集、JSON 解析或代理转码。</p>
+    <h1>播放器设置</h1>
+    <p>管理播放器品牌、播放行为与加载提示。</p>
 </section>
 
 <?php if ($error): ?><div class="admin-alert admin-alert-error"><?php echo e($error); ?></div><?php endif; ?>
@@ -146,17 +139,15 @@ $logoBgStyle = withu_player_logo_bg_style($logoBgPreset, $logoBgColor);
 <form method="post" enctype="multipart/form-data" class="player-settings-form">
     <?php echo csrf_field(); ?><input type="hidden" name="action" value="save">
 
-    <section class="admin-card player-settings-card">
+    <section class="admin-card player-settings-card player-brand-card">
         <div class="admin-card-header">
             <div>
-                <div class="player-section-kicker">播放器呈现与交互</div>
                 <div class="admin-card-title">界面展示</div>
-                <div class="admin-card-subtitle">管理播放器的品牌信息、主题、台标和右键交互。</div>
+                <div class="admin-card-subtitle">标题、台标与右键菜单。</div>
             </div>
-            <span class="player-section-index">01</span>
-        </div>
+                    </div>
 
-        <div class="player-settings-grid">
+        <div class="player-settings-grid player-brand-fields">
             <label>播放器名称
                 <input name="MIZHI[title]" value="<?php echo e(withu_art_setting($settings, 'art_player_title')); ?>">
             </label>
@@ -181,7 +172,7 @@ $logoBgStyle = withu_player_logo_bg_style($logoBgPreset, $logoBgColor);
             </label>
         </div>
 
-        <div class="player-settings-grid" style="margin-top:.9rem;">
+        <div class="player-settings-grid player-logo-settings-grid" style="margin-top:.9rem;">
             <label class="player-field-wide">台标文件
                 <div class="player-logo-upload-row" data-logo-preview data-default-logo="<?php echo e('/assets/images/withu-logo.png'); ?>" data-default-background="<?php echo e($logoBgStyle); ?>">
                     <div class="player-logo-preview-stage" data-logo-preview-stage style="background:<?php echo e($logoBgStyle); ?>">
@@ -214,15 +205,13 @@ $logoBgStyle = withu_player_logo_bg_style($logoBgPreset, $logoBgColor);
         <?php endif; ?>
     </section>
 
-    <section class="admin-card player-settings-card">
+    <section class="admin-card player-settings-card player-behavior-card">
         <div class="admin-card-header">
             <div>
-                <div class="player-section-kicker">播放策略与运行行为</div>
                 <div class="admin-card-title">播放控制</div>
-                <div class="admin-card-subtitle">管理倍速、自动衔接、加载等待和播放异常处理。</div>
+                <div class="admin-card-subtitle">倍速、自动播放与异常提示。</div>
             </div>
-            <span class="player-section-index">02</span>
-        </div>
+                    </div>
 
         <div class="player-settings-grid">
             <label>默认倍速
@@ -232,13 +221,13 @@ $logoBgStyle = withu_player_logo_bg_style($logoBgPreset, $logoBgColor);
                     <?php endforeach; ?>
                 </select>
             </label>
-            <label>继续播放等待秒数
+            <label>继续播放等待
                 <input type="number" min="0" max="60" name="MIZHI[waittime]" value="<?php echo (int)withu_art_setting($settings, 'art_player_waittime'); ?>">
-                <small>设置为 0 表示不等待。</small>
+                <small>0 秒不等待。</small>
             </label>
             <label>加载背景
                 <input type="text" inputmode="url" autocomplete="url" name="MIZHI[load_bg]" value="<?php echo e(withu_art_setting($settings, 'art_player_load_bg')); ?>">
-                <small>支持本地路径、动态 GIF 或在线图床 URL。</small>
+                <small>支持本地或在线图片。</small>
             </label>
             <label class="player-toggle-field">
                 <span>
@@ -262,7 +251,7 @@ $logoBgStyle = withu_player_logo_bg_style($logoBgPreset, $logoBgColor);
             <button class="btn btn-primary" type="submit"><i class="fas fa-check"></i>保存设置</button>
             <button class="btn btn-secondary" type="submit" name="action" value="reset" onclick="return confirm('确定恢复播放器默认设置吗？');"><i class="fas fa-rotate-left"></i>恢复默认</button>
         </div>
-        <span>修改后保存即可应用到下一次播放。</span>
+        <span>保存后立即生效。</span>
     </div>
 </form>
 <script>

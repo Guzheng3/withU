@@ -9,12 +9,12 @@
             <span>概览</span>
         </a>
         <a href="/admin/articles.php"
-           class="admin-tab-item <?php echo in_array($adminPage, ['articles', 'albums', 'messages', 'events'], true) ? 'admin-tab-item-active' : ''; ?>">
+           class="admin-tab-item <?php echo in_array($adminPage, ['articles', 'albums', 'messages', 'events', 'map'], true) ? 'admin-tab-item-active' : ''; ?>">
             <i class="fas fa-layer-group"></i>
             <span>内容</span>
         </a>
-        <a href="/admin/media.php"
-           class="admin-tab-item <?php echo in_array($adminPage, ['media', 'media_catalog', 'media_resources', 'together_settings', 'player_settings', 'player_art'], true) ? 'admin-tab-item-active' : ''; ?>">
+        <a href="/admin/player_art.php"
+           class="admin-tab-item <?php echo in_array($adminPage, ['together_settings', 'player_settings', 'player_art'], true) ? 'admin-tab-item-active' : ''; ?>">
             <i class="fas fa-film"></i>
             <span>影视</span>
         </a>

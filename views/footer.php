@@ -78,5 +78,6 @@
     ?>
 
     <script src="/assets/js/main.js"></script>
+    <script src="/assets/js/withu_lg_ui.js?v=withu-lg-20260808-2"></script>
 </body>
 </html>

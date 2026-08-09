@@ -46,3 +46,9 @@ desktop.ini
 
 # 本地测试数据脚本含测试账号，不提交到公共仓库
 /deploy/seed-test-data.php
+
+# 本地 WithU 开发运行数据
+/deploy-local/runtime/
+
+# 本地部署备份
+/deploy-local/*.bak*

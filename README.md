@@ -1,6 +1,6 @@
 # WithU
 
-WithU 是面向两位授权用户的私密影视资源库与一起看平台。项目提供影视目录、网页播放器、同步观影、聊天/弹幕、OpenList/WebDAV 资源接入、豆瓣元数据识别和后台管理，并提供可选的 Windows Qt 桌面客户端。
+WithU 是面向两位授权用户的情侣专属网站。项目提供点滴记录、留言墙、爱情相册、纪念事件、地图与足迹、天气旅行、一起看/同步观影、聊天/弹幕、网页播放器、后台管理，并提供可选的 Windows Qt 桌面客户端。
 
 项目地址：[GitHub](https://github.com/Guzheng3/withU.git)
 
@@ -9,7 +9,6 @@ WithU 是面向两位授权用户的私密影视资源库与一起看平台。�
 - **影视库**：`watch.php` 提供影视搜索、筛选、分组、最近播放和猜你喜欢。
 - **网页播放**：`watch_play.php` 支持 MP4、HLS、OpenList/WebDAV 来源、分集切换、播放历史和清晰度信息。
 - **一起看**：两位用户可加入同一房间，同步播放/暂停、拖动、倍速和换集；支持聊天、弹幕以及浏览器支持时的麦克风连线。
-- **媒体管理**：后台支持来源管理、目录扫描、分组、筛选、重复资源处理、批量操作和元数据识别。
 - **豆瓣信息**：识别海报、评分、类型、演员、简介、总集数和完结状态；播放页同时显示豆瓣总集数与库内集数。
 - **访问边界**：影视库、播放和管理功能默认只向现有的两位授权用户开放，不提供公开注册流程。
 - **桌面客户端**：可选 Windows Qt/libmpv/WebView2 客户端，复用 WithU 的网页资源和播放能力。
@@ -33,9 +32,9 @@ FFmpeg 不属于 GitHub 源码仓库，使用时请单独下载发布包，见�
 | `assets/` | CSS、JavaScript、字体和图片 |
 | `core/` | 认证、数据库、媒体目录、OpenList 和播放器公共逻辑 |
 | `database/` | 主站数据库结构 |
-| `deploy/` | Nginx、媒体库初始化和部署说明 |
+| `deploy/` | Nginx 和部署说明 |
 | `desktop/` | Windows Qt 桌面客户端源码 |
-| `scripts/` | 媒体库迁移、扫描、导入和维护脚本 |
+| `scripts/` | 维护脚本 |
 | `views/` | 页面模板和公共视图 |
 | `uploads/`、`runtime/`、`storage/`、`logs/` | 本地运行数据，不应提交到仓库 |
 
@@ -52,39 +51,7 @@ FFmpeg 不属于 GitHub 源码仓库，使用时请单独下载发布包，见�
 
 安装向导会生成 `config/database.php` 和 `.installed`。不要把这两个文件中的连接信息复制到 GitHub，也不要在 README、日志或工单中粘贴密码。
 
-### 初始化影视资源库
-
-影视库与主站库分开。先使用 MySQL 管理员执行 `deploy/init-media-db.sql`，然后运行迁移脚本：
-
-```powershell
-C:\WithU\tools\php82\php.exe -c C:\WithU\dev\php.ini C:\WithU\withU\scripts\migrate_media_db.php
-```
-
-在后台配置 OpenList/WebDAV 后，可使用导入脚本建立资源索引：
-
-```powershell
-C:\WithU\tools\php82\php.exe -c C:\WithU\dev\php.ini C:\WithU\withU\scripts\import_openlist_to_media.php
-```
-
-默认扫描只保存 WebDAV 路径和媒体元数据。OpenList 临时直链在播放时按需解析，避免保存过期链接。
-
-#### 定时增量同步
-
-使用增量同步脚本可按资源指纹跳过未变化文件，只重新处理新增或发生变化的资源；完整扫描确认成功后，远端已删除的资源也会从媒体库移除。发生 WebDAV 目录读取错误时会自动停止删除阶段，避免网络故障造成误删。
-
-手动执行一次：
-
-```powershell
-C:\WithU\tools\php82\php.exe -c C:\WithU\dev\php.ini C:\WithU\withU\scripts\sync_openlist_media.php
-```
-
-注册 Windows 每 15 分钟执行一次的计划任务：
-
-```powershell
-powershell -ExecutionPolicy Bypass -File C:\WithU\withU\scripts\register_openlist_sync_task.ps1
-```
-
-脚本使用 `runtime/openlist-sync.lock` 防止重复并发执行，扫描统计会写入 `media_scan_state`。
+影视数据表由运行时自动初始化，与主站库分离。
 
 ### 媒体库字段与播放链路
 

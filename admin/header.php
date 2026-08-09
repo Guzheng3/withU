@@ -35,9 +35,7 @@ $adminPageMeta = [
     'albums' => ['title' => '相册管理', 'section' => '内容管理'],
     'messages' => ['title' => '留言管理', 'section' => '内容管理'],
     'events' => ['title' => '纪念事件', 'section' => '内容管理'],
-    'media' => ['title' => '媒体配置', 'section' => '影视与播放'],
-    'media_catalog' => ['title' => '影视资源库', 'section' => '影视与播放'],
-    'media_resources' => ['title' => '资源列表', 'section' => '影视与播放'],
+    'map' => ['title' => '地图与足迹', 'section' => '情侣空间'],
     'together_settings' => ['title' => '一起看设置', 'section' => '影视与播放'],
     'player_settings' => ['title' => '播放器设置', 'section' => '影视与播放'],
     'player_art' => ['title' => '播放器设置', 'section' => '影视与播放'],
@@ -62,10 +60,10 @@ foreach (($themeConfig['colors'] ?? []) as $themeName => $themeValue) {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>管理后台 - <?php echo e(SITE_NAME); ?></title>
     <link rel="stylesheet" href="/assets/css/style.css?v=withu-logo-20260718">
-    <link rel="stylesheet" href="/assets/css/admin_v2.css?v=glass-v5">
+    <link rel="stylesheet" href="/assets/css/admin_v2.css?v=ui-polish-3">
     <link rel="stylesheet" href="/assets/css/theme.css?v=withu-theme-20260724-1">
-    <link rel="stylesheet" href="/assets/css/admin_pages.css?v=glass-v5">
-    <link rel="stylesheet" href="/assets/css/admin_apple.css?v=glass-v5">
+    <link rel="stylesheet" href="/assets/css/admin_pages.css?v=ui-polish-2">
+    <link rel="stylesheet" href="/assets/css/admin_apple.css?v=ui-polish-2">
     <link rel="stylesheet"
           href="https://cdn.bootcdn.net/ajax/libs/font-awesome/6.4.0/css/all.min.css"
           onerror="this.onerror=null;this.href='https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css';">
@@ -88,7 +86,7 @@ foreach (($themeConfig['colors'] ?? []) as $themeName => $themeValue) {
     <div class="admin-drawer-menu">
         <div class="admin-drawer-section-title">总览</div>
         <a href="/admin/index.php" class="admin-drawer-link <?php echo $adminPage === 'dashboard' ? 'admin-drawer-link-active' : ''; ?>">
-            <i class="fas fa-grid-2"></i><span>仪表盘</span><small>状态概览</small>
+            <i class="fas fa-grid-2"></i><span>仪表盘</span>
         </a>
 
         <div class="admin-drawer-section-title">内容管理</div>
@@ -102,19 +100,14 @@ foreach (($themeConfig['colors'] ?? []) as $themeName => $themeValue) {
             <i class="fas fa-comment-dots"></i><span>留言管理</span>
         </a>
         <a href="/admin/events.php" class="admin-drawer-link <?php echo $adminPage === 'events' ? 'admin-drawer-link-active' : ''; ?>">
-            <i class="fas fa-calendar-heart"></i><span>纪念事件</span>
+            <i class="fas fa-calendar-plus"></i><span>纪念事件</span>
+        </a>
+
+        <a href="/admin/map.php" class="admin-drawer-link <?php echo $adminPage === 'map' ? 'admin-drawer-link-active' : ''; ?>">
+            <i class="fas fa-map-location-dot"></i><span>地图与足迹</span>
         </a>
 
         <div class="admin-drawer-section-title">影视与播放</div>
-        <a href="/admin/media.php" class="admin-drawer-link <?php echo $adminPage === 'media' ? 'admin-drawer-link-active' : ''; ?>">
-            <i class="fas fa-sliders"></i><span>媒体配置</span>
-        </a>
-        <a href="/admin/media_catalog.php" class="admin-drawer-link <?php echo $adminPage === 'media_catalog' ? 'admin-drawer-link-active' : ''; ?>">
-            <i class="fas fa-layer-group"></i><span>影视资源库</span>
-        </a>
-        <a href="/admin/media_resources.php" class="admin-drawer-link <?php echo $adminPage === 'media_resources' ? 'admin-drawer-link-active' : ''; ?>">
-            <i class="fas fa-list"></i><span>资源列表</span>
-        </a>
         <a href="/admin/together_settings.php" class="admin-drawer-link <?php echo $adminPage === 'together_settings' ? 'admin-drawer-link-active' : ''; ?>">
             <i class="fas fa-people-arrows"></i><span>一起看设置</span>
         </a>
