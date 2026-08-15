@@ -20,6 +20,11 @@ $auth->requireLogin();
 $auth->requireRole(['user1', 'user2']);
 
 $bridge = 'http://127.0.0.1:3111';
+// 读取内部共享密钥（与 bridge 校验一致），仅 withU 后台网关持有
+$bridgeSecret = '';
+foreach (['E:/Agent/withu/runtime/strm/bridge-secret.txt', dirname(__DIR__, 2) . '/runtime/strm/bridge-secret.txt', dirname(__DIR__, 2) . '/strm/runtime/bridge-secret.txt'] as $__bf) {
+    if (is_file($__bf)) { $bridgeSecret = trim((string)file_get_contents($__bf)); if ($bridgeSecret !== '') break; }
+}
 $pathInfo = $_SERVER['PATH_INFO'] ?? '/';
 if ($pathInfo === '' || $pathInfo[0] !== '/') {
     $pathInfo = '/';
@@ -63,6 +68,10 @@ foreach ($headers as $name => $val) {
         continue;
     }
     $forward[] = $name . ': ' . $val;
+}
+// 注入内部共享密钥 —— 只有 withU 网关能拿到，bridge 据此放行
+if ($bridgeSecret !== '') {
+    $forward[] = 'X-Withu-Bridge-Secret: ' . $bridgeSecret;
 }
 
 $ch = curl_init($target);
