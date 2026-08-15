@@ -52,3 +52,11 @@ desktop.ini
 
 # 本地部署备份
 /deploy-local/*.bak*
+
+# ===== withUstrm 内置组件构建产物 =====
+/strm/frontend/node_modules/
+/strm/frontend/.nuxt/
+/strm/frontend/.output/
+/strm/backend/build/
+/strm/backend/.gradle/
+/strm/.build-cache/

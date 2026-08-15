@@ -114,6 +114,9 @@ foreach (($themeConfig['colors'] ?? []) as $themeName => $themeValue) {
         <a href="/admin/player_art.php" class="admin-drawer-link <?php echo in_array($adminPage, ['player_settings', 'player_art'], true) ? 'admin-drawer-link-active' : ''; ?>">
             <i class="fas fa-play-circle"></i><span>播放器设置</span>
         </a>
+        <a href="/admin/strm.php/" class="admin-drawer-link <?php echo $adminPage === 'strm' ? 'admin-drawer-link-active' : ''; ?>">
+            <i class="fas fa-film"></i><span>媒体库 STRM</span>
+        </a>
 
         <div class="admin-drawer-section-title">系统管理</div>
         <a href="/admin/settings.php?section=general" class="admin-drawer-link <?php echo $adminPage === 'settings' && $adminSection !== 'theme' ? 'admin-drawer-link-active' : ''; ?>">

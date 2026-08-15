@@ -28,4 +28,22 @@ if(!fs.existsSync(path.join(cfgDir,'config.php'))) fs.writeFileSync(path.join(cf
 if(!fs.existsSync(path.join(cfgDir,'database.php'))) fs.writeFileSync(path.join(cfgDir,'database.php'), `<?php\nreturn ['host'=>'127.0.0.1','port'=>3307,'dbname'=>'couple_website','username'=>'root','password'=>'','charset'=>'utf8mb4','options'=>[PDO::ATTR_ERRMODE=>PDO::ERRMODE_EXCEPTION,PDO::ATTR_DEFAULT_FETCH_MODE=>PDO::FETCH_ASSOC,PDO::ATTR_EMULATE_PREPARES=>false]];`);
 fs.writeFileSync(path.join(root,'.installed'),'local deployment\n');
 if(!listening(port)){console.log('Starting PHP server...'); wmiCreate(`"${php}" -c "${path.join(__dirname,'php.ini')}" -S 127.0.0.1:${port} -t "${root}"`);} else console.log('PHP already listening on '+port);
+
+// ===== withUstrm 内置组件（后端 8080 + bridge 3111）=====
+// 构建缺失产物并生成启动器（幂等）
+const setupR = spawnSync('node',[path.join(__dirname,'setup-strm.cjs')],{encoding:'utf8',timeout:1800000});
+process.stdout.write(setupR.stdout||''); if(setupR.stderr) process.stdout.write(setupR.stderr);
+if(setupR.status!==0) console.error('withUstrm 组件构建失败，请检查 setup-strm.cjs');
+
+const nodeExe = 'C:\\Program Files\\nodejs\\node.exe';
+function cimStart(scriptPath, portName){
+  const ps = `$c = '"C:\\Program Files\\nodejs\\node.exe" ${scriptPath}'; Invoke-CimMethod -ClassName Win32_Process -MethodName Create -Arguments @{ CommandLine = $c } | Select-Object ProcessId | Format-List`;
+  const r = spawnSync('powershell',['-NoProfile','-Command',ps],{encoding:'utf8',windowsHide:true,timeout:60000});
+  console.log(r.stdout || r.stderr || '');
+}
+if(!listening(8080)){ console.log('Starting withUstrm backend (8080)...'); cimStart('E:\\Agent\\withu\\runtime\\strm\\start-backend.js','backend'); }
+else console.log('withUstrm backend already on 8080');
+if(!listening(3111)){ console.log('Starting withUstrm bridge (3111)...'); cimStart('E:\\Agent\\withu\\runtime\\strm\\start-bridge.js','bridge'); }
+else console.log('withUstrm bridge already on 3111');
+console.log('withUstrm ready: http://127.0.0.1:8088/admin/strm.php/ (后台菜单「媒体库 STRM」)');
 console.log('WithU ready: http://127.0.0.1:'+port+'/');
