@@ -99,19 +99,24 @@ $strmMode = (($_GET['source'] ?? '') === 'strm');
 if ($strmMode) {
     $strmMediaId = (int)($_GET['id'] ?? 0);
     if ($strmMediaId <= 0) { header('Location: /watch.php'); exit; }
-    $strmConfPath = dirname(__DIR__, 1) . '/runtime/strm/config/systemconf.json';
-    $strmKey = '';
-    if (is_file($strmConfPath)) {
-        try {
-            $strmConf = json_decode((string)file_get_contents($strmConfPath), true);
-            $strmKey = (string)($strmConf['external']['apiKey'] ?? '');
-        } catch (Throwable $e) { $strmKey = ''; }
+    // 与 api/strm.php 网关一致：读 strm 内部 JWT 密钥，签发带 withu_admin 主体的 token
+    $strmJwtPath = dirname(__DIR__, 1) . '/runtime/strm/jwt.txt';
+    $strmSecret = '';
+    if (is_file($strmJwtPath)) {
+        $strmSecret = trim((string)file_get_contents($strmJwtPath));
     }
-    if ($strmKey === '') { header('Location: /watch.php'); exit; }
-    $strmCh = curl_init('http://127.0.0.1:8080/api/external/media/' . $strmMediaId);
+    if ($strmSecret === '') { header('Location: /watch.php'); exit; }
+    $strmB64u = function (string $s): string { return rtrim(strtr(base64_encode($s), '+/', '-_'), '='); };
+    $strmNow = time();
+    $strmHeader = $strmB64u(json_encode(['alg' => 'HS256', 'typ' => 'JWT']));
+    $strmPayloadB64 = $strmB64u(json_encode(['sub' => 'withu_admin', 'iat' => $strmNow, 'exp' => $strmNow + 600]));
+    $strmSign = $strmB64u(hash_hmac('sha256', $strmHeader . '.' . $strmPayloadB64, $strmSecret, true));
+    $strmJwt = $strmHeader . '.' . $strmPayloadB64 . '.' . $strmSign;
+    // 调 strm 内部媒体库详情接口（external 已关闭，必须走内部 JWT）
+    $strmCh = curl_init('http://127.0.0.1:8080/api/media-library/' . $strmMediaId);
     curl_setopt_array($strmCh, [
         CURLOPT_RETURNTRANSFER => true,
-        CURLOPT_HTTPHEADER => ['X-API-Key: ' . $strmKey],
+        CURLOPT_HTTPHEADER => ['Authorization: Bearer ' . $strmJwt],
         CURLOPT_CONNECTTIMEOUT => 3,
         CURLOPT_TIMEOUT => 15,
         CURLOPT_SSL_VERIFYPEER => false,
@@ -120,9 +125,11 @@ if ($strmMode) {
     $strmBody = curl_exec($strmCh);
     $strmCode = (int)curl_getinfo($strmCh, CURLINFO_RESPONSE_CODE);
     curl_close($strmCh);
-    $strmMeta = $strmCode === 200 ? (json_decode((string)$strmBody, true) ?: []) : [];
+    $strmResp = $strmCode === 200 ? (json_decode((string)$strmBody, true) ?: []) : [];
+    // Spring ApiResponse {code,message,data}
+    $strmMeta = (($strmResp['code'] ?? 0) === 200) ? ($strmResp['data'] ?? []) : [];
     if (!$strmMeta) { header('Location: /watch.php'); exit; }
-    $strmTitle = (string)($strmMeta['name'] ?? 'strm 媒体');
+    $strmTitle = (string)($strmMeta['title'] ?? 'strm 媒体');
     $strmSummary = trim((string)($strmMeta['overview'] ?? ''));
     $media = [
         'id' => 0,

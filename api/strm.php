@@ -30,6 +30,39 @@ require_once __DIR__ . '/../core/Auth.php';
 require_once __DIR__ . '/../core/helpers.php';
 require_once __DIR__ . '/../core/withu.php';
 
+if (!function_exists('withu_run_node_sync')) {
+    function withu_run_node_sync(string $cmd, int $timeoutMs = 25000): array
+    {
+        $descriptors = [1 => ['pipe', 'w'], 2 => ['pipe', 'w']];
+        $proc = @proc_open($cmd, $descriptors, $pipes, dirname(__DIR__, 1));
+        if (!is_resource($proc)) return ['code' => -1, 'out' => 'proc_open 失败'];
+        stream_set_blocking($pipes[1], false);
+        stream_set_blocking($pipes[2], false);
+        $out = ''; $err = '';
+        $deadline = microtime(true) + $timeoutMs / 1000;
+        while (true) {
+            $r = [$pipes[1], $pipes[2]]; $w = null; $e = null;
+            $secs = $deadline - microtime(true);
+            if ($secs <= 0) break;
+            $n = @stream_select($r, $w, $e, (int)$secs, (int)(($secs - floor($secs)) * 1000000));
+            if ($n === false || $n === 0) break;
+            foreach ($r as $pipe) {
+                $chunk = @fread($pipe, 8192);
+                if ($chunk === false || $chunk === '') continue;
+                if ($pipe === $pipes[1]) $out .= $chunk; else $err .= $chunk;
+            }
+            $status = proc_get_status($proc);
+            if (!$status['running']) break;
+        }
+        $status = proc_get_status($proc);
+        @fclose($pipes[1]); @fclose($pipes[2]);
+        @proc_terminate($proc);
+        @proc_close($proc);
+        return ['code' => (int)($status['exitcode'] ?? -1), 'out' => $out . $err];
+    }
+}
+
+
 $auth = new Auth();
 try {
     $user = withu_require_couple_user($auth);
@@ -186,48 +219,44 @@ $action = (string)($_GET['action'] ?? 'info');
 if ($action === 'proxy') {
     $target = trim((string)($_GET['url'] ?? ''));
     if ($target === '' || !preg_match('#^https?://#i', $target)) strm_json(['code' => 400, 'msg' => '无效地址'], 400);
-    $ch = curl_init($target);
-    $reqHeaders = ['User-Agent: withu-strm-bridge/1.0', 'Accept: */*'];
-    if (isset($_SERVER['HTTP_RANGE'])) $reqHeaders[] = 'Range: ' . $_SERVER['HTTP_RANGE'];
-    curl_setopt_array($ch, [
-        CURLOPT_RETURNTRANSFER => false,
-        CURLOPT_FOLLOWLOCATION => true,
-        CURLOPT_HEADER => false,
-        CURLOPT_HTTPHEADER => $reqHeaders,
-        CURLOPT_CONNECTTIMEOUT => 5,
-        CURLOPT_TIMEOUT => 600,
-        CURLOPT_SSL_VERIFYPEER => false,
-        CURLOPT_SSL_VERIFYHOST => false,
-    ]);
-    // 需要拿上游的 Content-Type / Content-Length / Content-Range / Accept-Ranges
-    $statusLine = 200;
-    curl_setopt($ch, CURLOPT_HEADERFUNCTION, function ($ch, $headerLine) use (&$statusLine, &$respHeaders) {
-        $trim = trim($headerLine);
-        if ($trim === '') return strlen($headerLine);
-        if (preg_match('#^HTTP/\S+\s+(\d+)#', $trim, $m)) {
-            $statusLine = (int)$m[1];
-        } elseif (strpos($headerLine, ':') > 0) {
-            $pos = strpos($headerLine, ':');
-            $name = strtolower(trim(substr($headerLine, 0, $pos)));
-            $val = trim(substr($headerLine, $pos + 1));
+    // 用 PHP stream 转发：stream_get_meta_data 拿真实响应头（规避 php -S 下 curl HEADERFUNCTION 失效），fpassthru 流式输出（支持大文件/不占内存）
+    $range = isset($_SERVER['HTTP_RANGE']) ? trim($_SERVER['HTTP_RANGE']) : '';
+    $ctx = stream_context_create(['http' => [
+        'method' => 'GET',
+        'header' => "User-Agent: withu-strm-bridge/1.0\r\nAccept: */*\r\n" . ($range !== '' ? "Range: $range\r\n" : ''),
+        'follow_location' => 1,
+        'max_redirects' => 4,
+        'ignore_errors' => true,
+        'timeout' => 600,
+    ], 'ssl' => ['verify_peer' => false, 'verify_peer_name' => false]]);
+    $fp = @fopen($target, 'rb', false, $ctx);
+    if ($fp === false) strm_json(['code' => 502, 'msg' => '上游连接失败'], 502);
+    $meta = stream_get_meta_data($fp);
+    $status = 200;
+    $upHeaders = [];
+    foreach (($meta['wrapper_data'] ?? []) as $line) {
+        if (preg_match('#^HTTP/\S+\s+(\d+)#', trim($line), $m)) {
+            $status = (int)$m[1];
+        } elseif (strpos($line, ':') > 0) {
+            $pos = strpos($line, ':');
+            $name = strtolower(trim(substr($line, 0, $pos)));
+            $val = trim(substr($line, $pos + 1));
             if (in_array($name, ['content-type', 'content-length', 'content-range', 'accept-ranges', 'content-disposition'], true)) {
-                $respHeaders[$name] = $val;
+                $upHeaders[$name] = $val;
             }
         }
-        return strlen($headerLine);
-    });
-    // 清空现有输出缓冲
+    }
     while (ob_get_level() > 0) ob_end_clean();
-    http_response_code($statusLine);
-    if (!empty($respHeaders['content-type'])) header('Content-Type: ' . $respHeaders['content-type']);
-    if (!empty($respHeaders['content-range'])) header('Content-Range: ' . $respHeaders['content-range']);
-    if (!empty($respHeaders['accept-ranges'])) header('Accept-Ranges: ' . $respHeaders['accept-ranges']);
-    if (!empty($respHeaders['content-disposition'])) header('Content-Disposition: ' . $respHeaders['content-disposition']);
-    if (!empty($respHeaders['content-length'])) header('Content-Length: ' . $respHeaders['content-length']);
+    http_response_code($status);
+    if (!empty($upHeaders['content-type'])) header('Content-Type: ' . $upHeaders['content-type']);
+    if (!empty($upHeaders['content-range'])) header('Content-Range: ' . $upHeaders['content-range']);
+    if (!empty($upHeaders['accept-ranges'])) header('Accept-Ranges: ' . $upHeaders['accept-ranges']);
+    if (!empty($upHeaders['content-disposition'])) header('Content-Disposition: ' . $upHeaders['content-disposition']);
+    if (!empty($upHeaders['content-length'])) header('Content-Length: ' . $upHeaders['content-length']);
     header('Cache-Control: no-store');
     header('Access-Control-Allow-Origin: *');
-    curl_exec($ch);
-    // curl_close auto-released in PHP 8+
+    fpassthru($fp);
+    fclose($fp);
     exit;
 }
 
@@ -254,31 +283,29 @@ if ($action === 'proxy_m3u8') {
 if ($action === 'proxy_seg') {
     $seg = trim((string)($_GET['url'] ?? ''));
     if ($seg === '') strm_json(['code' => 400, 'msg' => '缺少url'], 400);
-    $ch = curl_init($seg);
-    curl_setopt_array($ch, [
-        CURLOPT_RETURNTRANSFER => false,
-        CURLOPT_FOLLOWLOCATION => true,
-        CURLOPT_HEADER => false,
-        CURLOPT_HTTPHEADER => ['User-Agent: withu-strm-bridge/1.0', 'Accept: */*'],
-        CURLOPT_CONNECTTIMEOUT => 5,
-        CURLOPT_TIMEOUT => 120,
-        CURLOPT_SSL_VERIFYPEER => false,
-        CURLOPT_SSL_VERIFYHOST => false,
-    ]);
+    $ctx = stream_context_create(['http' => [
+        'method' => 'GET',
+        'header' => "User-Agent: withu-strm-bridge/1.0\r\nAccept: */*\r\n",
+        'follow_location' => 1,
+        'max_redirects' => 4,
+        'ignore_errors' => true,
+        'timeout' => 120,
+    ], 'ssl' => ['verify_peer' => false, 'verify_peer_name' => false]]);
+    $fp = @fopen($seg, 'rb', false, $ctx);
+    if ($fp === false) strm_json(['code' => 502, 'msg' => '分片连接失败'], 502);
+    $meta = stream_get_meta_data($fp);
     $ct = 'application/octet-stream';
-    curl_setopt($ch, CURLOPT_HEADERFUNCTION, function ($ch, $headerLine) use (&$ct) {
-        $trim = trim($headerLine);
-        if (stripos($trim, 'Content-Type:') === 0) {
-            $ct = trim(substr($trim, 13));
+    foreach (($meta['wrapper_data'] ?? []) as $line) {
+        if (stripos($line, 'Content-Type:') === 0) {
+            $ct = trim(substr($line, 13));
         }
-        return strlen($headerLine);
-    });
+    }
     while (ob_get_level() > 0) ob_end_clean();
     header('Content-Type: ' . $ct);
     header('Cache-Control: max-age=3600');
     header('Access-Control-Allow-Origin: *');
-    curl_exec($ch);
-    // curl_close auto-released in PHP 8+
+    fpassthru($fp);
+    fclose($fp);
     exit;
 }
 
@@ -325,14 +352,21 @@ switch ($action) {
         $d = $r['data'] ?? [];
         $items = [];
         foreach (($d['items'] ?? []) as $it) {
+            $pid = (int)($it['id'] ?? 0);
+            $poster = (string)($it['posterUrl'] ?? '');
+            // 豆瓣海报兜底：strm 未刮削 TMDB 时，用本地 runtime/strm-posters/<id>.jpg
+            if ($poster === '' && $pid > 0) {
+                $imgFile = dirname(__DIR__, 2) . '/runtime/strm-posters/' . $pid . '.jpg';
+                if (is_file($imgFile)) $poster = '/api/strm.php?action=img&id=' . $pid;
+            }
             $items[] = [
-                'id' => (int)($it['id'] ?? 0),
+                'id' => $pid,
                 'name' => (string)($it['title'] ?? ''),
                 'type' => (string)($it['mediaType'] ?? ''),
                 'mediaType' => (string)($it['mediaType'] ?? ''),
                 'originalTitle' => (string)($it['originalTitle'] ?? ''),
                 'year' => (string)($it['releaseYear'] ?? ''),
-                'posterUrl' => (string)($it['posterUrl'] ?? ''),
+                'posterUrl' => $poster,
                 'backdropUrl' => (string)($it['backdropUrl'] ?? ''),
                 'voteAverage' => $it['voteAverage'] ?? null,
                 'tmdbId' => $it['tmdbId'] ?? null,
@@ -384,6 +418,55 @@ switch ($action) {
         $episode = (int)($_GET['episode'] ?? 0);
         if ($id <= 0) strm_json(['success' => false, 'message' => '缺少 id'], 400);
         strm_resolve_internal($id, $episode, $episode > 0 ? '第 ' . $episode . ' 集' : '');
+    }
+    case 'posters': {
+        // 豆瓣海报兜底：列出无海报媒体 → node 桥搜豆瓣补图（存 runtime/strm-posters/<id>.jpg）→ 返回映射
+        $r = strm_internal('?page=1&pageSize=100');
+        if (!$r['success']) {
+            strm_json(['success' => false, 'message' => $r['message'] ?? '媒体列表获取失败'], 502);
+        }
+        $items = $r['data']['items'] ?? [];
+        $need = [];
+        foreach ($items as $it) {
+            $pid = (int)($it['id'] ?? 0);
+            $poster = (string)($it['posterUrl'] ?? '');
+            $imgFile = dirname(__DIR__, 2) . '/runtime/strm-posters/' . $pid . '.jpg';
+            if ($pid > 0 && $poster === '' && !is_file($imgFile)) {
+                $need[] = ['id' => $pid, 'title' => (string)($it['title'] ?? '')];
+            }
+        }
+        $map = [];
+        if (count($need) > 0) {
+            $json = json_encode($need, JSON_UNESCAPED_UNICODE);
+            $cmd = 'node ' . escapeshellarg(ROOT_PATH . '/scripts/strm_poster_fetch.cjs') . ' ' . escapeshellarg(base64_encode($json));
+            $rr = withu_run_node_sync($cmd, 60000);
+            $out = json_decode($rr['out'] ?? '', true);
+            foreach (($out['results'] ?? []) as $res) {
+                $rid = (int)($res['id'] ?? 0);
+                if ($rid > 0 && !empty($res['ok'])) $map[$rid] = 1;
+            }
+        }
+        // 输出全部无海报媒体的可访问图 URL（已生成 or 等待下次）
+        $outMap = [];
+        foreach ($items as $it) {
+            $pid = (int)($it['id'] ?? 0);
+            $poster = (string)($it['posterUrl'] ?? '');
+            $imgFile = dirname(__DIR__, 2) . '/runtime/strm-posters/' . $pid . '.jpg';
+            if ($pid > 0 && $poster === '' && is_file($imgFile)) {
+                $outMap[$pid] = '/api/strm.php?action=img&id=' . $pid;
+            }
+        }
+        strm_json(['success' => true, 'data' => $outMap]);
+    }
+    case 'img': {
+        $id = (int)($_GET['id'] ?? 0);
+        $file = dirname(__DIR__, 2) . '/runtime/strm-posters/' . $id . '.jpg';
+        if (!is_file($file)) strm_json(['success' => false, 'message' => '海报不存在'], 404);
+        while (ob_get_level() > 0) ob_end_clean();
+        header('Content-Type: image/jpeg');
+        header('Cache-Control: max-age=86400');
+        readfile($file);
+        exit;
     }
     default:
         strm_json(['success' => false, 'message' => '未知操作'], 400);

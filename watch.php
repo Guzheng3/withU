@@ -520,6 +520,7 @@ body.watch-page a{color:inherit}
 
   /* ============ withUstrm 媒体库 ============ */
   var strmSec=document.getElementById('strm'), strmGrid=document.getElementById('strmGrid'), strmNote=document.getElementById('strmNote'), strmType='';
+  var strmPosterWarm=false;
   function strmCard(item){
     var poster = item.posterUrl || '';
     var metaLine = [item.year, item.mediaType==='tv'?'剧集':'电影'].filter(Boolean).join(' · ');
@@ -555,6 +556,14 @@ body.watch-page a{color:inherit}
         strmGrid.innerHTML=items.map(strmCard).join('');
         if(strmNote){strmNote.hidden=false;strmNote.textContent='共 '+data.total+' 部 · 第 '+data.page+' / '+Math.max(1,Math.ceil(data.total/Math.max(1,data.pageSize)))+' 页';}
         revealIn(strmGrid);
+        // 无海报媒体 → 预热豆瓣海报（一次性，成功后重绘）
+        if(!strmPosterWarm && items.some(function(it){return !(it.posterUrl||'');})){
+          strmPosterWarm=true;
+          fetch('/api/strm.php?action=posters',{credentials:'same-origin'})
+            .then(function(r){return r.json();})
+            .then(function(pd){ if(pd && pd.success){ loadStrm(page); } })
+            .catch(function(){});
+        }
       })
       .catch(function(){strmGrid.innerHTML='<div class="empty">媒体库加载失败</div>';});
   }
