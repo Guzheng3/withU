@@ -4,6 +4,7 @@
  */
 
 import { useAuthStore } from '~/core/stores/auth'
+import { getApiBaseUrl } from '~/core/utils/api'
 
 // API 基础配置
 const API_BASE_URL = '/'
@@ -263,8 +264,10 @@ export const authenticatedApiCall = async <T = any>(
 ): Promise<T> => {
   const { method = 'GET', body, headers } = options
 
-  // 确保 URL 以 /api 开头（Docker 生产环境需要）
-  const apiUrl = url.startsWith('/api') ? url : `/api${url.startsWith('/') ? url : '/' + url}`
+  // 统一走 runtimeConfig 的 apiBase（生产为 /admin/strm.php/api，由 withu 网关代理）
+  const baseUrl = import.meta.client ? getApiBaseUrl() : '/api'
+  const clean = url.startsWith('/') ? url : '/' + url
+  const apiUrl = baseUrl.endsWith('/') ? baseUrl.slice(0,-1) + clean : baseUrl + clean
 
   // 使用 $fetchApi，拦截器会自动添加 Authorization header
   return await $fetchApi<T>(apiUrl, {
@@ -285,8 +288,10 @@ export const apiCall = async <T = any>(
 ): Promise<T> => {
   const { method = 'GET', body, headers } = options
 
-  // 确保 URL 以 /api 开头（Docker 生产环境需要）
-  const apiUrl = url.startsWith('/api') ? url : `/api${url.startsWith('/') ? url : '/' + url}`
+  // 统一走 runtimeConfig 的 apiBase（生产为 /admin/strm.php/api，由 withu 网关代理）
+  const baseUrl = import.meta.client ? getApiBaseUrl() : '/api'
+  const clean = url.startsWith('/') ? url : '/' + url
+  const apiUrl = baseUrl.endsWith('/') ? baseUrl.slice(0,-1) + clean : baseUrl + clean
 
   return await $fetch<T>(apiUrl, {
     method,
