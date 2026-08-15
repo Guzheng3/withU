@@ -2,6 +2,7 @@ const fs = require('fs');
 const path = require('path');
 const {spawnSync} = require('child_process');
 const root = path.resolve(__dirname, '..');
+const workRoot = path.resolve(root, '..');
 const runtime = path.join(__dirname, 'runtime');
 fs.mkdirSync(runtime, {recursive:true});
 const php = 'C:\\Users\\Administrator\\scoop\\apps\\php\\current\\php.exe';
@@ -45,5 +46,23 @@ if(!listening(8080)){ console.log('Starting withUstrm backend (8080)...'); cimSt
 else console.log('withUstrm backend already on 8080');
 if(!listening(3111)){ console.log('Starting withUstrm bridge (3111)...'); cimStart('E:\\Agent\\withu\\runtime\\strm\\start-bridge.js','bridge'); }
 else console.log('withUstrm bridge already on 3111');
+// ===== 内置 mihomo/clash 代理组件（订阅地址自动拉取 + url-test 自动选节点）=====
+// 未配置订阅时：若 7897 已被手动 Clash 占用则复用，否则跳过（不影响主服务）
+const mihomoSetup = spawnSync('node', [path.join(__dirname, 'setup-mihomo.cjs')], { encoding: 'utf8', timeout: 900000 });
+process.stdout.write(mihomoSetup.stdout || ''); if (mihomoSetup.stderr) process.stdout.write(mihomoSetup.stderr);
+const mihomoStatus = path.join(workRoot, 'runtime', 'mihomo', 'status.json');
+if (fs.existsSync(mihomoStatus)) {
+  try {
+    const mst = JSON.parse(fs.readFileSync(mihomoStatus, 'utf8'));
+    if (mst.enabled && !listening(mst.port)) {
+      console.log('Starting built-in mihomo proxy (127.0.0.1:' + mst.port + ')...');
+      cimStart('C:\\Program Files\\nodejs\\node.exe ' + path.join(workRoot, 'runtime', 'mihomo', 'start.cjs'), 'mihomo');
+    } else if (mst.enabled) {
+      console.log('mihomo proxy already on ' + mst.port);
+    }
+  } catch (e) { console.warn('mihomo status 解析失败:', e.message); }
+}
+
 console.log('withUstrm ready: http://127.0.0.1:8088/admin/strm.php/ (后台菜单「媒体库 STRM」)');
 console.log('WithU ready: http://127.0.0.1:'+port+'/');
+console.log('TMDB 代理: 127.0.0.1:' + (fs.existsSync(mihomoStatus) ? (()=>{try{return JSON.parse(fs.readFileSync(mihomoStatus,'utf8')).port||7897;}catch(e){return 7897;}})() : 7897) + ' （配置 WITHU_PROXY_SUB_URL 可启用内置 mihomo 自动选节点）');

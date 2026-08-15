@@ -60,3 +60,7 @@ desktop.ini
 /strm/backend/build/
 /strm/backend/.gradle/
 /strm/.build-cache/
+
+# 代理订阅配置（含 token，勿入库）
+/config/mihomo.json
+/deploy-local/mihomo.json
