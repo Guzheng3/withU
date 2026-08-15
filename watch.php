@@ -272,6 +272,16 @@ body.watch-page a{color:inherit}
   .rail .card{flex-basis:120px}
   .section{margin:1.7rem 0 2.2rem}
 }
+
+.strm-tabs{display:inline-flex;gap:.3rem;padding:.22rem;border:1px solid rgba(167,139,250,.35);border-radius:999px;background:rgba(255,255,255,.6)}
+.strm-tab{border:0;border-radius:999px;padding:.3rem .85rem;font-size:.76rem;font-weight:700;color:#7c6aa6;background:transparent;cursor:pointer;transition:background .18s,color .18s}
+.strm-tab:hover{background:rgba(167,139,250,.14);color:#6d28d9}
+.strm-tab.is-active{background:linear-gradient(135deg,#a78bfa,#8b5cf6);color:#fff}
+.strm-tab-count{margin-left:.28rem;font-size:.7rem;opacity:.85}
+.badge-strm{position:absolute;right:.55rem;top:.55rem;z-index:2;padding:.2rem .55rem;border-radius:8px;font-size:.7rem;font-weight:800;color:#fff;background:linear-gradient(135deg,#a78bfa,#7c3aed)}
+.card-strm:hover{border-color:#a78bfa;transform:translateY(-6px)}
+.card-strm .rate{top:auto;bottom:.55rem;left:.55rem;background:linear-gradient(135deg,#a78bfa,#8b5cf6)}
+
 </style>
 </head>
 <body class="watch-page">
@@ -338,6 +348,21 @@ body.watch-page a{color:inherit}
     <section class="section" id="cz" hidden style="--sec-accent:var(--pink);--sec-soft:var(--pink-soft)">
       <div class="section-head"><span class="sec-accent"></span><h2><span class="src-badge">cz</span> 厂长资源</h2><span class="sec-note" id="czResultNote"></span></div>
       <div class="grid" id="czResultGrid"></div>
+    </section>
+
+    <section class="section" id="strm" style="--sec-accent:#a78bfa;--sec-soft:rgba(167,139,250,.15)">
+      <div class="section-head">
+        <span class="sec-accent"></span><h2><span class="src-badge" style="background:linear-gradient(135deg,#a78bfa,#7c3aed)">strm</span> 媒体库</h2>
+        <span class="sec-note">withUstrm · 点击卡片直接播放</span>
+        <span class="strm-tabs" role="tablist" aria-label="媒体库分类">
+          <button type="button" class="strm-tab is-active" data-strm-type="">全部<span class="strm-tab-count" data-count="all">…</span></button>
+          <button type="button" class="strm-tab" data-strm-type="movie">电影<span class="strm-tab-count" data-count="movie">…</span></button>
+          <button type="button" class="strm-tab" data-strm-type="tv">剧集<span class="strm-tab-count" data-count="tv">…</span></button>
+        </span>
+        <a class="sec-more" href="/admin/strm_home.php" target="_blank">后台管理 ›</a>
+      </div>
+      <div class="grid" id="strmGrid"><div class="empty">正在加载媒体库…</div></div>
+      <div id="strmNote" class="sec-note" style="margin-top:.6rem" hidden></div>
     </section>
 
     <section class="section" id="library" style="--sec-accent:var(--pink);--sec-soft:var(--pink-soft)">
@@ -480,6 +505,70 @@ body.watch-page a{color:inherit}
     if(czSec) czSec.scrollIntoView({behavior:'smooth',block:'start'});
   }
   window.withuCzSearch = czSearch;
+
+  /* ============ withUstrm 媒体库 ============ */
+  var strmSec=document.getElementById('strm'), strmGrid=document.getElementById('strmGrid'), strmNote=document.getElementById('strmNote'), strmType='';
+  function strmCard(item){
+    var poster = item.posterUrl || '';
+    var metaLine = [item.year, item.mediaType==='tv'?'剧集':'电影'].filter(Boolean).join(' · ');
+    var countText = Number(item.episodeCount||1)>1 ? item.episodeCount+' 集' : '播放';
+    var href = '/watch_play.php?source=strm&id='+Number(item.id);
+    return '<a class="card card-strm" href="'+href+'" data-watch-title="'+esc(item.name)+'">'
+      + (poster ? '<img class="poster" loading="lazy" src="'+esc(poster)+'" alt="" referrerpolicy="no-referrer">' : '<div class="ph">▶</div>')
+      + '<span class="badge-strm">strm</span>'
+      + '<span class="mask"></span><span class="play-btn">▶</span>'
+      + '<span class="tag">'+countText+'</span>'
+      + '<span class="name">'+esc(item.name)+'</span>'
+      + (metaLine ? '<span class="eps">'+esc(metaLine)+'</span>' : '')
+      + (item.voteAverage ? '<span class="rate">'+Number(item.voteAverage).toFixed(1)+'</span>' : '')
+      + '</a>';
+  }
+  function loadStrm(page){
+    page=page||1;
+    if(!strmSec){return;}
+    if(page===1){strmGrid.innerHTML='<div class="empty">正在加载媒体库…</div>';}
+    var url='/api/strm.php?action=media&page='+page+'&pageSize=24'+(strmType?'&type='+encodeURIComponent(strmType):'');
+    fetch(url,{credentials:'same-origin'})
+      .then(function(r){return r.json();})
+      .then(function(d){
+        if(!d || !d.success){
+          strmGrid.innerHTML='<div class="empty">'+(d&&d.message?esc(d.message):'媒体库加载失败')+'</div>';
+          return;
+        }
+        var data=d.data||{}, items=data.items||[];
+        if(!items.length){
+          strmGrid.innerHTML='<div class="empty">媒体库为空，请先在后台「媒体库 STRM」添加 OpenList 任务。</div>';
+          return;
+        }
+        strmGrid.innerHTML=items.map(strmCard).join('');
+        if(strmNote){strmNote.hidden=false;strmNote.textContent='共 '+data.total+' 部 · 第 '+data.page+' / '+Math.max(1,Math.ceil(data.total/Math.max(1,data.pageSize)))+' 页';}
+        revealIn(strmGrid);
+      })
+      .catch(function(){strmGrid.innerHTML='<div class="empty">媒体库加载失败</div>';});
+  }
+  function loadStrmCounts(){
+    fetch('/api/strm.php?action=counts',{credentials:'same-origin'})
+      .then(function(r){return r.json();})
+      .then(function(d){
+        if(!d || !d.success || !d.data) return;
+        document.querySelectorAll('.strm-tab-count').forEach(function(el){
+          var k=el.getAttribute('data-count');
+          if(k==='all') el.textContent=d.data.total;
+          else if(k==='movie') el.textContent=d.data.movie;
+          else if(k==='tv') el.textContent=d.data.series;
+        });
+      }).catch(function(){});
+  }
+  document.querySelectorAll('.strm-tab').forEach(function(btn){
+    btn.addEventListener('click',function(){
+      document.querySelectorAll('.strm-tab').forEach(function(b){b.classList.remove('is-active');});
+      btn.classList.add('is-active');
+      strmType=btn.getAttribute('data-strm-type')||'';
+      loadStrm(1);
+    });
+  });
+  if(strmSec){loadStrm(1);loadStrmCounts();}
+
 
   /* ============ 本地库搜索 ============ */
   var search=document.getElementById('watchSearch'), libGrid=document.getElementById('libraryGrid'),

@@ -18,8 +18,9 @@ $partner = $auth->getPartner();
 $partnerId = (int)($partner['id'] ?? 0);
 $mediaId = (int)($_GET['media_id'] ?? 0);
 $czMode = (($_GET['source'] ?? '') === 'cz');
+$strmMode = (($_GET['source'] ?? '') === 'strm');
 $media = $mediaId > 0 ? withu_media_fetch($mediaId) : null;
-if (!$media && !$czMode) { header('Location: /watch.php'); exit; }
+if (!$media && !$czMode && !$strmMode) { header('Location: /watch.php'); exit; }
 $themeConfig = withu_theme_config();
 $themeInlineStyle = '';
 foreach (($themeConfig['colors'] ?? []) as $themeName => $themeValue) $themeInlineStyle .= '--withu-custom-' . $themeName . ':' . $themeValue . ';';
@@ -34,7 +35,7 @@ $playerLogoSetting = trim((string)get_setting('player_logo_image', ''));
 $playerLogoUrl = $playerLogoSetting !== '' ? upload_url($playerLogoSetting) : '/assets/images/withu-logo.png';
 $playerLogoBgStyle = withu_player_logo_bg_style();
 $playerLoadBackground = trim((string)get_setting('art_player_load_bg', '/assets/admin-art/js/bjt.jpg'));
-$initialResolveUrl = $czMode ? '' : withu_media_resolve_url($media);
+$initialResolveUrl = ($czMode || $strmMode) ? '' : withu_media_resolve_url($media);
 // ---- cz 厂长资源分支：原播放界面新增 cz 源（source=cz&url=4kcz.com 详情页） ----
 $czLines = [];
 $czDetailUrl = '';
@@ -92,7 +93,47 @@ if ($czMode) {
     } catch (Throwable $e) {
         header('Location: /watch.php'); exit;
     }
+}// ---- withUstrm 媒体库分支：source=strm&id=<媒体id> ----
+$strmMode = (($_GET['source'] ?? '') === 'strm');
+if ($strmMode) {
+    $strmMediaId = (int)($_GET['id'] ?? 0);
+    if ($strmMediaId <= 0) { header('Location: /watch.php'); exit; }
+    $strmConfPath = dirname(__DIR__, 1) . '/runtime/strm/config/systemconf.json';
+    $strmKey = '';
+    if (is_file($strmConfPath)) {
+        try {
+            $strmConf = json_decode((string)file_get_contents($strmConfPath), true);
+            $strmKey = (string)($strmConf['external']['apiKey'] ?? '');
+        } catch (Throwable $e) { $strmKey = ''; }
+    }
+    if ($strmKey === '') { header('Location: /watch.php'); exit; }
+    $strmCh = curl_init('http://127.0.0.1:8080/api/external/media/' . $strmMediaId);
+    curl_setopt_array($strmCh, [
+        CURLOPT_RETURNTRANSFER => true,
+        CURLOPT_HTTPHEADER => ['X-API-Key: ' . $strmKey],
+        CURLOPT_CONNECTTIMEOUT => 3,
+        CURLOPT_TIMEOUT => 15,
+        CURLOPT_SSL_VERIFYPEER => false,
+        CURLOPT_SSL_VERIFYHOST => false,
+    ]);
+    $strmBody = curl_exec($strmCh);
+    $strmCode = (int)curl_getinfo($strmCh, CURLINFO_RESPONSE_CODE);
+    curl_close($strmCh);
+    $strmMeta = $strmCode === 200 ? (json_decode((string)$strmBody, true) ?: []) : [];
+    if (!$strmMeta) { header('Location: /watch.php'); exit; }
+    $strmTitle = (string)($strmMeta['name'] ?? 'strm 媒体');
+    $strmSummary = trim((string)($strmMeta['overview'] ?? ''));
+    $media = [
+        'id' => 0,
+        'file_name' => $strmTitle,
+        'series_name' => $strmTitle,
+        'summary' => $strmSummary !== '' ? $strmSummary : 'withUstrm 媒体库 · 编码 strm',
+        'resolution' => '',
+    ];
+    $mediaId = 0;
+    $initialResolveUrl = '';
 }
+
 ?>
 <!doctype html>
 <html lang="zh-CN" data-withu-theme="<?php echo e($themeConfig['preset']); ?>" data-withu-mode="<?php echo e($themeConfig['mode']); ?>"<?php if (!empty($themeConfig['custom'])): ?> data-withu-theme-custom="1" style="<?php echo e($themeInlineStyle); ?>"<?php endif; ?>>
@@ -548,8 +589,8 @@ if ($czMode) {
   <div class="player-top"><div class="player-top-copy"><h1 id="seriesTitle"><?php echo e($media['series_name'] ?: $media['file_name']); ?></h1><p>WithU Watch · 选择分集后开始播放</p></div><div class="player-top-search"><div class="media-search-wrap"><label class="sr-only" for="mediaSearch">搜索影片</label><span class="media-search-icon" aria-hidden="true">⌕</span><input id="mediaSearch" type="search" autocomplete="off" placeholder="搜索影片…"><div id="mediaSearchResults" class="media-search-results" hidden></div></div></div><div class="player-actions"><button id="togetherExit" class="btn btn-secondary" type="button" hidden title="退出一起看" aria-label="退出一起看">一起看</button><a class="player-icon-action" href="/watch_history.php" aria-label="观影历史"><svg aria-hidden="true" fill="none" viewBox="0 0 24 24" stroke-width="2"><path d="M12 8v5l3 2"/><path d="M3.05 11a9 9 0 1 1 2.63 6.36"/><path d="M3 17v-6h6"/></svg><span>历史</span></a><a class="player-icon-action" href="/admin/index.php" aria-label="后台设置"><svg aria-hidden="true" fill="none" viewBox="0 0 24 24" stroke-width="2"><path d="M12 15.5A3.5 3.5 0 1 0 12 8a3.5 3.5 0 0 0 0 7.5Z"/><path d="M19.4 15a1.8 1.8 0 0 0 .36 1.98l.04.04a2.1 2.1 0 0 1-2.97 2.97l-.04-.04a1.8 1.8 0 0 0-1.98-.36 1.8 1.8 0 0 0-1.1 1.66V21a2.1 2.1 0 0 1-4.2 0v-.06a1.8 1.8 0 0 0-1.1-1.66 1.8 1.8 0 0 0-1.98.36l-.04.04a2.1 2.1 0 0 1-2.97-2.97l.04-.04A1.8 1.8 0 0 0 3.8 15a1.8 1.8 0 0 0-1.66-1.1H2a2.1 2.1 0 0 1 0-4.2h.06A1.8 1.8 0 0 0 3.72 8.6a1.8 1.8 0 0 0-.36-1.98l-.04-.04a2.1 2.1 0 0 1 2.97-2.97l.04.04A1.8 1.8 0 0 0 8.3 4a1.8 1.8 0 0 0 1.1-1.66V2a2.1 2.1 0 0 1 4.2 0v.06A1.8 1.8 0 0 0 14.7 3.72a1.8 1.8 0 0 0 1.98-.36l.04-.04a2.1 2.1 0 0 1 2.97 2.97l-.04.04A1.8 1.8 0 0 0 19.28 8.3a1.8 1.8 0 0 0 1.66 1.1H21a2.1 2.1 0 0 1 0 4.2h-.06A1.8 1.8 0 0 0 19.4 15Z"/></svg><span>后台</span></a></div></div>
   <div id="status" class="player-status">正在读取播放器…</div>
   <div class="player-layout"><section class="player-stage"><div id="gesture" class="player-gesture"><div id="playerContainer" class="player-container"><div id="playerTopBar" class="withu-player-topbar is-solo" aria-live="polite"><span class="withu-player-topbar-left"><img class="withu-player-topbar-logo" src="<?php echo e($playerLogoUrl); ?>" alt="withU"><span id="playerTopTitle" class="withu-player-topbar-title"><?php echo e($media['series_name'] ?: $media['file_name']); ?></span></span><span id="playerTopWatch" class="withu-player-topbar-watch">一起看<span class="withu-player-topbar-heart">❤</span><span id="playerTopOnlineText">宝宝离线中</span></span><span class="withu-player-topbar-right"><span id="playerNetSpeed" class="withu-player-topbar-speed">网速 --</span><span id="playerTopTime" class="withu-player-topbar-time">--:--</span></span></div><div id="playerWatermark" class="player-watermark" aria-live="polite"><span id="watermarkMark" class="watermark-mark"><img src="<?php echo e($playerLogoUrl); ?>" alt="withU"><span class="watermark-heart" aria-hidden="true">♥</span></span><span id="watermarkOnline" class="watermark-online" hidden>宝宝在线中</span></div><div id="switchLoading" class="withu-switch-loading" hidden aria-live="polite"><div class="withu-switch-loading-box"><span class="withu-switch-loading-spinner" aria-hidden="true"></span><span id="switchLoadingText">正在切换选集…</span></div></div></div><span id="gestureValue" class="gesture-value"></span></div></section><section class="episode-panel" aria-labelledby="episodeListHeading"><div class="episode-panel-header"><h2 id="episodeListHeading">选集列表</h2><div class="episode-panel-controls"><button type="button" class="episode-toggle" data-episode-toggle="columns" aria-label="切换选集排版"><span class="episode-toggle-label">排版</span><span class="episode-toggle-option" data-episode-columns-state="2">双排</span><span class="episode-toggle-option" data-episode-columns-state="1">单排</span></button><button type="button" class="episode-toggle" data-episode-toggle="order" aria-label="切换选集排序"><span class="episode-toggle-label">排序</span><span class="episode-toggle-option" data-episode-order-state="asc">正序</span><span class="episode-toggle-option" data-episode-order-state="desc">倒序</span></button></div></div><div id="episodeListOutside" class="episode-list" data-columns="2"></div></section></div>
-  <section class="media-detail" aria-label="影片简介"><div class="media-detail-kicker">简介</div><span class="poster-badge-wrap"<?php echo $czMode && empty($czMeta['poster']) ? ' style="display:none"' : ''; ?>><img id="detailPoster" class="media-detail-poster" src="<?php echo $czMode ? (e($czMeta['poster'] ?? '')) : ('/api/media_cover.php?id=' . (int)$media['id']); ?>" alt=""><span id="detailResolutionBadge"><?php echo $czMode ? '' : withu_resolution_badge_html($media['resolution'] ?? ''); ?></span></span><div class="media-detail-copy"><div class="media-detail-titlebar"><h2 id="detailTitle"><?php echo e($media['series_name'] ?: $media['file_name']); ?></h2><div id="detailFacts" class="media-detail-facts"></div></div><div id="detailSummary" class="media-detail-summary"><div class="media-summary-body"><?php echo e($media['summary'] ?? '正在读取评分、简介和演职员信息…'); ?></div></div></div></section>
-  <?php if (!$czMode): ?><section class="recommend-panel" aria-labelledby="recommendHeading"><div class="recommend-panel-header"><div class="recommend-panel-titleline"><h2 id="recommendHeading">猜你想看</h2></div><a class="recommend-more" href="/watch.php">显示更多</a></div><div id="recommendList" class="recommend-list"></div></section><?php endif; ?>
+  <section class="media-detail" aria-label="影片简介"><div class="media-detail-kicker">简介</div><span class="poster-badge-wrap"<?php echo (($czMode && empty($czMeta['poster'])) || ($strmMode && empty($strmMeta['posterUrl'] ?? ''))) ? ' style="display:none"' : ''; ?>><img id="detailPoster" class="media-detail-poster" src="<?php echo $czMode ? (e($czMeta['poster'] ?? '')) : ($strmMode ? (e($strmMeta['posterUrl'] ?? '')) : ('/api/media_cover.php?id=' . (int)$media['id'])); ?>" alt=""><span id="detailResolutionBadge"><?php echo ($czMode || $strmMode) ? '' : withu_resolution_badge_html($media['resolution'] ?? ''); ?></span></span><div class="media-detail-copy"><div class="media-detail-titlebar"><h2 id="detailTitle"><?php echo e($media['series_name'] ?: $media['file_name']); ?></h2><div id="detailFacts" class="media-detail-facts"></div></div><div id="detailSummary" class="media-detail-summary"><div class="media-summary-body"><?php echo e($media['summary'] ?? '正在读取评分、简介和演职员信息…'); ?></div></div></div></section>
+  <?php if (!$czMode && !$strmMode): ?><section class="recommend-panel" aria-labelledby="recommendHeading"><div class="recommend-panel-header"><div class="recommend-panel-titleline"><h2 id="recommendHeading">猜你想看</h2></div><a class="recommend-more" href="/watch.php">显示更多</a></div><div id="recommendList" class="recommend-list"></div></section><?php endif; ?>
 </main>
 <div id="choiceModal" class="watch-choice" hidden><div class="watch-choice-box"><h2>另一位正在观影</h2><p id="choiceText">检测到另一位已进入 WithU Watch。</p><div class="watch-choice-actions"><button id="chooseTogether" class="btn btn-primary">一起看</button><button id="chooseSolo" class="btn btn-secondary">自己看</button></div></div></div>
 <script src="/assets/vendor/hls.min.js"></script>
@@ -557,6 +598,7 @@ if ($czMode) {
 <script>
  var csrf=<?php echo json_encode($csrfToken); ?>,partnerId=<?php echo $partnerId; ?>,initialMediaId=<?php echo $mediaId; ?>,initialUrl=<?php echo json_encode($initialResolveUrl); ?>,initialName=<?php echo json_encode($media['file_name']); ?>,playerLogoUrl=<?php echo json_encode($playerLogoUrl); ?>,playerLoadBackground=<?php echo json_encode($playerLoadBackground); ?>,watchPollIntervalMs=<?php echo $watchPollIntervalMs; ?>,watchHeartbeatIntervalMs=<?php echo $watchHeartbeatIntervalMs; ?>,watchAutoplayEnabled=<?php echo $watchAutoplayEnabled ? 'true' : 'false'; ?>,playerAutoNextEnabled=<?php echo $playerAutoNextEnabled ? 'true' : 'false'; ?>;
   var czMode=<?php echo $czMode ? 'true' : 'false'; ?>,czLines=<?php echo json_encode($czLines); ?>,czDetailUrl=<?php echo json_encode($czDetailUrl); ?>,czMeta=<?php echo json_encode($czMeta ?? [], JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES | JSON_HEX_TAG); ?>;
+var strmMode=<?php echo $strmMode ? 'true' : 'false'; ?>,strmMediaId=<?php echo (int)($strmMediaId ?? 0); ?>,strmMeta=<?php echo json_encode($strmMeta ?? [], JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES | JSON_HEX_TAG); ?>;
   var mediaApi='/api/media.php',watchApi='/api/watch.php',code='WithU Watch',roomJoined=false,loadedMediaId=null,lastEvent=0,timer=null,heartbeatTimer=null,pollInFlight=false,applying=false,applyingTimer=null,remoteSeekPending=false,remoteSeekTimer=null,syncCatchupTimer=null,holdTimer=null,normalSpeed=1,peer=null,voiceStream=null,voiceActive=false,voiceAudioCtx=null,voiceMicSource=null,voiceAnalyser=null,voiceLevelData=null,voiceActivityFrame=null,voiceActivityLastLoudAt=0,oldVolume=1,localOnly=false,partnerOnline=false,pendingMediaId=initialMediaId,mediaItems=[],recommendationGroups=[],searchRequestSerial=0,searchTimer=null,searchRequestController=null,playbackSourceController=null,brightness=1,currentEpisodes=[],episodeColumns=2,episodeColumnsManual=false,episodeOrder='asc',syncDriftThreshold=<?php echo $watchSyncThresholdMs / 1000; ?>,mediaSelectionSerial=0,mediaSwitchSerial=0,mediaSwitchBusy=false,localAutoplayRequest=false,localAutoplayPendingUntil=0,castExpanded=false,playerLayoutFrame=0,desktopRectFrame=0,episodePointerFrame=0,episodePointerEvent=null;
 var $=function(id){return document.getElementById(id);};
 var player=null,mediaPlayer=null,speedControl=null,speedMenu=null,episodeLauncher=null,voiceControl=null,chatControl=null,sideChatControl=null,voiceActivityNode=null,chatPanel=null,sideChatPanel=null,sideChatMessagesNode=null,danmakuLayer=null,chatMessages=[],episodeRenderSignature='',metaRenderSignature='',speedSteps=[.5,.75,1,1.25,1.5,2,3],playerDefaultSpeed=<?php echo json_encode($playerDefaultSpeed); ?>;
@@ -823,6 +865,44 @@ function loadCzEpisodes(){
   renderCzMeta();
   if(mediaItems.length) selectMedia(mediaItems[0].id);
 }
+function loadStrmEpisodes(){
+  var meta=strmMeta||{}, eps=meta.episodes||[];
+  var base=Number(meta.id||strmMediaId||0);
+  var isMovie=(meta.mediaType==='movie')||(meta.type==='Movie');
+  if(isMovie || !eps || !eps.length){
+    mediaItems=[{id:base,file_name:meta.name||'strm 媒体',series_name:meta.name||'strm 媒体',series_key:'strm-'+base,episode_number:0,strmMediaId:base,strmEpisodeId:0}];
+  }else{
+    mediaItems=eps.map(function(ep){
+      return {id:Number(ep.id)||0,file_name:ep.sourceFileName||('第 '+ep.episodeNo+' 集'),series_name:meta.name||'strm 媒体',series_key:'strm-'+base,episode_number:Number(ep.episodeNo)||0,strmMediaId:base,strmEpisodeId:Number(ep.id)||0};
+    });
+  }
+  pendingMediaId=mediaItems[0]?mediaItems[0].id:0;
+  setTogetherUi(false);localOnly=true;
+  if(document.getElementById('togetherExit'))document.getElementById('togetherExit').hidden=true;
+  var searchWrap=document.querySelector('.player-top-search');if(searchWrap)searchWrap.style.display='none';
+  renderEpisodes();
+  renderStrmMeta();
+  if(mediaItems.length) selectMedia(mediaItems[0].id);
+}
+function renderStrmMeta(){
+  var t=strmMeta||{};
+  var facts=[];
+  if(t.year)facts.push(String(t.year));
+  if(t.mediaType==='movie')facts.push('电影');else if(t.mediaType==='tv')facts.push('剧集');
+  if(t.voteAverage)facts.push('评分 '+Number(t.voteAverage).toFixed(1));
+  var dt=$('detailTitle'); if(dt)dt.textContent=t.name||'strm 媒体';
+  var df=$('detailFacts'); if(df)df.innerHTML=facts.map(function(x){return '<span>'+esc(x)+'</span>';}).join('');
+  var detail=$('detailSummary');
+  if(detail){
+    var summary=String(t.overview||'暂无简介').trim();
+    detail.innerHTML='<div class="media-summary-body"> '+esc(summary)+'</div>';
+  }
+  var poster=$('detailPoster');
+  if(poster&&t.posterUrl){ if(poster.getAttribute('src')!==t.posterUrl)poster.src=t.posterUrl; var wrap=poster.closest('.poster-badge-wrap'); if(wrap)wrap.style.display=''; }
+  var badge=$('detailResolutionBadge'); if(badge)badge.innerHTML='';
+  updatePlayerTopBar();
+}
+
  function setWatermarkOnline(online){var label=$('watermarkOnline'),mark=$('watermarkMark'),node=$('playerWatermark');if(label)label.hidden=!online;if(mark)mark.classList.toggle('is-online',!!online);if(node)node.classList.toggle('partner-online',!!online);}
 function updatePartner(payload){partnerOnline=(payload.members||[]).some(function(member){return Number(member.user_id)===Number(partnerId);});setWatermarkOnline(partnerOnline);updatePlayerTopBar();return partnerOnline;}
 function bindCastToggle(detail){
@@ -883,7 +963,7 @@ function renderCzMeta(){
   var badge=$('detailResolutionBadge'); if(badge)badge.innerHTML='';
   updatePlayerTopBar();
 }
-function renderMeta(room){ if(czMode){ renderCzMeta(); return; }
+function renderMeta(room){ if(czMode){ renderCzMeta(); return; } if(strmMode){ renderStrmMeta(); return; }
  var mediaItem=findMediaItem(room.media_id)||{},metadata={};
  try{metadata=JSON.parse(mediaItem.metadata_json||room.metadata_json||'{}');}catch(e){metadata={};}
  var cast=room.cast_names||'';
@@ -1009,6 +1089,16 @@ function selectMedia(id){id=Number(id);if(!Number.isFinite(id)||id<=0)return;if(
     pendingMediaId=id;loadedMediaId=null;renderEpisodes();updatePlayerTopBar();
     setStatus('正在解析 '+czName+' 直链…');
     return setPlayerSource('/api/cz.php?action=resolve_line&url='+encodeURIComponent(czTarget.czVplay||czDetailUrl)+'&from=player',czName,false,false,true,false).catch(function(err){setStatus('解析失败：'+(err&&err.message||err));});
+  }
+  if(strmMode){
+    var st=mediaItems.find(function(x){return Number(x.id)===id;})||currentEpisodes.find(function(x){return Number(x.id)===id;});
+    if(!st)return;
+    var stName=st.episode_number?('第 '+st.episode_number+' 集'):(st.file_name||st.series_name||'');
+    pendingMediaId=id;loadedMediaId=null;renderEpisodes();updatePlayerTopBar();
+    setStatus('正在解析 '+(stName||'媒体')+' 直链…');
+    var resolveUrl='/api/strm.php?action=resolve&id='+Number(st.strmMediaId||strmMediaId);
+    if(st.strmEpisodeId)resolveUrl+='&episode='+Number(st.strmEpisodeId);
+    return setPlayerSource(resolveUrl,stName||'strm 媒体',false,false,true,false).catch(function(err){setStatus('解析失败：'+(err&&err.message||err));});
   }var target=findMediaItem(id)||currentEpisodes.find(function(item){return Number(item.id)===id;})||{};var switchName=target.episode_number?'第 '+target.episode_number+' 集':(target.file_name||target.series_name||'当前选集');var selectionId=++mediaSelectionSerial;mediaSwitchBusy=true;pendingMediaId=id;loadedMediaId=null;localAutoplayRequest=watchAutoplayEnabled;setSwitchLoading(true,'正在切换到 '+switchName+'…');stopCurrentPlaybackForSwitch();renderEpisodes();updatePlayerTopBar();setStatus('正在读取选集…');ensureMediaLoaded(id).then(function(found){if(selectionId!==mediaSelectionSerial){localAutoplayRequest=false;return;}if(!found){localAutoplayRequest=false;setSwitchLoading(false);setStatus('未找到该选集');return;}renderEpisodes();setStatus('正在进入 WithU Watch…');var action=localOnly?'choose':'default';var data=localOnly?{choice:'solo',media_id:id}:{media_id:id};return watchRequest(action,data);}).then(function(result){if(!result||selectionId!==mediaSelectionSerial){localAutoplayRequest=false;return;}if(!result.success){localAutoplayRequest=false;setSwitchLoading(false);setStatus(result.message||'进入房间失败');return;}if(result.choice_required){mediaSwitchBusy=false;setSwitchLoading(false);roomJoined=false;$('choiceText').textContent='检测到另一位在线，当前影片为：'+result.current_file_name+'。请选择观看方式。';$('choiceModal').hidden=false;return;}roomJoined=!localOnly;setStatus(localOnly?'自己看模式':'已进入 WithU Watch');applyRoom(result);startPolling();}).catch(function(){if(selectionId===mediaSelectionSerial){mediaSwitchBusy=false;localAutoplayRequest=false;setSwitchLoading(false);setStatus('切换选集失败，请稍后重试');}});}
  function poll(){if(localOnly||pollInFlight)return;pollInFlight=true;watchRequest('poll',{room:code,since:lastEvent},'GET').then(function(payload){if(!payload||payload.success===false){setStatus((payload&&payload.message)||'服务暂时不可用，请稍后重试。');return;}applyRoom(payload);handleVoiceEvents(payload.events||[]);lastEvent=payload.last_event_id||lastEvent;}).catch(function(){setStatus('服务暂时不可用，请稍后重试。');}).then(function(){pollInFlight=false;});}
  function startPolling(){if(timer)clearInterval(timer);if(localOnly)return;timer=setInterval(poll,watchPollIntervalMs);poll();}
@@ -1031,7 +1121,7 @@ function showGesture(text){$('gestureValue').textContent=text;clearTimeout(showG
 function beginHold(){if(holdTimer)return;normalSpeed=desktopSpeed();holdTimer=setTimeout(function(){applying=true;if(desktopMpvActive){desktopMpvState.speed=2;desktopCommand('rate 2.00');}else player.playbackRate=2;applying=false;sendEvent('speed');showGesture('长按：2x');},450);}function endHold(){if(!holdTimer)return;clearTimeout(holdTimer);holdTimer=null;if(Math.abs(desktopSpeed()-normalSpeed)>.01){if(desktopMpvActive){desktopMpvState.speed=normalSpeed;desktopCommand('rate '+normalSpeed.toFixed(2));}else player.playbackRate=normalSpeed;sendEvent('speed');showGesture('恢复：'+normalSpeed+'x');}}
 var touchStart=null;$('gesture').addEventListener('pointerdown',function(e){beginHold();touchStart={x:e.clientX,y:e.clientY,volume:desktopVolume(),brightness:brightness};});$('gesture').addEventListener('pointerup',function(e){endHold();if(!touchStart)return;var dy=touchStart.y-e.clientY;if(Math.abs(dy)>24){var ratio=Math.max(-1,Math.min(1,dy/260));if(touchStart.x<window.innerWidth/2){brightness=Math.max(.4,Math.min(1.5,touchStart.brightness+ratio*.7));if(player)player.style.filter='brightness('+brightness+')';showGesture('亮度：'+Math.round(brightness*100)+'%');}else{var volume=Math.max(0,Math.min(1,touchStart.volume+ratio));if(desktopMpvActive){desktopMpvState.volume=volume;desktopCommand('volume '+(volume*100).toFixed(2));}else player.volume=volume;showGesture('音量：'+Math.round(volume*100)+'%');}}touchStart=null;});$('gesture').addEventListener('pointercancel',function(){endHold();touchStart=null;});
  function toggleTogether(){if(!localOnly&&roomJoined){endTogether();return;}chooseTogether();}
- $('togetherExit').onclick=toggleTogether;$('chooseTogether').onclick=chooseTogether;$('chooseSolo').onclick=chooseSolo;$('mediaSearch').addEventListener('input',renderSearchResults);$('mediaSearch').addEventListener('focus',renderSearchResults);document.addEventListener('click',function(event){if(!event.target.closest('.media-search-wrap')){var results=$('mediaSearchResults');if(results)results.hidden=true;}});window.addEventListener('resize',function(){clearTimeout(refreshCastToggleVisibility.timer);refreshCastToggleVisibility.timer=setTimeout(function(){refreshCastToggleVisibility();},120);});document.querySelectorAll('[data-episode-columns]').forEach(function(btn){btn.onclick=function(){episodeColumns=Number(btn.getAttribute('data-episode-columns'))===1?1:2;episodeColumnsManual=true;updateEpisodeControls();};});document.querySelectorAll('[data-episode-order]').forEach(function(btn){btn.onclick=function(){episodeOrder=btn.getAttribute('data-episode-order')==='desc'?'desc':'asc';renderEpisodes();};});document.querySelectorAll('[data-episode-toggle="columns"]').forEach(function(btn){btn.onclick=function(){episodeColumns=episodeColumns===1?2:1;episodeColumnsManual=true;updateEpisodeControls();};});document.querySelectorAll('[data-episode-toggle="order"]').forEach(function(btn){btn.onclick=function(){episodeOrder=episodeOrder==='asc'?'desc':'asc';renderEpisodes();};});setInterval(updatePlayerTopTime,30000);setTogetherUi(false);updatePlayerTopBar();updateEpisodeControls();if(czMode)loadCzEpisodes();else loadEpisodes();
+ $('togetherExit').onclick=toggleTogether;$('chooseTogether').onclick=chooseTogether;$('chooseSolo').onclick=chooseSolo;$('mediaSearch').addEventListener('input',renderSearchResults);$('mediaSearch').addEventListener('focus',renderSearchResults);document.addEventListener('click',function(event){if(!event.target.closest('.media-search-wrap')){var results=$('mediaSearchResults');if(results)results.hidden=true;}});window.addEventListener('resize',function(){clearTimeout(refreshCastToggleVisibility.timer);refreshCastToggleVisibility.timer=setTimeout(function(){refreshCastToggleVisibility();},120);});document.querySelectorAll('[data-episode-columns]').forEach(function(btn){btn.onclick=function(){episodeColumns=Number(btn.getAttribute('data-episode-columns'))===1?1:2;episodeColumnsManual=true;updateEpisodeControls();};});document.querySelectorAll('[data-episode-order]').forEach(function(btn){btn.onclick=function(){episodeOrder=btn.getAttribute('data-episode-order')==='desc'?'desc':'asc';renderEpisodes();};});document.querySelectorAll('[data-episode-toggle="columns"]').forEach(function(btn){btn.onclick=function(){episodeColumns=episodeColumns===1?2:1;episodeColumnsManual=true;updateEpisodeControls();};});document.querySelectorAll('[data-episode-toggle="order"]').forEach(function(btn){btn.onclick=function(){episodeOrder=episodeOrder==='asc'?'desc':'asc';renderEpisodes();};});setInterval(updatePlayerTopTime,30000);setTogetherUi(false);updatePlayerTopBar();updateEpisodeControls();if(czMode)loadCzEpisodes();else if(strmMode)loadStrmEpisodes();else loadEpisodes();
 function endTogether(){watchRequest('end_together',{room_code:code}).then(function(result){if(!result.success){setStatus(result.message||'结束一起看失败');return;}if(voiceActive)stopVoice();localOnly=true;roomJoined=false;setWatermarkOnline(false);setTogetherUi(false);if(timer)clearInterval(timer);if(heartbeatTimer)clearInterval(heartbeatTimer);heartbeatTimer=null;setStatus('已结束一起看，当前仅自己观看');});}
 </script>
 </body>
