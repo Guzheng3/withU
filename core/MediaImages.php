@@ -71,7 +71,7 @@ if (!function_exists('withu_media_image_download')) {
         $body = curl_exec($ch);
         $status = (int)curl_getinfo($ch, CURLINFO_HTTP_CODE);
         $contentType = strtolower((string)curl_getinfo($ch, CURLINFO_CONTENT_TYPE));
-        curl_close($ch);
+        
 
         if ($status < 200 || $status >= 300 || !is_string($body) || strlen($body) < 100) return '';
         $info = @getimagesizefromstring($body);

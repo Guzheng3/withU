@@ -167,7 +167,7 @@ function withu_douban_get(string $url, int $timeout = 12): string
     ]);
     $body = curl_exec($ch);
     $status = (int)curl_getinfo($ch, CURLINFO_HTTP_CODE);
-    curl_close($ch);
+    
     return $status >= 200 && $status < 300 && is_string($body) ? $body : '';
 }
 
@@ -197,7 +197,7 @@ function withu_douban_mobile_json(string $path, array $query = [], int $timeout 
     ]);
     $body = curl_exec($ch);
     $status = (int)curl_getinfo($ch, CURLINFO_HTTP_CODE);
-    curl_close($ch);
+    
     $json = is_string($body) ? json_decode($body, true) : null;
     return $status >= 200 && $status < 300 && is_array($json) ? $json : [];
 }
@@ -286,7 +286,7 @@ function withu_tmdb_request(string $path, array $query = [], int $timeout = 30):
     ]);
     $body = curl_exec($ch);
     $status = (int)curl_getinfo($ch, CURLINFO_HTTP_CODE);
-    curl_close($ch);
+    
     if ($status < 200 || $status >= 300 || !is_string($body)) return [];
     $json = json_decode($body, true);
     return is_array($json) ? $json : [];
@@ -756,7 +756,7 @@ function withu_recognize_series($db, string $seriesKey, array $hints = [], bool 
             ]);
             $raw = curl_exec($ch);
             $status = (int)curl_getinfo($ch, CURLINFO_HTTP_CODE);
-            curl_close($ch);
+            
             $decoded = is_string($raw) ? json_decode($raw, true) : null;
             $ai = withu_ai_json((string)($decoded['choices'][0]['message']['content'] ?? ''));
             $doubanId = is_array($ai) ? trim((string)($ai['douban_id'] ?? '')) : '';
@@ -861,7 +861,7 @@ function withu_recognize_media($db, array $media, bool $force = false): array
         ]);
         $raw = curl_exec($ch);
         $status = (int)curl_getinfo($ch, CURLINFO_HTTP_CODE);
-        curl_close($ch);
+        
         $decoded = is_string($raw) ? json_decode($raw, true) : null;
         $ai = withu_ai_json((string)($decoded['choices'][0]['message']['content'] ?? ''));
         if ($status >= 200 && $status < 300 && is_array($ai)) {

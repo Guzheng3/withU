@@ -3,7 +3,7 @@ function withu_http_json(string $url, array $headers = []): ?array
 {
     $ch = curl_init($url);
     curl_setopt_array($ch, [CURLOPT_RETURNTRANSFER => true, CURLOPT_TIMEOUT => 20, CURLOPT_HTTPHEADER => $headers]);
-    $raw = curl_exec($ch); curl_close($ch);
+    $raw = curl_exec($ch); 
     $data = is_string($raw) ? json_decode($raw, true) : null;
     return is_array($data) ? $data : null;
 }
@@ -32,7 +32,7 @@ function withu_ai_plan(string $destination, string $prompt, ?string &$source = n
             ['role' => 'user', 'content' => '目的地：' . $destination . '；需求：' . $prompt],
         ], 'temperature' => .3], JSON_UNESCAPED_UNICODE);
         $ch = curl_init($endpoint); curl_setopt_array($ch, [CURLOPT_POST => true, CURLOPT_POSTFIELDS => $payload, CURLOPT_RETURNTRANSFER => true, CURLOPT_TIMEOUT => 50, CURLOPT_HTTPHEADER => ['Content-Type: application/json', 'Authorization: Bearer ' . $key]]);
-        $raw = curl_exec($ch); curl_close($ch); $response = is_string($raw) ? json_decode($raw, true) : null; $content = trim((string)($response['choices'][0]['message']['content'] ?? '')); $json = json_decode($content, true);
+        $raw = curl_exec($ch);  $response = is_string($raw) ? json_decode($raw, true) : null; $content = trim((string)($response['choices'][0]['message']['content'] ?? '')); $json = json_decode($content, true);
         if (is_array($json)) { $source = 'ai'; return $json; }
     }
     $source = 'local';

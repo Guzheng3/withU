@@ -68,7 +68,7 @@ class OpenListClient
         $body = curl_exec($ch);
         $status = (int)curl_getinfo($ch, CURLINFO_HTTP_CODE);
         $error = curl_error($ch);
-        curl_close($ch);
+        
         if (!is_string($body) || $status < 200 || $status >= 300) {
             throw new RuntimeException($error !== '' ? $error : 'OpenList API 请求失败（HTTP ' . $status . '）');
         }
@@ -309,7 +309,7 @@ class OpenListClient
         curl_setopt($ch, CURLOPT_HTTPHEADER, ['Depth: 1', 'Content-Type: application/xml', 'User-Agent: withU/1.0']);
         $body = curl_exec($ch);
         $status = (int)curl_getinfo($ch, CURLINFO_HTTP_CODE);
-        curl_close($ch);
+        
         if (!is_string($body) || $status < 200 || $status >= 300) {
             $this->scanErrors++;
             return [];
@@ -369,7 +369,7 @@ class OpenListClient
         curl_exec($ch);
         if ($location === '') $location = (string)curl_getinfo($ch, CURLINFO_REDIRECT_URL);
         $status = (int)curl_getinfo($ch, CURLINFO_HTTP_CODE);
-        curl_close($ch);
+        
         if ($location === '' && $status >= 200 && $status < 300) return $sourceUrl;
         if ($location !== '' && !preg_match('#^https?://#i', $location)) {
             $parts = parse_url($sourceUrl);
@@ -472,7 +472,7 @@ class OpenListClient
         ]);
         curl_exec($ch);
         $status = (int)curl_getinfo($ch, CURLINFO_HTTP_CODE);
-        curl_close($ch);
+        
         return ($status >= 200 && $status < 300);
     }
 }

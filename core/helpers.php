@@ -57,7 +57,7 @@ function http_get_json(string $url, int $timeout = 5): array {
             CURLOPT_USERAGENT      => 'YC Album/1.0',
         ]);
         $response = curl_exec($ch);
-        curl_close($ch);
+        
     } else {
         // 回退到 file_get_contents
         $context = stream_context_create([
@@ -323,10 +323,10 @@ function verify_turnstile(string $token): bool {
 
     $result = curl_exec($ch);
     if ($result === false) {
-        curl_close($ch);
+        
         return false;
     }
-    curl_close($ch);
+    
 
     $data = json_decode($result, true);
     if (!is_array($data)) {

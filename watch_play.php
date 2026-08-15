@@ -124,7 +124,7 @@ if ($strmMode) {
     ]);
     $strmBody = curl_exec($strmCh);
     $strmCode = (int)curl_getinfo($strmCh, CURLINFO_RESPONSE_CODE);
-    curl_close($strmCh);
+    
     $strmResp = $strmCode === 200 ? (json_decode((string)$strmBody, true) ?: []) : [];
     // Spring ApiResponse {code,message,data}
     $strmMeta = (($strmResp['code'] ?? 0) === 200) ? ($strmResp['data'] ?? []) : [];
