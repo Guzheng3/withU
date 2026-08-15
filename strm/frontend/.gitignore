@@ -10,7 +10,10 @@ dist
 node_modules
 
 # Logs
+# 组件运行时日志目录（忽略），但前端日志页面源码需入库
 logs/
+!app/pages/logs/
+!app/pages/logs/index.vue
 *.log
 
 # Misc
