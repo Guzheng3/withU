@@ -1,4 +1,8 @@
 <?php
+/** SITE_NAME 兜底：config/config.php(不入库) 未定义时用默认值，避免前台致命错误 */
+if (!defined('SITE_NAME')) {
+    define('SITE_NAME', '我们的小情侣网站');
+}
 /** withU 共享业务辅助函数。 */
 
 // 厂长资源(cz / 4kcz.com) 总开关：默认 false=暂时屏蔽（部署到别处也不显示 cz 源）。
