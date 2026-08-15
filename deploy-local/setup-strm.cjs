@@ -95,6 +95,25 @@ if (!jwt || jwt.length < 32) {
 
 // ---- 4. 生成启动器 ----
 const java = ensureJava();
+// 幂等注入 TMDB 代理配置（本机 Clash 混合端口，可在 systemconf.json 手动改）
+function ensureTmdbProxy() {
+  const confPath = path.join(runtime, 'config', 'systemconf.json');
+  if (!fs.existsSync(confPath)) return;
+  try {
+    const conf = JSON.parse(fs.readFileSync(confPath, 'utf8'));
+    if (!conf.tmdb) conf.tmdb = {};
+    let changed = false;
+    if (!conf.tmdb.proxyHost) { conf.tmdb.proxyHost = '127.0.0.1'; changed = true; }
+    if (!conf.tmdb.proxyPort) { conf.tmdb.proxyPort = '7897'; changed = true; }
+    if (!conf.tmdb.apiKey) { conf.tmdb.apiKey = '8d70511b0389c1015d30b6c1ebf08dce'; changed = true; }
+    if (changed) {
+      fs.writeFileSync(confPath, JSON.stringify(conf, null, 2).replace(/\n/g, '\r\n'), 'utf8');
+      console.log('[strm] 已注入 TMDB 代理配置 (127.0.0.1:7897)');
+    }
+  } catch (e) { console.warn('[strm] systemconf 注入失败:', e.message); }
+}
+ensureTmdbProxy();
+
 const node = ensureNode();
 const bridge = path.join(strmRoot, 'bridge.js');
 
@@ -115,7 +134,8 @@ const backendLauncher = [
   "  DOUBAN_COOKIE_KEY: '" + jwt + "'",
   "});",
   "const fd = fs.openSync(base + '/backend.log', 'a');",
-  "const p = spawn(java, ['-jar', jar, '--server.address=127.0.0.1'], { env, cwd: base, stdio: ['ignore', fd, fd] });",
+  "const proxyArgs = ['-Dhttp.proxyHost=127.0.0.1', '-Dhttp.proxyPort=7897', '-Dhttps.proxyHost=127.0.0.1', '-Dhttps.proxyPort=7897', '-Dhttp.nonProxyHosts=localhost|127.0.0.1|[::1]', '-Dhttps.nonProxyHosts=localhost|127.0.0.1|[::1]'];",
+  "const p = spawn(java, [...proxyArgs, '-jar', jar, '--server.address=127.0.0.1'], { env, cwd: base, stdio: ['ignore', fd, fd] });",
   "console.log('spawned java pid', p.pid);",
   "p.on('exit', c => { try{fs.closeSync(fd);}catch(e){} console.log('java exited', c); process.exit(c || 0); });"
 ].join('\n');
