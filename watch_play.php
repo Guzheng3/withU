@@ -19,6 +19,7 @@ $partnerId = (int)($partner['id'] ?? 0);
 $mediaId = (int)($_GET['media_id'] ?? 0);
 $czMode = (($_GET['source'] ?? '') === 'cz');
 $strmMode = (($_GET['source'] ?? '') === 'strm');
+if ($czMode && (!defined('WITHU_CZ_ENABLED') || !WITHU_CZ_ENABLED)) { header('Location: /watch.php'); exit; } // 厂长资源(cz)暂时屏蔽
 $media = $mediaId > 0 ? withu_media_fetch($mediaId) : null;
 if (!$media && !$czMode && !$strmMode) { header('Location: /watch.php'); exit; }
 $themeConfig = withu_theme_config();

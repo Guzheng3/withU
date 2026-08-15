@@ -1,6 +1,10 @@
 <?php
 /** withU 共享业务辅助函数。 */
 
+// 厂长资源(cz / 4kcz.com) 总开关：默认 false=暂时屏蔽（部署到别处也不显示 cz 源）。
+// 本地如需启用，在 config/config.php（安装向导生成、不入 git）里先 define 覆盖为 true 即可。
+if (!defined('WITHU_CZ_ENABLED')) define('WITHU_CZ_ENABLED', false);
+
 if (!function_exists('withu_require_couple_user')) {
     function withu_require_couple_user(Auth $auth): array {
         $auth->requireLogin();

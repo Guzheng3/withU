@@ -23,6 +23,14 @@ header('Access-Control-Allow-Headers: *');
 if (($_SERVER['REQUEST_METHOD'] ?? '') === 'OPTIONS') exit;
 
 require_once __DIR__ . '/../config/config.php';
+
+if (!defined('WITHU_CZ_ENABLED')) define('WITHU_CZ_ENABLED', false); // 代码默认屏蔽，可在 config/config.php 覆盖启用
+// 厂长资源(cz)总开关：WITHU_CZ_ENABLED=false 时整个接口暂时屏蔽
+if (!defined('WITHU_CZ_ENABLED') || !WITHU_CZ_ENABLED) {
+    http_response_code(404);
+    echo json_encode(['success' => false, 'code' => 404, 'message' => 'cz 源已暂时屏蔽'], JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
+    exit;
+}
 require_once __DIR__ . '/../core/CzSource.php';
 require_once __DIR__ . '/../core/Database.php';
 require_once __DIR__ . '/../core/CzCatalog.php';

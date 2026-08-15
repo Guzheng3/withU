@@ -10,6 +10,7 @@ require_once __DIR__ . '/core/MediaSchema.php';
 require_once __DIR__ . '/core/MediaRepository.php';
 require_once __DIR__ . '/core/MediaRecognition.php';
 
+$czEnabled = !defined('WITHU_CZ_ENABLED') || WITHU_CZ_ENABLED; // 厂长资源(cz)开关：false=暂时屏蔽
 migrate_schema_if_needed();
 $auth = new Auth();
 $user = withu_require_couple_user($auth);
@@ -289,10 +290,10 @@ body.watch-page a{color:inherit}
 
 <header class="site-header">
   <a class="brand" href="/watch.php"><span class="brand-mark">🌸</span>樱视<em>withU 共享观影</em></a>
-  <label class="search-box"><span class="s-icon">⌕</span><input id="watchSearch" placeholder="模糊搜索片名、演员、年份 或 直接搜 cz 厂长资源"></label>
+  <label class="search-box"><span class="s-icon">⌕</span><input id="watchSearch" placeholder="模糊搜索片名、演员、年份"></label>
   <nav class="header-links">
     <a href="/watch_history.php">历史</a>
-    <a class="hide-m" href="#cz">cz 资源</a>
+    <?php if ($czEnabled): ?><a class="hide-m" href="#cz">cz 资源</a><?php endif; ?>
     <a class="hide-m" href="/">情侣空间</a>
   </nav>
 </header>
@@ -336,19 +337,21 @@ body.watch-page a{color:inherit}
     <?php endif; ?>
 
     <section class="section" id="movie" style="--sec-accent:var(--blue);--sec-soft:var(--blue-soft)">
-      <div class="section-head"><span class="sec-accent"></span><h2>热门电影</h2><span class="sec-note">豆瓣新片 · 点击卡片用 cz 源搜索资源</span><a class="sec-more" href="/cz_player.php" target="_blank">cz 播放器 ›</a></div>
+      <div class="section-head"><span class="sec-accent"></span><h2>热门电影</h2><span class="sec-note"><?php echo $czEnabled ? '豆瓣新片 · 点击卡片用 cz 源搜索资源' : '豆瓣新片 · 点击卡片搜索本地影视库'; ?></span><?php if ($czEnabled): ?><a class="sec-more" href="/cz_player.php" target="_blank">cz 播放器 ›</a><?php endif; ?></div>
       <div class="grid" id="movieGrid"><div class="empty">正在加载豆瓣新片…</div></div>
     </section>
 
     <section class="section" id="tv" style="--sec-accent:var(--green);--sec-soft:var(--green-soft)">
-      <div class="section-head"><span class="sec-accent"></span><h2>热门剧集</h2><span class="sec-note">豆瓣新剧 · 点击卡片用 cz 源搜索资源</span></div>
+      <div class="section-head"><span class="sec-accent"></span><h2>热门剧集</h2><span class="sec-note"><?php echo $czEnabled ? '豆瓣新剧 · 点击卡片用 cz 源搜索资源' : '豆瓣新剧 · 点击卡片搜索本地影视库'; ?></span></div>
       <div class="grid" id="tvGrid"><div class="empty">正在加载豆瓣新剧…</div></div>
     </section>
 
+    <?php if ($czEnabled): ?>
     <section class="section" id="cz" hidden style="--sec-accent:var(--pink);--sec-soft:var(--pink-soft)">
       <div class="section-head"><span class="sec-accent"></span><h2><span class="src-badge">cz</span> 厂长资源</h2><span class="sec-note" id="czResultNote"></span></div>
       <div class="grid" id="czResultGrid"></div>
     </section>
+    <?php endif; ?>
 
     <section class="section" id="strm" style="--sec-accent:#a78bfa;--sec-soft:rgba(167,139,250,.15)">
       <div class="section-head">
@@ -388,6 +391,7 @@ body.watch-page a{color:inherit}
 (function(){
   'use strict';
   var isBrowse = <?php echo $isBrowsePage ? 'true' : 'false'; ?>;
+  var CZ_ENABLED = <?php echo $czEnabled ? 'true' : 'false'; ?>;
   var categoryTypeId = <?php echo (int)$requestedTypeId; ?>;
   var searchPage = 1, controller = null, searching = false;
 
@@ -466,8 +470,9 @@ body.watch-page a{color:inherit}
     fetch('/api/douban_chart.php?type=tv&limit=12',{credentials:'same-origin'}).then(function(r){return r.json();}).then(function(d){done('tv',d);}).catch(function(){done('tv',null);});
   }
 
-  /* ============ cz 联动 ============ */
+  /* ============ cz 联动（CZ_ENABLED=false 时降级为本地库搜索） ============ */
   var czSec=document.getElementById('cz'), czGrid=document.getElementById('czResultGrid'), czNote=document.getElementById('czResultNote');
+  if(CZ_ENABLED){
   function czCard(item){
     var poster = item.poster || '';
     var metaLine = [item.year, (item.types||[]).join('、')].filter(Boolean).join(' · ');
@@ -504,7 +509,14 @@ body.watch-page a{color:inherit}
       .catch(function(){ renderCz(null,title); });
     if(czSec) czSec.scrollIntoView({behavior:'smooth',block:'start'});
   }
-  window.withuCzSearch = czSearch;
+  }
+  window.withuCzSearch = CZ_ENABLED ? czSearch : function(title){
+    if(!title || !search) return;
+    search.value = title;
+    loadSearch(false);
+    var libSec = document.getElementById('library');
+    if(libSec) libSec.scrollIntoView({behavior:'smooth',block:'start'});
+  };
 
   /* ============ withUstrm 媒体库 ============ */
   var strmSec=document.getElementById('strm'), strmGrid=document.getElementById('strmGrid'), strmNote=document.getElementById('strmNote'), strmType='';
@@ -613,6 +625,7 @@ body.watch-page a{color:inherit}
     }
   }
   function loadCzSearch(q){
+    if(!CZ_ENABLED){ if(czSec) czSec.hidden=true; return; }
     if(!q){ if(czSec) czSec.hidden=true; return; }
     czSearch(q);
   }
