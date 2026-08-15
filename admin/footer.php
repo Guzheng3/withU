@@ -14,7 +14,7 @@
             <span>内容</span>
         </a>
         <a href="/admin/player_art.php"
-           class="admin-tab-item <?php echo in_array($adminPage, ['together_settings', 'player_settings', 'player_art'], true) ? 'admin-tab-item-active' : ''; ?>">
+           class="admin-tab-item <?php echo in_array($adminPage, ['together_settings', 'player_settings', 'player_art', 'strm'], true) ? 'admin-tab-item-active' : ''; ?>">
             <i class="fas fa-film"></i>
             <span>影视</span>
         </a>
