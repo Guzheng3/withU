@@ -1,3 +1,4 @@
+import { getApiBaseUrl } from '~/core/utils/api'
 /**
  * 版本检查状态管理
  * 
@@ -105,7 +106,7 @@ export const useVersionStore = defineStore('version', {
         const config = useRuntimeConfig()
         const currentVersion = (config.public.appVersion as string) || 'dev'
 
-        const response = await $fetch<VersionCheckResponse>('/api/version/check', {
+        const response = await $fetch<VersionCheckResponse>(`${getApiBaseUrl()}/version/check`, {
           method: 'GET',
           params: {
             currentVersion

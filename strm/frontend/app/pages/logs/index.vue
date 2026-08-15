@@ -140,7 +140,7 @@
 
 <script setup>
 import { ref, computed, onMounted } from 'vue'
-import { apiCall } from '~/core/utils/api'
+import { apiCall, getApiBaseUrl } from '~/core/utils/api'
 
 definePageMeta({
   middleware: 'auth'
@@ -202,7 +202,7 @@ const switchType = (type) => {
 }
 
 const downloadLog = () => {
-  const url = `/api/logs/${activeType.value}/download`
+  const url = `${getApiBaseUrl()}/logs/${activeType.value}/download`
   window.location.href = url
 }
 

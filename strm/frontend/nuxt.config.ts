@@ -137,6 +137,7 @@ export default defineNuxtConfig({
 
   // 应用配置
   app: {
+    baseURL: '/admin/strm.php/',
     head: {
       title: 'withUstrm',
       meta: [

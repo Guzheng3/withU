@@ -438,6 +438,7 @@
 
 <script setup>
 import { ref, computed } from 'vue'
+import { getApiBaseUrl } from '~/core/utils/api'
 
 const tab = ref('tmdb')
 
@@ -484,7 +485,7 @@ const runSearch = async (q) => {
     const allResults = []
     let totalResults = 0
     for (const t of types) {
-      const res = await apiCall(`/api/test/tmdb/search?query=${encodeURIComponent(q)}&type=${t}`)
+      const res = await apiCall(`/test/tmdb/search?query=${encodeURIComponent(q)}&type=${t}`)
       if (res?.code === 200) {
         const list = res.data?.results || []
         list.forEach((r) => allResults.push({ ...r, searchType: t }))
@@ -518,7 +519,7 @@ const loadDetail = async (id, explicitType = null) => {
   const useType = explicitType || (type.value === 'auto' ? 'movie' : type.value)
   try {
     const { apiCall } = await import('~/core/api/client')
-    const res = await apiCall(`/api/test/tmdb/detail?type=${useType}&id=${id}`)
+    const res = await apiCall(`/test/tmdb/detail?type=${useType}&id=${id}`)
     if (res?.code !== 200) {
       error.value = res?.message || '查询详情失败'
       return
@@ -590,7 +591,7 @@ const runDouban = async (params) => {
     const { apiCall } = await import('~/core/api/client')
     const qs = new URLSearchParams()
     Object.entries(params).forEach(([k, v]) => { if (v != null && v !== '') qs.set(k, v) })
-    const res = await apiCall(`/api/test/douban?${qs.toString()}`)
+    const res = await apiCall(`/test/douban?${qs.toString()}`)
     if (res?.code !== 200 || !res.data) {
       doubanError.value = res?.message || '豆瓣请求失败'
       return
@@ -629,7 +630,7 @@ const loadDoubanCelebrities = async (parsed) => {
   try {
     const { apiCall } = await import('~/core/api/client')
     const action = isTv ? 'tv-celebrities' : 'movie-celebrities'
-    const res = await apiCall(`/api/test/douban?action=${action}&id=${id}`)
+    const res = await apiCall(`/test/douban?action=${action}&id=${id}`)
     const celebs = res?.data?.parsed
     const actors = (celebs?.actors || []).slice(0, 20)
     doubanCast.value = actors.map((a) => ({
@@ -665,7 +666,7 @@ const mapDoubanDetail = (p) => {
 
 const doubanProxySrc = (url) => {
   if (!url) return ''
-  if (/doubanio\.com/i.test(url)) return `/api/test/douban/image?url=${encodeURIComponent(url)}`
+  if (/doubanio\.com/i.test(url)) return `${getApiBaseUrl()}/test/douban/image?url=${encodeURIComponent(url)}`
   return url
 }
 

@@ -91,7 +91,7 @@ const handleUnauthorized = (): Promise<void> => {
     }
 
     // 尝试刷新 Token（必须携带当前 token）
-    $fetch('/api/auth/refresh', { 
+    $fetch(`${getApiBaseUrl()}/auth/refresh`, { 
       method: 'POST',
       headers: {
         'Authorization': `Bearer ${token}`

@@ -6,7 +6,7 @@
  * @date 2026-01-31
  */
 
-import { apiCall } from '~/core/utils/api'
+import { apiCall, getApiBaseUrl } from '~/core/utils/api'
 
 /**
  * 日志级别类型
@@ -105,7 +105,7 @@ class Logger {
       if (sync && navigator.sendBeacon) {
         // 同步发送（页面卸载时）
         const data = JSON.stringify({ logs: enrichedLogs })
-        navigator.sendBeacon('/api/logs/frontend', data)
+        navigator.sendBeacon(`${getApiBaseUrl()}/logs/frontend`, data)
       } else {
         // 异步发送 - 使用apiCall而不是authenticatedApiCall，因为日志API不需要认证
         // API路径为'/logs/frontend'
