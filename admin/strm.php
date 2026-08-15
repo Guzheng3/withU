@@ -27,6 +27,23 @@ if ($pathInfo === '' || $pathInfo[0] !== '/') {
 $qs = $_SERVER['QUERY_STRING'] ?? '';
 $target = $bridge . $pathInfo . ($qs !== '' ? '?' . $qs : '');
 
+// ---- 内部 JWT：让 iframe 内的 withUstrm 前端免二次登录（仅 withu 后台可达） ----
+function strm_internal_token(): string
+{
+    $path = dirname(__DIR__, 2) . '/runtime/strm/jwt.txt';
+    if (!is_file($path)) return '';
+    $secret = trim((string)file_get_contents($path));
+    if ($secret === '') return '';
+    $b64u = function (string $s): string {
+        return rtrim(strtr(base64_encode($s), '+/', '-_'), '=');
+    };
+    $header = $b64u(json_encode(['alg' => 'HS256', 'typ' => 'JWT']));
+    $now = time();
+    $payload = $b64u(json_encode(['sub' => 'withu_admin', 'iat' => $now, 'exp' => $now + 20160 * 60]));
+    $sig = $b64u(hash_hmac('sha256', $header . '.' . $payload, $secret, true));
+    return $header . '.' . $payload . '.' . $sig;
+}
+
 // 手动收集请求头（兼容 php -S / 任意 SAPI）
 $headers = [];
 foreach ($_SERVER as $k => $v) {
@@ -98,5 +115,28 @@ foreach ($lines as $line) {
     }
     header($name . ': ' . $val, false);
 }
+// 若是 HTML 页面（withUstrm Nuxt 首屏），注入免登录 JWT
+$ct = '';
+foreach ($lines as $line) {
+    if (stripos($line, 'content-type:') === 0) { $ct = strtolower(trim(substr($line, 13))); break; }
+}
+$jwtTok = strm_internal_token();
+if ($jwtTok !== '' && strpos($ct, 'text/html') !== false && strpos($body, '</head>') !== false) {
+    $esc = json_encode($jwtTok);
+    $script = '<script>'
+        . 'try{'
+        . '(function(){'
+        . '  if(sessionStorage.getItem("strm_auto_authed")==="1"){return;}'
+        . '  sessionStorage.setItem("strm_auto_authed","1");'
+        . '  localStorage.setItem("auth_storage_type","local");'
+        . '  localStorage.setItem("auth_token",' . $esc . ');'
+        . '  localStorage.setItem("auth_userInfo",JSON.stringify({username:"withu_admin"}));'
+        . '  location.reload();'
+        . '})();'
+        . '}catch(e){}'
+        . '</script>';
+    $body = str_replace('</head>', $script . '</head>', $body);
+}
+
 http_response_code($status);
 echo $body;

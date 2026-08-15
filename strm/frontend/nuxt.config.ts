@@ -87,7 +87,7 @@ export default defineNuxtConfig({
   // 运行时配置
   runtimeConfig: {
     public: {
-      apiBase: '/api',
+      apiBase: '/admin/strm.php/api',
       appVersion: process.env.NUXT_PUBLIC_APP_VERSION || 'dev'
     }
   },
