@@ -192,6 +192,20 @@ function strm_kind(string $url): string
     return 'other';
 }
 
+function strm_fuzzy_contains(string $needle, string $haystack): bool
+{
+    $needle = trim(mb_strtolower($needle, 'UTF-8'));
+    $haystack = mb_strtolower($haystack, 'UTF-8');
+    if ($needle === '' || $haystack === '') return false;
+    $offset = 0;
+    foreach (preg_split('//u', $needle, -1, PREG_SPLIT_NO_EMPTY) as $char) {
+        $position = mb_strpos($haystack, $char, $offset, 'UTF-8');
+        if ($position === false) return false;
+        $offset = $position + mb_strlen($char, 'UTF-8');
+    }
+    return true;
+}
+
 // 由内部 play 接口拿直链并返回给播放器的 {success,url,type}
 function strm_resolve_internal(int $mediaId, ?int $episodeId, string $displayName): void
 {
@@ -210,7 +224,7 @@ function strm_resolve_internal(int $mediaId, ?int $episodeId, string $displayNam
     if ($kind === 'm3u8') {
         strm_json(['success' => true, 'source' => 'strm', 'url' => $self . '?action=proxy_m3u8&url=' . rawurlencode($loc), 'type' => 'm3u8', 'name' => $displayName]);
     }
-    strm_json(['success' => true, 'source' => 'strm', 'url' => $self . '?action=proxy&url=' . rawurlencode($loc), 'type' => 'mp4', 'name' => $displayName]);
+    strm_json(['success' => true, 'source' => 'strm', 'url' => $loc, 'type' => 'mp4', 'name' => $displayName]);
 }
 
 $action = (string)($_GET['action'] ?? 'info');
@@ -350,6 +364,15 @@ switch ($action) {
             strm_json(['success' => false, 'message' => $r['message'] ?? '媒体列表获取失败'], 502);
         }
         $d = $r['data'] ?? [];
+        if ($kw !== '' && empty($d['items'])) {
+            $fallback = strm_internal('?page=1&pageSize=100');
+            $fallbackItems = $fallback['success'] ? ($fallback['data']['items'] ?? []) : [];
+            $d['items'] = array_values(array_filter($fallbackItems, function ($item) use ($kw) {
+                return strm_fuzzy_contains($kw, (string)($item['title'] ?? ''))
+                    || strm_fuzzy_contains($kw, (string)($item['originalTitle'] ?? ''));
+            }));
+            $d['total'] = count($d['items']);
+        }
         $items = [];
         foreach (($d['items'] ?? []) as $it) {
             $pid = (int)($it['id'] ?? 0);
@@ -379,6 +402,25 @@ switch ($action) {
             'pageSize' => (int)($d['pageSize'] ?? $pageSize),
             'items' => $items,
         ]]);
+    }
+    case 'credits': {
+        $tmdbId = (int)($_GET['tmdbId'] ?? 0);
+        $type = strtolower(trim((string)($_GET['type'] ?? 'movie')));
+        if ($tmdbId <= 0 || !in_array($type, ['movie', 'tv'], true)) {
+            strm_json(['success' => false, 'message' => '缺少有效的 TMDB 信息'], 400);
+        }
+        $url = strm_backend_base() . '/api/test/tmdb/detail?type=' . rawurlencode($type) . '&id=' . $tmdbId;
+        $r = strm_curl($url);
+        $payload = json_decode((string)($r['body'] ?? ''), true);
+        if ($r['code'] !== 200 || !is_array($payload) || (int)($payload['code'] ?? 0) !== 200) {
+            strm_json(['success' => false, 'message' => '演员表获取失败'], 502);
+        }
+        $cast = [];
+        foreach (($payload['data']['cast'] ?? []) as $person) {
+            $name = trim((string)($person['name'] ?? ''));
+            if ($name !== '') $cast[] = $name;
+        }
+        strm_json(['success' => true, 'data' => ['cast' => array_values(array_unique($cast))]]);
     }
     case 'detail': {
         $id = (int)($_GET['id'] ?? 0);

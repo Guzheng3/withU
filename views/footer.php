@@ -79,5 +79,6 @@
 
     <script src="/assets/js/main.js"></script>
     <script src="/assets/js/withu_lg_ui.js?v=withu-lg-20260808-2"></script>
+    <script src="/assets/js/withustrm_home.js?v=withustrm-home-20260815"></script>
 </body>
 </html>

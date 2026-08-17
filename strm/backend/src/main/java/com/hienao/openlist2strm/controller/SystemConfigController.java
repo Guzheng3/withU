@@ -29,6 +29,7 @@ public class SystemConfigController {
   private final SystemConfigService systemConfigService;
   private final AiFileNameRecognitionService aiFileNameRecognitionService;
   private final NotificationService notificationService;
+  private final com.hienao.openlist2strm.service.MihomoService mihomoService;
 
   /** 获取系统配置 */
   @GetMapping("/config")
@@ -89,10 +90,37 @@ public class SystemConfigController {
       }
 
       systemConfigService.saveSystemConfig(config);
+      // mihomo 订阅地址或轮询间隔变更时异步应用并启动代理
+      Object mihomoObj = config.get("mihomo");
+      if (mihomoObj instanceof Map<?, ?> rawMihomo) {
+        Object subUrl = rawMihomo.get("subUrl");
+        Object pollInterval = rawMihomo.get("pollInterval");
+        int pollSec = 1800;
+        if (pollInterval != null) {
+          try { pollSec = Math.max(60, Integer.parseInt(String.valueOf(pollInterval))); }
+          catch (NumberFormatException ignored) { pollSec = 1800; }
+        }
+        mihomoService.applyConfigAsync(
+            subUrl == null ? "" : String.valueOf(subUrl), pollSec);
+      }
       return ResponseEntity.ok(ApiResponse.success("配置保存成功"));
     } catch (Exception e) {
       log.error("保存系统配置失败", e);
       return ResponseEntity.ok(ApiResponse.error("保存系统配置失败: " + e.getMessage()));
+    }
+  }
+
+  /** 获取内置 mihomo 代理运行状态 */
+  @GetMapping("/mihomo/status")
+  @Operation(summary = "获取 mihomo 代理状态", description = "获取内置 mihomo 代理的订阅与运行状态")
+  public ResponseEntity<ApiResponse<Map<String, Object>>> getMihomoStatus() {
+    try {
+      Map<String, Object> status = mihomoService.getStatus();
+      status.put("subUrl", systemConfigService.getMihomoConfig().getOrDefault("subUrl", ""));
+      return ResponseEntity.ok(ApiResponse.success(status));
+    } catch (Exception e) {
+      log.error("获取 mihomo 状态失败", e);
+      return ResponseEntity.ok(ApiResponse.error("获取 mihomo 状态失败: " + e.getMessage()));
     }
   }
 

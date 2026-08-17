@@ -54,9 +54,10 @@ fs.mkdirSync(runtime, { recursive: true });
 // ---- 1. 后端构建（缺 jar 时） ----
 if (!fs.existsSync(jar)) {
   console.log('[strm] 后端 jar 缺失，开始构建 (gradlew bootJar)...');
-  const g = fs.existsSync(path.join(backendDir, 'gradlew.bat'))
-    ? path.join(backendDir, 'gradlew.bat')
-    : 'gradle';
+  const gradlew = path.join(backendDir, 'gradlew');
+  const g = process.platform === 'win32'
+    ? (fs.existsSync(path.join(backendDir, 'gradlew.bat')) ? path.join(backendDir, 'gradlew.bat') : 'gradle')
+    : (fs.existsSync(gradlew) ? gradlew : 'gradle');
   const r = run(g, ['bootJar', '-x', 'test', '--no-daemon', '--console=plain'], { cwd: backendDir });
   console.log((r.stdout || '').split(/\r?\n/).slice(-12).join('\n'));
   if (!fs.existsSync(jar)) { console.error('[strm] 后端构建失败'); process.exit(1); }
@@ -92,6 +93,17 @@ if (!jwt || jwt.length < 32) {
   jwt = crypto.randomBytes(32).toString('hex');
   fs.writeFileSync(jwtFile, jwt);
   console.log('[strm] 已生成新 JWT_SECRET 并持久化');
+}
+
+// ---- 3.5 持久化 bridge 共享密钥（与 admin/strm.php 网关校验一致） ----
+const bridgeSecretFile = path.join(runtime, 'bridge-secret.txt');
+let bridgeSecret = '';
+try { bridgeSecret = fs.readFileSync(bridgeSecretFile, 'utf8').trim(); } catch (e) { /* ignore */ }
+if (!bridgeSecret || bridgeSecret.length < 32) {
+  bridgeSecret = crypto.randomBytes(32).toString('base64').replace(/[^a-zA-Z0-9]/g, '').slice(0, 44);
+  fs.writeFileSync(bridgeSecretFile, bridgeSecret);
+  fs.chmodSync(bridgeSecretFile, 0o600);
+  console.log('[strm] 已生成新 bridge 共享密钥并持久化');
 }
 
 // ---- 4. 生成启动器 ----
@@ -140,10 +152,13 @@ const backendLauncher = [
   "  APP_STRM_PATH: base + '/strm',",
   "  APP_USER_INFO_PATH: base + '/config/userInfo.json',",
   "  APP_FRONTEND_LOGS_PATH: base + '/logs/frontend',",
+  "  WITHU_REPO: '" + root.replace(/\\/g, '/') + "',",
+  "  WORKROOT: '" + workRoot.replace(/\\/g, '/') + "',",
   "  JWT_SECRET: '" + jwt + "',",
   "  DOUBAN_COOKIE_KEY: '" + jwt + "'",
   "});",
   "const fd = fs.openSync(base + '/backend.log', 'a');",
+  "const PROXY_PORT = '" + PROXY_PORT + "';",
   "const proxyArgs = ['-Dhttp.proxyHost=127.0.0.1', '-Dhttp.proxyPort=' + PROXY_PORT, '-Dhttps.proxyHost=127.0.0.1', '-Dhttps.proxyPort=' + PROXY_PORT, '-Dhttp.nonProxyHosts=localhost|127.0.0.1|[::1]', '-Dhttps.nonProxyHosts=localhost|127.0.0.1|[::1]'];",
   "const p = spawn(java, [...proxyArgs, '-jar', jar, '--server.address=127.0.0.1'], { env, cwd: base, stdio: ['ignore', fd, fd] });",
   "console.log('spawned java pid', p.pid);",

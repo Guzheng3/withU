@@ -1632,6 +1632,8 @@ function migrate_withu_v1($db): void {
         ['media_library', 'audio_codec', "ALTER TABLE `media_library` ADD COLUMN `audio_codec` varchar(30) DEFAULT NULL COMMENT '音频编码'"],
         ['media_library', 'browser_playback', "ALTER TABLE `media_library` ADD COLUMN `browser_playback` varchar(20) NOT NULL DEFAULT 'unknown' COMMENT '浏览器播放方式'"],
         ['watch_rooms', 'last_sync_unix_ms', "ALTER TABLE `watch_rooms` ADD COLUMN `last_sync_unix_ms` bigint(20) unsigned NOT NULL DEFAULT 0 AFTER `last_sync_at`"],
+        ['watch_rooms', 'source', "ALTER TABLE `watch_rooms` ADD COLUMN `source` varchar(10) NOT NULL DEFAULT 'library' COMMENT '媒体来源: library/strm' AFTER `media_id`"],
+        ['watch_rooms', 'source_episode', "ALTER TABLE `watch_rooms` ADD COLUMN `source_episode` int(11) NOT NULL DEFAULT 0 COMMENT 'strm 分集 id' AFTER `source`"],
     ];
     foreach ($columns as $column) {
         try {

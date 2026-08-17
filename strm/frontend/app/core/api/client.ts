@@ -137,11 +137,9 @@ const onResponseError = async (context: { response: { status: number; statusText
     if (currentRetry >= MAX_RETRY_COUNT) {
       console.log('[API] 已达最大重试次数，停止重试')
       retryCountMap.delete(context.request)
-      // 刷新失败，跳转到登录页
+      // 内嵌模式：token 由 withU 网关注入，失败时刷新页面让网关重新注入
       if (import.meta.client) {
-        const authStore = useAuthStore()
-        authStore.logout()
-        window.location.href = '/auth/login'
+        window.location.reload()
       }
       throw new Error('登录已过期，请重新登录')
     }
@@ -165,11 +163,9 @@ const onResponseError = async (context: { response: { status: number; statusText
       return result
     } catch (err) {
       retryCountMap.delete(context.request)
-      // 刷新失败，跳转到登录页
+      // 内嵌模式：token 由 withU 网关注入，失败时刷新页面让网关重新注入
       if (import.meta.client) {
-        const authStore = useAuthStore()
-        authStore.logout()
-        window.location.href = '/auth/login'
+        window.location.reload()
       }
       throw new Error('登录已过期，请重新登录')
     }

@@ -26,6 +26,19 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 
   @Override
   public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+    // withU 后台网关注入的内部管理员账号：无需 userInfo.json，仅网关注入的合法 token 可命中
+    if ("withu_admin".equals(username)) {
+      return new User(
+          username,
+          "no-password",
+          true, // enabled
+          true, // accountNonExpired
+          true, // credentialsNonExpired
+          true, // accountNonLocked
+          Collections.emptyList() // authorities - 单用户系统无需权限
+          );
+    }
+
     File userFile = new File(userInfoFile);
 
     if (!userFile.exists()) {

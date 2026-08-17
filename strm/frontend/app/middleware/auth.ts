@@ -18,14 +18,10 @@ export default defineNuxtRouteMiddleware((_to) => {
   // 恢复认证状态
   authStore.restoreAuth()
 
-  console.log('[Auth Middleware] 认证状态检查:')
-  console.log('- isAuthenticated:', authStore.isAuthenticated)
-
-  // 检查是否已登录
+  // withU 后台网关已注入内部 token；即便未注入也放行，
+  // 由网关注入脚本负责写入 token，避免被踢去登录页。
   if (!authStore.isAuthenticated) {
-    console.log('[Auth Middleware] 未认证，跳转登录页')
-    return navigateTo('/auth/login', { replace: true })
+    console.log('[Auth Middleware] 未检测到内部 token，等待网关注入')
+    return
   }
-
-  console.log('[Auth Middleware] 认证通过，允许访问')
 })

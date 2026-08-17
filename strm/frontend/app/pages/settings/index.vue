@@ -94,6 +94,25 @@
                   <input id="tmdbProxyPort" v-model="tmdbConfig.proxyPort" type="text" class="input-field" placeholder="例如: 7890" />
                 </div>
               </div>
+
+              <!-- 内置 mihomo 订阅 -->
+              <div class="mt-4 border-t border-gray-200 pt-4">
+                <label for="mihomoSubUrl" class="block text-xs text-gray-700 mb-1">mihomo 订阅地址（可选）</label>
+                <input id="mihomoSubUrl" v-model="mihomoConfig.subUrl" type="url" class="input-field" placeholder="https://your-subscription-url" />
+                <div class="mt-2 flex flex-wrap items-center gap-2">
+                  <label for="mihomoPollInterval" class="text-xs text-gray-700">节点轮询间隔（分钟）</label>
+                  <input id="mihomoPollInterval" v-model.number="mihomoConfig.pollIntervalMinutes" type="number" min="1" class="input-field w-28" />
+                </div>
+                <p class="mt-1 text-xs text-gray-500">
+                  填写后保存将自动拉取订阅并启动内置 mihomo 代理，仅对 TMDB 域名生效，其余流量直连；按 TMDB 两个域名的访问延迟每 N 分钟轮询自动切换节点（优先低延迟，已排除 hysteria 节点）
+                </p>
+                <div v-if="mihomoStatus" class="mt-2 flex flex-wrap items-center gap-3 text-xs">
+                  <span :class="mihomoStatus.enabled && mihomoStatus.listening ? 'text-emerald-600' : 'text-gray-500'">
+                    状态：{{ mihomoStatus.enabled ? (mihomoStatus.listening ? `运行中 (127.0.0.1:${mihomoStatus.port})` : '未运行') : '未启用' }}
+                  </span>
+                  <button type="button" class="text-blue-600 hover:text-blue-700" @click="loadMihomoStatus">刷新</button>
+                </div>
+              </div>
             </div>
 
             <!-- TMDB API 域名配置 -->
@@ -573,6 +592,8 @@ const notificationConfig = ref({
 })
 const logConfig = ref({ retentionDays: 7, level: 'info', reportUsageData: true })
 const externalConfig = ref({ enabled: false, apiKey: '' })
+const mihomoConfig = ref({ subUrl: '', pollIntervalMinutes: 30 })
+const mihomoStatus = ref(null)
 const showExternalApiKey = ref(false)
 const showApiKey = ref(false)
 const saving = ref(false)
@@ -673,6 +694,10 @@ const loadCurrentSettings = async () => {
       if (config.notifications) notificationConfig.value = { ...notificationConfig.value, ...config.notifications }
       if (config.log) logConfig.value = { ...logConfig.value, ...config.log }
       if (config.external) externalConfig.value = { ...externalConfig.value, ...config.external }
+      if (config.mihomo) {
+        const pollSec = Number(config.mihomo.pollInterval) > 0 ? Number(config.mihomo.pollInterval) : 1800
+        mihomoConfig.value = { ...mihomoConfig.value, ...config.mihomo, pollIntervalMinutes: Math.round(pollSec / 60) }
+      }
     } else selectedExtensions.value = ['.mp4', '.avi', '.rmvb', '.mkv', '.iso']
   } catch { selectedExtensions.value = ['.mp4', '.avi', '.rmvb', '.mkv', '.iso'] }
 }
@@ -683,6 +708,15 @@ const loadMediaServers = async () => {
     if (response?.code === 200) mediaServers.value = response.data || []
   } catch {
     mediaServerMessage.value = { success: false, text: '媒体服务器配置加载失败' }
+  }
+}
+
+const loadMihomoStatus = async () => {
+  try {
+    const response = await authenticatedApiCall('/system/mihomo/status')
+    if (response?.code === 200) mihomoStatus.value = response.data
+  } catch {
+    mihomoStatus.value = null
   }
 }
 
@@ -775,9 +809,13 @@ const saveSettings = async () => {
   saving.value = true
   errorMessage.value = ''
   try {
+    const mihomoPayload = {
+      subUrl: mihomoConfig.value.subUrl,
+      pollInterval: Math.max(1, Number(mihomoConfig.value.pollIntervalMinutes) || 30) * 60
+    }
     const response = await authenticatedApiCall('/system/config', {
       method: 'POST',
-      body: { mediaExtensions: selectedExtensions.value, tmdb: tmdbConfig.value, scraping: scrapingConfig.value, ai: aiConfig.value, notifications: notificationConfig.value, log: logConfig.value, external: externalConfig.value }
+      body: { mediaExtensions: selectedExtensions.value, tmdb: tmdbConfig.value, scraping: scrapingConfig.value, ai: aiConfig.value, notifications: notificationConfig.value, log: logConfig.value, external: externalConfig.value, mihomo: mihomoPayload }
     })
     if (response?.code === 200) { showSuccess.value = true; setTimeout(() => showSuccess.value = false, 3000) }
     else { errorMessage.value = response?.message || '保存设置失败'; setTimeout(() => errorMessage.value = '', 3000) }
@@ -832,6 +870,7 @@ const goBack = () => router.back()
 onMounted(() => {
   loadCurrentSettings()
   loadMediaServers()
+  loadMihomoStatus()
 })
 </script>
 

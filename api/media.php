@@ -141,7 +141,7 @@ function withu_media_api_search_groups($db, string $term, int $limit = 10): arra
     $rows = array_merge(
         $db->fetchAll(
             "SELECT {$fields}
-             FROM media_library FORCE INDEX (idx_media_series_name)
+             FROM media_library
              WHERE recognition_status = 'recognized' AND media_type_id IN (1,2,3,4) AND series_name LIKE :series_like ESCAPE '\\\\'
              ORDER BY series_name ASC, id DESC
              LIMIT 80",
@@ -149,7 +149,7 @@ function withu_media_api_search_groups($db, string $term, int $limit = 10): arra
         ),
         $db->fetchAll(
             "SELECT {$fields}
-             FROM media_library FORCE INDEX (idx_media_name)
+             FROM media_library
              WHERE recognition_status = 'recognized' AND media_type_id IN (1,2,3,4) AND file_name LIKE :file_like ESCAPE '\\\\'
              ORDER BY file_name ASC, id DESC
              LIMIT 80",

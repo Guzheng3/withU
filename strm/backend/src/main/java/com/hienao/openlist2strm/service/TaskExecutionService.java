@@ -284,15 +284,21 @@ public class TaskExecutionService {
     int renamedDirectoryCount = 0;
     int renamedFileCount = 0;
 
+    // 读取是否在读取每个目录前强制刷新 OpenList 缓存（syncRefresh，默认 true）
+    Map<String, Object> systemConfigSnapshot = systemConfigService.getSystemConfig();
+    boolean forceRefresh =
+        !systemConfigSnapshot.containsKey("syncRefresh")
+            || Boolean.TRUE.equals(systemConfigSnapshot.get("syncRefresh"));
+
     // 1. 先获取目录文件列表（在清空目录之前验证 OpenList API 可用性）
     List<OpenlistApiService.OpenlistFile> allFiles;
     try {
-      log.info("开始获取 OpenList 文件列表: {}", taskConfig.getPath());
+      log.info("开始获取 OpenList 文件列表: {}, 强制刷新: {}", taskConfig.getPath(), forceRefresh);
       allFiles =
           openlistApiService.getAllFilesConcurrently(
               openlistConfig,
               taskConfig.getPath(),
-              false,
+              forceRefresh,
               directoryReadConcurrency(openlistConfig));
     } catch (Exception e) {
       log.error("获取 OpenList 文件列表失败，终止任务执行，STRM 目录未受影响: {}", e.getMessage(), e);
@@ -347,7 +353,7 @@ public class TaskExecutionService {
               openlistApiService.getAllFilesConcurrently(
                   openlistConfig,
                   taskConfig.getPath(),
-                  false,
+                  forceRefresh,
                   directoryReadConcurrency(openlistConfig));
         } catch (Exception e) {
           throw new TaskStageException(

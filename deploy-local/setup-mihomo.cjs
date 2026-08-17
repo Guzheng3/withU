@@ -14,9 +14,15 @@
  *
  * 效果：
  *   - 幂等下载对应平台的 mihomo 二进制到 runtime/mihomo/bin/
- *   - 生成 runtime/mihomo/config.yaml（proxy-providers + url-test AUTO 组 + 混合端口）
+ *   - 生成 runtime/mihomo/config.yaml（proxy-providers + 按 TMDB 两域名延迟轮询的 url-test 组 + 排除 hysteria 节点 + 混合端口）
  *   - 生成 runtime/mihomo/start.cjs / stop.cjs（启停启动器，供 start-withu 调用）
  *   - 未配置订阅时：若本机已有 7897 监听（手动 Clash）则复用；否则打印提示、不阻塞
+ *
+ * 节点切换策略（融入 daitcl/mihomo 的配置模板思路）：
+ *   - 轮询：url-test 组默认每 30 分钟对 TMDB 两域名（api.themoviedb.org / image.tmdb.org）测速（pollInterval 秒，后台可改）
+ *   - 选优：tolerance=20，延迟差在 20ms 内不切换，优先选择延迟低的节点
+ *   - 排除：exclude-filter 过滤 hysteria / hysteria2 / hy2 协议节点（测速能通但实际不可用）
+ *   - 兜底：仅 themoviedb.org / tmdb.org 两域名走代理，其余 MATCH,DIRECT 直连
  *
  * 常用配置项：
  *   port   混合代理端口（默认 7897，与 withUstrm TMDB 代理配置一致）
@@ -38,7 +44,6 @@ const confDir = path.join(runtime);
 const GITHUB_API = 'https://api.github.com/repos/MetaCubeX/mihomo/releases/latest';
 const DEFAULT_PORT = 7897;
 const DEFAULT_API_PORT = 9090;
-const HEALTH_URL = 'https://www.gstatic.com/generate_204';
 
 // ---------- 配置读取 ----------
 function loadConfig() {
@@ -47,7 +52,7 @@ function loadConfig() {
     path.join(root, 'config', 'mihomo.json'),
     path.join(__dirname, 'mihomo.json'),
   ];
-  let cfg = { port: DEFAULT_PORT, apiPort: DEFAULT_API_PORT, mirror: '', subUrl: '' };
+  let cfg = { port: DEFAULT_PORT, apiPort: DEFAULT_API_PORT, mirror: '', subUrl: '', pollInterval: 1800 };
   for (const c of cands) {
     if (!c) continue;
     if (typeof c === 'string' && /^https?:\/\//.test(c)) { cfg.subUrl = c; break; }
@@ -231,6 +236,28 @@ async function ensureBinary(cfg) {
 // ---------- 配置生成 ----------
 function genConfig(cfg, subUrl) {
   const providerPath = './providers/sub.yaml';
+  // 读取 TMDB 配置，用于对 TMDB 两个域名测速（api 需要带 key 返回 200）
+  let tmdbApiKey = '';
+  let tmdbApiBase = 'https://api.themoviedb.org';
+  let tmdbImageBase = 'https://image.tmdb.org';
+  try {
+    const confPath = path.join(workRoot, 'runtime', 'strm', 'config', 'systemconf.json');
+    if (fs.existsSync(confPath)) {
+      const sc = JSON.parse(fs.readFileSync(confPath, 'utf8'));
+      if (sc.tmdb) {
+        if (sc.tmdb.apiKey) tmdbApiKey = String(sc.tmdb.apiKey).trim();
+        if (sc.tmdb.baseUrl) tmdbApiBase = String(sc.tmdb.baseUrl).replace(/\/+$/, '');
+        if (sc.tmdb.imageBaseUrl) tmdbImageBase = String(sc.tmdb.imageBaseUrl).replace(/\/+$/, '');
+      }
+    }
+  } catch (e) { /* 忽略 */ }
+  const apiSpeedUrl = tmdbApiBase + '/3/configuration?api_key=' + encodeURIComponent(tmdbApiKey);
+  const imageSpeedUrl = tmdbImageBase + '/t/p/w92/8uO0gvtHj6YST5soLVhNkeMfrXk.jpg';
+  // 排除 hysteria/hysteria2/hy2 等不可用协议节点
+  const EXCLUDE_HY = "(?i)hysteria|hysteria2|hy2|hys|hy-2|hy-";
+  // 轮询测速间隔（秒），默认 30 分钟，可在后台设置
+  const pollInterval = Number(cfg.pollInterval) > 0 ? Number(cfg.pollInterval) : 1800;
+
   const lines = [
     'mixed-port: ' + cfg.port,
     'allow-lan: false',
@@ -243,6 +270,20 @@ function genConfig(cfg, subUrl) {
     'external-controller: 127.0.0.1:' + cfg.apiPort,
     'secret: ""',
     '',
+    'dns:',
+    '  enable: true',
+    '  ipv6: false',
+    '  enhanced-mode: redir-host',
+    '  nameserver:',
+    '    - https://223.5.5.5/dns-query',
+    '    - https://119.29.29.29/dns-query',
+    '  fallback:',
+    '    - https://1.1.1.1/dns-query',
+    '    - https://8.8.8.8/dns-query',
+    '  fallback-filter:',
+    '    geoip: true',
+    '    geoip-code: CN',
+    '',
     'proxy-providers:',
     '  sub:',
     '    type: http',
@@ -251,20 +292,37 @@ function genConfig(cfg, subUrl) {
     '    path: ' + providerPath,
     '    health-check:',
     '      enable: true',
-    '      url: ' + HEALTH_URL,
-    '      interval: 300',
+    '      url: ' + imageSpeedUrl,
+    '      interval: 120',
+    '      timeout: 5000',
+    '      lazy: true',
     '',
     'proxy-groups:',
-    '  - name: AUTO',
+    '  - name: TMDB_API',
     '    type: url-test',
-    '    url: ' + HEALTH_URL,
-    '    interval: 300',
-    '    tolerance: 50',
+    '    url: ' + apiSpeedUrl,
+    '    interval: ' + pollInterval,
+    '    timeout: 5000',
+    '    tolerance: 20',
+    '    lazy: true',
+    '    exclude-filter: "' + EXCLUDE_HY + '"',
+    '    use:',
+    '      - sub',
+    '  - name: TMDB_IMAGE',
+    '    type: url-test',
+    '    url: ' + imageSpeedUrl,
+    '    interval: ' + pollInterval,
+    '    timeout: 5000',
+    '    tolerance: 20',
+    '    lazy: true',
+    '    exclude-filter: "' + EXCLUDE_HY + '"',
     '    use:',
     '      - sub',
     '',
     'rules:',
-    '  - MATCH,AUTO',
+    '  - DOMAIN-SUFFIX,themoviedb.org,TMDB_API',
+    '  - DOMAIN-SUFFIX,tmdb.org,TMDB_IMAGE',
+    '  - MATCH,DIRECT',
     ''
   ];
   fs.mkdirSync(path.join(confDir, 'providers'), { recursive: true });

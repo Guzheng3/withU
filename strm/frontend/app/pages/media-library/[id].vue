@@ -228,9 +228,19 @@ const creditsLoading = ref(false)
 const cast = ref([])
 const activeEpisodeId = ref(null)
 const selectedSource = ref({})
+const fromWithU = route.query.from === 'withu'
+
+const openWithUPlayer = (episodeId = 0) => {
+  const query = episodeId ? `&episode=${episodeId}` : ''
+  window.location.href = `/watch_play.php?source=strm&id=${route.params.id}${query}`
+}
 
 const goPlayEpisode = (ep) => {
   activeEpisodeId.value = ep.id
+  if (fromWithU) {
+    openWithUPlayer(ep.id)
+    return
+  }
   // 未手动选源时走默认优先级（后端 4K 优先）；已选择则用所选来源
   const srcId = selectedSource.value[ep.episodeNo] || (ep.sources && ep.sources.length ? ep.sources[0].id : null)
   router.push(
@@ -241,6 +251,10 @@ const goPlayEpisode = (ep) => {
 const goPlaySource = (ep) => {
   const srcId = selectedSource.value[ep.episodeNo]
   activeEpisodeId.value = ep.id
+  if (fromWithU) {
+    openWithUPlayer(ep.id)
+    return
+  }
   router.push(
     `/media-library/play/${route.params.id}?episodeId=${ep.id}${srcId ? `&sourceId=${srcId}` : ''}`
   )
@@ -292,8 +306,16 @@ const goPlay = async () => {
     if (media.value?.episodes?.length) {
       const first = media.value.episodes[0]
       activeEpisodeId.value = first.id
+      if (fromWithU) {
+        openWithUPlayer(first.id)
+        return
+      }
       router.push(`/media-library/play/${route.params.id}?episodeId=${first.id}`)
     } else {
+      if (fromWithU) {
+        openWithUPlayer()
+        return
+      }
       router.push(`/media-library/play/${route.params.id}`)
     }
   } catch (e) {

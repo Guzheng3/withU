@@ -89,11 +89,33 @@
     $colorIndices = range(0, count($eventCardColors) - 1);
     shuffle($colorIndices);
     $colorIndex = 0; // 当前使用的颜色索引
+
+    // 分类计数：过去(纪念日) / 未来(倒计时) / 每年今日
+    $loveDayPastCount   = 0;
+    $loveDayFutureCount = 0;
+    foreach ($events as $ev) {
+        $evIsFuture = false;
+        if (!empty($ev['is_recurring'])) {
+            $evIsFuture = true;
+        } else {
+            $evIsFuture = strtotime($ev['event_date']) > time();
+        }
+        if ($evIsFuture) { $loveDayFutureCount++; } else { $loveDayPastCount++; }
+    }
     ?>
-    <div class="events-list">
+    <div class="withustrm-loveday-tabs-wrap">
+        <div class="withustrm-ios-tabs" data-withustrm-loveday-tabs role="tablist" aria-label="纪念日筛选">
+            <div class="withustrm-ios-tabs-slider"></div>
+            <button type="button" class="withustrm-ios-tab active" data-filter="all" role="tab" aria-selected="true"><i class="fas fa-layer-group"></i><span>全部</span></button>
+            <button type="button" class="withustrm-ios-tab" data-filter="past" role="tab" aria-selected="false"><i class="fas fa-heart"></i><span>纪念日</span></button>
+            <button type="button" class="withustrm-ios-tab" data-filter="future" role="tab" aria-selected="false"><i class="fas fa-hourglass-half"></i><span>倒计时</span></button>
+        </div>
+    </div>
+    <div class="events-list withustrm-loveday-grid" data-withustrm-loveday-grid>
         <?php foreach ($events as $event): ?>
         <?php
         $todayStr = date('Y-m-d');
+        $isFutureEvent = false;
         if (!empty($event['is_recurring'])) {
             $eventDate = new DateTime($event['event_date']);
             $today     = new DateTime($todayStr);
@@ -106,10 +128,12 @@
             }
             $displayDate = $currentYearDate->format('Y-m-d');
             $daysUntil   = daysBetween($today->format('Y-m-d'), $displayDate);
+            $isFutureEvent = true;
         } else {
             $daysUntil = null;
             $daysAgo   = daysBetween($event['event_date'], $todayStr);
             $displayDate = $event['event_date'];
+            $isFutureEvent = strtotime($event['event_date']) > time();
         }
 
         // 按顺序从打乱的颜色索引中选择颜色，确保不重复
@@ -124,36 +148,44 @@
 
         $bgStart = $palette[0];
         $bgEnd   = $palette[1];
+        $filterClass = $isFutureEvent ? 'future' : 'past';
         ?>
-        <div class="event-pill" style="background: linear-gradient(135deg, <?php echo $bgStart; ?> 0%, <?php echo $bgEnd; ?> 100%);">
-            <div class="event-pill-main">
-                <div class="event-pill-title">
-                    <i class="fas fa-<?php echo e(event_icon_class($event['icon'])); ?>"></i>
-                    <span><?php echo e($event['title']); ?></span>
-                    <?php if (!empty($event['is_important'])): ?>
-                    <span class="badge badge-important"><i class="fas fa-star"></i> 重要</span>
-                    <?php endif; ?>
-                    <?php if (!empty($event['is_recurring'])): ?>
-                    <span class="badge badge-recurring"><i class="fas fa-infinity"></i> 每年今日</span>
-                    <?php endif; ?>
+        <div class="event-pill withustrm-loveday-widget withustrm-loveday-widget--<?php echo $filterClass; ?> withustrm-loveday-item" data-withustrm-filter="<?php echo $filterClass; ?>" style="background: linear-gradient(135deg, <?php echo $bgStart; ?> 0%, <?php echo $bgEnd; ?> 100%);">
+            <?php if (!empty($event['is_important'])): ?>
+            <div class="withustrm-loveday-sup-label"><i class="fas fa-star"></i>&nbsp;重要</div>
+            <?php elseif ($isFutureEvent && $daysUntil !== null && $daysUntil >= 0): ?>
+            <div class="withustrm-loveday-sup-label">还有 <?php echo $daysUntil; ?> 天</div>
+            <?php else: ?>
+            <div class="withustrm-loveday-sup-label">已走过</div>
+            <?php endif; ?>
+            <div class="withustrm-loveday-content">
+                <div class="withustrm-loveday-left">
+                    <div class="withustrm-loveday-icon">
+                        <i class="fas fa-<?php echo e(event_icon_class($event['icon'])); ?>"></i>
+                    </div>
+                    <div class="withustrm-loveday-copy">
+                        <div class="withustrm-loveday-title">
+                            <?php echo e($event['title']); ?>
+                        </div>
+                        <div class="withustrm-loveday-date">
+                            <i class="fas fa-calendar-day"></i> <?php echo formatDate($displayDate, 'Y-m-d'); ?>
+                        </div>
+                    </div>
                 </div>
-            </div>
-            <div class="event-pill-meta">
-                <div class="event-pill-date"><?php echo formatDate($displayDate, 'Y-m-d'); ?></div>
-                <div class="event-pill-days">
+                <div class="withustrm-loveday-count">
                     <?php if (!empty($event['is_recurring'])): ?>
                         <?php if ($daysUntil === 0): ?>
-                            就是今天
+                            今天
                         <?php else: ?>
-                            距离下一次还有 <strong><?php echo $daysUntil; ?></strong> 天
+                            <?php echo $daysUntil; ?><span class="withustrm-loveday-unit">天</span>
                         <?php endif; ?>
                     <?php else: ?>
                         <?php if ($daysAgo === 0): ?>
-                            就是今天
-                        <?php elseif (strtotime($event['event_date']) > time()): ?>
-                            还有 <strong><?php echo $daysAgo; ?></strong> 天
+                            今天
+                        <?php elseif ($isFutureEvent): ?>
+                            <?php echo $daysAgo; ?><span class="withustrm-loveday-unit">天</span>
                         <?php else: ?>
-                            已经 <strong><?php echo $daysAgo; ?></strong> 天
+                            <span class="withustrm-loveday-unit">已</span><?php echo $daysAgo; ?><span class="withustrm-loveday-unit">天</span>
                         <?php endif; ?>
                     <?php endif; ?>
                 </div>
@@ -181,13 +213,13 @@
         <div class="withu-together-empty">还没有正在进行的共看，选择一部影片开始你们的下一场一起看。</div>
     <?php endif; ?>
     <?php if (!empty($watchRecent)): ?><h3 class="withu-home-watch watch-home-subtitle">近期观看</h3><div class="watch-home-row">
-        <?php foreach ($watchRecent as $item): ?><a class="watch-home-card" href="/watch_play.php?media_id=<?php echo (int)$item['id']; ?>"><div class="watch-home-cover"><img src="<?php echo e($item['cover_url'] ?: '/assets/images/Coverloaderror.jpg'); ?>" alt=""><span class="watch-home-badge">继续观看</span></div><div class="watch-home-body"><div class="watch-home-title"><?php echo e($item['series_name']); ?></div><div class="watch-home-meta"><?php echo e($item['episode_number'] ? '第 ' . $item['episode_number'] . ' 集' : $item['file_name']); ?></div></div></a><?php endforeach; ?>
+        <?php foreach ($watchRecent as $item): $isStrm = (string)($item['history_source'] ?? 'library') === 'strm'; $recentUrl = $isStrm ? '/watch_play.php?source=strm&id=' . (int)$item['id'] . ((int)($item['history_source_episode'] ?? 0) > 0 ? '&episode=' . (int)($item['history_source_episode']) : '') : '/watch_play.php?media_id=' . (int)$item['id']; ?><a class="watch-home-card" href="<?php echo e($recentUrl); ?>"><div class="watch-home-cover"><img src="<?php echo e($item['cover_url'] ?: '/assets/images/Coverloaderror.jpg'); ?>" alt=""></div><div class="watch-home-body"><div class="watch-home-title"><?php echo e($item['series_name']); ?></div><div class="watch-home-meta"><?php echo e($item['episode_number'] ? '上次观看 · 第 ' . $item['episode_number'] . ' 集' : $item['file_name']); ?></div></div></a><?php endforeach; ?>
     </div><?php endif; ?>
     <?php if (!empty($watchNew)): ?><h3 class="withu-home-watch watch-home-subtitle">最新添加</h3><div class="watch-home-row">
-        <?php foreach ($watchNew as $item): ?><a class="watch-home-card" href="/watch_play.php?media_id=<?php echo (int)$item['id']; ?>"><div class="watch-home-cover"><img src="<?php echo e($item['cover_url'] ?: '/assets/images/Coverloaderror.jpg'); ?>" alt=""><span class="watch-home-badge">最新添加</span></div><div class="watch-home-body"><div class="watch-home-title"><?php echo e($item['series_name']); ?></div><div class="watch-home-meta"><?php echo e($item['episode_number'] ? '第 ' . $item['episode_number'] . ' 集' : ($item['resolution'] ?: '待识别')); ?></div></div></a><?php endforeach; ?>
+        <?php foreach ($watchNew as $item): ?><a class="watch-home-card" href="/watch_play.php?media_id=<?php echo (int)$item['id']; ?>"><div class="watch-home-cover"><img src="<?php echo e($item['cover_url'] ?: '/assets/images/Coverloaderror.jpg'); ?>" alt=""></div><div class="watch-home-body"><div class="watch-home-title"><?php echo e($item['series_name']); ?></div><div class="watch-home-meta"><?php echo e($item['episode_number'] ? '第 ' . $item['episode_number'] . ' 集' : ($item['resolution'] ?: '待识别')); ?></div></div></a><?php endforeach; ?>
     </div><?php endif; ?>
     <h3 class="withu-home-watch watch-home-subtitle">全部影片</h3><div class="watch-home-row">
-        <?php foreach ($watchGroups as $watchGroup): $first = $watchGroup['items'][0]; $count = count($watchGroup['items']); ?><a class="watch-home-card" href="/watch_play.php?media_id=<?php echo (int)$first['id']; ?>"><div class="watch-home-cover"><img src="<?php echo e($watchGroup['cover_url']); ?>" alt=""><span class="watch-home-badge"><?php echo $count > 1 ? $count . ' 集' : '播放'; ?></span></div><div class="watch-home-body"><div class="watch-home-title"><?php echo e($watchGroup['name']); ?></div><div class="watch-home-meta"><?php echo e($first['rating'] ? '评分 ' . $first['rating'] . ' · ' : ''); ?><?php echo e($first['resolution'] ?: '分辨率未知'); ?></div></div></a><?php endforeach; ?>
+        <?php foreach ($watchGroups as $watchGroup): $first = $watchGroup['items'][0]; ?><a class="watch-home-card" href="/watch_play.php?media_id=<?php echo (int)$first['id']; ?>"><div class="watch-home-cover"><img src="<?php echo e($watchGroup['cover_url']); ?>" alt=""></div><div class="watch-home-body"><div class="watch-home-title"><?php echo e($watchGroup['name']); ?></div><div class="watch-home-meta"><?php echo e($first['rating'] ? '评分 ' . $first['rating'] . ' · ' : ''); ?><?php echo e($first['resolution'] ?: '分辨率未知'); ?></div></div></a><?php endforeach; ?>
     </div>
 </section>
 <?php endif; ?>
@@ -692,43 +724,81 @@ if (!empty($albums)) {
     <div class="section-header">
         <h2><i class="fas fa-comment-dots"></i> 温馨留言墙</h2>
     </div>
-    <div class="home-messages-masonry">
-        <?php
-        $messageCardVariants = ['card-pink', 'card-green', 'card-blue', 'card-purple'];
-        $variantIndex = 0;
-        ?>
-        <div class="message-grid">
+    <div class="withustrm-msg-container" id="withustrm-msg-container" aria-label="留言滚动">
+        <div class="withustrm-msg-track">
             <?php foreach ($latestMessages as $msg): ?>
             <?php
-            $variantClass  = $messageCardVariants[$variantIndex];
-            $variantIndex  = ($variantIndex + 1) % count($messageCardVariants);
             $contentText   = trim(strip_tags($msg['content']));
             $locationText  = isset($msg['location']) && $msg['location'] !== '' ? $msg['location'] : '';
             ?>
-            <div class="message-card <?php echo $variantClass; ?>">
-                <div class="msg-top-deco"></div>
-                <div class="msg-avatar">
-                    <img src="<?php echo e($msg['avatar'] ?: '/assets/images/default-avatar.svg'); ?>" alt="<?php echo e($msg['nickname']); ?>">
+            <div class="withustrm-msg-card">
+                <div class="withustrm-msg-header">
+                    <img class="withustrm-msg-avatar" src="<?php echo e($msg['avatar'] ?: '/assets/images/default-avatar.svg'); ?>" alt="<?php echo e($msg['nickname']); ?>">
+                    <div class="withustrm-msg-user-info">
+                        <div class="withustrm-msg-name-row">
+                            <span class="withustrm-msg-user-name"><?php echo e($msg['nickname']); ?></span>
+                        </div>
+                        <span class="withustrm-msg-post-time"><?php echo timeAgo($msg['created_at']); ?></span>
+                    </div>
                 </div>
-                <div class="msg-user"><?php echo e($msg['nickname']); ?></div>
-                <div class="msg-content">
-                    <i class="fas fa-quote-left quote-icon"></i>
-                    <p>
-                        <?php echo mb_substr($contentText, 0, 60); ?>
-                    </p>
-                </div>
-                <div class="msg-footer">
-                    <span class="msg-time"><?php echo timeAgo($msg['created_at']); ?></span>
+                <div class="withustrm-msg-content"><?php echo e(mb_substr($contentText, 0, 90)); ?></div>
+                <div class="withustrm-msg-divider"></div>
+                <div class="withustrm-msg-footer">
+                    <span class="withustrm-msg-chip"><i class="fas fa-heart"></i> 来自 withU</span>
                     <?php if ($locationText): ?>
-                        <span class="msg-location"><?php echo e($locationText); ?></span>
+                    <span class="withustrm-msg-loc"><i class="fas fa-location-dot"></i> <?php echo e($locationText); ?></span>
                     <?php endif; ?>
                 </div>
             </div>
             <?php endforeach; ?>
+            <a class="withustrm-msg-more" href="/messages.php" aria-label="查看全部寄语">
+                <span class="withustrm-msg-more__icon"><i class="fas fa-arrow-right"></i></span>
+                <span class="withustrm-msg-more__text">查看全部寄语</span>
+            </a>
         </div>
     </div>
 </section>
 <?php endif; ?>
+
+<?php
+$withuEpilogueQuotes = [
+    '爱是把平凡的日子，过成只属于我们的诗。',
+    '从相遇到相守，每一天都值得纪念。',
+    '山河远阔，人间烟火，无一是你，无一不是你。',
+    '愿我们朝暮与年岁并往，然后与你行至天光。',
+    '你是藏在时光褶皱里的温柔。',
+    '所有美好都恰逢其时。',
+    '慢慢来，谁不是翻山越岭去相爱。',
+    '一屋两人，三餐四季，把日子过成喜欢的样子。',
+    '今天也是被爱意包围的一天。',
+    '世界很大，幸而有你相伴。'
+];
+?>
+<section class="withustrm-epilogue" data-withustrm-epilogue data-withustrm-quotes="<?php echo e(json_encode($withuEpilogueQuotes, JSON_UNESCAPED_UNICODE)); ?>" aria-label="结语">
+    <div class="withustrm-epilogue__card">
+        <div class="withustrm-epilogue__holes" aria-hidden="true">
+            <div class="withustrm-epilogue__hole"></div>
+            <div class="withustrm-epilogue__hole"></div>
+            <div class="withustrm-epilogue__hole"></div>
+            <div class="withustrm-epilogue__hole"></div>
+            <div class="withustrm-epilogue__hole"></div>
+            <div class="withustrm-epilogue__hole"></div>
+            <div class="withustrm-epilogue__hole"></div>
+            <div class="withustrm-epilogue__hole"></div>
+        </div>
+        <div class="withustrm-epilogue__header">
+            <div class="withustrm-epilogue__subtitle">OUR STORY CONTINUES</div>
+            <div class="withustrm-epilogue__title">未完 · 待续</div>
+        </div>
+        <div class="withustrm-epilogue__quote-container">
+            <p class="withustrm-epilogue__quote" aria-live="polite"></p>
+        </div>
+        <div class="withustrm-epilogue__actions">
+            <button type="button" class="withustrm-epilogue__btn" data-epilogue-refresh><i class="fas fa-rotate-right"></i> 换一句</button>
+            <button type="button" class="withustrm-epilogue__btn" data-epilogue-copy><i class="fas fa-copy"></i> 复制</button>
+        </div>
+    </div>
+</section>
 
 <script>
 (function() {

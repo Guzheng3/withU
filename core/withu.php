@@ -187,7 +187,7 @@ if (!function_exists('withu_media_quality_badge_html')) {
 
 if (!function_exists('withu_watch_history_min_ms')) {
     function withu_watch_history_min_ms(): int {
-        $seconds = (int)get_setting('watch_history_min_sec', '30');
+        $seconds = (int)get_setting('watch_history_min_sec', '15');
         if ($seconds < 5) $seconds = 5;
         return $seconds * 1000;
     }

@@ -68,14 +68,45 @@ if ($currentUser) {
             }
         }
 
-        $historyRows = $db->fetchAll("SELECT media_id, last_position_ms, updated_at AS watch_updated_at FROM watch_history ORDER BY updated_at DESC, id DESC LIMIT 24");
-        $historyMedia = withu_media_fetch_many(array_map(static function (array $row): int { return (int)$row['media_id']; }, $historyRows));
+        $historyRows = $db->fetchAll("SELECT wh.*, COALESCE(wr.source, 'library') AS history_source, COALESCE(wr.source_episode, 0) AS history_source_episode, wh.updated_at AS watch_updated_at FROM watch_history wh LEFT JOIN watch_rooms wr ON wr.id = wh.room_id WHERE wh.watch_duration_ms >= :min_ms ORDER BY wh.updated_at DESC, wh.id DESC LIMIT 24", ['min_ms' => withu_watch_history_min_ms()]);
+        $libraryRows = array_filter($historyRows, static function (array $row): bool { return (string)($row['history_source'] ?? 'library') !== 'strm'; });
+        $historyMedia = withu_media_fetch_many(array_map(static function (array $row): int { return (int)$row['media_id']; }, $libraryRows));
+        $strmHistory = [];
+        $strmFetch = static function (int $id) use (&$strmHistory): array {
+            if (isset($strmHistory[$id])) return $strmHistory[$id];
+            $jwtPath = dirname(__DIR__) . '/runtime/strm/jwt.txt';
+            $secret = is_file($jwtPath) ? trim((string)file_get_contents($jwtPath)) : '';
+            if ($id <= 0 || $secret === '') return $strmHistory[$id] = [];
+            $b64u = static function (string $value): string { return rtrim(strtr(base64_encode($value), '+/', '-_'), '='); };
+            $now = time();
+            $header = $b64u(json_encode(['alg' => 'HS256', 'typ' => 'JWT']));
+            $payload = $b64u(json_encode(['sub' => 'withu_admin', 'iat' => $now, 'exp' => $now + 600]));
+            $signature = $b64u(hash_hmac('sha256', $header . '.' . $payload, $secret, true));
+            $ch = curl_init('http://127.0.0.1:8080/api/media-library/' . $id);
+            curl_setopt_array($ch, [CURLOPT_RETURNTRANSFER => true, CURLOPT_HTTPHEADER => ['Authorization: Bearer ' . $header . '.' . $payload . '.' . $signature], CURLOPT_CONNECTTIMEOUT => 3, CURLOPT_TIMEOUT => 10]);
+            $body = curl_exec($ch);
+            $status = (int)curl_getinfo($ch, CURLINFO_RESPONSE_CODE);
+            curl_close($ch);
+            $response = $status === 200 ? json_decode((string)$body, true) : null;
+            return $strmHistory[$id] = (($response['code'] ?? 0) === 200 && is_array($response['data'] ?? null)) ? $response['data'] : [];
+        };
         $recentSeen = [];
         foreach ($historyRows as $historyRow) {
-            $mediaRow = $historyMedia[(int)$historyRow['media_id']] ?? null;
+            $mediaId = (int)$historyRow['media_id'];
+            if ((string)($historyRow['history_source'] ?? 'library') === 'strm') {
+                $meta = $strmFetch($mediaId);
+                $episodeId = (int)($historyRow['history_source_episode'] ?? 0);
+                $episode = null;
+                foreach ((array)($meta['episodes'] ?? []) as $candidate) {
+                    if ((int)($candidate['id'] ?? 0) === $episodeId) { $episode = $candidate; break; }
+                }
+             $mediaRow = $meta ? ['id' => $mediaId, 'file_name' => (string)($episode['sourceFileName'] ?? ($meta['title'] ?? '')), 'series_name' => (string)($meta['title'] ?? 'strm 媒体'), 'series_key' => 'strm-title-' . preg_replace('/\s+/u', '', mb_strtolower((string)($meta['title'] ?? 'strm 媒体'), 'UTF-8')), 'episode_number' => (int)($episode['episodeNo'] ?? 0), 'duration_ms' => 0, 'cover_url' => (string)($meta['posterUrl'] ?? ''), 'source' => 'strm'] : null;
+            } else {
+                $mediaRow = $historyMedia[$mediaId] ?? null;
+            }
             if (!$mediaRow) continue;
             $item = withu_media_display_row(array_merge($mediaRow, $historyRow));
-            $key = (string)($item['series_key'] ?: $item['id']);
+            $key = (string)($item['history_source'] ?? 'library') . ':' . (string)($item['series_key'] ?: $item['id']);
             if (isset($recentSeen[$key])) continue;
             $recentSeen[$key] = true;
             $watchRecent[] = $item;

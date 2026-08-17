@@ -453,6 +453,12 @@ public class SystemConfigService {
     externalConfig.put("apiKey", ""); // 外部接口 API Key
     defaultConfig.put("external", externalConfig);
 
+    // 内置 mihomo 代理配置
+    Map<String, Object> mihomoConfig = new HashMap<>();
+    mihomoConfig.put("subUrl", ""); // mihomo 订阅地址，留空则未启用
+    mihomoConfig.put("pollInterval", 1800); // 节点轮询测速间隔（秒），默认 30 分钟
+    defaultConfig.put("mihomo", mihomoConfig);
+
     return defaultConfig;
   }
 
@@ -523,6 +529,13 @@ public class SystemConfigService {
   public Map<String, Object> getExternalConfig() {
     Map<String, Object> systemConfig = getSystemConfig();
     return (Map<String, Object>) systemConfig.getOrDefault("external", Collections.emptyMap());
+  }
+
+  /** 获取内置 mihomo 代理配置。 */
+  @SuppressWarnings("unchecked")
+  public Map<String, Object> getMihomoConfig() {
+    Map<String, Object> systemConfig = getSystemConfig();
+    return (Map<String, Object>) systemConfig.getOrDefault("mihomo", Collections.emptyMap());
   }
 
   /**

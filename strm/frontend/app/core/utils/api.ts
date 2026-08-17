@@ -114,9 +114,10 @@ export async function apiCall<T = unknown>(
 
 /**
  * 处理 401 未授权错误的统一逻辑
+ * 内嵌模式：token 由 withU 网关注入，直接刷新页面让网关重新注入
  */
 async function handleUnauthorizedError(): Promise<void> {
-  console.warn('检测到 401 未授权错误，清除 token 并跳转到登录页')
+  console.warn('检测到 401 未授权错误，刷新页面让网关重新注入 token')
 
   // 使用认证store清除认证信息
   const { useAuthStore } = await import('~/core/stores/auth')
@@ -127,26 +128,9 @@ async function handleUnauthorizedError(): Promise<void> {
   const { stopTokenRefreshService } = await import('~/core/utils/tokenRefresh')
   stopTokenRefreshService()
 
-  // 只在客户端执行跳转，避免服务端渲染时的问题
+  // 只在客户端执行刷新，避免服务端渲染时的问题
   if (import.meta.client) {
-    // 检查用户是否存在，决定跳转到登录页还是注册页
-    try {
-      const response = await $fetch<ApiResponse<{ exists: boolean }>>(`${getApiBaseUrl()}/auth/check-user`, {
-        method: 'GET'
-      })
-
-      if (response.code === 200 && response.data?.exists) {
-        // 用户存在，跳转到登录页
-        await navigateTo('/auth/login')
-      } else {
-        // 用户不存在，跳转到注册页
-        await navigateTo('/auth/register')
-      }
-    } catch (checkError) {
-      console.error('检查用户失败，默认跳转到登录页:', checkError)
-      // 检查失败时默认跳转到登录页
-      await navigateTo('/auth/login')
-    }
+    window.location.reload()
   }
 }
 

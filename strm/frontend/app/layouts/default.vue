@@ -49,7 +49,8 @@ const handleLogout = async () => {
     const { stopTokenRefreshService } = await import('~/core/utils/tokenRefresh.js')
     stopTokenRefreshService()
     authStore.clearAuth()
-    router.push('/auth/login')
+    // 内嵌模式：返回 withU 后台首页
+    window.location.href = '/'
   }
 }
 

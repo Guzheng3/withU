@@ -450,7 +450,8 @@ const logout = async () => {
     const { stopTokenRefreshService } = await import('~/core/utils/tokenRefresh.js')
     stopTokenRefreshService()
     authStore.clearAuth()
-    await navigateTo('/auth/login')
+    // 内嵌模式：返回 withU 后台首页
+    window.location.href = '/'
   }
 }
 

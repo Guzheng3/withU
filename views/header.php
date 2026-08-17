@@ -125,6 +125,11 @@ if (!isset($homeBannerImage)) {
     }
 }
 
+// 情侣主页使用专属浪漫背景，其他页面继续使用各自的背景配置
+if (!empty($isWithuHomePage) && $headerUser1 && $headerUser2) {
+    $homeBannerImage = '';
+}
+
 // 页面标题：如果未设置，则只显示网站标题；如果设置了，则显示"页面标题 - 网站标题"
 $pageTitle = isset($pageTitle) ? $pageTitle : '';
 $fullTitle = $pageTitle ? $pageTitle . ' - ' . $siteTitle : $siteTitle;
@@ -187,6 +192,7 @@ if ($headerDb && (string)get_setting('front_animation_enabled', '1') !== '1') {
     <link rel="stylesheet" href="/assets/css/style.css?v=withu-logo-20260718">
     <link rel="stylesheet" href="/assets/css/theme.css?v=withu-theme-20260719-3">
     <link rel="stylesheet" href="/assets/css/withu_lg_ui.css?v=withu-lg-20260809-2">
+    <link rel="stylesheet" href="/assets/css/withustrm_home.css?v=withustrm-home-20260815">
     <?php if (!empty($isArticleDetail)): ?>
     <link rel="stylesheet" href="/assets/css/article-detail.css">
     <?php endif; ?>
@@ -282,7 +288,7 @@ if ($headerDb && (string)get_setting('front_animation_enabled', '1') !== '1') {
                     <div class="withu-hero-orbit withu-hero-orbit-two"></div>
                     <div class="withu-hero-copy">
                         <span class="withu-hero-eyebrow"><i class="fas fa-sparkles"></i> OUR LITTLE UNIVERSE</span>
-                        <h1><?php echo e($siteTitle); ?></h1>
+                        <h1 id="withustrm-hero-title" data-hero-split><?php echo e($siteTitle); ?></h1>
                         <p><?php echo e($heroTagline); ?></p>
                     </div>
                     <div class="withu-hero-couple">
