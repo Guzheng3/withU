@@ -24,7 +24,7 @@ export default defineNuxtConfig({
   // 开发服务器监听所有网卡，便于预览环境访问
   devServer: {
     host: '0.0.0.0',
-    port: 3000
+    port: 3001
   },
 
   // SPA 模式配置
@@ -73,7 +73,7 @@ export default defineNuxtConfig({
       routes: ['/', '/auth/login', '/auth/register']
     },
     devProxy: {
-      '/api': 'http://localhost:8080/api'
+      '/api': 'http://localhost:8081/api'
     },
     routeRules: {
       '/**': {

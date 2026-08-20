@@ -111,8 +111,8 @@ const java = ensureJava();
 // 幂等注入 TMDB 代理配置（本机 Clash 混合端口，可在 systemconf.json 手动改）
 function ensureTmdbProxy() {
   const confPath = path.join(runtime, 'config', 'systemconf.json');
-  // 内置 mihomo 代理端口（若启用）；未启用则默认 7897（复用手动 Clash）
-  let proxyPort = '7897';
+  // 内置 mihomo 代理端口（若启用）；未启用则默认 7898（复用手动 Clash）
+  let proxyPort = '7898';
   try {
     const mst = JSON.parse(fs.readFileSync(path.join(workRoot, 'runtime', 'mihomo', 'status.json'), 'utf8'));
     if (mst.enabled && mst.port) proxyPort = String(mst.port);
@@ -127,7 +127,7 @@ function ensureTmdbProxy() {
     if (!conf.tmdb.apiKey) { conf.tmdb.apiKey = '8d70511b0389c1015d30b6c1ebf08dce'; changed = true; }
     if (changed) {
       fs.writeFileSync(confPath, JSON.stringify(conf, null, 2).replace(/\n/g, '\r\n'), 'utf8');
-      console.log('[strm] 已注入 TMDB 代理配置 (127.0.0.1:7897)');
+       console.log('[strm] 已注入 TMDB 代理配置 (127.0.0.1:7898)');
     }
   } catch (e) { console.warn('[strm] systemconf 注入失败:', e.message); }
 }
@@ -137,7 +137,7 @@ const node = ensureNode();
 const bridge = path.join(strmRoot, 'bridge.js');
 
 // 后端 JVM 走内置 mihomo/本机 Clash 的混合代理端口
-const PROXY_PORT = (() => { try { const mst = JSON.parse(fs.readFileSync(path.join(workRoot, 'runtime', 'mihomo', 'status.json'), 'utf8')); if (mst.enabled && mst.port) return String(mst.port); } catch (e) {} return '7897'; })();
+const PROXY_PORT = (() => { try { const mst = JSON.parse(fs.readFileSync(path.join(workRoot, 'runtime', 'mihomo', 'status.json'), 'utf8')); if (mst.enabled && mst.port) return String(mst.port); } catch (e) {} return '7898'; })();
 
 const backendLauncher = [
   "const { spawn } = require('child_process');",
@@ -160,7 +160,7 @@ const backendLauncher = [
   "const fd = fs.openSync(base + '/backend.log', 'a');",
   "const PROXY_PORT = '" + PROXY_PORT + "';",
   "const proxyArgs = ['-Dhttp.proxyHost=127.0.0.1', '-Dhttp.proxyPort=' + PROXY_PORT, '-Dhttps.proxyHost=127.0.0.1', '-Dhttps.proxyPort=' + PROXY_PORT, '-Dhttp.nonProxyHosts=localhost|127.0.0.1|[::1]', '-Dhttps.nonProxyHosts=localhost|127.0.0.1|[::1]'];",
-  "const p = spawn(java, [...proxyArgs, '-jar', jar, '--server.address=127.0.0.1'], { env, cwd: base, stdio: ['ignore', fd, fd] });",
+  "const p = spawn(java, [...proxyArgs, '-jar', jar, '--server.address=127.0.0.1', '--server.port=8081'], { env, cwd: base, stdio: ['ignore', fd, fd] });",
   "console.log('spawned java pid', p.pid);",
   "p.on('exit', c => { try{fs.closeSync(fd);}catch(e){} console.log('java exited', c); process.exit(c || 0); });"
 ].join('\n');
@@ -180,5 +180,5 @@ const bridgeLauncher = [
 fs.writeFileSync(path.join(runtime, 'start-bridge.js'), bridgeLauncher);
 
 console.log('[strm] 启动器已生成: ' + runtime);
-console.log('[strm] 组件就绪: 后端 127.0.0.1:8080 + bridge 127.0.0.1:3111');
+console.log('[strm] 组件就绪: 后端 127.0.0.1:8081 + bridge 127.0.0.1:3112');
 console.log('[strm] 后台访问: /admin/strm.php/ （需以情侣账号登录 withu 后台）');

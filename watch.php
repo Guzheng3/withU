@@ -41,7 +41,7 @@ $strmFetch = static function (int $id) use (&$strmHistory): array {
     $header = $b64u(json_encode(['alg' => 'HS256', 'typ' => 'JWT']));
     $payload = $b64u(json_encode(['sub' => 'withu_admin', 'iat' => $now, 'exp' => $now + 600]));
     $signature = $b64u(hash_hmac('sha256', $header . '.' . $payload, $secret, true));
-    $ch = curl_init('http://127.0.0.1:8080/api/media-library/' . $id);
+        $ch = curl_init('http://127.0.0.1:8081/api/media-library/' . $id);
     curl_setopt_array($ch, [
         CURLOPT_RETURNTRANSFER => true,
         CURLOPT_HTTPHEADER => ['Authorization: Bearer ' . $header . '.' . $payload . '.' . $signature],

@@ -8,7 +8,7 @@
  * 用法：
  *   配置订阅地址（任选其一，优先级从高到低）：
  *     1. 环境变量 WITHU_PROXY_SUB_URL（或 WITHU_MIHOMO_SUB_URL）
- *     2. 文件 <repo>/config/mihomo.json   → { "subUrl": "...", "port": 7897, "mirror": "" }
+ *     2. 文件 <repo>/config/mihomo.json   → { "subUrl": "...", "port": 7898, "mirror": "" }
  *     3. 文件 <repo>/deploy-local/mihomo.json（同上，本地开发用，不入 git）
  *   运行：node deploy-local/setup-mihomo.cjs
  *
@@ -16,7 +16,7 @@
  *   - 幂等下载对应平台的 mihomo 二进制到 runtime/mihomo/bin/
  *   - 生成 runtime/mihomo/config.yaml（proxy-providers + 按 TMDB 两域名延迟轮询的 url-test 组 + 排除 hysteria 节点 + 混合端口）
  *   - 生成 runtime/mihomo/start.cjs / stop.cjs（启停启动器，供 start-withu 调用）
- *   - 未配置订阅时：若本机已有 7897 监听（手动 Clash）则复用；否则打印提示、不阻塞
+ *   - 未配置订阅时：若本机已有 7898 监听（手动 Clash）则复用；否则打印提示、不阻塞
  *
  * 节点切换策略（融入 daitcl/mihomo 的配置模板思路）：
  *   - 轮询：url-test 组默认每 30 分钟对 TMDB 两域名（api.themoviedb.org / image.tmdb.org）测速（pollInterval 秒，后台可改）
@@ -25,9 +25,9 @@
  *   - 兜底：仅 themoviedb.org / tmdb.org 两域名走代理，其余 MATCH,DIRECT 直连
  *
  * 常用配置项：
- *   port   混合代理端口（默认 7897，与 withUstrm TMDB 代理配置一致）
+ *   port   混合代理端口（默认 7898，与 withUstrm TMDB 代理配置一致）
  *   mirror GitHub 下载镜像前缀（默认空=直连；可用 https://ghproxy.net/https://github.com/ 等）
- *   apiPort  mihomo 外部控制端口（默认 9090，RESTful API）
+ *   apiPort  mihomo 外部控制端口（默认 9091，RESTful API）
  */
 const fs = require('fs');
 const path = require('path');
@@ -42,8 +42,8 @@ const runtime = path.join(workRoot, 'runtime', 'mihomo');
 const binDir = path.join(runtime, 'bin');
 const confDir = path.join(runtime);
 const GITHUB_API = 'https://api.github.com/repos/MetaCubeX/mihomo/releases/latest';
-const DEFAULT_PORT = 7897;
-const DEFAULT_API_PORT = 9090;
+const DEFAULT_PORT = 7898;
+const DEFAULT_API_PORT = 9091;
 
 // ---------- 配置读取 ----------
 function loadConfig() {
@@ -177,8 +177,8 @@ async function ensureBinary(cfg) {
   const tmp = path.join(binDir, name);
   const progress = got => console.log('[mihomo]   已下载 ' + (got / 1048576).toFixed(1) + ' MB');
   // 优先走本机已有代理（若有监听）下载，再直连，再镜像
-  const proxied = listening(7897) || listening(7890);
-  const proxyPort = listening(7897) ? 7897 : 7890;
+  const proxied = listening(7898) || listening(7890);
+  const proxyPort = listening(7898) ? 7898 : 7890;
   let ok = false;
   if (proxied) {
     try {

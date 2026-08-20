@@ -1,0 +1,7059 @@
+﻿/* ==========================================
+   足迹地图弹窗遮罩层
+   ========================================== */
+.lg-map-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 100020;
+    background: rgba(0, 0, 0, 0);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    transition: background 0.4s ease;
+}
+
+.lg-map-overlay.lg-map-overlay-show {
+    background: rgba(0, 0, 0, 0.6);
+}
+
+.lg-map-overlay.lg-map-overlay-closing {
+    background: rgba(0, 0, 0, 0);
+    transition: background 0.3s ease;
+}
+
+.lg-map-overlay .lg-map-modal {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    opacity: 0;
+    transform: scale(0.96);
+    will-change: transform, opacity;
+    transition: opacity 0.4s cubic-bezier(0.25, 0.1, 0.25, 1),
+        transform 0.4s cubic-bezier(0.25, 0.1, 0.25, 1);
+}
+
+.lg-map-overlay.lg-map-overlay-show .lg-map-modal {
+    opacity: 1;
+    transform: scale(1);
+}
+
+.lg-map-overlay.lg-map-overlay-closing .lg-map-modal {
+    opacity: 0;
+    transform: scale(0.96);
+    transition: opacity 0.3s cubic-bezier(0.25, 0.1, 0.25, 1),
+        transform 0.3s cubic-bezier(0.25, 0.1, 0.25, 1);
+}
+
+.lg-map-overlay .lg-map {
+    width: 100%;
+    height: 100%;
+}
+
+.lg-map-overlay .missing-pets-wrap {
+    height: 100% !important;
+    border-radius: 0 !important;
+}
+
+.lg-map-overlay #missing-pets-map {
+    height: 100% !important;
+}
+
+/* ==========================================
+   地图模块主样式
+   ========================================== */
+.lg-map #missing-pets-module {
+    --hsla-raw: var(--footprint-hsla);
+    --primary-color: hsl(var(--hsla-raw));
+    --primary-hover: hsla(var(--hsla-raw), 0.8);
+    --text-color: #333;
+    --text-light: #666;
+    --bg-color: #fff;
+    --shadow-color: rgba(0, 0, 0, 0.1);
+    --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    --primary-color-hover: hsla(var(--hsla-raw), 0.7);
+    --primary-color-active: hsla(var(--hsla-raw), 0.9);
+    --text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+    --box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    --font-family-slogn: "快看世界体", sans-serif;
+
+    --footprint-primary-color: hsl(var(--hsla-raw));
+    --footprint-primary-color-light: hsl(var(--hsla-h), var(--hsla-s), calc(var(--hsla-l) + 10%));
+    --footprint-primary-color-dark: hsl(var(--hsla-h), var(--hsla-s), calc(var(--hsla-l) - 10%));
+
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+    line-height: 1.6;
+    background: #f5f5f5;
+}
+
+/* ==========================================
+   留言卡片样式 (全局，用于高德地图信息窗口)
+   ========================================== */
+
+/* 卡片入场动画 */
+@keyframes cardSlideIn {
+    0% {
+        opacity: 0;
+        transform: translateY(20px) scale(0.9);
+    }
+
+    100% {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+.lg-map .msg-card {
+    width: 260px;
+    background: #fff;
+    border-radius: 16px;
+    overflow: hidden;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15);
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    animation: cardSlideIn 0.3s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+}
+
+.lg-map .msg-card * {
+    box-sizing: border-box;
+}
+
+.lg-map .msg-card-head {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 16px 16px 14px;
+    border-bottom: 1px solid #f0f0f0;
+}
+
+.lg-map .msg-card-avatar {
+    width: 46px;
+    height: 46px;
+    border-radius: 50%;
+    overflow: hidden;
+    flex-shrink: 0;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.lg-map .msg-card-avatar img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.lg-map .msg-card-info {
+    flex: 1;
+    min-width: 0;
+}
+
+.lg-map .msg-card-name {
+    font-size: 15px;
+    font-weight: 600;
+    color: #1a1a1a;
+    margin-bottom: 3px;
+}
+
+.lg-map .msg-card-loc {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 12px;
+    color: #888;
+}
+
+.lg-map .msg-card-loc svg {
+    width: 12px;
+    height: 12px;
+    color: #ff4081;
+    flex-shrink: 0;
+}
+
+.lg-map .msg-card-loc span {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.lg-map .msg-card-time {
+    font-size: 11px;
+    color: #bbb;
+    flex-shrink: 0;
+}
+
+.lg-map .msg-card-body {
+    padding: 16px;
+}
+
+.lg-map .msg-card-text {
+    margin: 0;
+    font-size: 14px;
+    line-height: 1.7;
+    color: #333;
+    word-break: break-word;
+}
+
+.lg-map .msg-card-foot {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 10px 16px;
+    background: #f9f9f9;
+    font-size: 11px;
+    color: #aaa;
+    border-top: 1px solid #f0f0f0;
+}
+
+.lg-map .msg-card-foot svg {
+    width: 12px;
+    height: 12px;
+    color: #ccc;
+    flex-shrink: 0;
+}
+
+.lg-map #missing-pets-module * {
+    box-sizing: border-box;
+    white-space: nowrap;
+}
+
+.lg-map #missing-pets-module .missing-pets-wrap {
+    width: 100%;
+    height: 75vh;
+    position: relative;
+    transform: translateZ(0);
+    will-change: transform;
+    backface-visibility: hidden;
+    overflow: hidden;
+}
+
+.lg-map #missing-pets-module #missing-pets-map {
+    position: relative;
+    width: 100%;
+    height: 100vh;
+    background: #f5f5f5;
+    transition: var(--transition);
+    overflow: hidden;
+}
+
+.lg-map #missing-pets-map.map-transitioning {
+    filter: brightness(0.95);
+}
+
+.lg-map #missing-pets-map.map-shake {
+    animation: shake 0.4s cubic-bezier(0.36, 0.07, 0.19, 0.97) both;
+}
+
+@keyframes shake {
+
+    10%,
+    90% {
+        transform: translate3d(-1px, 0, 0);
+    }
+
+    20%,
+    80% {
+        transform: translate3d(2px, 0, 0);
+    }
+
+    30%,
+    50%,
+    70% {
+        transform: translate3d(-4px, 0, 0);
+    }
+
+    40%,
+    60% {
+        transform: translate3d(4px, 0, 0);
+    }
+}
+
+/* ================= 底部信息栏 - 极简空气风格 ================= */
+.lg-map .ui-footer-container {
+    position: fixed;
+    bottom: 30px;
+    left: 24px;
+    right: 24px;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    pointer-events: none;
+    z-index: 100;
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(20px);
+    transition: all 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.lg-map .ui-footer-container.show {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+}
+
+.lg-map .ui-footer-left {
+    text-shadow: 0 2px 20px rgba(0, 0, 0, 0.95), 0 4px 40px rgba(0, 0, 0, 0.8);
+}
+
+.lg-map .ui-footer-title {
+    font-size: 26px;
+    font-weight: 800;
+    color: #fff;
+    letter-spacing: -0.5px;
+    line-height: 1.1;
+    margin-bottom: 8px;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+/* 数量徽章样式 */
+.lg-map .footer-count-badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 24px;
+    height: 24px;
+    padding: 0 8px;
+    font-size: 13px;
+    font-weight: 600;
+    color: #fff;
+    background: linear-gradient(135deg, rgba(244, 114, 182, 0.9) 0%, rgba(236, 72, 153, 0.9) 100%);
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(236, 72, 153, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.2);
+    letter-spacing: 0;
+    font-family: "DIN Alternate", "Roboto Mono", -apple-system, monospace;
+    animation: badgePop 0.3s ease-out;
+}
+
+.lg-map .ui-footer-sub {
+    font-size: 12px;
+    color: rgba(255, 255, 255, 0.85);
+    font-weight: 400;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.lg-map .status-dot {
+    width: 6px;
+    height: 6px;
+    background: #f472b6;
+    border-radius: 50%;
+    box-shadow: 0 0 8px #f472b6;
+    animation: statusBreathe 2s infinite ease-in-out;
+    flex-shrink: 0;
+}
+
+@keyframes statusBreathe {
+
+    0%,
+    100% {
+        opacity: 0.6;
+        transform: scale(1);
+    }
+
+    50% {
+        opacity: 1;
+        transform: scale(1.3);
+    }
+}
+
+@keyframes badgePop {
+    0% {
+        opacity: 0;
+        transform: scale(0.6);
+    }
+
+    60% {
+        transform: scale(1.1);
+    }
+
+    100% {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+.lg-map .ui-footer-right {
+    text-align: right;
+    text-shadow: 0 2px 20px rgba(0, 0, 0, 0.95);
+    opacity: 0.9;
+    display: flex;
+    flex-direction: column;
+    align-items: end;
+}
+
+
+.lg-map .lgnewui-badge {
+    background: rgba(40, 40, 40, 0.75);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    border-radius: 50px;
+    padding: 4px 12px 4px 4px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    /* box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4); */
+    font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", "Helvetica Neue", Arial, sans-serif;
+    box-sizing: border-box;
+    user-select: none;
+    margin-bottom: 6px;
+}
+
+.lg-map .lgnewui-icon-circle {
+    width: 22px;
+    height: 22px;
+    background: #5e5e5e;
+    color: #ffffff;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 600;
+    font-size: 9px;
+    font-family: sans-serif;
+    flex-shrink: 0;
+}
+
+.lg-map .lgnewui-text-thin {
+    font-size: 11px;
+    font-weight: 300;
+    color: #ffffff;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    white-space: nowrap;
+    line-height: 1;
+}
+
+.lg-map .lgnewui-badge:hover {
+    background: rgba(50, 50, 50, 0.85);
+    border-color: rgba(255, 255, 255, 0.2);
+    cursor: default;
+}
+
+.lg-map .ui-footer-copy {
+    font-size: 9px;
+    color: rgba(255, 255, 255, 0.6);
+    line-height: 1.5;
+}
+
+.lg-map .ui-footer-copy .footer-amap-logo {
+    color: #4aa5ff;
+    font-weight: 600;
+    display: inline-flex;
+    align-items: center;
+    gap: 2px;
+}
+
+.lg-map .ui-footer-copy .footer-amap-logo svg {
+    background: #fff;
+    border-radius: 2px;
+    width: 8px;
+    height: 8px;
+}
+
+/* 地图控件样式 */
+.lg-map .map-controls {
+    position: fixed;
+    left: 50%;
+    bottom: 30px;
+    transform: translateX(-50%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(255, 255, 255, 0.85);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border-radius: 40px;
+    padding: 8px 10px;
+    z-index: 10001;
+    border: 1px solid rgba(0, 0, 0, 0.06);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08),
+        inset 0 0 0 1px rgba(255, 255, 255, 0.lg-map .5),
+        inset 0 2px 4px rgba(0, 0, 0, 0.lg-map .05);
+    width: auto;
+    min-width: 340px;
+    flex-wrap: wrap;
+    gap: 6px;
+    opacity: 0;
+    transform: translateX(-50%) translateY(20px);
+    transition: all 0.3s ease-out;
+}
+
+.lg-map .map-controls.show {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+}
+
+.lg-map .control-buttons {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-right: 10px;
+}
+
+/* 按钮组通用样式 */
+.lg-map .button-group {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    background: rgba(240, 240, 240, 0.85);
+    border-radius: 30px;
+    padding: 3px;
+    margin: 0 4px;
+    box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.05);
+}
+
+/* 基础图层按钮 */
+.lg-map .control-btn {
+    position: relative;
+    padding: 8px 16px;
+    background: transparent;
+    border: none;
+    border-radius: 20px;
+    color: var(--text-color);
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    opacity: 0;
+    transform: scale(0.8);
+    transition: all 0.3s ease-out;
+}
+
+.lg-map .control-btn:hover {
+    background: hsla(var(--hsla-raw), 0.1);
+}
+
+.lg-map .control-btn.active {
+    background: hsl(var(--hsla-raw));
+    color: white;
+    transform: translateY(-1px);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+}
+
+/* 卫星图层按钮激活样式 */
+.lg-map .control-btn[data-type="satellite"].active {
+    background: hsl(var(--hsla-raw));
+    color: white;
+    border: none;
+    box-shadow: var(--box-shadow);
+}
+
+/* 开关按钮样式 */
+.lg-map .control-btn[data-type="road"],
+.lg-map .control-btn[data-type="traffic"] {
+    position: relative;
+    padding: 6px 12px 6px 42px;
+    font-weight: 500;
+    background: rgba(255, 255, 255, 0.95);
+    border: 1px solid rgba(0, 0, 0, 0.08);
+    border-radius: 20px;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    overflow: hidden;
+    min-width: 90px;
+    text-align: left;
+}
+
+.lg-map .control-btn[data-type="road"]::before,
+.lg-map .control-btn[data-type="traffic"]::before {
+    content: '';
+    position: absolute;
+    left: 8px;
+    top: 50%;
+    width: 28px;
+    height: 16px;
+    background: rgba(0, 0, 0, 0.08);
+    border-radius: 10px;
+    transform: translateY(-50%);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.1);
+}
+
+.lg-map .control-btn[data-type="road"]::after,
+.lg-map .control-btn[data-type="traffic"]::after {
+    content: '';
+    position: absolute;
+    left: 10px;
+    top: 50%;
+    width: 12px;
+    height: 12px;
+    background: #fff;
+    border-radius: 50%;
+    transform: translateY(-50%);
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.15);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.lg-map .control-btn[data-type="road"].active,
+.lg-map .control-btn[data-type="traffic"].active {
+    background: rgba(255, 255, 255, 0.95);
+    color: var(--primary-color);
+    font-weight: 600;
+    border: 1px solid rgba(0, 0, 0, 0.08);
+}
+
+.lg-map .control-btn[data-type="road"].active::before,
+.lg-map .control-btn[data-type="traffic"].active::before {
+    background: hsl(var(--hsla-raw));
+    box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.05);
+}
+
+.lg-map .control-btn[data-type="road"].active::after,
+.lg-map .control-btn[data-type="traffic"].active::after {
+    left: 22px;
+    background: #fff;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+}
+
+.lg-map .control-btn[data-type="road"]:hover,
+.lg-map .control-btn[data-type="traffic"]:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+/* 缩放按钮组样式 */
+.lg-map .zoom-buttons {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    margin-left: 8px;
+}
+
+.lg-map .zoom-btn {
+    width: 32px;
+    height: 32px;
+    border: none;
+    background: transparent;
+    color: rgba(0, 0, 0, 0.7);
+    font-size: 18px;
+    font-weight: bold;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.25s ease;
+    border-radius: 50%;
+}
+
+.lg-map .zoom-btn:hover {
+    background-color: hsla(var(--hsla-raw), 0.1);
+    color: hsl(var(--hsla-raw));
+}
+
+.lg-map .zoom-btn:active,
+.lg-map .zoom-btn.zoom-active {
+    color: white;
+    background: hsl(var(--hsla-raw));
+    transform: translateY(1px);
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+/* 完全隐藏比例尺 */
+.lg-map .amap-scale,
+.lg-map .amap-scale-text,
+.lg-map .amap-scale-line {
+    display: none !important;
+    visibility: hidden !important;
+    opacity: 0 !important;
+    width: 0 !important;
+    height: 0 !important;
+    position: absolute !important;
+    z-index: -9999 !important;
+    pointer-events: none !important;
+}
+
+/* 信息窗口样式 */
+.lg-map .info-window {
+    width: 220px;
+    height: 280px;
+    background: white;
+    border-radius: 20px;
+    box-shadow: 12px 12px 0px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    opacity: 0;
+    transform: translateY(10px);
+    animation: infoWindowShow 0.3s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+    cursor: pointer;
+}
+
+.lg-map .info-window .image {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+}
+
+.lg-map .info-window .image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.lg-map .info-window .image-info {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    padding: 15px;
+    color: white;
+    background: linear-gradient(to top, rgba(0, 0, 0, 0.8) 0%, rgba(0, 0, 0, 0.6) 50%, rgba(0, 0, 0, 0) 100%);
+    z-index: 10;
+}
+
+.lg-map .info-window .title {
+    font-size: 16px;
+    font-weight: 600;
+    margin: 0 0 8px 0;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+}
+
+.lg-map .info-window .description {
+    font-size: 13px;
+    line-height: 1.5;
+    margin: 0 0 12px 0;
+    opacity: 0.9;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.lg-map .info-window .meta {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-size: 12px;
+    opacity: 0.9;
+    margin-bottom: 12px;
+}
+
+.lg-map .info-window .meta span {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+    width: 100%;
+}
+
+.lg-map .info-window .meta svg {
+    width: 12px;
+    height: 12px;
+    opacity: 0.9;
+    flex-shrink: 0;
+}
+
+.lg-map .info-window .meta span p {
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    width: 100%;
+}
+
+.lg-map .info-window .article-btn {
+    --primary-color: rgba(255, 255, 255, 0.9);
+    --secondary-color: rgba(0, 0, 0, 0.8);
+    --hover-color: #fff;
+    --arrow-width: 10px;
+    --arrow-stroke: 2px;
+    box-sizing: border-box;
+    border: 0;
+    border-radius: 20px;
+    color: var(--secondary-color);
+    padding: 8px 16px;
+    background: var(--primary-color);
+    display: flex;
+    transition: 0.2s all;
+    align-items: center;
+    gap: 0.6em;
+    font-weight: 500;
+    font-size: 13px;
+    backdrop-filter: blur(4px);
+    text-decoration: none;
+}
+
+.lg-map .info-window .article-btn .arrow-wrapper {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.lg-map .info-window .article-btn .arrow {
+    margin-top: 1px;
+    width: 0;
+    background: var(--secondary-color);
+    height: var(--arrow-stroke);
+    position: relative;
+    transition: 0.2s;
+}
+
+.lg-map .info-window .article-btn .arrow::before {
+    content: "";
+    box-sizing: border-box;
+    position: absolute;
+    border: solid var(--secondary-color);
+    border-width: 0 var(--arrow-stroke) var(--arrow-stroke) 0;
+    display: inline-block;
+    top: -3px;
+    right: 0;
+    transition: 0.2s;
+    padding: 3px;
+    transform: rotate(-45deg);
+}
+
+.lg-map .info-window .article-btn:hover {
+    background-color: var(--hover-color);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+.lg-map .info-window .article-btn:hover .arrow {
+    width: var(--arrow-width);
+}
+
+.lg-map .info-window .article-btn:hover .arrow:before {
+    right: 0;
+}
+
+.lg-map .info-window .close-btn {
+    display: none;
+}
+
+@keyframes infoWindowShow {
+    0% {
+        opacity: 0;
+        transform: translateY(30px) scale(0.95);
+    }
+
+    100% {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+/* 隐藏高德地图默认的关闭按钮 */
+.lg-map .amap-info-close {
+    display: none !important;
+}
+
+/* 隐藏高德地图默认的信息窗体样式 */
+.lg-map .amap-info-content {
+    padding: 0 !important;
+    background: transparent !important;
+    border: none !important;
+    box-shadow: none !important;
+}
+
+.lg-map .amap-info-outer,
+.lg-map .amap-info-inner {
+    background: transparent !important;
+    border: none !important;
+    box-shadow: none !important;
+}
+
+.lg-map .amap-info-sharp {
+    display: none !important;
+}
+
+/* 标记点样式 */
+.lg-map .custom-marker {
+    cursor: pointer;
+    transition: var(--transition);
+}
+
+.lg-map .marker-image {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    overflow: hidden;
+    border: 2px solid var(--bg-color);
+    box-shadow: 0 2px 8px var(--shadow-color);
+    transition: var(--transition);
+}
+
+.lg-map .marker-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: var(--transition);
+}
+
+.lg-map .custom-marker:hover .marker-image {
+    transform: scale(1.15);
+    box-shadow: 0 4px 12px var(--shadow-color);
+}
+
+/* 移除地图 Logo */
+.lg-map .amap-logo {
+    display: none !important;
+}
+
+.lg-map .amap-copyright {
+    display: none !important;
+}
+
+/* 主题控制样式 */
+.lg-map .theme-control {
+    display: flex;
+    align-items: center;
+    padding: 0 15px;
+    border-right: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+.lg-map .theme-label {
+    color: rgba(0, 0, 0, 0.7);
+    font-size: 13px;
+    margin-right: 8px;
+}
+
+.lg-map .theme-select {
+    background: rgba(0, 0, 0, 0.05);
+    border: none;
+    border-radius: 4px;
+    padding: 6px 24px 6px 8px;
+    font-size: 13px;
+    color: rgba(0, 0, 0, 0.7);
+    cursor: pointer;
+    appearance: none;
+    -webkit-appearance: none;
+    background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='rgba(0, 0, 0, 0.4)' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+    background-repeat: no-repeat;
+    background-position: right 8px center;
+    background-size: 16px;
+}
+
+.lg-map .theme-select:hover {
+    background-color: rgba(0, 0, 0, 0.1);
+    color: rgba(0, 0, 0, 0.9);
+}
+
+.lg-map .theme-select:focus {
+    outline: none;
+    background-color: rgba(0, 0, 0, 0.15);
+    color: rgba(0, 0, 0, 0.9);
+}
+
+/* 按钮点击效果 */
+.lg-map .control-btn.btn-clicked {
+    transform: scale(0.95) translateZ(0);
+    opacity: 0.9;
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* 加载指示器样式优化 */
+.lg-map .loading-indicator {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: var(--bg-color);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+    transition: opacity 0.3s ease;
+}
+
+.lg-map .spinner {
+    width: 40px;
+    height: 40px;
+    border: 3px solid hsla(var(--hsla-raw), 0.1);
+    border-top-color: hsl(var(--hsla-raw));
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+
+.lg-map .loading-text {
+    margin-top: 16px;
+    color: var(--text-light);
+    font-size: 14px;
+}
+
+@keyframes spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+/* 动画定义 */
+@keyframes logoEntrance {
+    0% {
+        opacity: 0;
+        transform: translate3d(0, 20px, 0);
+    }
+
+    100% {
+        opacity: 1;
+        transform: translate3d(0, 0, 0);
+    }
+}
+
+@keyframes textFadeIn {
+    0% {
+        opacity: 0;
+        transform: translate3d(0, 10px, 0);
+    }
+
+    50% {
+        opacity: 0;
+    }
+
+    100% {
+        opacity: 1;
+        transform: translate3d(0, 0, 0);
+    }
+}
+
+@keyframes slideIn {
+    0% {
+        opacity: 0;
+        transform: translateX(-30px);
+    }
+
+    100% {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+@keyframes colorFadeIn {
+    0% {
+        opacity: 0;
+        color: rgba(0, 0, 0, 0.2);
+    }
+
+    50% {
+        opacity: 1;
+        color: rgba(0, 0, 0, 0.5);
+    }
+
+    100% {
+        opacity: 1;
+        color: var(--primary-color);
+    }
+}
+
+@keyframes controlsFadeIn {
+    0% {
+        opacity: 0;
+        transform: translateX(-50%) translateY(20px);
+    }
+
+    100% {
+        opacity: 1;
+        transform: translateX(-50%) translateY(0);
+    }
+}
+
+@keyframes buttonColorFadeIn {
+    0% {
+        background: rgba(0, 0, 0, 0.1);
+    }
+
+    100% {
+        background: var(--primary-color);
+    }
+}
+
+/* 控制栏动画 */
+.lg-map .map-controls {
+    opacity: 0;
+    transform: translateX(-50%) translateY(20px);
+    transition: all 0.3s ease-out;
+}
+
+.lg-map .map-controls.show {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+}
+
+.lg-map .control-btn {
+    opacity: 0;
+    transform: scale(0.8);
+    transition: all 0.3s ease-out;
+}
+
+.lg-map .control-btn.show {
+    opacity: 1;
+    transform: scale(1);
+}
+
+.lg-map .control-btn.scale-in {
+    animation: scaleIn 0.3s ease-out;
+}
+
+.lg-map .zoom-controls button {
+    opacity: 0;
+    transform: translateX(-20px);
+    transition: all 0.3s ease-out;
+}
+
+.lg-map .zoom-controls button.show {
+    opacity: 1;
+    transform: translateX(0);
+}
+
+.lg-map .zoom-controls button.slide-in {
+    animation: slideIn 0.3s ease-out;
+}
+
+/* 按钮点击动画 */
+.lg-map .btn-pulse {
+    animation: pulse 0.3s ease-out;
+}
+
+/* 动画关键帧 */
+@keyframes scaleIn {
+    0% {
+        transform: scale(0.8);
+    }
+
+    50% {
+        transform: scale(1.1);
+    }
+
+    100% {
+        transform: scale(1);
+    }
+}
+
+@keyframes slideIn {
+    0% {
+        transform: translateX(-20px);
+        opacity: 0;
+    }
+
+    100% {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
+
+@keyframes pulse {
+    0% {
+        transform: scale(1);
+    }
+
+    50% {
+        transform: scale(0.95);
+    }
+
+    100% {
+        transform: scale(1);
+    }
+}
+
+/* 优化控制栏样式 */
+.lg-map .map-controls {
+    background: rgba(255, 255, 255, 0.9);
+    backdrop-filter: blur(10px);
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    padding: 8px;
+    margin: 16px;
+}
+
+.lg-map .control-btn {
+    position: relative;
+    overflow: hidden;
+    transition: all 0.3s ease;
+}
+
+.lg-map .control-btn::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 100%;
+    height: 100%;
+    background: radial-gradient(circle, rgba(255, 255, 255, 0.8) 0%, rgba(255, 255, 255, 0) 70%);
+    transform: translate(-50%, -50%) scale(0);
+    opacity: 0;
+    transition: transform 0.3s ease-out, opacity 0.3s ease-out;
+}
+
+.lg-map .control-btn:active::after {
+    transform: translate(-50%, -50%) scale(2);
+    opacity: 1;
+}
+
+.lg-map .control-btn.active {
+    background: var(--primary-color);
+    color: white;
+    transform: translateY(-1px);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+}
+
+.lg-map #missing-pets-module {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    height: 100vh;
+    width: 100vw;
+    overflow: hidden;
+    --primary-color: hsl(var(--footprint-hsla, 200, 100%, 50%));
+    position: relative;
+    width: 100%;
+    height: 100%;
+    background-color: #f5f5f5;
+}
+
+.lg-map .missing-pets-wrap {
+    position: relative;
+    width: 100%;
+    height: 100%;
+}
+
+.lg-map #missing-pets-map {
+    width: 100%;
+    height: 100%;
+}
+
+/* Logo和描述 */
+.lg-map .logo-container {
+    position: fixed;
+    bottom: 20px;
+    left: 20px;
+    z-index: 100;
+    max-width: 300px;
+}
+
+.lg-map .missing-pets-logo {
+    font-size: 2rem;
+    color: var(--primary-color);
+    margin-bottom: 8px;
+    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+}
+
+.lg-map .logo-version {
+    font-size: 0.8rem;
+    vertical-align: super;
+    opacity: 0.7;
+}
+
+.lg-map .missing-pets-slogan {
+    font-size: 1rem;
+    color: #a8a8a8;
+    line-height: 1.4;
+}
+
+/* 控制台基础样式 */
+.lg-map .map-controls {
+    position: fixed;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    padding: 8px 16px;
+    background: rgba(0, 0, 0, 0.6);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    border-radius: 50px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    z-index: 100;
+}
+
+/* 按钮组样式 */
+.lg-map .button-group {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 4px;
+}
+
+/* 分隔线 */
+.lg-map .button-group:not(:last-child) {
+    border-right: 1px solid rgba(255, 255, 255, 0.2);
+    padding-right: 16px;
+    margin-right: 8px;
+}
+
+/* 标准按钮样式 */
+.lg-map .control-btn {
+    background: rgba(255, 255, 255, 0.1);
+    border: none;
+    color: #fff;
+    padding: 8px 16px;
+    border-radius: 20px;
+    font-size: 14px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-weight: 500;
+}
+
+.lg-map .control-btn:hover {
+    background: rgba(255, 255, 255, 0.2);
+}
+
+.lg-map .control-btn.active {
+    background: var(--primary-color, #ff4081);
+    color: #fff;
+}
+
+/* 缩放按钮组样式 */
+.lg-map .zoom-buttons {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.lg-map .zoom-btn {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    border: none;
+    background: rgba(255, 255, 255, 0.1);
+    color: #fff;
+    font-size: 18px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.lg-map .zoom-btn:hover {
+    background: rgba(255, 255, 255, 0.2);
+}
+
+/* 比例尺文字样式 */
+.lg-map .amap-scale-text {
+    color: #fff;
+    font-size: 12px;
+    opacity: 0.8;
+    margin-left: 8px;
+    font-weight: 500;
+}
+
+/* 飞机开关样式优化 */
+.lg-map .plane-switch {
+    --dot: #fff;
+    --street: #6B6D76;
+    --street-line: #A8AAB4;
+    --street-line-mid: #C0C2C8;
+    --sky-1: #60A7FA;
+    --sky-2: #2F8EFC;
+    --light-1: rgba(255, 233, 0, 1);
+    --light-2: rgba(255, 233, 0, .3);
+    cursor: pointer;
+    -webkit-tap-highlight-color: transparent;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 4px;
+    border-radius: 20px;
+    transition: all 0.3s ease;
+}
+
+.lg-map .plane-switch:hover {
+    background: rgba(255, 255, 255, 0.1);
+}
+
+.lg-map .plane-switch .switch-text {
+    color: #fff;
+    font-size: 14px;
+    font-weight: 500;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+    user-select: none;
+    min-width: 28px;
+    text-align: center;
+}
+
+.lg-map .plane-switch input {
+    display: none;
+}
+
+.lg-map .plane-switch input+div {
+    -webkit-mask-image: -webkit-radial-gradient(white, black);
+    position: relative;
+    overflow: hidden;
+    width: 50px;
+    height: 25px;
+    padding: 1px;
+    border-radius: 13px;
+    background: linear-gradient(90deg, var(--street) 0%, var(--street) 25%, var(--sky-1) 75%, var(--sky-2) 100%) left var(--p, 0%) top 0;
+    background-position-x: var(--p, 0%);
+    background-size: 400% auto;
+    transition: background-position 0.6s;
+}
+
+.lg-map .plane-switch input+div:before,
+.lg-map .plane-switch input+div:after {
+    content: "";
+    display: block;
+    position: absolute;
+    transform: translateX(var(--s, 0));
+    transition: transform 0.3s;
+}
+
+.lg-map .plane-switch input+div:before {
+    width: 42px;
+    right: 2px;
+    top: 4px;
+    height: 1px;
+    background: var(--street-line);
+    box-shadow: 0 16px 0 0 var(--street-line);
+}
+
+.lg-map .plane-switch input+div:after {
+    width: 2px;
+    height: 2px;
+    border-radius: 50%;
+    left: 23px;
+    top: 1px;
+    -webkit-animation: lights2 2s linear infinite;
+    animation: lights2 2s linear infinite;
+    box-shadow: inset 0 0 0 2px var(--light-1), 0 21px 0 var(--light-1), 8px 0 0 var(--light-2), 8px 21px 0 var(--light-2), 16px 0 0 var(--light-2), 16px 21px 0 var(--light-2);
+}
+
+.lg-map .plane-switch input+div span {
+    display: block;
+    position: absolute;
+}
+
+.lg-map .plane-switch input+div span.street-middle {
+    top: 12px;
+    left: 21px;
+    width: 3px;
+    height: 1px;
+    transform: translateX(var(--s, 0));
+    background: var(--street-line-mid);
+    box-shadow: 5px 0 0 var(--street-line-mid), 10px 0 0 var(--street-line-mid), 15px 0 0 var(--street-line-mid), 20px 0 0 var(--street-line-mid), 25px 0 0 var(--street-line-mid);
+    transition: transform 0.3s;
+}
+
+.lg-map .plane-switch input+div span.cloud {
+    width: 12px;
+    height: 4px;
+    border-radius: 2px;
+    background: #fff;
+    position: absolute;
+    top: var(--ct, 8px);
+    left: 100%;
+    opacity: var(--co, 0);
+    transition: opacity 0.3s;
+    -webkit-animation: clouds2 2s linear infinite var(--cd, 0s);
+    animation: clouds2 2s linear infinite var(--cd, 0s);
+}
+
+.lg-map .plane-switch input+div span.cloud:before,
+.lg-map .plane-switch input+div span.cloud:after {
+    content: "";
+    position: absolute;
+    transform: translateX(var(--cx, 0));
+    border-radius: 50%;
+    width: var(--cs, 5px);
+    height: var(--cs, 5px);
+    background: #fff;
+    bottom: 1px;
+    left: 1px;
+}
+
+.lg-map .plane-switch input+div span.cloud:after {
+    --cs: 6px;
+    --cx: 4px;
+}
+
+.lg-map .plane-switch input+div span.cloud.two {
+    --ct: 20px;
+    --cd: 1s;
+    opacity: var(--co-2, 0);
+}
+
+.lg-map .plane-switch input+div div {
+    display: table;
+    position: relative;
+    z-index: 1;
+    padding: 5px;
+    border-radius: 50%;
+    background: var(--dot);
+    transform: translateX(var(--x, 0));
+    transition: transform 0.6s cubic-bezier(0.2, 0.8, 0.35, 1.2);
+}
+
+.lg-map .plane-switch input+div div svg {
+    width: 13px;
+    height: 13px;
+    display: block;
+    color: var(--c, var(--street));
+    transition: color 0.6s;
+}
+
+.lg-map .plane-switch input:checked+div {
+    --p: 100%;
+    --x: 25px;
+    --s: -50px;
+    --c: var(--sky-2);
+    --co: .8;
+    --co-2: .6;
+}
+
+@keyframes lights2 {
+
+    20%,
+    30% {
+        box-shadow: inset 0 0 0 2px var(--light-2), 0 21px 0 var(--light-2), 8px 0 0 var(--light-1), 8px 21px 0 var(--light-1), 16px 0 0 var(--light-2), 16px 21px 0 var(--light-2);
+    }
+
+    55%,
+    65% {
+        box-shadow: inset 0 0 0 2px var(--light-2), 0 21px 0 var(--light-2), 8px 0 0 var(--light-2), 8px 21px 0 var(--light-2), 16px 0 0 var(--light-1), 16px 21px 0 var(--light-1);
+    }
+
+    90%,
+    100% {
+        box-shadow: inset 0 0 0 2px var(--light-1), 0 21px 0 var(--light-1), 8px 0 0 var(--light-2), 8px 21px 0 var(--light-2), 16px 0 0 var(--light-2), 16px 21px 0 var(--light-2);
+    }
+}
+
+@keyframes clouds2 {
+    97% {
+        transform: translateX(-72px);
+        visibility: visible;
+    }
+
+    98%,
+    100% {
+        visibility: hidden;
+    }
+
+    99% {
+        transform: translateX(-72px);
+    }
+
+    100% {
+        transform: translateX(0);
+    }
+}
+
+/* 移动端适配 */
+@media screen and (max-width: 768px) {
+
+    /* 足迹信息放到顶部 */
+    .lg-map .logo-container {
+        position: fixed;
+        top: 16px;
+        bottom: auto;
+        left: 16px;
+        max-width: 80%;
+        background: transparent;
+        padding: 0;
+        z-index: 110;
+        box-shadow: none;
+        backdrop-filter: none;
+        -webkit-backdrop-filter: none;
+    }
+
+    .lg-map .missing-pets-logo {
+        font-size: 1.8rem;
+        margin-bottom: 6px;
+        margin-right: 0;
+        color: var(--primary-color);
+        text-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+    }
+
+    .lg-map .missing-pets-slogan {
+        font-size: 0.9rem;
+        line-height: 1.4;
+        color: #a8a8a8;
+        /*text-shadow: 0 1px 2px rgba(255, 255, 255, 0.8);*/
+        white-space: normal;
+        display: block;
+    }
+
+    /* 移动端控制台优化 */
+    .lg-map .map-controls {
+        width: calc(100% - 24px);
+        left: 50%;
+        transform: translateX(-50%);
+        border-radius: 20px;
+        bottom: 12px;
+        padding: 10px 0;
+        background: white;
+        box-shadow: 0 2px 15px rgba(0, 0, 0, 0.15);
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        grid-template-rows: auto auto;
+        grid-gap: 8px;
+        justify-items: center;
+        position: fixed;
+        margin: 0;
+    }
+
+    /* 图层按钮行 - 占据整行 */
+    .lg-map .map-controls .button-group:first-child {
+        grid-column: 1 / 3;
+        grid-row: 1;
+        width: 100%;
+        display: flex;
+        gap: 10px;
+        margin: 0;
+        border-right: none;
+        justify-content: center;
+    }
+
+    /* 图层按钮样式 */
+    .lg-map .map-controls .button-group:first-child .control-btn {
+        flex: 1;
+        max-width: 120px;
+        background: rgba(0, 0, 0, 0.05);
+        color: #333;
+        text-align: center;
+        font-weight: bold;
+        padding: 10px 0;
+    }
+
+    .lg-map .map-controls .button-group:first-child .control-btn.active {
+        background: var(--primary-color);
+        color: white;
+    }
+
+    /* 路网路况开关行 */
+    .lg-map .map-controls .button-group:nth-child(2) {
+        grid-column: 1;
+        grid-row: 2;
+        width: 100%;
+        display: flex;
+        justify-content: center;
+        gap: 15px;
+        border-right: none;
+        padding: 8px 5px 0;
+        margin: 0;
+    }
+
+    /* 缩放按钮和比例尺 */
+    .lg-map .map-controls .zoom-buttons,
+    .lg-map .map-controls .amap-scale-text {
+        grid-column: 2;
+        grid-row: 2;
+        margin: 0;
+        padding: 8px 15px 0 0;
+    }
+
+    /* 缩放按钮样式 */
+    .lg-map .map-controls .zoom-btn {
+        width: 36px;
+        height: 36px;
+        background: rgba(0, 0, 0, 0.05);
+        color: #333;
+        font-size: 20px;
+        border: 1px solid rgba(0, 0, 0, 0.1);
+    }
+
+    /* 路网路况开关样式 */
+    .lg-map .plane-switch {
+        padding: 4px;
+        background: rgba(0, 0, 0, 0.03);
+        border-radius: 20px;
+    }
+
+    .lg-map .plane-switch .switch-text {
+        color: #333;
+        font-weight: 600;
+        text-shadow: none;
+    }
+
+    /* 比例尺文字 */
+    .lg-map .amap-scale-text {
+        color: #666;
+        font-size: 12px;
+        padding-left: 10px;
+    }
+}
+
+
+/* ========================================
+   Tailwind CSS 替代样式
+   ======================================== */
+
+/* 定位和布局 */
+.lg-map .absolute {
+    position: absolute;
+}
+
+.lg-map .relative {
+    position: relative;
+}
+
+.lg-map .fixed {
+    position: fixed;
+}
+
+/* Flexbox */
+.lg-map .flex {
+    display: flex;
+}
+
+.lg-map .inline-flex {
+    display: inline-flex;
+}
+
+.lg-map .items-center {
+    align-items: center;
+}
+
+.lg-map .justify-center {
+    justify-content: center;
+}
+
+.lg-map .flex-shrink {
+    flex-shrink: 1;
+}
+
+.lg-map .flex-shrink-0 {
+    flex-shrink: 0;
+}
+
+/* 间距 */
+.lg-map .gap-1 {
+    gap: 0.25rem;
+}
+
+.lg-map .gap-2 {
+    gap: 0.5rem;
+}
+
+/* 位置 */
+.lg-map .top-1 {
+    top: 0.25rem;
+}
+
+.lg-map .left-1\/2 {
+    left: 50%;
+}
+
+.lg-map .-translate-x-1\/2 {
+    transform: translateX(-50%);
+}
+
+/* 内边距 */
+.lg-map .px-1 {
+    padding-left: 0.25rem;
+    padding-right: 0.25rem;
+}
+
+.lg-map .px-1\.5 {
+    padding-left: 0.375rem;
+    padding-right: 0.375rem;
+}
+
+.lg-map .px-2 {
+    padding-left: 0.5rem;
+    padding-right: 0.5rem;
+}
+
+.lg-map .py-0\.5 {
+    padding-top: 0.125rem;
+    padding-bottom: 0.125rem;
+}
+
+.lg-map .py-1 {
+    padding-top: 0.25rem;
+    padding-bottom: 0.25rem;
+}
+
+/* 外边距 */
+.lg-map .mr-1 {
+    margin-right: 0.25rem;
+}
+
+.lg-map .ml-2 {
+    margin-left: 0.5rem;
+}
+
+/* 宽高 */
+.lg-map .w-4 {
+    width: 1rem;
+}
+
+.lg-map .h-4 {
+    height: 1rem;
+}
+
+.lg-map .w-6 {
+    width: 1.5rem;
+}
+
+.lg-map .h-6 {
+    height: 1.5rem;
+}
+
+/* 背景色 */
+.lg-map .bg-black\/80 {
+    background-color: rgba(0, 0, 0, 0.8);
+}
+
+/* 文字颜色 */
+.lg-map .text-gray-100 {
+    color: #f3f4f6;
+}
+
+.lg-map .text-white {
+    color: #ffffff;
+}
+
+.lg-map .text-blue-500 {
+    color: #3b82f6;
+}
+
+.lg-map .text-red-500 {
+    color: #ef4444;
+}
+
+/* 文字大小 */
+.lg-map .text-xs {
+    font-size: 0.75rem;
+    line-height: 1rem;
+}
+
+/* 边框 */
+.lg-map .border {
+    border-width: 1px;
+    border-style: solid;
+}
+
+.lg-map .border-blue-500 {
+    border-color: #3b82f6;
+}
+
+.lg-map .border-red-500 {
+    border-color: #ef4444;
+}
+
+/* 圆角 */
+.lg-map .rounded-lg {
+    border-radius: 0.5rem;
+}
+
+.lg-map .rounded-md {
+    border-radius: 0.375rem;
+}
+
+.lg-map .rounded-full {
+    border-radius: 9999px;
+}
+
+/* SVG 填充 */
+.lg-map .fill-current {
+    fill: currentColor;
+}
+
+/* 控制图标按钮样式 */
+.lg-map .full-screen-function {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    display: flex;
+    gap: 10px;
+    z-index: 120;
+}
+
+/* 缩放倍数显示器 */
+.lg-map .zoom-indicator {
+    position: fixed;
+    top: 20px;
+    left: 20px;
+    display: flex;
+    align-items: baseline;
+    gap: 2px;
+    padding: 6px 12px;
+    background: rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    border-radius: 20px;
+    color: #fff;
+    font-size: 13px;
+    z-index: 120;
+}
+
+.lg-map .zoom-current {
+    font-size: 18px;
+    font-weight: 600;
+    color: #fff;
+}
+
+.lg-map .zoom-range {
+    font-size: 11px;
+    color: rgba(255, 255, 255, 0.6);
+}
+
+
+.lg-map .control-icon-button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 6px;
+    border: none;
+    border-radius: 12px;
+    background: rgba(255, 255, 255, 0.2);
+    color: #ffffff;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.18);
+    cursor: pointer;
+    transition: background-color 0.2s ease, transform 0.2s ease;
+    backdrop-filter: blur(6px);
+    -webkit-backdrop-filter: blur(6px);
+}
+
+.lg-map .control-icon-button:hover {
+    background: rgba(255, 255, 255, 0.3);
+    transform: translateY(-1px);
+}
+
+.lg-map .control-icon-button:active {
+    transform: translateY(0);
+    background: rgba(255, 255, 255, 0.22);
+}
+
+.lg-map .control-icon {
+    width: 22px;
+    height: 22px;
+    transition: color 0.3s ease;
+}
+
+.lg-map .control-icon-button:hover .control-icon {
+    color: hsl(var(--hsla-raw));
+}
+
+/* 信息窗口内的悬赏金额标签 */
+.lg-map .info-window .reward-badge {
+    position: absolute;
+    top: 0.25rem;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    align-items: center;
+    background-color: rgba(0, 0, 0, 0.8);
+    color: #f3f4f6;
+    border-radius: 0.5rem;
+    padding: 0.25rem 0.375rem;
+    z-index: 10;
+}
+
+.lg-map .info-window .reward-badge svg {
+    width: 1rem;
+    height: 1rem;
+    flex-shrink: 0;
+    margin-right: 0.25rem;
+}
+
+.lg-map .info-window .reward-badge span {
+    font-size: 0.75rem;
+    line-height: 1rem;
+}
+
+/* 性别标签 */
+.lg-map .info-window .gender-badge {
+    display: inline-flex;
+    margin-left: 0.5rem;
+    font-size: 0.75rem;
+    border-width: 1px;
+    border-style: solid;
+    padding: 0.125rem 0.5rem;
+    border-radius: 0.375rem;
+    font-weight: normal;
+}
+
+.lg-map .info-window .gender-badge.male {
+    border-color: #3b82f6;
+    color: #3b82f6;
+}
+
+.lg-map .info-window .gender-badge.female {
+    border-color: #ef4444;
+    color: #ef4444;
+}
+
+/* 距离面板样式 */
+.lg-map .love-distance-panel {
+    position: fixed;
+    bottom: 100px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border-radius: 16px;
+    padding: 16px 24px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+    z-index: 100;
+    text-align: center;
+    display: none;
+}
+
+.lg-map .love-distance-panel .panel-title {
+    font-size: 14px;
+    color: #666;
+    margin-bottom: 8px;
+}
+
+.lg-map .love-distance-panel .panel-body {
+    font-size: 18px;
+    font-weight: 600;
+    color: hsl(var(--hsla-raw));
+}
+
+/* ================= 情侣面板 - 黑曜石风格 ================= */
+.lg-map .lovers-panel {
+    position: fixed;
+    top: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    max-width: 380px;
+    min-width: 320px;
+    background: rgba(18, 18, 20, 0.85);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border-radius: 60px;
+    padding: 12px 16px;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.8);
+    z-index: 10001;
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.lg-map .lovers-panel.show {
+    opacity: 1;
+    visibility: visible;
+}
+
+.lg-map .lover-card {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    flex: 1;
+    min-width: 0;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    padding: 4px;
+    border-radius: 30px 10px 10px 30px;
+}
+
+.lg-map .lover-card:hover {
+    background: rgba(255, 255, 255, 0.05);
+}
+
+.lg-map .lover-card:hover .avatar-img {
+    transform: scale(1.05);
+    border-color: rgba(244, 114, 182, 0.4);
+}
+
+.lg-map .lover-card:active {
+    transform: scale(0.98);
+}
+
+.lg-map .lover-card.lover-right {
+    justify-content: flex-end;
+    border-radius: 10px 30px 30px 10px;
+}
+
+.lg-map .lover-info {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    min-width: 0;
+    position: relative;
+    z-index: 1;
+}
+
+.lg-map .lover-card.lover-right .lover-info {
+    text-align: right;
+}
+
+.lg-map .lover-name {
+    font-size: 15px;
+    font-weight: 700;
+    white-space: nowrap;
+    color: #f1f5f9;
+}
+
+.lg-map .lover-meta {
+    font-size: 11px;
+    margin-top: 4px;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    opacity: 0.6;
+    white-space: nowrap;
+    color: #cbd5e1;
+}
+
+.lg-map .lover-card.lover-right .lover-meta {
+    justify-content: flex-end;
+    flex-direction: row;
+}
+
+.lg-map .avatar-box {
+    position: relative;
+    width: 48px;
+    height: 48px;
+    flex-shrink: 0;
+}
+
+.lg-map .avatar-img {
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    object-fit: cover;
+    display: block;
+    border: 2px solid rgba(255, 255, 255, 0.1);
+    transition: all 0.3s ease;
+    box-sizing: border-box;
+}
+
+/* 中间距离区域 */
+.lg-map .love-distance-center {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 0 14px;
+    flex-shrink: 0;
+    position: relative;
+    cursor: pointer;
+    transition: transform 0.2s ease, opacity 0.2s ease;
+}
+
+.lg-map .love-distance-center:hover {
+    transform: scale(1.05);
+    opacity: 0.9;
+}
+
+.lg-map .love-distance-center:active {
+    transform: scale(0.95);
+}
+
+.lg-map .distance-icon {
+    font-size: 18px;
+    color: #bbbbbb;
+    margin-bottom: 2px;
+    display: inline-block;
+}
+
+.lg-map .distance-val {
+    font-family: "DIN Alternate", "Roboto Mono", monospace;
+    font-size: 13px;
+    font-weight: bold;
+    margin-top: 2px;
+    letter-spacing: 0.5px;
+    color: #e2e8f0;
+}
+
+/* 附近模式：图标变红，旋转 */
+.lg-map .lovers-panel.mode-near .distance-icon {
+    color: #f43f5e;
+    transform: rotate(43deg);
+    transform-origin: center center;
+}
+
+.lg-map .lovers-panel.mode-near .distance-val {
+    color: #f43f5e;
+}
+
+/* 身边模式：背景光晕 + 爱心动画 */
+.lg-map .lovers-panel.mode-together {
+    background: radial-gradient(circle at center, rgba(236, 72, 153, 0.15) 0%, rgba(18, 18, 20, 0.95) 80%);
+    border-color: rgba(236, 72, 153, 0.3);
+    box-shadow: 0 15px 50px rgba(236, 72, 153, 0.15);
+}
+
+.lg-map .lovers-panel.mode-together .distance-icon {
+    font-size: 24px;
+    color: #f472b6;
+    filter: drop-shadow(0 0 10px rgba(244, 114, 182, 0.6));
+    animation: heartbeat 1.5s infinite ease-in-out;
+}
+
+.lg-map .lovers-panel.mode-together .distance-val {
+    font-family: "Brush Script MT", cursive, sans-serif;
+    font-size: 14px;
+    color: #fce7f3;
+    text-shadow: 0 0 10px rgba(244, 114, 182, 0.5);
+    font-weight: normal;
+}
+
+@keyframes heartbeat {
+    0% {
+        transform: scale(1);
+    }
+
+    14% {
+        transform: scale(1.3);
+    }
+
+    28% {
+        transform: scale(1);
+    }
+
+    42% {
+        transform: scale(1.3);
+    }
+
+    70% {
+        transform: scale(1);
+    }
+}
+
+/* 小爱心飘散效果 */
+.lg-map .heart-particle {
+    position: absolute;
+    width: 12px;
+    height: 12px;
+    color: #ff4081;
+    pointer-events: none;
+    animation: floatUp 1s ease-out forwards;
+}
+
+.lg-map .heart-particle svg {
+    width: 100%;
+    height: 100%;
+}
+
+@keyframes floatUp {
+    0% {
+        opacity: 1;
+        transform: translateY(0) scale(1) rotate(0deg);
+    }
+
+    100% {
+        opacity: 0;
+        transform: translateY(-40px) scale(0.5) rotate(var(--rotate, 15deg));
+    }
+}
+
+.lg-map .distance-text {
+    font-size: 11px;
+    font-weight: 600;
+    color: #ff4081;
+    white-space: nowrap;
+    letter-spacing: -0.02em;
+    opacity: 0.9;
+}
+
+/* 连接线装饰 */
+.lg-map .love-distance-center::before,
+.lg-map .love-distance-center::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    width: 20px;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(255, 64, 129, 0.3), transparent);
+}
+
+.lg-map .love-distance-center::before {
+    right: 100%;
+    margin-right: 4px;
+}
+
+.lg-map .love-distance-center::after {
+    left: 100%;
+    margin-left: 4px;
+}
+
+/* 爱心标记点样式 */
+.lg-map .heart-marker {
+    cursor: pointer;
+    transition: transform 0.3s ease;
+}
+
+.lg-map .heart-marker:hover {
+    transform: scale(1.2);
+}
+
+.lg-map .heart-marker-icon {
+    width: 36px;
+    height: 36px;
+    color: hsl(var(--hsla-raw));
+    filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.2));
+}
+
+/* 流动爱心样式 */
+.lg-map .flowing-heart {
+    width: 20px;
+    height: 20px;
+    color: #ff4081;
+    filter: drop-shadow(0 2px 6px rgba(255, 64, 129, 0.5));
+    animation: pulse-heart 1s ease-in-out infinite;
+}
+
+.lg-map .flowing-heart svg {
+    width: 100%;
+    height: 100%;
+}
+
+/* 轨迹散落小爱心 */
+.lg-map .trail-dot {
+    width: 10px;
+    height: 10px;
+    color: #ff4081;
+    opacity: 0.2;
+    transform: scale(0.6);
+    transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.lg-map .trail-dot svg {
+    width: 100%;
+    height: 100%;
+    display: block;
+    filter: drop-shadow(0 0 2px rgba(255, 64, 129, 0.2));
+    transition: filter 0.4s ease;
+}
+
+/* 主爱心经过后点亮 - 脚印效果 */
+.lg-map .trail-dot.active {
+    opacity: 1;
+    transform: scale(1.5);
+}
+
+.lg-map .trail-dot.active svg {
+    filter: drop-shadow(0 0 8px rgba(255, 64, 129, 0.8));
+    animation: dotLightUp 0.5s ease-out;
+}
+
+@keyframes dotLightUp {
+    0% {
+        transform: scale(0.8);
+        opacity: 0.5;
+    }
+
+    50% {
+        transform: scale(1.4);
+    }
+
+    100% {
+        transform: scale(1);
+        opacity: 1;
+    }
+}
+
+/* 主流动爱心 */
+.lg-map .trail-heart-main {
+    width: 24px;
+    height: 24px;
+    color: #ff4081;
+    filter: drop-shadow(0 2px 8px rgba(255, 64, 129, 0.5));
+    animation: mainHeartPulse 1.5s ease-in-out infinite;
+}
+
+.lg-map .trail-heart-main svg {
+    width: 100%;
+    height: 100%;
+    display: block;
+}
+
+@keyframes mainHeartPulse {
+
+    0%,
+    100% {
+        transform: scale(1);
+        filter: drop-shadow(0 2px 8px rgba(255, 64, 129, 0.5));
+    }
+
+    50% {
+        transform: scale(1.15);
+        filter: drop-shadow(0 3px 12px rgba(255, 64, 129, 0.7));
+    }
+}
+
+/* 简洁流动爱心 - 保留兼容 */
+.lg-map .trail-heart-simple {
+    width: 20px;
+    height: 20px;
+    color: #ff4081;
+    filter: drop-shadow(0 2px 6px rgba(255, 64, 129, 0.5));
+    animation: simpleHeartPulse 1.5s ease-in-out infinite;
+}
+
+.lg-map .trail-heart-simple svg {
+    width: 100%;
+    height: 100%;
+    display: block;
+}
+
+@keyframes simpleHeartPulse {
+
+    0%,
+    100% {
+        transform: scale(1);
+        filter: drop-shadow(0 2px 6px rgba(255, 64, 129, 0.5));
+    }
+
+    50% {
+        transform: scale(1.15);
+        filter: drop-shadow(0 3px 10px rgba(255, 64, 129, 0.7));
+    }
+}
+
+/* 单个流动爱心 - 更流畅 */
+.lg-map .flowing-heart-single {
+    width: 28px;
+    height: 28px;
+    color: #ff4081;
+    filter: drop-shadow(0 3px 10px rgba(255, 64, 129, 0.6));
+    animation: heart-glow 2s ease-in-out infinite;
+    will-change: transform;
+}
+
+.lg-map .flowing-heart-single svg {
+    width: 100%;
+    height: 100%;
+}
+
+@keyframes heart-glow {
+
+    0%,
+    100% {
+        transform: scale(1);
+        filter: drop-shadow(0 3px 10px rgba(255, 64, 129, 0.6));
+    }
+
+    50% {
+        transform: scale(1.15);
+        filter: drop-shadow(0 4px 15px rgba(255, 64, 129, 0.8));
+    }
+}
+
+@keyframes pulse-heart {
+
+    0%,
+    100% {
+        transform: scale(1);
+        opacity: 0.8;
+    }
+
+    50% {
+        transform: scale(1.2);
+        opacity: 1;
+    }
+}
+
+/* 聚合标记样式 */
+.lg-map .cluster-marker {
+    cursor: pointer;
+    transition: transform 0.2s ease;
+}
+
+.lg-map .cluster-marker:hover {
+    transform: scale(1.1);
+}
+
+.lg-map .cluster-marker:active {
+    transform: scale(0.95);
+}
+
+.lg-map .cluster-content {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    background: linear-gradient(135deg, #ff6b9d 0%, #ff4081 100%);
+    border-radius: 50%;
+    box-shadow: 0 4px 15px rgba(255, 64, 129, 0.4);
+}
+
+.lg-map .cluster-count {
+    font-size: 14px;
+    font-weight: 700;
+    color: #fff;
+    z-index: 1;
+}
+
+.lg-map .cluster-heart {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    color: rgba(255, 255, 255, 0.15);
+    padding: 8px;
+}
+
+/* 精美留言卡片样式 */
+.lg-map .love-card {
+    width: 260px;
+    background: #fff;
+    border-radius: 16px;
+    overflow: hidden;
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
+}
+
+.lg-map .love-card-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 14px;
+    background: linear-gradient(135deg, #fff5f7 0%, #fff 100%);
+    border-bottom: 1px solid #fce4ec;
+}
+
+.lg-map .love-card-avatar {
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    overflow: hidden;
+    border: 2px solid #ff4081;
+    flex-shrink: 0;
+}
+
+.lg-map .love-card-avatar img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.lg-map .love-card-info {
+    flex: 1;
+    min-width: 0;
+}
+
+.lg-map .love-card-name {
+    font-size: 15px;
+    font-weight: 600;
+    color: #333;
+    margin-bottom: 2px;
+}
+
+.lg-map .love-card-meta {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 12px;
+    color: #888;
+}
+
+.lg-map .love-card-body {
+    padding: 14px;
+}
+
+.lg-map .love-card-text {
+    margin: 0;
+    font-size: 14px;
+    line-height: 1.6;
+    color: #444;
+    word-break: break-word;
+}
+
+.lg-map .love-card-footer {
+    padding: 10px 14px;
+    background: #fafafa;
+    font-size: 11px;
+    color: #999;
+    border-top: 1px solid #f0f0f0;
+}
+
+/* 情侣位置标记样式 */
+.lg-map .lover-marker {
+    cursor: pointer;
+    transition: transform 0.3s ease;
+}
+
+.lg-map .lover-marker:hover {
+    transform: scale(1.1);
+}
+
+.lg-map .lover-marker-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.lg-map .lover-marker-avatar {
+    width: 46px;
+    height: 46px;
+    border-radius: 50%;
+    overflow: hidden;
+    border: 3px solid hsl(var(--hsla-raw));
+    box-shadow: 0 3px 12px rgba(0, 0, 0, 0.2);
+    background: #fff;
+}
+
+.lg-map .lover-marker-avatar img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.lg-map .lover-marker.is-owner .lover-marker-avatar {
+    border-color: rgba(255, 154, 186, 0.95);
+    box-shadow: 0 8px 24px rgba(255, 120, 163, 0.22);
+}
+
+.lg-map .lover-marker.is-visitor .lover-marker-avatar {
+    border-color: rgba(125, 163, 255, 0.95);
+    box-shadow: 0 8px 24px rgba(92, 133, 255, 0.24);
+    background: linear-gradient(135deg, rgba(248, 251, 255, 0.98), rgba(230, 238, 248, 0.98));
+}
+
+.lg-map .lover-marker-label {
+    margin-top: 4px;
+    background: hsl(var(--hsla-raw));
+    color: #fff;
+    padding: 3px 10px;
+    border-radius: 10px;
+    font-size: 11px;
+    font-weight: 500;
+    white-space: nowrap;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+}
+
+.lg-map .lover-marker-heart {
+    position: absolute;
+    top: -6px;
+    right: -6px;
+    width: 18px;
+    height: 18px;
+    color: hsl(var(--hsla-raw));
+    animation: heartbeat 1.5s ease-in-out infinite;
+}
+
+/* ================= 同一位置的情侣合并标记 - 黑曜石风格 ================= */
+.lg-map .lovers-together-marker {
+    cursor: pointer;
+    transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+    position: relative;
+}
+
+/* 外层光晕 */
+.lg-map .lovers-together-marker::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 140px;
+    height: 140px;
+    background: radial-gradient(circle, rgba(244, 114, 182, 0.lg-map .25) 0%, rgba(236, 72, 153, 0.lg-map .1) 40%,
+            transparent 70%);
+    border-radius: 50%;
+    animation: togetherGlow 3s ease-in-out infinite;
+    pointer-events: none;
+}
+
+/* 内层脉冲环 */
+.lg-map .lovers-together-marker::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 110px;
+    height: 110px;
+    border: 2px solid rgba(244, 114, 182, 0.3);
+    border-radius: 50%;
+    animation: togetherRing 2s ease-out infinite;
+    pointer-events: none;
+}
+
+.lg-map .lovers-together-marker:hover {
+    transform: scale(1.05);
+}
+
+.lg-map .together-avatars {
+    display: flex;
+    align-items: center;
+    position: relative;
+    padding: 8px 16px;
+    background: rgba(18, 18, 20, 0.9);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border-radius: 60px;
+    border: 1px solid rgba(244, 114, 182, 0.3);
+    box-shadow:
+        0 8px 32px rgba(0, 0, 0, 0.6),
+        0 0 20px rgba(244, 114, 182, 0.15),
+        inset 0 1px 0 rgba(255, 255, 255, 0.lg-map .05);
+}
+
+.lg-map .together-avatar {
+    width: 52px;
+    height: 52px;
+    border-radius: 50%;
+    overflow: hidden;
+    border: 2px solid rgba(255, 255, 255, 0.15);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+    background: #1a1a1a;
+    transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+    position: relative;
+}
+
+/* 头像光环 */
+.lg-map .together-avatar::after {
+    content: '';
+    position: absolute;
+    inset: -3px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #f472b6, #ec4899, #db2777);
+    z-index: -1;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.lg-map .lovers-together-marker:hover .together-avatar::after {
+    opacity: 1;
+}
+
+.lg-map .together-avatar.left {
+    z-index: 2;
+}
+
+.lg-map .together-avatar.right {
+    margin-left: -16px;
+    z-index: 1;
+}
+
+.lg-map .lovers-together-marker:hover .together-avatar.left {
+    transform: translateX(-4px) rotate(-5deg);
+    border-color: rgba(244, 114, 182, 0.5);
+}
+
+.lg-map .lovers-together-marker:hover .together-avatar.right {
+    transform: translateX(4px) rotate(5deg);
+    border-color: rgba(244, 114, 182, 0.5);
+}
+
+.lg-map .together-avatar img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+/* 中间爱心 */
+.lg-map .together-heart {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 26px;
+    height: 26px;
+    color: #f472b6;
+    z-index: 3;
+    filter: drop-shadow(0 0 8px rgba(244, 114, 182, 0.8));
+    animation: togetherHeartPulse 1.5s ease-in-out infinite;
+}
+
+.lg-map .together-heart svg {
+    width: 100%;
+    height: 100%;
+}
+
+.lg-map .together-center {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 28px;
+    height: 28px;
+    color: #7aa2ff;
+    z-index: 3;
+    filter: drop-shadow(0 0 10px rgba(122, 162, 255, 0.7));
+}
+
+.lg-map .together-center svg {
+    width: 100%;
+    height: 100%;
+}
+
+.lg-map .lovers-together-marker.is-solo::before {
+    background: radial-gradient(circle, rgba(122, 162, 255, 0.24) 0%, rgba(122, 162, 255, 0.08) 40%, transparent 70%);
+}
+
+.lg-map .lovers-together-marker.is-solo::after {
+    border-color: rgba(122, 162, 255, 0.28);
+}
+
+.lg-map .lovers-together-marker.is-solo .together-avatars {
+    border-color: rgba(122, 162, 255, 0.28);
+    box-shadow:
+        0 8px 32px rgba(0, 0, 0, 0.6),
+        0 0 20px rgba(122, 162, 255, 0.14),
+        inset 0 1px 0 rgba(255, 255, 255, 0.05);
+}
+
+.lg-map .lovers-together-marker.is-solo .together-avatar::after {
+    background: linear-gradient(135deg, #7aa2ff, #5fa8ff, #3b82f6);
+}
+
+.lg-map .lovers-together-marker.is-solo:hover .together-avatar.left,
+.lg-map .lovers-together-marker.is-solo:hover .together-avatar.right {
+    border-color: rgba(122, 162, 255, 0.5);
+}
+
+.lg-map .trail-dot--solo svg,
+.lg-map .trail-heart-main--solo svg {
+    color: #7aa2ff;
+}
+
+.lg-map .trail-dot--solo {
+    width: 12px;
+    height: 12px;
+    color: #7aa2ff;
+    opacity: 0.28;
+    transform: scale(0.72);
+}
+
+.lg-map .trail-dot--solo svg {
+    filter: drop-shadow(0 0 4px rgba(122, 162, 255, 0.22));
+}
+
+.lg-map .trail-dot--solo.active {
+    opacity: 1;
+    transform: scale(1.45);
+}
+
+.lg-map .trail-dot--solo.active svg {
+    filter:
+        drop-shadow(0 0 6px rgba(122, 162, 255, 0.8))
+        drop-shadow(0 0 14px rgba(95, 168, 255, 0.45));
+}
+
+.lg-map .trail-heart-main--solo {
+    width: 22px;
+    height: 22px;
+    color: #7aa2ff;
+    filter:
+        drop-shadow(0 0 8px rgba(122, 162, 255, 0.85))
+        drop-shadow(0 0 18px rgba(95, 168, 255, 0.42));
+    animation: soloTrailPulse 1.6s ease-in-out infinite;
+}
+
+.lg-map .trail-heart-main--solo svg {
+    stroke-linecap: round;
+    stroke-linejoin: round;
+}
+
+@keyframes soloTrailPulse {
+    0%,
+    100% {
+        transform: scale(1);
+        filter:
+            drop-shadow(0 0 8px rgba(122, 162, 255, 0.85))
+            drop-shadow(0 0 18px rgba(95, 168, 255, 0.42));
+    }
+
+    50% {
+        transform: scale(1.18);
+        filter:
+            drop-shadow(0 0 10px rgba(122, 162, 255, 1))
+            drop-shadow(0 0 24px rgba(95, 168, 255, 0.58));
+    }
+}
+
+@keyframes togetherHeartPulse {
+
+    0%,
+    100% {
+        transform: translate(-50%, -50%) scale(1);
+    }
+
+    14% {
+        transform: translate(-50%, -50%) scale(1.3);
+    }
+
+    28% {
+        transform: translate(-50%, -50%) scale(1);
+    }
+
+    42% {
+        transform: translate(-50%, -50%) scale(1.2);
+    }
+
+    70% {
+        transform: translate(-50%, -50%) scale(1);
+    }
+}
+
+@keyframes togetherGlow {
+
+    0%,
+    100% {
+        opacity: 0.5;
+        transform: translate(-50%, -50%) scale(1);
+    }
+
+    50% {
+        opacity: 0.8;
+        transform: translate(-50%, -50%) scale(1.15);
+    }
+}
+
+@keyframes togetherRing {
+    0% {
+        opacity: 0.6;
+        transform: translate(-50%, -50%) scale(0.8);
+    }
+
+    100% {
+        opacity: 0;
+        transform: translate(-50%, -50%) scale(1.4);
+    }
+}
+
+/* 底部标签 */
+.lg-map .together-label {
+    position: absolute;
+    bottom: -32px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: rgba(18, 18, 20, 0.95);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    color: #fce7f3;
+    font-size: 12px;
+    font-weight: 600;
+    padding: 6px 16px;
+    border-radius: 20px;
+    white-space: nowrap;
+    border: 1px solid rgba(244, 114, 182, 0.3);
+    box-shadow:
+        0 4px 16px rgba(0, 0, 0, 0.5),
+        0 0 12px rgba(244, 114, 182, 0.2);
+    letter-spacing: 2px;
+    text-shadow: 0 0 10px rgba(244, 114, 182, 0.5);
+}
+
+/* 移动端情侣面板适配 */
+@media screen and (max-width: 768px) {
+
+    /* 移动端 lovers-panel 位置 - 顶部居中，避开控制按钮 */
+    .lg-map .lovers-panel {
+        top: 58px;
+        bottom: auto;
+        left: 50%;
+        right: auto;
+        transform: translateX(-50%);
+        padding: 0;
+        gap: 8px;
+        border-radius: 50px;
+        max-width: calc(100% - 100px);
+        min-width: 280px;
+    }
+
+    .lg-map .avatar-box {
+        width: 40px;
+        height: 40px;
+    }
+
+    .lg-map .lover-name {
+        font-size: 13px;
+    }
+
+    .lg-map .lover-meta {
+        font-size: 10px;
+        max-width: 70px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+
+    .lg-map .distance-icon {
+        font-size: 16px;
+    }
+
+    .lg-map .distance-val {
+        font-size: 11px;
+    }
+
+    .lg-map .love-distance-center {
+        padding: 0 10px;
+    }
+
+    /* 移动端缩放显示器位置 */
+    .lg-map .zoom-indicator {
+        top: 12px;
+        left: 12px;
+        padding: 4px 10px;
+    }
+
+    .lg-map .zoom-current {
+        font-size: 14px;
+    }
+
+    .lg-map .zoom-range {
+        font-size: 10px;
+    }
+}
+
+/* Logo 徽章样式 */
+.lg-map .logo-badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    color: #fff;
+    background: linear-gradient(135deg, #ff6b9d 0%, #ff4081 100%);
+    margin-left: 8px;
+    padding: 6px;
+    border-radius: 50%;
+    vertical-align: middle;
+    box-shadow: 0 2px 8px rgba(255, 64, 129, 0.4);
+    animation: heartbeat 1.5s ease-in-out infinite;
+}
+
+.lg-map .logo-badge svg {
+    width: 14px;
+    height: 14px;
+    display: block;
+}
+
+/* ========================================
+   聚合动画效果
+   ======================================== */
+
+/* 聚合收集动画 - 缩小时聚合 */
+@keyframes clusterCollect {
+    0% {
+        transform: scale(1.5);
+        opacity: 0;
+    }
+
+    50% {
+        transform: scale(0.9);
+    }
+
+    100% {
+        transform: scale(1);
+        opacity: 1;
+    }
+}
+
+.lg-map .cluster-collect {
+    animation: clusterCollect 0.4s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+}
+
+/* 聚合爆炸动画 - 放大时展开 */
+@keyframes clusterExplode {
+    0% {
+        transform: scale(1);
+        opacity: 1;
+    }
+
+    50% {
+        transform: scale(1.3);
+        opacity: 0.6;
+    }
+
+    100% {
+        transform: scale(0);
+        opacity: 0;
+    }
+}
+
+.lg-map .cluster-explode {
+    animation: clusterExplode 0.3s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+}
+
+/* 标记弹出动画 - 从聚合展开时 */
+@keyframes markerPopIn {
+    0% {
+        transform: scale(0) translateY(20px);
+        opacity: 0;
+    }
+
+    60% {
+        transform: scale(1.1) translateY(-5px);
+    }
+
+    100% {
+        transform: scale(1) translateY(0);
+        opacity: 1;
+    }
+}
+
+.lg-map .marker-pop-in {
+    animation: markerPopIn 0.4s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+}
+
+/* 标记飞出动画 - 聚合收起时 */
+@keyframes markerFlyOut {
+    0% {
+        transform: scale(1) translateY(0);
+        opacity: 1;
+    }
+
+    100% {
+        transform: scale(0.3) translateY(-30px);
+        opacity: 0;
+    }
+}
+
+.lg-map .marker-fly-out {
+    animation: markerFlyOut 0.3s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+}
+
+/* ========================================
+   高级留言卡片样式 - 封面式设计
+   ======================================== */
+
+/* 留言卡片 - 简洁现代风格 */
+.lg-map .message-card {
+    width: 260px;
+    background: #fff;
+    border-radius: 16px;
+    overflow: hidden;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.12);
+    animation: cardFadeIn 0.3s ease-out forwards;
+}
+
+@keyframes cardFadeIn {
+    0% {
+        opacity: 0;
+        transform: translateY(12px);
+    }
+
+    100% {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.lg-map .message-card-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 16px 16px 12px;
+    border-bottom: 1px solid #f5f5f5;
+}
+
+.lg-map .message-card-avatar {
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    overflow: hidden;
+    flex-shrink: 0;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.lg-map .message-card-avatar img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.lg-map .message-card-user {
+    flex: 1;
+    min-width: 0;
+}
+
+.lg-map .message-card-name {
+    font-size: 15px;
+    font-weight: 600;
+    color: #1a1a1a;
+    margin-bottom: 2px;
+}
+
+.lg-map .message-card-location {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 12px;
+    color: #999;
+}
+
+.lg-map .message-card-location svg {
+    color: #ff4081;
+    flex-shrink: 0;
+}
+
+.lg-map .message-card-time {
+    font-size: 11px;
+    color: #bbb;
+    flex-shrink: 0;
+}
+
+.lg-map .message-card-body {
+    padding: 14px 16px;
+}
+
+.lg-map .message-card-text {
+    margin: 0;
+    font-size: 14px;
+    line-height: 1.6;
+    color: #444;
+    word-break: break-word;
+}
+
+.lg-map .message-card-footer {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 10px 16px;
+    background: #fafafa;
+    font-size: 11px;
+    color: #bbb;
+}
+
+.lg-map .message-card-footer svg {
+    color: #ccc;
+}
+
+/* 旧的 love-card 样式保留兼容 */
+.lg-map .love-card {
+    width: 280px;
+    background: #fff;
+    border-radius: 20px;
+    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15);
+    animation: cardFadeIn 0.3s ease-out forwards;
+}
+
+/* 封面区域 */
+.lg-map .love-card-cover {
+    position: relative;
+    width: 100%;
+    height: 140px;
+    overflow: hidden;
+    border-radius: 20px 20px 0 0;
+}
+
+.lg-map .love-card-cover>img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.5s ease;
+}
+
+.lg-map .love-card:hover .love-card-cover>img {
+    transform: scale(1.05);
+}
+
+/* 封面渐变遮罩 */
+.lg-map .love-card-cover-overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(to bottom, transparent 0%, rgba(0, 0, 0, 0.lg-map .1) 50%,
+            rgba(0, 0, 0, 0.lg-map .5) 100%);
+    pointer-events: none;
+}
+
+/* 封面上的头像 */
+.lg-map .love-card-avatar-wrap {
+    position: absolute;
+    bottom: -28px;
+    left: 20px;
+    width: 56px;
+    height: 56px;
+    border-radius: 50%;
+    overflow: hidden;
+    border: 4px solid #fff;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+    z-index: 10;
+    background: #fff;
+}
+
+.lg-map .love-card-avatar-wrap img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+/* 内容区域 */
+.lg-map .love-card-content {
+    padding: 36px 20px 18px;
+    border-radius: 0 0 20px 20px;
+    background: #fff;
+    position: relative;
+}
+
+/* 用户信息行 */
+.lg-map .love-card-user {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 12px;
+}
+
+.lg-map .love-card-name {
+    font-size: 16px;
+    font-weight: 700;
+    color: #1a1a1a;
+    letter-spacing: -0.02em;
+}
+
+.lg-map .love-card-badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 20px;
+    height: 20px;
+    background: linear-gradient(135deg, #ff6b9d 0%, #ff4081 100%);
+    border-radius: 50%;
+    color: #fff;
+}
+
+.lg-map .love-card-badge svg {
+    width: 12px;
+    height: 12px;
+}
+
+/* 留言文字 */
+.lg-map .love-card-message {
+    font-size: 14px;
+    line-height: 1.7;
+    color: #444;
+    margin-bottom: 16px;
+    word-break: break-word;
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+/* 元信息列表 */
+.lg-map .love-card-meta-list {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    padding-top: 14px;
+    border-top: 1px solid #f0f0f0;
+}
+
+.lg-map .love-card-meta-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 12px;
+    color: #888;
+}
+
+.lg-map .love-card-meta-item svg {
+    width: 14px;
+    height: 14px;
+    color: #bbb;
+    flex-shrink: 0;
+}
+
+.lg-map .love-card-meta-item span {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+/* ========================================
+   情侣详情卡片样式 - 高斯模糊风格
+   ======================================== */
+
+.lg-map .lover-detail-card {
+    width: 280px;
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border-radius: 20px;
+    overflow: hidden;
+    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15);
+    animation: cardSlideIn 0.35s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+    position: relative;
+}
+
+.lg-map .lover-detail-bg {
+    display: none;
+}
+
+.lg-map .lover-detail-header {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 16px;
+    background: linear-gradient(135deg, #ff6b9d 0%, #ff4081 100%);
+}
+
+.lg-map .lover-detail-header .lover-detail-avatar {
+    position: relative;
+    width: 56px;
+    height: 56px;
+    border-radius: 50%;
+    overflow: hidden;
+    border: 3px solid rgba(255, 255, 255, 0.6);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    flex-shrink: 0;
+}
+
+.lg-map .lover-detail-header .lover-detail-avatar img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.lg-map .lover-avatar-ring {
+    display: none;
+}
+
+.lg-map .lover-detail-body {
+    padding: 0;
+    text-align: left;
+    flex: 1;
+}
+
+.lg-map .lover-detail-name {
+    font-size: 18px;
+    font-weight: 700;
+    color: #fff;
+    margin-bottom: 4px;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+}
+
+.lg-map .lover-detail-location {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 12px;
+    color: rgba(255, 255, 255, 0.9);
+    padding: 0;
+    background: none;
+    border-radius: 0;
+    margin-bottom: 0;
+}
+
+.lg-map .lover-detail-location svg {
+    width: 12px;
+    height: 12px;
+    color: rgba(255, 255, 255, 0.9);
+}
+
+.lg-map .lover-detail-stats {
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+    padding: 14px 16px;
+    background: #fff;
+}
+
+.lg-map .lover-stat {
+    text-align: center;
+    flex: 1;
+}
+
+.lg-map .lover-stat-value {
+    font-size: 20px;
+    font-weight: 700;
+    color: #333;
+}
+
+.lg-map .lover-stat-label {
+    font-size: 11px;
+    color: #999;
+    margin-top: 2px;
+}
+
+.lg-map .lover-stat-divider {
+    color: #ff4081;
+    width: 24px;
+    height: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    animation: heartbeat 1.5s ease-in-out infinite;
+}
+
+.lg-map .lover-stat-divider svg {
+    width: 20px;
+    height: 20px;
+}
+
+.lg-map .lover-detail-footer {
+    padding: 12px 16px;
+    background: #f8f8f8;
+    text-align: center;
+    border-top: 1px solid #eee;
+}
+
+.lg-map .lover-detail-quote {
+    font-size: 13px;
+    color: #666;
+    font-style: italic;
+    line-height: 1.4;
+}
+
+.lg-map .lover-detail-badge {
+    display: none;
+}
+
+/* ========================================
+   点点滴滴地图标记样式
+   ======================================== */
+
+/* 点点滴滴标记 - 简洁圆形 */
+.lg-map .moment-marker {
+    cursor: pointer;
+    transition: transform 0.2s ease;
+}
+
+.lg-map .moment-marker:hover {
+    transform: translateY(-2px);
+}
+
+.lg-map .moment-marker-content {
+    width: 40px;
+    height: 40px;
+    border-radius: 10px;
+    background: linear-gradient(145deg, #2a2520, #1e1a16);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 2px solid rgba(255, 255, 255, 0.1);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    color: #c9b896;
+}
+
+.lg-map .moment-marker-content svg {
+    width: 18px;
+    height: 18px;
+}
+
+.lg-map .moment-marker.encrypted .moment-marker-content {
+    background: linear-gradient(145deg, #2a2025, #1e161a);
+    color: #c9a0a8;
+}
+
+/* 点点滴滴聚合标记 */
+.lg-map .moment-cluster-marker {
+    cursor: pointer;
+    transition: transform 0.2s ease;
+}
+
+.lg-map .moment-cluster-marker:hover {
+    transform: translateY(-2px);
+}
+
+.lg-map .moment-cluster-content {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(145deg, #2a2520, #1e1a16);
+    border-radius: 10px;
+    border: 2px solid rgba(255, 255, 255, 0.1);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+}
+
+.lg-map .moment-cluster-count {
+    color: #c9b896;
+    font-size: 13px;
+    font-weight: 600;
+}
+
+/* 点点滴滴信息卡片 - 渐变微光风格 */
+.lg-map .moment-card {
+    width: 280px;
+    background: linear-gradient(145deg, #1e1a16, #14120f);
+    border-radius: 12px;
+    padding: 1px;
+    position: relative;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+    animation: momentCardIn 0.3s ease-out forwards;
+}
+
+@keyframes momentCardIn {
+    0% {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+
+    100% {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* 渐变边框效果 */
+.lg-map .moment-card::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: 12px;
+    padding: 1px;
+    background: linear-gradient(135deg, transparent, rgba(201, 184, 150, 0.2), transparent);
+    -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+    pointer-events: none;
+}
+
+.lg-map .moment-card-inner {
+    background: linear-gradient(145deg, #1e1a16, #14120f);
+    border-radius: 11px;
+    padding: 16px;
+}
+
+.lg-map .moment-card-header {
+    padding: 0;
+    margin-bottom: 12px;
+}
+
+.lg-map .moment-card-title {
+    font-size: 15px;
+    font-weight: 600;
+    color: #fff;
+    line-height: 1.4;
+    margin-bottom: 6px;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+.lg-map .moment-card-author {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 12px;
+    color: #c9b896;
+}
+
+.lg-map .moment-card-author svg {
+    width: 12px;
+    height: 12px;
+    opacity: 0.7;
+}
+
+.lg-map .moment-card.encrypted .moment-card-author {
+    color: #c9a0a8;
+}
+
+.lg-map .moment-card-meta {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding-top: 12px;
+    border-top: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.lg-map .moment-card-location {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 11px;
+    color: #888;
+}
+
+.lg-map .moment-card-location svg {
+    width: 12px;
+    height: 12px;
+    opacity: 0.5;
+}
+
+.lg-map .moment-card-time {
+    font-size: 11px;
+    color: #666;
+}
+
+.lg-map .moment-card-icon {
+    display: none;
+}
+
+/* ========================================
+   聚合标记样式增强 - 参考 Airbnb/Mapbox 风格
+   ======================================== */
+
+/* 留言聚合标记 - 胶囊药丸风格 */
+.lg-map .cluster-marker {
+    cursor: pointer;
+    transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+    filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.1));
+}
+
+.lg-map .cluster-marker:hover {
+    transform: scale(1.08) translateY(-2px);
+    filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.15));
+}
+
+.lg-map .cluster-marker:active {
+    transform: scale(0.98);
+}
+
+.lg-map .cluster-content {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #ff7043;
+    border-radius: 20px;
+    padding: 0 4px;
+    min-width: 32px;
+    height: 32px;
+    box-shadow:
+        0 1px 2px rgba(0, 0, 0, 0.1),
+        inset 0 1px 0 rgba(255, 255, 255, 0.2);
+    position: relative;
+    overflow: hidden;
+}
+
+.lg-map .cluster-content::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 50%;
+    background: linear-gradient(to bottom, rgba(255, 255, 255, 0.15), transparent);
+    border-radius: 20px 20px 0 0;
+}
+
+.lg-map .cluster-count {
+    font-size: 13px;
+    font-weight: 600;
+    color: #fff;
+    letter-spacing: -0.02em;
+    position: relative;
+    z-index: 1;
+    text-shadow: 0 1px 1px rgba(0, 0, 0, 0.1);
+}
+
+.lg-map .cluster-heart {
+    display: none;
+}
+
+/* 聚合标记动画 */
+.lg-map .cluster-marker.cluster-collect {
+    animation: clusterCollect 0.3s ease-out;
+}
+
+.lg-map .cluster-marker.cluster-explode {
+    animation: clusterExplode 0.25s ease-in forwards;
+}
+
+@keyframes clusterCollect {
+    0% {
+        transform: scale(0.6);
+        opacity: 0;
+    }
+
+    60% {
+        transform: scale(1.1);
+    }
+
+    100% {
+        transform: scale(1);
+        opacity: 1;
+    }
+}
+
+@keyframes clusterExplode {
+    0% {
+        transform: scale(1);
+        opacity: 1;
+    }
+
+    100% {
+        transform: scale(1.5);
+        opacity: 0;
+    }
+}
+
+
+/* ========================================
+   模式切换器样式
+   ======================================== */
+
+.lg-map .mode-switcher {
+    position: fixed;
+    right: 20px;
+    top: 50%;
+    transform: translateY(-50%);
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    background: rgb(255 255 255 / 14%);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    padding: 8px;
+    border-radius: 28px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+    z-index: 10001;
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.lg-map .mode-switcher.show {
+    opacity: 1;
+    visibility: visible;
+}
+
+.lg-map .mode-btn {
+    width: 44px;
+    height: 44px;
+    border: none;
+    border-radius: 50%;
+    background: transparent;
+    color: #888;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+    position: relative;
+}
+
+.lg-map .mode-btn svg {
+    width: 22px;
+    height: 22px;
+}
+
+/* 情侣模式 - 粉色 */
+.lg-map .mode-btn[data-mode="lovers"]:hover {
+    background: rgba(255, 64, 129, 0.1);
+    color: #ff4081;
+}
+
+.lg-map .mode-btn[data-mode="lovers"].active {
+    background: linear-gradient(135deg, #ff6b9d 0%, #ff4081 100%);
+    color: #fff;
+    box-shadow: 0 4px 12px rgba(255, 64, 129, 0.4);
+}
+
+/* 留言模式 - 橙色 */
+.lg-map .mode-btn[data-mode="messages"]:hover {
+    background: rgba(255, 112, 67, 0.1);
+    color: #ff7043;
+}
+
+.lg-map .mode-btn[data-mode="messages"].active {
+    background: linear-gradient(135deg, #ff8a65 0%, #ff7043 100%);
+    color: #fff;
+    box-shadow: 0 4px 12px rgba(255, 112, 67, 0.4);
+}
+
+/* 相册模式 - 紫色 */
+.lg-map .mode-btn[data-mode="albums"]:hover {
+    background: rgba(124, 77, 255, 0.1);
+    color: #7c4dff;
+}
+
+.lg-map .mode-btn[data-mode="albums"].active {
+    background: linear-gradient(135deg, #9c7cff 0%, #7c4dff 100%);
+    color: #fff;
+    box-shadow: 0 4px 12px rgba(124, 77, 255, 0.4);
+}
+
+/* 事件模式 - 蓝色 */
+.lg-map .mode-btn[data-mode="events"]:hover {
+    background: rgba(33, 150, 243, 0.1);
+    color: #2196f3;
+}
+
+.lg-map .mode-btn[data-mode="events"].active {
+    background: linear-gradient(135deg, #64b5f6 0%, #2196f3 100%);
+    color: #fff;
+    box-shadow: 0 4px 12px rgba(33, 150, 243, 0.4);
+}
+
+/* 点点滴滴模式 - 暖棕色 */
+.lg-map .mode-btn[data-mode="moments"]:hover {
+    background: rgba(201, 184, 150, 0.15);
+    color: #c9b896;
+}
+
+.lg-map .mode-btn[data-mode="moments"].active {
+    background: linear-gradient(135deg, #3d3530, #2a2520);
+    color: #c9b896;
+    box-shadow: 0 4px 12px rgb(101 91 85 / 34%);
+}
+
+.lg-map .mode-btn::after {
+    content: attr(title);
+    position: absolute;
+    right: 54px;
+    background: rgba(0, 0, 0, 0.8);
+    color: #fff;
+    padding: 6px 12px;
+    border-radius: 6px;
+    font-size: 12px;
+    white-space: nowrap;
+    opacity: 0;
+    visibility: hidden;
+    transform: translateX(10px);
+    transition: all 0.2s ease;
+    pointer-events: none;
+}
+
+.lg-map .mode-btn:hover::after {
+    opacity: 1;
+    visibility: visible;
+    transform: translateX(0);
+}
+
+/* 情侣模式 - 纯净信息面板 */
+.lg-map .love-info-panel {
+    position: fixed;
+    bottom: 100px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(15px);
+    -webkit-backdrop-filter: blur(15px);
+    border-radius: 20px;
+    padding: 20px 28px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.12);
+    z-index: 150;
+    display: none;
+    max-width: 90%;
+}
+
+.lg-map .love-info-panel.show {
+    display: block;
+    animation: slideUp 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes slideUp {
+    from {
+        opacity: 0;
+        transform: translateX(-50%) translateY(20px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateX(-50%) translateY(0);
+    }
+}
+
+.lg-map .love-stats {
+    display: flex;
+    align-items: center;
+    gap: 32px;
+}
+
+.lg-map .love-stat-item {
+    text-align: center;
+}
+
+.lg-map .love-stat-value {
+    font-size: 28px;
+    font-weight: 700;
+    color: #ff4081;
+    line-height: 1.2;
+}
+
+.lg-map .love-stat-label {
+    font-size: 12px;
+    color: #888;
+    margin-top: 4px;
+}
+
+.lg-map .love-stat-divider {
+    width: 1px;
+    height: 40px;
+    background: #eee;
+}
+
+/* 相册卡片样式 - 拍立得风格 */
+.lg-map .polaroid-card {
+    width: 220px;
+    background: #fefefe;
+    padding: 8px 8px 0 8px;
+    box-shadow:
+        0 1px 3px rgba(0, 0, 0, 0.12),
+        0 4px 12px rgba(0, 0, 0, 0.08);
+    position: relative;
+    animation: polaroidIn 0.4s ease-out forwards;
+}
+
+@keyframes polaroidIn {
+    0% {
+        opacity: 0;
+        transform: translateY(20px) rotate(-3deg);
+    }
+
+    100% {
+        opacity: 1;
+        transform: translateY(0) rotate(-1.5deg);
+    }
+}
+
+.lg-map .polaroid-tape-top {
+    position: absolute;
+    top: -10px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 50px;
+    height: 20px;
+    background: rgba(255, 248, 220, 0.85);
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+}
+
+.lg-map .polaroid-inner {
+    background: #fff;
+}
+
+.lg-map .polaroid-photo {
+    width: 100%;
+    aspect-ratio: 1;
+    overflow: hidden;
+    background: #111;
+}
+
+.lg-map .polaroid-photo img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.lg-map .polaroid-caption {
+    padding: 12px 4px 8px 4px;
+    min-height: 50px;
+}
+
+.lg-map .polaroid-handwriting {
+    font-size: 15px;
+    color: #333;
+    line-height: 1.3;
+    margin-bottom: 4px;
+}
+
+.lg-map .polaroid-date-stamp {
+    font-size: 11px;
+    color: #999;
+}
+
+.lg-map .polaroid-footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px 4px;
+    border-top: 1px solid #f0f0f0;
+    margin-top: 4px;
+}
+
+.lg-map .polaroid-location {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 11px;
+    color: #888;
+}
+
+.lg-map .polaroid-location svg {
+    width: 12px;
+    height: 12px;
+    color: #888;
+}
+
+.lg-map .polaroid-view-btn {
+    display: flex;
+    align-items: center;
+    gap: 2px;
+    font-size: 12px;
+    color: #666;
+    text-decoration: none;
+    padding: 4px 0;
+    transition: color 0.2s;
+}
+
+.lg-map .polaroid-view-btn:hover {
+    color: #333;
+}
+
+.lg-map .polaroid-view-btn svg {
+    width: 14px;
+    height: 14px;
+}
+
+/* 相册标记样式 */
+.lg-map .album-marker {
+    cursor: pointer;
+    transition: transform 0.3s ease;
+}
+
+.lg-map .album-marker:hover {
+    transform: scale(1.1);
+}
+
+.lg-map .album-marker-content {
+    width: 50px;
+    height: 50px;
+    border-radius: 12px;
+    overflow: hidden;
+    border: 3px solid #fff;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+}
+
+.lg-map .album-marker-content img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    background: #333;
+}
+
+/* 移动端适配 */
+@media screen and (max-width: 768px) {
+    .lg-map .mode-switcher {
+        right: 12px;
+        top: auto;
+        bottom: 200px;
+        transform: none;
+    }
+
+    .lg-map .mode-btn {
+        width: 40px;
+        height: 40px;
+    }
+
+    .lg-map .mode-btn svg {
+        width: 20px;
+        height: 20px;
+    }
+
+    .lg-map .mode-btn::after {
+        display: none;
+    }
+
+    .lg-map .love-info-panel {
+        bottom: 200px;
+        padding: 16px 20px;
+    }
+
+    .lg-map .love-stats {
+        gap: 20px;
+    }
+
+    .lg-map .love-stat-value {
+        font-size: 22px;
+    }
+}
+
+
+/* ========================================
+   相册聚合标记样式 - 堆叠照片风格
+   ======================================== */
+
+.lg-map .album-cluster-marker {
+    cursor: pointer;
+    transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.lg-map .album-cluster-marker:hover {
+    transform: scale(1.08) translateY(-2px);
+}
+
+.lg-map .album-cluster-marker:hover .album-cluster-content {
+    box-shadow: 0 8px 20px rgba(124, 77, 255, 0.35);
+}
+
+/* 相册聚合收集动画 */
+.lg-map .album-cluster-marker.cluster-collect {
+    animation: clusterCollect 0.3s ease-out;
+}
+
+.lg-map .album-cluster-content {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(135deg, #9c7cff 0%, #7c4dff 100%);
+    border-radius: 10px;
+    position: relative;
+    box-shadow:
+        0 2px 8px rgba(124, 77, 255, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.lg-map .2);
+}
+
+/* 堆叠效果 */
+.lg-map .album-cluster-content::before,
+.lg-map .album-cluster-content::after {
+    content: '';
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    border-radius: 10px;
+    background: inherit;
+    z-index: -1;
+}
+
+.lg-map .album-cluster-content::before {
+    transform: rotate(-6deg) translate(-2px, 2px);
+    opacity: 0.6;
+}
+
+.lg-map .album-cluster-content::after {
+    transform: rotate(4deg) translate(2px, 1px);
+    opacity: 0.4;
+}
+
+.lg-map .album-cluster-count {
+    font-size: 14px;
+    font-weight: 700;
+    color: #fff;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.15);
+}
+
+.lg-map .album-cluster-icon {
+    display: none;
+}
+
+/* 相册标记动画 */
+.lg-map .album-marker {
+    animation: albumMarkerIn 0.3s ease-out;
+}
+
+@keyframes albumMarkerIn {
+    from {
+        opacity: 0;
+        transform: scale(0.8);
+    }
+
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+
+/* ========================================
+   事件模式样式
+   ======================================== */
+
+/* 事件标记样式 */
+.lg-map .event-marker {
+    cursor: pointer;
+    transition: transform 0.3s ease;
+}
+
+.lg-map .event-marker:hover {
+    transform: scale(1.1);
+}
+
+.lg-map .event-marker-content {
+    width: 50px;
+    height: 50px;
+    border-radius: 12px;
+    overflow: hidden;
+    border: 3px solid #fff;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+    position: relative;
+}
+
+.lg-map .event-marker-content img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.lg-map .event-marker-check {
+    position: absolute;
+    bottom: -4px;
+    right: -4px;
+    width: 20px;
+    height: 20px;
+    background: linear-gradient(135deg, #ff6b9d 0%, #ff4081 100%);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 2px solid #fff;
+    box-shadow: 0 2px 6px rgba(34, 197, 94, 0.4);
+}
+
+.lg-map .event-marker-check svg {
+    width: 12px;
+    height: 12px;
+    color: #fff;
+}
+
+/* 事件聚合标记样式 - 徽章风格 */
+.lg-map .event-cluster-marker {
+    cursor: pointer;
+    transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.lg-map .event-cluster-marker:hover {
+    transform: scale(1.08) translateY(-2px);
+}
+
+.lg-map .event-cluster-marker:hover .event-cluster-content {
+    box-shadow: 0 6px 16px rgba(33, 150, 243, 0.4);
+}
+
+/* 事件聚合收集动画 */
+.lg-map .event-cluster-marker.cluster-collect {
+    animation: clusterCollect 0.3s ease-out;
+}
+
+.lg-map .event-cluster-content {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #2196f3;
+    border-radius: 50%;
+    position: relative;
+    box-shadow:
+        0 2px 8px rgba(33, 150, 243, 0.35), inset 0 1px 0 rgba(255, 255, 255, 0.lg-map .25);
+}
+
+/* 徽章光环效果 */
+.lg-map .event-cluster-content::before {
+    content: '';
+    position: absolute;
+    top: -3px;
+    left: -3px;
+    right: -3px;
+    bottom: -3px;
+    border-radius: 50%;
+    border: 2px solid rgba(33, 150, 243, 0.3);
+    animation: eventRing 2s ease-in-out infinite;
+}
+
+@keyframes eventRing {
+
+    0%,
+    100% {
+        transform: scale(1);
+        opacity: 0.6;
+    }
+
+    50% {
+        transform: scale(1.1);
+        opacity: 0.3;
+    }
+}
+
+.lg-map .event-cluster-count {
+    font-size: 13px;
+    font-weight: 700;
+    color: #fff;
+    text-shadow: 0 1px 1px rgba(0, 0, 0, 0.1);
+}
+
+.lg-map .event-cluster-icon {
+    display: none;
+}
+
+/* 事件卡片样式 - 成就勋章风格 */
+.lg-map .achievement-card {
+    width: 260px;
+    background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+    border-radius: 20px;
+    padding: 24px 20px 20px;
+    position: relative;
+    overflow: hidden;
+    animation: achievementUnlock 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+}
+
+@keyframes achievementUnlock {
+    0% {
+        opacity: 0;
+        transform: scale(0.5) rotateY(90deg);
+    }
+
+    50% {
+        transform: scale(1.1) rotateY(0deg);
+    }
+
+    100% {
+        opacity: 1;
+        transform: scale(1) rotateY(0deg);
+    }
+}
+
+.lg-map .achievement-glow {
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: radial-gradient(circle at center, rgba(255, 215, 0, 0.lg-map .15) 0%,
+            transparent 50%);
+    animation: glowPulse 2s ease-in-out infinite;
+}
+
+@keyframes glowPulse {
+
+    0%,
+    100% {
+        opacity: 0.5;
+        transform: scale(1);
+    }
+
+    50% {
+        opacity: 1;
+        transform: scale(1.1);
+    }
+}
+
+.lg-map .achievement-badge {
+    position: relative;
+    display: flex;
+    justify-content: center;
+    margin-bottom: 16px;
+}
+
+.lg-map .achievement-ribbon-left,
+.lg-map .achievement-ribbon-right {
+    position: absolute;
+    bottom: -8px;
+    width: 24px;
+    height: 32px;
+    background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%);
+}
+
+.lg-map .achievement-ribbon-left {
+    left: calc(50% - 36px);
+    transform: skewX(15deg);
+    border-radius: 0 0 0 4px;
+}
+
+.lg-map .achievement-ribbon-right {
+    right: calc(50% - 36px);
+    transform: skewX(-15deg);
+    border-radius: 0 0 4px 0;
+}
+
+.lg-map .achievement-ribbon-left::after,
+.lg-map .achievement-ribbon-right::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    width: 0;
+    height: 0;
+    border-style: solid;
+}
+
+.lg-map .achievement-ribbon-left::after {
+    left: 0;
+    border-width: 8px 12px 0 0;
+    border-color: #c0392b transparent transparent transparent;
+}
+
+.lg-map .achievement-ribbon-right::after {
+    right: 0;
+    border-width: 8px 0 0 12px;
+    border-color: #c0392b transparent transparent transparent;
+}
+
+.lg-map .achievement-medal {
+    width: 72px;
+    height: 72px;
+    background: linear-gradient(135deg, #ffd700 0%, #ffb700 50%, #ff9500 100%);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow:
+        0 4px 20px rgba(255, 215, 0, 0.5),
+        inset 0 2px 4px rgba(255, 255, 255, 0.lg-map .5),
+        inset 0 -2px 4px rgba(0, 0, 0, 0.lg-map .2);
+    position: relative;
+    z-index: 1;
+}
+
+.lg-map .achievement-medal::before {
+    content: '';
+    position: absolute;
+    inset: 4px;
+    border-radius: 50%;
+    border: 2px solid rgba(255, 255, 255, 0.3);
+}
+
+.lg-map .achievement-medal-inner {
+    width: 52px;
+    height: 52px;
+    background: linear-gradient(135deg, #fff8dc 0%, #ffd700 100%);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: inset 0 2px 8px rgba(0, 0, 0, 0.15);
+}
+
+.lg-map .achievement-medal-inner svg {
+    width: 28px;
+    height: 28px;
+    color: #b8860b;
+}
+
+.lg-map .achievement-content {
+    text-align: center;
+    position: relative;
+    z-index: 1;
+}
+
+.lg-map .achievement-label {
+    font-size: 11px;
+    font-weight: 600;
+    color: #ffd700;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    margin-bottom: 8px;
+}
+
+.lg-map .achievement-title {
+    font-size: 15px;
+    font-weight: 600;
+    color: #fff;
+    line-height: 1.4;
+    margin-bottom: 12px;
+}
+
+.lg-map .achievement-info {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    padding-top: 12px;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.lg-map .achievement-info-item {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    font-size: 12px;
+    color: rgba(255, 255, 255, 0.7);
+}
+
+.lg-map .achievement-info-item svg {
+    width: 14px;
+    height: 14px;
+    color: #ffd700;
+}
+
+.lg-map .achievement-link {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 4px;
+    margin-top: 14px;
+    padding: 8px 0;
+    color: rgba(255, 255, 255, 0.7);
+    font-size: 12px;
+    text-decoration: none;
+    transition: color 0.2s;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.lg-map .achievement-link:hover {
+    color: #ffd700;
+}
+
+.lg-map .achievement-link svg {
+    width: 14px;
+    height: 14px;
+}
+
+.lg-map .achievement-sparkles {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    overflow: hidden;
+}
+
+.lg-map .achievement-sparkles span {
+    position: absolute;
+    width: 6px;
+    height: 6px;
+    background: #ffd700;
+    border-radius: 50%;
+    animation: sparkle 1.5s ease-in-out infinite;
+}
+
+.lg-map .achievement-sparkles span:nth-child(1) {
+    top: 20%;
+    left: 15%;
+    animation-delay: 0s;
+}
+
+.lg-map .achievement-sparkles span:nth-child(2) {
+    top: 30%;
+    right: 20%;
+    animation-delay: 0.3s;
+}
+
+.lg-map .achievement-sparkles span:nth-child(3) {
+    bottom: 25%;
+    left: 20%;
+    animation-delay: 0.6s;
+}
+
+.lg-map .achievement-sparkles span:nth-child(4) {
+    bottom: 35%;
+    right: 15%;
+    animation-delay: 0.9s;
+}
+
+@keyframes sparkle {
+
+    0%,
+    100% {
+        opacity: 0;
+        transform: scale(0);
+    }
+
+    50% {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+/* 事件清单面板样式 */
+.lg-map .events-panel {
+    position: fixed;
+    left: 20px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(15px);
+    -webkit-backdrop-filter: blur(15px);
+    border-radius: 16px;
+    padding: 16px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+    z-index: 150;
+    max-height: 70vh;
+    overflow-y: auto;
+    display: none;
+    width: 240px;
+}
+
+.lg-map .events-panel.show {
+    display: block;
+    animation: slideRight 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.lg-map .events-panel-header {
+    margin-bottom: 14px;
+    padding-bottom: 12px;
+    border-bottom: 1px solid #f0f0f0;
+}
+
+.lg-map .events-panel-title {
+    font-size: 14px;
+    font-weight: 600;
+    color: #333;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    margin-bottom: 10px;
+}
+
+.lg-map .events-panel-title svg {
+    width: 18px;
+    height: 18px;
+    color: #ff4081;
+}
+
+.lg-map .events-panel-progress {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.lg-map .progress-text {
+    font-size: 12px;
+    font-weight: 600;
+    color: #ff4081;
+    min-width: 40px;
+}
+
+.lg-map .progress-bar {
+    flex: 1;
+    height: 6px;
+    background: #e5e7eb;
+    border-radius: 3px;
+    overflow: hidden;
+}
+
+.lg-map .progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, #ff6b9d 0%, #ff4081 100%);
+    border-radius: 3px;
+    transition: width 0.5s ease;
+}
+
+.lg-map .events-panel-list {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.lg-map .events-panel-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    padding: 10px;
+    border-radius: 10px;
+    background: #f9fafb;
+    transition: all 0.2s ease;
+}
+
+.lg-map .events-panel-item:hover {
+    background: #f3f4f6;
+}
+
+.lg-map .events-panel-item.done {
+    background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%);
+}
+
+.lg-map .event-check-icon {
+    width: 22px;
+    height: 22px;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 1px;
+}
+
+.lg-map .events-panel-item:not(.done) .event-check-icon svg {
+    width: 18px;
+    height: 18px;
+    color: #d1d5db;
+}
+
+.lg-map .events-panel-item.done .event-check-icon svg {
+    width: 18px;
+    height: 18px;
+    color: #ff4081;
+}
+
+.lg-map .event-item-content {
+    flex: 1;
+    min-width: 0;
+}
+
+.lg-map .event-item-name {
+    font-size: 13px;
+    color: #333;
+    line-height: 1.4;
+    word-break: break-word;
+}
+
+.lg-map .events-panel-item:not(.done) .event-item-name {
+    color: #9ca3af;
+}
+
+.lg-map .events-panel-item.done .event-item-name {
+    color: #166534;
+    font-weight: 500;
+}
+
+.lg-map .event-item-date {
+    font-size: 11px;
+    color: #ff4081;
+    margin-top: 4px;
+}
+
+/* 事件面板滚动条样式 */
+.lg-map .events-panel::-webkit-scrollbar {
+    width: 4px;
+}
+
+.lg-map .events-panel::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.lg-map .events-panel::-webkit-scrollbar-thumb {
+    background: #d1d5db;
+    border-radius: 2px;
+}
+
+.lg-map .events-panel::-webkit-scrollbar-thumb:hover {
+    background: #9ca3af;
+}
+
+/* 移动端事件面板适配 */
+@media screen and (max-width: 768px) {
+    .lg-map .events-panel {
+        left: 12px;
+        right: 12px;
+        top: auto;
+        bottom: 200px;
+        transform: none;
+        width: auto;
+        max-height: 40vh;
+        animation: slideUp 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .lg-map .events-panel.show {
+        animation: slideUp 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .lg-map .events-panel-list {
+        max-height: 200px;
+        overflow-y: auto;
+    }
+}
+
+
+/* ========================================
+   移动端全面优化
+   ======================================== */
+
+@media screen and (max-width: 768px) {
+
+    /* 情侣面板 - 移动端优化，位置在控制按钮下方 */
+    .lg-map .lovers-panel {
+        top: 58px;
+        bottom: auto;
+        left: 50%;
+        right: auto;
+        transform: translateX(-50%);
+        padding: 0;
+        gap: 4px;
+        border-radius: 50px;
+        max-width: calc(100% - 80px);
+        width: 100%;
+    }
+
+    .lg-map .lover-card {
+        gap: 6px;
+        padding: 4px 8px 4px 4px;
+    }
+
+    .lg-map .lover-card.lover-right {
+        padding: 6px;
+    }
+
+    .lg-map .avatar-box {
+        width: 36px;
+        height: 36px;
+    }
+
+    .lg-map .lover-name {
+        font-size: 12px;
+    }
+
+    .lg-map .lover-meta {
+        font-size: 9px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+
+
+    .lg-map .love-distance-center {
+        padding: 0 8px;
+    }
+
+    .lg-map .distance-icon {
+        font-size: 14px;
+    }
+
+    .lg-map .distance-val {
+        font-size: 10px;
+    }
+
+    /* 模式切换器 - 移动端底部横向排列 */
+    .lg-map .mode-switcher {
+        position: fixed;
+        right: auto;
+        left: 50%;
+        top: auto;
+        bottom: 16px;
+        transform: translateX(-50%);
+        flex-direction: row;
+        padding: 6px;
+        border-radius: 30px;
+        gap: 4px;
+    }
+
+    .lg-map .mode-btn {
+        width: 48px;
+        height: 48px;
+    }
+
+    .lg-map .mode-btn svg {
+        width: 22px;
+        height: 22px;
+    }
+
+    .lg-map .mode-btn::after {
+        display: none;
+    }
+
+    /* 控制按钮 - 移动端位置调整 */
+    .lg-map .full-screen-function {
+        position: fixed;
+        top: 12px;
+        right: 12px;
+        bottom: auto;
+        flex-direction: row;
+        gap: 8px;
+    }
+
+    .lg-map .control-icon-button {
+        width: 38px;
+        height: 38px;
+        border-radius: 10px;
+    }
+
+    .lg-map .control-icon {
+        width: 18px;
+        height: 18px;
+    }
+
+    /* 底部信息栏 - 移动端整合到 tab 栏上方 */
+    .lg-map .ui-footer-container {
+        bottom: 86px;
+        left: 50%;
+        right: auto;
+        transform: translateX(-50%);
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+        padding: 10px 20px;
+        border-radius: 10px;
+        background: rgb(2 2 2 / 40%);
+        backdrop-filter: blur(20px);
+        width: auto;
+        max-width: calc(100% - 24px);
+    }
+
+    .lg-map .ui-footer-container.show {
+        transform: translateX(-50%) translateY(0);
+    }
+
+    .lg-map .ui-footer-left {
+        text-align: center;
+    }
+
+    .lg-map .ui-footer-title {
+        font-size: 16px;
+        margin-bottom: 2px;
+        gap: 8px;
+        justify-content: center;
+    }
+
+    .lg-map .footer-count-badge {
+        min-width: 20px;
+        height: 20px;
+        padding: 0 6px;
+        font-size: 11px;
+        border-radius: 10px;
+    }
+
+    .lg-map .ui-footer-sub {
+        font-size: 10px;
+        gap: 6px;
+        justify-content: center;
+    }
+
+    .lg-map .status-dot {
+        width: 5px;
+        height: 5px;
+    }
+
+    /* 移动端隐藏右侧品牌信息 */
+    .lg-map .ui-footer-right {
+        display: none;
+    }
+
+    /* 事件面板 - 移动端底部弹出 */
+    .lg-map .events-panel {
+        position: fixed;
+        left: 12px;
+        right: 12px;
+        top: auto;
+        bottom: 90px;
+        transform: none;
+        width: auto;
+        max-height: 35vh;
+        border-radius: 16px;
+    }
+
+    .lg-map .events-panel-list {
+        max-height: 180px;
+        overflow-y: auto;
+    }
+
+    .lg-map .events-panel-item {
+        padding: 8px;
+    }
+
+    .lg-map .event-item-name {
+        font-size: 12px;
+    }
+
+    /* 信息卡片 - 移动端优化 */
+    .lg-map .message-card {
+        width: 240px;
+    }
+
+    .lg-map .message-card-header {
+        padding: 12px 14px 10px;
+        gap: 10px;
+    }
+
+    .lg-map .message-card-avatar {
+        width: 38px;
+        height: 38px;
+    }
+
+    .lg-map .message-card-name {
+        font-size: 14px;
+    }
+
+    .lg-map .message-card-body {
+        padding: 12px 14px;
+    }
+
+    .lg-map .message-card-text {
+        font-size: 13px;
+    }
+
+    .lg-map .love-card {
+        width: 240px;
+    }
+
+    .lg-map .love-card-cover {
+        height: 120px;
+    }
+
+    /* 拍立得卡片 - 移动端优化 */
+    .lg-map .polaroid-card {
+        width: 200px;
+        transform: rotate(-1deg);
+    }
+
+    .lg-map .polaroid-handwriting {
+        font-size: 14px;
+    }
+
+    .lg-map .polaroid-footer {
+        padding: 8px 4px;
+    }
+
+    /* 成就卡片 - 移动端优化 */
+    .lg-map .achievement-card {
+        width: 240px;
+        padding: 20px 16px 16px;
+    }
+
+    .lg-map .achievement-medal {
+        width: 60px;
+        height: 60px;
+    }
+
+    .lg-map .achievement-medal-inner {
+        width: 44px;
+        height: 44px;
+    }
+
+    .lg-map .achievement-medal-inner svg {
+        width: 24px;
+        height: 24px;
+    }
+
+    .lg-map .achievement-label {
+        font-size: 10px;
+    }
+
+    .lg-map .achievement-title {
+        font-size: 14px;
+    }
+
+    .lg-map .achievement-info-item {
+        font-size: 11px;
+    }
+
+    .lg-map .achievement-link {
+        padding: 8px;
+        font-size: 12px;
+        margin-top: 12px;
+    }
+
+    /* 情侣详情卡片 - 移动端优化 */
+    .lg-map .lover-detail-card {
+        width: 200px;
+    }
+
+    .lg-map .lover-detail-header {
+        padding: 20px 16px 14px;
+    }
+
+    .lg-map .lover-detail-header .lover-detail-avatar {
+        width: 60px;
+        height: 60px;
+        border-width: 3px;
+    }
+
+    .lg-map .lover-detail-badge {
+        width: 24px;
+        height: 24px;
+        top: 12px;
+        right: 12px;
+    }
+
+    .lg-map .lover-detail-badge svg {
+        width: 14px;
+        height: 14px;
+    }
+
+    .lg-map .lover-detail-body {
+        padding: 12px 16px 16px;
+    }
+
+    .lg-map .lover-detail-name {
+        font-size: 16px;
+    }
+
+    .lg-map .lover-detail-location {
+        font-size: 12px;
+        padding: 5px 12px;
+    }
+
+    /* 标记点 - 移动端优化 */
+    .lg-map .marker-image {
+        width: 32px;
+        height: 32px;
+    }
+
+    .lg-map .lover-marker-avatar {
+        width: 40px;
+        height: 40px;
+        border-width: 2px;
+    }
+
+    .lg-map .lover-marker-label {
+        font-size: 10px;
+        padding: 2px 8px;
+    }
+
+    .lg-map .lover-marker-heart {
+        width: 14px;
+        height: 14px;
+        top: -4px;
+        right: -4px;
+    }
+
+    .lg-map .album-marker-content {
+        width: 42px;
+        height: 42px;
+        border-radius: 10px;
+        border-width: 2px;
+    }
+
+    .lg-map .event-marker-content {
+        width: 42px;
+        height: 42px;
+        border-radius: 10px;
+        border-width: 2px;
+    }
+
+    .lg-map .event-marker-check {
+        width: 16px;
+        height: 16px;
+        bottom: -3px;
+        right: -3px;
+    }
+
+    .lg-map .event-marker-check svg {
+        width: 10px;
+        height: 10px;
+    }
+
+    /* 聚合标记 - 移动端优化 */
+    .lg-map .cluster-content,
+    .lg-map .album-cluster-content,
+    .lg-map .event-cluster-content {
+        transform: scale(0.85);
+    }
+
+    .lg-map .cluster-count,
+    .lg-map .album-cluster-count,
+    .lg-map .event-cluster-count {
+        font-size: 13px;
+    }
+
+    /* 流动爱心 - 移动端缩小 */
+    .lg-map .trail-heart-simple {
+        width: 16px;
+        height: 16px;
+    }
+}
+
+/* 超小屏幕适配 (iPhone SE 等) */
+@media screen and (max-width: 375px) {
+
+    .lg-map .moment-pill-card {
+        max-width: 210px;
+    }
+
+    .lg-map .event-pill-card {
+        max-width: 230px;
+    }
+
+    .lg-map .event-pill-card .evt-title {
+        font-size: 12px !important;
+    }
+
+    .lg-map .event-pill-card .evt-meta-row {
+        font-size: 8px !important;
+    }
+
+    .lg-map .lovers-panel {
+        padding: 0;
+        /* min-width: 260px; */
+    }
+
+    .lg-map .avatar-box {
+        width: 32px;
+        height: 32px;
+    }
+
+    .lg-map .lover-name {
+        font-size: 11px;
+    }
+
+    .lg-map .lover-meta {
+        font-size: 9px;
+    }
+
+    .lg-map .distance-icon {
+        font-size: 12px;
+    }
+
+    .lg-map .distance-val {
+        font-size: 9px;
+    }
+
+    .lg-map .love-distance-center {
+        padding: 0 6px;
+    }
+
+    .lg-map .mode-btn {
+        width: 42px;
+        height: 42px;
+    }
+
+    .lg-map .mode-btn svg {
+        width: 20px;
+        height: 20px;
+    }
+
+    .lg-map .mode-switcher {
+        bottom: 12px;
+        padding: 5px;
+        gap: 3px;
+    }
+
+    .lg-map .ui-footer-container {
+        bottom: 72px;
+        padding: 8px 16px;
+    }
+
+    .lg-map .ui-footer-container.show {
+        transform: translateX(-50%) translateY(0);
+    }
+
+    .lg-map .ui-footer-title {
+        font-size: 14px;
+        gap: 6px;
+    }
+
+    .lg-map .footer-count-badge {
+        min-width: 18px;
+        height: 18px;
+        padding: 0 5px;
+        font-size: 10px;
+        border-radius: 9px;
+    }
+
+    .lg-map .ui-footer-sub {
+        font-size: 9px;
+    }
+
+    .lg-map .events-panel {
+        bottom: 80px;
+        max-height: 30vh;
+    }
+
+    .lg-map .polaroid-frame,
+    .lg-map .love-card,
+    .lg-map .achievement-card {
+        width: 200px;
+    }
+
+    .lg-map .polaroid-photo {
+        height: 130px;
+    }
+
+    .lg-map .love-card-cover {
+        height: 100px;
+    }
+}
+
+
+/* ========================================
+   情侣模式丰富内容样式
+   ======================================== */
+
+/* 恋爱天数面板 - 右下角 */
+.lg-map .love-days-panel {
+    position: fixed;
+    right: 20px;
+    bottom: 100px;
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border-radius: 16px;
+    padding: 16px 20px;
+    text-align: center;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+    z-index: 150;
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(10px);
+    transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.lg-map .love-days-panel.show {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+}
+
+.lg-map .love-days-number {
+    font-size: 42px;
+    font-weight: 700;
+    color: hsl(var(--hsla-raw));
+    line-height: 1;
+    letter-spacing: -2px;
+}
+
+.lg-map .love-days-label {
+    font-size: 14px;
+    color: hsl(var(--hsla-raw));
+    margin-top: 2px;
+}
+
+.lg-map .love-days-text {
+    font-size: 12px;
+    color: #999;
+    margin-top: 6px;
+}
+
+/* 纪念日倒计时面板 - 右下角恋爱天数上方 */
+.lg-map .anniversary-panel {
+    position: fixed;
+    right: 20px;
+    bottom: 200px;
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border-radius: 14px;
+    padding: 12px 16px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+    z-index: 150;
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(10px);
+    transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.lg-map .anniversary-panel.show {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+}
+
+.lg-map .anniversary-icon {
+    width: 36px;
+    height: 36px;
+    background: #fff5f7;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.lg-map .anniversary-icon svg {
+    width: 20px;
+    height: 20px;
+    color: hsl(var(--hsla-raw));
+}
+
+.lg-map .anniversary-content {
+    text-align: left;
+}
+
+.lg-map .anniversary-title {
+    font-size: 12px;
+    color: #666;
+    margin-bottom: 2px;
+}
+
+.lg-map .anniversary-countdown {
+    display: flex;
+    align-items: baseline;
+    gap: 2px;
+}
+
+.lg-map .countdown-number {
+    font-size: 22px;
+    font-weight: 700;
+    color: hsl(var(--hsla-raw));
+    line-height: 1;
+}
+
+.lg-map .countdown-unit {
+    font-size: 12px;
+    color: #999;
+}
+
+/* 爱情数据统计面板 - 底部中央 */
+.lg-map .love-stats-panel {
+    position: fixed;
+    bottom: 100px;
+    left: 50%;
+    transform: translateX(-50%) translateY(10px);
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border-radius: 16px;
+    padding: 14px 24px;
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+    z-index: 150;
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.lg-map .love-stats-panel.show {
+    opacity: 1;
+    visibility: visible;
+    transform: translateX(-50%) translateY(0);
+}
+
+.lg-map .stats-item {
+    text-align: center;
+}
+
+.lg-map .stats-icon {
+    width: 28px;
+    height: 28px;
+    margin: 0 auto 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.lg-map .stats-icon svg {
+    width: 20px;
+    height: 20px;
+    color: #999;
+}
+
+.lg-map .stats-value {
+    font-size: 18px;
+    font-weight: 700;
+    color: #333;
+    line-height: 1;
+}
+
+.lg-map .stats-label {
+    font-size: 11px;
+    color: #999;
+    margin-top: 4px;
+}
+
+.lg-map .stats-divider {
+    width: 1px;
+    height: 36px;
+    background: #eee;
+}
+
+/* 随机情话面板 - 底部偏左 */
+.lg-map .love-quote-panel {
+    position: fixed;
+    bottom: 100px;
+    left: 240px;
+    max-width: 200px;
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border-radius: 14px;
+    padding: 14px 16px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+    z-index: 150;
+    cursor: pointer;
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(10px);
+    transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.lg-map .love-quote-panel.show {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+}
+
+.lg-map .love-quote-panel:hover {
+    box-shadow: 0 6px 24px rgba(0, 0, 0, 0.12);
+}
+
+.lg-map .love-quote-panel.quote-change {
+    animation: quoteShake 0.3s ease;
+}
+
+@keyframes quoteShake {
+
+    0%,
+    100% {
+        transform: translateY(0);
+    }
+
+    25% {
+        transform: translateY(-3px);
+    }
+
+    75% {
+        transform: translateY(3px);
+    }
+}
+
+.lg-map .quote-icon {
+    width: 20px;
+    height: 20px;
+    margin-bottom: 8px;
+}
+
+.lg-map .quote-icon svg {
+    width: 100%;
+    height: 100%;
+    color: hsl(var(--hsla-raw));
+    opacity: 0.6;
+}
+
+.lg-map .quote-text {
+    font-size: 13px;
+    color: #555;
+    line-height: 1.6;
+}
+
+.lg-map .quote-hint {
+    font-size: 10px;
+    color: #bbb;
+    margin-top: 8px;
+    text-align: right;
+}
+
+/* 移动端适配 - 情侣模式丰富内容 */
+@media screen and (max-width: 768px) {
+
+    /* 恋爱天数 - 移到右上角 */
+    .lg-map .love-days-panel {
+        position: fixed;
+        right: 70px;
+        bottom: auto;
+        top: 12px;
+        padding: 8px 12px;
+        border-radius: 12px;
+    }
+
+    .lg-map .love-days-number {
+        font-size: 24px;
+        letter-spacing: -1px;
+    }
+
+    .lg-map .love-days-label {
+        font-size: 11px;
+        display: inline;
+    }
+
+    .lg-map .love-days-text {
+        display: none;
+    }
+
+    /* 纪念日 - 隐藏 */
+    .lg-map .anniversary-panel {
+        display: none !important;
+    }
+
+    /* 统计面板 - 隐藏 */
+    .lg-map .love-stats-panel {
+        display: none !important;
+    }
+
+    /* 情话面板 - 底部显示 */
+    .lg-map .love-quote-panel {
+        left: 12px;
+        right: 12px;
+        bottom: 80px;
+        max-width: none;
+        padding: 12px 14px;
+    }
+
+    .lg-map .quote-icon {
+        display: none;
+    }
+
+    .lg-map .quote-text {
+        font-size: 12px;
+    }
+
+    .lg-map .quote-hint {
+        display: none;
+    }
+}
+
+/* 超小屏幕 */
+@media screen and (max-width: 375px) {
+    .lg-map .love-days-panel {
+        right: 60px;
+        padding: 6px 10px;
+    }
+
+    .lg-map .love-days-number {
+        font-size: 20px;
+    }
+
+    .lg-map .love-quote-panel {
+        bottom: 75px;
+    }
+}
+
+/* ========================================
+   同坐标列表选择器样式
+   ======================================== */
+.lg-map .location-picker {
+    width: 240px;
+    max-height: 320px;
+    background: #fff;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.18);
+    animation: pickerSlideIn 0.25s ease-out;
+}
+
+@keyframes pickerSlideIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px) scale(0.95);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+.lg-map .location-picker-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 12px 14px;
+    background: #f8f8f8;
+    border-bottom: 1px solid #eee;
+}
+
+.lg-map .location-picker-title {
+    font-size: 13px;
+    font-weight: 600;
+    color: #333;
+}
+
+.lg-map .location-picker-count {
+    font-size: 11px;
+    color: #888;
+    background: #eee;
+    padding: 2px 8px;
+    border-radius: 10px;
+}
+
+.lg-map .location-picker-list {
+    max-height: 260px;
+    overflow-y: auto;
+    padding: 6px 0;
+}
+
+.lg-map .location-picker-list::-webkit-scrollbar {
+    width: 4px;
+}
+
+.lg-map .location-picker-list::-webkit-scrollbar-thumb {
+    background: #ddd;
+    border-radius: 2px;
+}
+
+.lg-map .location-picker-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 14px;
+    cursor: pointer;
+    transition: background 0.15s ease;
+}
+
+.lg-map .location-picker-item:hover {
+    background: #f5f5f5;
+}
+
+.lg-map .location-picker-item:active {
+    background: #eee;
+}
+
+/* 留言模式列表项 */
+.lg-map .location-picker-item.msg-item .picker-avatar {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    overflow: hidden;
+    flex-shrink: 0;
+    border: 2px solid #ff4081;
+}
+
+.lg-map .location-picker-item.msg-item .picker-avatar img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.lg-map .location-picker-item .picker-info {
+    flex: 1;
+    min-width: 0;
+}
+
+.lg-map .location-picker-item .picker-name {
+    font-size: 13px;
+    font-weight: 500;
+    color: #333;
+    margin-bottom: 2px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.lg-map .location-picker-item .picker-desc {
+    font-size: 11px;
+    color: #888;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.lg-map .location-picker-item .picker-arrow {
+    width: 16px;
+    height: 16px;
+    color: #ccc;
+    flex-shrink: 0;
+}
+
+/* 相册模式列表项 */
+.lg-map .location-picker-item.album-item .picker-thumb {
+    width: 44px;
+    height: 44px;
+    border-radius: 6px;
+    overflow: hidden;
+    flex-shrink: 0;
+    border: 2px solid #667eea;
+}
+
+.lg-map .location-picker-item.album-item .picker-thumb img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+/* 事件模式列表项 */
+.lg-map .location-picker-item.event-item .picker-icon {
+    width: 36px;
+    height: 36px;
+    border-radius: 8px;
+    background: linear-gradient(135deg, #ff4081 0%, #e91e63 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.lg-map .location-picker-item.event-item .picker-icon svg {
+    width: 18px;
+    height: 18px;
+    color: #fff;
+}
+
+/* 移动端适配 */
+@media screen and (max-width: 768px) {
+    .lg-map .location-picker {
+        width: 220px;
+        max-height: 280px;
+    }
+
+    .lg-map .location-picker-item {
+        padding: 8px 12px;
+    }
+
+    .lg-map .location-picker-item.msg-item .picker-avatar,
+    .lg-map .location-picker-item.event-item .picker-icon {
+        width: 32px;
+        height: 32px;
+    }
+
+    .lg-map .location-picker-item.album-item .picker-thumb {
+        width: 38px;
+        height: 38px;
+    }
+}
+
+/* ========================================
+   同坐标轮播选择器样式
+   ======================================== */
+.lg-map .location-carousel {
+    display: none;
+    /* 废弃旧样式 */
+}
+
+/* ========================================
+   同位置卡片选择器（简洁版）
+   ======================================== */
+.lg-map .loc-picker-wrap {
+    --picker-color: #ff4081;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.lg-map .loc-picker-card {
+    position: relative;
+}
+
+/* 左右切换按钮 */
+.lg-map .loc-side-btn {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 32px;
+    height: 32px;
+    border: none;
+    background: rgba(255, 255, 255, 0.95);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+    color: #666;
+    z-index: 10;
+}
+
+.lg-map .loc-side-prev {
+    left: -44px;
+}
+
+.lg-map .loc-side-next {
+    right: -44px;
+}
+
+.lg-map .loc-side-btn:hover:not(:disabled) {
+    background: var(--picker-color);
+    color: #fff;
+    transform: translateY(-50%) scale(1.1);
+}
+
+.lg-map .loc-side-btn:disabled {
+    opacity: 0.3;
+    cursor: not-allowed;
+}
+
+.lg-map .loc-side-btn svg {
+    width: 16px;
+    height: 16px;
+}
+
+/* 指示器圆点 - 居中在卡片下方 */
+.lg-map .loc-dots {
+    position: absolute;
+    bottom: -24px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    padding: 4px 10px;
+    background: rgba(0, 0, 0, 0.5);
+    border-radius: 10px;
+}
+
+.lg-map .loc-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.4);
+    transition: all 0.2s ease;
+}
+
+.lg-map .loc-dot.active {
+    background: #fff;
+    transform: scale(1.3);
+}
+
+
+/* ========================================
+   新版卡片样式 - 基于 test2.html 优化
+   适用于高德地图信息窗口
+   ======================================== */
+
+/* === 通用 SVG 图标样式 === */
+.lg-map .icon-svg {
+    width: 13px;
+    height: 13px;
+    fill: none;
+    stroke: #777;
+    stroke-width: 2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    display: inline-block;
+    vertical-align: -2px;
+    margin-right: 4px;
+    opacity: 0.8;
+}
+
+.lg-map .icon-svg-lg {
+    width: 20px;
+    height: 20px;
+    stroke: #555;
+    margin-right: 0;
+    opacity: 1;
+}
+
+/* ========================================
+   1. 事件清单卡片 - 胶囊横向布局
+   ======================================== */
+.lg-map .event-pill-card {
+    width: 300px;
+    background: rgba(20, 20, 20, 0.95);
+    border-radius: 999px;
+    padding: 6px 20px 6px 6px;
+    height: 64px;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    border: 1px solid #333;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+    animation: cardSlideIn 0.3s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+    box-sizing: border-box;
+}
+
+.lg-map .event-pill-card.done {
+    border: 1px solid #2b2b2b;
+    background: rgba(20, 20, 20, 0.85);
+}
+
+.lg-map .event-pill-card .evt-thumb {
+    width: 52px;
+    height: 52px;
+    border-radius: 50%;
+    background-color: #1a1a1a;
+    background-size: cover;
+    background-position: center;
+    border: 2px solid #333;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+}
+
+.lg-map .event-pill-card .evt-thumb img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.lg-map .event-pill-card .evt-info {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    min-width: 0;
+}
+
+.lg-map .event-pill-card .evt-title {
+    font-size: 14px;
+    font-weight: 600;
+    color: #eee;
+    margin-bottom: 4px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.lg-map .event-pill-card .evt-meta-row {
+    display: flex;
+    align-items: center;
+    font-size: 11px;
+    color: #888;
+    gap: 8px;
+}
+
+.lg-map .event-pill-card .evt-meta-row span {
+    display: flex;
+    align-items: center;
+}
+
+.lg-map .event-pill-card .evt-meta-row svg {
+    width: 12px;
+    height: 12px;
+    stroke: #666;
+    fill: none;
+    margin-right: 4px;
+    flex-shrink: 0;
+}
+
+.lg-map .event-pill-card .evt-divider {
+    width: 1px;
+    height: 10px;
+    background: #444;
+}
+
+.lg-map .event-pill-card .evt-status-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+}
+
+.lg-map .event-pill-card .evt-status-icon svg {
+    width: 22px;
+    height: 22px;
+    stroke: #2196f3;
+    fill: none;
+}
+
+.lg-map .event-pill-card.done .evt-status-icon svg {
+    stroke: #4caf50;
+}
+
+/* ========================================
+   2. 相册卡片 - 堆叠照片风格
+   ======================================== */
+.lg-map .album-stack-card {
+    width: 300px;
+    background: rgba(18, 18, 18, 0.96);
+    border: 1px solid #333;
+    border-radius: 14px;
+    padding: 12px;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+    animation: cardSlideIn 0.3s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+    box-sizing: border-box;
+    transition: all .3s;
+}
+
+.lg-map .album-stack-card:hover {
+    border-color: #555;
+    cursor: pointer;
+}
+
+.lg-map .album-stack-card .alb-stack {
+    width: 76px;
+    height: 76px;
+    flex-shrink: 0;
+    position: relative;
+    margin-left: 4px;
+}
+
+.lg-map .album-stack-card .alb-cover {
+    width: 100%;
+    height: 100%;
+    border-radius: 8px;
+    background-size: cover;
+    background-position: center;
+    border: 2px solid #e5e5e5;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.5);
+    position: relative;
+    z-index: 3;
+}
+
+.lg-map .album-stack-card .alb-stack::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: #2a2a2a;
+    border: 1px solid #444;
+    border-radius: 8px;
+    transform: rotate(6deg);
+    z-index: 1;
+    transition: all .3s;
+}
+
+.lg-map .album-stack-card .alb-stack::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: #2a2a2a;
+    border: 1px solid #444;
+    border-radius: 8px;
+    transform: rotate(6deg);
+    z-index: 2;
+    transition: all .3s;
+}
+
+
+.lg-map .album-stack-card:hover .alb-stack::after {
+    transform: rotate(10deg);
+}
+
+.lg-map .album-stack-card:hover .alb-stack::before {
+    transform: rotate(-10deg);
+
+}
+
+.lg-map .album-stack-card .alb-info {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+    justify-content: flex-start;
+    gap: 4px;
+}
+
+.lg-map .album-stack-card .alb-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 2px;
+}
+
+.lg-map .album-stack-card .alb-title {
+    font-size: 15px;
+    font-weight: 700;
+    color: #fff;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 150px;
+}
+
+.lg-map .album-stack-card .alb-count {
+    font-size: 10px;
+    color: #888;
+    background: #1a1a1a;
+    padding: 3px 8px;
+    border-radius: 6px;
+    border: 1px solid #333;
+    flex-shrink: 0;
+    margin-left: 8px;
+}
+
+.lg-map .album-stack-card .alb-desc {
+    font-size: 12px;
+    color: #888;
+    margin-bottom: 2px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    width: 100%;
+}
+
+.lg-map .album-stack-card .alb-meta {
+    display: flex;
+    align-items: center;
+    font-size: 11px;
+    color: #666;
+    gap: 14px;
+    width: 100%;
+    overflow: hidden;
+}
+
+.lg-map .album-stack-card .alb-meta span {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    white-space: nowrap;
+}
+
+/* Let the second span (location) shrink but keep the first span (date) intact if needed */
+.lg-map .album-stack-card .alb-meta span:last-child {
+    flex: 1;
+    min-width: 0;
+}
+
+.lg-map .album-stack-card .alb-meta span .alb-text {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    display: block;
+}
+
+.lg-map .album-stack-card .alb-meta svg {
+    width: 12px;
+    height: 12px;
+    stroke: #666;
+    fill: none;
+    margin-right: 4px;
+    flex-shrink: 0;
+}
+
+/* ========================================
+   3. 留言卡片 - 气泡对话风格
+   ======================================== */
+.lg-map .msg-bubble-card {
+    width: 260px;
+    background: #111;
+    /* border: 1px solid #333; */
+    border-radius: 16px;
+    padding: 16px;
+    /* box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4); */
+    animation: cardSlideIn 0.3s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+    position: relative;
+    box-sizing: border-box;
+}
+
+/* 气泡小尾巴 - 底部中心指向下方 */
+.lg-map .msg-bubble-card::after {
+    content: '';
+    position: absolute;
+    bottom: -8px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 0;
+    height: 0;
+    border-left: 8px solid transparent;
+    border-right: 8px solid transparent;
+    border-top: 8px solid #111;
+}
+
+
+.lg-map .msg-bubble-card .msg-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 8px;
+}
+
+.lg-map .msg-bubble-card .msg-name {
+    font-size: 14px;
+    font-weight: 700;
+    color: #fff;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.lg-map .msg-bubble-card .msg-time {
+    font-size: 10px;
+    color: #666;
+    font-weight: 400;
+    flex-shrink: 0;
+    margin-left: 8px;
+}
+
+.lg-map .msg-bubble-card .msg-text {
+    font-size: 13px;
+    color: #aaa;
+    line-height: 1.6;
+    margin-bottom: 12px;
+    word-break: break-word;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.lg-map .msg-bubble-card .msg-text img {
+    max-height: 22px;
+    max-width: 22px;
+    height: 22px;
+    width: 22px;
+    vertical-align: middle;
+    margin: 0 2px;
+    display: inline;
+}
+
+.lg-map .msg-bubble-card .msg-footer {
+    border-top: 1px solid #222;
+    padding-top: 10px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 11px;
+    color: #666;
+}
+
+.lg-map .msg-bubble-card .msg-footer svg {
+    width: 12px;
+    height: 12px;
+    stroke: #666;
+    fill: none;
+    margin-right: 4px;
+    flex-shrink: 0;
+}
+
+.lg-map .msg-bubble-card .msg-footer-item {
+    display: flex;
+    align-items: center;
+}
+
+/* ========================================
+   4. 点点滴滴卡片 - 胶囊横向布局
+   ======================================== */
+.lg-map .moment-pill-card {
+    width: 300px;
+    background: rgba(18, 18, 18, 0.96);
+    border: 1px solid #333;
+    border-radius: 999px;
+    padding: 8px 20px 8px 8px;
+    height: 60px;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+    animation: cardSlideIn 0.3s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+    box-sizing: border-box;
+}
+
+.lg-map .moment-pill-card.encrypted {
+    border-color: rgba(201, 160, 168, 0.3);
+}
+
+.lg-map .moment-pill-card .mmt-icon {
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    background: linear-gradient(145deg, #2a2520, #1e1a16);
+    border: 1px solid rgba(201, 184, 150, 0.2);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #c9b896;
+    flex-shrink: 0;
+}
+
+.lg-map .moment-pill-card .mmt-icon svg {
+    width: 20px;
+    height: 20px;
+    stroke: currentColor;
+    fill: none;
+}
+
+.lg-map .moment-pill-card.encrypted .mmt-icon {
+    background: linear-gradient(145deg, #2a2025, #1e161a);
+    border-color: rgba(201, 160, 168, 0.2);
+    color: #c9a0a8;
+}
+
+.lg-map .moment-pill-card .mmt-info {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    min-width: 0;
+}
+
+.lg-map .moment-pill-card .mmt-title {
+    font-size: 13px;
+    font-weight: 600;
+    color: #eee;
+    margin-bottom: 4px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.lg-map .moment-pill-card.encrypted .mmt-title {
+    color: #888;
+}
+
+.lg-map .moment-pill-card .mmt-meta-row {
+    display: flex;
+    align-items: center;
+    font-size: 11px;
+    color: #777;
+    gap: 8px;
+}
+
+.lg-map .moment-pill-card .mmt-meta-row span {
+    display: flex;
+    align-items: center;
+}
+
+.lg-map .moment-pill-card .mmt-meta-row svg {
+    width: 12px;
+    height: 12px;
+    stroke: #666;
+    fill: none;
+    margin-right: 4px;
+    flex-shrink: 0;
+}
+
+.lg-map .moment-pill-card .mmt-divider {
+    width: 1px;
+    height: 10px;
+    background: #444;
+}
+
+/* ========================================
+   通用动画
+   ======================================== */
+@keyframes cardSlideIn {
+    0% {
+        opacity: 0;
+        transform: translateY(20px) scale(0.95);
+    }
+
+    100% {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+
+/* ========================================
+   情侣详情卡片 - 精致纵向风格
+   ======================================== */
+.lg-map .lover-profile-card {
+    width: 220px;
+    background: linear-gradient(180deg, rgba(30, 30, 30, 0.95) 0%, rgba(15, 15, 15, 0.98) 100%);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 20px;
+    padding: 0 20px 20px 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    position: relative;
+    box-shadow: 0 20px 40px -10px rgba(0, 0, 0, 0.6);
+    animation: cardSlideIn 0.3s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+    box-sizing: border-box;
+    margin-top: 36px;
+}
+
+/* 顶部高光线 */
+.lg-map .lover-profile-card::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 20px;
+    right: 20px;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.25), transparent);
+}
+
+/* 悬浮头像区 */
+.lg-map .lpc-avatar-box {
+    position: relative;
+    margin-top: -36px;
+    margin-bottom: 14px;
+    width: 72px;
+    height: 72px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.lg-map .lpc-avatar {
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    background-size: cover;
+    background-position: center;
+    border: 3px solid #1a1a1a;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.5);
+    position: relative;
+    z-index: 10;
+}
+
+/* 柔和的雷达波纹 */
+.lg-map .lpc-avatar-box::before {
+    content: '';
+    position: absolute;
+    inset: -1px;
+    border-radius: 50%;
+    border: 1px solid #ec4899;
+    opacity: 0;
+    z-index: 1;
+    animation: lpc-ripple 3s infinite cubic-bezier(0, 0.2, 0.8, 1);
+}
+
+@keyframes lpc-ripple {
+    0% {
+        transform: scale(1);
+        opacity: 0.5;
+    }
+
+    100% {
+        transform: scale(1.6);
+        opacity: 0;
+    }
+}
+
+/* 名字 */
+.lg-map .lpc-name {
+    font-size: 17px;
+    font-weight: 700;
+    color: #fff;
+    margin-bottom: 8px;
+    letter-spacing: 0.5px;
+}
+
+/* 胶囊位置 */
+.lg-map .lpc-location-pill {
+    display: inline-flex;
+    align-items: center;
+    font-size: 12px;
+    color: #9ca3af;
+    background: rgba(255, 255, 255, 0.03);
+    padding: 6px 12px;
+    border-radius: 100px;
+    border: 1px solid rgba(255, 255, 255, 0.04);
+    margin-bottom: 18px;
+}
+
+.lg-map .lpc-location-pill svg {
+    width: 13px;
+    height: 13px;
+    stroke: #9ca3af;
+    margin-right: 5px;
+    opacity: 0.7;
+}
+
+/* 底部数据仪表盘 */
+.lg-map .lpc-dashboard {
+    width: 100%;
+    border-top: 1px solid rgba(255, 255, 255, 0.06);
+    padding-top: 14px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 18px;
+}
+
+.lg-map .lpc-stat-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+    flex: 1 1 0;
+    min-width: 0;
+}
+
+.lg-map .lpc-stat-label {
+    font-size: 9px;
+    color: #555;
+    font-weight: 600;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+}
+
+.lg-map .lpc-stat-val {
+    font-family: 'Inter', sans-serif;
+    font-size: 13px;
+    color: #eee;
+    font-weight: 500;
+}
+
+.lg-map .lpc-stat-val--mono {
+    font-family: 'SFMono-Regular', 'Menlo', 'Monaco', 'Consolas', monospace;
+    font-size: 12px;
+    letter-spacing: 0.02em;
+    white-space: nowrap;
+}
+
+.lg-map .lpc-divider-v {
+    width: 1px;
+    height: 24px;
+    background: rgba(255, 255, 255, 0.06);
+}
+
+/* ================= 高德地图配置错误提示 ================= */
+.lg-map .amap-config-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.6);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 99999;
+    animation: amapFadeIn 0.5s ease-out;
+}
+
+.lg-map .amap-config-card {
+    width: 340px;
+    max-width: 90vw;
+    background: rgba(30, 30, 35, 0.65);
+    backdrop-filter: blur(40px);
+    -webkit-backdrop-filter: blur(40px);
+    border-radius: 32px;
+    padding: 40px 30px;
+    text-align: center;
+    position: relative;
+    box-shadow:
+        inset 0 0 0 1px rgba(255, 255, 255, 0.lg-map .08),
+        0 25px 50px -12px rgba(0, 0, 0, 0.6);
+    overflow: hidden;
+    animation: amapScaleUp 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.lg-map .amap-config-card::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: radial-gradient(circle at 50% 0%, rgba(255, 255, 255, 0.06), transparent 60%);
+    pointer-events: none;
+}
+
+.lg-map .amap-config-icon-wrap {
+    width: 72px;
+    height: 72px;
+    margin: 0 auto 24px;
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.02));
+    border-radius: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+    position: relative;
+}
+
+.lg-map .amap-config-icon-wrap::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: 24px;
+    box-shadow: 0 0 20px rgba(255, 255, 255, 0.1);
+    animation: amapBreathe 3s infinite ease-in-out;
+}
+
+.lg-map .amap-config-icon-wrap.amap-config-icon-error {
+    background: linear-gradient(135deg, rgba(239, 68, 68, 0.2), rgba(239, 68, 68, 0.05));
+    border-color: rgba(239, 68, 68, 0.2);
+}
+
+.lg-map .amap-config-icon-wrap.amap-config-icon-error::after {
+    box-shadow: 0 0 20px rgba(239, 68, 68, 0.2);
+}
+
+.lg-map .amap-config-icon {
+    font-size: 32px;
+    color: #fff;
+    opacity: 0.95;
+}
+
+.lg-map .amap-config-title {
+    font-size: 20px;
+    font-weight: 700;
+    color: #fff;
+    margin-bottom: 8px;
+    letter-spacing: 0.5px;
+}
+
+.lg-map .amap-config-desc {
+    font-size: 13px;
+    color: rgba(255, 255, 255, 0.55);
+    line-height: 1.6;
+    margin-bottom: 32px;
+}
+
+.lg-map .amap-config-actions {
+    display: flex;
+    gap: 12px;
+    justify-content: center;
+}
+
+.lg-map .amap-btn-base {
+    flex: 1;
+    padding: 12px 0;
+    border-radius: 50px;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 4px;
+    white-space: nowrap;
+}
+
+.lg-map .amap-btn-primary {
+    background: #fff;
+    color: #000;
+    border: none;
+    box-shadow: 0 4px 15px rgba(255, 255, 255, 0.2);
+}
+
+.lg-map .amap-btn-primary:hover {
+    background: #f0f0f0;
+    transform: translateY(-1px);
+    box-shadow: 0 6px 20px rgba(255, 255, 255, 0.3);
+}
+
+.lg-map .amap-btn-primary:active {
+    transform: scale(0.96);
+}
+
+.lg-map .amap-btn-secondary {
+    background: rgba(255, 255, 255, 0.05);
+    color: #fff;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.lg-map .amap-btn-secondary:hover {
+    background: rgba(255, 255, 255, 0.1);
+    border-color: rgba(255, 255, 255, 0.2);
+}
+
+.lg-map .amap-btn-secondary:active {
+    transform: scale(0.96);
+    background: rgba(255, 255, 255, 0.02);
+}
+
+@keyframes amapFadeIn {
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
+}
+
+@keyframes amapScaleUp {
+    from {
+        transform: scale(0.95);
+        opacity: 0;
+    }
+
+    to {
+        transform: scale(1);
+        opacity: 1;
+    }
+}
+
+@keyframes amapBreathe {
+
+    0%,
+    100% {
+        opacity: 0.5;
+    }
+
+    50% {
+        opacity: 1;
+    }
+}
+
+
+/* ========================================
+   相册照片展开系统样式（暗黑主题）
+   ======================================== */
+
+/* 相册锚点高亮（展开照片时，原相册标记变为锚点） */
+.album-marker.album-anchor-active .album-marker-content,
+.album-anchor-active .album-marker-content {
+    box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.35), 0 0 16px rgba(255, 255, 255, 0.15);
+    animation: album-anchor-pulse 2s ease-in-out infinite;
+}
+
+@keyframes album-anchor-pulse {
+    0%, 100% { box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.35), 0 0 16px rgba(255, 255, 255, 0.15); }
+    50% { box-shadow: 0 0 0 6px rgba(255, 255, 255, 0.2), 0 0 24px rgba(255, 255, 255, 0.1); }
+}
+
+/* 照片标记弹入动画 */
+@keyframes photoPopIn {
+    0% { transform: scale(0); opacity: 0; }
+    60% { transform: scale(1.15); opacity: 1; }
+    100% { transform: scale(1); opacity: 1; }
+}
+
+/* 照片标记淡出动画 */
+@keyframes photoFadeOut {
+    0% { transform: scale(1); opacity: 1; }
+    100% { transform: scale(0.5); opacity: 0; }
+}
+
+/* 照片标记 - 小圆形缩略图 */
+.photo-pin-marker {
+    cursor: pointer;
+    transition: transform 0.2s ease;
+}
+
+.photo-pin-marker.marker-pop-in .photo-pin-content {
+    animation: photoPopIn 0.35s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+}
+
+.photo-pin-marker.marker-fade-out .photo-pin-content {
+    animation: photoFadeOut 0.25s ease-out forwards;
+}
+
+.photo-pin-marker:hover {
+    transform: scale(1.15);
+    z-index: 10;
+}
+
+.photo-pin-content {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    overflow: hidden;
+    border: 2.5px solid #fff;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
+    position: relative;
+    background: #222;
+}
+
+.photo-pin-content img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+}
+
+.photo-pin-video {
+    position: absolute;
+    bottom: 1px;
+    right: 1px;
+    width: 14px;
+    height: 14px;
+    background: rgba(0, 0, 0, 0.7);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.photo-pin-video svg {
+    width: 8px;
+    height: 8px;
+    fill: #fff;
+}
+
+/* 照片聚合标记 */
+.photo-cluster-marker {
+    cursor: pointer;
+    transition: transform 0.2s ease;
+}
+
+.photo-cluster-marker:hover {
+    transform: scale(1.1);
+}
+
+.photo-cluster-content {
+    border-radius: 50%;
+    background: rgba(30, 30, 30, 0.92);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
+    border: 2px solid #555;
+}
+
+.photo-cluster-count {
+    color: #fff;
+    font-size: 12px;
+    font-weight: 600;
+    line-height: 1;
+}
+
+/* 照片信息窗口卡片（暗黑主题，与 album-stack-card 统一） */
+.photo-detail-card {
+    background: rgba(18, 18, 18, 0.96);
+    border: 1px solid #333;
+    border-radius: 14px;
+    overflow: hidden;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+    width: 240px;
+    cursor: pointer;
+    transition: border-color 0.3s;
+    animation: cardSlideIn 0.3s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+}
+
+.photo-detail-card:hover {
+    border-color: #555;
+}
+
+.phd-preview {
+    width: 100%;
+    height: 150px;
+    background-size: cover;
+    background-position: center;
+    position: relative;
+}
+
+.phd-video-badge {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    width: 24px;
+    height: 24px;
+    background: rgba(0, 0, 0, 0.6);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.phd-video-badge svg {
+    width: 12px;
+    height: 12px;
+    fill: #fff;
+}
+
+.phd-info {
+    padding: 10px 12px;
+}
+
+.phd-album-tag {
+    font-size: 11px;
+    color: #888;
+    font-weight: 500;
+    margin-bottom: 6px;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.phd-album-tag::before {
+    content: '';
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: #555;
+    flex-shrink: 0;
+}
+
+.phd-meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    font-size: 11px;
+    color: #666;
+}
+
+.phd-meta span {
+    display: flex;
+    align-items: center;
+    gap: 3px;
+}
+
+.phd-meta svg {
+    width: 12px;
+    height: 12px;
+    flex-shrink: 0;
+    stroke: #666;
+}
+
+/* 相册卡片中的展开按钮 */
+.alb-actions {
+    margin-top: 4px;
+}
+
+.alb-expand-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 3px;
+    padding: 3px 10px;
+    border: 1px solid #444;
+    border-radius: 12px;
+    background: transparent;
+    color: #999;
+    font-size: 11px;
+    font-weight: 400;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.alb-expand-btn:hover {
+    background: rgba(255, 255, 255, 0.06);
+    border-color: #666;
+    color: #fff;
+}
+
+.alb-expand-btn svg {
+    width: 12px;
+    height: 12px;
+    flex-shrink: 0;
+    stroke: currentColor;
+}
+
+/* 返回相册按钮 */
+.album-back-btn {
+    position: fixed;
+    bottom: 80px;
+    left: 50%;
+    z-index: 200;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 8px 18px 8px 14px;
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    border-radius: 22px;
+    background: rgba(18, 18, 18, 0.88);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+    color: #fff;
+    font-size: 13px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+    opacity: 0;
+    transform: translateX(-50%) translateY(20px);
+}
+
+.album-back-btn.show {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+}
+
+.album-back-btn:hover {
+    background: rgba(30, 30, 30, 0.95);
+    border-color: rgba(255, 255, 255, 0.25);
+    box-shadow: 0 6px 24px rgba(0, 0, 0, 0.6);
+}
+
+.album-back-btn svg {
+    width: 14px;
+    height: 14px;
+    flex-shrink: 0;
+    stroke: #fff;
+}
+
+/* 移动端适配 */
+@media (max-width: 768px) {
+    .photo-pin-content {
+        width: 30px;
+        height: 30px;
+        border-width: 2px;
+    }
+
+    .photo-detail-card {
+        width: 200px;
+    }
+
+    .phd-preview {
+        height: 120px;
+    }
+
+    .album-back-btn {
+        bottom: 72px;
+        padding: 7px 14px 7px 10px;
+        font-size: 12px;
+    }
+}

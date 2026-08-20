@@ -1,6 +1,6 @@
 /**
  * withUstrm 内置组件 - 桥接服务器
- * 仅监听 127.0.0.1:3111，供 withU 后台 PHP 网关反代。
+ * 仅监听 127.0.0.1:3112，供 withU 后台 PHP 网关反代。
  * 职责：提供 Nuxt 静态产物 + 反代 Spring Boot API + SPA 回退。
  * 零第三方依赖。
  *
@@ -14,9 +14,9 @@ const fs = require('fs');
 const path = require('path');
 const crypto = require('crypto');
 
-const PORT = parseInt(process.env.STRM_BRIDGE_PORT || '3111', 10);
+const PORT = parseInt(process.env.STRM_BRIDGE_PORT || '3112', 10);
 const PUBLIC = path.join(__dirname, 'frontend', '.output', 'public');
-const BACKEND = process.env.STRM_BACKEND || 'http://127.0.0.1:8080';
+const BACKEND = process.env.STRM_BACKEND || 'http://127.0.0.1:8081';
 
 // 读取内部共享密钥（支持 env / 文件两个来源）
 function loadSecret() {

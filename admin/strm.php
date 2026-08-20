@@ -4,7 +4,7 @@
  *
  * 访问路径：/admin/strm.php/<任意子路径>
  * - 仅允许已登录的情侣账号（user1/user2）访问 —— 这就是「只能从 withu 后台访问」的闸门。
- * - 所有请求（页面 / 静态资源 / API）统一反代到本机 127.0.0.1:3111 的 bridge，
+ * - 所有请求（页面 / 静态资源 / API）统一反代到本机 127.0.0.1:3112 的 bridge，
  *   bridge 负责 Nuxt 静态产物与 Spring Boot API 转发。
  * - withUstrm 前端以 baseURL=/admin/strm.php/ 构建，资源路径天然经过本网关。
  */
@@ -19,7 +19,7 @@ $auth = new Auth();
 $auth->requireLogin();
 $auth->requireRole(['user1', 'user2']);
 
-$bridge = 'http://127.0.0.1:3111';
+$bridge = 'http://127.0.0.1:3112';
 // 读取内部共享密钥（与 bridge 校验一致），仅 withU 后台网关持有
 $bridgeSecret = '';
 foreach (['E:/Agent/withu/runtime/strm/bridge-secret.txt', dirname(__DIR__, 2) . '/runtime/strm/bridge-secret.txt', dirname(__DIR__, 2) . '/strm/runtime/bridge-secret.txt'] as $__bf) {

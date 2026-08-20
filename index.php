@@ -82,7 +82,7 @@ if ($currentUser) {
             $header = $b64u(json_encode(['alg' => 'HS256', 'typ' => 'JWT']));
             $payload = $b64u(json_encode(['sub' => 'withu_admin', 'iat' => $now, 'exp' => $now + 600]));
             $signature = $b64u(hash_hmac('sha256', $header . '.' . $payload, $secret, true));
-            $ch = curl_init('http://127.0.0.1:8080/api/media-library/' . $id);
+            $ch = curl_init('http://127.0.0.1:8081/api/media-library/' . $id);
             curl_setopt_array($ch, [CURLOPT_RETURNTRANSFER => true, CURLOPT_HTTPHEADER => ['Authorization: Bearer ' . $header . '.' . $payload . '.' . $signature], CURLOPT_CONNECTTIMEOUT => 3, CURLOPT_TIMEOUT => 10]);
             $body = curl_exec($ch);
             $status = (int)curl_getinfo($ch, CURLINFO_RESPONSE_CODE);

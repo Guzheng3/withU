@@ -1,5 +1,5 @@
 const {spawnSync} = require('child_process');
-// WithU 全家一键停止：php(8088) + withUstrm 后端(8080) + bridge(3111) + MariaDB(3307)
+// WithU 全家一键停止：php(1314) + withUstrm 后端(8081) + bridge(3112) + MariaDB(3307)
 function killByPort(port, name){
   const ns = spawnSync('netstat',['-ano'],{encoding:'utf8'});
   const pids = new Set();
@@ -17,11 +17,11 @@ function killByPort(port, name){
   });
   return pids.size;
 }
-killByPort(8088,'withu php');
-killByPort(8080,'withUstrm 后端');
-killByPort(3111,'withUstrm bridge');
+killByPort(1314,'withu php');
+killByPort(8081,'withUstrm 后端');
+killByPort(3112,'withUstrm bridge');
 // MariaDB 优雅关闭
 const mysqladmin = 'C:\\Users\\Administrator\\scoop\\apps\\mariadb\\12.3.2\\mariadb-12.3.2-winx64\\bin\\mysqladmin.exe';
-const r = spawnSync(mysqladmin,['--protocol=tcp','-h','127.0.0.1','-P','3307','-u','root','shutdown'],{encoding:'utf8',timeout:10000});
+  const r = spawnSync(mysqladmin,['--protocol=tcp','-h','127.0.0.1','-P','3307','-u','root','shutdown'],{encoding:'utf8',timeout:10000});
 console.log('MariaDB 停止:', r.status===0?'ok':((r.stdout||r.stderr||'').trim()||'未运行'));
 console.log('WithU 全家已停止。');

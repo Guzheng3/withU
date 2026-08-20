@@ -28,7 +28,7 @@ $code = '';
 // ---------- strm 媒体库辅助（与 api/strm.php 一致，供一起看房间解析 strm 媒体） ----------
 function withu_strm_backend_base(): string
 {
-    return rtrim((string)getenv('STRM_BACKEND_URL') ?: 'http://127.0.0.1:8080', '/');
+    return rtrim((string)getenv('STRM_BACKEND_URL') ?: 'http://127.0.0.1:8081', '/');
 }
 
 function withu_strm_jwt_path(): string

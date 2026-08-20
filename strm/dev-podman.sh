@@ -8,7 +8,7 @@ set -e
 # 配置变量
 PROJECT_NAME="ostrm"
 CONTAINER_NAME="app"
-DEFAULT_PORT="3111"
+DEFAULT_PORT="3112"
 
 # 颜色定义
 RED='\033[0;31m'

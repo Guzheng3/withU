@@ -1,0 +1,562 @@
+/**
+ * LGMiniMap - 迷你地图 + 全屏地图样式
+ */
+
+/* ========== 小地图容器 ========== */
+.lg-minimap-wrap {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    border-radius: 12px;
+    overflow: hidden;
+    cursor: pointer;
+}
+
+.lg-minimap-container {
+    width: 100%;
+    height: 100%;
+    opacity: 0;
+    transition: opacity 0.5s ease;
+}
+
+.lg-minimap-container.lgmini-map-loaded {
+    opacity: 1;
+}
+
+.lg-minimap-container .amap-logo,
+.lg-minimap-container .amap-copyright {
+    display: none !important;
+}
+
+/* ========== 小地图信息卡片 ========== */
+.lgmini-info-card {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    padding: 18px 11px 9px;
+    background: linear-gradient(to top, rgba(0, 0, 0, 0.7) 0%, rgba(0, 0, 0, 0.2) 65%, transparent 100%);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    pointer-events: none;
+    z-index: 5;
+    opacity: 0;
+    transform: translateY(6px);
+    transition: opacity 0.6s cubic-bezier(0.16, 1, 0.3, 1),
+                transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.lgmini-info-card.lgmini-info-show {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.lgmini-info-left {
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.lgmini-info-nav-icon {
+    font-size: 11px;
+    color: rgba(255, 255, 255, 0.5);
+    transform: rotate(-45deg);
+}
+
+.lgmini-info-right {
+    display: flex;
+    flex-direction: column;
+    gap: 1px;
+    min-width: 0;
+}
+
+.lgmini-info-name-text {
+    font-size: 11.5px;
+    font-weight: 600;
+    color: rgba(255, 255, 255, 0.88);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    line-height: 1.2;
+    letter-spacing: 0.01em;
+}
+
+.lgmini-info-coords-text {
+    font-size: 9.5px;
+    font-family: "SF Mono", "Menlo", "Consolas", monospace;
+    font-variant-numeric: tabular-nums;
+    color: rgba(255, 255, 255, 0.3);
+    letter-spacing: 0.02em;
+    line-height: 1.2;
+}
+
+/* ========== 骨架屏（加载中） ========== */
+.lgmini-skeleton {
+    position: absolute;
+    inset: 0;
+    z-index: 10;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    background: #1a1d23;
+    transition: opacity 0.5s ease;
+}
+
+.lgmini-skeleton-hide {
+    opacity: 0;
+    pointer-events: none;
+}
+
+.lgmini-sk-radar {
+    position: relative;
+    width: 48px;
+    height: 48px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.lgmini-sk-ring {
+    position: absolute;
+    inset: 0;
+    border-radius: 50%;
+    border: 1.5px solid rgba(255,255,255,0.15);
+    animation: lgminiSkPulse 2s ease-out infinite;
+}
+
+@keyframes lgminiSkPulse {
+    0%   { transform: scale(0.6); opacity: 0.8; }
+    100% { transform: scale(1.4); opacity: 0; }
+}
+
+.lgmini-sk-icon {
+    position: relative;
+    z-index: 1;
+    font-size: 16px;
+    color: rgba(255,255,255,0.4);
+}
+
+.lgmini-sk-text {
+    font-size: 11px;
+    font-weight: 500;
+    color: rgba(255,255,255,0.3);
+    letter-spacing: 0.05em;
+}
+
+/* ========== 定位标记（小地图版） ========== */
+.lgmini-marker {
+    position: relative;
+    width: 80px;
+    height: 80px;
+}
+
+.lgmini-marker-radar {
+    position: absolute;
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+    width: 80px; height: 80px;
+}
+
+.lgmini-radar-wave {
+    position: absolute;
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+    border-radius: 50%;
+    border: 1px solid rgba(255, 255, 255, 0.35);
+    background: radial-gradient(circle, rgba(255, 255, 255, 0.06) 0%, transparent 70%);
+}
+
+.lgmini-rw1 { width: 28px; height: 28px; animation: lgminiPulse 2.4s ease-out infinite 0s; }
+.lgmini-rw2 { width: 28px; height: 28px; animation: lgminiPulse 2.4s ease-out infinite 0.8s; }
+.lgmini-rw3 { width: 28px; height: 28px; animation: lgminiPulse 2.4s ease-out infinite 1.6s; }
+
+@keyframes lgminiPulse {
+    0%   { width: 28px; height: 28px; opacity: 0.7; border-color: rgba(255,255,255,0.4); }
+    100% { width: 80px; height: 80px; opacity: 0; border-color: rgba(255,255,255,0); }
+}
+
+.lgmini-marker-core {
+    position: absolute;
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+    width: 32px; height: 32px;
+    background: rgba(30, 30, 35, 0.6);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: inset 0 0 0 1px rgba(255,255,255,0.15), 0 4px 16px rgba(0,0,0,0.4);
+}
+
+.lgmini-marker-core::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: 50%;
+    background: radial-gradient(circle at 30% 30%, rgba(255,255,255,0.12), transparent 60%);
+    pointer-events: none;
+}
+
+.lgmini-marker-core i {
+    font-size: 16px;
+    color: #fff;
+    opacity: 0.9;
+}
+
+/* ========== 全屏版标记（稍大） ========== */
+.lgmini-marker-radar-full { width: 120px; height: 120px; }
+
+.lgmini-marker-full .lgmini-rw1,
+.lgmini-marker-full .lgmini-rw2,
+.lgmini-marker-full .lgmini-rw3 { width: 40px; height: 40px; animation-name: lgminiPulseFull; }
+
+@keyframes lgminiPulseFull {
+    0%   { width: 40px; height: 40px; opacity: 0.8; border-color: rgba(255,255,255,0.5); }
+    100% { width: 120px; height: 120px; opacity: 0; border-color: rgba(255,255,255,0); }
+}
+
+.lgmini-marker-core-full {
+    width: 48px; height: 48px;
+}
+
+.lgmini-marker-core-full i {
+    font-size: 24px;
+}
+
+/* ========== 全屏遮罩 ========== */
+.lgmini-fullscreen-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 99999;
+    background: rgba(0, 0, 0, 0.85);
+    opacity: 0;
+    transition: opacity .25s ease;
+}
+
+.lgmini-fullscreen-overlay.show {
+    opacity: 1;
+}
+
+/* 全屏 loading 指示器 */
+.lgmini-fullscreen-loading {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 5;
+    background: transparent;
+    transition: opacity 0.4s ease;
+}
+
+.lgmini-fullscreen-loading.lgmini-loading-hide {
+    opacity: 0;
+    pointer-events: none;
+}
+
+.lgmini-loading-spinner {
+    width: 28px;
+    height: 28px;
+    border: 2px solid rgba(255, 255, 255, 0.1);
+    border-top-color: rgba(255, 255, 255, 0.5);
+    border-radius: 50%;
+    animation: lgminiSpin 0.8s linear infinite;
+}
+
+@keyframes lgminiSpin {
+    to { transform: rotate(360deg); }
+}
+
+.lgmini-fullscreen-map {
+    width: 100%;
+    height: 100%;
+    background: #0d1117;
+}
+
+.lgmini-fullscreen-map .amap-logo,
+.lgmini-fullscreen-map .amap-copyright {
+    display: none !important;
+}
+
+/* 关闭按钮 */
+.lgmini-fullscreen-close {
+    position: absolute;
+    top: 20px; right: 20px;
+    width: 40px; height: 40px;
+    border: none;
+    border-radius: 50%;
+    background: rgba(30, 30, 35, 0.55);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    box-shadow: 0 2px 12px rgba(0,0,0,0.3);
+    color: rgba(255,255,255,0.8);
+    font-size: 16px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 10;
+    transition: background .2s, transform .2s;
+}
+
+.lgmini-fullscreen-close:hover {
+    background: rgba(50, 50, 55, 0.65);
+    transform: scale(1.06);
+}
+
+/* ========== 定位按钮 ========== */
+.lgmini-fullscreen-locate {
+    position: absolute;
+    top: 72px; right: 20px;
+    width: 40px; height: 40px;
+    border: none;
+    border-radius: 50%;
+    background: rgba(30, 30, 35, 0.55);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    box-shadow: 0 2px 12px rgba(0,0,0,0.3);
+    color: rgba(255, 255, 255, 0.8);
+    font-size: 15px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 10;
+    transition: background .2s, transform .2s;
+}
+
+.lgmini-fullscreen-locate:hover {
+    background: rgba(50, 50, 55, 0.65);
+    transform: scale(1.06);
+    color: #fff;
+}
+
+.lgmini-fullscreen-locate:active {
+    transform: scale(0.94);
+}
+
+/* 定位按钮点击脉冲 */
+.lgmini-locate-pulse {
+    animation: lgminiLocatePulse 1.2s ease-out;
+}
+
+@keyframes lgminiLocatePulse {
+    0%   { box-shadow: 0 2px 12px rgba(0,0,0,0.3), 0 0 0 0 rgba(255,255,255,0.25); }
+    50%  { box-shadow: 0 2px 12px rgba(0,0,0,0.3), 0 0 0 14px rgba(255,255,255,0); }
+    100% { box-shadow: 0 2px 12px rgba(0,0,0,0.3), 0 0 0 0 rgba(255,255,255,0); }
+}
+
+/* 缩放指示器 */
+.lgmini-fullscreen-zoom {
+    position: absolute;
+    bottom: 20px; right: 20px;
+    background: rgba(30, 30, 35, 0.55);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    box-shadow: 0 2px 12px rgba(0,0,0,0.3);
+    color: rgba(255,255,255,0.7);
+    font-size: 13px;
+    font-family: "SF Mono", "Menlo", monospace;
+    font-variant-numeric: tabular-nums;
+    padding: 6px 12px;
+    border-radius: 8px;
+    z-index: 10;
+}
+
+/* ========== 全屏地址卡片 ========== */
+.lgmini-addr-card {
+    position: absolute;
+    bottom: 24px;
+    left: 50%;
+    display: flex;
+    align-items: center;
+    gap: 0;
+    padding: 0;
+    background: rgba(18, 18, 22, 0.72);
+    backdrop-filter: blur(24px) saturate(1.2);
+    -webkit-backdrop-filter: blur(24px) saturate(1.2);
+    border-radius: 16px;
+    box-shadow: 0 8px 40px rgba(0, 0, 0, 0.45);
+    z-index: 10;
+    max-width: min(480px, calc(100vw - 48px));
+    pointer-events: none;
+    opacity: 0;
+    transform: translateX(-50%) translateY(20px) scale(0.92);
+    transition: opacity 0.45s cubic-bezier(0.16, 1, 0.3, 1),
+                transform 0.45s cubic-bezier(0.16, 1, 0.3, 1);
+    overflow: hidden;
+}
+
+.lgmini-addr-card.lgmini-addr-visible {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0) scale(1);
+    pointer-events: auto;
+}
+
+/* 左侧图标区 */
+.lgmini-addr-left {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 14px 14px 14px 16px;
+    flex-shrink: 0;
+}
+
+.lgmini-addr-icon-wrap {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.07);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.lgmini-addr-icon-wrap i {
+    font-size: 14px;
+    color: rgba(255, 255, 255, 0.6);
+    transform: rotate(-45deg);
+}
+
+/* 中间文字区 */
+.lgmini-addr-right {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    padding: 12px 4px 12px 0;
+    min-width: 0;
+    flex: 1;
+}
+
+.lgmini-addr-name {
+    font-size: 14px;
+    font-weight: 600;
+    color: rgba(255, 255, 255, 0.9);
+    line-height: 1.3;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.lgmini-addr-sub {
+    font-size: 12px;
+    color: rgba(255, 255, 255, 0.38);
+    line-height: 1.3;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.lgmini-addr-sub:empty {
+    display: none;
+}
+
+/* 分割线 */
+.lgmini-addr-divider {
+    width: 1px;
+    align-self: stretch;
+    margin: 10px 0;
+    background: rgba(255, 255, 255, 0.08);
+    flex-shrink: 0;
+}
+
+/* 右侧经纬度区 */
+.lgmini-addr-coords-block {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    padding: 12px 16px 12px 14px;
+    flex-shrink: 0;
+}
+
+.lgmini-addr-coord-row {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.lgmini-addr-coord-label {
+    font-size: 9px;
+    font-weight: 700;
+    color: rgba(255, 255, 255, 0.22);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    width: 24px;
+    flex-shrink: 0;
+}
+
+.lgmini-addr-coord-val {
+    font-size: 11px;
+    font-family: "SF Mono", "Menlo", "Consolas", monospace;
+    font-variant-numeric: tabular-nums;
+    color: rgba(255, 255, 255, 0.45);
+    letter-spacing: 0.02em;
+}
+
+/* ========== 移动端适配 ========== */
+@media (max-width: 480px) {
+    .lgmini-fullscreen-close,
+    .lgmini-fullscreen-locate {
+        width: 36px;
+        height: 36px;
+        font-size: 14px;
+    }
+
+    .lgmini-fullscreen-close {
+        top: 16px;
+        right: 16px;
+    }
+
+    .lgmini-fullscreen-locate {
+        top: 60px;
+        right: 16px;
+    }
+
+    .lgmini-addr-card {
+        bottom: 16px;
+        border-radius: 14px;
+        max-width: calc(100vw - 32px);
+    }
+
+    .lgmini-addr-left {
+        padding: 12px 10px 12px 14px;
+    }
+
+    .lgmini-addr-icon-wrap {
+        width: 32px;
+        height: 32px;
+    }
+
+    .lgmini-addr-icon-wrap i {
+        font-size: 12px;
+    }
+
+    .lgmini-addr-name {
+        font-size: 13px;
+    }
+
+    .lgmini-addr-sub {
+        font-size: 11px;
+    }
+
+    .lgmini-addr-coords-block {
+        padding: 10px 14px 10px 12px;
+    }
+
+    .lgmini-addr-coord-val {
+        font-size: 10px;
+    }
+
+    .lgmini-fullscreen-zoom {
+        bottom: 16px;
+        right: 16px;
+        font-size: 12px;
+        padding: 4px 10px;
+    }
+}

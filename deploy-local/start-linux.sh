@@ -16,9 +16,9 @@ cd "$(dirname "$0")/.."
 ROOT="$(pwd)"
 WORKROOT="$(dirname "$ROOT")"     # 工作目录（runtime 所在）
 MYSQL_PORT="${MYSQL_PORT:-3306}"
-WITHU_PORT="${WITHU_PORT:-8088}"
-STRM_BACKEND_PORT="${STRM_BACKEND_PORT:-8080}"
-STRM_BRIDGE_PORT="${STRM_BRIDGE_PORT:-3111}"
+WITHU_PORT="${WITHU_PORT:-1314}"
+STRM_BACKEND_PORT="${STRM_BACKEND_PORT:-8081}"
+STRM_BRIDGE_PORT="${STRM_BRIDGE_PORT:-3112}"
 log() { echo "[$(date '+%H:%M:%S')] $*"; }
 
 is_listening() { (echo >/dev/tcp/127.0.0.1/$1) >/dev/null 2>&1; }
@@ -103,10 +103,10 @@ log "配置内置 mihomo 代理..."
 WITHU_PROXY_SUB_URL="${WITHU_PROXY_SUB_URL:-$(node -e "try{console.log(require('./config/mihomo.json').subUrl||'')}catch(e){console.log('')}" 2>/dev/null)}"
 node deploy-local/setup-mihomo.cjs
 MIHOMO_STATUS="$WORKROOT/runtime/mihomo/status.json"
-MIHOMO_ENABLED=0; MIHOMO_PORT=7897
+MIHOMO_ENABLED=0; MIHOMO_PORT=7898
 if [ -f "$MIHOMO_STATUS" ]; then
   MIHOMO_ENABLED=$(node -e "console.log(require('$MIHOMO_STATUS').enabled?1:0)" 2>/dev/null || echo 0)
-  MIHOMO_PORT=$(node -e "console.log(require('$MIHOMO_STATUS').port||7897)" 2>/dev/null || echo 7897)
+  MIHOMO_PORT=$(node -e "console.log(require('$MIHOMO_STATUS').port||7898)" 2>/dev/null || echo 7898)
 fi
 if [ "$MIHOMO_ENABLED" = "1" ]; then
   if ! is_listening "$MIHOMO_PORT"; then

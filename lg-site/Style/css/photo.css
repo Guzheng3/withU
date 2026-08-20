@@ -1,0 +1,999 @@
+/*!
+ *      _      ____ _   _ _____ _    _ _   _ ___
+ *     | |    / ___| \ | | ____| |  | | | | |_ _|
+ *     | |   | |  _|  \| |  _| | |  | | | | || |
+ *     | |___| |_| | |\  | |___| |__| | |_| || |
+ *     |_____|\____|_| \_|_____|____/ \___/|___|
+ *
+ *      ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+ *
+ * Project      : LGNewUi
+ * Author       : Ki
+ * Last Updated : 2026-03-31
+ * Description  : A private place to preserve love, memory, and the
+ *                years shared between two people.
+ *
+ * Copyright (c) 2022-2026 by Ki. All Rights Reserved.
+ *
+ * Type         : Native PHP web application built with PHP, HTML,
+ *                CSS, JavaScript, and selected third-party libraries.
+ * License      : This project is licensed for personal couple-record
+ *                use only.
+ * Restriction  : Commercial, corporate, organizational, platform,
+ *                or enterprise use is strictly prohibited.
+ * Restriction  : Redistribution, modification, repackaging, resale,
+ *                or unauthorized public deployment without explicit
+ *                written permission is strictly prohibited.
+ *
+ * Official Authorization Site:
+ * https://auth-love.kikiw.cn/
+ *
+ * Warning      : LGNewUi is an original work. Any unauthorized
+ *                copying, scraping, resale, redistribution, or
+ *                commercial use is forbidden.
+ * Notice       : Development and long-term maintenance require
+ *                substantial time and effort. Please respect the
+ *                work involved and the applicable authorization terms.
+ *
+ */
+#pjax-container {
+    width: 100% !important;
+}
+
+.photo_content {
+    /*-webkit-column-break-inside: avoid;*/
+    page-break-inside: avoid;
+    break-inside: avoid;
+    margin-bottom: 1rem;
+    border-radius: 1rem;
+    font-family: 'Noto Serif SC', serif;
+    height: 100%;
+    overflow: hidden;
+    box-sizing: border-box;
+    transition: all 0.2s;
+    position: relative;
+}
+
+.photo_content:hover {
+    background: #514e4e;
+    cursor: pointer;
+}
+
+.photo_content:hover img {
+    box-shadow: none;
+    opacity: 0.7;
+}
+
+.photo_content:hover video {
+    box-shadow: none;
+}
+
+
+.photo_content:hover .photo_text,
+.by_name,
+.by_name,
+.by_name b {
+    color: #d2d2d2 !important;
+}
+
+.photo_text,
+.by_name,
+.by_name,
+.by_name b {
+    color: #f4f4f4 !important;
+}
+
+.photo_content video {
+    border-radius: 0.5rem;
+    box-shadow: 0 3px 12px #bcbec19e;
+}
+
+.photo_content .photo_info {
+    padding: 1rem 1rem 0.8rem;
+    position: absolute;
+    bottom: 0;
+    z-index: 10;
+    width: 100%;
+    box-sizing: border-box;
+    transition: all .3s;
+    transform: translateY(100%);
+    border-radius: 0 0 1rem 1rem;
+}
+
+
+.photo_content:hover .photo_info {
+    transform: translateY(0);
+    background: linear-gradient(to top, rgba(0, 0, 0, 0.5), transparent);
+    /* 使用渐变背景 */
+}
+
+.photo_content .photo_info .photo_le {
+    display: flex;
+    align-items: center;
+}
+
+.photo_content .photo_info .photo_rg {
+    text-align: right;
+    color: #a7a0a0;
+    margin-top: 0.3rem;
+    border-top: 1px dashed #ffffffa3;
+    padding: 0.5rem 0.5rem 0;
+}
+
+.photo_content .photo_info .photo_text {
+    margin-top: 0.3rem;
+    color: #949494;
+    text-indent: 2em;
+    line-height: 1.5rem;
+    letter-spacing: 2px;
+}
+
+.photo_content .photo_info .photo_le .by_img {
+    display: block;
+    width: 3rem;
+    height: 3rem;
+    border-radius: 5rem;
+    border: 1px solid #fff;
+}
+
+.photo_content .photo_info .photo_le .by_name {
+    margin-left: 0.5rem;
+    color: #9e9e9e;
+    font-weight: 400;
+}
+
+.photo_content .photo_info .photo_le .by_name b {
+    font-weight: 700;
+    color: #393839;
+}
+
+.photo_content:hover img {
+    transform: scale(1.13);
+}
+
+/* ============================================================
+   相册头部 — lgnew-new-photo-head 命名空间
+   ============================================================ */
+
+.lgnew-new-photo-head-wrapper {
+    background-color: #ffffff;
+}
+
+.lgnew-new-photo-head-hero-header {
+    position: relative;
+    width: 100%;
+    height: 75vh;
+    min-height: 550px;
+    overflow: hidden;
+    border-bottom-left-radius: 3rem;
+    border-bottom-right-radius: 3rem;
+}
+
+/* 噪点纹理 */
+.lgnew-new-photo-head-hero-header::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAQAAAAECAYAAACp8Z5+AAAABmJLR0QA/wD/AP+gvaeTAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAKUlEQVQImU3IMREAIAgAwJfNkQCEsH8cijjpMf6vnXlQaIiJFx+omEBfmqIEZLe2jzcAAAAASUVORK5CYII=);
+    z-index: 3;
+    pointer-events: none;
+}
+
+.lgnew-new-photo-head-hero-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+    animation: lgnew-heroZoom 6s ease-out both;
+    transition: filter 0.6s ease, transform 0.6s ease;
+}
+
+.lgnew-new-photo-head-hero-header:hover .lgnew-new-photo-head-hero-img {
+    -webkit-filter: blur(6px);
+    filter: blur(6px);
+    transform: scale(1.03);
+}
+
+@keyframes lgnew-heroZoom {
+    from { transform: scale(1.05); }
+    to { transform: scale(1); }
+}
+
+.lgnew-new-photo-head-hero-gradient {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(to top, rgba(0,0,0,0.65) 0%, rgba(0,0,0,0.3) 45%, transparent 100%);
+    pointer-events: none;
+    z-index: 2;
+}
+
+.lgnew-new-photo-head-hero-footer {
+    position: absolute;
+    bottom: 1.5rem;
+    left: 1.5rem;
+    right: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+    z-index: 10;
+}
+
+@media (min-width: 768px) {
+    .lgnew-new-photo-head-hero-footer {
+        bottom: 2.5rem;
+        left: 5rem;
+        right: 5rem;
+    }
+}
+
+/* 上层：标题模块 — 独立呼吸空间 */
+.lgnew-new-photo-head-hero-footer > .lgnew-new-photo-head-title-area {
+    margin-bottom: 0;
+    animation: lgnew-slideUp 0.8s ease-out 0.3s both;
+}
+
+/* 下层：信息标签栏 */
+.lgnew-new-photo-head-info-bar {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    padding-top: 1rem;
+    position: relative;
+}
+
+.lgnew-new-photo-head-info-bar::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 60%;
+    max-width: 420px;
+    height: 1px;
+    background: linear-gradient(to right, rgba(255, 255, 255, 0.18), transparent);
+    pointer-events: none;
+}
+
+@media (min-width: 768px) {
+    .lgnew-new-photo-head-info-bar {
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: flex-end;
+    }
+}
+
+.lgnew-new-photo-head-info-left {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    align-items: flex-start;
+}
+
+.lgnew-new-photo-head-info-right {
+    display: flex;
+    flex-direction: row;
+    gap: 0.75rem;
+    align-items: flex-start;
+}
+
+@media (min-width: 768px) {
+    .lgnew-new-photo-head-info-right {
+        flex-direction: column;
+        align-items: flex-end;
+    }
+}
+
+.lgnew-new-photo-head-chips-group {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+}
+
+.lgnew-new-photo-head-chips-group .lgnew-new-photo-head-chip {
+    animation: lgnew-chipIn 0.5s ease-out both;
+}
+.lgnew-new-photo-head-chips-group .lgnew-new-photo-head-chip:nth-child(1) { animation-delay: 0.7s; }
+.lgnew-new-photo-head-chips-group .lgnew-new-photo-head-chip:nth-child(2) { animation-delay: 0.85s; }
+.lgnew-new-photo-head-chips-group .lgnew-new-photo-head-chip:nth-child(3) { animation-delay: 1.0s; }
+.lgnew-new-photo-head-chips-group .lgnew-new-photo-head-chip:nth-child(4) { animation-delay: 1.15s; }
+
+@keyframes lgnew-chipIn {
+    from { opacity: 0; transform: translateY(0.75rem) scale(0.95); }
+    to { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+.lgnew-new-photo-head-watermark {
+    font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+    font-size: 0.7rem;
+    color: rgba(255, 255, 255, 0.75);
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    text-shadow: 0 1px 4px rgba(0,0,0,0.5);
+    margin-bottom: 0.25rem;
+    animation: lgnew-fadeIn 0.6s ease-out 0.6s both;
+}
+
+@keyframes lgnew-fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+.lgnew-new-photo-head-watermark-dot {
+    width: 4px;
+    height: 4px;
+    background-color: #3b82f6;
+    border-radius: 50%;
+    box-shadow: 0 0 8px #3b82f6;
+}
+
+.lgnew-new-photo-head-chip {
+    background-color: rgba(20, 20, 20, 0.4);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 0.5px solid rgba(255, 255, 255, 0.08);
+    color: rgba(255, 255, 255, 0.95);
+    padding: 0.25rem 0.875rem 0.25rem 0.25rem;
+    border-radius: 9999px;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.8125rem;
+    font-weight: 400;
+    letter-spacing: 0.02em;
+    transition: background-color 0.3s ease, transform 0.3s ease;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.12);
+}
+
+.lgnew-new-photo-head-chip:hover {
+    background-color: rgba(40, 40, 40, 0.5);
+}
+
+/* 归属地 chip — 可点击交互 */
+.lgnew-new-photo-head-chip-location {
+    cursor: pointer;
+}
+
+.lgnew-new-photo-head-chip-location:active {
+    transform: scale(0.93);
+    background-color: rgba(0, 0, 0, 0.5);
+}
+
+.lgnew-new-photo-head-chip-icon-bg {
+    width: 1.75rem;
+    height: 1.75rem;
+    border-radius: 50%;
+    background-color: rgba(255, 255, 255, 0.15);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    color: #ffffff;
+}
+
+.lgnew-new-photo-head-chip-icon-bg i {
+    font-size: 14px;
+    line-height: 1;
+}
+
+.lgnew-new-photo-head-chip-avatar {
+    width: 1.75rem;
+    height: 1.75rem;
+    border-radius: 50%;
+    object-fit: cover;
+    flex-shrink: 0;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+.lgnew-new-photo-head-chip-text {
+    padding-right: 0.1rem;
+}
+
+.lgnew-new-photo-head-title-area {
+    animation: lgnew-slideUp 0.8s ease-out 0.3s both;
+}
+
+@keyframes lgnew-slideUp {
+    from { opacity: 0; transform: translateY(1.5rem); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.lgnew-new-photo-head-title {
+    font-size: 2rem;
+    font-weight: 900;
+    color: #ffffff;
+    margin-bottom: 0.5rem;
+    letter-spacing: -0.025em;
+    text-shadow: 0 2px 12px rgba(0,0,0,0.5), 0 0 20px rgba(0,0,0,0.2);
+}
+
+@media (min-width: 768px) {
+    .lgnew-new-photo-head-title { font-size: 3.25rem; }
+}
+
+.lgnew-new-photo-head-desc {
+    font-size: 1rem;
+    color: rgba(255, 255, 255, 0.8);
+    line-height: 1.5;
+    font-weight: 300;
+    text-shadow: 0 1px 8px rgba(0,0,0,0.4);
+}
+
+@media (min-width: 768px) {
+    .lgnew-new-photo-head-desc { font-size: 1.2rem; }
+}
+
+@media screen and (max-width: 768px) {
+    .lgnew-new-photo-head-hero-header {
+        height: 55vh;
+        min-height: 380px;
+        border-bottom-left-radius: 2rem;
+        border-bottom-right-radius: 2rem;
+    }
+    .lgnew-new-photo-head-desc {
+        font-size: 1rem;
+    }
+}
+
+.mar_top2 {
+    margin-top: 2rem;
+}
+
+body {
+    background: #fff url(../../Style/img/rud.svg);
+}
+
+#homePage {
+    display: none;
+}
+
+
+.row.central.nav_k,
+.Width_limit_10re.lg_20rem {
+    display: none;
+}
+
+.gallery {
+    column-count: 4;
+    column-gap: 10px;
+    margin-bottom: 3rem;
+}
+
+.gallery img {
+    width: 100%;
+    height: auto;
+    box-shadow: 0 3px 12px #bcbec19e;
+    transition: all .5s;
+    min-height: 260px;
+    object-fit: cover;
+    background: #f6f6f6;
+}
+
+
+
+/* photo_bg 噪点纹理已在上方 ::before 中定义 */
+
+.img_date {
+    display: flex;
+    align-items: center;
+    justify-content: end;
+    color: #c9c0c0;
+}
+
+
+/* ============================================================
+   imglist.php 瀑布流卡片样式 (.lgnewui-new-photo 命名空间)
+   ============================================================ */
+
+.lgnewui-new-photo {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    padding: 2rem 1rem 3rem;
+    box-sizing: border-box;
+    max-width: 1400px;
+    margin: 0 auto;
+}
+
+/* Masonry 网格 */
+.lgnewui-new-photo .imglist-masonry-grid {
+    width: 100%;
+}
+
+.lgnewui-new-photo .imglist-masonry-col {
+    width: 25%;
+    padding: 6px;
+    box-sizing: border-box;
+}
+
+@media screen and (max-width: 1200px) {
+    .lgnewui-new-photo .imglist-masonry-col {
+        width: 33.333%;
+    }
+}
+
+@media screen and (max-width: 768px) {
+    .lgnewui-new-photo .imglist-masonry-col {
+        width: 50%;
+    }
+
+    .lgnewui-new-photo {
+        padding: 1rem 0.5rem 2rem;
+    }
+}
+
+@media screen and (max-width: 480px) {
+    .lgnewui-new-photo .imglist-masonry-col {
+        width: 50%;
+        padding: 4px;
+    }
+}
+
+/* === 以下完全复制自 card-v1.html demo === */
+
+/* 基础卡片外框 */
+.lgnewui-new-photo .card {
+    position: relative;
+    width: 100%;
+    border-radius: 20px;
+    overflow: hidden;
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.08);
+    cursor: pointer;
+    transform: translateZ(0);
+    -webkit-transform: translateZ(0);
+}
+
+/* 背景图片 — 自然高度，瀑布流参差效果 */
+.lgnewui-new-photo .bg-img {
+    display: block;
+    width: 100%;
+    height: auto;
+    min-height: 120px;
+    object-fit: cover;
+    object-position: center;
+    transition: transform 0.7s cubic-bezier(0.2, 0.8, 0.2, 1), opacity 0.7s linear, filter 0.7s linear, -webkit-filter 0.7s linear;
+    filter: saturate(0.8) brightness(0.9) blur(35px);
+    background-color: #000000 !important;
+    will-change: transform, filter;
+    padding: 0 !important;
+}
+
+.lgnewui-new-photo .card .bg-img.loaded {
+    filter: saturate(0.8) brightness(0.9) blur(0);
+    opacity: 1;
+}
+
+/* 左上角：Mini 标签聚合 */
+.lgnewui-new-photo .tags-group {
+    position: absolute;
+    top: 16px;
+    left: 16px;
+    display: flex;
+    gap: 6px;
+    z-index: 10;
+    max-width: calc(100% - 32px);
+}
+
+.lgnewui-new-photo .tag {
+    background: rgba(0, 0, 0, 0.35);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    color: rgba(255, 255, 255, 0.95);
+    padding: 5px 10px;
+    border-radius: 8px;
+    font-size: 12px;
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    border: none;
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.15), 0 2px 8px rgba(0, 0, 0, 0.1);
+    max-width: 100%;
+    min-width: 0;
+    overflow: hidden;
+}
+
+.lgnewui-new-photo .tag i {
+    font-size: 14px;
+    color: rgba(255, 255, 255, 0.9);
+    flex-shrink: 0;
+}
+
+.lgnewui-new-photo .tag span {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    min-width: 0;
+}
+
+
+
+.lgnewui-new-photo .location-tag.has-coords {
+    cursor: pointer;
+}
+
+
+.lgnewui-new-photo .location-tag.has-coords:active {
+    transform: scale(0.95);
+}
+
+/* 中心：视频播放按钮 */
+.lgnewui-new-photo .play-btn {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 52px;
+    height: 52px;
+    background: rgba(255, 255, 255, 0.25);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.6);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    z-index: 15;
+    transition: all 0.4s cubic-bezier(0.2, 0.8, 0.2, 1);
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
+    padding: 0;
+    outline: none;
+    cursor: pointer;
+    -webkit-appearance: none;
+    will-change: transform;
+}
+
+.lgnewui-new-photo .play-btn i {
+    font-size: 24px;
+    line-height: 1;
+}
+
+.lgnewui-new-photo .card:hover .play-btn {
+    background: rgba(255, 255, 255, 0.4);
+    transform: translate(-50%, -50%) scale(1.15);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.25);
+}
+
+.lgnewui-new-photo .play-btn:active {
+    transform: translate(-50%, -50%) scale(0.85) !important;
+    background: rgba(255, 255, 255, 0.55) !important;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2) !important;
+    transition: all 0.1s ease !important;
+}
+
+/* 独立磨砂背景层 */
+.lgnewui-new-photo .overlay-blur {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 85%;
+    background: linear-gradient(to bottom, rgba(0, 0, 0, 0) 0%, rgba(0, 0, 0, 0) 20%, rgba(0, 0, 0, 0.05) 40%, rgba(0, 0, 0, 0.15) 60%, rgba(0, 0, 0, 0.35) 80%, rgba(0, 0, 0, 0.6) 100%);
+    backdrop-filter: blur(24px) saturate(150%);
+    -webkit-backdrop-filter: blur(24px) saturate(150%);
+    mask-image: linear-gradient(to bottom, transparent 0%, transparent 15%, rgba(0, 0, 0, 0.05) 30%, rgba(0, 0, 0, 0.2) 45%, rgba(0, 0, 0, 0.6) 60%, black 75%);
+    -webkit-mask-image: linear-gradient(to bottom, transparent 0%, transparent 15%, rgba(0, 0, 0, 0.05) 30%, rgba(0, 0, 0, 0.2) 45%, rgba(0, 0, 0, 0.6) 60%, black 75%);
+    z-index: 4;
+    opacity: 0;
+    transform: translateY(15px);
+    transition: all 0.6s cubic-bezier(0.2, 0.8, 0.2, 1);
+    pointer-events: none;
+    will-change: opacity, transform;
+}
+
+/* 底部信息板块：纯文字层，无磨砂 */
+.lgnewui-new-photo .overlay {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    padding: 20px;
+    box-sizing: border-box;
+    color: white;
+    z-index: 5;
+    opacity: 0;
+    transform: translateY(15px);
+    transition: all 0.6s cubic-bezier(0.2, 0.8, 0.2, 1);
+    pointer-events: none;
+    will-change: opacity, transform;
+}
+
+.lgnewui-new-photo .title {
+    font-size: 15px;
+    font-weight: 300;
+    margin: 0 0 16px 0;
+    line-height: 1.5;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+    transition: all 0.5s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+.lgnewui-new-photo .footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 13px;
+    color: rgba(255, 255, 255, 0.75);
+    transition: all 0.5s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+.lgnewui-new-photo .user-info {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.lgnewui-new-photo .avatar {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    background-color: transparent;
+    object-fit: cover;
+    border: none;
+    box-shadow: none;
+    margin-right: 0;
+    flex-shrink: 0;
+}
+
+.lgnewui-new-photo .author-name {
+    display: inline-flex;
+    align-items: center;
+    gap: 3px;
+}
+
+.lgnewui-new-photo .gender-icon {
+    font-size: 12px;
+    line-height: 1;
+}
+
+.lgnewui-new-photo .gender-icon.male {
+    color: #60a5fa;
+}
+
+.lgnewui-new-photo .gender-icon.female {
+    color: #f472b6;
+}
+
+.lgnewui-new-photo .date-text {
+    font-size: 11px;
+    opacity: 0.65;
+    white-space: nowrap;
+}
+
+/* 控制信息板块默认显示的 Class：.show-info-default */
+.lgnewui-new-photo .card.show-info-default .overlay-blur,
+.lgnewui-new-photo .card.show-info-default .overlay {
+    opacity: 1;
+    transform: translateY(0);
+    pointer-events: auto;
+}
+
+/* show-info-default 激活时隐藏 info 按钮 */
+.lgnewui-new-photo .card.show-info-default .info-toggle-btn {
+    opacity: 0;
+    pointer-events: none;
+}
+
+/* 移动端 info 按钮 — 右下角小圆按钮 */
+.lgnewui-new-photo .info-toggle-btn {
+    display: none;
+    position: absolute;
+    bottom: 12px;
+    right: 12px;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background: rgba(0, 0, 0, 0.3);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    border: none;
+    color: rgba(255, 255, 255, 0.85);
+    z-index: 12;
+    cursor: pointer;
+    align-items: center;
+    justify-content: center;
+    transition: opacity 0.3s ease, transform 0.2s ease;
+    padding: 0;
+    outline: none;
+    -webkit-appearance: none;
+}
+
+.lgnewui-new-photo .info-toggle-btn i {
+    font-size: 16px;
+    line-height: 1;
+}
+
+.lgnewui-new-photo .info-toggle-btn:active {
+    transform: scale(0.88);
+}
+
+@media screen and (max-width: 768px) {
+    .lgnewui-new-photo .info-toggle-btn {
+        display: flex;
+    }
+    .lgnewui-new-photo .overlay-blur {
+        height: 100%;
+        mask-image: linear-gradient(to bottom, transparent 0%, rgba(0, 0, 0, 0.1) 20%, rgba(0, 0, 0, 0.4) 40%, rgba(0, 0, 0, 0.8) 60%, black 75%);
+        -webkit-mask-image: linear-gradient(to bottom, transparent 0%, rgba(0, 0, 0, 0.1) 20%, rgba(0, 0, 0, 0.4) 40%, rgba(0, 0, 0, 0.8) 60%, black 75%);
+    }
+    .lgnewui-new-photo .overlay {
+        padding: 14px;
+    }
+    .lgnewui-new-photo .title {
+        margin: 0 0 8px 0;
+        font-size: 12px;
+        line-height: 1.4;
+    }
+    .lgnewui-new-photo .footer {
+        font-size: 11px;
+        flex-wrap: wrap;
+        gap: 6px 10px;
+    }
+    .lgnewui-new-photo .avatar {
+        width: 24px;
+        height: 24px;
+    }
+    .lgnewui-new-photo .gender-icon {
+        font-size: 10px;
+    }
+    .lgnewui-new-photo .date-text {
+        font-size: 10px;
+    }
+    /* 移动端 tag 只显示图标 */
+    .lgnewui-new-photo .type-tag {
+        padding: 5px;
+        font-size: 0;
+        gap: 0;
+    }
+    .lgnewui-new-photo .type-tag i {
+        font-size: 12px;
+    }
+}
+
+/* 当信息默认显示时，鼠标悬浮不做标题动画 */
+
+/* 全局悬浮动效：焕彩微旋 */
+.lgnewui-new-photo .card:hover .bg-img.loaded {
+    transform: scale(1.08) rotate(1.5deg);
+    filter: saturate(1.2) brightness(1.05) blur(0);
+}
+
+.lgnewui-new-photo .card:hover .overlay-blur,
+.lgnewui-new-photo .card:hover .overlay {
+    opacity: 1;
+    transform: translateY(0);
+    pointer-events: auto;
+}
+
+/* === 以上完全复制自 card-v1.html demo === */
+
+/* 加载更多 */
+.lgnewui-new-photo .imglist-load-more {
+    text-align: center;
+    padding: 2rem 0;
+}
+
+.lgnewui-new-photo .imglist-load-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 12px 36px;
+    border: none;
+    border-radius: 100px;
+    background: linear-gradient(135deg, #2c2c2c, #1a1a1a);
+    color: rgba(255, 255, 255, 0.9);
+    font-size: 13px;
+    font-weight: 500;
+    font-family: inherit;
+    letter-spacing: 0.5px;
+    cursor: pointer;
+    transition: all 0.4s cubic-bezier(0.2, 0.8, 0.2, 1);
+    outline: none;
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.15), inset 0 1px 0 rgba(255, 255, 255, 0.08);
+}
+
+.lgnewui-new-photo .imglist-load-btn:hover {
+    background: linear-gradient(135deg, #3a3a3a, #222);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.2), inset 0 1px 0 rgba(255, 255, 255, 0.1);
+    color: #fff;
+}
+
+.lgnewui-new-photo .imglist-load-btn:active {
+    transform: translateY(0) scale(0.97);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+}
+
+.lgnewui-new-photo .imglist-load-btn:disabled {
+    opacity: 0.75;
+    cursor: not-allowed;
+    transform: none;
+}
+
+/* 到底提示 */
+.lgnewui-new-photo .imglist-load-done {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 16px;
+    padding: 2.5rem 0 1.5rem;
+    color: #bbb;
+    font-size: 13px;
+    letter-spacing: 1px;
+}
+
+.lgnewui-new-photo .imglist-done-line {
+    width: 48px;
+    height: 1px;
+    background: linear-gradient(to right, transparent, #ddd, transparent);
+}
+
+/* 按钮内图标对齐 */
+.lgnewui-new-photo .imglist-load-btn .btn-text {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.lgnewui-new-photo .imglist-load-btn .btn-text i {
+    font-size: 14px;
+    line-height: 1;
+}
+
+/* spinner 转圈 */
+.lgnewui-new-photo .imglist-spin {
+    display: inline-block;
+    animation: imglist-spin 0.9s linear infinite;
+}
+
+@keyframes imglist-spin {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+}
+
+/* 加载中 — 圆点流动动画 */
+.lgnewui-new-photo .imglist-loading {
+    text-align: center;
+    padding: 3rem 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.lgnewui-new-photo .imglist-dots {
+    display: flex;
+    gap: 16px;
+    align-items: center;
+}
+
+.lgnewui-new-photo .imglist-dot {
+    display: inline-block;
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: #777;
+    animation: imglist-dot-flow 1.4s ease-in-out infinite;
+}
+
+.lgnewui-new-photo .imglist-dot:nth-child(1) { animation-delay: 0s; }
+.lgnewui-new-photo .imglist-dot:nth-child(2) { animation-delay: 0.16s; }
+.lgnewui-new-photo .imglist-dot:nth-child(3) { animation-delay: 0.32s; }
+
+@keyframes imglist-dot-flow {
+    0%, 100% {
+        opacity: 0.3;
+        transform: translateX(-12px) scale(0.7);
+    }
+    40% {
+        opacity: 1;
+        transform: translateX(0) scale(1);
+    }
+    80% {
+        opacity: 0.3;
+        transform: translateX(12px) scale(0.7);
+    }
+}
+
+/* 头部图标 */

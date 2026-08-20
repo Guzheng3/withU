@@ -1,0 +1,1038 @@
+/* ============================================
+   LG Header — 顶部导航栏样式
+   包含: stuck-logo, 天气胶囊, 地图胶囊, 头像组, 移动端更多面板
+   ============================================ */
+
+/* ── CSS 变量 ── */
+:root {
+    --lg-header-glass-bg: rgba(255, 255, 255, 0.65);
+    --lg-header-glass-blur: saturate(180%) blur(20px);
+    --lg-header-capsule-bg: rgba(255, 255, 255, 0.85);
+    --lg-header-capsule-border: rgba(255, 255, 255, 0.9);
+    --lg-header-icon-bg: rgba(0, 0, 0, 0.06);
+    --lg-header-text-primary: #1f2937;
+    --lg-header-text-secondary: #6b7280;
+}
+
+/* ============================================
+   Stuck Logo 样式（前台）
+   ============================================ */
+
+.lgnewui-header-left-avatar {
+    display: flex;
+    align-items: center;
+    flex-shrink: 0;
+    max-width: min(50vw, 320px);
+}
+
+.lgnewui-header-left-avatar .stuck-logo {
+    display: flex;
+    align-items: center;
+    min-width: 0;
+    max-width: 100%;
+}
+
+.lgnewui-header-left-avatar .stuck-logo__name {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    min-width: 0;
+}
+
+.lgnewui-header-left-avatar .stuck-logo__text {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    min-width: 0;
+}
+
+/* cn-v1: 水墨风 · 黑色胶囊 */
+.lgnewui-header-left-avatar .stuck-logo--cn-v1 {
+    gap: 0;
+    background-color: rgba(0, 0, 0, 0.9);
+    padding: 6px 16px;
+    border-radius: 50px;
+}
+
+.lgnewui-header-left-avatar .stuck-logo--cn-v1 .stuck-logo__name {
+    font-family: 'Ma Shan Zheng', cursive;
+    font-size: 18px;
+    font-weight: 700;
+    color: #fff;
+    line-height: 1;
+}
+
+.lgnewui-header-left-avatar .stuck-logo--cn-v1 .stuck-logo__heart {
+    display: flex;
+    align-items: center;
+    margin: 0 6px;
+    color: rgba(255, 255, 255, 0.8);
+}
+
+/* cn-v2: 狂野红 · 红色胶囊 */
+.lgnewui-header-left-avatar .stuck-logo--cn-v2 {
+    gap: 0;
+    background-color: #7f1d1d;
+    padding: 6px 16px;
+    border-radius: 50px;
+}
+
+.lgnewui-header-left-avatar .stuck-logo--cn-v2 .stuck-logo__name {
+    font-family: 'Ma Shan Zheng', cursive;
+    font-size: 20px;
+    color: #fff;
+    line-height: 1;
+}
+
+.lgnewui-header-left-avatar .stuck-logo--cn-v2 .stuck-logo__xi {
+    color: #fecaca;
+    font-weight: bold;
+    font-size: 16px;
+    margin: 0 8px;
+    background: #fff;
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+/* cn-v3: 时尚宋体 · 黑色胶囊 */
+.lgnewui-header-left-avatar .stuck-logo--cn-v3 {
+    gap: 0;
+    background-color: #000;
+    padding: 6px 16px;
+    border-radius: 50px;
+}
+
+.lgnewui-header-left-avatar .stuck-logo--cn-v3 .stuck-logo__name {
+    font-family: 'Noto Serif SC', serif;
+    font-size: 16px;
+    font-weight: 700;
+    color: #fff;
+    line-height: 1;
+}
+
+.lgnewui-header-left-avatar .stuck-logo--cn-v3 .stuck-logo__icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 8px;
+    font-size: 14px;
+    color: #fff;
+}
+
+/* cn-v4: 宋体渐变竖线 */
+.lgnewui-header-left-avatar .stuck-logo--cn-v4 {
+    gap: 14px;
+}
+
+.lgnewui-header-left-avatar .stuck-logo--cn-v4 .stuck-logo__name {
+    font-family: 'Noto Serif SC', serif;
+    color: #0f172a;
+    font-weight: 700;
+    font-size: 18px;
+    line-height: 1;
+}
+
+.lgnewui-header-left-avatar .stuck-logo--cn-v4 .stuck-logo__divider {
+    width: 1px;
+    height: 18px;
+    background: linear-gradient(to bottom, transparent, #0f172a, transparent);
+    flex-shrink: 0;
+}
+
+/* cn-v5: 艺术风 · AND 副文字 */
+.lgnewui-header-left-avatar .stuck-logo--cn-v5 {
+    gap: 0;
+}
+
+.lgnewui-header-left-avatar .stuck-logo--cn-v5 .stuck-logo__name {
+    font-family: 'Ma Shan Zheng', cursive;
+    font-size: 22px;
+    color: #1e293b;
+    line-height: 1;
+}
+
+.lgnewui-header-left-avatar .stuck-logo--cn-v5 .stuck-logo__sub {
+    font-family: 'Noto Serif SC', serif;
+    font-size: 11px;
+    color: #64748b;
+    margin: 0 10px;
+    margin-top: 4px;
+}
+
+/* cn-v6: 角括号 · 伪元素装饰 */
+.lgnewui-header-left-avatar .stuck-logo--cn-v6 .stuck-logo__bracket {
+    position: relative;
+    padding: 6px 20px;
+}
+
+.lgnewui-header-left-avatar .stuck-logo--cn-v6 .stuck-logo__bracket::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 10px;
+    height: 10px;
+    border-top: 1px solid #0f172a;
+    border-left: 1px solid #0f172a;
+}
+
+.lgnewui-header-left-avatar .stuck-logo--cn-v6 .stuck-logo__bracket::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    width: 10px;
+    height: 10px;
+    border-bottom: 1px solid #0f172a;
+    border-right: 1px solid #0f172a;
+}
+
+.lgnewui-header-left-avatar .stuck-logo--cn-v6 .stuck-logo__text {
+    font-family: 'Noto Serif SC', serif;
+    font-size: 18px;
+    font-weight: 700;
+    color: #0f172a;
+}
+
+/* cn-v7: 红线爱心 · 经典红绳 */
+.lgnewui-header-left-avatar .stuck-logo--cn-v7 {
+    gap: 0;
+}
+
+.lgnewui-header-left-avatar .stuck-logo--cn-v7 .stuck-logo__name {
+    font-family: 'Noto Serif SC', serif;
+    font-size: 16px;
+    font-weight: 700;
+    color: #1e293b;
+    line-height: 1;
+}
+
+.lgnewui-header-left-avatar .stuck-logo--cn-v7 .stuck-logo__redline-l {
+    width: 28px;
+    height: 1px;
+    background: linear-gradient(to right, transparent, #f87171);
+}
+
+.lgnewui-header-left-avatar .stuck-logo--cn-v7 .stuck-logo__redline-r {
+    width: 28px;
+    height: 1px;
+    background: linear-gradient(to left, transparent, #f87171);
+}
+
+.lgnewui-header-left-avatar .stuck-logo--cn-v7 .stuck-logo__heart {
+    color: #ef4444;
+    margin: 0 6px;
+    display: flex;
+    align-items: center;
+}
+
+/* en-v1: 优雅衬线 · 黑色胶囊 */
+.lgnewui-header-left-avatar .stuck-logo--en-v1 {
+    gap: 0;
+    background-color: rgba(0, 0, 0, 0.9);
+    padding: 6px 16px;
+    border-radius: 50px;
+}
+
+.lgnewui-header-left-avatar .stuck-logo--en-v1 .stuck-logo__name {
+    font-family: 'Playfair Display', serif;
+    font-size: 16px;
+    letter-spacing: 0.1em;
+    color: #fff;
+    line-height: 1;
+}
+
+.lgnewui-header-left-avatar .stuck-logo--en-v1 .stuck-logo__heart {
+    display: flex;
+    align-items: center;
+    margin: 0 6px;
+    color: rgba(255, 255, 255, 0.8);
+}
+
+/* en-v2: 蓝灰胶囊 · 花体手写 */
+.lgnewui-header-left-avatar .stuck-logo--en-v2 {
+    gap: 0;
+    background-color: #64748b;
+    padding: 6px 16px;
+    border-radius: 50px;
+}
+
+.lgnewui-header-left-avatar .stuck-logo--en-v2 .stuck-logo__name {
+    font-family: 'Dancing Script', cursive;
+    font-size: 22px;
+    color: #fff;
+    line-height: 1;
+}
+
+.lgnewui-header-left-avatar .stuck-logo--en-v2 .stuck-logo__icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 6px;
+    font-size: 14px;
+    color: #fef08a;
+    flex-shrink: 0;
+}
+
+/* en-v3: 时尚黑 · 花体手写 */
+.lgnewui-header-left-avatar .stuck-logo--en-v3 {
+    gap: 0;
+    background-color: #000;
+    padding: 6px 16px;
+    border-radius: 50px;
+}
+
+.lgnewui-header-left-avatar .stuck-logo--en-v3 .stuck-logo__name {
+    font-family: 'Dancing Script', cursive;
+    font-size: 24px;
+    color: #fff;
+    line-height: 1;
+}
+
+.lgnewui-header-left-avatar .stuck-logo--en-v3 .stuck-logo__icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 6px;
+    font-size: 14px;
+    color: #fff;
+    flex-shrink: 0;
+}
+
+/* en-v4: 渐变竖线 · 大写衬线 */
+.lgnewui-header-left-avatar .stuck-logo--en-v4 {
+    gap: 14px;
+}
+
+.lgnewui-header-left-avatar .stuck-logo--en-v4 .stuck-logo__name {
+    font-family: 'Crimson Pro', serif;
+    color: #0f172a;
+    font-weight: 700;
+    font-size: 18px;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    line-height: 1;
+}
+
+.lgnewui-header-left-avatar .stuck-logo--en-v4 .stuck-logo__divider {
+    width: 1px;
+    height: 18px;
+    background: linear-gradient(to bottom, transparent, #0f172a, transparent);
+    flex-shrink: 0;
+}
+
+/* en-v5: 经典衬线 · with 副文字 */
+.lgnewui-header-left-avatar .stuck-logo--en-v5 {
+    gap: 0;
+}
+
+.lgnewui-header-left-avatar .stuck-logo--en-v5 .stuck-logo__name {
+    font-family: 'Libre Baskerville', serif;
+    font-size: 20px;
+    font-weight: 600;
+    color: #1e293b;
+    line-height: 1;
+}
+
+.lgnewui-header-left-avatar .stuck-logo--en-v5 .stuck-logo__sub {
+    font-family: 'Inter', sans-serif;
+    font-size: 9px;
+    color: #94a3b8;
+    margin: 0 10px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+}
+
+/* en-v6: 角括号 · 大写衬线 */
+.lgnewui-header-left-avatar .stuck-logo--en-v6 .stuck-logo__bracket {
+    position: relative;
+    padding: 6px 20px;
+}
+
+.lgnewui-header-left-avatar .stuck-logo--en-v6 .stuck-logo__bracket::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 10px;
+    height: 10px;
+    border-top: 1px solid #0f172a;
+    border-left: 1px solid #0f172a;
+}
+
+.lgnewui-header-left-avatar .stuck-logo--en-v6 .stuck-logo__bracket::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    width: 10px;
+    height: 10px;
+    border-bottom: 1px solid #0f172a;
+    border-right: 1px solid #0f172a;
+}
+
+.lgnewui-header-left-avatar .stuck-logo--en-v6 .stuck-logo__text {
+    font-family: 'Playfair Display', serif;
+    font-size: 18px;
+    letter-spacing: 0.05em;
+    color: #0f172a;
+    text-transform: uppercase;
+}
+
+/* en-v7: 红线爱心 · 花体手写 */
+.lgnewui-header-left-avatar .stuck-logo--en-v7 {
+    gap: 0;
+}
+
+.lgnewui-header-left-avatar .stuck-logo--en-v7 .stuck-logo__name {
+    font-family: 'Dancing Script', cursive;
+    font-size: 22px;
+    color: #1e293b;
+    line-height: 1;
+}
+
+.lgnewui-header-left-avatar .stuck-logo--en-v7 .stuck-logo__redline-l {
+    width: 28px;
+    height: 1px;
+    background: linear-gradient(to right, transparent, #f87171);
+}
+
+.lgnewui-header-left-avatar .stuck-logo--en-v7 .stuck-logo__redline-r {
+    width: 28px;
+    height: 1px;
+    background: linear-gradient(to left, transparent, #f87171);
+}
+
+.lgnewui-header-left-avatar .stuck-logo--en-v7 .stuck-logo__heart {
+    color: #ef4444;
+    margin: 0 6px;
+    display: flex;
+    align-items: center;
+}
+
+/* Solo 模式样式 */
+.lgnewui-header-left-avatar .stuck-logo--solo-cn-v1 .stuck-logo__bracket,
+.lgnewui-header-left-avatar .stuck-logo--solo-en-v1 .stuck-logo__bracket {
+    position: relative;
+    padding: 6px 20px;
+}
+
+.lgnewui-header-left-avatar .stuck-logo--solo-cn-v1 .stuck-logo__bracket::before,
+.lgnewui-header-left-avatar .stuck-logo--solo-en-v1 .stuck-logo__bracket::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 10px;
+    height: 10px;
+    border-top: 1px solid #0f172a;
+    border-left: 1px solid #0f172a;
+}
+
+.lgnewui-header-left-avatar .stuck-logo--solo-cn-v1 .stuck-logo__bracket::after,
+.lgnewui-header-left-avatar .stuck-logo--solo-en-v1 .stuck-logo__bracket::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    width: 10px;
+    height: 10px;
+    border-bottom: 1px solid #0f172a;
+    border-right: 1px solid #0f172a;
+}
+
+.lgnewui-header-left-avatar .stuck-logo--solo-cn-v1 .stuck-logo__text {
+    font-family: 'Noto Serif SC', serif;
+    font-size: 18px;
+    font-weight: 700;
+    color: #0f172a;
+}
+
+.lgnewui-header-left-avatar .stuck-logo--solo-en-v1 .stuck-logo__text {
+    font-family: 'Playfair Display', serif;
+    font-size: 18px;
+    letter-spacing: 0.05em;
+    color: #0f172a;
+}
+
+.lgnewui-header-left-avatar .stuck-logo--solo-cn-v2 .stuck-logo__name {
+    font-family: 'Ma Shan Zheng', cursive;
+    font-size: 22px;
+    color: #1e293b;
+    position: relative;
+}
+
+.lgnewui-header-left-avatar .stuck-logo--solo-cn-v2 .stuck-logo__name::after {
+    content: '';
+    position: absolute;
+    bottom: -2px;
+    left: 0;
+    right: 0;
+    height: 2px;
+    background: linear-gradient(to right, #f87171, #fbbf24);
+    border-radius: 1px;
+}
+
+.lgnewui-header-left-avatar .stuck-logo--solo-en-v2 .stuck-logo__name {
+    font-family: 'Dancing Script', cursive;
+    font-size: 24px;
+    color: #1e293b;
+}
+
+.lgnewui-header-left-avatar .stuck-logo--solo-cn-v3 .stuck-logo__name {
+    font-family: 'Ma Shan Zheng', cursive;
+    font-size: 24px;
+    color: #1e293b;
+}
+
+.lgnewui-header-left-avatar .stuck-logo--solo-en-v3 {
+    gap: 10px;
+}
+
+.lgnewui-header-left-avatar .stuck-logo--solo-en-v3 .stuck-logo__name {
+    font-family: 'Libre Baskerville', serif;
+    font-size: 18px;
+    font-weight: 600;
+    color: #1e293b;
+}
+
+.lgnewui-header-left-avatar .stuck-logo--solo-en-v3 .stuck-logo__divider {
+    width: 1px;
+    height: 16px;
+    background: linear-gradient(to bottom, transparent, #0f172a, transparent);
+}
+
+/* default */
+.lgnewui-header-left-avatar .stuck-logo--default .stuck-logo__text {
+    font-family: 'Noto Serif SC', serif;
+    font-size: 18px;
+    font-weight: 700;
+    color: #1e293b;
+}
+
+/* ============================================
+   返回/首页胶囊按钮
+   ============================================ */
+
+.lg-capsule-back {
+    display: none;
+    align-items: center;
+    background: var(--lg-header-capsule-bg);
+    border-radius: 50px;
+    padding: 4px;
+    gap: 2px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+    border: 1px solid var(--lg-header-capsule-border);
+}
+
+.lg-capsule-back__btn {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--lg-header-text-secondary);
+    transition: all 0.2s ease;
+    text-decoration: none;
+}
+
+.lg-capsule-back__btn:hover {
+    background: var(--lg-header-icon-bg);
+    color: var(--lg-header-text-primary);
+}
+
+.lg-capsule-back__btn .lucide {
+    width: 18px;
+    height: 18px;
+}
+
+/* ============================================
+   右侧操作区
+   ============================================ */
+
+.lgnewui-header-actions {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-shrink: 0;
+}
+
+/* 天气胶囊 */
+.lgnewui-header-weather {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    background: rgba(255, 255, 255, 0.85);
+    border-radius: 50px;
+    padding: 6px 12px 6px 8px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    border: none;
+    box-shadow: none;
+}
+
+.lgnewui-header-weather:hover {
+    background: rgba(255, 255, 255, 0.95);
+}
+
+.lgnewui-header-weather-icon-wrap {
+    width: 26px;
+    height: 26px;
+    border-radius: 50%;
+    background: var(--lg-header-icon-bg);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.lgnewui-header-weather-icon {
+    font-size: 16px;
+    color: var(--lg-header-text-primary);
+}
+
+.lgnewui-header-weather-text {
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--lg-header-text-primary);
+    white-space: nowrap;
+}
+
+.lgnewui-header-weather-loading {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.lgnewui-header-weather-loading .lucide {
+    width: 16px;
+    height: 16px;
+    animation: lg-header-spin 1s linear infinite;
+    color: var(--lg-header-text-secondary);
+}
+
+.lgnewui-header-weather.is-loading .lgnewui-header-weather-icon-wrap,
+.lgnewui-header-weather.is-loading .lgnewui-header-weather-text {
+    display: none;
+}
+
+.lgnewui-header-weather:not(.is-loading) .lgnewui-header-weather-loading {
+    display: none;
+}
+
+@keyframes lg-header-spin {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+}
+
+/* 地图胶囊（与天气完全统一） */
+.lgnewui-header-map {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    color: #334155;
+    background: rgba(0, 0, 0, 0.04);
+    border-radius: 50px;
+    padding: 0 12px 0 6px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    border: none;
+    box-shadow: none;
+    text-decoration: none;
+    height: 34px;
+}
+
+.lgnewui-header-map:hover {
+    background: rgba(0, 0, 0, 0.08);
+
+}
+
+.lgnewui-header-map-icon-wrap {
+    width: 26px;
+    height: 26px;
+    border-radius: 50%;
+    background: linear-gradient(180deg, rgba(255, 255, 255, 0.82), rgba(255, 255, 255, 0.58));
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.92), 0 4px 10px rgba(15, 23, 42, 0.04);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.lgnewui-header-map-icon-wrap i {
+    font-size: 16px;
+    color: var(--lg-header-text-primary);
+}
+
+.lgnewui-header-map-text {
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--lg-header-text-primary);
+    white-space: nowrap;
+}
+
+/* 分隔线 - 白色渐变透明 */
+.lgnewui-header-divider {
+    width: 1px;
+    height: 20px;
+    background: linear-gradient(to bottom, transparent, rgba(255, 255, 255, 0.8), transparent);
+}
+
+/* 头像组 */
+.lgnewui-couple-avatars-right {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.lgnewui-avatar-group {
+    display: flex;
+    align-items: center;
+}
+
+.lgnewui-avatar-group img {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    border: 2px solid #fff;
+    object-fit: cover;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+}
+
+.lgnewui-avatar-group img:not(:first-child) {
+    margin-left: -10px;
+}
+
+.lgnewui-right-heart {
+    width: 8px;
+    height: 8px;
+    background: #ef4444;
+    border-radius: 50%;
+    animation: lg-header-heartbeat 1.5s ease-in-out infinite;
+}
+
+@keyframes lg-header-heartbeat {
+    0%, 100% { transform: scale(1); opacity: 1; }
+    50% { transform: scale(1.2); opacity: 0.8; }
+}
+
+/* 旧版地图按钮（兼容，隐藏） */
+.lgnewui-header-action-btn {
+    display: none;
+}
+
+/* ============================================
+   移动端「更多」面板（毛玻璃磨砂效果）
+   ============================================ */
+
+.lg-header-more-panel {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 10000;
+    pointer-events: none;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.3s ease, visibility 0.3s ease;
+}
+
+.lg-header-more-panel.is-open {
+    opacity: 1;
+    visibility: visible;
+    pointer-events: auto;
+}
+
+.lg-header-more-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.4);
+}
+
+.lg-header-more-sheet {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    background: rgba(250, 250, 250, 0.85);
+    backdrop-filter: saturate(180%) blur(20px);
+    -webkit-backdrop-filter: saturate(180%) blur(20px);
+    border-radius: 0 0 24px 24px;
+    padding: 50px 20px 20px;
+    border: none;
+    transform: translateY(-100%);
+    transition: transform 0.35s cubic-bezier(0.32, 0.72, 0, 1);
+}
+
+.lg-header-more-panel.is-open .lg-header-more-sheet {
+    transform: translateY(0);
+}
+
+.lg-header-more-close {
+    position: absolute;
+    top: 16px;
+    right: 16px;
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background: rgba(0, 0, 0, 0.05);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    color: var(--lg-header-text-secondary);
+    border: none;
+    transition: all 0.2s ease;
+}
+
+.lg-header-more-close:hover {
+    background: rgba(0, 0, 0, 0.1);
+    color: var(--lg-header-text-primary);
+}
+
+.lg-header-more-close .lucide {
+    width: 20px;
+    height: 20px;
+}
+
+/* 面板内的 stuck-logo 展示区 */
+.lg-header-more-identity {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 16px;
+    padding-bottom: 20px;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+    margin-bottom: 16px;
+}
+
+.lg-header-more-identity .stuck-logo {
+    display: flex;
+    align-items: center;
+    transform: scale(1.1);
+}
+
+/* 面板内复用 header 的 stuck-logo 样式 */
+.lg-header-more-identity .stuck-logo--cn-v1,
+.lg-header-more-identity .stuck-logo--en-v1 {
+    gap: 0;
+    background-color: rgba(0, 0, 0, 0.9);
+    padding: 6px 16px;
+    border-radius: 50px;
+}
+
+.lg-header-more-identity .stuck-logo--cn-v1 .stuck-logo__name {
+    font-family: 'Ma Shan Zheng', cursive;
+    font-size: 18px;
+    font-weight: 700;
+    color: #fff;
+    line-height: 1;
+}
+
+.lg-header-more-identity .stuck-logo--en-v1 .stuck-logo__name {
+    font-family: 'Playfair Display', serif;
+    font-size: 16px;
+    letter-spacing: 0.1em;
+    color: #fff;
+    line-height: 1;
+}
+
+.lg-header-more-identity .stuck-logo--cn-v1 .stuck-logo__heart,
+.lg-header-more-identity .stuck-logo--en-v1 .stuck-logo__heart {
+    display: flex;
+    align-items: center;
+    margin: 0 6px;
+    color: rgba(255, 255, 255, 0.8);
+}
+
+.lg-header-more-identity .stuck-logo--cn-v7,
+.lg-header-more-identity .stuck-logo--en-v7 {
+    gap: 0;
+}
+
+.lg-header-more-identity .stuck-logo--cn-v7 .stuck-logo__name {
+    font-family: 'Noto Serif SC', serif;
+    font-size: 18px;
+    font-weight: 700;
+    color: #1e293b;
+    line-height: 1;
+}
+
+.lg-header-more-identity .stuck-logo--en-v7 .stuck-logo__name {
+    font-family: 'Dancing Script', cursive;
+    font-size: 24px;
+    color: #1e293b;
+    line-height: 1;
+}
+
+.lg-header-more-identity .stuck-logo--cn-v7 .stuck-logo__redline-l,
+.lg-header-more-identity .stuck-logo--en-v7 .stuck-logo__redline-l {
+    width: 32px;
+    height: 1px;
+    background: linear-gradient(to right, transparent, #f87171);
+}
+
+.lg-header-more-identity .stuck-logo--cn-v7 .stuck-logo__redline-r,
+.lg-header-more-identity .stuck-logo--en-v7 .stuck-logo__redline-r {
+    width: 32px;
+    height: 1px;
+    background: linear-gradient(to left, transparent, #f87171);
+}
+
+.lg-header-more-identity .stuck-logo--cn-v7 .stuck-logo__heart,
+.lg-header-more-identity .stuck-logo--en-v7 .stuck-logo__heart {
+    color: #ef4444;
+    margin: 0 8px;
+    display: flex;
+    align-items: center;
+}
+
+/* 面板内的功能入口 */
+.lg-header-more-actions {
+    display: flex;
+    justify-content: center;
+    gap: 12px;
+    padding-top: 12px;
+}
+
+.lg-header-more-action-item {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 12px 6px 8px;
+    border-radius: 50px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    text-decoration: none;
+    color: #334155;
+    background: rgba(0, 0, 0, 0.04);
+}
+
+.lg-header-more-action-item:hover {
+    background: rgba(0, 0, 0, 0.08);
+}
+
+.lg-header-more-action-item .lg-header-more-action-icon {
+    width: 26px;
+    height: 26px;
+    border-radius: 50%;
+    background: linear-gradient(180deg, rgba(255, 255, 255, 0.82), rgba(255, 255, 255, 0.58));
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.92), 0 4px 10px rgba(15, 23, 42, 0.04);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+    color: #334155;
+}
+
+.lg-header-more-action-item .lg-header-more-action-label {
+    font-size: 13px;
+    font-weight: 500;
+    color: #334155;
+}
+
+.lg-header-more-action-item:active {
+    transform: scale(0.95);
+}
+
+.lg-header-more-action-icon {
+    width: 26px;
+    height: 26px;
+    border-radius: 50%;
+    background: rgba(0, 0, 0, 0.06);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+    color: var(--lg-header-text-primary);
+}
+
+.lg-header-more-action-label {
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--lg-header-text-primary);
+}
+
+/* 移动端更多按钮 - 半透明磨砂 */
+.lg-header-more-btn {
+    display: none;
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.4);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border: none;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    color: var(--lg-header-text-secondary);
+    transition: all 0.2s ease;
+}
+
+.lg-header-more-btn:hover {
+    background: rgba(255, 255, 255, 0.6);
+    color: var(--lg-header-text-primary);
+}
+
+.lg-header-more-btn .lucide {
+    width: 18px;
+    height: 18px;
+}
+
+/* ============================================
+   移动端响应式
+   ============================================ */
+
+@media (max-width: 768px) {
+    /* 1. 隐藏昵称logo */
+    .lgnewui-header-left-avatar {
+        display: none !important;
+    }
+
+    /* 2. 左侧显示logo标题 */
+    .header .logo {
+        position: absolute !important;
+        left: 16px !important;
+        transform: none !important;
+    }
+
+    /* 3. 隐藏情侣头像、分隔线、更多按钮 */
+    .lgnewui-couple-avatars-right,
+    .lgnewui-header-divider,
+    .lg-header-more-btn {
+        display: none !important;
+    }
+
+    /* 4. 移动端logo不要faded效果 */
+    .alogo.lgnewui-logo-faded {
+        opacity: 1 !important;
+        transform: none !important;
+    }
+
+    /* 4.1 移动端详情页滚动时隐藏标题logo */
+    .header .logo.scroll-logo-hidden {
+        opacity: 0 !important;
+        transform: translateX(-20px) !important;
+        pointer-events: none !important;
+    }
+
+    /* 5. 移动端天气地图始终显示（覆盖head.php中的opacity:0） */
+    .lgnewui-header-actions {
+        opacity: 1 !important;
+        pointer-events: auto !important;
+        transform: translateY(-50%) !important;
+        gap: 6px !important;
+    }
+
+    /* 6. header布局 */
+    .header {
+        justify-content: flex-end !important;
+    }
+}

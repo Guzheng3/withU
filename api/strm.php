@@ -82,7 +82,7 @@ function strm_json($data, int $code = 200)
 // ---------- 配置：后端地址 + 内部 JWT ----------
 function strm_backend_base(): string
 {
-    return rtrim((string)getenv('STRM_BACKEND_URL') ?: 'http://127.0.0.1:8080', '/');
+    return rtrim((string)getenv('STRM_BACKEND_URL') ?: 'http://127.0.0.1:8081', '/');
 }
 
 function strm_jwt_path(): string

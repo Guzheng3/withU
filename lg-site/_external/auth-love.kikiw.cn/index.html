@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no"/>
+    <title>LGNewUi-Auth - 情侣小站在线授权系统</title>
+    <meta name="description" content="LGNewUI是一个专注于情侣和爱情的网站，提供了多种功能来帮助用户记录和分享他们的恋爱故事。该网站具有丰富的互动性和个性化设置选项，旨在为情侣用户提供一个温馨、浪漫的程序。">
+    <meta name="keyword" content="LGNewUi,情侣小站,LGNewUi-Pro,情侣小站付费版,情侣记录,情侣网站,情侣博客">
+    <meta name="author" content="nathan">
+    <link href="/static/template/Light-Year/css/bootstrap.min.css" rel="stylesheet">
+    <link href="/static/template/Light-Year/css/materialdesignicons.min.css" rel="stylesheet">
+    <link href="/static/template/Light-Year/css/style.min.css" rel="stylesheet">
+    <link href="/static/js/jconfirm/jquery-confirm.min.css" rel="stylesheet">
+    <link href="/static/libs/nprogress/nprogress.css" rel="stylesheet">
+    <style>
+        .nathan_center{
+            text-align: center;
+        }
+        .logo-header > img {
+            margin: 100px 0;
+            width: 210px;
+            height: 36px;
+        }
+        .site-content {
+            margin: 0 20%;
+            width: 60%;
+        }
+        .auth-nav > a {
+            margin-left: 5px;
+        }
+        @media (max-width: 769px) {
+            .site-content {
+                margin: 0;
+                width: 100%;
+            }
+            .logo-header > img {
+                margin: 20px 0;
+            }
+            .auth-nav > a {
+                margin-bottom: 5px;
+            }
+        }
+    </style>
+</head>
+<body>
+<div class="lyear-layout-web">
+    <div class="lyear-layout-container">
+        <div class="logo-header text-center">
+            <img src="https://blog.kikiw.cn/kiki/logo@300x100.svg">
+        </div>
+        <div class="container-fluid site-content">
+            <div class="card">
+                <div class="card-body text-center auth-nav" style="padding: 32px 0;border-top: 5px solid #007bff;">
+                    <a class="btn btn-danger" href="/index/Index/index.html">授权查询</a>
+                    <a class="btn btn-info" href="/index/Index/query_agent.html">代理查询</a>
+                    <a class="btn btn-info" href="/index/Index/replace_auth.html">更换授权</a>
+                    <a class="btn btn-info" href="/index/Index/create_auth.html">自助授权</a>
+                    <a class="btn btn-info" href="/index/Index/down_app.html">下载程序</a>
+                    <a class="btn btn-info" href="/user/index/login.html">用户登录</a>
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-header">
+                    <h4>授权查询</h4>
+                </div>
+                <div class="card-body">
+                    <form>
+                        <div class="form-group">
+                            <label>应用：</label>
+                            <select class="form-control" name="appid">
+                                <option value="">选择应用</option>
+                                                                <option value="1">应用名称：LGNewUi - 作者：Ki</option>
+                                                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>授权域名：</label>
+                            <input class="form-control" placeholder="请输入您的授权域名" type="text" name="url">
+                        </div>
+                        <div class="form-group text-center">
+                            <button type="submit" id="query_auth" class="btn btn-label btn-info"><label><i class="mdi mdi-checkbox-marked-circle-outline"></i></label> 立即查询</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+                        <div class="card">
+                <div class="card-header">
+                    <h4>系统公告</h4>
+                </div>
+                <div class="card-body">
+                    欢迎使用LGNewUi情侣小站授权系统                </div>
+            </div>
+                        <div class="sidebar-footer nathan_center">
+    <p>
+    <a href="https://beian.miit.gov.cn/" target="_blank"  rel="nofollow"><img src="/static/images/icp.png" style="height: 2em; ">&nbsp;备案号：粤ICP备2021037776号</a>
+  </p>
+    <p>Copyright © 2026 <a href="/">LGNewUi-Auth</a> All right reserved.</p>
+  <p>一觉醒来以为我长高了，起来一看原来是我被子盖横了。</p>
+  <a href="https://www.aliyun.com/" target="_blank"  rel="nofollow"><img src="/static/images/qcloud.svg" alt="NanYiNet" style="height: 1.0em;"></a>
+  <a href="https://www.aliyun.com/" target="_blank"  rel="nofollow"><img src="/static/images/aliyun.png" alt="NanYiNet" style="height: 1.0em; "></a>
+  <a href="https://bt.cn/" target="_blank"  rel="nofollow"><img src="/static/images/bt.png" alt="NanYiNet" style="height: 1.0em; "></a>
+</div>
+        </div>
+    </div>
+</div>
+<script type="text/javascript" src="/static/layer/jquery.js"></script>
+<script type="text/javascript" src="/static/layer/layer.min.js"></script>
+<script type="text/javascript" src="/static/template/Light-Year/js/jquery.min.js"></script>
+<script type="text/javascript" src="/static/template/Light-Year/js/bootstrap.min.js"></script>
+<script type="text/javascript" src="/static/template/Light-Year/js/perfect-scrollbar.min.js"></script>
+<script type="text/javascript" src="/static/template/Light-Year/js/main.min.js"></script>
+<script type="text/javascript" src="/static/js/jconfirm/main.js"></script>
+<script type="text/javascript" src="/static/js/jconfirm/jquery-confirm.min.js"></script>
+<script type="text/javascript" src="/static/js/Nathan_Auth_T2.js"></script>
+<script type="text/javascript" src="/static/libs/nprogress/nprogress.js"></script>
+<script>
+    NProgress.start();
+    function neeprog() {
+        NProgress.done();
+    }
+    window.onload=neeprog;
+</script>
+</body>
+</html>

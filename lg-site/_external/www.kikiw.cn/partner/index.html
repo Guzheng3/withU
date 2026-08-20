@@ -1,0 +1,967 @@
+<!DOCTYPE html>
+<html lang="zh-CN" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>LGNewUi 授权商合作计划 · 官方高级合作伙伴 · Partner Program</title>
+
+    <!-- ============ 基础 SEO ============ -->
+    <meta name="description" content="LGNewUi 授权商合作计划 · 了解合作模式、价格、权益与规则。支持限期挑战合作（3 天 10 单赢身份）与直接购买授权商身份（998 元起），通过推广 LGNewUi 授权获得长期收益。">
+    <meta name="keywords" content="LGNewUi 授权商, 授权商合作, LGNewUi 代理, 情侣小站代理, Partner Program, 限期挑战, 官方授权, Ki, 代理招募">
+    <meta name="author" content="Ki">
+    <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1">
+    <meta name="googlebot" content="index, follow">
+    <meta name="bingbot" content="index, follow">
+    <meta name="theme-color" content="#050505">
+    <meta name="color-scheme" content="dark">
+    <meta name="format-detection" content="telephone=no, email=no, address=no">
+    <meta name="referrer" content="no-referrer-when-downgrade">
+    <link rel="canonical" href="https://www.kikiw.cn/partner/">
+
+    <!-- ============ Open Graph (微信 / Facebook 分享) ============ -->
+    <meta property="og:type" content="website">
+    <meta property="og:locale" content="zh_CN">
+    <meta property="og:site_name" content="LGNewUi">
+    <meta property="og:title" content="LGNewUi 授权商合作计划 · 官方高级合作伙伴">
+    <meta property="og:description" content="面向有客户资源、社群资源或推广能力的合作伙伴开放。支持限期挑战合作，也可直接购买授权商身份，通过推广 LGNewUi 授权获得长期收益。">
+    <meta property="og:url" content="https://www.kikiw.cn/partner/">
+    <meta property="og:image" content="https://www.kikiw.cn/assets/img/logo.png">
+    <meta property="og:image:width" content="500">
+    <meta property="og:image:height" content="500">
+    <meta property="og:image:alt" content="LGNewUi Logo">
+
+    <!-- ============ Twitter Card ============ -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="LGNewUi 授权商合作计划 · 官方高级合作伙伴">
+    <meta name="twitter:description" content="面向有客户资源、社群资源或推广能力的合作伙伴开放。">
+    <meta name="twitter:image" content="https://www.kikiw.cn/assets/img/logo.png">
+
+    <!-- ============ DNS 预连接 ============ -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+    <!-- ============ 结构化数据 (面包屑 + Offer) ============ -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@graph": [
+        {
+          "@type": "BreadcrumbList",
+          "itemListElement": [
+            { "@type": "ListItem", "position": 1, "name": "首页", "item": "https://www.kikiw.cn/" },
+            { "@type": "ListItem", "position": 2, "name": "授权商合作计划", "item": "https://www.kikiw.cn/partner/" }
+          ]
+        },
+        {
+          "@type": "Offer",
+          "name": "LGNewUi 授权商身份",
+          "description": "成为 LGNewUi 授权商，享受官方进货价 + 推广收益",
+          "price": "998",
+          "priceCurrency": "CNY",
+          "url": "https://www.kikiw.cn/partner/",
+          "availability": "https://schema.org/InStock",
+          "seller": { "@type": "Person", "name": "Ki" }
+        }
+      ]
+    }
+    </script>
+
+    <!-- ============ Tailwind CSS (本地预构建) ============ -->
+    <link rel="stylesheet" href="../assets/css/tailwind.css?v=2.2.2">
+
+    <!-- ============ Partner 页专用样式 (抽离自内联) ============ -->
+    <link rel="stylesheet" href="../assets/css/partner.css?v=2.2.2">
+
+    <!-- ============ Lucide Icons (本地) ============ -->
+    <script src="../assets/js/lucide.min.js?v=2.2.2" defer></script>
+
+    <!-- ============ Google Fonts: Inter ============ -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body class="relative min-h-screen overflow-x-hidden selection:bg-gray-700 selection:text-white">
+
+    <!-- 背景装饰 (去除蓝色光晕，改为极微弱的纯白高光) -->
+    <div class="fixed inset-0 z-[-1] bg-grid"></div>
+    <div class="fixed top-[-20%] left-[-10%] w-[50%] h-[50%] rounded-full bg-white/5 blur-[120px] z-[-1] pointer-events-none"></div>
+
+    <!-- 顶部导航栏 (官网同款 iOS Pill Tab Bar + 滚动高亮) -->
+    <nav class="fixed top-0 left-0 w-full z-50 transition-all duration-300 bg-black/40 backdrop-blur-md border-b border-white/5">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 md:h-20 flex items-center justify-between">
+            <!-- Logo -->
+            <a href="#hero" class="flex-shrink-0 flex items-center hover:opacity-80 transition-opacity" aria-label="LGNewUi">
+                <img src="../assets/img/logo.png" alt="LGNewUi" class="h-8 md:h-9 w-auto select-none" draggable="false" />
+            </a>
+
+            <!-- Desktop Tab Bar (iOS pill) -->
+            <div class="hidden md:flex items-center">
+                <div class="flex items-center bg-white/5 rounded-full px-2 py-1.5 border border-white/5 backdrop-blur-sm relative">
+                    <div id="nav-pill" class="absolute top-1.5 bottom-1.5 bg-white/10 rounded-full transition-all duration-500 ease-[cubic-bezier(0.25,0.8,0.25,1)] z-0 hidden md:block"></div>
+                    <a href="#hero" class="nav-link relative z-10 px-5 py-2 text-xs font-bold text-gray-300 hover:text-white rounded-full transition-all">首页</a>
+                    <a href="#pricing" class="nav-link relative z-10 px-5 py-2 text-xs font-bold text-gray-300 hover:text-white rounded-full transition-all">价格</a>
+                    <a href="#models" class="nav-link relative z-10 px-5 py-2 text-xs font-bold text-gray-300 hover:text-white rounded-full transition-all">合作模式</a>
+                    <a href="#rules" class="nav-link relative z-10 px-5 py-2 text-xs font-bold text-gray-300 hover:text-white rounded-full transition-all">规则</a>
+                    <a href="#agreement" class="nav-link relative z-10 px-5 py-2 text-xs font-bold text-gray-300 hover:text-white rounded-full transition-all">协议</a>
+                    <a href="#faq" class="nav-link relative z-10 px-5 py-2 text-xs font-bold text-gray-300 hover:text-white rounded-full transition-all">FAQ</a>
+                </div>
+            </div>
+
+            <!-- Right Actions -->
+            <div class="flex items-center gap-1 md:gap-2">
+                <!-- 官方网站 · 图标按钮 (参考官网 Gitee 图标的极简风格) -->
+                <a href="/" target="_blank" rel="noopener noreferrer"
+                    class="hidden md:flex items-center justify-center w-9 h-9 rounded-full text-gray-400 hover:text-white hover:bg-white/5 transition-colors"
+                    title="LGNEWUI 官方网站" aria-label="官方网站">
+                    <i data-lucide="external-link" class="-arrow-square-out w-4 h-4"></i>
+                </a>
+                <!-- 咨询合作 · 主 CTA (精简体, 无 glow) -->
+                <button class="open-contact-modal hidden md:inline-flex items-center justify-center px-4 py-2 text-xs font-semibold text-black bg-white rounded-full hover:bg-gray-200 active:scale-95 transition-all gap-1.5">
+                    <i data-lucide="headphones" class="-headphones w-3.5 h-3.5"></i>
+                    <span>咨询合作</span>
+                </button>
+                <!-- Mobile menu button -->
+                <button id="mobile-menu-btn" class="md:hidden text-brand-muted hover:text-white focus:outline-none" aria-label="菜单">
+                    <i data-lucide="menu" class="-list w-6 h-6"></i>
+                </button>
+            </div>
+        </div>
+
+        <!-- 移动端菜单 -->
+        <div id="mobile-menu" class="hidden md:hidden bg-brand-card border-b border-brand-border">
+            <div class="px-2 pt-2 pb-3 space-y-1 sm:px-3">
+                <a href="/" target="_blank" rel="noopener noreferrer" class="flex items-center gap-2 px-3 py-2 rounded-md text-base font-medium text-white hover:bg-brand-cardhover">
+                    官方网站 <i data-lucide="external-link" class="-arrow-square-out w-4 h-4 text-brand-muted"></i>
+                </a>
+                <a href="#pricing" class="block px-3 py-2 rounded-md text-base font-medium text-brand-muted hover:text-white hover:bg-brand-cardhover">价格说明</a>
+                <a href="#models" class="block px-3 py-2 rounded-md text-base font-medium text-brand-muted hover:text-white hover:bg-brand-cardhover">合作模式</a>
+                <a href="#rules" class="block px-3 py-2 rounded-md text-base font-medium text-brand-muted hover:text-white hover:bg-brand-cardhover">授权规则</a>
+                <a href="#agreement" class="block px-3 py-2 rounded-md text-base font-medium text-brand-muted hover:text-white hover:bg-brand-cardhover">授权商协议</a>
+                <a href="#faq" class="block px-3 py-2 rounded-md text-base font-medium text-brand-muted hover:text-white hover:bg-brand-cardhover">常见问题</a>
+                <button class="open-contact-modal w-full flex items-center justify-center gap-2 mt-4 px-4 py-3 font-medium text-white bg-brand-border rounded-md hover:bg-gray-700">
+                    <i data-lucide="qr-code" class="-qr-code w-4 h-4"></i> 咨询合作
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- 首屏 Hero 区域 -->
+    <section id="hero" class="pt-32 pb-20 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto relative">
+        <div class="text-center max-w-3xl mx-auto mb-16">
+            <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-brand-border/50 border border-brand-border text-xs font-medium text-brand-muted mb-6">
+                <i data-lucide="medal" class="-medal w-4 h-4"></i>
+                <span>官方正版授权合作</span>
+            </div>
+            <h1 class="text-4xl sm:text-5xl lg:text-6xl font-bold tracking-tight text-gradient mb-6 leading-tight">
+                LGNEWUI 授权商合作计划
+            </h1>
+            <p class="text-lg text-brand-muted mb-8 leading-relaxed">
+                面向有客户资源、社群资源或推广能力的合作伙伴开放。支持限期挑战合作，也可直接购买授权商身份，通过推广 LGNEWUI 授权获得长期收益。
+            </p>
+            <div class="flex flex-col sm:flex-row gap-4 justify-center">
+                <button class="open-contact-modal inline-flex items-center justify-center px-6 py-3 text-base font-semibold text-black bg-white rounded-full hover:bg-gray-200 active:scale-[0.98] transition-all duration-300 shadow-[0_0_25px_rgba(255,255,255,0.18)] hover:shadow-[0_0_30px_rgba(255,255,255,0.28)] gap-2 group">
+                    <span>立即咨询合作</span>
+                    <i data-lucide="qr-code" class="-qr-code w-4 h-4 text-gray-700 group-hover:text-black transition-colors"></i>
+                </button>
+                <a href="#pricing" class="inline-flex items-center justify-center px-6 py-3 text-base font-medium text-white bg-transparent border border-brand-border rounded-full hover:bg-brand-cardhover hover:border-white/40 transition-colors gap-2 group">
+                    <span>查看价格规则</span>
+                    <i data-lucide="arrow-right" class="-arrow-right w-4 h-4 text-brand-muted group-hover:text-white transition-colors"></i>
+                </a>
+            </div>
+            <p class="mt-6 text-sm text-brand-muted/70 flex items-center justify-center gap-2">
+                <i data-lucide="info" class="-info w-4 h-4"></i>
+                授权为永久授权，每个授权仅限一个用户/账号使用
+            </p>
+        </div>
+
+        <!-- 数据卡片网格 -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+            <div class="glass-card p-6 rounded-xl hover:bg-brand-cardhover transition-colors">
+                <div class="text-brand-muted text-sm font-medium mb-2">原价授权</div>
+                <div class="text-2xl font-bold text-white mb-1">298 <span class="text-base font-normal text-brand-muted">元 / 个</span></div>
+                <div class="text-xs text-brand-muted/80">标准市场零售价</div>
+            </div>
+            <div class="glass-card p-6 rounded-xl hover:bg-brand-cardhover transition-colors">
+                <div class="text-brand-muted text-sm font-medium mb-2">学生优惠价</div>
+                <div class="text-2xl font-bold text-white mb-1">260 <span class="text-base font-normal text-brand-muted">元 / 个</span></div>
+                <div class="text-xs text-brand-muted/80">需提供学生身份凭证</div>
+            </div>
+            <div class="glass-card p-6 rounded-xl border-gray-600/30 bg-white/5 hover:bg-white/10 transition-colors relative overflow-hidden">
+                <div class="absolute top-0 right-0 bg-white/10 text-white text-[10px] px-2 py-1 font-bold rounded-bl-lg">核心利润点</div>
+                <div class="text-white text-sm font-medium mb-2">授权商补充额度</div>
+                <div class="text-2xl font-bold text-white mb-1">150 <span class="text-base font-normal text-brand-muted">元 / 个</span></div>
+                <div class="text-xs text-brand-muted/80">成为授权商后的专享底价</div>
+            </div>
+            <div class="glass-card p-6 rounded-xl border-gray-500/30 hover:bg-brand-cardhover transition-colors">
+                <div class="text-brand-muted text-sm font-medium mb-2">授权商身份</div>
+                <div class="text-2xl font-bold text-white mb-1">998 <span class="text-base font-normal text-brand-muted">元</span></div>
+                <div class="text-xs text-brand-muted/80">直接成为正式授权商，赠送 3 个授权额度</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 价格说明模块 -->
+    <section id="pricing" class="py-20 bg-[#0a0a0a] border-y border-white/5">
+        <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-12">
+                <h2 class="text-3xl font-bold text-white mb-4">透明清晰的价格体系</h2>
+                <p class="text-brand-muted">LGNEWUI 授权价格和授权商补充额度价格统一透明，合作前请确认以下价格规则。</p>
+            </div>
+            
+            <div class="glass-card rounded-2xl overflow-hidden">
+                <div class="overflow-x-auto">
+                    <table class="w-full min-w-[640px] text-left border-collapse">
+                        <thead>
+                            <tr class="bg-brand-card border-b border-brand-border text-sm text-brand-muted">
+                                <th class="p-5 font-medium whitespace-nowrap">项目</th>
+                                <th class="p-5 font-medium whitespace-nowrap">价格</th>
+                                <th class="p-5 font-medium">说明</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-brand-border/50 text-sm">
+                            <tr class="hover:bg-brand-cardhover/50 transition-colors">
+                                <td class="p-5 text-white font-medium whitespace-nowrap align-middle">原价授权</td>
+                                <td class="p-5 text-white text-lg whitespace-nowrap align-middle">298 元 <span class="text-brand-muted text-sm">/ 个</span></td>
+                                <td class="p-5 text-brand-muted leading-relaxed align-middle">普通用户购买价格，授权开通后永久有效。</td>
+                            </tr>
+                            <tr class="hover:bg-brand-cardhover/50 transition-colors">
+                                <td class="p-5 text-white font-medium whitespace-nowrap align-middle">学生优惠价</td>
+                                <td class="p-5 text-white text-lg whitespace-nowrap align-middle">260 元 <span class="text-brand-muted text-sm">/ 个</span></td>
+                                <td class="p-5 text-brand-muted leading-relaxed align-middle">仅限符合学生身份的用户购买，必要时需提供学生身份凭证。</td>
+                            </tr>
+                            <tr class="bg-white/5 hover:bg-white/10 transition-colors">
+                                <td class="p-5 text-white font-medium whitespace-nowrap align-middle">
+                                    <span class="inline-flex items-center gap-2">
+                                        授权商补充额度
+                                        <i data-lucide="zap" class="-lightning w-4 h-4"></i>
+                                    </span>
+                                </td>
+                                <td class="p-5 text-white text-lg font-bold whitespace-nowrap align-middle">150 元 <span class="text-brand-muted text-sm font-normal">/ 个</span></td>
+                                <td class="p-5 text-brand-muted leading-relaxed align-middle">成为授权商后，后续补充授权额度的统一成本价。利润空间来自于差价。</td>
+                            </tr>
+                            <tr class="hover:bg-brand-cardhover/50 transition-colors">
+                                <td class="p-5 text-white font-medium whitespace-nowrap align-middle">购买授权商身份</td>
+                                <td class="p-5 text-white text-lg whitespace-nowrap align-middle">998 元</td>
+                                <td class="p-5 text-brand-muted leading-relaxed align-middle">一次性购买即可成为 LGNEWUI 正式授权商，<span class="text-white">并赠送 3 个授权额度</span>。</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 两种合作模式模块 -->
+    <section id="models" class="py-20 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
+        <div class="text-center mb-16">
+            <h2 class="text-3xl font-bold text-white mb-4">两种合作模式</h2>
+            <p class="text-brand-muted max-w-2xl mx-auto">你可以先通过限期挑战测试推广能力，也可以直接购买授权商身份长期参与合作。按需选择，无需盲目投入。</p>
+        </div>
+
+        <div class="grid md:grid-cols-2 gap-8 mb-16">
+            <!-- 模式一 -->
+            <div class="glass-card rounded-2xl p-8 relative overflow-hidden flex flex-col h-full border border-brand-border">
+                <div class="absolute inset-x-0 top-0 h-[1px] bg-gradient-to-r from-transparent via-gray-400 to-transparent opacity-50"></div>
+                <div class="mb-6 relative z-10">
+                    <span class="px-3 py-1 bg-gray-800 text-gray-300 text-xs font-medium rounded-md mb-4 inline-block">模式一</span>
+                    <h3 class="text-2xl font-bold text-white mb-2">限期挑战型合作</h3>
+                    <p class="text-brand-muted text-sm">适合第一次合作、想先尝试推广能力、不想直接付费买身份的伙伴。</p>
+                </div>
+                
+                <div class="flex-grow space-y-6 relative z-10">
+                    <div>
+                        <h4 class="text-sm font-semibold text-white mb-3 flex items-center gap-2">
+                            <i data-lucide="target" class="-target w-4 h-4 text-brand-muted"></i> 核心目标
+                        </h4>
+                        <div class="bg-black/30 rounded-lg p-4 text-sm text-gray-300 border border-brand-border">
+                            <strong class="text-white">3 天内完成 10 个有效授权成交。</strong>
+                            <p class="mt-2 text-xs text-brand-muted">有效成交指用户已完成付款并成功开通。退款、取消、异常订单不计入。</p>
+                        </div>
+                    </div>
+                    
+                    <div>
+                        <h4 class="text-sm font-semibold text-white mb-3 flex items-center gap-2">
+                            <i data-lucide="gift" class="-gift w-4 h-4 text-brand-muted"></i> 挑战福利与返利
+                        </h4>
+                        <ul class="space-y-3 text-sm text-brand-muted">
+                            <li class="flex items-start gap-2">
+                                <i data-lucide="check" class="-check w-4 h-4 mt-0.5 text-gray-400 shrink-0"></i>
+                                <span>参与即 <strong class="text-white">赠送 1 个</strong> LGNEWUI 授权</span>
+                            </li>
+                            <li class="flex items-start gap-2">
+                                <i data-lucide="check" class="-check w-4 h-4 mt-0.5 text-gray-400 shrink-0"></i>
+                                <span>完成 10 单后，<strong class="text-white">按学生优惠价统一返现 260 元</strong>（相当于返利 1 个授权的金额）</span>
+                            </li>
+                            <li class="flex items-start gap-2">
+                                <i data-lucide="check" class="-check w-4 h-4 mt-0.5 text-gray-400 shrink-0"></i>
+                                <span>3 天内成功完成，额外 <strong class="text-white">赠送 1 个授权额度</strong>（价值 150 元）</span>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 模式二 -->
+            <div class="glass-card rounded-2xl p-8 relative overflow-hidden flex flex-col h-full border border-brand-border">
+                <div class="absolute inset-x-0 top-0 h-[1px] bg-gradient-to-r from-transparent via-gray-200 to-transparent"></div>
+                <div class="absolute top-0 right-0 w-32 h-32 bg-white/5 blur-[50px] rounded-full pointer-events-none"></div>
+                <div class="absolute top-4 right-4 text-white opacity-10">
+                    <i data-lucide="crown" class="-crown w-24 h-24"></i>
+                </div>
+                <div class="mb-6 relative z-10">
+                    <span class="px-3 py-1 bg-white/20 text-white text-xs font-medium rounded-md mb-4 inline-block">模式二 · 重点推荐</span>
+                    <h3 class="text-2xl font-bold text-white mb-2">直接购买授权商身份</h3>
+                    <p class="text-brand-muted text-sm">适合想长期推广、有稳定渠道、正式成为 LGNEWUI 授权商的伙伴。</p>
+                </div>
+                
+                <div class="flex-grow space-y-6 relative z-10">
+                    <div class="flex items-baseline gap-2 mb-6">
+                        <span class="text-4xl font-bold text-white">998</span>
+                        <span class="text-brand-muted">元</span>
+                    </div>
+
+                    <div>
+                        <h4 class="text-sm font-semibold text-white mb-3 flex items-center gap-2">
+                            <i data-lucide="star" class="-star w-4 h-4 text-gray-300"></i> 专属身份与额度
+                        </h4>
+                        <ul class="space-y-3 text-sm text-brand-muted">
+                            <li class="flex items-start gap-2">
+                                <i data-lucide="check" class="-check w-4 h-4 mt-0.5 text-gray-300 shrink-0"></i>
+                                <span>立即获得 LGNEWUI 正式授权商身份</span>
+                            </li>
+                            <li class="flex items-start gap-2">
+                                <i data-lucide="check" class="-check w-4 h-4 mt-0.5 text-gray-300 shrink-0"></i>
+                                <span><strong class="text-white">赠送 3 个授权额度</strong>（可自用或出售给客户）</span>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <div>
+                        <h4 class="text-sm font-semibold text-white mb-3 flex items-center gap-2">
+                            <i data-lucide="trending-up" class="-trend-up w-4 h-4 text-gray-300"></i> 长期收益模式
+                        </h4>
+                        <div class="bg-white/5 border border-white/10 rounded-lg p-4">
+                            <p class="text-sm text-brand-muted"><strong class="text-white">解锁 150 元 / 个的专享补额底价</strong></p>
+                            <p class="text-xs text-brand-muted/80 mt-2 leading-relaxed">
+                                成为授权商后，可按照官方价格体系长期推广销售，通过授权进价与终端售价之间的差价，获取丰厚的长线收益。
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 模式对比表 -->
+        <div id="compare" class="glass-card rounded-2xl overflow-hidden mt-8">
+            <div class="px-6 py-5 border-b border-brand-border">
+                <h3 class="text-lg font-bold text-white">合作模式对比一览</h3>
+            </div>
+            <div class="overflow-x-auto">
+                <table class="w-full min-w-[720px] text-left border-collapse text-sm">
+                    <thead>
+                        <tr class="bg-black/30 border-b border-brand-border text-brand-muted">
+                            <th class="p-4 font-medium w-1/4">对比项</th>
+                            <th class="p-4 font-medium w-[37.5%] border-l border-brand-border/50">限期挑战型合作</th>
+                            <th class="p-4 font-medium w-[37.5%] border-l border-brand-border/50">直接购买授权商身份</th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-brand-border/50">
+                        <tr class="hover:bg-brand-cardhover/30">
+                            <td class="p-4 text-brand-muted">适合对象</td>
+                            <td class="p-4 text-white border-l border-brand-border/50">想先尝试推广的人</td>
+                            <td class="p-4 text-white border-l border-brand-border/50">想长期做代理的人</td>
+                        </tr>
+                        <tr class="hover:bg-brand-cardhover/30">
+                            <td class="p-4 text-brand-muted">加入方式</td>
+                            <td class="p-4 text-white border-l border-brand-border/50">参与限期挑战</td>
+                            <td class="p-4 text-white font-medium border-l border-brand-border/50">支付 998 元购买身份</td>
+                        </tr>
+                        <tr class="hover:bg-brand-cardhover/30">
+                            <td class="p-4 text-brand-muted">核心目标</td>
+                            <td class="p-4 text-white border-l border-brand-border/50">3 天内完成 10 个有效成交</td>
+                            <td class="p-4 text-white border-l border-brand-border/50">直接成为授权商</td>
+                        </tr>
+                        <tr class="hover:bg-brand-cardhover/30">
+                            <td class="p-4 text-brand-muted">赠送权益</td>
+                            <td class="p-4 text-white border-l border-brand-border/50">赠送 1 个授权</td>
+                            <td class="p-4 text-white border-l border-brand-border/50">赠送 3 个授权额度</td>
+                        </tr>
+                        <tr class="hover:bg-brand-cardhover/30">
+                            <td class="p-4 text-brand-muted">返利规则</td>
+                            <td class="p-4 text-white border-l border-brand-border/50">完成 10 单后返 1 个授权的钱</td>
+                            <td class="p-4 text-white border-l border-brand-border/50 text-brand-muted">无额外返利，除非另有活动</td>
+                        </tr>
+                        <tr class="hover:bg-brand-cardhover/30">
+                            <td class="p-4 text-brand-muted">后续补额度</td>
+                            <td class="p-4 text-white border-l border-brand-border/50 text-brand-muted">按授权商规则执行</td>
+                            <td class="p-4 text-white font-bold border-l border-brand-border/50">150 元 / 个</td>
+                        </tr>
+                        <tr class="hover:bg-brand-cardhover/30">
+                            <td class="p-4 text-brand-muted">退款规则</td>
+                            <td class="p-4 text-brand-muted border-l border-brand-border/50">赠送 / 返现的授权额度不支持折现</td>
+                            <td class="p-4 text-brand-muted border-l border-brand-border/50">身份费用和授权额度均不支持退款</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </section>
+
+    <!-- 规则与条款区域 (整合) -->
+    <section id="rules" class="py-20 bg-[#0a0a0a] border-y border-white/5">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid lg:grid-cols-2 gap-12">
+                
+                <!-- 左侧：基础规则 -->
+                <div class="space-y-8">
+                    <!-- 授权额度规则 -->
+                    <div>
+                        <h3 class="text-xl font-bold text-white mb-4 flex items-center gap-2">
+                            <i data-lucide="layers" class="-stack w-5 h-5 text-gray-400"></i>
+                            授权额度规则
+                        </h3>
+                        <div class="glass-card p-6 rounded-xl text-sm text-brand-muted space-y-3">
+                            <p class="flex items-start gap-2">
+                                <span class="block w-1.5 h-1.5 rounded-full bg-gray-500 mt-1.5 shrink-0"></span>
+                                每成功开通 1 个用户授权，将消耗 1 个授权额度。
+                            </p>
+                            <p class="flex items-start gap-2 text-white">
+                                <span class="block w-1.5 h-1.5 rounded-full bg-red-500 mt-1.5 shrink-0"></span>
+                                授权额度一经购买或赠送，不支持退款。不支持折现、提现或兑换现金。
+                            </p>
+                            <p class="flex items-start gap-2">
+                                <span class="block w-1.5 h-1.5 rounded-full bg-gray-500 mt-1.5 shrink-0"></span>
+                                授权额度仅用于 LGNEWUI 授权开通。
+                            </p>
+                            <p class="flex items-start gap-2">
+                                <span class="block w-1.5 h-1.5 rounded-full bg-gray-500 mt-1.5 shrink-0"></span>
+                                是否能够卖出，需要授权商自行负责推广和成交。
+                            </p>
+                            <div class="mt-4 p-3 bg-black/40 border border-gray-800 rounded text-xs text-gray-400">
+                                <i data-lucide="alert-circle" class="-warning-circle w-4 h-4 inline-block mr-1 mb-0.5"></i>
+                                建议：不建议盲目大量囤额度，请根据实际客户数量按需购买。
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 有效期与绑定 -->
+                    <div>
+                        <h3 class="text-xl font-bold text-white mb-4 flex items-center gap-2">
+                            <i data-lucide="link" class="-link w-5 h-5 text-gray-400"></i>
+                            授权有效期与账号绑定
+                        </h3>
+                        <div class="glass-card p-6 rounded-xl text-sm text-brand-muted space-y-3">
+                            <p class="font-medium text-white">LGNEWUI 授权为永久授权。</p>
+                            <p>每个授权仅限一个用户 / 一个账号使用，不得转卖、共享、出租或多人共用。</p>
+                            <p>授权开通后原则上不支持随意转让或更换绑定信息。特殊情况需联系官方处理，最终结果以官方判断为准。</p>
+                        </div>
+                    </div>
+
+                    <!-- 多级代理与价格调整 -->
+                    <div class="grid sm:grid-cols-2 gap-4">
+                        <div class="glass-card p-5 rounded-xl border border-brand-border">
+                            <h4 class="text-white font-medium text-sm mb-2 flex items-center gap-2">
+                                <i data-lucide="git-merge" class="-git-merge w-4 h-4 text-gray-400"></i>
+                                暂不开放多级代理
+                            </h4>
+                            <p class="text-xs text-brand-muted leading-relaxed">
+                                仅限本人或团队推广，不得私自招收下级代理或开展多级分销。后续政策以官方通知为准。
+                            </p>
+                        </div>
+                        <div class="glass-card p-5 rounded-xl border border-brand-border">
+                            <h4 class="text-white font-medium text-sm mb-2 flex items-center gap-2">
+                                <i data-lucide="sliders-horizontal" class="-sliders-horizontal w-4 h-4 text-gray-400"></i>
+                                政策与价格调整
+                            </h4>
+                            <p class="text-xs text-brand-muted leading-relaxed">
+                                官方有权根据市场情况调整价格及规则。已购买额度不受后续价格变动影响。
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 右侧：正式协议 -->
+                <div id="agreement" class="bg-brand-card/30 border border-brand-border rounded-2xl p-8 relative shadow-2xl backdrop-blur-sm">
+                    <div class="absolute inset-x-0 top-0 h-[1px] bg-gradient-to-r from-transparent via-gray-600/50 to-transparent"></div>
+                    <div class="mb-6 border-b border-brand-border pb-4">
+                        <h3 class="text-2xl font-bold text-white tracking-wide">授权商合作协议</h3>
+                        <p class="text-sm text-gray-500 mt-2">合作前请务必仔细阅读并同意以下商业规范条款。</p>
+                    </div>
+                    
+                    <ul class="agreement-list text-sm text-gray-300 space-y-3">
+                        <li>授权商不得低于官方规定价格恶意销售。</li>
+                        <li>授权商不得虚假宣传、夸大承诺或误导客户。</li>
+                        <li>授权商不得私自承诺官方未提供的额外服务。</li>
+                        <li>授权商不得转卖、倒卖、共享或违规分发授权。</li>
+                        <li>授权商不得进行恶意低价竞争。</li>
+                        <li>授权商不得通过刷单、虚假成交等方式获取返利或奖励。</li>
+                        <li>授权商不得损害 LGNEWUI 品牌形象。</li>
+                        <li>授权商不得开放或发展下级代理。</li>
+                        <li>授权商需要自行负责自己的推广、成交和客户沟通。</li>
+                        <li>如因授权商虚假宣传、错误承诺、私自降价、误导客户等原因造成纠纷，由授权商自行承担全部责任。</li>
+                    </ul>
+
+                    <!-- 风险提示 (Docs-style callout) -->
+                    <div class="mt-8 p-5 rounded-xl bg-brand-card border border-brand-border">
+                        <div class="flex items-center gap-2 mb-3">
+                            <i data-lucide="octagon-alert" class="-warning-octagon w-4 h-4 text-red-400/90"></i>
+                            <span class="text-[10px] font-mono font-semibold tracking-[0.2em] uppercase text-red-400/90">Risk Notice · 风险提示</span>
+                        </div>
+                        <p class="text-sm text-gray-400 leading-relaxed">
+                            如发现违规行为，LGNEWUI 官方有权随时取消其授权商资格，已购买的授权商身份费用及剩余授权额度费用均不予退款。
+                        </p>
+                    </div>
+
+                    <!-- 触发弹窗的按钮 -->
+                    <div class="mt-8 pt-6 border-t border-brand-border/50 flex justify-center">
+                        <button id="open-agreement-btn" class="px-6 py-3 bg-brand-cardhover hover:bg-gray-800 text-white text-sm font-medium rounded-lg transition-colors border border-brand-border flex items-center gap-2 group">
+                            <i data-lucide="book-open" class="-book-open-text w-4 h-4 text-brand-muted group-hover:text-white transition-colors"></i>
+                            阅读合规承诺书
+                        </button>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- 售后责任说明 -->
+    <section id="after-sales" class="py-20 px-4 sm:px-6 lg:px-8 max-w-5xl mx-auto">
+        <div class="text-center mb-12">
+            <h2 class="text-3xl font-bold text-white mb-4">售后与责任分工</h2>
+            <p class="text-brand-muted">明确官方与授权商的服务边界，共同保障终端用户体验。</p>
+        </div>
+
+        <div class="grid md:grid-cols-2 gap-px bg-brand-border rounded-2xl overflow-hidden glass-card">
+            <div class="bg-brand-card p-8 sm:p-10">
+                <div class="w-12 h-12 rounded-full bg-gray-800 flex items-center justify-center mb-6 border border-gray-700">
+                    <i data-lucide="hard-drive" class="-hard-drives w-6 h-6 text-white"></i>
+                </div>
+                <h3 class="text-lg font-bold text-white mb-6">官方协助处理</h3>
+                <ul class="space-y-4 text-sm text-brand-muted">
+                    <li class="flex items-center gap-3"><i data-lucide="check-circle-2" class="w-4 h-4 text-gray-500"></i> 授权开通审核与下发</li>
+                    <li class="flex items-center gap-3"><i data-lucide="check-circle-2" class="w-4 h-4 text-gray-500"></i> 授权状态验证服务</li>
+                    <li class="flex items-center gap-3"><i data-lucide="check-circle-2" class="w-4 h-4 text-gray-500"></i> 基础使用环境问题协助</li>
+                    <li class="flex items-center gap-3"><i data-lucide="check-circle-2" class="w-4 h-4 text-gray-500"></i> 软件产品自身 Bug 及反馈处理</li>
+                </ul>
+            </div>
+            
+            <div class="bg-brand-card p-8 sm:p-10">
+                <div class="w-12 h-12 rounded-full bg-white/10 flex items-center justify-center mb-6 border border-white/20">
+                    <i data-lucide="users" class="-users w-6 h-6 text-white"></i>
+                </div>
+                <h3 class="text-lg font-bold text-white mb-6">授权商主要负责</h3>
+                <ul class="space-y-4 text-sm text-brand-muted">
+                    <li class="flex items-center gap-3"><i data-lucide="chevron-right" class="-caret-right w-4 h-4 text-gray-400"></i> 潜在客户售前沟通</li>
+                    <li class="flex items-center gap-3"><i data-lucide="chevron-right" class="-caret-right w-4 h-4 text-gray-400"></i> 推广介绍与功能说明</li>
+                    <li class="flex items-center gap-3"><i data-lucide="chevron-right" class="-caret-right w-4 h-4 text-gray-400"></i> 购买流程引导与收款</li>
+                    <li class="flex items-center gap-3"><i data-lucide="chevron-right" class="-caret-right w-4 h-4 text-gray-400"></i> 常见问题基础答疑</li>
+                    <li class="flex items-center gap-3"><i data-lucide="chevron-right" class="-caret-right w-4 h-4 text-gray-400"></i> 协助客户提交授权开通所需信息</li>
+                </ul>
+            </div>
+        </div>
+    </section>
+
+    <!-- FAQ 常见问题 -->
+    <section id="faq" class="py-20 bg-[#0a0a0a] border-y border-white/5">
+        <div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-12">
+                <h2 class="text-3xl font-bold text-white">常见问题 (FAQ)</h2>
+            </div>
+            
+            <div class="space-y-4">
+                <!-- FAQ Item 1 -->
+                <div class="glass-card rounded-lg border border-brand-border overflow-hidden">
+                    <button class="faq-btn w-full px-6 py-4 text-left flex justify-between items-center focus:outline-none">
+                        <span class="font-medium text-white">Q1：LGNEWUI 授权是永久的吗？</span>
+                        <i data-lucide="chevron-down" class="-caret-down w-5 h-5 text-brand-muted transition-transform duration-200"></i>
+                    </button>
+                    <div class="faq-wrapper">
+                        <div class="faq-inner">
+                            <div class="px-6 pb-4 text-sm text-brand-muted leading-relaxed">
+                                是的，LGNEWUI 授权为永久授权。
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- FAQ Item 2 -->
+                <div class="glass-card rounded-lg border border-brand-border overflow-hidden">
+                    <button class="faq-btn w-full px-6 py-4 text-left flex justify-between items-center focus:outline-none">
+                        <span class="font-medium text-white">Q2：一个授权可以几个人用？</span>
+                        <i data-lucide="chevron-down" class="-caret-down w-5 h-5 text-brand-muted transition-transform duration-200"></i>
+                    </button>
+                    <div class="faq-wrapper">
+                        <div class="faq-inner">
+                            <div class="px-6 pb-4 text-sm text-brand-muted leading-relaxed">
+                                每个授权仅限一个用户 / 一个账号使用，不得多人共用、共享或转卖。
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- FAQ Item 3 -->
+                <div class="glass-card rounded-lg border border-brand-border overflow-hidden">
+                    <button class="faq-btn w-full px-6 py-4 text-left flex justify-between items-center focus:outline-none">
+                        <span class="font-medium text-white">Q3：成为授权商后，后续补额度多少钱？</span>
+                        <i data-lucide="chevron-down" class="-caret-down w-5 h-5 text-brand-muted transition-transform duration-200"></i>
+                    </button>
+                    <div class="faq-wrapper">
+                        <div class="faq-inner">
+                            <div class="px-6 pb-4 text-sm text-brand-muted leading-relaxed">
+                                授权商后续补充授权额度统一价格为 150 元 / 个。
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- FAQ Item 4 -->
+                <div class="glass-card rounded-lg border border-brand-border overflow-hidden">
+                    <button class="faq-btn w-full px-6 py-4 text-left flex justify-between items-center focus:outline-none">
+                        <span class="font-medium text-white">Q4：直接购买授权商身份多少钱？</span>
+                        <i data-lucide="chevron-down" class="-caret-down w-5 h-5 text-brand-muted transition-transform duration-200"></i>
+                    </button>
+                    <div class="faq-wrapper">
+                        <div class="faq-inner">
+                            <div class="px-6 pb-4 text-sm text-brand-muted leading-relaxed">
+                                授权商身份售价为 998 元，购买后直接赠送 3 个授权额度。
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- FAQ Item 5 -->
+                <div class="glass-card rounded-lg border border-brand-border overflow-hidden">
+                    <button class="faq-btn w-full px-6 py-4 text-left flex justify-between items-center focus:outline-none">
+                        <span class="font-medium text-white">Q5：授权额度可以退款吗？</span>
+                        <i data-lucide="chevron-down" class="-caret-down w-5 h-5 text-brand-muted transition-transform duration-200"></i>
+                    </button>
+                    <div class="faq-wrapper">
+                        <div class="faq-inner">
+                            <div class="px-6 pb-4 text-sm text-brand-muted leading-relaxed">
+                                不可以。授权额度一经购买或赠送，不支持退款、折现、提现或兑换现金。
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- FAQ Item 6 -->
+                <div class="glass-card rounded-lg border border-brand-border overflow-hidden">
+                    <button class="faq-btn w-full px-6 py-4 text-left flex justify-between items-center focus:outline-none">
+                        <span class="font-medium text-white">Q6：可以发展下级代理吗？</span>
+                        <i data-lucide="chevron-down" class="-caret-down w-5 h-5 text-brand-muted transition-transform duration-200"></i>
+                    </button>
+                    <div class="faq-wrapper">
+                        <div class="faq-inner">
+                            <div class="px-6 pb-4 text-sm text-brand-muted leading-relaxed">
+                                暂不开放多级代理或下级代理体系，授权商不得私自发展下级代理。
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- FAQ Item 7 -->
+                <div class="glass-card rounded-lg border border-brand-border overflow-hidden">
+                    <button class="faq-btn w-full px-6 py-4 text-left flex justify-between items-center focus:outline-none">
+                        <span class="font-medium text-white">Q7：学生价怎么判断？</span>
+                        <i data-lucide="chevron-down" class="-caret-down w-5 h-5 text-brand-muted transition-transform duration-200"></i>
+                    </button>
+                    <div class="faq-wrapper">
+                        <div class="faq-inner">
+                            <div class="px-6 pb-4 text-sm text-brand-muted leading-relaxed">
+                                学生优惠价仅限符合学生身份的用户购买，必要时需要提供学生身份凭证，最终是否适用学生价以 LGNEWUI 官方判断为准。
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- FAQ Item 8 -->
+                <div class="glass-card rounded-lg border border-brand-border overflow-hidden">
+                    <button class="faq-btn w-full px-6 py-4 text-left flex justify-between items-center focus:outline-none">
+                        <span class="font-medium text-white">Q8：授权商可以自己定价吗？</span>
+                        <i data-lucide="chevron-down" class="-caret-down w-5 h-5 text-brand-muted transition-transform duration-200"></i>
+                    </button>
+                    <div class="faq-wrapper">
+                        <div class="faq-inner">
+                            <div class="px-6 pb-4 text-sm text-brand-muted leading-relaxed">
+                                不可以。授权商必须遵守官方价格体系，不得低于官方规定价格恶意销售，违反者官方有权取消其授权商资格。
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- FAQ Item 9 -->
+                <div class="glass-card rounded-lg border border-brand-border overflow-hidden">
+                    <button class="faq-btn w-full px-6 py-4 text-left flex justify-between items-center focus:outline-none">
+                        <span class="font-medium text-white">Q9：如果客户退款，算有效成交吗？</span>
+                        <i data-lucide="chevron-down" class="-caret-down w-5 h-5 text-brand-muted transition-transform duration-200"></i>
+                    </button>
+                    <div class="faq-wrapper">
+                        <div class="faq-inner">
+                            <div class="px-6 pb-4 text-sm text-brand-muted leading-relaxed">
+                                不算。只有用户完成付款，并且授权成功开通后，才算有效成交。退款、取消、异常订单不计入有效成交。
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- FAQ Item 10 -->
+                <div class="glass-card rounded-lg border border-brand-border overflow-hidden">
+                    <button class="faq-btn w-full px-6 py-4 text-left flex justify-between items-center focus:outline-none">
+                        <span class="font-medium text-white">Q10：规则以后会变吗？</span>
+                        <i data-lucide="chevron-down" class="-caret-down w-5 h-5 text-brand-muted transition-transform duration-200"></i>
+                    </button>
+                    <div class="faq-wrapper">
+                        <div class="faq-inner">
+                            <div class="px-6 pb-4 text-sm text-brand-muted leading-relaxed">
+                                LGNEWUI 官方有权根据产品更新、活动政策和市场情况调整价格及合作规则。已购买额度不受已购价格影响。
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 底部 CTA -->
+    <section id="cta" class="py-24 relative overflow-hidden">
+        <!-- 装饰性光晕 -->
+        <div class="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-white/[0.03] via-black to-black z-[-1]"></div>
+        
+        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+            <h2 class="text-3xl sm:text-4xl font-bold text-white mb-6">准备成为 LGNEWUI 授权商了吗？</h2>
+            <p class="text-lg text-brand-muted mb-10 max-w-2xl mx-auto leading-relaxed">
+                无论你是想先参与限期挑战，还是直接购买授权商身份，都可以联系 LGNEWUI 官方了解合作详情。合作前请仔细确认价格、返利规则和授权商协议。
+            </p>
+            <div class="flex flex-col items-center gap-6">
+                <button class="open-contact-modal inline-flex items-center justify-center px-8 py-4 text-lg font-semibold text-black bg-white rounded-full hover:bg-gray-200 active:scale-[0.98] transition-all duration-300 shadow-[0_0_25px_rgba(255,255,255,0.2)] hover:shadow-[0_0_35px_rgba(255,255,255,0.3)] group">
+                    <span>立即咨询合作</span>
+                    <i data-lucide="qr-code" class="-qr-code w-5 h-5 ml-2 text-gray-700 group-hover:text-black transition-colors"></i>
+                </button>
+                <p class="text-xs text-gray-500 max-w-lg">
+                    注：授权额度一经购买或赠送，不支持退款、折现或提现。建议根据实际客户数量购买，不建议盲目囤额度。
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer (官网同款: EN 大标题 + CN 辅助字 + 小圆点 list) -->
+    <footer class="py-10 bg-[#020202] border-t border-white/5">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-12 md:gap-8 mb-16">
+                <!-- 品牌介绍 -->
+                <div class="col-span-2 md:col-span-1">
+                    <a href="#hero" class="inline-flex items-center mb-6" aria-label="LGNewUi">
+                        <img src="../assets/img/logo.png" alt="LGNewUi" class="h-10 w-auto select-none opacity-95" draggable="false" />
+                    </a>
+                    <p class="text-gray-500 text-sm leading-relaxed mb-6">
+                        官方授权商合作计划。<br>
+                        只面向有推广能力的正式合作伙伴。<br>
+                        <span class="text-gray-600 font-mono text-[11px] tracking-wider mt-2 inline-block">Since 2026 · Guangzhou</span>
+                    </p>
+                </div>
+
+                <!-- Cooperation -->
+                <div>
+                    <h4 class="text-white font-bold mb-6 flex items-center gap-2">
+                        Cooperation
+                        <span class="text-[10px] font-mono font-normal text-gray-500 tracking-wider">合作</span>
+                    </h4>
+                    <ul class="space-y-4 text-sm text-gray-500">
+                        <li>
+                            <a href="#models" class="hover:text-white transition-colors inline-flex items-center gap-2.5 group">
+                                <span class="w-1 h-1 rounded-full bg-gray-600 group-hover:bg-white/80 transition-colors flex-shrink-0"></span>
+                                Models 合作模式
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#pricing" class="hover:text-white transition-colors inline-flex items-center gap-2.5 group">
+                                <span class="w-1 h-1 rounded-full bg-gray-600 group-hover:bg-white/80 transition-colors flex-shrink-0"></span>
+                                Pricing 价格说明
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#rules" class="hover:text-white transition-colors inline-flex items-center gap-2.5 group">
+                                <span class="w-1 h-1 rounded-full bg-gray-600 group-hover:bg-white/80 transition-colors flex-shrink-0"></span>
+                                Rules 授权规则
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#faq" class="hover:text-white transition-colors inline-flex items-center gap-2.5 group">
+                                <span class="w-1 h-1 rounded-full bg-gray-600 group-hover:bg-white/80 transition-colors flex-shrink-0"></span>
+                                FAQ 常见问题
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- Network (官方生态) -->
+                <div>
+                    <h4 class="text-white font-bold mb-6 flex items-center gap-2">
+                        Network
+                        <span class="text-[10px] font-mono font-normal text-gray-500 tracking-wider">生态</span>
+                    </h4>
+                    <ul class="space-y-4 text-sm text-gray-500">
+                        <li>
+                            <a href="/" target="_blank" rel="noopener noreferrer" class="hover:text-white transition-colors inline-flex items-center gap-2.5 group">
+                                <span class="w-1 h-1 rounded-full bg-gray-600 group-hover:bg-white/80 transition-colors flex-shrink-0"></span>
+                                Home 官方网站
+                            </a>
+                        </li>
+                        <li>
+                            <a href="https://auth-love.kikiw.cn/" target="_blank" rel="noopener noreferrer" class="hover:text-white transition-colors inline-flex items-center gap-2.5 group">
+                                <span class="w-1 h-1 rounded-full bg-gray-600 group-hover:bg-white/80 transition-colors flex-shrink-0"></span>
+                                Auth 官方授权站
+                            </a>
+                        </li>
+                        <li>
+                            <a href="https://love-really.kikiw.cn/" target="_blank" rel="noopener noreferrer" class="hover:text-white transition-colors inline-flex items-center gap-2.5 group">
+                                <span class="w-1 h-1 rounded-full bg-gray-600 group-hover:bg-white/80 transition-colors flex-shrink-0"></span>
+                                Demo 演示站点
+                            </a>
+                        </li>
+                        <li>
+                            <a href="https://blog.kikiw.cn/" target="_blank" rel="noopener noreferrer" class="hover:text-white transition-colors inline-flex items-center gap-2.5 group">
+                                <span class="w-1 h-1 rounded-full bg-gray-600 group-hover:bg-white/80 transition-colors flex-shrink-0"></span>
+                                Blog 作者博客
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- Contact -->
+                <div>
+                    <h4 class="text-white font-bold mb-6 flex items-center gap-2">
+                        Contact
+                        <span class="text-[10px] font-mono font-normal text-gray-500 tracking-wider">联系</span>
+                    </h4>
+                    <ul class="space-y-4 text-sm text-gray-500">
+                        <li>
+                            <button class="open-contact-modal hover:text-white transition-colors inline-flex items-center gap-2.5 group text-left">
+                                <span class="w-1 h-1 rounded-full bg-gray-600 group-hover:bg-white/80 transition-colors flex-shrink-0"></span>
+                                WeChat 微信 · KiCode_
+                            </button>
+                        </li>
+                        <li>
+                            <span class="inline-flex items-center gap-2.5 group">
+                                <span class="w-1 h-1 rounded-full bg-gray-600 flex-shrink-0"></span>
+                                QQ · 3439780232
+                            </span>
+                        </li>
+                        <li>
+                            <a href="mailto:mail@kikiw.cn" class="hover:text-white transition-colors inline-flex items-center gap-2.5 group">
+                                <span class="w-1 h-1 rounded-full bg-gray-600 group-hover:bg-white/80 transition-colors flex-shrink-0"></span>
+                                Email · mail@kikiw.cn
+                            </a>
+                        </li>
+                        <li>
+                            <button class="open-contact-modal hover:text-white transition-colors inline-flex items-center gap-2.5 group text-left">
+                                <span class="w-1 h-1 rounded-full bg-gray-600 group-hover:bg-white/80 transition-colors flex-shrink-0"></span>
+                                QR Code 查看二维码
+                            </button>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- 底部分隔线 -->
+            <div class="pt-8 border-t border-white/5 flex flex-col md:flex-row justify-between items-center gap-4 text-xs text-gray-600">
+                <div class="flex items-center gap-4">
+                    <span>&copy; <span id="copyright-year"></span> LGNewUi Studio. All rights reserved.</span>
+                </div>
+                <div class="flex flex-wrap items-center gap-x-6 gap-y-2 justify-center">
+                    <a href="#agreement" class="hover:text-white transition-colors">授权商协议</a>
+                    <span class="w-px h-3 bg-white/10"></span>
+                    <a href="https://beian.miit.gov.cn/" target="_blank" rel="noopener noreferrer" class="hover:text-white transition-colors">
+                        粤ICP备 2021037776 号
+                    </a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- 承诺协议弹窗 -->
+    <div id="agreement-modal" class="fixed inset-0 z-[100] flex items-center justify-center bg-black/60 backdrop-blur-sm opacity-0 pointer-events-none transition-opacity duration-300">
+        <div class="modal-content w-full max-w-md mx-4 bg-brand-card border border-brand-border rounded-2xl shadow-2xl relative overflow-hidden">
+            <!-- 顶部发光线 (改为银灰色高级质感) -->
+            <div class="absolute inset-x-0 top-0 h-[1px] bg-gradient-to-r from-transparent via-gray-400/60 to-transparent"></div>
+            
+            <div class="p-6 sm:p-8">
+                <div class="w-12 h-12 rounded-full bg-gray-800 flex items-center justify-center mb-6 border border-gray-700 mx-auto shadow-[0_0_15px_rgba(255,255,255,0.05)]">
+                    <i data-lucide="shield" class="-shield w-6 h-6 text-white"></i>
+                </div>
+                
+                <h3 class="text-xl font-bold text-white text-center mb-5 tracking-wide">授权商合规承诺</h3>
+                
+                <div class="text-sm text-brand-muted space-y-3 mb-8 bg-black/40 p-5 rounded-xl border border-brand-border/50">
+                    <p class="text-white font-medium mb-3">我自愿成为 LGNEWUI 授权合作伙伴，并郑重承诺：</p>
+                    <ul class="list-none space-y-3">
+                        <li class="flex items-start gap-2">
+                            <i data-lucide="check-circle-2" class="w-4 h-4 mt-0.5 text-gray-500 shrink-0"></i>
+                            <span>严格遵守官方价格体系，<strong class="text-white">绝不低价倾销</strong>。</span>
+                        </li>
+                        <li class="flex items-start gap-2">
+                            <i data-lucide="check-circle-2" class="w-4 h-4 mt-0.5 text-gray-500 shrink-0"></i>
+                            <span>诚实守信进行推广，<strong class="text-white">绝不虚假宣传</strong>或过度承诺。</span>
+                        </li>
+                        <li class="flex items-start gap-2">
+                            <i data-lucide="check-circle-2" class="w-4 h-4 mt-0.5 text-gray-500 shrink-0"></i>
+                            <span>合规运营本人渠道，<strong class="text-white">绝不私自发展下级代理</strong>。</span>
+                        </li>
+                    </ul>
+                    <div class="mt-4 pt-4 border-t border-brand-border">
+                        <p class="text-xs text-red-400/80 leading-relaxed">
+                            * 我已知晓并同意：如违反上述承诺，官方有权随时取消我的授权商资格，且已交费用及剩余额度概不退还。
+                        </p>
+                    </div>
+                </div>
+                
+                <div class="flex gap-3">
+                    <button id="close-modal-btn" class="flex-1 px-4 py-2.5 bg-transparent border border-brand-border text-brand-muted rounded-lg hover:text-white hover:bg-brand-cardhover transition-colors text-sm font-medium">
+                        再想想
+                    </button>
+                    <button id="agree-modal-btn" class="flex-1 px-4 py-2.5 bg-white text-black rounded-lg hover:bg-gray-200 transition-colors text-sm font-medium flex justify-center items-center gap-2">
+                        <i data-lucide="check" class="-check w-4 h-4"></i>
+                        我承诺并同意
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 咨询合作 / 二维码弹窗 -->
+    <div id="contact-modal" class="fixed inset-0 z-[100] flex items-center justify-center bg-black/60 backdrop-blur-sm opacity-0 pointer-events-none transition-opacity duration-300">
+        <div class="modal-content w-full max-w-sm mx-4 bg-brand-card border border-brand-border rounded-2xl shadow-2xl relative overflow-hidden">
+            <!-- 顶部发光线 (改为银灰色高级质感) -->
+            <div class="absolute inset-x-0 top-0 h-[1px] bg-gradient-to-r from-transparent via-gray-400/60 to-transparent"></div>
+            
+            <!-- 关闭按钮 -->
+            <button id="close-contact-btn" class="absolute top-4 right-4 text-brand-muted hover:text-white focus:outline-none transition-colors">
+                <i data-lucide="x" class="-x w-5 h-5"></i>
+            </button>
+            
+            <div class="p-8 text-center mt-2">
+                <h3 class="text-xl font-bold text-white mb-2">添加官方客服</h3>
+                <p class="text-sm text-brand-muted mb-6">扫码或复制微信号咨询合作详情</p>
+                
+                <!-- 二维码展示区 (去除了白底和多余边框) -->
+                <div class="w-48 h-48 mx-auto mb-6 flex items-center justify-center">
+                    <img src="../assets/img/qr-wechat.png" alt="LGNEWUI 官方微信二维码" loading="lazy" class="max-w-full max-h-full object-contain">
+                </div>
+                
+                <div class="flex items-center justify-between bg-black/40 border border-brand-border rounded-lg p-3">
+                    <div class="flex items-center gap-2">
+                        <i data-lucide="message-circle" class="-chat-circle w-4 h-4 text-brand-muted"></i>
+                        <span class="text-sm text-gray-200 font-medium tracking-wide" id="contact-wechat-id">KiCode_</span>
+                    </div>
+                    <button id="copy-wechat-btn" class="text-xs font-medium px-3 py-1.5 bg-gray-800 text-gray-300 border border-gray-700 rounded hover:bg-gray-700 hover:text-white transition-colors focus:outline-none">
+                        复制微信号
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 交互脚本 -->
+    <script src="../assets/js/partner.js?v=2.2.2"></script>
+</body>
+</html>

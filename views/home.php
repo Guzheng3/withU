@@ -193,6 +193,11 @@
         </div>
         <?php endforeach; ?>
     </div>
+    <?php else: ?>
+    <div class="withustrm-loveday-empty">
+        <i class="fas fa-heart"></i>
+        <p>还没有纪念日，去后台记录你们的第一个重要日子吧。</p>
+    </div>
     <?php endif; ?>
 </section>
 

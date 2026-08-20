@@ -192,10 +192,14 @@ if ($headerDb && (string)get_setting('front_animation_enabled', '1') !== '1') {
     <link rel="stylesheet" href="/assets/css/style.css?v=withu-logo-20260718">
     <link rel="stylesheet" href="/assets/css/theme.css?v=withu-theme-20260719-3">
     <link rel="stylesheet" href="/assets/css/withu_lg_ui.css?v=withu-lg-20260809-2">
+    <link rel="stylesheet" href="/assets/css/withu_polish.css?v=withu-polish-20260818">
     <link rel="stylesheet" href="/assets/css/withustrm_home.css?v=withustrm-home-20260815">
     <?php if (!empty($isArticleDetail)): ?>
     <link rel="stylesheet" href="/assets/css/article-detail.css">
     <?php endif; ?>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Infant:wght@400;500;600;700&display=swap">
     <link rel="stylesheet" href="https://cdn.bootcdn.net/ajax/libs/font-awesome/6.4.0/css/all.min.css"
           onerror="this.onerror=null;this.href='https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css';">
 </head>
@@ -368,10 +372,6 @@ if ($headerDb && (string)get_setting('front_animation_enabled', '1') !== '1') {
             <a href="/watch.php" class="nav-button lgnewui-nav-island-item gradient-pink">
                 <i class="fas fa-film"></i>
                 <span>同步观影</span>
-            </a>
-            <a href="/travel.php" class="nav-button lgnewui-nav-island-item gradient-blue">
-                <i class="fas fa-cloud-sun"></i>
-                <span>天气旅行</span>
             </a>
             <?php endif; ?>
         </div>

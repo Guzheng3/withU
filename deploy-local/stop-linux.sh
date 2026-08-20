@@ -27,11 +27,11 @@ kill_by_port() {
 }
 
 stop_pidfile withu-php
-kill_by_port 8088 withu-php
+kill_by_port 1314 withu-php
 stop_pidfile strm-bridge
-kill_by_port 3111 strm-bridge
+kill_by_port 3112 strm-bridge
 stop_pidfile strm-backend
-kill_by_port 8080 strm-backend
+kill_by_port 8081 strm-backend
 stop_pidfile mihomo
 stop_pidfile mariadb
 

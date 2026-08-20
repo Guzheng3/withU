@@ -1,0 +1,506 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, shrink-to-fit=no">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge, chrome=1">
+            <meta name="description" content="记录生活 留住感动" />
+<meta name="keywords" content="typecho,php,blog,Ki'sBlog,Ki个人主页,Ki个人博客" />
+<meta name="generator" content="Typecho 1.2.1" />
+<meta name="template" content="Cuteen" />
+<link rel="pingback" href="https://blog.kikiw.cn/index.php/action/xmlrpc" />
+<link rel="EditURI" type="application/rsd+xml" title="RSD" href="https://blog.kikiw.cn/index.php/action/xmlrpc?rsd" />
+<link rel="wlwmanifest" type="application/wlwmanifest+xml" href="https://blog.kikiw.cn/index.php/action/xmlrpc?wlw" />
+<link rel="alternate" type="application/rss+xml" title="Ki'sBlog &raquo; RSS 2.0" href="https://blog.kikiw.cn/index.php/feed/" />
+<link rel="alternate" type="application/rdf+xml" title="Ki'sBlog &raquo; RSS 1.0" href="https://blog.kikiw.cn/index.php/feed/rss/" />
+<link rel="alternate" type="application/atom+xml" title="Ki'sBlog &raquo; ATOM 1.0" href="https://blog.kikiw.cn/index.php/feed/atom/" />
+            <link rel="icon" type="image/png" href="https://blog.kikiw.cn/favicon.ico"><link rel="apple-touch-icon-precomposed" href="https://blog.kikiw.cn/favicon.ico">    <title>Ki'sBlog - 记录生活 留住感动</title>
+            <link href="https://font.sec.miui.com/font/css?family=MiSans:400,700:Chinese_Simplify,Chinese_Traditional,Latin,Numeric&display=swap"
+              rel="stylesheet" media="print" onload="this.media='all'">
+        <link href="https://font.sec.miui.com/font/css?family=Source_Han_Serif:400,600:Chinese_Simplify,Chinese_Traditional,Latin,Numeric&display=swap"
+              rel="stylesheet" media="print" onload="this.media='all'">
+        <link rel="stylesheet" href="https://blog.kikiw.cn/usr/themes/Cuteen/static/css/vendor.min.css">
+            <link title="dark-prism" rel="stylesheet" href="https://blog.kikiw.cn/usr/themes/Cuteen/static/css/prism.css">
+        <div id='LocalizeScript'><script type='text/javascript'>var CuteenConfig = {"theme_version":"5.15(20240520)","index":"https:\/\/blog.kikiw.cn\/index.php","api":"https:\/\/blog.kikiw.cn\/index.php\/cuteen\/api","page_size":"6","category_mid":"null","search_words":"null","post_cid":"null","static_cdn_url":"https:\/\/blog.kikiw.cn\/usr\/themes\/Cuteen\/static","is_login":false,"load_article_mode":"ajax","theme_url":"https:\/\/blog.kikiw.cn\/usr\/themes\/Cuteen","music_id":"2335673654","music_media":"netease","TopIndexArray":"[1,2,3]"};</script></div>    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Ma+Shan+Zheng&family=Pacifico&display=swap">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@700&display=swap" rel="stylesheet">
+</head>
+<script src="https://blog.kikiw.cn/usr/themes/Cuteen/static/js/font_3601434_nup6sgrztd.js"></script>
+<style data-custom-style>
+    .titleki {
+    font-family: 'Pacifico',Arial,'Ma Shan Zheng',Helvetica;
+    font-weight: 400;
+}
+#comments .comment-list p{
+    word-break: break-all;
+}
+.typography blockquote:not(.cuteen-blockquote) {
+    padding: 1rem;
+    padding-left: 1.5rem;
+    line-height: 2em;
+    background: #f5f5f5;
+    border-radius: 10px;
+    color: #747474;
+    margin-top: 1.5rem;
+}
+.typography blockquote:not(.cuteen-blockquote)::before {
+    content: "“";
+    position: absolute;
+    font-size: 3rem;
+    color: #b9b9b9;
+    top: 13px;
+}
+.text {
+    font-family: 'Noto Serif SC', serif;
+    font-weight: 700;
+}
+#nav_pc {
+    font-family: 'Noto Serif SC', serif;
+    font-weight: 700;
+}
+.text-white {
+    font-family: 'Noto Serif SC', serif;
+    font-weight: 700;
+}
+.md\:bg-black {
+    border-radius: 13px;
+    box-shadow: 0 8px 12px #dfdfdf;
+    border: 1px solid rgb(255 255 255 / 70%) !important;
+}
+.typography .code-toolbar {
+    box-shadow: 0 8px 13px #72727296;
+    width: 98%;
+    margin: 30px auto!important;
+    border-radius: 10px;
+}
+.typography img {
+    border-radius: 15px;
+    box-shadow: 0 3px 22px #a8a8a859;
+}
+.typography .friends-img{
+   border-radius: 50px;
+}
+.friends-ctx {
+    box-shadow: 0 4px 16px 0 rgb(28 31 33 / 10%) !important;
+}
+.emoji {
+    box-shadow: none!important;
+}
+.typography p:not(.friend-content) {
+    margin: 1.5em 0;
+}
+.typography blockquote:not(.cuteen-blockquote) {
+    padding-left: 1.5rem;
+}
+.typography h2 {
+    border-radius: 3px;
+    font-family: 'Noto Serif SC', serif;
+    font-weight: 700;
+}
+.card{
+    background: #fff;
+    box-shadow: 0 4px 8px 0 rgb(28 31 33 / 10%);
+    border-radius: 12px;
+}
+.friends-ctx {
+    box-shadow: 0 4px 8px 0 rgb(28 31 33 / 10%);
+    border-radius: 12px;
+    background: #fff;
+}
+button#OwO-btn {
+    border: 1px solid;
+}
+a.article-title.serif-font {
+    font-family: 'Noto Serif SC', serif;
+    font-weight: 700;
+}
+h3.post-title.serif-font {
+    font-family: 'Noto Serif SC', serif;
+    font-weight: 700;
+}
+.typography h1 {
+    font-family: 'Noto Serif SC', serif;
+    font-weight: 700;
+    color: #545454;
+}
+.typography table thead>tr>th{
+    border-radius: 0.5rem;
+}
+.typography table{
+border-radius: 0.5rem;
+}
+#post-top .carousel-item.active>a>* {
+    font-family: 'Noto Serif SC', serif;
+    font-weight: 700;
+}
+
+.typography del{
+    background-image: none;
+    background-color: transparent;
+    text-decoration: line-through;
+}
+.typography img.emoji {
+    margin: 0;
+}
+
+.has-img{
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+}
+
+.bg-transparent{
+    background-color: #ffffff70 !important;
+}
+
+.hide-text {
+    border: 2px dashed #ff8989;
+    padding: 8px;
+    border-radius: 10px;
+}
+
+#navPC{
+    padding: 5px;
+}
+
+
+
+.typography hr {
+    border: 0;
+    height: 1px;
+    max-width: 70%;
+    margin: 40px auto;
+    background: linear-gradient(
+        to right,
+        transparent,
+        #d1d5db 20%,
+        #d1d5db 80%,
+        transparent
+    );
+}            #post-box a[data-fslightbox] {
+        width: 100%;
+        text-align: center;
+    }
+
+        
+        .hero::after {
+        content: '';
+        width: 100%;
+        height: 10%;
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        background: linear-gradient(to top, #fff, transparent);
+    }
+
+    .dark .hero::after {
+        background: linear-gradient(to top, #0F172A, transparent);
+    }
+
+    
+        body {
+        font-family: 'CustomFonts', MiSans, Microsoft YaHei, sans-serif;
+    }
+
+    </style><body>
+
+<nav class="navbar navbar-expand-md fixed-top px-2 px-md-5 has-img" id="navPC">
+    <div class="container-fluid">
+        <ul class="navbar-nav d-md-none">
+            <li class="nav-item navbar-icon">
+                <svg class="icon icon-20 " aria-hidden="true" data-bs-toggle="offcanvas"
+                     data-bs-target="#offcanvasNavbar">
+                    <use xlink:href="#menu"></use>
+                </svg>
+            </li>
+        </ul>
+
+        <a class="navbar-brand m-0 me-md-3" href="https://blog.kikiw.cn/">
+                            <div class="logo-text serif-font">
+                    Ki'sBlog                </div>
+                    </a>
+        <div class="offcanvas offcanvas-start" tabindex="-1" id="offcanvasNavbar"
+             aria-labelledby="offcanvasNavbarLabel">
+            <div class="offcanvas-header">
+                <h5 class="offcanvas-title" id="offcanvasNavbarLabel">Ki'sBlog</h5>
+                <svg class='icon icon-20' aria-hidden='true' data-bs-dismiss="offcanvas" >
+                    <use xlink:href='#x'></use>
+                </svg>
+            </div>
+            <div class="offcanvas-body">
+                <section class="d-md-none d-block sidebar-author position-relative">
+                    <div class="sidebar-banner border-0"
+                         style="background-image: url('https://blog.kikiw.cn/usr/themes/Cuteen/static/img/center-bg.svg')"></div>
+                    <div class="text-center">
+                                                    <img class="sidebar-avatar" src="https://q1.qlogo.cn/g?b=qq&nk=3439780232&s=4"
+                                 alt="avatar">
+                                            </div>
+                    <h2 class="fw-bold serif-font mt-5 fs-4 text-center">Ki.</h2>
+                                        <div class="border-top">
+                        <table class="text-center my-2 w-100 serif-font">
+                            <tr class="fs-6 w-100">
+                                <th>文章</th>
+                                <th>评论</th>
+                                <th>标签</th>
+                            </tr>
+                            <tr>
+                                <td>28</td>
+                                <td>5658</td>
+                                <td>23</td>
+                            </tr>
+                        </table>
+                    </div>
+                </section>
+
+                <ul class="navbar-nav justify-content-start flex-grow-1 px-4 pt-4 px-md-0 pt-md-0 pe-md-3">
+                    <li class="nav-item"><a target="_self" class="nav-link text-nowrap" href="https://blog.kikiw.cn/index.php/category/default/">日常生活</a></li><li class="nav-item"><a target="_self" class="nav-link text-nowrap" href="https://blog.kikiw.cn/index.php/category/code/">代码笔记</a></li><li class="nav-item"><a target="_self" class="nav-link text-nowrap" href="https://blog.kikiw.cn/index.php/category/works/">项目作品</a></li><li class="nav-item"><a target="_self" class="nav-link text-nowrap" href="https://blog.kikiw.cn/index.php/file.html">文章归档</a></li><li class="nav-item"><a target="_self" class="nav-link text-nowrap" href="https://blog.kikiw.cn/index.php/say.html">说说念念</a></li><li class="nav-item"><a target="_self" class="nav-link text-nowrap" href="https://blog.kikiw.cn/index.php/Friend.html">朋友圈</a></li><li class="nav-item"><a target="_self" class="nav-link text-nowrap" href="https://blog.kikiw.cn/index.php/about.html">关于</a></li>
+                </ul>
+            </div>
+
+        </div>
+        <ul class="navbar-nav">
+            <li class="navbar-icon" data-bs-toggle="modal" data-bs-target="#searchModal">
+                <svg class="icon icon-20" aria-hidden="true">
+                    <use xlink:href="#search"></use>
+                </svg>
+            </li>
+                            <li id="musicApp" class="navbar-icon position-relative d-none d-md-inline-flex">
+                    <svg id="musicSvg" class="icon icon-20" aria-hidden="true">
+                        <use xlink:href="#music"></use>
+                    </svg>
+                    <div id="musicPop"></div>
+                </li>
+                        <li class="navbar-icon d-none d-md-inline-flex" onclick="Cuteen.DarkModeToggle();" data-bs-toggle="tooltip"
+                data-bs-placement="bottom"
+                title="昼夜切换">
+                <svg class="icon icon-20 darkMode" aria-hidden="true">
+                    <use xlink:href="#moon"></use>
+                </svg>
+            </li>
+        </ul>
+    </div>
+</nav>
+
+<div class="modal fade" id="searchModal" tabindex="-1" aria-labelledby="searchModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <form class="modal-content" target="_blank">
+            <div class="modal-header">
+                <h5 class="modal-title" id="searchModalLabel">搜点什么</h5>
+                <svg class='icon icon-20' aria-hidden='true' data-bs-dismiss="modal" >
+                    <use xlink:href='#x'></use>
+                </svg>
+            </div>
+            <div class="modal-body">
+                <input value=""
+                       autocomplete="off" class="form-control" name="s" type="text" placeholder="请输入搜索关键词……"
+                       required/>
+            </div>
+            <div class="modal-footer">
+                <button type="submit" class="btn btn-primary">点击搜索</button>
+            </div>
+        </form>
+    </div>
+</div>
+<div id="hero-box" class="hero" style="background-image: url('https://blog.kikiw.cn/usr/uploads/2024/07/bg.webp');height:700px;">
+            <h3 class="big-title serif-font"><div class="titleki">Ki Code</div></h3>
+        <div class="sub-title">
+            <div class="text">只是寻常岁月诗 书写风花雪月事</div>        </div>
+            </div>
+
+<main id="wrap" class="container">
+
+
+
+<div class="row justify-content-center ">
+        <section class="mt-4 col-lg-9">
+                    <div id="post-top" class="carousel slide carousel-fade" data-bs-ride="carousel">
+    <div class="carousel-indicators">
+                    <button type="button" data-bs-target="#post-top"
+                    data-bs-slide-to="0" class="active" aria-current="true"                    aria-label="Slide 0"></button>
+                    <button type="button" data-bs-target="#post-top"
+                    data-bs-slide-to="1"                    aria-label="Slide 1"></button>
+                    <button type="button" data-bs-target="#post-top"
+                    data-bs-slide-to="2"                    aria-label="Slide 2"></button>
+            </div>
+    <div class="carousel-inner">
+                    <div class="carousel-item active">
+                <img src="https://blog.kikiw.cn/img/LikeGirlv5.2.0.png" class="d-block w-100" alt="Like Girl  v5.2.0 情侣小站开源版文档">
+                <a class="carousel-caption" href="https://blog.kikiw.cn/index.php/archives/52/">
+                    <h3 class="fw-bold serif-font">Like Girl  v5.2.0 情侣小站开源版文档</h3>
+                    <ul class="post-title-info">
+                        <li class="md:flex d-none d-md-flex">
+                            <svg class="icon" aria-hidden="true">
+                                <use xlink:href="#biaoqian2"></use>
+                            </svg>
+                            <span>项目作品</span>
+                        </li>
+                        <li>
+                            <svg class="icon" aria-hidden="true">
+                                <use xlink:href="#huo"></use>
+                            </svg>
+                            <span>470w阅读</span>
+                        </li>
+                        <li>
+                            <svg class="icon" aria-hidden="true">
+                                <use xlink:href="#shijian"></use>
+                            </svg>
+                            <span>2024年11月07日</span>
+                        </li>
+                        <li>
+                            <svg class="icon" aria-hidden="true">
+                                <use xlink:href="#pinglun1"></use>
+                            </svg>
+                            <span>4010评论</span>
+                        </li>
+                    </ul>
+                </a>
+            </div>
+                    <div class="carousel-item ">
+                <img src="https://img.gejiba.com/images/4bda1fd67e9b22c3e97de809d9667140.png" class="d-block w-100" alt="LikeGirl微信小程序1.0.0">
+                <a class="carousel-caption" href="https://blog.kikiw.cn/index.php/archives/55/">
+                    <h3 class="fw-bold serif-font">LikeGirl微信小程序1.0.0</h3>
+                    <ul class="post-title-info">
+                        <li class="md:flex d-none d-md-flex">
+                            <svg class="icon" aria-hidden="true">
+                                <use xlink:href="#biaoqian2"></use>
+                            </svg>
+                            <span>项目作品</span>
+                        </li>
+                        <li>
+                            <svg class="icon" aria-hidden="true">
+                                <use xlink:href="#huo"></use>
+                            </svg>
+                            <span>1.5w阅读</span>
+                        </li>
+                        <li>
+                            <svg class="icon" aria-hidden="true">
+                                <use xlink:href="#shijian"></use>
+                            </svg>
+                            <span>2023年01月02日</span>
+                        </li>
+                        <li>
+                            <svg class="icon" aria-hidden="true">
+                                <use xlink:href="#pinglun1"></use>
+                            </svg>
+                            <span>8评论</span>
+                        </li>
+                    </ul>
+                </a>
+            </div>
+                    <div class="carousel-item ">
+                <img src="https://blog.kikiw.cn/usr/uploads/2026/04/2105166462.webp" class="d-block w-100" alt="LG_NewUi 情侣小站 — 马年限定版 全新前后台UI">
+                <a class="carousel-caption" href="https://blog.kikiw.cn/index.php/archives/65/">
+                    <h3 class="fw-bold serif-font">LG_NewUi 情侣小站 — 马年限定版 全新前后台UI</h3>
+                    <ul class="post-title-info">
+                        <li class="md:flex d-none d-md-flex">
+                            <svg class="icon" aria-hidden="true">
+                                <use xlink:href="#biaoqian2"></use>
+                            </svg>
+                            <span>项目作品</span>
+                        </li>
+                        <li>
+                            <svg class="icon" aria-hidden="true">
+                                <use xlink:href="#huo"></use>
+                            </svg>
+                            <span>6.5w阅读</span>
+                        </li>
+                        <li>
+                            <svg class="icon" aria-hidden="true">
+                                <use xlink:href="#shijian"></use>
+                            </svg>
+                            <span>2024年12月21日</span>
+                        </li>
+                        <li>
+                            <svg class="icon" aria-hidden="true">
+                                <use xlink:href="#pinglun1"></use>
+                            </svg>
+                            <span>57评论</span>
+                        </li>
+                    </ul>
+                </a>
+            </div>
+            </div>
+    <button class="carousel-control-prev" type="button" data-bs-target="#post-top" data-bs-slide="prev">
+        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+        <span class="visually-hidden">Previous</span>
+    </button>
+    <button class="carousel-control-next" type="button" data-bs-target="#post-top" data-bs-slide="next">
+        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+        <span class="visually-hidden">Next</span>
+    </button>
+</div>
+                <div id="article-list">
+                            <article class="article"><div class="blur-img" > <img alt = "记录一下 最近的菜腿骑行" src = "https://loveli.kikiw.cn/Lovefolder/20241025165834_671b5dba79717.webp" ></div > <a class="d-md-block d-none article-img" href = "https://blog.kikiw.cn/index.php/archives/76/" > <img class="lazy article-left-img" alt = "记录一下 最近的菜腿骑行" data-src = "https://loveli.kikiw.cn/Lovefolder/20241025165834_671b5dba79717.webp" ></a > <div class="article-ctx" > <div class="article-info" > <div class="article-time d-flex align-items-center" > <svg class='icon me-1' aria-hidden='true'><use xlink:href='#shijian'></use></svg>2024年06月13日</div > <div class="article-vs  d-flex align-items-center" > <span class="article-views d-flex align-items-center" > <svg class='icon me-1' aria-hidden='true'><use xlink:href='#huo'></use></svg>4.7k<div class="readText me-1" > 阅读</div ></span > <a href = "https://blog.kikiw.cn/index.php/category/default/" class="article-sort d-flex align-items-center" > <svg class='icon me-1' aria-hidden='true'><use xlink:href='#biaoqian'></use></svg>日常生活 </a ></div > </div > <a class="article-title serif-font" href = "https://blog.kikiw.cn/index.php/archives/76/" > 记录一下 最近的菜腿骑行</a > <a class="article-description" href = "https://blog.kikiw.cn/index.php/archives/76/" > 心血来潮 我入手了一辆公路车 当我取到车那一刻 我觉得姿势和我骑去地铁站上班的山地车真是天差地别...</a ></div ></article >                             <article class="article flex-row-reverse "><div class="blur-img" > <img alt = "记录 Class_Photo（班级相册）开发历程" src = "https://loveli.kikiw.cn/Lovefolder/20241025165327_671b5c87d3025.webp" ></div > <a class="d-md-block d-none article-img" href = "https://blog.kikiw.cn/index.php/archives/74/" > <img class="lazy article-left-img" alt = "记录 Class_Photo（班级相册）开发历程" data-src = "https://loveli.kikiw.cn/Lovefolder/20241025165327_671b5c87d3025.webp" ></a > <div class="article-ctx" > <div class="article-info" > <div class="article-time d-flex align-items-center" > <svg class='icon me-1' aria-hidden='true'><use xlink:href='#shijian'></use></svg>2023年06月03日</div > <div class="article-vs  d-flex align-items-center" > <span class="article-views d-flex align-items-center" > <svg class='icon me-1' aria-hidden='true'><use xlink:href='#huo'></use></svg>1w<div class="readText me-1" > 阅读</div ></span > <a href = "https://blog.kikiw.cn/index.php/category/works/" class="article-sort d-flex align-items-center" > <svg class='icon me-1' aria-hidden='true'><use xlink:href='#biaoqian'></use></svg>项目作品 </a ></div > </div > <a class="article-title serif-font" href = "https://blog.kikiw.cn/index.php/archives/74/" > 记录 Class_Photo（班级相册）开发历程</a > <a class="article-description" href = "https://blog.kikiw.cn/index.php/archives/74/" > 最新也是学了一下uniapp开发 刚好赶上毕业季 所以我凑合开发一下项目初衷由于我们班毕业照是自己组织拍的 所以人数也不齐自愿报名 摄影师也是班里同学找的包括服装这就导致了有些同学并没有在毕业照...</a ></div ></article >                             <article class="article"><div class="blur-img" > <img alt = "随机抽取系统项目" src = "https://img-love.kikiw.cn/blog-img/20221108151119.jpg" ></div > <a class="d-md-block d-none article-img" href = "https://blog.kikiw.cn/index.php/archives/40/" > <img class="lazy article-left-img" alt = "随机抽取系统项目" data-src = "https://img-love.kikiw.cn/blog-img/20221108151119.jpg" ></a > <div class="article-ctx" > <div class="article-info" > <div class="article-time d-flex align-items-center" > <svg class='icon me-1' aria-hidden='true'><use xlink:href='#shijian'></use></svg>2023年05月22日</div > <div class="article-vs  d-flex align-items-center" > <span class="article-views d-flex align-items-center" > <svg class='icon me-1' aria-hidden='true'><use xlink:href='#huo'></use></svg>1.7w<div class="readText me-1" > 阅读</div ></span > <a href = "https://blog.kikiw.cn/index.php/category/works/" class="article-sort d-flex align-items-center" > <svg class='icon me-1' aria-hidden='true'><use xlink:href='#biaoqian'></use></svg>项目作品 </a ></div > </div > <a class="article-title serif-font" href = "https://blog.kikiw.cn/index.php/archives/40/" > 随机抽取系统项目</a > <a class="article-description" href = "https://blog.kikiw.cn/index.php/archives/40/" > V1.0.0 主要更新全新UI 重新编写界面css样式更新抽取逻辑 单次抽取数据不重复出现新增后台设置 以简为主（该有的设置基本都有）可自行设置数据开关可自行设置打印列表显示（一般用不上）后台填...</a ></div ></article >                             <article class="article flex-row-reverse "><div class="blur-img" > <img alt = "LG_NewUi 使用文档" src = "https://loveli.kikiw.cn/Lovefolder/20241025165328_671b5c88aae53.webp" ></div > <a class="d-md-block d-none article-img" href = "https://blog.kikiw.cn/index.php/archives/66/" > <img class="lazy article-left-img" alt = "LG_NewUi 使用文档" data-src = "https://loveli.kikiw.cn/Lovefolder/20241025165328_671b5c88aae53.webp" ></a > <div class="article-ctx" > <div class="article-info" > <div class="article-time d-flex align-items-center" > <svg class='icon me-1' aria-hidden='true'><use xlink:href='#shijian'></use></svg>2023年04月01日</div > <div class="article-vs  d-flex align-items-center" > <span class="article-views d-flex align-items-center" > <svg class='icon me-1' aria-hidden='true'><use xlink:href='#huo'></use></svg>1.3w<div class="readText me-1" > 阅读</div ></span > <a href = "https://blog.kikiw.cn/index.php/category/default/" class="article-sort d-flex align-items-center" > <svg class='icon me-1' aria-hidden='true'><use xlink:href='#biaoqian'></use></svg>日常生活 </a ></div > </div > <a class="article-title serif-font" href = "https://blog.kikiw.cn/index.php/archives/66/" > LG_NewUi 使用文档</a > <a class="article-description" href = "https://blog.kikiw.cn/index.php/archives/66/" > 加密文章，请前往内页查看详情</a ></div ></article >                             <article class="article"><div class="blur-img" > <img alt = "语法笔记 年纪大了也记不住那么多了~" src = "https://img.gejiba.com/images/9f2b1970d326fb024e002779d1424cd1.jpg" ></div > <a class="d-md-block d-none article-img" href = "https://blog.kikiw.cn/index.php/archives/56/" > <img class="lazy article-left-img" alt = "语法笔记 年纪大了也记不住那么多了~" data-src = "https://img.gejiba.com/images/9f2b1970d326fb024e002779d1424cd1.jpg" ></a > <div class="article-ctx" > <div class="article-info" > <div class="article-time d-flex align-items-center" > <svg class='icon me-1' aria-hidden='true'><use xlink:href='#shijian'></use></svg>2023年01月06日</div > <div class="article-vs  d-flex align-items-center" > <span class="article-views d-flex align-items-center" > <svg class='icon me-1' aria-hidden='true'><use xlink:href='#huo'></use></svg>2.4w<div class="readText me-1" > 阅读</div ></span > <a href = "https://blog.kikiw.cn/index.php/category/code/" class="article-sort d-flex align-items-center" > <svg class='icon me-1' aria-hidden='true'><use xlink:href='#biaoqian'></use></svg>代码笔记 </a ></div > </div > <a class="article-title serif-font" href = "https://blog.kikiw.cn/index.php/archives/56/" > 语法笔记 年纪大了也记不住那么多了~</a > <a class="article-description" href = "https://blog.kikiw.cn/index.php/archives/56/" > 加密文章，请前往内页查看详情</a ></div ></article >                             <article class="article flex-row-reverse "><div class="blur-img" > <img alt = "LikeGirl微信小程序1.0.0" src = "https://img.gejiba.com/images/4bda1fd67e9b22c3e97de809d9667140.png" ></div > <a class="d-md-block d-none article-img" href = "https://blog.kikiw.cn/index.php/archives/55/" > <img class="lazy article-left-img" alt = "LikeGirl微信小程序1.0.0" data-src = "https://img.gejiba.com/images/4bda1fd67e9b22c3e97de809d9667140.png" ></a > <div class="article-ctx" > <div class="article-info" > <div class="article-time d-flex align-items-center" > <svg class='icon me-1' aria-hidden='true'><use xlink:href='#shijian'></use></svg>2023年01月02日</div > <div class="article-vs  d-flex align-items-center" > <span class="article-views d-flex align-items-center" > <svg class='icon me-1' aria-hidden='true'><use xlink:href='#huo'></use></svg>1.5w<div class="readText me-1" > 阅读</div ></span > <a href = "https://blog.kikiw.cn/index.php/category/works/" class="article-sort d-flex align-items-center" > <svg class='icon me-1' aria-hidden='true'><use xlink:href='#biaoqian'></use></svg>项目作品 </a ></div > </div > <a class="article-title serif-font" href = "https://blog.kikiw.cn/index.php/archives/55/" > LikeGirl微信小程序1.0.0</a > <a class="article-description" href = "https://blog.kikiw.cn/index.php/archives/55/" > 收到了一些小伙伴的小程序需求 所以我花了几天时间把API整理完就把小程序给写了小程序视频演示页面图片演示首页   文章   留言   相册    事件   API     类型描述金额39.99...</a ></div ></article >                     </div>
+            <div class="d-flex justify-content-center my-5">
+        <a class="next" title="" href="https://blog.kikiw.cn/index.php/page/3/"><button id="NextButton" onclick="Cuteen.AjaxLoadPost(this)" class="btn btn-primary col-3 mx-auto rounded-pill">点击加载更多</button></a>    </div>
+    </section>
+</div>
+
+</main>
+
+<footer id="footer" class="bg-white p-4 text-center mt-4">
+    <p class="small">
+        &copy; 2026        <a href="https://blog.kikiw.cn/">Ki'sBlog</a>
+    </p>
+    <p class="small">
+                    <svg class='icon icon-20' aria-hidden='true'>
+                <use xlink:href='#ICP'></use>
+            </svg>
+            <a href="https://beian.miit.gov.cn/#/Integrated/index" target="_blank"> 粤ICP备2021037776号</a>
+                    </p>
+    <!-- 此处版权可以修改或删除，建议保留，谢谢 -->
+    <p class="small"> Powered by <a href="http://typecho.org" target="_blank">Typecho</a> ※ Theme is <a
+                href="https://blog.zwying.com" target="_blank">Cuteen</a></p>
+</footer>
+
+    <div id="tool" class="d-grid gap-1">
+                <div onclick="Cuteen.DarkModeToggle();" class="right-btn-icon p-2 d-block d-sm-none">
+            <svg class="icon icon-20 darkMode" aria-hidden="true">
+                <use xlink:href="#moon"></use>
+            </svg>
+        </div>
+        <div class="right-btn-icon p-2" onclick="window.scroll({top: 0, left: 0, behavior: 'smooth'});">
+            <svg class="icon icon-20" aria-hidden="true">
+                <use xlink:href="#arrow-up-circle"></use>
+            </svg>
+        </div>
+    </div>
+    <!--Headroom-->
+    <!--MathJax-->
+
+    <script src="https://blog.kikiw.cn/usr/themes/Cuteen/static/js/pjax.min.js"></script>
+    <script src="https://blog.kikiw.cn/usr/themes/Cuteen/static/js/topbar.min.js"></script>
+    <script>
+        const pjax = new Pjax({
+            selectors: [
+                'main', 'title', '#LocalizeScript', '#tool', '#hero-box'
+            ],
+        });
+        document.addEventListener('pjax:send', () => {
+            NProgress.set(0.6);
+        });
+        document.addEventListener('pjax:complete', () => {
+            NProgress.done();
+            if (document.getElementById('echarts_pie')) EchartsInit();
+            refreshFsLightbox();
+                                    if (typeof Prism !== 'undefined') Prism.highlightAll(true, null);
+            Cuteen.PjaxLoad()
+                    });
+    </script>
+    <script src="https://blog.kikiw.cn/usr/themes/Cuteen/static/js/player.js"></script>
+            <script>
+            const player = new Player({
+                autoplay: false, listshow: false, mode: 'listloop',
+                music: {type: 'cloud', source: CuteenConfig.music_id, media: CuteenConfig.music_media,}
+            });
+        </script>
+    
+    <script src="https://blog.kikiw.cn/usr/themes/Cuteen/static/js/message.js"></script>
+    <script src="https://blog.kikiw.cn/usr/themes/Cuteen/static/js/OwO.js"></script>
+    <script src="https://blog.kikiw.cn/usr/themes/Cuteen/static/js/lazyload.min.js"></script>
+    <script src="https://blog.kikiw.cn/usr/themes/Cuteen/static/js/fslightbox.js"></script>
+    <script src="https://blog.kikiw.cn/usr/themes/Cuteen/include/prism.js"></script>
+    <script src="https://blog.kikiw.cn/usr/themes/Cuteen/static/js/main.js"></script>
+    <script src="https://blog.kikiw.cn/usr/themes/Cuteen/static/js/bootstrap.bundle.min.js"></script>
+    <script src="https://blog.kikiw.cn/usr/themes/Cuteen/static/js/smooth.min.js"></script>
+<script type="text/javascript" src="//js.users.51.la/21930741.js"></script></body>
+</html>

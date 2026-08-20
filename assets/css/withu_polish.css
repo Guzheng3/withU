@@ -1,0 +1,109 @@
+/* WithU · UI/UX polish layer (ui-ux-pro-max review)
+   Typography / contrast / micro-interaction upgrades, no structural change. */
+
+body.withu-front-modern {
+    --muted: #5d6679;
+    --font-display: "Cormorant Infant", "Songti SC", "SimSun", Georgia, serif;
+    font-variant-numeric: tabular-nums;
+}
+
+/* ---- Romance display type ---- */
+body.withu-front-modern .withu-hero-eyebrow {
+    font-family: var(--font-display);
+    font-size: .78rem;
+    font-weight: 600;
+    color: rgba(255, 255, 255, .86);
+    letter-spacing: .26em;
+}
+body.withu-front-modern .withu-hero-copy p { color: rgba(255, 255, 255, .86); }
+body.withu-front-modern .withu-hero-fact { color: rgba(255, 255, 255, .88); }
+body.withu-front-modern .withu-hero-fact small { color: rgba(255, 255, 255, .78); }
+body.withu-front-modern .withu-hero-fact b {
+    font-family: var(--font-display);
+    font-size: 1.25rem;
+    font-weight: 600;
+    font-variant-numeric: tabular-nums;
+}
+
+/* 恋爱计时器：优雅衬线数字 + 柔和渐变 */
+body.withu-front-modern .love-counter-title-gradient { color: rgba(255, 255, 255, .9); }
+body.withu-front-modern .love-timer-label { color: rgba(255, 255, 255, .85); }
+body.withu-front-modern .love-timer-number {
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-variant-numeric: tabular-nums;
+    color: #fff;
+    background: linear-gradient(180deg, #ffffff 30%, #fbcfe8 88%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+/* 统计数字：品牌渐变 + 衬线 */
+body.withu-front-modern .stat-number {
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: 2.15rem;
+    font-variant-numeric: tabular-nums;
+    color: #fff;
+    background: linear-gradient(120deg, #be185d, #7c3aed 72%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+body.withu-front-modern .stat-icon {
+    box-shadow: 0 10px 20px rgba(190, 24, 93, .22);
+}
+
+/* 分区标题：图标渐变圆底，强化信息层级 */
+body.withu-front-modern .section-header h2 { display: inline-flex; align-items: center; gap: .55rem; }
+body.withu-front-modern .section-header h2 i {
+    display: inline-grid;
+    place-items: center;
+    width: 1.7rem;
+    height: 1.7rem;
+    border-radius: 9px;
+    color: #fff;
+    background: linear-gradient(135deg, #ec4899, #8b5cf6);
+    box-shadow: 0 6px 14px rgba(236, 72, 153, .3);
+    font-size: .82rem;
+}
+
+/* 结语：英文副标题用浪漫衬线 */
+body.withu-front-modern .withustrm-epilogue__subtitle {
+    font-family: var(--font-display);
+    letter-spacing: .32em;
+    font-weight: 600;
+}
+
+/* 事件空态 */
+.withustrm-loveday-empty {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: .6rem;
+    padding: 2.2rem 1rem;
+    border: 1px dashed rgba(236, 72, 153, .35);
+    border-radius: 20px;
+    background: rgba(255, 255, 255, .6);
+    color: var(--muted);
+    text-align: center;
+    font-size: .92rem;
+}
+.withustrm-loveday-empty i { font-size: 1.6rem; color: #ec4899; opacity: .7; }
+
+/* 入场动画收敛（微交互 ≤ 500ms） */
+@keyframes withuSectionInFast { from { opacity: .85; transform: translateY(8px); } to { opacity: 1; transform: none; } }
+body.withu-front-modern .content-section,
+body.withu-front-modern .love-day-section,
+body.withu-front-modern .albums-section { animation: withuSectionInFast .5s ease both; }
+
+@keyframes withuHeroCopyInFast { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: none; } }
+body.withu-front-modern .withu-hero-copy { animation: withuHeroCopyInFast .6s cubic-bezier(.2, .8, .2, 1) both; }
+
+@media (prefers-reduced-motion: reduce) {
+    body.withu-front-modern .content-section,
+    body.withu-front-modern .love-day-section,
+    body.withu-front-modern .albums-section,
+    body.withu-front-modern .withu-hero-copy { animation: none; }
+}

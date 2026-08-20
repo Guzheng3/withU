@@ -13,7 +13,7 @@ services:
       USER_INFO_PATH: /maindata/config/userInfo.json
       FRONTEND_LOGS_PATH: /maindata/log/frontend
     ports:
-      - "3111:80"  # External port:Internal port, users can modify external port as needed
+      - "3112:80"  # External port:Internal port, users can modify external port as needed
     volumes:
       - ${LOG_PATH_HOST}:/maindata/log
       - ${CONFIG_PATH_HOST}:/maindata/config

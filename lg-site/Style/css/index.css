@@ -1,0 +1,44 @@
+/*!
+ *      _      ____ _   _ _____ _    _ _   _ ___
+ *     | |    / ___| \ | | ____| |  | | | | |_ _|
+ *     | |   | |  _|  \| |  _| | |  | | | | || |
+ *     | |___| |_| | |\  | |___| |__| | |_| || |
+ *     |_____|\____|_| \_|_____|____/ \___/|___|
+ *
+ *      ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+ *
+ * Project      : LGNewUi
+ * Author       : Ki
+ * Last Updated : 2026-03-31
+ * Description  : A private place to preserve love, memory, and the
+ *                years shared between two people.
+ *
+ * Copyright (c) 2022-2026 by Ki. All Rights Reserved.
+ *
+ * Type         : Native PHP web application built with PHP, HTML,
+ *                CSS, JavaScript, and selected third-party libraries.
+ * License      : This project is licensed for personal couple-record
+ *                use only.
+ * Restriction  : Commercial, corporate, organizational, platform,
+ *                or enterprise use is strictly prohibited.
+ * Restriction  : Redistribution, modification, repackaging, resale,
+ *                or unauthorized public deployment without explicit
+ *                written permission is strictly prohibited.
+ *
+ * Official Authorization Site:
+ * https://auth-love.kikiw.cn/
+ *
+ * Warning      : LGNewUi is an original work. Any unauthorized
+ *                copying, scraping, resale, redistribution, or
+ *                commercial use is forbidden.
+ * Notice       : Development and long-term maintenance require
+ *                substantial time and effort. Please respect the
+ *                work involved and the applicable authorization terms.
+ *
+ */
+@import url(content.css);
+@import url(home.css);
+@import url(small-x.css) only screen and (max-width: 768px);
+@import url(small.css) only screen and (min-width: 768px);
+@import url(medium.css) only screen and (min-width: 960px);
+@import url(big.css) only screen and (min-width: 1200px);

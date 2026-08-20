@@ -56,7 +56,7 @@ if ($strmMode) {
     $strmSign = $strmB64u(hash_hmac('sha256', $strmHeader . '.' . $strmPayloadB64, $strmSecret, true));
     $strmJwt = $strmHeader . '.' . $strmPayloadB64 . '.' . $strmSign;
     // 调 strm 内部媒体库详情接口（external 已关闭，必须走内部 JWT）
-    $strmCh = curl_init('http://127.0.0.1:8080/api/media-library/' . $strmMediaId);
+    $strmCh = curl_init('http://127.0.0.1:8081/api/media-library/' . $strmMediaId);
     curl_setopt_array($strmCh, [
         CURLOPT_RETURNTRANSFER => true,
         CURLOPT_HTTPHEADER => ['Authorization: Bearer ' . $strmJwt],
@@ -85,7 +85,7 @@ if ($strmMode) {
     $initialResolveUrl = '';
     // 拉取媒体库列表，生成右侧推荐视频（排除当前媒体，最多 4 条）
     $strmRecommendations = [];
-    $strmCh2 = curl_init('http://127.0.0.1:8080/api/media-library?page=1&size=50');
+    $strmCh2 = curl_init('http://127.0.0.1:8081/api/media-library?page=1&size=50');
     curl_setopt_array($strmCh2, [
         CURLOPT_RETURNTRANSFER => true,
         CURLOPT_HTTPHEADER => ['Authorization: Bearer ' . $strmJwt],
