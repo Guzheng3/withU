@@ -1,5 +1,0 @@
-build/
-dist/
-dist-wmf/
-*.user
-*.vcxproj.user
