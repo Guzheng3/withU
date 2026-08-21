@@ -8,9 +8,9 @@ const fs = require('fs');
 const path = require('path');
 const crypto = require('crypto');
 
-const ROOT = path.join(__dirname, '..', 'lg-site');
+const ROOT = path.join(__dirname, '..', '..', 'frontend');
 const PORT = parseInt(process.env.PORT || '8899', 10);
-const PHP_ROOT = path.join(__dirname, '..');
+const PHP_ROOT = path.join(__dirname, '..', 'app');
 const PHP_BACKEND = 'http://127.0.0.1:8902';
 
 const admin = require('./admin.js');
@@ -655,7 +655,7 @@ const server = http.createServer((req, res) => {
 
       // ---- LG_CONFIG 注入：后台保存的 lg-config.json → 页面 window.LG_CONFIG ----
       if (/^\/(index|about|albums|messages|timeline|lovelist|articles)(\.html|\.php)?$/.test(urlPath) || urlPath === '/') {
-        const cfgFile = path.join(__dirname, 'lg-config.json');
+        const cfgFile = path.join(__dirname, 'app-config.json');
         if (fs.existsSync(cfgFile)) {
           try {
             const cfg = JSON.parse(fs.readFileSync(cfgFile, 'utf8')).LG_CONFIG || {};

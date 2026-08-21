@@ -6,7 +6,7 @@ const fs = require('fs');
 const path = require('path');
 
 const DATA_DIR = path.join(__dirname, 'data');
-const ROOT = path.join(__dirname, '..', 'lg-site');
+const ROOT = path.join(__dirname, '..', '..', 'frontend');
 
 const cache = {};
 
@@ -23,7 +23,7 @@ function abs(rel) {
 // 特殊绝对路径映射（@ 前缀 key → 固定文件）
 const ABS_MAP = {
   '@mapAll': path.join(ROOT, 'services', 'map-all.json'),
-  '@lgConfig': path.join(__dirname, 'lg-config.json')
+  '@lgConfig': path.join(__dirname, 'app-config.json')
 };
 
 function load(rel, def) {
@@ -57,7 +57,7 @@ const FILE = {
   beacons: 'beacons.json',
   weatherConfig: 'weather-config.json',
   mapConfig: 'map-config.json',
-  lgConfig: path.join(__dirname, 'lg-config.json'),
+  lgConfig: path.join(__dirname, 'app-config.json'),
   mapAll: path.join(ROOT, 'services', 'map-all.json')
 };
 

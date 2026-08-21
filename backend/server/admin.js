@@ -11,10 +11,9 @@ const path = require('path');
 
 const store = require('./store.js');
 
-const ROOT = path.join(__dirname, '..', 'lg-site');
+const ROOT = path.join(__dirname, '..', '..', 'frontend');
 const DATA_DIR = path.join(__dirname, 'admin-data');
-const MAP_FILE = path.join(ROOT, 'services', 'map-all.json');
-const CONFIG_FILE = path.join(__dirname, 'lg-config.json');
+const CONFIG_FILE = path.join(__dirname, 'app-config.json');
 const USERS_FILE = path.join(DATA_DIR, 'users.json');
 const OPLOG_FILE = path.join(DATA_DIR, 'oplog.jsonl');
 

@@ -1,9 +1,9 @@
 # 配置文件(由安装向导自动生成)
-/config/database.php
+backend/app/config/database.php
 
 # 上传文件
-/uploads/*
-!/uploads/.gitkeep
+backend/app/uploads/*
+!/backend/app/uploads/.gitkeep
 
 # 安装标记
 .installed
@@ -30,8 +30,9 @@ desktop.ini
 *.cache
 
 # 本地运行数据
-/config/config.php
-/runtime/*
+backend/app/config/config.php
+backend/app/runtime/*
+backend/runtime/*
 /storage/*
 /releases/
 /backups/
@@ -54,13 +55,13 @@ desktop.ini
 /deploy-local/*.bak*
 
 # ===== withUstrm 内置组件构建产物 =====
-/strm/frontend/node_modules/
-/strm/frontend/.nuxt/
-/strm/frontend/.output/
-/strm/backend/build/
-/strm/backend/.gradle/
-/strm/.build-cache/
+backend/strm/frontend/node_modules/
+backend/strm/frontend/.nuxt/
+backend/strm/frontend/.output/
+backend/strm/backend/build/
+backend/strm/backend/.gradle/
+backend/strm/.build-cache/
 
 # 代理订阅配置（含 token，勿入库）
-/config/mihomo.json
+backend/app/config/mihomo.json
 /deploy-local/mihomo.json
