@@ -1,6 +1,6 @@
 // ============================================================
-// LG-NewUi 数据存取层：统一的 JSON 持久化（带内存缓存）
-// 所有数据文件集中在 lg-server/data/ 与 lg-site/services/
+// withU 数据存取层：统一的 JSON 持久化（带内存缓存）
+// 所有数据文件集中在 withu-server/data/ 与 withu-site/services/
 // ============================================================
 const fs = require('fs');
 const path = require('path');

@@ -7,7 +7,7 @@
  *
  *      ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
  *
- * Project      : LGNewUi
+ * Project      : withU
  * Author       : Ki
  * Last Updated : 2026-03-31
  * Description  : A private place to preserve love, memory, and the
@@ -28,7 +28,7 @@
  * Official Authorization Site:
  * https://auth-love.kikiw.cn/
  *
- * Warning      : LGNewUi is an original work. Any unauthorized
+ * Warning      : withU is an original work. Any unauthorized
  *                copying, scraping, resale, redistribution, or
  *                commercial use is forbidden.
  * Notice       : Development and long-term maintenance require
@@ -666,7 +666,7 @@ ul.mask_black::before {
 
 
 /* ── 空数据状态 ── */
-.lgnewui-no-data {
+.withu-no-data {
   position: relative;
   width: 100%;
   max-width: 720px;
@@ -681,7 +681,7 @@ ul.mask_black::before {
   isolation: isolate;
 }
 
-.lgnewui-no-data::before {
+.withu-no-data::before {
   content: "";
   position: absolute;
   top: 0;
@@ -692,7 +692,7 @@ ul.mask_black::before {
   z-index: -2;
 }
 
-.lgnewui-no-data::after {
+.withu-no-data::after {
   content: "";
   position: absolute;
   top: auto;
@@ -708,19 +708,19 @@ ul.mask_black::before {
   background: radial-gradient(circle, rgba(37, 99, 235, 0.18), transparent 68%);
 }
 
-.lgnewui-no-data-wrap {
+.withu-no-data-wrap {
   display: flex;
   align-items: center;
   justify-content: center;
 }
 
-.lgnewui-no-data-content {
+.withu-no-data-content {
   width: 100%;
   max-width: 500px;
   text-align: center;
 }
 
-.lgnewui-no-data-icon {
+.withu-no-data-icon {
   width: 138px;
   height: 138px;
   margin: 0 auto 22px;
@@ -736,13 +736,13 @@ ul.mask_black::before {
   background: linear-gradient(180deg, rgba(37, 99, 235, 0.08), rgba(37, 99, 235, 0.03));
 }
 
-.lgnewui-no-data-icon svg {
+.withu-no-data-icon svg {
   width: 72px;
   height: 72px;
 }
 
-.lgnewui-no-data-icon::before,
-.lgnewui-no-data-icon::after {
+.withu-no-data-icon::before,
+.withu-no-data-icon::after {
   content: "";
   position: absolute;
   border-radius: 999px;
@@ -751,14 +751,14 @@ ul.mask_black::before {
   background: rgba(37, 99, 235, 0.14);
 }
 
-.lgnewui-no-data-icon::before {
+.withu-no-data-icon::before {
   width: 84px;
   height: 84px;
   left: 10px;
   top: 12px;
 }
 
-.lgnewui-no-data-icon::after {
+.withu-no-data-icon::after {
   width: 76px;
   height: 76px;
   right: 8px;
@@ -766,115 +766,115 @@ ul.mask_black::before {
 }
 
 /* 搜索空状态 · 橙色变体 */
-.lgnewui-no-data-icon--search {
+.withu-no-data-icon--search {
   background: linear-gradient(180deg, rgba(245, 158, 11, 0.08), rgba(245, 158, 11, 0.03));
 }
 
-.lgnewui-no-data-icon--search::before,
-.lgnewui-no-data-icon--search::after {
+.withu-no-data-icon--search::before,
+.withu-no-data-icon--search::after {
   background: rgba(245, 158, 11, 0.12);
 }
 
-.lgnewui-no-data--search::after,
-.lgnewui-no-data--orange::after {
+.withu-no-data--search::after,
+.withu-no-data--orange::after {
   background: radial-gradient(circle, rgba(245, 158, 11, 0.16), transparent 68%);
 }
 
 /* 橙色通用变体（轨迹页等） */
-.lgnewui-no-data-icon--orange {
+.withu-no-data-icon--orange {
   background: linear-gradient(180deg, rgba(245, 158, 11, 0.08), rgba(245, 158, 11, 0.03));
 }
 
-.lgnewui-no-data-icon--orange::before,
-.lgnewui-no-data-icon--orange::after {
+.withu-no-data-icon--orange::before,
+.withu-no-data-icon--orange::after {
   background: rgba(245, 158, 11, 0.12);
 }
 
 /* 留言空状态 · 粉色变体 */
-.lgnewui-no-data-icon--pink {
+.withu-no-data-icon--pink {
   background: linear-gradient(180deg, rgba(236, 72, 153, 0.08), rgba(236, 72, 153, 0.03));
 }
 
-.lgnewui-no-data-icon--pink::before,
-.lgnewui-no-data-icon--pink::after {
+.withu-no-data-icon--pink::before,
+.withu-no-data-icon--pink::after {
   background: rgba(236, 72, 153, 0.12);
 }
 
-.lgnewui-no-data--pink::after {
+.withu-no-data--pink::after {
   background: radial-gradient(circle, rgba(236, 72, 153, 0.16), transparent 68%);
 }
 
 /* 相册空状态 · 绿色变体 */
-.lgnewui-no-data-icon--green {
+.withu-no-data-icon--green {
   background: linear-gradient(180deg, rgba(16, 185, 129, 0.08), rgba(16, 185, 129, 0.03));
 }
 
-.lgnewui-no-data-icon--green::before,
-.lgnewui-no-data-icon--green::after {
+.withu-no-data-icon--green::before,
+.withu-no-data-icon--green::after {
   background: rgba(16, 185, 129, 0.12);
 }
 
-.lgnewui-no-data--green::after {
+.withu-no-data--green::after {
   background: radial-gradient(circle, rgba(16, 185, 129, 0.15), transparent 68%);
 }
 
 /* 相册空状态 · 青蓝色变体 */
-.lgnewui-no-data-icon--teal {
+.withu-no-data-icon--teal {
   background: linear-gradient(180deg, rgba(13, 148, 136, 0.08), rgba(13, 148, 136, 0.03));
 }
 
-.lgnewui-no-data-icon--teal::before,
-.lgnewui-no-data-icon--teal::after {
+.withu-no-data-icon--teal::before,
+.withu-no-data-icon--teal::after {
   background: rgba(13, 148, 136, 0.12);
 }
 
-.lgnewui-no-data--teal::after {
+.withu-no-data--teal::after {
   background: radial-gradient(circle, rgba(13, 148, 136, 0.15), transparent 68%);
 }
 
 /* 点滴空状态 · 薰衣草蓝变体 */
-.lgnewui-no-data-icon--indigo {
+.withu-no-data-icon--indigo {
   background: linear-gradient(180deg, rgba(99, 102, 241, 0.08), rgba(99, 102, 241, 0.03));
 }
 
-.lgnewui-no-data-icon--indigo::before,
-.lgnewui-no-data-icon--indigo::after {
+.withu-no-data-icon--indigo::before,
+.withu-no-data-icon--indigo::after {
   background: rgba(99, 102, 241, 0.12);
 }
 
-.lgnewui-no-data--indigo::after {
+.withu-no-data--indigo::after {
   background: radial-gradient(circle, rgba(99, 102, 241, 0.15), transparent 68%);
 }
 
 /* 相册空状态 · 天蓝色变体 */
-.lgnewui-no-data-icon--sky {
+.withu-no-data-icon--sky {
   background: linear-gradient(180deg, rgba(14, 165, 233, 0.08), rgba(14, 165, 233, 0.03));
 }
 
-.lgnewui-no-data-icon--sky::before,
-.lgnewui-no-data-icon--sky::after {
+.withu-no-data-icon--sky::before,
+.withu-no-data-icon--sky::after {
   background: rgba(14, 165, 233, 0.12);
 }
 
-.lgnewui-no-data--sky::after {
+.withu-no-data--sky::after {
   background: radial-gradient(circle, rgba(14, 165, 233, 0.15), transparent 68%);
 }
 
 /* 清单空状态 · 紫色变体 */
-.lgnewui-no-data-icon--purple {
+.withu-no-data-icon--purple {
   background: linear-gradient(180deg, rgba(139, 92, 246, 0.08), rgba(139, 92, 246, 0.03));
 }
 
-.lgnewui-no-data-icon--purple::before,
-.lgnewui-no-data-icon--purple::after {
+.withu-no-data-icon--purple::before,
+.withu-no-data-icon--purple::after {
   background: rgba(139, 92, 246, 0.12);
 }
 
-.lgnewui-no-data--purple::after {
+.withu-no-data--purple::after {
   background: radial-gradient(circle, rgba(139, 92, 246, 0.15), transparent 68%);
 }
 
-.lgnewui-no-data-title {
+.withu-no-data-title {
   margin: 0;
   font-size: 28px;
   line-height: 1.2;
@@ -883,7 +883,7 @@ ul.mask_black::before {
   color: #111827;
 }
 
-.lgnewui-no-data-desc {
+.withu-no-data-desc {
   margin: 14px auto 0;
   max-width: 420px;
   font-size: 14px;
@@ -892,7 +892,7 @@ ul.mask_black::before {
   font-weight: 300;
 }
 
-.lgnewui-no-data-actions {
+.withu-no-data-actions {
   margin-top: 24px;
   display: -webkit-flex;
   display: flex;
@@ -905,12 +905,12 @@ ul.mask_black::before {
 
 /* gap 降级：不支持 flex gap 的浏览器用 margin */
 @supports not (gap: 12px) {
-  .lgnewui-no-data-actions > * {
+  .withu-no-data-actions > * {
     margin: 6px;
   }
 }
 
-.lgnewui-no-data-btn {
+.withu-no-data-btn {
   -webkit-appearance: none;
   appearance: none;
   display: -webkit-inline-flex;
@@ -933,56 +933,56 @@ ul.mask_black::before {
               color 0.35s cubic-bezier(0.22, 1, 0.36, 1);
 }
 
-.lgnewui-no-data-btn i {
+.withu-no-data-btn i {
   font-size: 18px;
   line-height: 1;
 }
 
-.lgnewui-no-data-btn:hover {
+.withu-no-data-btn:hover {
   transform: translateY(-2px);
 }
 
-.lgnewui-no-data-btn-primary {
+.withu-no-data-btn-primary {
   background: #111827;
   color: #fff;
 }
 
-.lgnewui-no-data-btn-primary:hover {
+.withu-no-data-btn-primary:hover {
   background: #000;
   color: #fff;
 }
 
-.lgnewui-no-data-btn-soft {
+.withu-no-data-btn-soft {
   background: #f3f4f6;
   color: #4b5563;
 }
 
-.lgnewui-no-data-btn-soft:hover {
+.withu-no-data-btn-soft:hover {
   background: #e5e7eb;
   color: #374151;
 }
 
 @media (max-width: 640px) {
-  .lgnewui-no-data {
+  .withu-no-data {
     padding: 2.5rem 1rem;
   }
 
-  .lgnewui-no-data-icon {
+  .withu-no-data-icon {
     width: 100px;
     height: 100px;
     border-radius: 26px;
   }
 
-  .lgnewui-no-data-icon svg {
+  .withu-no-data-icon svg {
     width: 52px;
     height: 52px;
   }
 
-  .lgnewui-no-data-title {
+  .withu-no-data-title {
     font-size: 22px;
   }
 
-  .lgnewui-no-data-btn {
+  .withu-no-data-btn {
     height: 42px;
     padding: 0 1.5rem;
     font-size: 14px;
@@ -1149,7 +1149,7 @@ div#homePage[data-Fullscreen] .list .item {
 
 
 @media (min-width: 1200px) and (max-width: 1578px) {
-  .lg_20rem {
+  .withu_20rem {
     padding: 0 10rem !important;
   }
 

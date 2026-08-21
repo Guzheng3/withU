@@ -3,9 +3,9 @@
 <head>
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>LG-NewUi 后台管理</title>
-<link href="/ext/lgadmin/assets/css/icons.min.css" rel="stylesheet"/>
-<link href="/ext/lgadmin/assets/css/app.min.css" rel="stylesheet"/>
+<title>withU 后台管理</title>
+<link href="/ext/withuadmin/assets/css/icons.min.css" rel="stylesheet"/>
+<link href="/ext/withuadmin/assets/css/app.min.css" rel="stylesheet"/>
 <style>
 :root{--brand:#e75480;--brand-dark:#c23b64;}
 body{background:#f4f6fb;font-family:"Nunito","Microsoft YaHei",sans-serif;margin:0;}
@@ -92,7 +92,7 @@ pre.raw{background:#f8f9fc;border-radius:10px;padding:14px;font-size:12px;max-he
 <div id="loginView">
   <div class="login-card">
     <div class="login-head">
-      <h3>💗 LG-NewUi 后台管理</h3>
+      <h3>💗 withU 后台管理</h3>
       <p>小手一牵 · 岁岁年年</p>
     </div>
     <div class="login-body">
@@ -109,7 +109,7 @@ pre.raw{background:#f8f9fc;border-radius:10px;padding:14px;font-size:12px;max-he
 <div id="appView">
   <div class="layout">
     <aside class="side">
-      <div class="brand"><b>LG-NewUi</b><small>管理后台 · v2.2.5</small></div>
+      <div class="brand"><b>withU</b><small>管理后台 · v2.2.5</small></div>
       <nav class="menu" id="sideMenu">
         <div class="grp">概览</div>
         <a href="javascript:;" data-v="dashboard" class="active"><i class="mdi mdi-view-dashboard"></i><span>仪表盘</span></a>
@@ -486,8 +486,8 @@ async function renderConfig() {
     </div>
     <div class="card"><h3 class="card-title">说明</h3>
       <p style="font-size:13px;color:#666;line-height:1.9;margin:0">
-        设置保存在 <code>work/lg-config.json</code>，保存后刷新前台页面即可生效。<br>
-        前台读取的是首页注入的 LG_CONFIG，本后台修改会同步写入该文件。
+        设置保存在 <code>work/withu-config.json</code>，保存后刷新前台页面即可生效。<br>
+        前台读取的是首页注入的 WITHU_CONFIG，本后台修改会同步写入该文件。
       </p>
     </div>`;
   } catch (e) { box.innerHTML = '<div class="empty">' + esc(e.message) + '</div>'; }
@@ -600,7 +600,7 @@ async function renderMapConfig() {
     </div>` + loverForm(c.lovers[0] || { name: '', label: '', coords: [0, 0], avatar: '' }, 0) + loverForm(c.lovers[1] || { name: '', label: '', coords: [0, 0], avatar: '' }, 1) + `
     <div class="card"><h3 class="card-title">说明</h3>
       <p style="font-size:13px;color:#666;line-height:1.9;margin:0">
-        前端已内置高德 JS API SDK（lg-map-sdk.js）。填入 Web 端 Key 后即可在地图页显示情侣位置与足迹。<br>
+        前端已内置高德 JS API SDK（withu-map-sdk.js）。填入 Web 端 Key 后即可在地图页显示情侣位置与足迹。<br>
         默认使用「代理服务」安全模式：地图请求由本服务端转发到 webapi.amap.com，无需安全密钥。<br>
         若你已在控制台配置了安全密钥，可切换为 jsCode 模式并填入 securityJsCode。<br>
         Key 申请地址：<code>https://console.amap.com/</code>

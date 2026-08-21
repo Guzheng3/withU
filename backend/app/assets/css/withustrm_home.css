@@ -1,11 +1,11 @@
-/* WithU · LG-home interaction layer
-   Transferred from lg-site homepage (index.php) interactions:
-   - hero split-text title (lgnewui-hero-title / .char)
-   - iOS tabs filter for love-day/events (lgnewui-ios-tabs)
-   - horizontal message carousel (lgnewui-home-message-container/track)
-   - epilogue notebook card (lgnewui-epilogue__card)
-   Scoped with `withustrm-` prefix to stay consistent with withu_lg_ui.css
-   and avoid clashing with the legacy lgnewui-* nav classes. */
+/* WithU · withU-home interaction layer
+   Transferred from withu-site homepage (index.php) interactions:
+   - hero split-text title (withu-hero-title / .char)
+   - iOS tabs filter for love-day/events (withu-ios-tabs)
+   - horizontal message carousel (withu-home-message-container/track)
+   - epilogue notebook card (withu-epilogue__card)
+   Scoped with `withustrm-` prefix to stay consistent with withu-sakura.css
+   and avoid clashing with the legacy withu-* nav classes. */
 
 /* ── 1. Hero split-text title ─────────────────────────────── */
 body.withu-front-modern #withustrm-hero-title {

@@ -1,5 +1,5 @@
-/* WithU · LG-home interaction layer (vanilla JS)
-   Ported from lg-site homepage (index.php) interactions:
+/* WithU · withU-home interaction layer (vanilla JS)
+   Ported from withu-site homepage (index.php) interactions:
    - split-text hero title
    - iOS tabs filter for Love Day / events
    - horizontal message carousel (auto-scroll + drag)

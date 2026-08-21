@@ -1,6 +1,6 @@
 // ==================== Music Player v3.0.8 ====================
 // ==================== 统一设置管理 ====================
-const MUSIC_STORAGE_KEY = 'lgnewui-music-set';
+const MUSIC_STORAGE_KEY = 'withu-music-set';
 
 // 获取所有设置
 function getMusicSettings() {
@@ -32,8 +32,8 @@ function _mpEsc(str) {
 }
 
 // ==================== 全局状态 ====================
-let lg_love_musicPlaying = false;
-let lg_love_musicFirst = false;
+let withu_love_musicPlaying = false;
+let withu_love_musicFirst = false;
 let musicBindInited = false;
 let musicTelescopicInited = false;
 
@@ -74,29 +74,29 @@ function waitForCondition(checkFn, callback, interval = 200, retryCount = 0) {
 let mobileControlsReady = false;
 
 // ==================== 主控制对象 ====================
-const lg_love = {
+const withu_love = {
   // 切换音乐播放状态
   musicToggle: function (changePaly = true) {
-    if (!lg_love_musicFirst) {
+    if (!withu_love_musicFirst) {
       musicBindEvent();
-      lg_love_musicFirst = true;
+      withu_love_musicFirst = true;
     }
     const msgPlayIcon =
-      '<svg viewBox="0 0 1024 1024" class="lgnewui-nav-music-play-icon" aria-hidden="true"><path d="M324.085 95.787l500.422 300.664c82.373 50.453 79.284 136.946-1.03 186.37v0l-506.6 304.784c-41.187 23.683-87.522 37.068-131.798 9.267-36.037-22.653-46.335-58.691-46.335-97.819v-616.774c0-39.127 13.386-75.166 48.395-97.819 45.305-27.801 94.731-14.416 136.946 11.327v0z" fill="#ffffff"/></svg>';
+      '<svg viewBox="0 0 1024 1024" class="withu-nav-music-play-icon" aria-hidden="true"><path d="M324.085 95.787l500.422 300.664c82.373 50.453 79.284 136.946-1.03 186.37v0l-506.6 304.784c-41.187 23.683-87.522 37.068-131.798 9.267-36.037-22.653-46.335-58.691-46.335-97.819v-616.774c0-39.127 13.386-75.166 48.395-97.819 45.305-27.801 94.731-14.416 136.946 11.327v0z" fill="#ffffff"/></svg>';
 
     // 读取 meting-js 标签的 data-expand 属性，决定是否默认展开
     const metingEl = getMetingEl();
     const shouldExpand = metingEl && metingEl.getAttribute('data-expand') === 'true';
 
-    if (lg_love_musicPlaying) {
+    if (withu_love_musicPlaying) {
       navMusicEl.classList.remove("playing");
       document.getElementById("nav-music-hoverTips").innerHTML = msgPlayIcon;
-      lg_love_musicPlaying = false;
+      withu_love_musicPlaying = false;
       navMusicEl.classList.remove("stretch");
       mobileControlsReady = false;
     } else {
       navMusicEl.classList.add("playing");
-      lg_love_musicPlaying = true;
+      withu_love_musicPlaying = true;
       // 根据 data-expand 属性决定是否展开
       if (shouldExpand) {
         navMusicEl.classList.add("stretch");
@@ -151,7 +151,7 @@ const lg_love = {
 };
 
 // 挂载到全局
-window.lg_love = lg_love;
+window.withu_love = withu_love;
 
 // ==================== 移动端控制按钮交互逻辑 ====================
 if (isMobile && navMusicEl) {
@@ -159,7 +159,7 @@ if (isMobile && navMusicEl) {
 
   function getControls() {
     if (!controls) {
-      controls = navMusicEl.querySelector(".lgnewui-nav-music-controls");
+      controls = navMusicEl.querySelector(".withu-nav-music-controls");
     }
     return controls;
   }
@@ -172,7 +172,7 @@ if (isMobile && navMusicEl) {
       return;
     }
 
-    const buttons = ctrl.querySelectorAll(".lgnewui-nav-music-btn");
+    const buttons = ctrl.querySelectorAll(".withu-nav-music-btn");
     buttons.forEach(function (btn) {
       btn.addEventListener("click", function (e) {
         // 如果控件隐藏或未就绪，阻止事件并显示控件
@@ -234,10 +234,10 @@ function bindProgressSync() {
   if (!ap) return;
 
   const progressWrap = document.getElementById('nav-music-progress');
-  const playedBar = progressWrap?.querySelector(".lgnewui-nav-music-progress-played");
-  const loadedBar = progressWrap?.querySelector(".lgnewui-nav-music-progress-loaded");
-  const thumb = progressWrap?.querySelector(".lgnewui-nav-music-progress-thumb");
-  const loadingEl = progressWrap?.querySelector(".lgnewui-nav-music-progress-loading"); // 缓存 loading 元素
+  const playedBar = progressWrap?.querySelector(".withu-nav-music-progress-played");
+  const loadedBar = progressWrap?.querySelector(".withu-nav-music-progress-loaded");
+  const thumb = progressWrap?.querySelector(".withu-nav-music-progress-thumb");
+  const loadingEl = progressWrap?.querySelector(".withu-nav-music-progress-loading"); // 缓存 loading 元素
 
   if (!progressWrap || !playedBar) return;
 
@@ -360,20 +360,20 @@ function bindProgressSync() {
   // 监听系统控制（锁屏、通知栏等）的播放/暂停
   ap.audio.addEventListener("pause", function () {
     setLoadingState(false);
-    if (lg_love_musicPlaying) {
+    if (withu_love_musicPlaying) {
       navMusicEl.classList.remove("playing");
       navMusicEl.classList.remove("stretch");
-      document.getElementById("nav-music-hoverTips").innerHTML = '<svg viewBox="0 0 1024 1024" class="lgnewui-nav-music-play-icon" aria-hidden="true"><path d="M324.085 95.787l500.422 300.664c82.373 50.453 79.284 136.946-1.03 186.37v0l-506.6 304.784c-41.187 23.683-87.522 37.068-131.798 9.267-36.037-22.653-46.335-58.691-46.335-97.819v-616.774c0-39.127 13.386-75.166 48.395-97.819 45.305-27.801 94.731-14.416 136.946 11.327v0z" fill="#ffffff"/></svg>';
-      lg_love_musicPlaying = false;
+      document.getElementById("nav-music-hoverTips").innerHTML = '<svg viewBox="0 0 1024 1024" class="withu-nav-music-play-icon" aria-hidden="true"><path d="M324.085 95.787l500.422 300.664c82.373 50.453 79.284 136.946-1.03 186.37v0l-506.6 304.784c-41.187 23.683-87.522 37.068-131.798 9.267-36.037-22.653-46.335-58.691-46.335-97.819v-616.774c0-39.127 13.386-75.166 48.395-97.819 45.305-27.801 94.731-14.416 136.946 11.327v0z" fill="#ffffff"/></svg>';
+      withu_love_musicPlaying = false;
       mobileControlsReady = false;
     }
   });
 
   ap.audio.addEventListener("play", function () {
-    if (!lg_love_musicPlaying) {
+    if (!withu_love_musicPlaying) {
       navMusicEl.classList.add("playing");
       navMusicEl.classList.add("stretch");
-      lg_love_musicPlaying = true;
+      withu_love_musicPlaying = true;
       if (isMobile) {
         mobileControlsReady = false;
         setTimeout(function () {
@@ -747,7 +747,7 @@ function bindTelescopicEvents() {
     e.stopImmediatePropagation();
     e.stopPropagation();
     e.preventDefault();
-    lg_love.musicTelescopic();
+    withu_love.musicTelescopic();
     return false;
   }, true);
 }
@@ -773,7 +773,7 @@ setTimeout(bindTelescopicEvents, 800);
 
   // 检测移动端底部 tab 栏占据的高度，返回安全的最小 bottom 值
   function getMobileTabSafeBottom() {
-    var navItems = document.querySelectorAll('.lgnewui-base-nav-item');
+    var navItems = document.querySelectorAll('.withu-base-nav-item');
     if (!navItems.length) return BOTTOM_FALLBACK;
     var topOfNav = Infinity;
     for (var i = 0; i < navItems.length; i++) {
@@ -1040,7 +1040,7 @@ setTimeout(bindTelescopicEvents, 800);
 
   // 定位到当前播放
   function scrollToCurrent() {
-    const activeItem = playlistContent.querySelector('.lgnewui-music-playlist-item.active');
+    const activeItem = playlistContent.querySelector('.withu-music-playlist-item.active');
     if (activeItem) {
       activeItem.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
       if (window.Toastify && Toastify.showScenario) {
@@ -1053,7 +1053,7 @@ setTimeout(bindTelescopicEvents, 800);
   function renderPlaylist(audios, activeIndex) {
     if (!audios || audios.length === 0) {
       playlistContent.innerHTML = `
-        <div class="lgnewui-music-playlist-empty">
+        <div class="withu-music-playlist-empty">
           <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
             <path d="M12 3v10.55c-.59-.34-1.27-.55-2-.55-2.21 0-4 1.79-4 4s1.79 4 4 4 4-1.79 4-4V7h4V3h-6z"/>
           </svg>
@@ -1076,25 +1076,25 @@ setTimeout(bindTelescopicEvents, 800);
       const _plArtist = _mpEsc(audio.artist || '未知歌手');
       const _plQuality = audio.quality ? _mpEsc(audio.quality) : '';
       html += `
-        <div class="lgnewui-music-playlist-item${isActive ? ' active' : ''}" data-index="${index}">
-          <div class="lgnewui-music-playlist-index">${indexNum}</div>
-          <div class="lgnewui-music-playlist-cover">
+        <div class="withu-music-playlist-item${isActive ? ' active' : ''}" data-index="${index}">
+          <div class="withu-music-playlist-index">${indexNum}</div>
+          <div class="withu-music-playlist-cover">
             <img class="lazy" data-src="${_plCover}" alt="" onerror="this.src='https://picsum.photos/200/200?random=err'">
-            <div class="lgnewui-music-playlist-playing-indicator">
-              <div class="lgnewui-music-playlist-playing-bars">
+            <div class="withu-music-playlist-playing-indicator">
+              <div class="withu-music-playlist-playing-bars">
                 <span></span><span></span><span></span>
               </div>
             </div>
           </div>
-          <div class="lgnewui-music-playlist-info">
-            <div class="lgnewui-music-playlist-song-title">${_plName}</div>
-            <div class="lgnewui-music-playlist-meta">
-              <span class="lgnewui-music-playlist-artist">${_plArtist}</span>
-              ${_plQuality ? `<span class="lgnewui-music-playlist-quality ${_plQuality.toLowerCase()}">${_plQuality}</span>` : ''}
+          <div class="withu-music-playlist-info">
+            <div class="withu-music-playlist-song-title">${_plName}</div>
+            <div class="withu-music-playlist-meta">
+              <span class="withu-music-playlist-artist">${_plArtist}</span>
+              ${_plQuality ? `<span class="withu-music-playlist-quality ${_plQuality.toLowerCase()}">${_plQuality}</span>` : ''}
             </div>
           </div>
           ${!isActive ? `
-          <div class="lgnewui-music-playlist-action" title="下一首播放">
+          <div class="withu-music-playlist-action" title="下一首播放">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
               <line x1="12" y1="5" x2="12" y2="19"></line>
               <line x1="5" y1="12" x2="19" y2="12"></line>
@@ -1110,11 +1110,11 @@ setTimeout(bindTelescopicEvents, 800);
     if (window.lazyLoadInstance) window.lazyLoadInstance.update();
 
     // 绑定点击事件
-    playlistContent.querySelectorAll('.lgnewui-music-playlist-item').forEach(function (item) {
+    playlistContent.querySelectorAll('.withu-music-playlist-item').forEach(function (item) {
       // 下一首播放逻辑
-      item.querySelector('.lgnewui-music-playlist-action')?.addEventListener('click', function (e) {
+      item.querySelector('.withu-music-playlist-action')?.addEventListener('click', function (e) {
         e.stopPropagation();
-        const parentItem = this.closest('.lgnewui-music-playlist-item');
+        const parentItem = this.closest('.withu-music-playlist-item');
         const targetIndex = parseInt(parentItem.dataset.index);
 
         const ap = getAPlayer();
@@ -1154,7 +1154,7 @@ setTimeout(bindTelescopicEvents, 800);
 
       // 切歌逻辑
       item.addEventListener('click', function (e) {
-        if (e.target.closest('.lgnewui-music-playlist-action')) return;
+        if (e.target.closest('.withu-music-playlist-action')) return;
 
         const idx = parseInt(this.dataset.index);
         const ap = getAPlayer();
@@ -1168,7 +1168,7 @@ setTimeout(bindTelescopicEvents, 800);
 
     // 滚动到当前播放项
     if (activeIndex >= 0 && audios.length > 0) {
-      const activeItem = playlistContent.querySelector('.lgnewui-music-playlist-item.active');
+      const activeItem = playlistContent.querySelector('.withu-music-playlist-item.active');
       if (activeItem) {
         setTimeout(function () {
           activeItem.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
@@ -1184,7 +1184,7 @@ setTimeout(bindTelescopicEvents, 800);
     const oldIndex = currentIndex;
     currentIndex = index;
 
-    const items = playlistContent.querySelectorAll('.lgnewui-music-playlist-item');
+    const items = playlistContent.querySelectorAll('.withu-music-playlist-item');
 
     if (!items || items.length === 0) return;
 
@@ -1236,7 +1236,7 @@ setTimeout(bindTelescopicEvents, 800);
   function togglePlaylist(forceRender) {
     if (!playlistInited) {
       // 首次：显示 loading，然后初始化
-      if (playlistContent && !playlistContent.querySelector('.lgnewui-music-playlist-item')) {
+      if (playlistContent && !playlistContent.querySelector('.withu-music-playlist-item')) {
         playlistContent.innerHTML = '<div style="text-align:center;padding:40px 0;color:rgba(255,255,255,0.5);font-size:13px;"><i class="ph ph-spinner" style="animation:spin 1s linear infinite;display:inline-block;margin-right:6px;"></i>加载中...</div>';
       }
       initPlaylist();
@@ -1343,7 +1343,7 @@ setTimeout(bindTelescopicEvents, 800);
       segments = [];
       for (let i = 0; i < segmentCount; i++) {
         const el = document.createElement('div');
-        el.className = 'lgnewui-music-volume-segment-block';
+        el.className = 'withu-music-volume-segment-block';
         track.appendChild(el);
         segments.push(el);
       }
@@ -1404,15 +1404,15 @@ setTimeout(bindTelescopicEvents, 800);
         btn.classList.remove('active');
       }
 
-      btn.classList.remove('lgnewui-icon-state-mute', 'lgnewui-icon-state-low', 'lgnewui-icon-state-med', 'lgnewui-icon-state-high');
+      btn.classList.remove('withu-icon-state-mute', 'withu-icon-state-low', 'withu-icon-state-med', 'withu-icon-state-high');
       if (volume <= 0) {
-        btn.classList.add('lgnewui-icon-state-mute');
+        btn.classList.add('withu-icon-state-mute');
       } else if (volume < 33) {
-        btn.classList.add('lgnewui-icon-state-low');
+        btn.classList.add('withu-icon-state-low');
       } else if (volume < 66) {
-        btn.classList.add('lgnewui-icon-state-med');
+        btn.classList.add('withu-icon-state-med');
       } else {
-        btn.classList.add('lgnewui-icon-state-high');
+        btn.classList.add('withu-icon-state-high');
       }
 
       const ap = getAPlayer();

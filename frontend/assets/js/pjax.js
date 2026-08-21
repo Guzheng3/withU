@@ -1,5 +1,5 @@
 /**
- * LG_NewUI PJAX 管理模块
+ * withU PJAX 管理模块
  * @version 2.0.0
  * @description 统一管理 PJAX 配置、生命周期事件、页面组件初始化
  * @requires jQuery, jquery.pjax, LGApp
@@ -18,7 +18,7 @@
 
     // 获取 LGApp 模块引用
     const LGApp = window.LGApp || {};
-    const LGConfig = window.LG_CONFIG || {};
+    const LGConfig = window.WITHU_CONFIG || {};
     const { TimerManager, LazyLoadManager, HeightManager, CommonFunctions, AOSManager, Toast } = LGApp;
     const imageErrorFallback = LGConfig.imageErrorFallback || ((LGConfig.assetBase || '') + 'Style/img/file-placeholder.svg');
 
@@ -123,7 +123,7 @@
          * 初始化 LG 相册页 Masonry
          */
         initLGGrid() {
-            const $grid = $('.lg-masonry-grid');
+            const $grid = $('.withu-masonry-grid');
             if ($grid.length === 0 || typeof Masonry === 'undefined') return;
 
             // 添加 loading 状态，防止高度塌陷导致 pjax 滚动失焦
@@ -131,7 +131,7 @@
 
             const initMasonry = () => {
                 this._create($grid[0], {
-                    itemSelector: '.lg-masonry-col',
+                    itemSelector: '.withu-masonry-col',
                     percentPosition: true
                 });
                 $grid.css('min-height', '');
@@ -153,7 +153,7 @@
          * 初始化点点滴滴页面瀑布流
          */
         initArticleGrid() {
-            const $articleGrid = $('#lgnewui-article-masonry');
+            const $articleGrid = $('#withu-article-masonry');
             if ($articleGrid.length === 0 || typeof Masonry === 'undefined') return;
 
             // 添加 loading 状态，防止底部闪烁
@@ -161,7 +161,7 @@
 
             const initMasonry = () => {
                 this._create($articleGrid[0], {
-                    itemSelector: '.lgnewui-article-masonry-item',
+                    itemSelector: '.withu-article-masonry-item',
                     percentPosition: true,
                     horizontalOrder: true
                 });
@@ -334,10 +334,10 @@
         init() {
             if (typeof Plyr === 'undefined') return;
 
-            const videoEl = document.getElementById('LGNewUiPlayerVideo');
+            const videoEl = document.getElementById('withUPlayerVideo');
             if (!videoEl) return;
 
-            this._instance = new Plyr('#LGNewUiPlayerVideo', {
+            this._instance = new Plyr('#withUPlayerVideo', {
                 i18n: {
                     speed: '速度',
                     normal: '正常'
@@ -446,7 +446,7 @@
          * 初始化弥散光效果
          */
         init() {
-            const cards = document.querySelectorAll('.lgnewui-article-card-base');
+            const cards = document.querySelectorAll('.withu-article-card-base');
             if (cards.length === 0) return;
 
             const rand = (min, max) => Math.floor(Math.random() * (max - min + 1)) + min;
@@ -485,7 +485,7 @@
             if (CommonFunctions && CommonFunctions.initViewImage) {
                 CommonFunctions.initViewImage();
             } else if (window.ViewImage) {
-                ViewImage.init('.grid-gallery img, .ConventionPhoto img, .lg-media img, #md-view img, .leav_card .aiv_qq img, img.photo_style');
+                ViewImage.init('.grid-gallery img, .ConventionPhoto img, .withu-media img, #md-view img, .leav_card .aiv_qq img, img.photo_style');
             }
 
             // ScrollReveal 动画
@@ -504,7 +504,7 @@
          * 滚动到页面描述区域
          */
         scrollToPageHeader() {
-            const pageHeader = document.querySelector('.lgnewui-page-header');
+            const pageHeader = document.querySelector('.withu-page-header');
             if (!pageHeader) return;
 
             // 先滚动到顶部，确保计算准确
@@ -611,7 +611,7 @@
                 LoadingIndicator.show();
 
                 // ---- 统一清理：防止内存泄漏 ----
-                // 0. 强制释放滚动锁（弹窗打开时切页会导致 lg-scroll-locked 残留）
+                // 0. 强制释放滚动锁（弹窗打开时切页会导致 withu-scroll-locked 残留）
                 if (window.lgScrollReset) lgScrollReset();
 
                 // 1. 销毁 Masonry 实例
@@ -620,7 +620,7 @@
                 // 1.5 销毁 imglist 瀑布流
                 if (window.ImglistApp) ImglistApp.destroy();
 
-                // 2. 销毁轮播实例（lg-pjax 管理的）
+                // 2. 销毁轮播实例（withu-pjax 管理的）
                 CarouselManager.destroyAll();
 
                 // 3. 销毁视频播放器
@@ -723,12 +723,12 @@
                         const link = document.createElement('link');
                         link.id = cssId;
                         link.rel = 'stylesheet';
-                        link.href = ((window.LG_CONFIG && window.LG_CONFIG.assetBase) || '') + 'Style/css/message.css';
+                        link.href = ((window.WITHU_CONFIG && window.WITHU_CONFIG.assetBase) || '') + 'Style/css/message.css';
                         document.head.appendChild(link);
                     }
                 }
 
-                // 初始化页面标题动画（lgnewui-page-header）
+                // 初始化页面标题动画（withu-page-header）
                 if (typeof initPageHeaderAnimation === 'function') {
                     initPageHeaderAnimation();
                 }
@@ -741,7 +741,7 @@
                 // 动态加载 WaveSurfer（时间轴页面需要）
                 if ($('.timeline-container').length > 0 && typeof WaveSurfer === 'undefined') {
                     const script = document.createElement('script');
-                    script.src = ((window.LG_CONFIG && window.LG_CONFIG.assetBase) || '') + 'Style/js/wavesurfer.min.js';
+                    script.src = ((window.WITHU_CONFIG && window.WITHU_CONFIG.assetBase) || '') + 'Style/js/wavesurfer.min.js';
                     script.onload = () => {
                         // WaveSurfer 加载完成后初始化音频播放器
                         if (typeof initTimelineAudio === 'function') {
@@ -825,7 +825,7 @@
                 }
 
                 // 初始化首页
-                if ($('#lgnewui-day-counter-days').length > 0 && window.LGIndexModule) {
+                if ($('#withu-day-counter-days').length > 0 && window.LGIndexModule) {
                     window.LGIndexModule.destroy();
                     window.LGIndexModule.init();
                     // 初始化 LoveDay 滑块位置

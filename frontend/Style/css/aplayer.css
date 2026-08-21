@@ -273,7 +273,7 @@
     opacity: 1;
 }
 
-#nav-music #nav-music-hoverTips .lgnewui-nav-music-play-icon {
+#nav-music #nav-music-hoverTips .withu-nav-music-play-icon {
     width: 22px;
     height: 22px;
     display: block;
@@ -392,7 +392,7 @@
 }
 
 /* 顶部迷你控制按钮样式 */
-#nav-music .lgnewui-nav-music-controls {
+#nav-music .withu-nav-music-controls {
     position: absolute;
     right: 0;
     top: 50%;
@@ -413,13 +413,13 @@
     z-index: 2;
 }
 
-#nav-music.stretch .lgnewui-nav-music-controls {
+#nav-music.stretch .withu-nav-music-controls {
     pointer-events: none;
     /* 保持穿透 */
     opacity: 0;
 }
 
-#nav-music.stretch:hover .lgnewui-nav-music-controls {
+#nav-music.stretch:hover .withu-nav-music-controls {
     opacity: 1;
     visibility: visible;
     pointer-events: none;
@@ -429,7 +429,7 @@
 
 /* ... existing code ... */
 
-#nav-music .lgnewui-nav-music-btn {
+#nav-music .withu-nav-music-btn {
     /* ... existing styles ... */
     pointer-events: auto;
     /* 按钮恢复可点击 */
@@ -462,7 +462,7 @@
 
 /* 移动端：stretch 状态下控制按钮始终可见可点击 */
 @media (hover: none) and (pointer: coarse) {
-    #nav-music.stretch .lgnewui-nav-music-controls {
+    #nav-music.stretch .withu-nav-music-controls {
         opacity: 1;
         visibility: visible;
         pointer-events: auto;
@@ -470,7 +470,7 @@
     }
 
     /* 点击空白后隐藏控制按钮 */
-    #nav-music.stretch .lgnewui-nav-music-controls.mobile-hidden {
+    #nav-music.stretch .withu-nav-music-controls.mobile-hidden {
         opacity: 0;
         pointer-events: auto;
         /* 关键修复：必须允许点击才能触发JS的显示逻辑 */
@@ -478,21 +478,21 @@
     }
 
     /* 移动端禁用按钮 hover 效果 */
-    #nav-music .lgnewui-nav-music-btn:hover {
+    #nav-music .withu-nav-music-btn:hover {
         background: transparent;
     }
 
-    #nav-music.playing .lgnewui-nav-music-btn:hover {
+    #nav-music.playing .withu-nav-music-btn:hover {
         background: transparent;
     }
 
     /* 移动端用 active 代替 hover */
-    #nav-music .lgnewui-nav-music-btn:active {
+    #nav-music .withu-nav-music-btn:active {
         background: rgba(255, 255, 255, 0.18);
     }
 }
 
-#nav-music .lgnewui-nav-music-btn {
+#nav-music .withu-nav-music-btn {
     width: 26px;
     height: 26px;
     border-radius: 26px;
@@ -509,31 +509,31 @@
     /* 确保按钮可点击 */
 }
 
-#nav-music.stretch:hover .lgnewui-nav-music-btn {
+#nav-music.stretch:hover .withu-nav-music-btn {
     pointer-events: auto;
 }
 
 /* 移动端：按钮始终可点击 */
 @media (hover: none) and (pointer: coarse) {
-    #nav-music.stretch .lgnewui-nav-music-btn {
+    #nav-music.stretch .withu-nav-music-btn {
         pointer-events: auto;
     }
 }
 
-#nav-music.playing .lgnewui-nav-music-btn {
+#nav-music.playing .withu-nav-music-btn {
     background: transparent;
 }
 
-#nav-music .lgnewui-nav-music-btn:hover {
+#nav-music .withu-nav-music-btn:hover {
     /* transform: translateY(-1px); */
     background: rgba(255, 255, 255, 0.12);
 }
 
-#nav-music.playing .lgnewui-nav-music-btn:hover {
+#nav-music.playing .withu-nav-music-btn:hover {
     background: rgba(255, 255, 255, 0.18);
 }
 
-#nav-music .lgnewui-nav-music-icon {
+#nav-music .withu-nav-music-icon {
     width: 16px;
     height: 16px;
     stroke: currentColor;
@@ -544,15 +544,15 @@
 }
 
 /* 根据播放状态切换播放/暂停图标显示 */
-#nav-music .lgnewui-nav-music-icon-pause {
+#nav-music .withu-nav-music-icon-pause {
     display: none;
 }
 
-#nav-music.playing .lgnewui-nav-music-icon-play {
+#nav-music.playing .withu-nav-music-icon-play {
     display: none;
 }
 
-#nav-music.playing .lgnewui-nav-music-icon-pause {
+#nav-music.playing .withu-nav-music-icon-pause {
     display: block;
 }
 
@@ -681,14 +681,14 @@
 }
 
 /* 已缓冲 */
-#nav-music-progress .lgnewui-nav-music-progress-loaded {
+#nav-music-progress .withu-nav-music-progress-loaded {
     background: rgba(255, 255, 255, .35);
     width: 0%;
     transition: width .15s linear;
 }
 
 /* 已播放 */
-#nav-music-progress .lgnewui-nav-music-progress-played {
+#nav-music-progress .withu-nav-music-progress-played {
     background: var(--nav-music-theme) !important;
     width: 0%;
     transition: width .1s linear;
@@ -696,7 +696,7 @@
 }
 
 /* 滑块圆点 */
-#nav-music-progress .lgnewui-nav-music-progress-thumb {
+#nav-music-progress .withu-nav-music-progress-thumb {
     width: 6px;
     height: 6px;
     background: #fff;
@@ -713,18 +713,18 @@
 }
 
 /* 展开时显示滑块 */
-#nav-music.stretch #nav-music-progress .lgnewui-nav-music-progress-thumb {
+#nav-music.stretch #nav-music-progress .withu-nav-music-progress-thumb {
     opacity: 1;
 }
 
 /* 悬停时滑块放大 */
-#nav-music-progress:hover .lgnewui-nav-music-progress-thumb {
+#nav-music-progress:hover .withu-nav-music-progress-thumb {
     transform: translate(-50%, -50%) scale(1.5);
     box-shadow: 0 0 4px rgba(0, 0, 0, 0.5);
 }
 
 /* 隐藏不需要的 loading 元素 */
-#nav-music-progress .lgnewui-nav-music-progress-loading {
+#nav-music-progress .withu-nav-music-progress-loading {
     display: none;
 }
 
@@ -735,7 +735,7 @@
 }
 
 /* 加载时：滑块变成旋转 + 脉冲的 loading 效果 */
-#nav-music-progress.is-loading .lgnewui-nav-music-progress-thumb {
+#nav-music-progress.is-loading .withu-nav-music-progress-thumb {
     width: 6px;
     height: 6px;
     background: #fff;
@@ -761,7 +761,7 @@
 }
 
 /* 非加载状态时确保滑块正常 */
-#nav-music-progress:not(.is-loading) .lgnewui-nav-music-progress-thumb {
+#nav-music-progress:not(.is-loading) .withu-nav-music-progress-thumb {
     animation: none;
 }
 
@@ -795,11 +795,11 @@
 
 /* ==========================================================================
    Music Playlist & Volume Styles (Migrated from post.html)
-   Prefix: lgnewui-
+   Prefix: withu-
    ========================================================================== */
 
 /* 列表内容 */
-.lgnewui-music-playlist-content {
+.withu-music-playlist-content {
     flex: 1 1 auto;
     min-height: 0;
     overflow-y: auto;
@@ -807,25 +807,25 @@
     padding: 8px 0;
 }
 
-.lgnewui-music-playlist-content::-webkit-scrollbar {
+.withu-music-playlist-content::-webkit-scrollbar {
     width: 4px;
 }
 
-.lgnewui-music-playlist-content::-webkit-scrollbar-thumb {
+.withu-music-playlist-content::-webkit-scrollbar-thumb {
     background: rgba(255, 255, 255, 0.2);
     border-radius: 4px;
 }
 
-.lgnewui-music-playlist-content::-webkit-scrollbar-thumb:hover {
+.withu-music-playlist-content::-webkit-scrollbar-thumb:hover {
     background: rgba(255, 255, 255, 0.35);
 }
 
-.lgnewui-music-playlist-content::-webkit-scrollbar-track {
+.withu-music-playlist-content::-webkit-scrollbar-track {
     background: transparent;
 }
 
 /* 歌曲项 */
-.lgnewui-music-playlist-item {
+.withu-music-playlist-item {
     display: flex;
     align-items: center;
     gap: 10px;
@@ -836,15 +836,15 @@
     -webkit-tap-highlight-color: transparent;
 }
 
-.lgnewui-music-playlist-item:hover {
+.withu-music-playlist-item:hover {
     background: rgba(255, 255, 255, 0.08);
 }
 
-.lgnewui-music-playlist-item.active {
+.withu-music-playlist-item.active {
     background: rgba(255, 255, 255, 0.15);
 }
 
-.lgnewui-music-playlist-item.active::before {
+.withu-music-playlist-item.active::before {
     content: '';
     position: absolute;
     left: 0;
@@ -857,7 +857,7 @@
 }
 
 /* 序号 */
-.lgnewui-music-playlist-index {
+.withu-music-playlist-index {
     width: 20px;
     font-size: 11px;
     font-weight: 500;
@@ -866,13 +866,13 @@
     flex-shrink: 0;
 }
 
-.lgnewui-music-playlist-item.active .lgnewui-music-playlist-index {
+.withu-music-playlist-item.active .withu-music-playlist-index {
     color: #fff;
     font-weight: 600;
 }
 
 /* 封面 */
-.lgnewui-music-playlist-cover {
+.withu-music-playlist-cover {
     width: 40px;
     height: 40px;
     border-radius: 8px;
@@ -881,23 +881,23 @@
     position: relative;
 }
 
-.lgnewui-music-playlist-cover img {
+.withu-music-playlist-cover img {
     width: 100%;
     height: 100%;
     object-fit: cover;
     transition: transform 0.5s cubic-bezier(0.25, 0.8, 0.25, 1), opacity 0.8s ease-in-out;
 }
 
-.lgnewui-music-playlist-item:hover .lgnewui-music-playlist-cover img {
+.withu-music-playlist-item:hover .withu-music-playlist-cover img {
     transform: scale(1.15) rotate(5deg);
 }
 
-.lgnewui-music-playlist-cover img.loaded{
+.withu-music-playlist-cover img.loaded{
     transition:  transform 0.3s ease, .7s filter linear, .7s -webkit-filter linear;
 }
 
 /* 播放状态指示器 */
-.lgnewui-music-playlist-playing-indicator {
+.withu-music-playlist-playing-indicator {
     position: absolute;
     top: 0;
     left: 0;
@@ -909,35 +909,35 @@
     justify-content: center;
 }
 
-.lgnewui-music-playlist-item.active .lgnewui-music-playlist-playing-indicator {
+.withu-music-playlist-item.active .withu-music-playlist-playing-indicator {
     display: flex;
 }
 
-.lgnewui-music-playlist-playing-bars {
+.withu-music-playlist-playing-bars {
     display: flex;
     align-items: flex-end;
     gap: 2px;
     height: 14px;
 }
 
-.lgnewui-music-playlist-playing-bars span {
+.withu-music-playlist-playing-bars span {
     width: 3px;
     background: #fff;
     border-radius: 2px;
     animation: playingBars 0.8s ease-in-out infinite;
 }
 
-.lgnewui-music-playlist-playing-bars span:nth-child(1) {
+.withu-music-playlist-playing-bars span:nth-child(1) {
     height: 6px;
     animation-delay: 0s;
 }
 
-.lgnewui-music-playlist-playing-bars span:nth-child(2) {
+.withu-music-playlist-playing-bars span:nth-child(2) {
     height: 12px;
     animation-delay: 0.15s;
 }
 
-.lgnewui-music-playlist-playing-bars span:nth-child(3) {
+.withu-music-playlist-playing-bars span:nth-child(3) {
     height: 8px;
     animation-delay: 0.3s;
 }
@@ -955,12 +955,12 @@
 }
 
 /* 歌曲信息 */
-.lgnewui-music-playlist-info {
+.withu-music-playlist-info {
     flex: 1;
     min-width: 0;
 }
 
-.lgnewui-music-playlist-song-title {
+.withu-music-playlist-song-title {
     font-size: 13px;
     font-weight: 500;
     color: #fff;
@@ -971,14 +971,14 @@
     text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
 }
 
-.lgnewui-music-playlist-meta {
+.withu-music-playlist-meta {
     display: flex;
     align-items: center;
     gap: 6px;
     margin-top: 3px;
 }
 
-.lgnewui-music-playlist-artist {
+.withu-music-playlist-artist {
     font-size: 11px;
     color: rgba(255, 255, 255, 0.6);
     white-space: nowrap;
@@ -986,7 +986,7 @@
     text-overflow: ellipsis;
 }
 
-.lgnewui-music-playlist-dot {
+.withu-music-playlist-dot {
     width: 2px;
     height: 2px;
     background: rgba(255, 255, 255, 0.4);
@@ -994,14 +994,14 @@
     flex-shrink: 0;
 }
 
-.lgnewui-music-playlist-duration {
+.withu-music-playlist-duration {
     font-size: 11px;
     color: rgba(255, 255, 255, 0.5);
     flex-shrink: 0;
 }
 
 /* 音质标签 - 统一简约样式 */
-.lgnewui-music-playlist-quality {
+.withu-music-playlist-quality {
     font-size: 9px;
     font-weight: 500;
     padding: 2px 5px;
@@ -1015,27 +1015,27 @@
 }
 
 /* 悬停效果增强 */
-.lgnewui-music-playlist-item:hover {
+.withu-music-playlist-item:hover {
     background: rgba(255, 255, 255, 0.12);
 }
 
-.lgnewui-music-playlist-item:hover .lgnewui-music-playlist-song-title {
+.withu-music-playlist-item:hover .withu-music-playlist-song-title {
     color: #fff;
 }
 
-.lgnewui-music-playlist-item:hover .lgnewui-music-playlist-quality {
+.withu-music-playlist-item:hover .withu-music-playlist-quality {
     background: rgba(255, 255, 255, 0.25);
     color: #fff;
 }
 
 /* 当前播放歌曲封面光晕 */
-.lgnewui-music-playlist-item.active .lgnewui-music-playlist-cover {
+.withu-music-playlist-item.active .withu-music-playlist-cover {
     box-shadow:
         0 4px 12px rgba(0, 0, 0, 0.3),
         0 0 20px rgba(255, 255, 255, 0.2);
 }
 
-.lgnewui-music-playlist-item.active .lgnewui-music-playlist-cover::after {
+.withu-music-playlist-item.active .withu-music-playlist-cover::after {
     content: '';
     position: absolute;
     top: -2px;
@@ -1048,14 +1048,14 @@
 }
 
 /* 空状态 */
-.lgnewui-music-playlist-empty {
+.withu-music-playlist-empty {
     padding: 40px 20px;
     text-align: center;
     color: rgba(255, 255, 255, 0.7);
     font-size: 13px;
 }
 
-.lgnewui-music-playlist-empty svg {
+.withu-music-playlist-empty svg {
     width: 40px;
     height: 40px;
     fill: rgba(255, 255, 255, 0.3);
@@ -1063,7 +1063,7 @@
 }
 
 /* iOS风格音量控制 - Segment Mini Style */
-.lgnewui-music-playlist-volume {
+.withu-music-playlist-volume {
     display: flex;
     align-items: center;
     gap: 12px;
@@ -1073,7 +1073,7 @@
 }
 
 /* 数值显示 */
-.lgnewui-music-volume-value {
+.withu-music-volume-value {
     font-size: 13px;
     font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
     color: rgba(255, 255, 255, 0.9);
@@ -1086,7 +1086,7 @@
 }
 
 /* 分段滑块轨道 */
-.lgnewui-music-volume-segment-track {
+.withu-music-volume-segment-track {
     position: relative;
     flex: 1;
     height: 20px;
@@ -1101,7 +1101,7 @@
 }
 
 /* 每一个小分段 - 初始化时由JS插入 */
-.lgnewui-music-volume-segment-block {
+.withu-music-volume-segment-block {
     flex: 1;
     height: 100%;
     background: rgba(255, 255, 255, 0.15);
@@ -1111,13 +1111,13 @@
 }
 
 /* 激活状态 */
-.lgnewui-music-volume-segment-block.active {
+.withu-music-volume-segment-block.active {
     background: #ffffff;
     box-shadow: 0 0 8px rgba(255, 255, 255, 0.6);
 }
 
 /* 右侧图标包裹 */
-.lgnewui-music-volume-icon-wrap {
+.withu-music-volume-icon-wrap {
     background: none;
     border: none;
     padding: 0;
@@ -1135,20 +1135,20 @@
     -webkit-tap-highlight-color: transparent;
 }
 
-.lgnewui-music-volume-icon-wrap:hover {
+.withu-music-volume-icon-wrap:hover {
     transform: scale(1.1);
 }
 
-.lgnewui-music-volume-icon-wrap:active {
+.withu-music-volume-icon-wrap:active {
     transform: scale(0.9);
 }
 
-.lgnewui-music-volume-icon-wrap.active {
+.withu-music-volume-icon-wrap.active {
     color: #ffffff;
     /* 有音量时亮色 */
 }
 
-.lgnewui-music-volume-icon-svg {
+.withu-music-volume-icon-svg {
     width: 20px;
     height: 20px;
     stroke: currentColor;
@@ -1159,29 +1159,29 @@
 }
 
 /* 图标状态切换 */
-.lgnewui-music-volume-icon-path {
+.withu-music-volume-icon-path {
     display: none;
 }
 
-.lgnewui-icon-state-mute .lgnewui-path-mute {
+.withu-icon-state-mute .withu-path-mute {
     display: block;
 }
 
-.lgnewui-icon-state-low .lgnewui-path-low {
+.withu-icon-state-low .withu-path-low {
     display: block;
 }
 
-.lgnewui-icon-state-med .lgnewui-path-med {
+.withu-icon-state-med .withu-path-med {
     display: block;
 }
 
-.lgnewui-icon-state-high .lgnewui-path-high {
+.withu-icon-state-high .withu-path-high {
     display: block;
 }
 
 /* 响应式适配 */
 @media screen and (max-width: 400px) {
-    .lgnewui-music-playlist-panel {
+    .withu-music-playlist-panel {
         left: 10px;
         width: 280px;
     }
@@ -1189,7 +1189,7 @@
 
 /* 移动端隐藏音量控制（因为iOS等系统不支持JS控制音量） */
 @media screen and (max-width: 768px) {
-    .lgnewui-music-playlist-volume {
+    .withu-music-playlist-volume {
         display: none !important;
     }
 }
@@ -1198,7 +1198,7 @@
 
 
 /* ============ 高级音乐列表面板 ============ */
-.lgnewui-music-playlist-panel {
+.withu-music-playlist-panel {
     --panel-theme: var(--nav-music-theme, #b08968);
     --panel-theme-rgb: var(--music-theme-rgb, 176, 137, 104);
     position: fixed;
@@ -1238,7 +1238,7 @@
 }
 
 /* 顶部装饰光晕 */
-.lgnewui-music-playlist-panel::before {
+.withu-music-playlist-panel::before {
     content: '';
     position: absolute;
     top: -50%;
@@ -1252,14 +1252,14 @@
 }
 
 /* 在下方弹出时的样式 */
-.lgnewui-music-playlist-panel.position-below {
+.withu-music-playlist-panel.position-below {
     bottom: auto;
     top: 60px;
     transform: translateY(-12px) scale(0.95);
     transform-origin: top left;
 }
 
-.lgnewui-music-playlist-panel.show {
+.withu-music-playlist-panel.show {
     opacity: 1;
     visibility: visible;
     transform: translateY(0) scale(1);
@@ -1267,7 +1267,7 @@
 }
 
 /* 头部区域 */
-.lgnewui-music-playlist-header {
+.withu-music-playlist-header {
     padding: 14px 16px;
     display: flex;
     align-items: center;
@@ -1277,7 +1277,7 @@
     border-bottom: 1px solid rgba(255, 255, 255, 0.1);
 }
 
-.lgnewui-music-playlist-title {
+.withu-music-playlist-title {
     font-size: 14px;
     font-weight: 600;
     color: #fff;
@@ -1287,14 +1287,14 @@
     text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
 }
 
-.lgnewui-music-playlist-title svg {
+.withu-music-playlist-title svg {
     width: 16px;
     height: 16px;
     fill: #fff;
     opacity: 0.9;
 }
 
-.lgnewui-music-playlist-count {
+.withu-music-playlist-count {
     font-size: 11px;
     color: rgba(255, 255, 255, 0.7);
     font-weight: 400;
@@ -1304,14 +1304,14 @@
     margin-left: 4px;
 }
 
-.lgnewui-music-playlist-header-right {
+.withu-music-playlist-header-right {
     display: flex;
     align-items: center;
     gap: 8px;
 }
 
 /* 播放模式图标 */
-.lgnewui-music-playlist-mode {
+.withu-music-playlist-mode {
     width: 24px;
     height: 24px;
     display: flex;
@@ -1322,17 +1322,17 @@
     transition: all 0.2s ease;
 }
 
-.lgnewui-music-playlist-mode:hover {
+.withu-music-playlist-mode:hover {
     opacity: 1;
 }
 
-.lgnewui-music-playlist-mode .mode-icon {
+.withu-music-playlist-mode .mode-icon {
     width: 14px;
     height: 14px;
     stroke: #fff;
 }
 
-.lgnewui-music-playlist-close {
+.withu-music-playlist-close {
     width: 24px;
     height: 24px;
     border: none;
@@ -1345,16 +1345,16 @@
     transition: all 0.2s ease;
 }
 
-.lgnewui-music-playlist-close:hover {
+.withu-music-playlist-close:hover {
     background: rgba(255, 255, 255, 0.25);
     transform: rotate(90deg);
 }
 
-.lgnewui-music-playlist-close:active {
+.withu-music-playlist-close:active {
     transform: scale(0.9) rotate(90deg);
 }
 
-.lgnewui-music-playlist-close svg {
+.withu-music-playlist-close svg {
     width: 10px;
     height: 10px;
     stroke: #fff;
@@ -1362,7 +1362,7 @@
 }
 
 /* 下一首播放按钮样式 */
-.lgnewui-music-playlist-action {
+.withu-music-playlist-action {
     display: flex;
     align-items: center;
     justify-content: center;
@@ -1377,17 +1377,17 @@
     /* 始终显示 */
 }
 
-.lgnewui-music-playlist-item:hover .lgnewui-music-playlist-action {
+.withu-music-playlist-item:hover .withu-music-playlist-action {
     opacity: 1;
 }
 
-.lgnewui-music-playlist-action:hover {
+.withu-music-playlist-action:hover {
     background: rgba(255, 255, 255, 0.1);
     color: #fff;
     transform: scale(1.1);
 }
 
-.lgnewui-music-playlist-action svg {
+.withu-music-playlist-action svg {
     width: 16px;
     height: 16px;
 }

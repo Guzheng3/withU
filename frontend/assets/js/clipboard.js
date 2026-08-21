@@ -1,12 +1,12 @@
 /**
- * LG_NewUI 前台剪贴板工具
+ * withU 前台剪贴板工具
  * @version 1.0.0
  * @description 基于 ClipboardJS 的前台统一复制封装，支持 data 属性声明式 + JS 编程式调用
  *
  * 使用方式一：data 属性声明式
- *   <button data-lg-copy="要复制的文本">复制</button>
- *   <button data-lg-copy-target="#inputId">复制输入框内容</button>
- *   <button data-lg-copy-attr="data-url">复制同元素上指定属性的值</button>
+ *   <button data-withu-copy="要复制的文本">复制</button>
+ *   <button data-withu-copy-target="#inputId">复制输入框内容</button>
+ *   <button data-withu-copy-attr="data-url">复制同元素上指定属性的值</button>
  *
  * 使用方式二：JS 编程式
  *   LGClipboard.copy('要复制的文本')
@@ -105,14 +105,14 @@
 
         if (typeof ClipboardJS === 'undefined') return;
 
-        // data-lg-copy="文本" — 直接复制指定文本
-        _instance = new ClipboardJS('[data-lg-copy]', {
+        // data-withu-copy="文本" — 直接复制指定文本
+        _instance = new ClipboardJS('[data-withu-copy]', {
             text: function(trigger) {
-                return trigger.getAttribute('data-lg-copy') || '';
+                return trigger.getAttribute('data-withu-copy') || '';
             }
         });
         _instance.on('success', function(e) {
-            var msg = e.trigger.getAttribute('data-lg-copy-msg') || '已复制到剪贴板';
+            var msg = e.trigger.getAttribute('data-withu-copy-msg') || '已复制到剪贴板';
             _showToast('success', msg);
             e.clearSelection();
         });
@@ -120,17 +120,17 @@
             _showToast('error', '复制失败，请手动复制');
         });
 
-        // data-lg-copy-target="#selector" — 复制目标元素的文本/值
-        _targetInstance = new ClipboardJS('[data-lg-copy-target]', {
+        // data-withu-copy-target="#selector" — 复制目标元素的文本/值
+        _targetInstance = new ClipboardJS('[data-withu-copy-target]', {
             text: function(trigger) {
-                var sel = trigger.getAttribute('data-lg-copy-target');
+                var sel = trigger.getAttribute('data-withu-copy-target');
                 var el = sel ? document.querySelector(sel) : null;
                 if (!el) return '';
                 return el.value !== undefined ? el.value : (el.textContent || el.innerText || '');
             }
         });
         _targetInstance.on('success', function(e) {
-            var msg = e.trigger.getAttribute('data-lg-copy-msg') || '已复制到剪贴板';
+            var msg = e.trigger.getAttribute('data-withu-copy-msg') || '已复制到剪贴板';
             _showToast('success', msg);
             e.clearSelection();
         });
@@ -138,15 +138,15 @@
             _showToast('error', '复制失败，请手动复制');
         });
 
-        // data-lg-copy-attr="data-xxx" — 复制触发元素自身某个属性值
-        _attrInstance = new ClipboardJS('[data-lg-copy-attr]', {
+        // data-withu-copy-attr="data-xxx" — 复制触发元素自身某个属性值
+        _attrInstance = new ClipboardJS('[data-withu-copy-attr]', {
             text: function(trigger) {
-                var attr = trigger.getAttribute('data-lg-copy-attr');
+                var attr = trigger.getAttribute('data-withu-copy-attr');
                 return attr ? (trigger.getAttribute(attr) || '') : '';
             }
         });
         _attrInstance.on('success', function(e) {
-            var msg = e.trigger.getAttribute('data-lg-copy-msg') || '已复制到剪贴板';
+            var msg = e.trigger.getAttribute('data-withu-copy-msg') || '已复制到剪贴板';
             _showToast('success', msg);
             e.clearSelection();
         });

@@ -1,5 +1,5 @@
 /**
- * LG_NewUI 时间轴页面模块
+ * withU 时间轴页面模块
  * @version 2.0.0
  * @description timeline.php 页面的 JS 逻辑
  * @requires WaveSurfer.js (动态加载)
@@ -11,7 +11,7 @@
     // ============================================
     // 配置常量
     // ============================================
-    const _assetBase = (window.LG_CONFIG && window.LG_CONFIG.assetBase) || '';
+    const _assetBase = (window.WITHU_CONFIG && window.WITHU_CONFIG.assetBase) || '';
     const TIMELINE_CONFIG = {
         enableDiffusedLight: true,
         waveSurferUrl: _assetBase + 'Style/js/wavesurfer.min.js',
@@ -109,8 +109,8 @@
             const pos2 = `bottom: ${Math.random() * -10}%; right: ${Math.random() * -10}%; width: 60%; height: 60%;`;
 
             return `
-                <div class="lgnewui-time-line-diffused-light" style="${pos1} background: radial-gradient(circle, ${color1} 0%, transparent 70%);"></div>
-                <div class="lgnewui-time-line-diffused-light" style="${pos2} background: radial-gradient(circle, ${color2} 0%, transparent 70%);"></div>
+                <div class="withu-time-line-diffused-light" style="${pos1} background: radial-gradient(circle, ${color1} 0%, transparent 70%);"></div>
+                <div class="withu-time-line-diffused-light" style="${pos2} background: radial-gradient(circle, ${color2} 0%, transparent 70%);"></div>
             `;
         }
     };
@@ -205,13 +205,13 @@
          * 初始化 WaveSurfer 实例
          */
         _initWaveSurfers() {
-            const wrappers = document.querySelectorAll('.lgnewui-timeline-audio-wrapper');
+            const wrappers = document.querySelectorAll('.withu-timeline-audio-wrapper');
 
             wrappers.forEach(wrapper => {
                 const id = wrapper.id.replace('audio-player-', '');
-                const waveContainer = wrapper.querySelector('.lgnewui-timeline-audio-wave');
-                const playBtnIcon = wrapper.querySelector('.lgnewui-timeline-audio-play-btn i');
-                const durationText = wrapper.querySelector('.lgnewui-timeline-audio-duration');
+                const waveContainer = wrapper.querySelector('.withu-timeline-audio-wave');
+                const playBtnIcon = wrapper.querySelector('.withu-timeline-audio-play-btn i');
+                const durationText = wrapper.querySelector('.withu-timeline-audio-duration');
                 const audioUrl = wrapper.dataset.audioUrl;
 
                 if (!waveContainer || !audioUrl) return;
@@ -238,20 +238,20 @@
                 const waveArea = waveContainer.parentElement;
 
                 ws.on('ready', () => {
-                    wrapper.classList.remove('lgnewui-timeline-audio-loading');
-                    wrapper.classList.add('lgnewui-timeline-audio-loaded');
+                    wrapper.classList.remove('withu-timeline-audio-loading');
+                    wrapper.classList.add('withu-timeline-audio-loaded');
                     playBtnIcon.className = 'ph-fill ph-play';
                     durationText.innerText = Utils.formatTime(ws.getDuration());
                     // Insert custom cursor line in wave-area (same as admin style)
-                    if (waveArea && !waveArea.querySelector('.lgnewui-timeline-audio-cursor')) {
+                    if (waveArea && !waveArea.querySelector('.withu-timeline-audio-cursor')) {
                         const cursor = document.createElement('div');
-                        cursor.className = 'lgnewui-timeline-audio-cursor';
+                        cursor.className = 'withu-timeline-audio-cursor';
                         waveArea.appendChild(cursor);
                     }
                 });
 
                 ws.on('timeupdate', (currentTime) => {
-                    const cursor = waveArea ? waveArea.querySelector('.lgnewui-timeline-audio-cursor') : null;
+                    const cursor = waveArea ? waveArea.querySelector('.withu-timeline-audio-cursor') : null;
                     if (!cursor) return;
                     const dur = ws.getDuration ? ws.getDuration() : 0;
                     if (!dur) return;
@@ -277,7 +277,7 @@
             const ws = this._instances[id];
             const wrapper = document.getElementById(`audio-player-${id}`);
 
-            if (!ws || !wrapper || wrapper.classList.contains('lgnewui-timeline-audio-loading')) return;
+            if (!ws || !wrapper || wrapper.classList.contains('withu-timeline-audio-loading')) return;
 
             if (ws.isPlaying()) {
                 ws.pause();
@@ -332,49 +332,49 @@
             const timeAgo = Utils.getTimeAgo(item.year, item.month, item.day, item.time);
 
             const metaItems = [];
-            if (item.time) metaItems.push(`<div class="lgnewui-time-line-meta-item"><i class="ph-fill ph-clock"></i><span>${item.time}</span></div>`);
+            if (item.time) metaItems.push(`<div class="withu-time-line-meta-item"><i class="ph-fill ph-clock"></i><span>${item.time}</span></div>`);
             if (item.location) {
                 const hasValidCoords = item.map_lat && item.map_lng && isFinite(item.map_lat) && isFinite(item.map_lng) && !(item.map_lat === 0 && item.map_lng === 0);
                 if (hasValidCoords) {
-                    metaItems.push(`<div class="lgnewui-time-line-meta-item lgnewui-tl-meta-location-link" onclick="event.stopPropagation(); if(typeof LGMiniMap!=='undefined') LGMiniMap.openFullscreen(${item.map_lat}, ${item.map_lng})" data-tooltip="${item.location}"><i class="ph-fill ph-map-pin"></i><span>${item.location}</span></div>`);
+                    metaItems.push(`<div class="withu-time-line-meta-item withu-tl-meta-location-link" onclick="event.stopPropagation(); if(typeof LGMiniMap!=='undefined') LGMiniMap.openFullscreen(${item.map_lat}, ${item.map_lng})" data-tooltip="${item.location}"><i class="ph-fill ph-map-pin"></i><span>${item.location}</span></div>`);
                 } else {
-                    metaItems.push(`<div class="lgnewui-time-line-meta-item" data-tooltip="${item.location}"><i class="ph-fill ph-map-pin"></i><span>${item.location}</span></div>`);
+                    metaItems.push(`<div class="withu-time-line-meta-item" data-tooltip="${item.location}"><i class="ph-fill ph-map-pin"></i><span>${item.location}</span></div>`);
                 }
             }
             if (item.weather) {
                 const wIcon = item.weatherIcon || 'ph-cloud-sun';
-                metaItems.push(`<div class="lgnewui-time-line-meta-item"><i class="ph-fill ${wIcon}"></i><span>${item.weather}</span></div>`);
+                metaItems.push(`<div class="withu-time-line-meta-item"><i class="ph-fill ${wIcon}"></i><span>${item.weather}</span></div>`);
             }
             if (item.moodLabel) {
                 const mIconHtml = item.moodIconHtml || '<i class="ph-fill ph-smiley"></i>';
-                metaItems.push(`<div class="lgnewui-time-line-meta-item">${mIconHtml}<span>${item.moodLabel}</span></div>`);
+                metaItems.push(`<div class="withu-time-line-meta-item">${mIconHtml}<span>${item.moodLabel}</span></div>`);
             }
 
             return `
-                <div class="lgnewui-time-line-card-header">
-                    <div class="lgnewui-time-line-card-header-top">
-                        <div class="lg-author${hasGender ? ' show-gender' : ''}">
-                            <div class="lg-author__ring">
-                                <img src="${author.avatar || ''}" class="lg-author__avatar">
-                                ${hasGender ? `<div class="lg-author__badge ${genderClass}"><i class="ph-bold ${genderIcon}"></i></div>` : ''}
+                <div class="withu-time-line-card-header">
+                    <div class="withu-time-line-card-header-top">
+                        <div class="withu-author${hasGender ? ' show-gender' : ''}">
+                            <div class="withu-author__ring">
+                                <img src="${author.avatar || ''}" class="withu-author__avatar">
+                                ${hasGender ? `<div class="withu-author__badge ${genderClass}"><i class="ph-bold ${genderIcon}"></i></div>` : ''}
                             </div>
-                            <div class="lg-author__text">
-                                <span class="lg-author__name">${author.name || ''}</span>
-                                <div class="lgnewui-timeline-capsule style-contrast">
-                                    <div class="lgnewui-timeline-capsule-icon-box"><i class="ph-bold ${eventType.icon}"></i></div>
-                                    <span class="lgnewui-timeline-capsule-label">${eventType.name}</span>
-                                    <div class="lgnewui-timeline-capsule-divider"></div>
-                                    <span class="lgnewui-timeline-capsule-time">${timeAgo}</span>
+                            <div class="withu-author__text">
+                                <span class="withu-author__name">${author.name || ''}</span>
+                                <div class="withu-timeline-capsule style-contrast">
+                                    <div class="withu-timeline-capsule-icon-box"><i class="ph-bold ${eventType.icon}"></i></div>
+                                    <span class="withu-timeline-capsule-label">${eventType.name}</span>
+                                    <div class="withu-timeline-capsule-divider"></div>
+                                    <span class="withu-timeline-capsule-time">${timeAgo}</span>
                                 </div>
                             </div>
                         </div>
-                        <div class="lgnewui-time-line-date-badge">
-                            <span class="lgnewui-time-line-date-day">${item.day}</span>
-                            <div class="lgnewui-time-line-date-divider"></div>
-                            <span class="lgnewui-time-line-date-month">${MONTH_CN_MAP[item.month] || ''}</span>
+                        <div class="withu-time-line-date-badge">
+                            <span class="withu-time-line-date-day">${item.day}</span>
+                            <div class="withu-time-line-date-divider"></div>
+                            <span class="withu-time-line-date-month">${MONTH_CN_MAP[item.month] || ''}</span>
                         </div>
                     </div>
-                    ${metaItems.length > 0 ? `<div class="lgnewui-time-line-meta">${metaItems.join('')}</div>` : ''}
+                    ${metaItems.length > 0 ? `<div class="withu-time-line-meta">${metaItems.join('')}</div>` : ''}
                 </div>
             `;
         },
@@ -393,8 +393,8 @@
             // 统一提取标题和描述，放在所有卡片内容的顶部
             const isTicket = item.type === 'ticket';
             const titleAndDesc = `
-                ${item.title ? `<h3 class="lgnewui-time-line-card-title">${item.title}</h3>` : ''}
-                ${item.desc ? `<p class="lgnewui-time-line-card-desc">${item.desc}</p>` : ''}
+                ${item.title ? `<h3 class="withu-time-line-card-title">${item.title}</h3>` : ''}
+                ${item.desc ? `<p class="withu-time-line-card-desc">${item.desc}</p>` : ''}
                 ${(item.title || item.desc) && isTicket ? `<div style="height:1px; background:linear-gradient(to right, rgba(255,255,255,0.2) 0%, rgba(255,255,255,0) 100%); margin:12px 0 16px;"></div>` : ''}
             `;
 
@@ -412,13 +412,13 @@
                 const displayPath = item.linkPath.length > 50 ? item.linkPath.substring(0, 50) + '...' : item.linkPath;
                 const arrowIcon = item.linkType === 'external' ? 'ph-arrow-square-out' : 'ph-caret-right';
                 linkHtml = `
-                <a class="lgnewui-tl-link-card${isTicket ? ' lgnewui-tl-link-card-ticket' : ''}" href="${item.linkPath}"${linkTarget}>
-                    <div class="lgnewui-tl-link-card-icon ${lc.colorClass}"><i class="ph-fill ${lc.icon}"></i></div>
-                    <div class="lgnewui-tl-link-card-body">
-                        <div class="lgnewui-tl-link-card-title ${lc.hoverClass}">${linkTitle}</div>
-                        <div class="lgnewui-tl-link-card-path">${displayPath}</div>
+                <a class="withu-tl-link-card${isTicket ? ' withu-tl-link-card-ticket' : ''}" href="${item.linkPath}"${linkTarget}>
+                    <div class="withu-tl-link-card-icon ${lc.colorClass}"><i class="ph-fill ${lc.icon}"></i></div>
+                    <div class="withu-tl-link-card-body">
+                        <div class="withu-tl-link-card-title ${lc.hoverClass}">${linkTitle}</div>
+                        <div class="withu-tl-link-card-path">${displayPath}</div>
                     </div>
-                    <i class="ph-bold ${arrowIcon} lgnewui-tl-link-card-${item.linkType === 'external' ? 'external' : 'arrow'}"></i>
+                    <i class="ph-bold ${arrowIcon} withu-tl-link-card-${item.linkType === 'external' ? 'external' : 'arrow'}"></i>
                 </a>`;
             }
 
@@ -427,15 +427,15 @@
             switch (item.type) {
                 case 'text':
                     return `
-                    <div class="lgnewui-time-line-card ${extraClass}">
+                    <div class="withu-time-line-card ${extraClass}">
                         ${diffusedLights}
-                        <div class="lgnewui-time-line-card-inner">
+                        <div class="withu-time-line-card-inner">
                             ${header}
-                            <div class="lgnewui-time-line-card-content">
+                            <div class="withu-time-line-card-content">
                                 ${titleAndDesc}
-                                <div class="lgnewui-time-line-card-footer">
-                                    <div class="lgnewui-time-line-quote-icon"><i class="ph-fill ph-quotes"></i></div>
-                                    <div class="lgnewui-time-line-signature">${item.signature ? ('— ' + item.signature) : ('By ' + (author.name || ''))}</div>
+                                <div class="withu-time-line-card-footer">
+                                    <div class="withu-time-line-quote-icon"><i class="ph-fill ph-quotes"></i></div>
+                                    <div class="withu-time-line-signature">${item.signature ? ('— ' + item.signature) : ('By ' + (author.name || ''))}</div>
                                 </div>
                                 ${linkHtml}
                                 ${likeHtml}
@@ -446,20 +446,20 @@
                 case 'image':
                     const imgMeta = item.mediaMeta || {};
                     const imgMetaTags = [
-                        imgMeta.format ? `<span class="lgnewui-tl-media-meta-tag"><i class="ph-bold ph-file-image"></i>${imgMeta.format}</span>` : '',
-                        imgMeta.resolution ? `<span class="lgnewui-tl-media-meta-tag"><i class="ph-bold ph-frame-corners"></i>${imgMeta.resolution}</span>` : '',
-                        imgMeta.fileSize ? `<span class="lgnewui-tl-media-meta-tag"><i class="ph-bold ph-database"></i>${imgMeta.fileSize}</span>` : '',
+                        imgMeta.format ? `<span class="withu-tl-media-meta-tag"><i class="ph-bold ph-file-image"></i>${imgMeta.format}</span>` : '',
+                        imgMeta.resolution ? `<span class="withu-tl-media-meta-tag"><i class="ph-bold ph-frame-corners"></i>${imgMeta.resolution}</span>` : '',
+                        imgMeta.fileSize ? `<span class="withu-tl-media-meta-tag"><i class="ph-bold ph-database"></i>${imgMeta.fileSize}</span>` : '',
                     ].filter(Boolean).join('');
                     return `
-                    <div class="lgnewui-time-line-card ${extraClass}">
+                    <div class="withu-time-line-card ${extraClass}">
                         ${diffusedLights}
-                        <div class="lgnewui-time-line-card-inner">
+                        <div class="withu-time-line-card-inner">
                             ${header}
-                            <div class="lgnewui-time-line-card-content">
+                            <div class="withu-time-line-card-content">
                                 ${titleAndDesc}
-                                <div class="lgnewui-time-line-media-container" style="position:relative; overflow:hidden;">
+                                <div class="withu-time-line-media-container" style="position:relative; overflow:hidden;">
                                     <img src="${item.mediaUrl}" loading="lazy" class="view-image-media" style="width:100%; height:100%; object-fit:cover; cursor:pointer;">
-                                    ${imgMetaTags ? `<div class="lgnewui-tl-media-meta">${imgMetaTags}</div>` : ''}
+                                    ${imgMetaTags ? `<div class="withu-tl-media-meta">${imgMetaTags}</div>` : ''}
                                 </div>
                                 ${linkHtml}
                                 ${likeHtml}
@@ -473,22 +473,22 @@
                     const vidDuration = vidMeta.duration || item.duration || '';
                     const vidResLabel = vidMeta.resolutionLabel || '';
                     const vidMetaTags = [
-                        vidMeta.format ? `<span class="lgnewui-tl-media-meta-tag"><i class="ph-bold ph-film-strip"></i>${vidMeta.format}</span>` : '',
-                        vidResLabel ? `<span class="lgnewui-tl-media-meta-tag"><i class="ph-bold ph-monitor"></i>${vidResLabel}</span>` : (vidMeta.resolution ? `<span class="lgnewui-tl-media-meta-tag"><i class="ph-bold ph-frame-corners"></i>${vidMeta.resolution}</span>` : ''),
-                        vidMeta.fileSize ? `<span class="lgnewui-tl-media-meta-tag"><i class="ph-bold ph-database"></i>${vidMeta.fileSize}</span>` : '',
-                        vidDuration ? `<span class="lgnewui-tl-media-meta-tag"><i class="ph-bold ph-timer"></i>${vidDuration}</span>` : '',
+                        vidMeta.format ? `<span class="withu-tl-media-meta-tag"><i class="ph-bold ph-film-strip"></i>${vidMeta.format}</span>` : '',
+                        vidResLabel ? `<span class="withu-tl-media-meta-tag"><i class="ph-bold ph-monitor"></i>${vidResLabel}</span>` : (vidMeta.resolution ? `<span class="withu-tl-media-meta-tag"><i class="ph-bold ph-frame-corners"></i>${vidMeta.resolution}</span>` : ''),
+                        vidMeta.fileSize ? `<span class="withu-tl-media-meta-tag"><i class="ph-bold ph-database"></i>${vidMeta.fileSize}</span>` : '',
+                        vidDuration ? `<span class="withu-tl-media-meta-tag"><i class="ph-bold ph-timer"></i>${vidDuration}</span>` : '',
                     ].filter(Boolean).join('');
                     return `
-                    <div class="lgnewui-time-line-card ${extraClass}">
+                    <div class="withu-time-line-card ${extraClass}">
                         ${diffusedLights}
-                        <div class="lgnewui-time-line-card-inner">
+                        <div class="withu-time-line-card-inner">
                             ${header}
-                            <div class="lgnewui-time-line-card-content">
+                            <div class="withu-time-line-card-content">
                                 ${titleAndDesc}
-                                <div class="lgnewui-time-line-media-container video-player" data-url="${item.mediaUrl}" onclick="if(window.VideoModal){window.VideoModal.open('${item.mediaUrl}', '${videoCoverUrl}');}else{console.warn('VideoModal not loaded');}" style="cursor:pointer; position:relative; overflow:hidden; border-radius:12px; height:256px;">
+                                <div class="withu-time-line-media-container video-player" data-url="${item.mediaUrl}" onclick="if(window.VideoModal){window.VideoModal.open('${item.mediaUrl}', '${videoCoverUrl}');}else{console.warn('VideoModal not loaded');}" style="cursor:pointer; position:relative; overflow:hidden; border-radius:12px; height:256px;">
                                     ${videoCoverUrl ? `<img src="${videoCoverUrl}" loading="lazy" style="width:100%; height:100%; object-fit:cover;">` : `<video src="${item.mediaUrl}" preload="metadata" muted playsinline style="width:100%; height:100%; object-fit:cover; pointer-events:none;"></video>`}
-                                    <div class="lgnewui-tl-video-play-icon"><i class="ph-fill ph-play"></i></div>
-                                    ${vidMetaTags ? `<div class="lgnewui-tl-media-meta">${vidMetaTags}</div>` : ''}
+                                    <div class="withu-tl-video-play-icon"><i class="ph-fill ph-play"></i></div>
+                                    ${vidMetaTags ? `<div class="withu-tl-media-meta">${vidMetaTags}</div>` : ''}
                                 </div>
                                 ${linkHtml}
                                 ${likeHtml}
@@ -499,17 +499,17 @@
                 case 'audio':
                     const audioId = AudioManager.getNextId();
                     return `
-                    <div class="lgnewui-time-line-card ${extraClass}">
+                    <div class="withu-time-line-card ${extraClass}">
                         ${diffusedLights}
-                        <div class="lgnewui-time-line-card-inner">
+                        <div class="withu-time-line-card-inner">
                             ${header}
-                            <div class="lgnewui-time-line-card-content">
+                            <div class="withu-time-line-card-content">
                                 ${titleAndDesc}
-                                <div class="lgnewui-timeline-audio-wrapper lgnewui-timeline-audio-loading" id="audio-player-${audioId}" data-audio-url="${item.mediaUrl}">
-                                    <div class="lgnewui-timeline-audio-container">
-                                        <div class="lgnewui-timeline-audio-play-btn" onclick="window.toggleTimelineAudio('${audioId}')"><i class="ph-fill ph-play"></i></div>
-                                        <div class="lgnewui-timeline-audio-wave-area"><div class="lgnewui-timeline-audio-wave" id="audio-wave-${audioId}"></div></div>
-                                        <div class="lgnewui-timeline-audio-duration">--:--</div>
+                                <div class="withu-timeline-audio-wrapper withu-timeline-audio-loading" id="audio-player-${audioId}" data-audio-url="${item.mediaUrl}">
+                                    <div class="withu-timeline-audio-container">
+                                        <div class="withu-timeline-audio-play-btn" onclick="window.toggleTimelineAudio('${audioId}')"><i class="ph-fill ph-play"></i></div>
+                                        <div class="withu-timeline-audio-wave-area"><div class="withu-timeline-audio-wave" id="audio-wave-${audioId}"></div></div>
+                                        <div class="withu-timeline-audio-duration">--:--</div>
                                     </div>
                                 </div>
                                 ${linkHtml}
@@ -520,24 +520,24 @@
 
                 case 'ticket':
                     return `
-                    <div class="lgnewui-time-line-card lgnewui-time-line-ticket-card ${extraClass}">
-                        <div class="lgnewui-time-line-ticket-overlay"></div>
-                        <div class="lgnewui-time-line-card-inner">
+                    <div class="withu-time-line-card withu-time-line-ticket-card ${extraClass}">
+                        <div class="withu-time-line-ticket-overlay"></div>
+                        <div class="withu-time-line-card-inner">
                             ${header}
-                            <div class="lgnewui-time-line-ticket-notch lgnewui-time-line-ticket-notch-left"></div>
-                            <div class="lgnewui-time-line-ticket-notch lgnewui-time-line-ticket-notch-right"></div>
-                            <div class="lgnewui-time-line-ticket-content">
+                            <div class="withu-time-line-ticket-notch withu-time-line-ticket-notch-left"></div>
+                            <div class="withu-time-line-ticket-notch withu-time-line-ticket-notch-right"></div>
+                            <div class="withu-time-line-ticket-content">
                                 ${titleAndDesc}
-                                <div class="lgnewui-time-line-ticket-route">
-                                    <div><div class="lgnewui-time-line-ticket-city-code">${item.fromCode}</div><div class="lgnewui-time-line-ticket-city-name">${item.from}</div></div>
-                                    <div class="lgnewui-time-line-ticket-plane"><i class="ph-fill ph-airplane"></i></div>
-                                    <div style="text-align: right;"><div class="lgnewui-time-line-ticket-city-code">${item.toCode}</div><div class="lgnewui-time-line-ticket-city-name">${item.to}</div></div>
+                                <div class="withu-time-line-ticket-route">
+                                    <div><div class="withu-time-line-ticket-city-code">${item.fromCode}</div><div class="withu-time-line-ticket-city-name">${item.from}</div></div>
+                                    <div class="withu-time-line-ticket-plane"><i class="ph-fill ph-airplane"></i></div>
+                                    <div style="text-align: right;"><div class="withu-time-line-ticket-city-code">${item.toCode}</div><div class="withu-time-line-ticket-city-name">${item.to}</div></div>
                                 </div>
-                                <div class="lgnewui-time-line-ticket-divider"></div>
-                                <div class="lgnewui-time-line-ticket-details">
-                                    <div class="lgnewui-time-line-ticket-detail-item"><span class="lgnewui-time-line-ticket-detail-label">Flight</span><span class="lgnewui-time-line-ticket-detail-value">${item.flightNo}</span></div>
-                                    <div class="lgnewui-time-line-ticket-detail-item"><span class="lgnewui-time-line-ticket-detail-label">Seat</span><span class="lgnewui-time-line-ticket-detail-value lgnewui-time-line-ticket-seat">${item.seat}</span></div>
-                                    <div class="lgnewui-time-line-ticket-qr"><i class="ph-fill ph-qr-code"></i></div>
+                                <div class="withu-time-line-ticket-divider"></div>
+                                <div class="withu-time-line-ticket-details">
+                                    <div class="withu-time-line-ticket-detail-item"><span class="withu-time-line-ticket-detail-label">Flight</span><span class="withu-time-line-ticket-detail-value">${item.flightNo}</span></div>
+                                    <div class="withu-time-line-ticket-detail-item"><span class="withu-time-line-ticket-detail-label">Seat</span><span class="withu-time-line-ticket-detail-value withu-time-line-ticket-seat">${item.seat}</span></div>
+                                    <div class="withu-time-line-ticket-qr"><i class="ph-fill ph-qr-code"></i></div>
                                 </div>
                                 ${linkHtml}
                                 ${likeHtml}
@@ -547,17 +547,17 @@
 
                 case 'list':
                     return `
-                    <div class="lgnewui-time-line-card ${extraClass}">
+                    <div class="withu-time-line-card ${extraClass}">
                         ${diffusedLights}
-                        <div class="lgnewui-time-line-card-inner">
+                        <div class="withu-time-line-card-inner">
                             ${header}
-                            <div class="lgnewui-time-line-card-content">
+                            <div class="withu-time-line-card-content">
                                 ${titleAndDesc}
-                                <div class="lgnewui-time-line-list-items">
+                                <div class="withu-time-line-list-items">
                                     ${(item.items || []).map(todo => `
-                                        <div class="lgnewui-time-line-list-item">
-                                            <div class="lgnewui-time-line-list-checkbox ${todo.done ? 'checked' : ''}">${todo.done ? '<i class="ph-bold ph-check"></i>' : ''}</div>
-                                            <span class="lgnewui-time-line-list-text ${todo.done ? 'checked' : ''}">${todo.text}</span>
+                                        <div class="withu-time-line-list-item">
+                                            <div class="withu-time-line-list-checkbox ${todo.done ? 'checked' : ''}">${todo.done ? '<i class="ph-bold ph-check"></i>' : ''}</div>
+                                            <span class="withu-time-line-list-text ${todo.done ? 'checked' : ''}">${todo.text}</span>
                                         </div>
                                     `).join('')}
                                 </div>
@@ -579,40 +579,40 @@
                     const giftDir = giftPartner.name ? `赠予 ${giftPartner.name}` : '';
 
                     return `
-                    <div class="lgnewui-time-line-card ${extraClass}">
+                    <div class="withu-time-line-card ${extraClass}">
                         ${diffusedLights}
-                        <div class="lgnewui-time-line-card-inner">
+                        <div class="withu-time-line-card-inner">
                             ${header}
-                            <div class="lgnewui-time-line-card-content">
+                            <div class="withu-time-line-card-content">
                                 ${titleAndDesc}
 
                                 ${giftHasImage ? `
-                                <div class="lgnewui-tl-gift-img-wrap">
-                                    <div class="lgnewui-tl-gift-img-inner">
+                                <div class="withu-tl-gift-img-wrap">
+                                    <div class="withu-tl-gift-img-inner">
                                         <img src="${item.giftThumbUrl || item.giftImage}" referrerpolicy="no-referrer" loading="lazy" class="view-image-media" style="cursor:pointer;">
                                     </div>
-                                    <div class="lgnewui-tl-gift-img-footer">
-                                        <div class="lgnewui-tl-gift-img-left">
+                                    <div class="withu-tl-gift-img-footer">
+                                        <div class="withu-tl-gift-img-left">
                                             <i class="ph-fill ph-gift"></i>
-                                            <span class="lgnewui-tl-gift-img-name">${item.giftName || '神秘礼物'}</span>
+                                            <span class="withu-tl-gift-img-name">${item.giftName || '神秘礼物'}</span>
                                         </div>
-                                        ${item.giftPrice ? `<div class="lgnewui-tl-gift-img-price"><i class="lgnewui-tl-gift-sym"></i>${parseFloat(item.giftPrice).toFixed(2)}</div>` : ''}
+                                        ${item.giftPrice ? `<div class="withu-tl-gift-img-price"><i class="withu-tl-gift-sym"></i>${parseFloat(item.giftPrice).toFixed(2)}</div>` : ''}
                                     </div>
                                 </div>
                                 ` : `
-                                <div class="lgnewui-tl-gift-simple">
-                                    <div class="lgnewui-tl-gift-icon-box">
+                                <div class="withu-tl-gift-simple">
+                                    <div class="withu-tl-gift-icon-box">
                                         <i class="ph-fill ph-gift"></i>
                                     </div>
-                                    <div class="lgnewui-tl-gift-info">
-                                        <div class="lgnewui-tl-gift-name">${item.giftName || '一份特别的礼物'}</div>
-                                        ${item.giftPrice ? `<div class="lgnewui-tl-gift-price"><i class="lgnewui-tl-gift-sym"></i>${parseFloat(item.giftPrice).toFixed(2)}</div>` : ''}
+                                    <div class="withu-tl-gift-info">
+                                        <div class="withu-tl-gift-name">${item.giftName || '一份特别的礼物'}</div>
+                                        ${item.giftPrice ? `<div class="withu-tl-gift-price"><i class="withu-tl-gift-sym"></i>${parseFloat(item.giftPrice).toFixed(2)}</div>` : ''}
                                     </div>
                                 </div>
                                 `}
 
                                 ${giftDir ? `
-                                <div class="lgnewui-tl-gift-dir">
+                                <div class="withu-tl-gift-dir">
                                     <i class="ph-fill ph-heart"></i><span>${giftDir}</span>
                                 </div>
                                 ` : ''}
@@ -627,24 +627,24 @@
                     const msUnit = item.milestoneUnit || '';
                     const msCat = (item.milestoneCategory && item.milestoneCategory !== 'default') ? item.milestoneCategory : '';
                     return `
-                    <div class="lgnewui-time-line-card ${extraClass}">
+                    <div class="withu-time-line-card ${extraClass}">
                         ${diffusedLights}
-                        <div class="lgnewui-time-line-card-inner">
+                        <div class="withu-time-line-card-inner">
                             ${header}
-                            <div class="lgnewui-time-line-card-content">
+                            <div class="withu-time-line-card-content">
                                 ${titleAndDesc}
-                                <div class="lgnewui-tl-ms-panel">
-                                    <div class="lgnewui-tl-ms-accent"></div>
-                                    <span class="lgnewui-tl-ms-corner-bl"></span>
-                                    <span class="lgnewui-tl-ms-corner-br"></span>
+                                <div class="withu-tl-ms-panel">
+                                    <div class="withu-tl-ms-accent"></div>
+                                    <span class="withu-tl-ms-corner-bl"></span>
+                                    <span class="withu-tl-ms-corner-br"></span>
                                     ${msVal ? `
-                                        <div class="lgnewui-tl-ms-figure">
-                                            <span class="lgnewui-tl-ms-value">${msVal}</span>
-                                            ${msUnit ? `<span class="lgnewui-tl-ms-unit">${msUnit}</span>` : ''}
+                                        <div class="withu-tl-ms-figure">
+                                            <span class="withu-tl-ms-value">${msVal}</span>
+                                            ${msUnit ? `<span class="withu-tl-ms-unit">${msUnit}</span>` : ''}
                                         </div>` : ''}
                                     ${msCat ? `
-                                        <div class="lgnewui-tl-ms-divider"></div>
-                                        <div class="lgnewui-tl-ms-category">
+                                        <div class="withu-tl-ms-divider"></div>
+                                        <div class="withu-tl-ms-category">
                                             <i class="ph-fill ph-flag-pennant"></i><span>${msCat}</span>
                                         </div>` : ''}
                                 </div>
@@ -657,15 +657,15 @@
                     const hasCoords = item.map_lat && item.map_lng;
                     const mapId = 'tl-map-' + (item.id || Math.random().toString(36).substr(2, 6));
                     return `
-                    <div class="lgnewui-time-line-card ${extraClass}">
+                    <div class="withu-time-line-card ${extraClass}">
                         ${diffusedLights}
-                        <div class="lgnewui-time-line-card-inner">
+                        <div class="withu-time-line-card-inner">
                             ${header}
-                            <div class="lgnewui-time-line-card-content">
+                            <div class="withu-time-line-card-content">
                                 ${titleAndDesc}
                                 ${hasCoords
-                            ? `<div class="lgnewui-tl-map-preview" id="${mapId}" data-lat="${item.map_lat}" data-lng="${item.map_lng}" style="margin-top:16px;"></div>`
-                            : `<div class="lgnewui-tl-map-empty" style="margin-top:16px;"><i class="ph-fill ph-map-pin"></i></div>`}
+                            ? `<div class="withu-tl-map-preview" id="${mapId}" data-lat="${item.map_lat}" data-lng="${item.map_lng}" style="margin-top:16px;"></div>`
+                            : `<div class="withu-tl-map-empty" style="margin-top:16px;"><i class="ph-fill ph-map-pin"></i></div>`}
                                 ${linkHtml}
                                 ${likeHtml}
                             </div>
@@ -674,11 +674,11 @@
 
                 default:
                     return `
-                        <div class="lgnewui-time-line-card ${extraClass}">
+                        <div class="withu-time-line-card ${extraClass}">
                             ${diffusedLights}
-                            <div class="lgnewui-time-line-card-inner">
+                            <div class="withu-time-line-card-inner">
                                 ${header}
-                                <div class="lgnewui-time-line-card-content">
+                                <div class="withu-time-line-card-content">
                                     ${titleAndDesc}
                                     ${linkHtml}
                                 </div>
@@ -720,7 +720,7 @@
         init() {
             this.destroy();
 
-            const sections = document.querySelectorAll('.lgnewui-time-line-year-section');
+            const sections = document.querySelectorAll('.withu-time-line-year-section');
             if (sections.length === 0) return;
 
             this._handler = () => {
@@ -738,7 +738,7 @@
 
                     // 特殊处理：最后一个 section，当其内部有节点被激活时也应该激活年份
                     if (isLastSection && !activeSection) {
-                        const lastNode = section.querySelector('.lgnewui-time-line-event:last-child .lgnewui-time-line-node.active');
+                        const lastNode = section.querySelector('.withu-time-line-event:last-child .withu-time-line-node.active');
                         if (lastNode) {
                             activeSection = section;
                         }
@@ -825,7 +825,7 @@
                 });
             });
 
-            const rows = document.querySelectorAll('.lgnewui-time-line-event');
+            const rows = document.querySelectorAll('.withu-time-line-event');
             this._cachedNodes = Array.from(rows).map(row => {
                 const nodeId = row.getAttribute('data-node-id');
                 const rect = row.getBoundingClientRect();
@@ -837,7 +837,7 @@
                     pcNode: pcNode,
                     mobileNode: document.getElementById(`mobile-${nodeId}`),
                     card: document.getElementById(`card-${nodeId}`),
-                    connector: row.querySelector('.lgnewui-time-line-connector'),
+                    connector: row.querySelector('.withu-time-line-connector'),
                     activated: false  // 始终从 false 开始，由滚动逻辑决定激活
                 };
             });
@@ -860,7 +860,7 @@
                     if (node.pcNode) node.pcNode.classList.add('active');
                     if (node.mobileNode) node.mobileNode.classList.add('active');
                     if (node.connector) node.connector.classList.add('active');
-                    const memoryCard = node.card ? node.card.querySelector('.lgnewui-time-line-card') : null;
+                    const memoryCard = node.card ? node.card.querySelector('.withu-time-line-card') : null;
                     if (memoryCard) memoryCard.classList.add('active');
                 }
                 // 移除了滚动回去时取消激活的逻辑，卡片一旦显示就保持显示
@@ -1051,15 +1051,15 @@
             if (timelineData.length === 0) {
                 var hint = document.getElementById('timelineScrollHint');
                 if (hint) hint.style.display = 'none';
-                var _ab = (window.LG_CONFIG && window.LG_CONFIG.assetBase) || '';
-                var _sb = (window.LG_CONFIG && window.LG_CONFIG.siteBase) || '';
+                var _ab = (window.WITHU_CONFIG && window.WITHU_CONFIG.assetBase) || '';
+                var _sb = (window.WITHU_CONFIG && window.WITHU_CONFIG.siteBase) || '';
                 container.innerHTML =
-                    '<div class="lgnewui-no-data lgnewui-no-data--orange">' +
-                    '<div class="lgnewui-no-data-wrap"><div class="lgnewui-no-data-content">' +
-                    '<div class="lgnewui-no-data-icon lgnewui-no-data-icon--orange"><svg viewBox="0 0 24 24" fill="none" stroke="#f59e0b" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg></div>' +
-                    '<h3 class="lgnewui-no-data-title">\u8fd8\u6ca1\u6709\u8bb0\u5f55\u4e0b\u4efb\u4f55\u8db3\u8ff9</h3>' +
-                    '<p class="lgnewui-no-data-desc">\u8fd9\u91cc\u8fd8\u6ca1\u6709\u65f6\u5149\u8f68\u8ff9\uff0c\u8fc7\u6bb5\u65f6\u95f4\u518d\u6765\u770b\u770b\u5427\u3002</p>' +
-                    '<div class="lgnewui-no-data-actions"><a class="lgnewui-no-data-btn lgnewui-no-data-btn-primary" href="' + _sb.replace(/\/$/, '') + '/index.php"><i class="ph ph-house"></i> \u8fd4\u56de\u9996\u9875</a></div>' +
+                    '<div class="withu-no-data withu-no-data--orange">' +
+                    '<div class="withu-no-data-wrap"><div class="withu-no-data-content">' +
+                    '<div class="withu-no-data-icon withu-no-data-icon--orange"><svg viewBox="0 0 24 24" fill="none" stroke="#f59e0b" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg></div>' +
+                    '<h3 class="withu-no-data-title">\u8fd8\u6ca1\u6709\u8bb0\u5f55\u4e0b\u4efb\u4f55\u8db3\u8ff9</h3>' +
+                    '<p class="withu-no-data-desc">\u8fd9\u91cc\u8fd8\u6ca1\u6709\u65f6\u5149\u8f68\u8ff9\uff0c\u8fc7\u6bb5\u65f6\u95f4\u518d\u6765\u770b\u770b\u5427\u3002</p>' +
+                    '<div class="withu-no-data-actions"><a class="withu-no-data-btn withu-no-data-btn-primary" href="' + _sb.replace(/\/$/, '') + '/index.php"><i class="ph ph-house"></i> \u8fd4\u56de\u9996\u9875</a></div>' +
                     '</div></div></div>';
                 return;
             }
@@ -1067,54 +1067,54 @@
             // 重置音频计数器
             AudioManager.resetCounter();
 
-            let html = '<div class="lgnewui-time-line-wrapper">';
+            let html = '<div class="withu-time-line-wrapper">';
             let eventCounter = 0;
 
             timelineData.forEach((group, groupIdx) => {
                 const isLastGroup = groupIdx === timelineData.length - 1;
-                const trackClass = isLastGroup ? 'lgnewui-time-line-track trail-mask' : 'lgnewui-time-line-track';
+                const trackClass = isLastGroup ? 'withu-time-line-track trail-mask' : 'withu-time-line-track';
 
                 html += `
-                    <div class="lgnewui-time-line-year-section" id="year-${group.year}">
-                        <div class="lgnewui-time-line-year-badge-mobile">
-                            <div class="lgnewui-time-line-year-badge-inner">
-                                <span class="lgnewui-time-line-year-badge-year">${group.year}</span>
-                                <div class="lgnewui-time-line-year-badge-divider"></div>
-                                <span class="lgnewui-time-line-year-badge-chapter">Chapter ${totalGroups - groupIdx}</span>
+                    <div class="withu-time-line-year-section" id="year-${group.year}">
+                        <div class="withu-time-line-year-badge-mobile">
+                            <div class="withu-time-line-year-badge-inner">
+                                <span class="withu-time-line-year-badge-year">${group.year}</span>
+                                <div class="withu-time-line-year-badge-divider"></div>
+                                <span class="withu-time-line-year-badge-chapter">Chapter ${totalGroups - groupIdx}</span>
                             </div>
                         </div>
-                        <div class="lgnewui-time-line-year-sidebar">
-                            <div class="lgnewui-time-line-year-sticky">
-                                <div class="lgnewui-time-line-year-number">
+                        <div class="withu-time-line-year-sidebar">
+                            <div class="withu-time-line-year-sticky">
+                                <div class="withu-time-line-year-number">
                                     ${group.year}
-                                    <span class="lgnewui-time-line-year-sparkle"><i class="ph-fill ph-sparkle"></i></span>
+                                    <span class="withu-time-line-year-sparkle"><i class="ph-fill ph-sparkle"></i></span>
                                 </div>
-                                <p class="lgnewui-time-line-year-chapter">Chapter ${totalGroups - groupIdx}</p>
+                                <p class="withu-time-line-year-chapter">Chapter ${totalGroups - groupIdx}</p>
                             </div>
                         </div>
-                        <div class="lgnewui-time-line-track-wrapper">
-                            <div class="lgnewui-time-line-track-inner ${trackClass}">
-                                <div class="lgnewui-time-line-progress" id="progress-line-pc-${group.year}"></div>
+                        <div class="withu-time-line-track-wrapper">
+                            <div class="withu-time-line-track-inner ${trackClass}">
+                                <div class="withu-time-line-progress" id="progress-line-pc-${group.year}"></div>
                             </div>
                         </div>
-                        <div class="lgnewui-time-line-events" id="events-container-${group.year}">
-                            <div class="lgnewui-time-line-track-mobile ${trackClass}">
-                                <div class="lgnewui-time-line-progress" id="progress-line-mobile-${group.year}"></div>
+                        <div class="withu-time-line-events" id="events-container-${group.year}">
+                            <div class="withu-time-line-track-mobile ${trackClass}">
+                                <div class="withu-time-line-progress" id="progress-line-mobile-${group.year}"></div>
                             </div>
-                            <div class="lgnewui-time-line-events-inner">
+                            <div class="withu-time-line-events-inner">
                                 ${group.events.map(item => {
                     const cardHTML = CardGenerator.generate(item);
                     const nodeId = `node-${eventCounter++}`;
                     return `
-                                        <div class="lgnewui-time-line-event" data-node-id="${nodeId}">
-                                            <div class="lgnewui-time-line-node-wrapper-pc">
-                                                <div class="lgnewui-time-line-node" id="pc-${nodeId}"></div>
-                                                <div class="lgnewui-time-line-connector"></div>
+                                        <div class="withu-time-line-event" data-node-id="${nodeId}">
+                                            <div class="withu-time-line-node-wrapper-pc">
+                                                <div class="withu-time-line-node" id="pc-${nodeId}"></div>
+                                                <div class="withu-time-line-connector"></div>
                                             </div>
-                                            <div class="lgnewui-time-line-node-wrapper-mobile">
-                                                <div class="lgnewui-time-line-node" id="mobile-${nodeId}"></div>
+                                            <div class="withu-time-line-node-wrapper-mobile">
+                                                <div class="withu-time-line-node" id="mobile-${nodeId}"></div>
                                             </div>
-                                            <div class="lgnewui-time-line-card-wrapper" id="card-${nodeId}">
+                                            <div class="withu-time-line-card-wrapper" id="card-${nodeId}">
                                                 ${cardHTML}
                                             </div>
                                         </div>`;
@@ -1135,7 +1135,7 @@
 
             // 初始化地图卡片中的迷你地图
             if (typeof LGMiniMap !== 'undefined') {
-                container.querySelectorAll('.lgnewui-tl-map-preview').forEach(el => {
+                container.querySelectorAll('.withu-tl-map-preview').forEach(el => {
                     const lat = parseFloat(el.dataset.lat);
                     const lng = parseFloat(el.dataset.lng);
                     if (isFinite(lat) && isFinite(lng)) {
@@ -1242,7 +1242,7 @@
          */
         _playEntranceAnimation() {
             setTimeout(() => {
-                document.querySelectorAll('.lgnewui-time-line-event').forEach((el, idx) => {
+                document.querySelectorAll('.withu-time-line-event').forEach((el, idx) => {
                     el.style.animationDelay = `${idx * 0.1}s`;
                     el.classList.add('fade-in-up');
                 });

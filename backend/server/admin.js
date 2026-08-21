@@ -1,5 +1,5 @@
 // ============================================================
-// LG-NewUi 本地复刻站 · 管理后台模块（基于 LikeGirl 后台协议还原）
+// withU 本地复刻站 · 管理后台模块（基于 LikeGirl 后台协议还原）
 // 挂载到 server.js：require('./admin.js').mount(req, res, body, urlPath)
 // 登录协议与 LikeGirl 一致：POST adminName + pw(md5) → session cookie
 // 默认账号 admin / lovezz（与原版一致），安全码 Love
@@ -17,7 +17,7 @@ const CONFIG_FILE = path.join(__dirname, 'app-config.json');
 const USERS_FILE = path.join(DATA_DIR, 'users.json');
 const OPLOG_FILE = path.join(DATA_DIR, 'oplog.jsonl');
 
-const SECRET = 'lg-local-admin-2026-secret';
+const SECRET = 'withu-local-admin-2026-secret';
 const md5 = s => crypto.createHash('md5').update(String(s)).digest('hex');
 const now = () => new Date().toLocaleString('zh-CN', { hour12: false });
 
@@ -71,7 +71,7 @@ function parseCookies(req) {
   return out;
 }
 function authUser(req) {
-  const tok = parseCookies(req).lg_admin;
+  const tok = parseCookies(req).withu_admin;
   if (!tok) return null;
   for (const u of loadUsers().users) {
     if (sessionToken(u.user, u.pw_md5) === tok) return u;
@@ -105,12 +105,12 @@ function apiRouter(req, res, body, urlPath, q) {
     logOp(u.user, '登录成功', '后台登录');
     res.writeHead(200, {
       'Content-Type': 'application/json; charset=utf-8',
-      'Set-Cookie': 'lg_admin=' + sessionToken(u.user, u.pw_md5) + '; Path=/; HttpOnly; SameSite=Lax'
+      'Set-Cookie': 'withu_admin=' + sessionToken(u.user, u.pw_md5) + '; Path=/; HttpOnly; SameSite=Lax'
     });
     return res.end(JSON.stringify({ ok: true, msg: '登录成功', name: u.name || u.user }));
   }
   if (urlPath === '/admin/api/logout' && req.method === 'POST') {
-    res.writeHead(200, { 'Content-Type': 'application/json; charset=utf-8', 'Set-Cookie': 'lg_admin=; Path=/; Max-Age=0' });
+    res.writeHead(200, { 'Content-Type': 'application/json; charset=utf-8', 'Set-Cookie': 'withu_admin=; Path=/; Max-Age=0' });
     return res.end(JSON.stringify({ ok: true }));
   }
 
@@ -142,7 +142,7 @@ function apiRouter(req, res, body, urlPath, q) {
         beacons: (bc.records || []).length,
         amapKey: !!(mc.amapKey)
       },
-      config: { title: (loadConfig().LG_CONFIG || {}).title || '', version: (loadConfig().LG_CONFIG || {}).version || '' },
+      config: { title: (loadConfig().WITHU_CONFIG || {}).title || '', version: (loadConfig().WITHU_CONFIG || {}).version || '' },
       ops: readOps(12)
     });
   }
@@ -316,9 +316,9 @@ function apiRouter(req, res, body, urlPath, q) {
     return json(res, 200, { ok: true });
   }
 
-  // ---- 站点设置（lg-config.json）----
+  // ---- 站点设置（withu-config.json）----
   if (urlPath === '/admin/api/config' && req.method === 'GET') {
-    const c = loadConfig().LG_CONFIG || {};
+    const c = loadConfig().WITHU_CONFIG || {};
     return json(res, 200, { ok: true, config: {
       title: c.title, version: c.version, boy: c.boy, girl: c.girl, startTime: c.startTime,
       userCity: c.userCity, weatherEnabled: c.weatherEnabled, soloMode: c.soloMode, maleName: c.maleName, femaleName: c.femaleName
@@ -327,7 +327,7 @@ function apiRouter(req, res, body, urlPath, q) {
   if (urlPath === '/admin/api/config/save' && req.method === 'POST') {
     let p = {}; try { p = JSON.parse(body || '{}'); } catch (e) {}
     const full = loadConfig();
-    const c = full.LG_CONFIG = full.LG_CONFIG || {};
+    const c = full.WITHU_CONFIG = full.WITHU_CONFIG || {};
     ['title', 'version', 'boy', 'girl', 'maleName', 'femaleName', 'startTime', 'userCity'].forEach(k => { if (p[k] !== undefined) c[k] = p[k]; });
     if (p.weatherEnabled !== undefined) c.weatherEnabled = !!p.weatherEnabled;
     if (p.soloMode !== undefined) c.soloMode = !!p.soloMode;
@@ -507,7 +507,7 @@ function apiRouter(req, res, body, urlPath, q) {
 function pageHandler(req, res, urlPath) {
   if (urlPath === '/admin/' || urlPath === '/admin' || urlPath === '/admin/index.html') {
     const user = authUser(req);
-    const f = path.join(ROOT, '_external', 'lgadmin', 'index.html');
+    const f = path.join(ROOT, '_external', 'withuadmin', 'index.html');
     if (!fs.existsSync(f)) { res.writeHead(404); res.end('admin page missing'); return; }
     let html = fs.readFileSync(f, 'utf8');
     html = html.replace('__BOOT_USER__', JSON.stringify(user ? { user: user.user, name: user.name } : null));

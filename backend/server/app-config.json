@@ -1,5 +1,5 @@
 {
-  "LG_CONFIG": {
+  "WITHU_CONFIG": {
     "title": "Love Really · 后台演示站",
     "boy": "Ki.",
     "girl": "Really",
@@ -40,8 +40,8 @@
     "userCity": "湖北 · 武汉",
     "anonymousAvatar": "https://love-really.kikiw.cn/Lovefolder/20250310095445_67ce466598093.webp"
   },
-  "LGApp_config": {
-    "title": "LG-NewUi Demo",
+  "WITHUApp_config": {
+    "title": "withU Demo",
     "boy": "Ki.",
     "girl": "Really",
     "startTime": "2023-07-19 00:00:00",

@@ -1,4 +1,4 @@
-/* WithU · LG-inspired frontend motion layer */
+/* WithU · withU-inspired frontend motion layer */
 (function(){'use strict';
 function init(){
     var body=document.body;

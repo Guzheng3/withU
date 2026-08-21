@@ -7,7 +7,7 @@
  *
  *      ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
  *
- * Project      : LGNewUi
+ * Project      : withU
  * Author       : Ki
  * Last Updated : 2026-03-31
  * Description  : A private place to preserve love, memory, and the
@@ -28,7 +28,7 @@
  * Official Authorization Site:
  * https://auth-love.kikiw.cn/
  *
- * Warning      : LGNewUi is an original work. Any unauthorized
+ * Warning      : withU is an original work. Any unauthorized
  *                copying, scraping, resale, redistribution, or
  *                commercial use is forbidden.
  * Notice       : Development and long-term maintenance require
@@ -38,7 +38,7 @@
  */
 $(document).ready(function () {
     const audio = $('#music')[0];
-    const assetBase = (window.LG_CONFIG && window.LG_CONFIG.assetBase) || '';
+    const assetBase = (window.WITHU_CONFIG && window.WITHU_CONFIG.assetBase) || '';
     const play_svg = assetBase + "Style/img/pause.svg";
     const pause_svg = assetBase + "Style/img/play.svg";
     const play_svg2 = assetBase + "Style/img/pause2.svg";

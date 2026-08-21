@@ -1,5 +1,5 @@
 /**
- * LGNewUi Mobile Navigation - mobile-nav.js
+ * withU Mobile Navigation - mobile-nav.js
  * 移动端底部 Tab 栏交互逻辑（6套方案）
  * 根据页面中存在的 DOM 结构自动初始化，支持 pjax 重新初始化
  */
@@ -84,12 +84,12 @@
        方案 1：灵动伸缩栏
        ================================================================ */
     function initV1() {
-        var wrapper = document.getElementById('lgnewui-mobile-nav-v1');
+        var wrapper = document.getElementById('withu-mobile-nav-v1');
         if (!wrapper) return;
 
-        var nav = wrapper.querySelector('.lgnewui-tab-template-v1-nav');
-        var items = Array.from(wrapper.querySelectorAll('.js-lgnewui-v1-item'));
-        var indicator = wrapper.querySelector('.lgnewui-tab-template-v1-indicator');
+        var nav = wrapper.querySelector('.withu-tab-template-v1-nav');
+        var items = Array.from(wrapper.querySelectorAll('.js-withu-v1-item'));
+        var indicator = wrapper.querySelector('.withu-tab-template-v1-indicator');
         var baseItemWidth = 0;
 
         function updateIndicator(target, instant) {
@@ -97,7 +97,7 @@
             if (baseItemWidth === 0 && items.length > 0) {
                 var testItem = items[0];
                 if (testItem.offsetWidth > 0) {
-                    var tw = testItem.querySelector('.lgnewui-tab-template-v1-text-wrap');
+                    var tw = testItem.querySelector('.withu-tab-template-v1-text-wrap');
                     var oldMax = tw.style.maxWidth;
                     tw.style.maxWidth = '0px';
                     baseItemWidth = testItem.offsetWidth || 48;
@@ -112,8 +112,8 @@
             var targetWidth = 0;
 
             items.forEach(function (item, idx) {
-                var tw = item.querySelector('.lgnewui-tab-template-v1-text-wrap');
-                var text = item.querySelector('.lgnewui-tab-template-v1-text');
+                var tw = item.querySelector('.withu-tab-template-v1-text-wrap');
+                var text = item.querySelector('.withu-tab-template-v1-text');
                 var exactTextWidth = text ? text.scrollWidth : 0;
                 if (idx === targetIndex) {
                     tw.style.maxWidth = exactTextWidth + 'px';
@@ -160,13 +160,13 @@
         setActiveByUrl(items, 'active');
         
         setTimeout(function () {
-            var active = wrapper.querySelector('.js-lgnewui-v1-item.active');
+            var active = wrapper.querySelector('.js-withu-v1-item.active');
             if (active) updateIndicator(active, true);
         }, 100);
 
-        window.recalcLgnewuiV1 = function () {
+        window.recalcWithuV1 = function () {
             baseItemWidth = 0;
-            var active = wrapper.querySelector('.js-lgnewui-v1-item.active');
+            var active = wrapper.querySelector('.js-withu-v1-item.active');
             if (active) updateIndicator(active, true);
         };
     }
@@ -175,13 +175,13 @@
        方案 2：全息展开层
        ================================================================ */
     function initV2() {
-        var wrapper = document.getElementById('lgnewui-mobile-nav-v2');
+        var wrapper = document.getElementById('withu-mobile-nav-v2');
         if (!wrapper) return;
 
-        var overlay = wrapper.querySelector('.js-lgnewui-v2-overlay');
-        var toggleBtns = wrapper.querySelectorAll('.js-lgnewui-v2-toggle');
-        var dockItems = wrapper.querySelectorAll('.js-lgnewui-v2-dock-item');
-        var gridItems = wrapper.querySelectorAll('.js-lgnewui-v2-grid-item');
+        var overlay = wrapper.querySelector('.js-withu-v2-overlay');
+        var toggleBtns = wrapper.querySelectorAll('.js-withu-v2-toggle');
+        var dockItems = wrapper.querySelectorAll('.js-withu-v2-dock-item');
+        var gridItems = wrapper.querySelectorAll('.js-withu-v2-grid-item');
 
         function toggleOverlay() {
             if (overlay) overlay.classList.toggle('open');
@@ -195,7 +195,7 @@
         });
 
         // 选择dock中的更多按钮（排除sheet中的关闭按钮）
-        var moreBtn = wrapper.querySelector('.lgnewui-tab-template-v2-dock .js-lgnewui-v2-toggle');
+        var moreBtn = wrapper.querySelector('.withu-tab-template-v2-dock .js-withu-v2-toggle');
         
         // 根据 URL 设置高亮
         setActiveByUrl(Array.from(dockItems), 'active');
@@ -242,15 +242,15 @@
        方案 3：沉浸网格拉伸
        ================================================================ */
     function initV3() {
-        var wrapper = document.getElementById('lgnewui-mobile-nav-v3');
+        var wrapper = document.getElementById('withu-mobile-nav-v3');
         if (!wrapper) return;
 
-        var inner = wrapper.querySelector('.lgnewui-tab-template-v3-container');
-        var toggleBtn = wrapper.querySelector('.js-lgnewui-v3-toggle');
+        var inner = wrapper.querySelector('.withu-tab-template-v3-container');
+        var toggleBtn = wrapper.querySelector('.js-withu-v3-toggle');
         var toggleIcon = toggleBtn ? toggleBtn.querySelector('i') : null;
-        var items = wrapper.querySelectorAll('.js-lgnewui-v3-item');
-        var menuItems = wrapper.querySelectorAll('.js-lgnewui-v3-menu-item');
-        var overlay = document.querySelector('.js-lgnewui-v3-overlay');
+        var items = wrapper.querySelectorAll('.js-withu-v3-item');
+        var menuItems = wrapper.querySelectorAll('.js-withu-v3-menu-item');
+        var overlay = document.querySelector('.js-withu-v3-overlay');
 
         function toggleGrid() {
             var isExpanded = wrapper.classList.toggle('is-expanded');
@@ -278,7 +278,7 @@
             });
         }
 
-        var toggleBtn = wrapper.querySelector('.js-lgnewui-v3-toggle');
+        var toggleBtn = wrapper.querySelector('.js-withu-v3-toggle');
         
         // 根据 URL 设置高亮
         setActiveByUrl(Array.from(items), 'active');
@@ -324,10 +324,10 @@
        方案 4：横向无级滑动
        ================================================================ */
     function initV4() {
-        var wrapper = document.getElementById('lgnewui-mobile-nav-v4');
+        var wrapper = document.getElementById('withu-mobile-nav-v4');
         if (!wrapper) return;
 
-        var items = wrapper.querySelectorAll('.js-lgnewui-v4-item');
+        var items = wrapper.querySelectorAll('.js-withu-v4-item');
         
         // 根据 URL 设置高亮
         setActiveByUrl(Array.from(items), 'active');
@@ -345,11 +345,11 @@
        方案 5：极简包裹点阵
        ================================================================ */
     function initV5() {
-        var track = document.getElementById('lgnewui-mobile-nav-v5');
+        var track = document.getElementById('withu-mobile-nav-v5');
         if (!track) return;
 
-        var items = Array.from(track.querySelectorAll('.js-lgnewui-v5-item'));
-        var indicator = track.querySelector('.lgnewui-tab-template-v5-indicator');
+        var items = Array.from(track.querySelectorAll('.js-withu-v5-item'));
+        var indicator = track.querySelector('.withu-tab-template-v5-indicator');
 
         function setActive(el, noAnim) {
             items.forEach(function (i) { i.classList.remove('active'); });
@@ -370,13 +370,13 @@
             item.addEventListener('mousedown', function () { setActive(this, false); });
         });
 
-        window.recalcLgnewuiV5 = function () {
-            var active = track.querySelector('.js-lgnewui-v5-item.active');
+        window.recalcWithuV5 = function () {
+            var active = track.querySelector('.js-withu-v5-item.active');
             if (active) setActive(active, true);
         };
 
         setTimeout(function () {
-            window.recalcLgnewuiV5();
+            window.recalcWithuV5();
         }, 100);
     }
 
@@ -384,13 +384,13 @@
        方案 6：玻璃全抽屉
        ================================================================ */
     function initV6() {
-        var wrapper = document.getElementById('lgnewui-mobile-nav-v6');
+        var wrapper = document.getElementById('withu-mobile-nav-v6');
         if (!wrapper) return;
 
-        var toggleBtns = wrapper.querySelectorAll('.js-lgnewui-v6-toggle');
-        var barItems = wrapper.querySelectorAll('.js-lgnewui-v6-bar-item');
-        var gridItems = wrapper.querySelectorAll('.js-lgnewui-v6-grid-item');
-        var gridContainer = wrapper.querySelector('.lgnewui-tab-template-v6-grid');
+        var toggleBtns = wrapper.querySelectorAll('.js-withu-v6-toggle');
+        var barItems = wrapper.querySelectorAll('.js-withu-v6-bar-item');
+        var gridItems = wrapper.querySelectorAll('.js-withu-v6-grid-item');
+        var gridContainer = wrapper.querySelector('.withu-tab-template-v6-grid');
 
         if (gridContainer && gridItems.length <= 4) {
             gridContainer.classList.add('is-few');
@@ -404,7 +404,7 @@
         });
 
         // 选择bar中的更多按钮（排除panel中的关闭按钮）
-        var moreBtn = wrapper.querySelector('.lgnewui-tab-template-v6-bar .js-lgnewui-v6-toggle');
+        var moreBtn = wrapper.querySelector('.withu-tab-template-v6-bar .js-withu-v6-toggle');
         
         // 根据 URL 设置高亮
         setActiveByUrl(Array.from(barItems), 'active');
@@ -469,56 +469,56 @@
      */
     function refreshHighlight() {
         // 方案1
-        var v1 = document.getElementById('lgnewui-mobile-nav-v1');
+        var v1 = document.getElementById('withu-mobile-nav-v1');
         if (v1) {
-            var v1Items = Array.from(v1.querySelectorAll('.js-lgnewui-v1-item'));
+            var v1Items = Array.from(v1.querySelectorAll('.js-withu-v1-item'));
             setActiveByUrl(v1Items, 'active');
-            if (window.recalcLgnewuiV1) window.recalcLgnewuiV1();
+            if (window.recalcWithuV1) window.recalcWithuV1();
         }
         
         // 方案2
-        var v2 = document.getElementById('lgnewui-mobile-nav-v2');
+        var v2 = document.getElementById('withu-mobile-nav-v2');
         if (v2) {
-            var v2DockItems = Array.from(v2.querySelectorAll('.js-lgnewui-v2-dock-item'));
-            var v2GridItems = Array.from(v2.querySelectorAll('.js-lgnewui-v2-grid-item'));
-            var v2MoreBtn = v2.querySelector('.lgnewui-tab-template-v2-dock .js-lgnewui-v2-toggle');
+            var v2DockItems = Array.from(v2.querySelectorAll('.js-withu-v2-dock-item'));
+            var v2GridItems = Array.from(v2.querySelectorAll('.js-withu-v2-grid-item'));
+            var v2MoreBtn = v2.querySelector('.withu-tab-template-v2-dock .js-withu-v2-toggle');
             setActiveByUrl(v2DockItems, 'active');
             setActiveByUrl(v2GridItems, 'active');
             updateMoreBtnHighlight(v2DockItems, v2GridItems, v2MoreBtn);
         }
         
         // 方案3
-        var v3 = document.getElementById('lgnewui-mobile-nav-v3');
+        var v3 = document.getElementById('withu-mobile-nav-v3');
         if (v3) {
-            var v3Items = Array.from(v3.querySelectorAll('.js-lgnewui-v3-item'));
-            var v3MenuItems = Array.from(v3.querySelectorAll('.js-lgnewui-v3-menu-item'));
-            var v3ToggleBtn = v3.querySelector('.lgnewui-tab-template-v3-dock .js-lgnewui-v3-toggle');
+            var v3Items = Array.from(v3.querySelectorAll('.js-withu-v3-item'));
+            var v3MenuItems = Array.from(v3.querySelectorAll('.js-withu-v3-menu-item'));
+            var v3ToggleBtn = v3.querySelector('.withu-tab-template-v3-dock .js-withu-v3-toggle');
             setActiveByUrl(v3Items, 'active');
             setActiveByUrl(v3MenuItems, 'active');
             updateMoreBtnHighlight(v3Items, v3MenuItems, v3ToggleBtn);
         }
         
         // 方案4
-        var v4 = document.getElementById('lgnewui-mobile-nav-v4');
+        var v4 = document.getElementById('withu-mobile-nav-v4');
         if (v4) {
-            var v4Items = Array.from(v4.querySelectorAll('.js-lgnewui-v4-item'));
+            var v4Items = Array.from(v4.querySelectorAll('.js-withu-v4-item'));
             setActiveByUrl(v4Items, 'active');
         }
         
         // 方案5
-        var v5 = document.getElementById('lgnewui-mobile-nav-v5');
+        var v5 = document.getElementById('withu-mobile-nav-v5');
         if (v5) {
-            var v5Items = Array.from(v5.querySelectorAll('.js-lgnewui-v5-item'));
+            var v5Items = Array.from(v5.querySelectorAll('.js-withu-v5-item'));
             setActiveByUrl(v5Items, 'active');
-            if (window.recalcLgnewuiV5) window.recalcLgnewuiV5();
+            if (window.recalcWithuV5) window.recalcWithuV5();
         }
         
         // 方案6
-        var v6 = document.getElementById('lgnewui-mobile-nav-v6');
+        var v6 = document.getElementById('withu-mobile-nav-v6');
         if (v6) {
-            var v6BarItems = Array.from(v6.querySelectorAll('.js-lgnewui-v6-bar-item'));
-            var v6GridItems = Array.from(v6.querySelectorAll('.js-lgnewui-v6-grid-item'));
-            var v6MoreBtn = v6.querySelector('.lgnewui-tab-template-v6-bar .js-lgnewui-v6-toggle');
+            var v6BarItems = Array.from(v6.querySelectorAll('.js-withu-v6-bar-item'));
+            var v6GridItems = Array.from(v6.querySelectorAll('.js-withu-v6-grid-item'));
+            var v6MoreBtn = v6.querySelector('.withu-tab-template-v6-bar .js-withu-v6-toggle');
             setActiveByUrl(v6BarItems, 'active');
             setActiveByUrl(v6GridItems, 'active');
             updateMoreBtnHighlight(v6BarItems, v6GridItems, v6MoreBtn);
@@ -528,7 +528,7 @@
     // 支持 pjax 无刷新跳转后刷新高亮
     document.addEventListener('pjax:complete', function () {
         // 确保移动端tab显示（详情页可能隐藏了）
-        var mobileNavRoot = document.querySelector('.lgnewui-mobile-nav-root');
+        var mobileNavRoot = document.querySelector('.withu-mobile-nav-root');
         if (mobileNavRoot) {
             mobileNavRoot.style.display = '';
         }

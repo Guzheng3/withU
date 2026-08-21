@@ -2,28 +2,28 @@
 <html lang="zh-CN">
 
 <head>
-    <meta name="x-lg-license-instance" content="858ee1d099b9">
+    <meta name="x-withu-license-instance" content="858ee1d099b9">
 
 <link rel="icon" href="/favicon.png" />
 <meta name="viewport" content="width=device-width,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no">
-<meta name="description" content="LG_NewUi 是一个适合记录恋爱日常与纪念时刻的情侣小站，支持相册、时间轴、点滴文章、留言互动和邀请页面，让每一段关系都能拥有自己的专属回忆空间。">
-<meta name="keywords" content="情侣网站,恋爱记录,祝福留言,情侣相册,恋爱清单,爱情纪念,情侣头像框,祝福语句,情侣互动,爱情相册,情侣事件记录,情侣留言,爱情故事,情感交流,用户互动,祝福卡片,音乐分享,甜蜜瞬间,情侣活动,爱情动态,LGNewUI">
+<meta name="description" content="withU 是一个适合记录恋爱日常与纪念时刻的情侣小站，支持相册、时间轴、点滴文章、留言互动和邀请页面，让每一段关系都能拥有自己的专属回忆空间。">
+<meta name="keywords" content="情侣网站,恋爱记录,祝福留言,情侣相册,恋爱清单,爱情纪念,情侣头像框,祝福语句,情侣互动,爱情相册,情侣事件记录,情侣留言,爱情故事,情感交流,用户互动,祝福卡片,音乐分享,甜蜜瞬间,情侣活动,爱情动态,withU">
 <meta name="robots" content="index, follow">
 <link rel="canonical" href="/timeline.php">
 
 <!-- Open Graph (Facebook/微信/QQ) -->
 <meta property="og:type" content="website">
-<meta property="og:site_name" content="LG-NewUi Demo">
-<meta property="og:title" content="LG-NewUi Demo">
-<meta property="og:description" content="LG_NewUi 是一个适合记录恋爱日常与纪念时刻的情侣小站，支持相册、时间轴、点滴文章、留言互动和邀请页面，让每一段关系都能拥有自己的专属回忆空间。">
+<meta property="og:site_name" content="withU Demo">
+<meta property="og:title" content="withU Demo">
+<meta property="og:description" content="withU 是一个适合记录恋爱日常与纪念时刻的情侣小站，支持相册、时间轴、点滴文章、留言互动和邀请页面，让每一段关系都能拥有自己的专属回忆空间。">
 <meta property="og:url" content="/timeline.php">
-<meta property="og:image" content="LG Demo">
+<meta property="og:image" content="withU">
 
 <!-- Twitter Card -->
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="LG-NewUi Demo">
-<meta name="twitter:description" content="LG_NewUi 是一个适合记录恋爱日常与纪念时刻的情侣小站，支持相册、时间轴、点滴文章、留言互动和邀请页面，让每一段关系都能拥有自己的专属回忆空间。">
-<meta name="twitter:image" content="LG Demo">
+<meta name="twitter:title" content="withU Demo">
+<meta name="twitter:description" content="withU 是一个适合记录恋爱日常与纪念时刻的情侣小站，支持相册、时间轴、点滴文章、留言互动和邀请页面，让每一段关系都能拥有自己的专属回忆空间。">
+<meta name="twitter:image" content="withU">
 
     <!-- Google Fonts CDN 版本 -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -63,8 +63,8 @@
 <link rel="stylesheet" href="/Style/vendor/remixicon/remixicon.css">
 <link rel="stylesheet" href="/Style/css/tooltip.css">
 <link rel="stylesheet" href="/Style/css/interaction.css">
-<link rel="stylesheet" href="/Style/css/lgnewui-home-style.css">
-<link rel="stylesheet" href="/Style/css/lgnewui-detail.css">
+<link rel="stylesheet" href="/Style/css/withu-home-style.css">
+<link rel="stylesheet" href="/Style/css/withu-detail.css">
 <link rel="stylesheet" href="/Style/css/mobile-nav.css">
 <link rel="stylesheet" href="/Style/css/header.css">
 <!-- 自定义右键菜单 -->
@@ -85,7 +85,7 @@
 <script src="/Style/js/masonry.pkgd.min.js"></script>
 <script src="/Style/js/imagesloaded.pkgd.min.js"></script>
 <script src="/Style/js/loading.js"></script>
-<script src="/Style/js/LGNewUiOwO.js"></script>
+<script src="/Style/js/withu-owoui.js"></script>
 <!-- 全局滚动锁工具（所有弹窗共用，防止滚动条消失时布局跳动） -->
 <script>
 (function(){
@@ -94,21 +94,21 @@
         _count++;
         if (_count === 1) {
             var w = window.innerWidth - document.documentElement.clientWidth;
-            document.documentElement.style.setProperty('--lg-scrollbar-compensate', w + 'px');
-            document.documentElement.classList.add('lg-scroll-locked');
+            document.documentElement.style.setProperty('--withu-scrollbar-compensate', w + 'px');
+            document.documentElement.classList.add('withu-scroll-locked');
         }
     };
     window.lgScrollUnlock = function(){
         _count = Math.max(0, _count - 1);
         if (_count === 0) {
-            document.documentElement.classList.remove('lg-scroll-locked');
-            document.documentElement.style.removeProperty('--lg-scrollbar-compensate');
+            document.documentElement.classList.remove('withu-scroll-locked');
+            document.documentElement.style.removeProperty('--withu-scrollbar-compensate');
         }
     };
     window.lgScrollReset = function(){
         _count = 0;
-        document.documentElement.classList.remove('lg-scroll-locked');
-        document.documentElement.style.removeProperty('--lg-scrollbar-compensate');
+        document.documentElement.classList.remove('withu-scroll-locked');
+        document.documentElement.style.removeProperty('--withu-scrollbar-compensate');
     };
 })();
 </script>
@@ -127,16 +127,16 @@
 <!-- QR Code Styling (美化二维码) -->
 <script src="/Style/vendor/qr-code-styling/qr-code-styling.min.js"></script>
 
-<!-- LG_NewUI 核心框架 -->
+<!-- withU 核心框架 -->
 <script>
-    window.LG_CONFIG = Object.assign(window.LG_CONFIG || {}, {"title":"LG-NewUi Demo","boy":"Ki.","girl":"Really","startTime":"2023-07-19 00:00:00","version":"2.2.5","pcCarouselHeight":"80vh","mobileCarouselHeight":"50vh","pcPhotoCoverHeight":"80vh","mobilePhotoCoverHeight":"60vh","pcImgMaxHeight":"450px","mobileImgMaxHeight":"260px","maleName":"Ki.","maleAvatar":"/Lovefolder/20260411043037_69d95ded97293201118237.webp","femaleName":"Really","femaleAvatar":"/Lovefolder/20260411043046_69d95df639c33274072975.webp","siteBase":"","assetBase":"","imageErrorFallback":"/Style/img/file-placeholder.svg","owoBase":"/OwO","soloMode":false,"weatherEnabled":true,"weatherToken":"d4210665334edba618aecc1829a5e734701e2b824c5aebd4ff8859d7a2536721","soloOwnerGeo":{"lat":21.915454,"lng":110.856708},"bannedChars":"操屌","endpoints":{"mapApi":"/assets/map-api.php","weatherNow":"/services/weather.php","interaction":"/services/interaction.php"}});
+    window.WITHU_CONFIG = Object.assign(window.WITHU_CONFIG || {}, {"title":"withU Demo","boy":"Ki.","girl":"Really","startTime":"2023-07-19 00:00:00","version":"2.2.5","pcCarouselHeight":"80vh","mobileCarouselHeight":"50vh","pcPhotoCoverHeight":"80vh","mobilePhotoCoverHeight":"60vh","pcImgMaxHeight":"450px","mobileImgMaxHeight":"260px","maleName":"Ki.","maleAvatar":"/Lovefolder/20260411043037_69d95ded97293201118237.webp","femaleName":"Really","femaleAvatar":"/Lovefolder/20260411043046_69d95df639c33274072975.webp","siteBase":"","assetBase":"","imageErrorFallback":"/Style/img/file-placeholder.svg","owoBase":"/OwO","soloMode":false,"weatherEnabled":true,"weatherToken":"d4210665334edba618aecc1829a5e734701e2b824c5aebd4ff8859d7a2536721","soloOwnerGeo":{"lat":21.915454,"lng":110.856708},"bannedChars":"操屌","endpoints":{"mapApi":"/assets/map-api.php","weatherNow":"/services/weather.php","interaction":"/services/interaction.php"}});
 
     // AOS 动画配置（供 app.js 的 AOSManager 使用）
-    window.LG_AOS_CONFIG = {"enabled":true,"animation":"fade-up","duration":800,"delay":0,"interval":50,"maxDelay":300,"easing":"ease-out-cubic","offset":50,"once":true,"mirror":true,"anchorPlacement":"top-bottom"};
+    window.WITHU_AOS_CONFIG = {"enabled":true,"animation":"fade-up","duration":800,"delay":0,"interval":50,"maxDelay":300,"easing":"ease-out-cubic","offset":50,"once":true,"mirror":true,"anchorPlacement":"top-bottom"};
 
     window.LGVisitorGeoCache = window.LGVisitorGeoCache || (function () {
-        var storageKey = 'lgnewui_visitor_geo_v1';
-        var cookieKey = 'lg_visitor_geo';
+        var storageKey = 'withu_visitor_geo_v1';
+        var cookieKey = 'withu_visitor_geo';
         var maxAgeMs = 6 * 60 * 60 * 1000;
 
         function normalize(payload) {
@@ -276,7 +276,7 @@
 
         window.LGMAP_DATA_READY = window.LGMapData.fetchAll()
             .catch(function (err) {
-                if (window.LG_CONFIG && window.LG_CONFIG.debugMap && window.console && typeof window.console.warn === 'function') {
+                if (window.WITHU_CONFIG && window.WITHU_CONFIG.debugMap && window.console && typeof window.console.warn === 'function') {
                     window.console.warn('地图数据加载失败:', err);
                 }
             });
@@ -860,7 +860,7 @@
     }
 
     /* Logo 淡出效果 - 通过JS添加类控制 */
-    .alogo.lgnewui-logo-faded {
+    .alogo.withu-logo-faded {
         opacity: 0.3;
         transform: scale(0.92);
     }
@@ -872,7 +872,7 @@
 
     /* 左侧纯文字 Logo - 只有文字 */
     /* 左侧 Logo - 时尚杂志风格 */
-    .lgnewui-header-left-avatar {
+    .withu-header-left-avatar {
         position: absolute;
         left: 6%;
         top: 50%;
@@ -897,7 +897,7 @@
         will-change: transform, opacity;
     }
 
-    .lgnewui-header-left-avatar:hover {
+    .withu-header-left-avatar:hover {
         background: none;
         box-shadow: none;
         transform: translateY(-50%) translateX(-20px);
@@ -1533,17 +1533,17 @@
 
     /* 大屏下增加最大边距限制 */
     @media screen and (min-width: 1600px) {
-        .lgnewui-header-left-avatar {
+        .withu-header-left-avatar {
             left: 100px;
         }
 
-        .lgnewui-header-actions {
+        .withu-header-actions {
             right: 100px !important;
         }
     }
 
     /* 右侧工具区域 - 地图 + 情侣头像 */
-    .lgnewui-header-actions {
+    .withu-header-actions {
         position: absolute;
         right: 6%;
         top: 50%;
@@ -1562,14 +1562,14 @@
     }
 
     /* === 情侣头像组 - 丝滑交互版 === */
-    .lgnewui-couple-avatars-right {
+    .withu-couple-avatars-right {
         display: flex;
         align-items: center;
         position: relative;
         cursor: pointer;
     }
 
-    .lgnewui-avatar-group {
+    .withu-avatar-group {
         display: flex;
         align-items: center;
         position: relative;
@@ -1581,11 +1581,11 @@
             background 0.3s ease;
     }
 
-    .lgnewui-avatar-group:hover {
+    .withu-avatar-group:hover {
         background: rgba(0, 0, 0, 0.06);
     }
 
-    .lgnewui-avatar-group img {
+    .withu-avatar-group img {
         width: 36px;
         height: 36px;
         border-radius: 50%;
@@ -1597,17 +1597,17 @@
         transition: transform 0.5s cubic-bezier(0.23, 1, 0.32, 1);
     }
 
-    .lgnewui-avatar-group .avatar-male {
+    .withu-avatar-group .avatar-male {
         z-index: 2;
     }
 
-    .lgnewui-avatar-group .avatar-female {
+    .withu-avatar-group .avatar-female {
         margin-left: -10px;
         z-index: 1;
     }
 
     /* 中间连接点 - 简约小圆点 */
-    .lgnewui-right-heart {
+    .withu-right-heart {
         position: absolute;
         left: 50%;
         top: 50%;
@@ -1625,32 +1625,32 @@
     }
 
     /* === 悬停效果 - 整体放大 === */
-    .lgnewui-couple-avatars-right:hover .lgnewui-avatar-group {
+    .withu-couple-avatars-right:hover .withu-avatar-group {
         transform: scale(1.08);
     }
 
-    .lgnewui-couple-avatars-right:hover .lgnewui-right-heart {
+    .withu-couple-avatars-right:hover .withu-right-heart {
         transform: translate(-50%, -50%) scale(1.2);
     }
 
 
     /* 竖线分隔符 (位于 Avatar 和 图标之间) */
-    .lgnewui-header-divider {
+    .withu-header-divider {
         width: 1px;
         height: 18px;
         background: rgba(0, 0, 0, 0.1);
     }
 
     /* 吸附时显示 - 通过JS添加类控制 - 灵动岛弹出效果 */
-    .lgnewui-header-left-avatar.lgnewui-avatar-visible,
-    .lgnewui-header-actions.lgnewui-actions-visible {
+    .withu-header-left-avatar.withu-avatar-visible,
+    .withu-header-actions.withu-actions-visible {
         opacity: 1;
         transform: translateY(-50%) translateX(0) scale(1);
         pointer-events: auto;
     }
 
     /* ── 子页面胶囊返回按钮（微信小程序风格） ── */
-    .lg-capsule-back {
+    .withu-capsule-back {
         position: absolute;
         left: 6%;
         top: 50%;
@@ -1667,15 +1667,15 @@
         pointer-events: none;
         transition: opacity 0.3s ease, transform 0.3s ease;
     }
-    .lg-capsule-back.subpage-back-ready {
+    .withu-capsule-back.subpage-back-ready {
         display: flex;
     }
-    .lg-capsule-back.scroll-back-visible {
+    .withu-capsule-back.scroll-back-visible {
         opacity: 1;
         transform: translateY(-50%) translateX(0);
         pointer-events: auto;
     }
-    .lg-capsule-back__btn {
+    .withu-capsule-back__btn {
         display: flex;
         align-items: center;
         justify-content: center;
@@ -1687,21 +1687,21 @@
         transition: all 0.25s ease;
         font-size: 15px;
     }
-    .lg-capsule-back__btn:hover {
+    .withu-capsule-back__btn:hover {
         background: rgba(255, 255, 255, 0.85);
         color: #333;
         transform: scale(1.08);
     }
-    .lg-capsule-back__btn:active {
+    .withu-capsule-back__btn:active {
         transform: scale(0.95);
     }
-    .lg-capsule-back__btn svg {
+    .withu-capsule-back__btn svg {
         width: 18px;
         height: 18px;
     }
 
     /* 吸顶时左侧 logo 被胶囊替换的隐藏动画 */
-    .lgnewui-header-left-avatar.lgnewui-avatar-visible.scroll-logo-hidden {
+    .withu-header-left-avatar.withu-avatar-visible.scroll-logo-hidden {
         opacity: 0;
         transform: translateY(-50%) translateX(12px) scale(0.9);
         pointer-events: none;
@@ -1709,12 +1709,12 @@
 
     /* 大屏下胶囊 left 限制 */
     @media screen and (min-width: 1600px) {
-        .lg-capsule-back {
+        .withu-capsule-back {
             left: 100px;
         }
     }
 
-    .lgnewui-header-action-btn {
+    .withu-header-action-btn {
         display: flex;
         align-items: center;
         justify-content: center;
@@ -1729,17 +1729,17 @@
         font-size: 15px;
     }
 
-    .lgnewui-header-action-btn:hover {
+    .withu-header-action-btn:hover {
         background: rgba(0, 0, 0, 0.08);
         color: #333;
         transform: scale(1.08);
     }
 
-    .lgnewui-header-action-btn:active {
+    .withu-header-action-btn:active {
         transform: scale(0.95);
     }
 
-    .lgnewui-header-weather {
+    .withu-header-weather {
         position: relative;
         display: inline-flex;
         align-items: center;
@@ -1759,34 +1759,34 @@
         -webkit-tap-highlight-color: transparent;
     }
 
-    .lgnewui-header-weather:hover {
+    .withu-header-weather:hover {
         background: rgba(0, 0, 0, 0.08);
     }
 
-    .lgnewui-header-weather:focus {
+    .withu-header-weather:focus {
         outline: none;
     }
 
-    .lgnewui-header-weather:focus-visible {
+    .withu-header-weather:focus-visible {
         box-shadow:
             0 0 0 2px rgba(59, 130, 246, 0.18),
             0 10px 24px rgba(15, 23, 42, 0.08);
     }
 
-    .lgnewui-header-weather:active {
+    .withu-header-weather:active {
         transform: scale(0.98);
     }
 
-    .lgnewui-header-weather.is-loading .lgnewui-header-weather-icon,
-    .lgnewui-header-weather.is-loading .lgnewui-header-weather-text {
+    .withu-header-weather.is-loading .withu-header-weather-icon,
+    .withu-header-weather.is-loading .withu-header-weather-text {
         display: none;
     }
 
-    .lgnewui-header-weather:not(.is-loading) .lgnewui-header-weather-loading {
+    .withu-header-weather:not(.is-loading) .withu-header-weather-loading {
         display: none;
     }
 
-    .lgnewui-header-weather-icon-wrap {
+    .withu-header-weather-icon-wrap {
         display: inline-flex;
         align-items: center;
         justify-content: center;
@@ -1798,12 +1798,12 @@
         flex-shrink: 0;
     }
 
-    .lgnewui-header-weather-icon {
+    .withu-header-weather-icon {
         font-size: 14px;
         color: #5f6672;
     }
 
-    .lgnewui-header-weather-loading {
+    .withu-header-weather-loading {
         display: inline-flex;
         align-items: center;
         justify-content: center;
@@ -1812,13 +1812,13 @@
         color: #64748b;
     }
 
-    .lgnewui-header-weather-loading svg {
+    .withu-header-weather-loading svg {
         width: 16px;
         height: 16px;
         animation: lgHeaderWeatherSpin 0.9s linear infinite;
     }
 
-    .lgnewui-header-weather-text {
+    .withu-header-weather-text {
         display: inline-block;
         max-width: 96px;
         overflow: hidden;
@@ -1829,7 +1829,7 @@
         color: #334155;
     }
 
-    .lgnewui-header-weather-panel {
+    .withu-header-weather-panel {
         position: fixed;
         top: 0;
         left: 0;
@@ -1860,7 +1860,7 @@
         overflow: hidden;
     }
 
-    .lgnewui-header-weather-panel.is-open {
+    .withu-header-weather-panel.is-open {
         opacity: 1;
         visibility: visible;
         transform: translateY(0) scale(1);
@@ -1868,7 +1868,7 @@
         filter: blur(0);
     }
 
-    .lgnewui-header-weather-panel::before {
+    .withu-header-weather-panel::before {
         content: '';
         position: absolute;
         inset: 0;
@@ -1881,7 +1881,7 @@
         z-index: 0;
     }
 
-    .lgnewui-header-weather-panel::after {
+    .withu-header-weather-panel::after {
         content: '';
         position: absolute;
         inset: 1px;
@@ -1893,12 +1893,12 @@
         z-index: 0;
     }
 
-    .lgnewui-header-weather-sheet {
+    .withu-header-weather-sheet {
         position: relative;
         z-index: 1;
     }
 
-    .lgnewui-header-weather-hero {
+    .withu-header-weather-hero {
         display: grid;
         grid-template-columns: 42px minmax(0, 1fr) auto;
         align-items: center;
@@ -1906,7 +1906,7 @@
         padding: 2px 2px 14px;
     }
 
-    .lgnewui-header-weather-hero-icon {
+    .withu-header-weather-hero-icon {
         display: inline-flex;
         align-items: center;
         justify-content: center;
@@ -1923,7 +1923,7 @@
         flex-shrink: 0;
     }
 
-    .lgnewui-header-weather-hero-icon i {
+    .withu-header-weather-hero-icon i {
         font-size: 24px;
         background: linear-gradient(180deg, #667085 0%, #344054 100%);
         -webkit-background-clip: text;
@@ -1933,17 +1933,17 @@
         filter: drop-shadow(0 2px 6px rgba(255, 255, 255, 0.2));
     }
 
-    .lgnewui-header-weather-hero-main {
+    .withu-header-weather-hero-main {
         min-width: 0;
         padding-top: 0;
     }
 
-    .lgnewui-header-weather-hero-title {
+    .withu-header-weather-hero-title {
         display: block;
         margin-bottom: 4px;
     }
 
-    .lgnewui-header-weather-hero-desc {
+    .withu-header-weather-hero-desc {
         min-width: 0;
         display: block;
         font-size: 15px;
@@ -1954,7 +1954,7 @@
         letter-spacing: -0.02em;
     }
 
-    .lgnewui-header-weather-hero-temp {
+    .withu-header-weather-hero-temp {
         display: block;
         padding-top: 0;
         font-size: 28px;
@@ -1967,7 +1967,7 @@
         align-self: center;
     }
 
-    .lgnewui-header-weather-hero-sub {
+    .withu-header-weather-hero-sub {
         display: inline-flex;
         align-items: center;
         gap: 5px;
@@ -1976,19 +1976,19 @@
         line-height: 1.2;
     }
 
-    .lgnewui-header-weather-hero-sub i {
+    .withu-header-weather-hero-sub i {
         font-size: 13px;
         color: #8896ab;
     }
 
-    .lgnewui-header-weather-meta {
+    .withu-header-weather-meta {
         display: grid;
         grid-template-columns: repeat(2, minmax(0, 1fr));
         gap: 8px;
         margin-bottom: 10px;
     }
 
-    .lgnewui-header-weather-meta-item {
+    .withu-header-weather-meta-item {
         display: flex;
         align-items: center;
         gap: 10px;
@@ -2004,7 +2004,7 @@
         -webkit-backdrop-filter: blur(14px) saturate(145%);
     }
 
-    .lgnewui-header-weather-meta-icon {
+    .withu-header-weather-meta-icon {
         display: inline-flex;
         align-items: center;
         justify-content: center;
@@ -2017,15 +2017,15 @@
         flex-shrink: 0;
     }
 
-    .lgnewui-header-weather-meta-icon i {
+    .withu-header-weather-meta-icon i {
         font-size: 15px;
     }
 
-    .lgnewui-header-weather-meta-copy {
+    .withu-header-weather-meta-copy {
         min-width: 0;
     }
 
-    .lgnewui-header-weather-meta-label {
+    .withu-header-weather-meta-label {
         display: block;
         margin-bottom: 2px;
         font-size: 10px;
@@ -2034,7 +2034,7 @@
         letter-spacing: 0.08em;
     }
 
-    .lgnewui-header-weather-meta-value {
+    .withu-header-weather-meta-value {
         display: block;
         font-size: 12px;
         color: #162033;
@@ -2044,7 +2044,7 @@
         text-overflow: ellipsis;
     }
 
-    .lgnewui-header-weather-foot {
+    .withu-header-weather-foot {
         position: relative;
         display: flex;
         align-items: center;
@@ -2054,7 +2054,7 @@
         padding: 10px 4px 2px;
     }
 
-    .lgnewui-header-weather-foot::before {
+    .withu-header-weather-foot::before {
         content: '';
         position: absolute;
         top: 0;
@@ -2064,7 +2064,7 @@
         background: linear-gradient(90deg, rgba(255, 255, 255, 0), rgba(255, 255, 255, 0.72), rgba(255, 255, 255, 0));
     }
 
-    .lgnewui-header-weather-updated {
+    .withu-header-weather-updated {
         display: inline-flex;
         align-items: center;
         gap: 6px;
@@ -2073,12 +2073,12 @@
         min-width: 0;
     }
 
-    .lgnewui-header-weather-updated i {
+    .withu-header-weather-updated i {
         font-size: 13px;
         color: rgba(112, 124, 141, 0.88);
     }
 
-    .lgnewui-header-weather-note {
+    .withu-header-weather-note {
         display: inline-flex;
         align-items: center;
         gap: 6px;
@@ -2093,7 +2093,7 @@
         box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.3);
     }
 
-    .lgnewui-header-weather-note i {
+    .withu-header-weather-note i {
         font-size: 13px;
         color: rgba(104, 116, 134, 0.86);
     }
@@ -2108,11 +2108,11 @@
     }
 
     @media (max-width: 980px) {
-        .lgnewui-header-weather-text {
+        .withu-header-weather-text {
             max-width: 78px;
         }
 
-        .lgnewui-header-weather-panel {
+        .withu-header-weather-panel {
             width: 264px;
         }
     }
@@ -2128,18 +2128,18 @@
     }
 
     /* ================================== */
-    /* 公共头像组件 .lg-author             */
+    /* 公共头像组件 .withu-author             */
     /* 用于: 相册、点点滴滴、时间轴等       */
     /* 性别徽章: 父级加 .show-gender 显示  */
     /* ================================== */
-    .lg-author {
+    .withu-author {
         display: flex;
         align-items: center;
         gap: 12px;
         min-width: 0;
     }
 
-    .lg-author__ring {
+    .withu-author__ring {
         padding: 3px;
         background: linear-gradient(135deg, #f4f4f4 0%, #fafafa 100%);
         /* border: 1px solid rgba(0, 0, 0, 0.06); */
@@ -2151,7 +2151,7 @@
         /* box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04); */
     }
 
-    .lg-author__avatar {
+    .withu-author__avatar {
         width: 40px;
         height: 40px;
         border-radius: 10px;
@@ -2161,7 +2161,7 @@
         background-position: center;
     }
 
-    .lg-author__badge {
+    .withu-author__badge {
         position: absolute;
         bottom: -2px;
         right: -2px;
@@ -2177,26 +2177,26 @@
         color: white;
     }
 
-    .lg-author__badge.male {
+    .withu-author__badge.male {
         background: #3b82f6;
     }
 
-    .lg-author__badge.female {
+    .withu-author__badge.female {
         background: #ec4899;
     }
 
-    .show-gender .lg-author__badge {
+    .show-gender .withu-author__badge {
         display: flex;
     }
 
-    .lg-author__text {
+    .withu-author__text {
         display: flex;
         flex-direction: column;
         gap: 2px;
         min-width: 0;
     }
 
-    .lg-author__name {
+    .withu-author__name {
         font-family: 'Dancing Script', 'Noto Serif SC', cursive;
         font-size: 18px;
         font-weight: 700;
@@ -2208,7 +2208,7 @@
         letter-spacing: -0.02em;
     }
 
-    .lg-author__meta {
+    .withu-author__meta {
         font-size: 11px;
         opacity: 0.5;
         display: flex;
@@ -2219,18 +2219,18 @@
         min-width: 0;
     }
 
-    .lg-author__meta i {
+    .withu-author__meta i {
         font-size: 10px;
     }
 
     @media (min-width: 640px) {
-        .lg-author__badge {
+        .withu-author__badge {
             width: 20px;
             height: 20px;
             font-size: 10px;
         }
 
-        .lg-author__name {
+        .withu-author__name {
             font-size: 20px;
         }
     }
@@ -2477,7 +2477,7 @@
     }
 
     /* 页面描述区域 */
-    .lgnewui-page-header {
+    .withu-page-header {
         position: relative;
         display: flex;
         flex-direction: column;
@@ -2488,7 +2488,7 @@
         padding: 2rem 0 1rem;
     }
 
-    .lgnewui-meta-container {
+    .withu-meta-container {
         display: flex;
         flex-direction: column;
         align-items: center;
@@ -2496,7 +2496,7 @@
         margin-bottom: 16px;
     }
 
-    .lgnewui-meta-tag {
+    .withu-meta-tag {
         font-family: var(--font-display);
         font-size: 14px;
         letter-spacing: 0.15em;
@@ -2511,18 +2511,18 @@
         transition: all 0.6s var(--ease-smooth);
     }
 
-    .lgnewui-meta-tag.in {
+    .withu-meta-tag.in {
         opacity: 1;
         filter: blur(0);
         transform: translateY(0);
     }
 
-    .lgnewui-meta-icon {
+    .withu-meta-icon {
         font-size: 10px;
         color: #bbb;
     }
 
-    .lgnewui-meta-line {
+    .withu-meta-line {
         width: 44px;
         height: 1px;
         background: linear-gradient(90deg, transparent 0%, rgba(187, 187, 187, 0.75) 50%, transparent 100%);
@@ -2533,13 +2533,13 @@
         transition: opacity 0.5s var(--ease-smooth), transform 0.7s var(--ease-smooth), filter 0.5s var(--ease-smooth);
     }
 
-    .lgnewui-meta-line.in {
+    .withu-meta-line.in {
         opacity: 1;
         transform: scaleX(1) translateY(0);
         filter: blur(0);
     }
 
-    .lgnewui-hero-title {
+    .withu-hero-title {
         font-family: var(--font-serif);
         font-size: clamp(24px, 4vw, 36px);
         font-weight: 600;
@@ -2558,7 +2558,7 @@
         text-shadow: 0 20px 40px rgba(0, 0, 0, 0.05);
     }
 
-    .lgnewui-hero-title .char {
+    .withu-hero-title .char {
         opacity: 0;
         filter: blur(12px);
         transform: scale(0.95) translateY(10px);
@@ -2567,20 +2567,20 @@
         min-width: 0.2em;
     }
 
-    .lgnewui-hero-title .char.in {
+    .withu-hero-title .char.in {
         opacity: 1;
         filter: blur(0);
         transform: scale(1) translateY(0);
     }
 
-    .lgnewui-connector {
+    .withu-connector {
         width: 1px;
         height: 40px;
         background: linear-gradient(to bottom, rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.1) 40%, rgba(0, 0, 0, 0));
         margin: 10px 0;
     }
 
-    .lgnewui-sticky-sentinel {
+    .withu-sticky-sentinel {
         width: 100%;
         height: 1px;
         pointer-events: none;
@@ -2588,7 +2588,7 @@
     }
 
     /* 导航栏容器 */
-    .lgnewui-nav-wrapper {
+    .withu-nav-wrapper {
         position: -webkit-sticky;
         position: sticky;
         top: 70px;
@@ -2601,23 +2601,23 @@
         z-index: 9999;
     }
 
-    .lgnewui-nav-wrapper.is-fixed {
+    .withu-nav-wrapper.is-fixed {
         position: fixed;
         top: 14px;
         left: 0;
         right: 0;
     }
 
-    .lgnewui-nav-placeholder {
+    .withu-nav-placeholder {
         display: none;
     }
 
-    .lgnewui-nav-placeholder.is-active {
+    .withu-nav-placeholder.is-active {
         display: block;
     }
 
     /* 导航岛容器 - 灵动岛风格 */
-    .lgnewui-nav-island-container {
+    .withu-nav-island-container {
         pointer-events: auto;
         display: flex;
         align-items: center;
@@ -2641,7 +2641,7 @@
     }
 
     /* 吸顶时的收缩效果 - 灵动岛风格 */
-    .lgnewui-nav-island-container.lgnewui-is-stuck {
+    .withu-nav-island-container.withu-is-stuck {
         padding: 5px;
         background: rgba(248, 248, 248, 0.65);
         border-radius: 50px;
@@ -2650,27 +2650,27 @@
     }
 
     /* 吸顶Logo和工具图标 - 默认隐藏 */
-    .lgnewui-nav-stuck-logo,
-    .lgnewui-nav-stuck-actions {
+    .withu-nav-stuck-logo,
+    .withu-nav-stuck-actions {
         display: none;
         opacity: 0;
         transition: opacity 0.3s ease;
     }
 
-    .lgnewui-nav-island-container.lgnewui-is-stuck .lgnewui-nav-stuck-logo,
-    .lgnewui-nav-island-container.lgnewui-is-stuck .lgnewui-nav-stuck-actions {
+    .withu-nav-island-container.withu-is-stuck .withu-nav-stuck-logo,
+    .withu-nav-island-container.withu-is-stuck .withu-nav-stuck-actions {
         display: flex;
         opacity: 1;
     }
 
     /* 吸顶Logo样式 */
-    .lgnewui-nav-stuck-logo {
+    .withu-nav-stuck-logo {
         align-items: center;
         margin-right: 8px;
         padding-left: 8px;
     }
 
-    .lgnewui-nav-stuck-logo img {
+    .withu-nav-stuck-logo img {
         width: 28px;
         height: 28px;
         border-radius: 50%;
@@ -2678,14 +2678,14 @@
     }
 
     /* 工具图标区域 */
-    .lgnewui-nav-stuck-actions {
+    .withu-nav-stuck-actions {
         align-items: center;
         gap: 4px;
         margin-left: 8px;
         padding-right: 4px;
     }
 
-    .lgnewui-nav-stuck-action-btn {
+    .withu-nav-stuck-action-btn {
         display: flex;
         align-items: center;
         justify-content: center;
@@ -2700,38 +2700,38 @@
         font-size: 14px;
     }
 
-    .lgnewui-nav-stuck-action-btn:hover {
+    .withu-nav-stuck-action-btn:hover {
         background: rgba(0, 0, 0, 0.05);
         color: #333;
     }
 
-    .lgnewui-nav-stuck-divider {
+    .withu-nav-stuck-divider {
         width: 1px;
         height: 20px;
         background: rgba(0, 0, 0, 0.1);
         margin: 0 4px;
     }
 
-    .lgnewui-nav-island-container.lgnewui-is-stuck .lgnewui-nav-island-item {
+    .withu-nav-island-container.withu-is-stuck .withu-nav-island-item {
         padding: 10px 18px;
         font-size: 16px;
         gap: 6px;
     }
 
-    .lgnewui-nav-island-container.lgnewui-is-stuck .lgnewui-nav-island-item i {
+    .withu-nav-island-container.withu-is-stuck .withu-nav-island-item i {
         font-size: 13px;
     }
 
-    .lgnewui-nav-island-container.lgnewui-is-stuck .lgnewui-nav-island-item.nav-home {
+    .withu-nav-island-container.withu-is-stuck .withu-nav-island-item.nav-home {
         padding: 8px 24px;
     }
 
-    .lgnewui-nav-island-container.lgnewui-is-stuck .lgnewui-nav-island-item.nav-home i {
+    .withu-nav-island-container.withu-is-stuck .withu-nav-island-item.nav-home i {
         font-size: 15px;
     }
 
     /* 导航项 - 灵动岛风格过渡 */
-    .lgnewui-nav-island-item {
+    .withu-nav-island-item {
         position: relative;
         z-index: 1;
         display: flex;
@@ -2758,50 +2758,50 @@
             background-color 0.2s ease;
     }
 
-    .lgnewui-nav-island-item i {
+    .withu-nav-island-item i {
         transition: font-size 0.25s ease-out;
         font-size: 16px !important;
     }
 
-    .lgnewui-nav-wrapper.is-fixed .lgnewui-nav-island-item {
+    .withu-nav-wrapper.is-fixed .withu-nav-island-item {
         color: #000000;
     }
 
-    .lgnewui-nav-island-item:not(.active):hover {
+    .withu-nav-island-item:not(.active):hover {
         background-color: rgb(248 114 113 / 9%);
         color: #f87171;
     }
 
-    .lgnewui-nav-wrapper.is-fixed .lgnewui-nav-island-item:not(.active):hover {
+    .withu-nav-wrapper.is-fixed .withu-nav-island-item:not(.active):hover {
         background-color: rgb(255 255 255);
         color: #6f6f6f;
     }
 
     /* 首页 Tab */
-    .lgnewui-nav-island-item.nav-home {
+    .withu-nav-island-item.nav-home {
         padding: 10px 32px;
         margin: 0 4px;
         color: #1d1d1f;
         opacity: 0.8;
     }
 
-    .lgnewui-nav-island-item.nav-home.active {
+    .withu-nav-island-item.nav-home.active {
         opacity: 1;
         color: #fff;
     }
 
-    .lgnewui-nav-island-item.nav-home i {
+    .withu-nav-island-item.nav-home i {
         font-size: 18px;
         transition: color 0.2s ease;
     }
 
-    .lgnewui-nav-island-item.nav-home:hover {
+    .withu-nav-island-item.nav-home:hover {
         opacity: 1;
         background-color: rgba(0, 0, 0, 0.04);
     }
 
-    .lgnewui-nav-island-item.nav-home::before,
-    .lgnewui-nav-island-item.nav-home::after {
+    .withu-nav-island-item.nav-home::before,
+    .withu-nav-island-item.nav-home::after {
         content: '';
         position: absolute;
         top: 50%;
@@ -2812,31 +2812,31 @@
         transition: opacity 0.2s;
     }
 
-    .lgnewui-nav-island-item.nav-home::before {
+    .withu-nav-island-item.nav-home::before {
         left: 0;
     }
 
-    .lgnewui-nav-island-item.nav-home::after {
+    .withu-nav-island-item.nav-home::after {
         right: 0;
     }
 
-    .lgnewui-nav-island-item.nav-home:hover::before,
-    .lgnewui-nav-island-item.nav-home:hover::after,
-    .lgnewui-nav-island-item.nav-home.active::before,
-    .lgnewui-nav-island-item.nav-home.active::after,
-    .lgnewui-nav-island-container.lgnewui-is-stuck .lgnewui-nav-island-item.nav-home::before,
-    .lgnewui-nav-island-container.lgnewui-is-stuck .lgnewui-nav-island-item.nav-home::after {
+    .withu-nav-island-item.nav-home:hover::before,
+    .withu-nav-island-item.nav-home:hover::after,
+    .withu-nav-island-item.nav-home.active::before,
+    .withu-nav-island-item.nav-home.active::after,
+    .withu-nav-island-container.withu-is-stuck .withu-nav-island-item.nav-home::before,
+    .withu-nav-island-container.withu-is-stuck .withu-nav-island-item.nav-home::after {
         opacity: 0;
     }
 
-    .lgnewui-nav-wrapper.is-fixed .lgnewui-nav-island-item.active,
-    .lgnewui-nav-wrapper .lgnewui-nav-island-item.active {
+    .withu-nav-wrapper.is-fixed .withu-nav-island-item.active,
+    .withu-nav-wrapper .withu-nav-island-item.active {
         color: #fff;
         font-weight: 600;
     }
 
 
-    .lgnewui-nav-indicator {
+    .withu-nav-indicator {
         position: absolute;
         top: 8px;
         left: 0;
@@ -2849,7 +2849,7 @@
         /* box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1); */
     }
 
-    .lgnewui-nav-indicator::before {
+    .withu-nav-indicator::before {
         content: "";
         display: block;
         background: inherit;
@@ -2866,18 +2866,18 @@
         transform: scale(1, 1);
     }
 
-    .lgnewui-nav-indicator.no-transition {
+    .withu-nav-indicator.no-transition {
         transition: none !important;
     }
 
-    .lgnewui-nav-island-container.lgnewui-is-stuck .lgnewui-nav-indicator {
+    .withu-nav-island-container.withu-is-stuck .withu-nav-indicator {
         top: 5px;
         height: calc(100% - 10px);
         /* box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08); */
     }
 
     @media (max-width: 768px) {
-        .lgnewui-nav-island-container {
+        .withu-nav-island-container {
             max-width: 90vw;
             overflow-x: auto;
             justify-content: flex-start;
@@ -2886,16 +2886,16 @@
             padding: 4px;
         }
 
-        .lgnewui-nav-island-container::-webkit-scrollbar {
+        .withu-nav-island-container::-webkit-scrollbar {
             display: none;
         }
 
-        .lgnewui-nav-island-item {
+        .withu-nav-island-item {
             padding: 8px 16px;
             flex-shrink: 0;
         }
 
-        .lgnewui-hero-title {
+        .withu-hero-title {
             font-size: clamp(20px, 5vw, 28px);
         }
     }
@@ -3034,63 +3034,63 @@
 <div class="header-wrap">
     <div class="header">
         <!-- 吸顶 Logo（模板渲染：根据 $stuckLogoStyle 只输出选中的一套） -->
-                <div class="lgnewui-header-left-avatar">
+                <div class="withu-header-left-avatar">
                                 <div class="stuck-logo stuck-logo--en-v7">
-                        <span class="stuck-logo__name" data-lg-tip="Ki.">Ki.</span>
+                        <span class="stuck-logo__name" data-withu-tip="Ki.">Ki.</span>
                         <span class="stuck-logo__redline-l"></span>
                         <span class="stuck-logo__heart"><svg width="20" height="20" viewBox="0 0 256 256" fill="currentColor">
                                 <path
                                     d="M240,94c0,70-103.79,126.66-108.21,129a8,8,0,0,1-7.58,0C119.79,220.66,16,164,16,94A62.07,62.07,0,0,1,78,32c20.65,0,38.73,8.88,50,23.89C139.27,40.88,157.35,32,178,32A62.07,62.07,0,0,1,240,94Z" />
                             </svg></span>
                         <span class="stuck-logo__redline-r"></span>
-                        <span class="stuck-logo__name" data-lg-tip="Really">Really</span>
+                        <span class="stuck-logo__name" data-withu-tip="Really">Really</span>
                     </div>
                             </div>
 
-        <div class="lg-capsule-back">
-            <a href="javascript:void(0);" class="lg-capsule-back__btn lg-capsule-back__prev" title="返回">
+        <div class="withu-capsule-back">
+            <a href="javascript:void(0);" class="withu-capsule-back__btn withu-capsule-back__prev" title="返回">
                 <i data-lucide="chevron-left"></i>
             </a>
-            <a href="/index.php" class="lg-capsule-back__btn lg-capsule-back__home" title="首页">
+            <a href="/index.php" class="withu-capsule-back__btn withu-capsule-back__home" title="首页">
                 <i data-lucide="house"></i>
             </a>
         </div>
         <div class="logo">
-                        <h1><a class="alogo" href="index.php" style="font-family:'Niconne', cursive">LG Demo<span class="alogo-home-icon"><i class="ph-fill ph-house"></i></span></a></h1>
+                        <h1><a class="alogo" href="index.php" style="font-family:'Niconne', cursive">withU<span class="alogo-home-icon"><i class="ph-fill ph-house"></i></span></a></h1>
         </div>
         <!-- 吸顶时显示的右侧区域: 地图 + 情侣头像 -->
-        <div class="lgnewui-header-actions" id="lgnewuiHeaderActions">
-                            <div class="lgnewui-header-weather is-loading" id="lgHeaderVisitorWeather" title="点击查看当前天气信息" role="button" tabindex="0" aria-expanded="false">
-                    <span class="lgnewui-header-weather-loading" id="lgHeaderVisitorWeatherLoading" aria-label="天气加载中">
+        <div class="withu-header-actions" id="withuHeaderActions">
+                            <div class="withu-header-weather is-loading" id="lgHeaderVisitorWeather" title="点击查看当前天气信息" role="button" tabindex="0" aria-expanded="false">
+                    <span class="withu-header-weather-loading" id="lgHeaderVisitorWeatherLoading" aria-label="天气加载中">
                         <i data-lucide="loader-circle"></i>
                     </span>
-                    <span class="lgnewui-header-weather-icon-wrap">
-                        <i class="qi-999-fill lgnewui-header-weather-icon" id="lgHeaderVisitorWeatherIcon"></i>
+                    <span class="withu-header-weather-icon-wrap">
+                        <i class="qi-999-fill withu-header-weather-icon" id="lgHeaderVisitorWeatherIcon"></i>
                     </span>
-                    <span class="lgnewui-header-weather-text" id="lgHeaderVisitorWeatherText"></span>
+                    <span class="withu-header-weather-text" id="lgHeaderVisitorWeatherText"></span>
                 </div>
             
-                            <a href="javascript:void(0);" class="lgnewui-header-map" id="lgMapOpenBtn" title="足迹地图">
-                    <span class="lgnewui-header-map-icon-wrap">
+                            <a href="javascript:void(0);" class="withu-header-map" id="lgMapOpenBtn" title="足迹地图">
+                    <span class="withu-header-map-icon-wrap">
                         <i class="ph-fill ph-globe-hemisphere-west"></i>
                     </span>
-                    <span class="lgnewui-header-map-text">足迹</span>
+                    <span class="withu-header-map-text">足迹</span>
                 </a>
 
-                <div class="lgnewui-header-divider"></div>
+                <div class="withu-header-divider"></div>
             
-            <div class="lgnewui-couple-avatars-right">
-                <div class="lgnewui-avatar-group">
+            <div class="withu-couple-avatars-right">
+                <div class="withu-avatar-group">
                     <img src="/Lovefolder/20260411043046_69d95df639c33274072975.webp"
                         class="avatar-male" alt="She">
                                         <img src="/Lovefolder/20260411043037_69d95ded97293201118237.webp"
                         class="avatar-female" alt="He">
                                     </div>
-                                <span class="lgnewui-right-heart"></span>
+                                <span class="withu-right-heart"></span>
                             </div>
 
             <!-- 移动端更多按钮 -->
-            <button type="button" class="lg-header-more-btn" id="lgHeaderMoreBtn" aria-label="更多信息">
+            <button type="button" class="withu-header-more-btn" id="lgHeaderMoreBtn" aria-label="更多信息">
                 <i data-lucide="ellipsis"></i>
             </button>
         </div>
@@ -3098,38 +3098,38 @@
 </div>
 
 <!-- 移动端更多面板（毛玻璃磨砂效果） -->
-<div class="lg-header-more-panel" id="lgHeaderMorePanel">
-    <div class="lg-header-more-overlay" data-close-panel></div>
-    <div class="lg-header-more-sheet">
-        <button type="button" class="lg-header-more-close" data-close-panel aria-label="关闭">
+<div class="withu-header-more-panel" id="lgHeaderMorePanel">
+    <div class="withu-header-more-overlay" data-close-panel></div>
+    <div class="withu-header-more-sheet">
+        <button type="button" class="withu-header-more-close" data-close-panel aria-label="关闭">
             <i data-lucide="x"></i>
         </button>
 
         <!-- stuck-logo 展示 -->
-        <div class="lg-header-more-identity">
+        <div class="withu-header-more-identity">
                                 <div class="stuck-logo stuck-logo--en-v7">
-                        <span class="stuck-logo__name" data-lg-tip="Ki.">Ki.</span>
+                        <span class="stuck-logo__name" data-withu-tip="Ki.">Ki.</span>
                         <span class="stuck-logo__redline-l"></span>
                         <span class="stuck-logo__heart"><svg width="20" height="20" viewBox="0 0 256 256" fill="currentColor"><path d="M240,94c0,70-103.79,126.66-108.21,129a8,8,0,0,1-7.58,0C119.79,220.66,16,164,16,94A62.07,62.07,0,0,1,78,32c20.65,0,38.73,8.88,50,23.89C139.27,40.88,157.35,32,178,32A62.07,62.07,0,0,1,240,94Z"/></svg></span>
                         <span class="stuck-logo__redline-r"></span>
-                        <span class="stuck-logo__name" data-lg-tip="Really">Really</span>
+                        <span class="stuck-logo__name" data-withu-tip="Really">Really</span>
                     </div>
                         </div>
 
         <!-- 功能入口：天气、地图 -->
-        <div class="lg-header-more-actions">
-                        <a href="javascript:void(0);" class="lg-header-more-action-item" id="lgMorePanelWeather" data-close-panel>
-                <span class="lg-header-more-action-icon">
+        <div class="withu-header-more-actions">
+                        <a href="javascript:void(0);" class="withu-header-more-action-item" id="lgMorePanelWeather" data-close-panel>
+                <span class="withu-header-more-action-icon">
                     <i class="qi-999-fill" id="lgMorePanelWeatherIcon"></i>
                 </span>
-                <span class="lg-header-more-action-label" id="lgMorePanelWeatherText">天气</span>
+                <span class="withu-header-more-action-label" id="lgMorePanelWeatherText">天气</span>
             </a>
             
-                        <a href="javascript:void(0);" class="lg-header-more-action-item" id="lgMorePanelMap" data-close-panel>
-                <span class="lg-header-more-action-icon">
+                        <a href="javascript:void(0);" class="withu-header-more-action-item" id="lgMorePanelMap" data-close-panel>
+                <span class="withu-header-more-action-icon">
                     <i class="ph-fill ph-globe-hemisphere-west"></i>
                 </span>
-                <span class="lg-header-more-action-label">足迹地图</span>
+                <span class="withu-header-more-action-label">足迹地图</span>
             </a>
                     </div>
     </div>
@@ -3264,58 +3264,58 @@
 </div>
 
 <div class="Width_limit_10rem">
-    <div class="lgnewui-sticky-sentinel" id="lgnewuiStickySentinel"></div>
+    <div class="withu-sticky-sentinel" id="withuStickySentinel"></div>
 </div>
 
-<div class="lgnewui-nav-placeholder" id="lgnewuiNavPlaceholder"></div>
-<div class="lgnewui-nav-wrapper" id="lgnewuiNavWrapper">
-    <nav class="lgnewui-nav-island-container" id="lgnewuiNavIsland">
-        <div class="lgnewui-nav-indicator" id="lgnewuiNavIndicator"></div>
+<div class="withu-nav-placeholder" id="withuNavPlaceholder"></div>
+<div class="withu-nav-wrapper" id="withuNavWrapper">
+    <nav class="withu-nav-island-container" id="withuNavIsland">
+        <div class="withu-nav-indicator" id="withuNavIndicator"></div>
 
                 <a href="articles.php"
-           class="lgnewui-nav-island-item  "
+           class="withu-nav-island-item  "
            draggable="false"
            data-desc="写下日常、心情与想念"
            data-meta="Memory Notes">
             <i class="ph-fill ph-notebook"></i>
             <span>点滴</span>        </a>
                 <a href="messages.php"
-           class="lgnewui-nav-island-item  "
+           class="withu-nav-island-item  "
            draggable="false"
            data-desc="留下想说的话与温柔回应"
            data-meta="Kind Messages">
             <i class="ph-fill ph-chat-teardrop-dots"></i>
             <span>留言</span>        </a>
                 <a href="timeline.php"
-           class="lgnewui-nav-island-item active "
+           class="withu-nav-island-item active "
            draggable="false"
            data-desc="回看我们一路走来的轨迹"
            data-meta="Steps of Us">
             <i class="ph-fill ph-clock-countdown"></i>
             <span>轨迹</span>        </a>
                 <a href="index.php"
-           class="lgnewui-nav-island-item  nav-home"
+           class="withu-nav-island-item  nav-home"
            draggable="false"
            data-desc="收好我们的日常与心动"
            data-meta="Our Cozy Place">
             <i class="ph-fill ph-house"></i>
                     </a>
                 <a href="albums.php"
-           class="lgnewui-nav-island-item  "
+           class="withu-nav-island-item  "
            draggable="false"
            data-desc="收藏见面与出游的闪亮瞬间"
            data-meta="Photo Keepsakes">
             <i class="ph-fill ph-camera"></i>
             <span>相册</span>        </a>
                 <a href="lovelist.php"
-           class="lgnewui-nav-island-item  "
+           class="withu-nav-island-item  "
            draggable="false"
            data-desc="记下想一起完成的心愿"
            data-meta="Plans Together">
             <i class="ph-fill ph-list-checks"></i>
             <span>清单</span>        </a>
                 <a href="about.php"
-           class="lgnewui-nav-island-item  "
+           class="withu-nav-island-item  "
            draggable="false"
            data-desc="用对话回放我们的故事"
            data-meta="Story Replay">
@@ -3325,16 +3325,16 @@
 </div>
 
 <div class="Width_limit_10rem">
-    <div class="lgnewui-page-header">
-        <div class="lgnewui-meta-container">
-            <div class="lgnewui-meta-tag" id="lgnewuiMetaTag">
-                <i class="fa-solid fa-star-of-life lgnewui-meta-icon"></i>
-                <span id="lgnewuiMetaText">Sanctuary of Us</span>
-                <i class="fa-solid fa-star-of-life lgnewui-meta-icon"></i>
+    <div class="withu-page-header">
+        <div class="withu-meta-container">
+            <div class="withu-meta-tag" id="withuMetaTag">
+                <i class="fa-solid fa-star-of-life withu-meta-icon"></i>
+                <span id="withuMetaText">Sanctuary of Us</span>
+                <i class="fa-solid fa-star-of-life withu-meta-icon"></i>
             </div>
-            <div class="lgnewui-meta-line" id="lgnewuiMetaLine"></div>
+            <div class="withu-meta-line" id="withuMetaLine"></div>
         </div>
-        <h2 class="lgnewui-hero-title" id="lgnewuiHeroTitle"></h2>
+        <h2 class="withu-hero-title" id="withuHeroTitle"></h2>
     </div>
 </div>
 
@@ -3351,7 +3351,7 @@
     <meta charset="utf-8" />
     <meta name="viewport"
         content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>轨迹 — LG-NewUi Demo</title>
+    <title>轨迹 — withU Demo</title>
 </head>
 
 <body class="bg-pdot-vignette">
@@ -3363,21 +3363,21 @@
         <script src="/assets/js/mini-map.js"></script>
 
         <!-- 滚动提示 -->
-        <div class="lgnewui-scroll-hint" id="timelineScrollHint">
-            <div class="lgnewui-scroll-hint-inner">
+        <div class="withu-scroll-hint" id="timelineScrollHint">
+            <div class="withu-scroll-hint-inner">
                 <!-- PC 端：鼠标图标 -->
-                <div class="lgnewui-scroll-mouse">
-                    <div class="lgnewui-scroll-wheel"></div>
+                <div class="withu-scroll-mouse">
+                    <div class="withu-scroll-wheel"></div>
                 </div>
                 <!-- 移动端：手指滑动图标 -->
-                <div class="lgnewui-scroll-touch">
-                    <div class="lgnewui-scroll-touch-hand">
+                <div class="withu-scroll-touch">
+                    <div class="withu-scroll-touch-hand">
                         <i class="ph-fill ph-hand-tap"></i>
                     </div>
-                    <div class="lgnewui-scroll-touch-trail"></div>
+                    <div class="withu-scroll-touch-trail"></div>
                 </div>
-                <span class="lgnewui-scroll-text lgnewui-scroll-text-pc">向下滚动查看时间轴</span>
-                <span class="lgnewui-scroll-text lgnewui-scroll-text-mobile">向上滑动查看时间轴</span>
+                <span class="withu-scroll-text withu-scroll-text-pc">向下滚动查看时间轴</span>
+                <span class="withu-scroll-text withu-scroll-text-mobile">向上滑动查看时间轴</span>
             </div>
         </div>
 
@@ -3385,14 +3385,14 @@
 
         <style>
             /* 滚动提示样式 */
-            .lgnewui-scroll-hint {
+            .withu-scroll-hint {
                 display: flex;
                 justify-content: center;
                 align-items: center;
                 padding: 30px 0 50px;
             }
 
-            .lgnewui-scroll-hint-inner {
+            .withu-scroll-hint-inner {
                 display: flex;
                 flex-direction: column;
                 align-items: center;
@@ -3400,7 +3400,7 @@
             }
 
             /* 鼠标图标 - PC 端 */
-            .lgnewui-scroll-mouse {
+            .withu-scroll-mouse {
                 width: 26px;
                 height: 42px;
                 border: 2px solid rgba(0, 0, 0, 0.2);
@@ -3410,7 +3410,7 @@
                 justify-content: center;
             }
 
-            .lgnewui-scroll-wheel {
+            .withu-scroll-wheel {
                 width: 4px;
                 height: 8px;
                 background: rgba(0, 0, 0, 0.3);
@@ -3438,7 +3438,7 @@
             }
 
             /* 手指滑动图标 - 移动端 */
-            .lgnewui-scroll-touch {
+            .withu-scroll-touch {
                 display: none;
                 flex-direction: column;
                 align-items: center;
@@ -3446,13 +3446,13 @@
                 height: 60px;
             }
 
-            .lgnewui-scroll-touch-hand {
+            .withu-scroll-touch-hand {
                 font-size: 28px;
                 color: rgba(0, 0, 0, 0.35);
                 animation: touchSwipe 1.8s ease-in-out infinite;
             }
 
-            .lgnewui-scroll-touch-trail {
+            .withu-scroll-touch-trail {
                 position: absolute;
                 bottom: 0;
                 width: 2px;
@@ -3484,48 +3484,48 @@
                 }
             }
 
-            .lgnewui-scroll-text {
+            .withu-scroll-text {
                 font-size: 13px;
                 color: rgba(0, 0, 0, 0.4);
                 font-family: 'Noto Serif SC', serif;
                 letter-spacing: 0.1em;
             }
 
-            .lgnewui-scroll-text-mobile {
+            .withu-scroll-text-mobile {
                 display: none;
             }
 
             @media (max-width: 768px) {
-                .lgnewui-scroll-hint {
+                .withu-scroll-hint {
                     padding: 20px 0 40px;
                 }
 
-                .lgnewui-scroll-mouse {
+                .withu-scroll-mouse {
                     display: none;
                 }
 
-                .lgnewui-scroll-touch {
+                .withu-scroll-touch {
                     display: flex;
                 }
 
-                .lgnewui-scroll-text-pc {
+                .withu-scroll-text-pc {
                     display: none;
                 }
 
-                .lgnewui-scroll-text-mobile {
+                .withu-scroll-text-mobile {
                     display: block;
                 }
 
-                .lgnewui-scroll-text {
+                .withu-scroll-text {
                     font-size: 12px;
                 }
             }
         </style>
 
-        <!-- <div class="lgnewui-time-line-spacer"></div> -->
+        <!-- <div class="withu-time-line-spacer"></div> -->
 
-        <main class="lgnewui-time-line-main">
-            <div id="timeline-container" class="lgnewui-time-line-container"></div>
+        <main class="withu-time-line-main">
+            <div id="timeline-container" class="withu-time-line-container"></div>
         </main>
 
         <!-- PHP 配置输出 -->
@@ -3574,15 +3574,15 @@ window.TIMELINE_AUTHORS['female'] = window.TIMELINE_AUTHORS[2];
 
 
     <!-- 表情面板（全局可用，弹窗 & 抽屉共用） -->
-    <div class="lgnewui-message-emoji-panel" id="lgmsgEmojiPanel">
-        <div class="lgnewui-message-emoji-tabs-wrap">
-            <div class="lgnewui-message-emoji-tabs" id="lgmsgEmojiTabs"></div>
+    <div class="withu-message-emoji-panel" id="lgmsgEmojiPanel">
+        <div class="withu-message-emoji-tabs-wrap">
+            <div class="withu-message-emoji-tabs" id="lgmsgEmojiTabs"></div>
         </div>
-        <div class="lgnewui-message-emoji-cat-title" id="lgmsgEmojiCatTitle"></div>
-        <div class="lgnewui-message-emoji-list" id="lgmsgEmojiGrid"></div>
+        <div class="withu-message-emoji-cat-title" id="lgmsgEmojiCatTitle"></div>
+        <div class="withu-message-emoji-list" id="lgmsgEmojiGrid"></div>
     </div>
 
-    <div class="lgnewui-message-emoji-preview" id="lgmsgEmojiPreview">
+    <div class="withu-message-emoji-preview" id="lgmsgEmojiPreview">
         <img src="" id="lgmsgPreviewImg">
         <span id="lgmsgPreviewText"></span>
     </div>
@@ -3618,75 +3618,75 @@ window.TIMELINE_AUTHORS['female'] = window.TIMELINE_AUTHORS[2];
     </div>
 
     <!-- 留言弹窗（全局可用） -->
-    <div class="lgnewui-message-modal-overlay" id="lgmsgCommentModal">
-        <div class="lgnewui-message-modal-content" id="lgmsgModalContent">
-            <div class="lgnewui-message-close-wrapper">
-                <button class="lgnewui-message-close-btn" id="lgmsgModalCloseBtn">
+    <div class="withu-message-modal-overlay" id="lgmsgCommentModal">
+        <div class="withu-message-modal-content" id="lgmsgModalContent">
+            <div class="withu-message-close-wrapper">
+                <button class="withu-message-close-btn" id="lgmsgModalCloseBtn">
                     <i data-lucide="x" style="width:20px;height:20px;"></i>
                 </button>
             </div>
-            <div class="lgnewui-message-modal-body">
-                <div class="lgnewui-message-head-titles">
-                    <div class="lgnewui-message-title">写一条留言</div>
-                    <div class="lgnewui-message-subtitle">在这里，留下属于你的印记</div>
+            <div class="withu-message-modal-body">
+                <div class="withu-message-head-titles">
+                    <div class="withu-message-title">写一条留言</div>
+                    <div class="withu-message-subtitle">在这里，留下属于你的印记</div>
                 </div>
-                <div class="lgnewui-message-ios-tabs-wrap">
-                    <div class="lgnewui-message-ios-tabs" id="lgmsgTabContainer">
-                        <div class="lgnewui-message-ios-tab-slider" id="lgmsgTabSlider"></div>
-                        <div class="lgnewui-message-ios-tab active" data-mode="qq">QQ留言</div>
-                        <div class="lgnewui-message-ios-tab" data-mode="anonymous">匿名留言</div>
+                <div class="withu-message-ios-tabs-wrap">
+                    <div class="withu-message-ios-tabs" id="lgmsgTabContainer">
+                        <div class="withu-message-ios-tab-slider" id="lgmsgTabSlider"></div>
+                        <div class="withu-message-ios-tab active" data-mode="qq">QQ留言</div>
+                        <div class="withu-message-ios-tab" data-mode="anonymous">匿名留言</div>
                     </div>
                 </div>
-                <div class="lgnewui-message-visitor-tags" id="lgmsgVisitorTags">
-                    <div class="lgnewui-message-v-tag">
-                        <div class="lgnewui-message-v-tag-icon lgnewui-message-icon-os">
+                <div class="withu-message-visitor-tags" id="lgmsgVisitorTags">
+                    <div class="withu-message-v-tag">
+                        <div class="withu-message-v-tag-icon withu-message-icon-os">
                             <i data-lucide="monitor"></i>
                         </div>
                         <span id="lgmsgTagOS">--</span>
                     </div>
-                    <div class="lgnewui-message-v-tag">
-                        <div class="lgnewui-message-v-tag-icon lgnewui-message-icon-browser">
+                    <div class="withu-message-v-tag">
+                        <div class="withu-message-v-tag-icon withu-message-icon-browser">
                             <i data-lucide="globe"></i>
                         </div>
                         <span id="lgmsgTagBrowser">--</span>
                     </div>
-                    <div class="lgnewui-message-v-tag">
-                        <div class="lgnewui-message-v-tag-icon lgnewui-message-icon-location">
+                    <div class="withu-message-v-tag">
+                        <div class="withu-message-v-tag-icon withu-message-icon-location">
                             <i data-lucide="map-pin"></i>
                         </div>
                         <span id="lgmsgTagLocation">--</span>
                     </div>
-                    <div class="lgnewui-message-v-tag">
-                        <div class="lgnewui-message-v-tag-icon lgnewui-message-icon-weather">
+                    <div class="withu-message-v-tag">
+                        <div class="withu-message-v-tag-icon withu-message-icon-weather">
                             <i class="qi-100-fill" id="lgmsgWeatherIcon"></i>
                         </div>
                         <span id="lgmsgTagWeather">--</span>
                     </div>
                 </div>
-                <div class="lgnewui-message-input-row" id="lgmsgInputRow"></div>
-                <div class="lgnewui-message-privacy-hint" id="lgmsgPrivacyHint"><i data-lucide="lock"></i>QQ 信息经过加密脱敏处理，不会公开展示，请放心留言</div>
-                <div class="lgnewui-message-editor-wrap">
-                    <div class="lgnewui-message-editor-content" id="lgmsgEditor" contenteditable="true" data-placeholder="想说点什么..."></div>
-                    <div class="lgnewui-message-emoji-bubbles" id="lgmsgEmojiBubbles"></div>
-                    <div class="lgnewui-message-editor-toolbar">
-                        <div class="lgnewui-message-tb-left">
-                            <button class="lgnewui-message-tb-btn" id="lgmsgBtnEmoji" title="表情">
+                <div class="withu-message-input-row" id="lgmsgInputRow"></div>
+                <div class="withu-message-privacy-hint" id="lgmsgPrivacyHint"><i data-lucide="lock"></i>QQ 信息经过加密脱敏处理，不会公开展示，请放心留言</div>
+                <div class="withu-message-editor-wrap">
+                    <div class="withu-message-editor-content" id="lgmsgEditor" contenteditable="true" data-placeholder="想说点什么..."></div>
+                    <div class="withu-message-emoji-bubbles" id="lgmsgEmojiBubbles"></div>
+                    <div class="withu-message-editor-toolbar">
+                        <div class="withu-message-tb-left">
+                            <button class="withu-message-tb-btn" id="lgmsgBtnEmoji" title="表情">
                                 <i data-lucide="smile"></i>
                             </button>
-                            <button class="lgnewui-message-tb-btn" id="lgmsgBtnQuote" title="随机一言">
+                            <button class="withu-message-tb-btn" id="lgmsgBtnQuote" title="随机一言">
                                 <i data-lucide="sparkles"></i>
                             </button>
-                            <div class="lgnewui-message-switch-wrap" id="lgmsgEnterToSendWrap">
-                                <div class="lgnewui-message-switch"></div>
-                                <span class="lgnewui-message-switch-text">Enter 发送</span>
+                            <div class="withu-message-switch-wrap" id="lgmsgEnterToSendWrap">
+                                <div class="withu-message-switch"></div>
+                                <span class="withu-message-switch-text">Enter 发送</span>
                             </div>
                         </div>
-                        <span class="lgnewui-message-char-counter" id="lgmsgCharCounter">0/500</span>
-                        <button class="lgnewui-message-submit-btn" id="lgmsgSubmitBtn">
-                            <span class="lgnewui-message-submit-label">发送留言</span>
-                            <i data-lucide="send" class="lgnewui-message-submit-icon" style="width:18px;height:18px;"></i>
-                            <i data-lucide="loader" class="lgnewui-message-submit-loader lgnewui-message-lucide-loader" style="width:18px;height:18px;"></i>
-                            <i data-lucide="check" class="lgnewui-message-submit-check" style="width:18px;height:18px;"></i>
+                        <span class="withu-message-char-counter" id="lgmsgCharCounter">0/500</span>
+                        <button class="withu-message-submit-btn" id="lgmsgSubmitBtn">
+                            <span class="withu-message-submit-label">发送留言</span>
+                            <i data-lucide="send" class="withu-message-submit-icon" style="width:18px;height:18px;"></i>
+                            <i data-lucide="loader" class="withu-message-submit-loader withu-message-lucide-loader" style="width:18px;height:18px;"></i>
+                            <i data-lucide="check" class="withu-message-submit-check" style="width:18px;height:18px;"></i>
                         </button>
                     </div>
                 </div>
@@ -3696,16 +3696,16 @@ window.TIMELINE_AUTHORS['female'] = window.TIMELINE_AUTHORS[2];
 
     <!-- 留言弹窗配置输出 -->
     <script>
-        window.LG_CONFIG = window.LG_CONFIG || {};
-        window.LG_CONFIG.userCity = "湖北 · 武汉";
-        window.LG_CONFIG.anonymousAvatar = "/Lovefolder/20250310095643_67ce46dbe2fa8.webp";
+        window.WITHU_CONFIG = window.WITHU_CONFIG || {};
+        window.WITHU_CONFIG.userCity = "湖北 · 武汉";
+        window.WITHU_CONFIG.anonymousAvatar = "/Lovefolder/20250310095643_67ce46dbe2fa8.webp";
     </script>
 
     <!-- 极验验证与留言提交绑定 -->
     <script>
     $(function() {
         if (typeof GeetestHelper !== 'undefined') {
-            var siteTitle = (window.LG_CONFIG && window.LG_CONFIG.title) || '';
+            var siteTitle = (window.WITHU_CONFIG && window.WITHU_CONFIG.title) || '';
 
             GeetestHelper.init({
                 toast: {
@@ -3798,8 +3798,8 @@ window.TIMELINE_AUTHORS['female'] = window.TIMELINE_AUTHORS[2];
 <script src="/Style/js/meting.js"></script>
 
 <div id="nav-music">
-    <div id="nav-music-hoverTips" onclick="lg_love.musicToggle()">
-        <svg viewBox="0 0 1024 1024" class="lgnewui-nav-music-play-icon" aria-hidden="true">
+    <div id="nav-music-hoverTips" onclick="withu_love.musicToggle()">
+        <svg viewBox="0 0 1024 1024" class="withu-nav-music-play-icon" aria-hidden="true">
             <path d="M324.085 95.787l500.422 300.664c82.373 50.453 79.284 136.946-1.03 186.37v0l-506.6 304.784c-41.187 23.683-87.522 37.068-131.798 9.267-36.037-22.653-46.335-58.691-46.335-97.819v-616.774c0-39.127 13.386-75.166 48.395-97.819 45.305-27.801 94.731-14.416 136.946 11.327v0z" fill="#ffffff" />
         </svg>
     </div>
@@ -3812,71 +3812,71 @@ window.TIMELINE_AUTHORS['female'] = window.TIMELINE_AUTHORS[2];
     </meting-js>
     
     <div id="nav-music-progress">
-        <div class="lgnewui-nav-music-progress-loaded"></div>
-        <div class="lgnewui-nav-music-progress-played"></div>
-        <div class="lgnewui-nav-music-progress-thumb"></div>
-        <div class="lgnewui-nav-music-progress-loading">
+        <div class="withu-nav-music-progress-loaded"></div>
+        <div class="withu-nav-music-progress-played"></div>
+        <div class="withu-nav-music-progress-thumb"></div>
+        <div class="withu-nav-music-progress-loading">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                 <circle cx="12" cy="12" r="10" stroke-dasharray="31.4" stroke-dashoffset="10" />
             </svg>
         </div>
     </div>
 
-    <div class="lgnewui-nav-music-controls">
-        <button class="lgnewui-nav-music-btn lgnewui-nav-music-btn-back" type="button" onclick="lg_love.musicSkipBack()" aria-label="上一首">
-            <svg viewBox="0 0 24 24" class="lgnewui-nav-music-icon" aria-hidden="true"><path d="M6 5v14" /><path d="M18 5L10 12l8 7" /></svg>
+    <div class="withu-nav-music-controls">
+        <button class="withu-nav-music-btn withu-nav-music-btn-back" type="button" onclick="withu_love.musicSkipBack()" aria-label="上一首">
+            <svg viewBox="0 0 24 24" class="withu-nav-music-icon" aria-hidden="true"><path d="M6 5v14" /><path d="M18 5L10 12l8 7" /></svg>
         </button>
-        <button class="lgnewui-nav-music-btn lgnewui-nav-music-btn-toggle" type="button" onclick="lg_love.musicToggle()" aria-label="播放或暂停">
-            <svg viewBox="0 0 24 24" class="lgnewui-nav-music-icon lgnewui-nav-music-icon-play" aria-hidden="true"><path d="M8 5v14l9-7z" /></svg>
-            <svg viewBox="0 0 24 24" class="lgnewui-nav-music-icon lgnewui-nav-music-icon-pause" aria-hidden="true"><path d="M9 6v12" /><path d="M15 6v12" /></svg>
+        <button class="withu-nav-music-btn withu-nav-music-btn-toggle" type="button" onclick="withu_love.musicToggle()" aria-label="播放或暂停">
+            <svg viewBox="0 0 24 24" class="withu-nav-music-icon withu-nav-music-icon-play" aria-hidden="true"><path d="M8 5v14l9-7z" /></svg>
+            <svg viewBox="0 0 24 24" class="withu-nav-music-icon withu-nav-music-icon-pause" aria-hidden="true"><path d="M9 6v12" /><path d="M15 6v12" /></svg>
         </button>
-        <button class="lgnewui-nav-music-btn lgnewui-nav-music-btn-forward" type="button" onclick="lg_love.musicSkipForward()" aria-label="下一首">
-            <svg viewBox="0 0 24 24" class="lgnewui-nav-music-icon" aria-hidden="true"><path d="M18 5v14" /><path d="M6 5l8 7-8 7" /></svg>
+        <button class="withu-nav-music-btn withu-nav-music-btn-forward" type="button" onclick="withu_love.musicSkipForward()" aria-label="下一首">
+            <svg viewBox="0 0 24 24" class="withu-nav-music-icon" aria-hidden="true"><path d="M18 5v14" /><path d="M6 5l8 7-8 7" /></svg>
         </button>
     </div>
 </div>
 
 <!-- 音乐列表面板 -->
-<div class="lgnewui-music-playlist-panel" id="musicPlaylist">
-    <div class="lgnewui-music-playlist-header">
-        <div class="lgnewui-music-playlist-title">
+<div class="withu-music-playlist-panel" id="musicPlaylist">
+    <div class="withu-music-playlist-header">
+        <div class="withu-music-playlist-title">
             <svg viewBox="0 0 24 24" width="16" height="16" xmlns="http://www.w3.org/2000/svg">
                 <circle cx="12" cy="12" r="10" fill="currentColor" opacity="0.2" />
                 <circle cx="12" cy="12" r="4" fill="currentColor" />
                 <circle cx="12" cy="12" r="1" fill="rgba(255,255,255,0.8)" />
             </svg>
             <span>播放列表</span>
-            <span class="lgnewui-music-playlist-count" id="playlistCount"></span>
+            <span class="withu-music-playlist-count" id="playlistCount"></span>
         </div>
-        <div class="lgnewui-music-playlist-header-right">
-            <div class="lgnewui-music-playlist-mode" id="playlistMode" title="播放模式">
+        <div class="withu-music-playlist-header-right">
+            <div class="withu-music-playlist-mode" id="playlistMode" title="播放模式">
                 <svg class="mode-icon mode-random" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 3h5v5M4 20L21 3M21 16v5h-5M15 15l6 6M4 4l5 5" /></svg>
                 <svg class="mode-icon mode-loop" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display:none"><path d="M17 2l4 4-4 4M3 11V9a4 4 0 014-4h14M7 22l-4-4 4-4M21 13v2a4 4 0 01-4 4H3" /></svg>
                 <svg class="mode-icon mode-single" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:none"><path d="M17 2l4 4-4 4" /><path d="M3 11V9a4 4 0 014-4h14" /><path d="M7 22l-4-4 4-4" /><path d="M21 13v2a4 4 0 01-4 4H3" /><path d="M12 10v4" /></svg>
             </div>
-            <button class="lgnewui-music-playlist-close" id="playlistLocate" aria-label="定位当前" title="定位当前播放" style="margin-left:8px;">
+            <button class="withu-music-playlist-close" id="playlistLocate" aria-label="定位当前" title="定位当前播放" style="margin-left:8px;">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="16"></line><line x1="8" y1="12" x2="16" y2="12"></line></svg>
             </button>
-            <button class="lgnewui-music-playlist-close" id="playlistReset" aria-label="重置列表" title="重置播放列表" style="margin-left:4px;">
+            <button class="withu-music-playlist-close" id="playlistReset" aria-label="重置列表" title="重置播放列表" style="margin-left:4px;">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M3 12a9 9 0 0 1 9-9 9.75 9.75 0 0 1 6.74 2.74L21 8"></path><path d="M21 3v5h-5"></path><path d="M21 12a9 9 0 0 1-9 9 9.75 9.75 0 0 1-6.74-2.74L3 16"></path><path d="M8 16H3v5"></path></svg>
             </button>
         </div>
     </div>
-    <div class="lgnewui-music-playlist-content" id="playlistContent">
-        <div class="lgnewui-music-playlist-empty">
+    <div class="withu-music-playlist-content" id="playlistContent">
+        <div class="withu-music-playlist-empty">
             <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 3v10.55c-.59-.34-1.27-.55-2-.55-2.21 0-4 1.79-4 4s1.79 4 4 4 4-1.79 4-4V7h4V3h-6z" /></svg>
             <div>暂无音乐</div>
         </div>
     </div>
-    <div class="lgnewui-music-playlist-volume">
-        <div class="lgnewui-music-volume-value" id="volumeValue">50%</div>
-        <div class="lgnewui-music-volume-segment-track" id="volumeTrack"></div>
-        <button class="lgnewui-music-volume-icon-wrap" id="volumeBtn">
-            <svg class="lgnewui-music-volume-icon-svg" viewBox="0 0 24 24">
-                <g class="lgnewui-music-volume-icon-path lgnewui-path-mute"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon><line x1="23" y1="9" x2="17" y2="15"></line><line x1="17" y1="9" x2="23" y2="15"></line></g>
-                <g class="lgnewui-music-volume-icon-path lgnewui-path-low"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon></g>
-                <g class="lgnewui-music-volume-icon-path lgnewui-path-med"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon><path d="M15.54 8.46a5 5 0 0 1 0 7.07"></path></g>
-                <g class="lgnewui-music-volume-icon-path lgnewui-path-high"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon><path d="M15.54 8.46a5 5 0 0 1 0 7.07"></path><path d="M19.07 4.93a10 10 0 0 1 0 14.14"></path></g>
+    <div class="withu-music-playlist-volume">
+        <div class="withu-music-volume-value" id="volumeValue">50%</div>
+        <div class="withu-music-volume-segment-track" id="volumeTrack"></div>
+        <button class="withu-music-volume-icon-wrap" id="volumeBtn">
+            <svg class="withu-music-volume-icon-svg" viewBox="0 0 24 24">
+                <g class="withu-music-volume-icon-path withu-path-mute"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon><line x1="23" y1="9" x2="17" y2="15"></line><line x1="17" y1="9" x2="23" y2="15"></line></g>
+                <g class="withu-music-volume-icon-path withu-path-low"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon></g>
+                <g class="withu-music-volume-icon-path withu-path-med"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon><path d="M15.54 8.46a5 5 0 0 1 0 7.07"></path></g>
+                <g class="withu-music-volume-icon-path withu-path-high"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon><path d="M15.54 8.46a5 5 0 0 1 0 7.07"></path><path d="M19.07 4.93a10 10 0 0 1 0 14.14"></path></g>
             </svg>
         </button>
     </div>
@@ -3971,8 +3971,8 @@ window.TIMELINE_AUTHORS['female'] = window.TIMELINE_AUTHORS[2];
         if (dismissed) saveMusicSetting('modalDismissed', true);
         modal.classList.remove('show');
         setTimeout(function () {
-            if (window.lg_love && typeof lg_love.musicToggle === 'function') {
-                lg_love.musicToggle();
+            if (window.withu_love && typeof withu_love.musicToggle === 'function') {
+                withu_love.musicToggle();
             }
         }, 300);
     });
@@ -3987,9 +3987,9 @@ window.TIMELINE_AUTHORS['female'] = window.TIMELINE_AUTHORS[2];
 
 <!-- 足迹地图弹窗 -->
 <!-- ============ 足迹地图弹窗 ============ -->
-<div class="lg-map-overlay" id="lgMapOverlay" style="display:none;">
-    <div class="lg-map-modal">
-        <div class="lg-map">
+<div class="withu-map-overlay" id="lgMapOverlay" style="display:none;">
+    <div class="withu-map-modal">
+        <div class="withu-map">
             <section id="missing-pets-module">
                 <div class="missing-pets-wrap">
                     <div id="missing-pets-map"></div>
@@ -4003,9 +4003,9 @@ window.TIMELINE_AUTHORS['female'] = window.TIMELINE_AUTHORS[2];
                             </div>
                         </div>
                         <div class="ui-footer-right">
-                            <div class="lgnewui-badge">
-                                <div class="lgnewui-icon-circle">LG</div>
-                                <div class="lgnewui-text-thin">LGNewUi</div>
+                            <div class="withu-badge">
+                                <div class="withu-icon-circle">withU</div>
+                                <div class="withu-text-thin">withU</div>
                             </div>
                             <div class="ui-footer-copy">
                                 Powered by <span class="footer-amap-logo">
@@ -4108,7 +4108,7 @@ window.TIMELINE_AUTHORS['female'] = window.TIMELINE_AUTHORS[2];
 <div id="pjax-container">
 
     
-    <div id="lgnewuiFloatingActions">
+    <div id="withuFloatingActions">
         
         
         <a href="javascript:void(0)" id="scrollTopBtn" title="回到顶部">
@@ -4119,7 +4119,7 @@ window.TIMELINE_AUTHORS['female'] = window.TIMELINE_AUTHORS[2];
     <script>
     // 加密免验提示点击
     (function () {
-        var btn = document.getElementById('lgnewuiEncryptHint');
+        var btn = document.getElementById('withuEncryptHint');
         if (!btn) return;
         btn.addEventListener('click', function () {
             var label = this.getAttribute('data-encrypt-label') || '加密';
@@ -4142,7 +4142,7 @@ window.TIMELINE_AUTHORS['female'] = window.TIMELINE_AUTHORS[2];
 
             // 初始化 LGApp 核心框架
             if (window.LGApp && typeof window.LGApp.init === 'function') {
-                window.LGApp.setConfig(window.LG_CONFIG || {});
+                window.LGApp.setConfig(window.WITHU_CONFIG || {});
                 window.LGApp.init();
             }
 
@@ -4384,7 +4384,7 @@ window.TIMELINE_AUTHORS['female'] = window.TIMELINE_AUTHORS[2];
                         <span class="badge-subject">Copyright</span>
                         <span class="badge-value bg-DIY1">
                             ©
-                            2026 LG_NewUi Web All Rights Reserved.
+                            2026 withU Web All Rights Reserved.
                         </span>
                     </a>
                 </p>
@@ -4393,42 +4393,42 @@ window.TIMELINE_AUTHORS['female'] = window.TIMELINE_AUTHORS[2];
 </div>
 
 
-<div class="lgnewui-mobile-nav-root">
+<div class="withu-mobile-nav-root">
 
     <!-- 方案5: 极简包裹点阵 -->
-    <div class="lgnewui-tab-template-v5-container lgnewui-glass-panel" id="lgnewui-mobile-nav-v5">
-        <div class="lgnewui-tab-template-v5-indicator"></div>
-                                <a class="lgnewui-base-nav-item js-lgnewui-v5-item"
+    <div class="withu-tab-template-v5-container withu-glass-panel" id="withu-mobile-nav-v5">
+        <div class="withu-tab-template-v5-indicator"></div>
+                                <a class="withu-base-nav-item js-withu-v5-item"
                href="articles.php">
                 <i class="ph-fill ph-notebook"></i>
                 <span>点滴</span>
             </a>
-                                <a class="lgnewui-base-nav-item js-lgnewui-v5-item"
+                                <a class="withu-base-nav-item js-withu-v5-item"
                href="messages.php">
                 <i class="ph-fill ph-chat-teardrop-dots"></i>
                 <span>留言</span>
             </a>
-                                <a class="lgnewui-base-nav-item js-lgnewui-v5-item active"
+                                <a class="withu-base-nav-item js-withu-v5-item active"
                href="timeline.php">
                 <i class="ph-fill ph-clock-countdown"></i>
                 <span>轨迹</span>
             </a>
-                                <a class="lgnewui-base-nav-item js-lgnewui-v5-item"
+                                <a class="withu-base-nav-item js-withu-v5-item"
                href="index.php">
                 <i class="ph-fill ph-house"></i>
                 <span>首页</span>
             </a>
-                                <a class="lgnewui-base-nav-item js-lgnewui-v5-item"
+                                <a class="withu-base-nav-item js-withu-v5-item"
                href="albums.php">
                 <i class="ph-fill ph-camera"></i>
                 <span>相册</span>
             </a>
-                                <a class="lgnewui-base-nav-item js-lgnewui-v5-item"
+                                <a class="withu-base-nav-item js-withu-v5-item"
                href="lovelist.php">
                 <i class="ph-fill ph-list-checks"></i>
                 <span>清单</span>
             </a>
-                                <a class="lgnewui-base-nav-item js-lgnewui-v5-item"
+                                <a class="withu-base-nav-item js-withu-v5-item"
                href="about.php">
                 <i class="ph-fill ph-book-open-text"></i>
                 <span>关于</span>
@@ -4445,12 +4445,12 @@ window.TIMELINE_AUTHORS['female'] = window.TIMELINE_AUTHORS[2];
     (function () {
         var requestId = "742fe4f4754df5d0d2b4494f629fb911";
         var token = "e8320da232c7da2b0641463216088a535013236c8cc07eca055df8b1b5f9a3b4";
-        window.LG_CONFIG = Object.assign(window.LG_CONFIG || {}, {
-            endpoints: Object.assign({}, (window.LG_CONFIG && window.LG_CONFIG.endpoints) || {}, {
+        window.WITHU_CONFIG = Object.assign(window.WITHU_CONFIG || {}, {
+            endpoints: Object.assign({}, (window.WITHU_CONFIG && window.WITHU_CONFIG.endpoints) || {}, {
                 accessBeacon: "/services/access-beacon.php"            })
         });
 
-        var endpoint = (window.LG_CONFIG && window.LG_CONFIG.endpoints && window.LG_CONFIG.endpoints.accessBeacon) || '';
+        var endpoint = (window.WITHU_CONFIG && window.WITHU_CONFIG.endpoints && window.WITHU_CONFIG.endpoints.accessBeacon) || '';
         if (!endpoint || !navigator.sendBeacon) {
             return;
         }
@@ -4517,8 +4517,8 @@ window.TIMELINE_AUTHORS['female'] = window.TIMELINE_AUTHORS[2];
                 if (!xhr || typeof xhr.getResponseHeader !== 'function') {
                     return;
                 }
-                var nextRequestId = xhr.getResponseHeader('X-LG-Access-Request-Id') || '';
-                var nextToken = xhr.getResponseHeader('X-LG-Access-Beacon-Token') || '';
+                var nextRequestId = xhr.getResponseHeader('X-WithU-Access-Request-Id') || '';
+                var nextToken = xhr.getResponseHeader('X-WithU-Access-Beacon-Token') || '';
                 setContext(nextRequestId, nextToken);
             });
         }

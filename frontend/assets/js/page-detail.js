@@ -1,5 +1,5 @@
 /**
- * LG_NewUI 文章详情页模块
+ * withU 文章详情页模块
  * @version 1.0.0
  * @description page.php 文章详情页的 JS 逻辑
  * @author KiKi
@@ -32,7 +32,7 @@
          */
         _initVideos() {
             const self = this;
-            const videos = document.querySelectorAll('video.lgnewui-player-video');
+            const videos = document.querySelectorAll('video.withu-player-video');
 
             if (videos.length === 0) return;
 
@@ -115,14 +115,14 @@
             // 无标题时显示骨架屏空状态
             if (headings.length === 0) {
                 const emptyHtml = `
-                    <div class="lgnewui-toc-empty">
-                        <div class="lgnewui-toc-skeleton">
-                            <div class="lgnewui-toc-skeleton-line" style="width: 75%"></div>
-                            <div class="lgnewui-toc-skeleton-line" style="width: 90%"></div>
-                            <div class="lgnewui-toc-skeleton-line" style="width: 60%"></div>
-                            <div class="lgnewui-toc-skeleton-line" style="width: 80%"></div>
+                    <div class="withu-toc-empty">
+                        <div class="withu-toc-skeleton">
+                            <div class="withu-toc-skeleton-line" style="width: 75%"></div>
+                            <div class="withu-toc-skeleton-line" style="width: 90%"></div>
+                            <div class="withu-toc-skeleton-line" style="width: 60%"></div>
+                            <div class="withu-toc-skeleton-line" style="width: 80%"></div>
                         </div>
-                        <div class="lgnewui-toc-empty-badge">
+                        <div class="withu-toc-empty-badge">
                             <i class="ph-duotone ph-paragraph"></i>
                             <span>本文尚未设置章节标题</span>
                         </div>
@@ -166,20 +166,20 @@
                     h4Index = 0;
                     number = String(h2Index).padStart(2, '0') + '-' + h3Index;
                     tag = 'H3';
-                    nestClass = 'lgnewui-detail-toc-link-nested';
+                    nestClass = 'withu-detail-toc-link-nested';
                     iconClass = 'ph-fill ph-square';
                 } else if (level === 'h4') {
                     h4Index++;
                     number = String(h2Index).padStart(2, '0') + '-' + h3Index + '-' + h4Index;
                     tag = 'H4';
-                    nestClass = 'lgnewui-detail-toc-link-nested-2';
+                    nestClass = 'withu-detail-toc-link-nested-2';
                     iconClass = 'ph-fill ph-circle';
                 }
 
-                tocHtml += '<a href="#' + heading.id + '" class="lgnewui-detail-toc-link ' + nestClass + '" data-target="' + heading.id + '">';
-                tocHtml += '<i class="' + iconClass + ' lgnewui-detail-toc-icon-default"></i>';
-                tocHtml += '<span class="lgnewui-toc-prefix" data-number="' + number + '" data-tag="' + tag + '" style="display: none;"></span>';
-                tocHtml += '<span class="lgnewui-detail-toc-link-text">' + text + '</span>';
+                tocHtml += '<a href="#' + heading.id + '" class="withu-detail-toc-link ' + nestClass + '" data-target="' + heading.id + '">';
+                tocHtml += '<i class="' + iconClass + ' withu-detail-toc-icon-default"></i>';
+                tocHtml += '<span class="withu-toc-prefix" data-number="' + number + '" data-tag="' + tag + '" style="display: none;"></span>';
+                tocHtml += '<span class="withu-detail-toc-link-text">' + text + '</span>';
                 tocHtml += '</a>';
             });
 
@@ -198,17 +198,17 @@
                 entries.forEach(function(entry) {
                     if (entry.isIntersecting) {
                         const targetId = entry.target.id;
-                        document.querySelectorAll('.lgnewui-detail-toc-link').forEach(function(link) {
+                        document.querySelectorAll('.withu-detail-toc-link').forEach(function(link) {
                             const isActive = link.getAttribute('data-target') === targetId;
                             link.classList.toggle('active', isActive);
                             const icon = link.querySelector('i');
                             if (icon) {
                                 if (isActive) {
-                                    icon.classList.remove('lgnewui-detail-toc-icon-default');
-                                    icon.classList.add('lgnewui-detail-toc-icon-active');
+                                    icon.classList.remove('withu-detail-toc-icon-default');
+                                    icon.classList.add('withu-detail-toc-icon-active');
                                 } else {
-                                    icon.classList.remove('lgnewui-detail-toc-icon-active');
-                                    icon.classList.add('lgnewui-detail-toc-icon-default');
+                                    icon.classList.remove('withu-detail-toc-icon-active');
+                                    icon.classList.add('withu-detail-toc-icon-default');
                                 }
                             }
                         });
@@ -243,7 +243,7 @@
             this._mode = mode;
 
             // 更新按钮状态
-            const tabs = document.querySelectorAll('.lgnewui-toc-tab-mini');
+            const tabs = document.querySelectorAll('.withu-toc-tab-mini');
             tabs.forEach(function(tab) {
                 tab.classList.remove('active');
                 if (tab.getAttribute('data-mode') === mode) {
@@ -255,7 +255,7 @@
             this._updateIndicator(mode);
 
             // 更新前缀显示
-            const prefixes = document.querySelectorAll('.lgnewui-toc-prefix');
+            const prefixes = document.querySelectorAll('.withu-toc-prefix');
             prefixes.forEach(function(prefix) {
                 if (mode === 'none') {
                     prefix.style.display = 'none';
@@ -277,13 +277,13 @@
          * @param {string} mode
          */
         _updateIndicator(mode) {
-            const indicators = document.querySelectorAll('.lgnewui-toc-tab-indicator-mini');
+            const indicators = document.querySelectorAll('.withu-toc-tab-indicator-mini');
             indicators.forEach(function(indicator) {
-                const container = indicator.closest('.lgnewui-toc-switcher-mini');
+                const container = indicator.closest('.withu-toc-switcher-mini');
                 if (!container) return;
 
-                const tabs = container.querySelectorAll('.lgnewui-toc-tab-mini');
-                const activeTab = container.querySelector('.lgnewui-toc-tab-mini[data-mode="' + mode + '"]');
+                const tabs = container.querySelectorAll('.withu-toc-tab-mini');
+                const activeTab = container.querySelector('.withu-toc-tab-mini[data-mode="' + mode + '"]');
 
                 if (activeTab && tabs.length > 0) {
                     const tabIndex = Array.from(tabs).indexOf(activeTab);
@@ -303,13 +303,13 @@
             const self = this;
 
             // 目录模式切换
-            $(document).off('click.tocMode', '.lgnewui-toc-tab-mini').on('click.tocMode', '.lgnewui-toc-tab-mini', function() {
+            $(document).off('click.tocMode', '.withu-toc-tab-mini').on('click.tocMode', '.withu-toc-tab-mini', function() {
                 const mode = $(this).attr('data-mode');
                 self._switchMode(mode);
             });
 
             // 目录链接点击
-            $(document).off('click.tocLink', '.lgnewui-detail-toc-link').on('click.tocLink', '.lgnewui-detail-toc-link', function(e) {
+            $(document).off('click.tocLink', '.withu-detail-toc-link').on('click.tocLink', '.withu-detail-toc-link', function(e) {
                 e.preventDefault();
                 const targetId = $(this).attr('data-target');
                 const target = document.getElementById(targetId);
@@ -384,9 +384,9 @@
          */
         _initIndicator() {
             const savedFont = localStorage.getItem('preferredFont') || 'default';
-            const indicator = document.querySelector('.lgnewui-font-tab-indicator-mini');
-            const activeTab = document.querySelector('.lgnewui-font-tab-mini[data-font="' + savedFont + '"]');
-            const tabs = document.querySelectorAll('.lgnewui-font-tab-mini');
+            const indicator = document.querySelector('.withu-font-tab-indicator-mini');
+            const activeTab = document.querySelector('.withu-font-tab-mini[data-font="' + savedFont + '"]');
+            const tabs = document.querySelectorAll('.withu-font-tab-mini');
 
             if (indicator && activeTab && tabs.length > 0) {
                 const tabIndex = Array.from(tabs).indexOf(activeTab);
@@ -407,7 +407,7 @@
             if (!articleBody) return;
 
             // 更新按钮状态
-            const tabs = document.querySelectorAll('.lgnewui-font-tab-mini');
+            const tabs = document.querySelectorAll('.withu-font-tab-mini');
             tabs.forEach(function(tab) {
                 tab.classList.remove('active');
                 if (tab.getAttribute('data-font') === fontType) {
@@ -416,8 +416,8 @@
             });
 
             // 更新指示器
-            const indicator = document.querySelector('.lgnewui-font-tab-indicator-mini');
-            const activeTab = document.querySelector('.lgnewui-font-tab-mini[data-font="' + fontType + '"]');
+            const indicator = document.querySelector('.withu-font-tab-indicator-mini');
+            const activeTab = document.querySelector('.withu-font-tab-mini[data-font="' + fontType + '"]');
 
             if (indicator && activeTab && tabs.length > 0) {
                 const tabIndex = Array.from(tabs).indexOf(activeTab);
@@ -444,7 +444,7 @@
          */
         _bindEvents() {
             const self = this;
-            $(document).off('click.fontSwitch', '.lgnewui-font-tab-mini').on('click.fontSwitch', '.lgnewui-font-tab-mini', function() {
+            $(document).off('click.fontSwitch', '.withu-font-tab-mini').on('click.fontSwitch', '.withu-font-tab-mini', function() {
                 const fontType = $(this).attr('data-font');
                 self._switchFont(fontType);
             });
@@ -466,7 +466,7 @@
          * 增强图片：统一包裹 figure，有 alt 时加 figcaption，接入灯箱
          */
         _enhanceImages() {
-            const content = document.getElementById('lgnewui-detail-content');
+            const content = document.getElementById('withu-detail-content');
             if (!content) return;
 
             // 给容器加 view-image 属性，让 ViewImage 以此为分组容器
@@ -531,37 +531,37 @@
 
             tables.forEach(function(table, index) {
                 // 检查是否已增强
-                if (table.closest('.lgnewui-table-wrapper')) return;
+                if (table.closest('.withu-table-wrapper')) return;
 
-                table.classList.add('lgnewui-main');
+                table.classList.add('withu-main');
 
                 const firstRow = table.querySelector('tr');
                 const columnCount = firstRow ? firstRow.children.length : 0;
 
                 // 创建包装器
                 const wrapper = document.createElement('div');
-                wrapper.className = 'lgnewui-table-wrapper';
+                wrapper.className = 'withu-table-wrapper';
 
                 const container = document.createElement('div');
-                container.className = 'lgnewui-table-container';
+                container.className = 'withu-table-container';
                 container.id = 'tableContainer-' + index;
 
                 const scrollbar = document.createElement('div');
-                scrollbar.className = 'lgnewui-table-scrollbar';
+                scrollbar.className = 'withu-table-scrollbar';
 
                 const containerWrapper = document.createElement('div');
-                containerWrapper.className = 'lgnewui-table-container-wrapper';
+                containerWrapper.className = 'withu-table-container-wrapper';
                 containerWrapper.id = 'tableContainerWrapper-' + index;
 
                 // 左右按钮
                 const leftBtn = document.createElement('button');
-                leftBtn.className = 'lgnewui-table-nav-btn lgnewui-table-nav-left';
+                leftBtn.className = 'withu-table-nav-btn withu-table-nav-left';
                 leftBtn.id = 'tableNavLeft-' + index;
                 leftBtn.innerHTML = '<i class="ph-bold ph-caret-left"></i>';
                 leftBtn.onclick = function() { self._scrollTable(index, 'left', columnCount); };
 
                 const rightBtn = document.createElement('button');
-                rightBtn.className = 'lgnewui-table-nav-btn lgnewui-table-nav-right';
+                rightBtn.className = 'withu-table-nav-btn withu-table-nav-right';
                 rightBtn.id = 'tableNavRight-' + index;
                 rightBtn.innerHTML = '<i class="ph-bold ph-caret-right"></i>';
                 rightBtn.onclick = function() { self._scrollTable(index, 'right', columnCount); };
@@ -584,9 +584,9 @@
                     if (isScrollable) {
                         wrapper.classList.add('is-scrollable');
                         const progressTrack = document.createElement('div');
-                        progressTrack.className = 'lgnewui-table-progress-track';
+                        progressTrack.className = 'withu-table-progress-track';
                         const progressBar = document.createElement('div');
-                        progressBar.className = 'lgnewui-table-progress-bar';
+                        progressBar.className = 'withu-table-progress-bar';
                         progressBar.id = 'tableProgress-' + index;
                         progressTrack.appendChild(progressBar);
                         scrollbar.appendChild(progressTrack);
@@ -656,7 +656,7 @@
         _bindResizeEvent() {
             const self = this;
             $(window).off('resize.tableEnhancer').on('resize.tableEnhancer', function() {
-                const wrappers = document.querySelectorAll('.lgnewui-table-wrapper');
+                const wrappers = document.querySelectorAll('.withu-table-wrapper');
                 wrappers.forEach(function(wrapper, index) {
                     self._updateTableButtons(index);
                     self._updateTableProgress(index);
@@ -683,9 +683,9 @@
         init() {
             if (window.innerWidth < 1024) return;
 
-            this._sidebar = document.querySelector('.lgnewui-detail-sidebar');
-            this._stickyContent = document.querySelector('.lgnewui-detail-sidebar-sticky');
-            this._mainContent = document.querySelector('.lgnewui-detail-main-content');
+            this._sidebar = document.querySelector('.withu-detail-sidebar');
+            this._stickyContent = document.querySelector('.withu-detail-sidebar-sticky');
+            this._mainContent = document.querySelector('.withu-detail-main-content');
 
             if (!this._sidebar || !this._stickyContent || !this._mainContent) return;
 
@@ -853,8 +853,8 @@
          * @returns {boolean}
          */
         _isDetailPage() {
-            return $('#lgnewui-detail-content').length > 0 || 
-                   $('.lgnewui-detail-main-grid').length > 0;
+            return $('#withu-detail-content').length > 0 || 
+                   $('.withu-detail-main-grid').length > 0;
         },
 
         /**

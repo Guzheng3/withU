@@ -1,4 +1,4 @@
-// withU 1314 端口反代：1314 域名显示 lg-site 完整前端（转发到 8901 lg-server）
+// withU 1314 端口反代：1314 域名显示 withu-site 完整前端（转发到 8901 withu-server）
 const http = require('http');
 
 const PORT = parseInt(process.env.PORT || '1314', 10);

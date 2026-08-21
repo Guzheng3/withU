@@ -7,7 +7,7 @@
  *
  *      ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
  *
- * Project      : LGNewUi
+ * Project      : withU
  * Author       : Ki
  * Last Updated : 2026-03-31
  * Description  : A private place to preserve love, memory, and the
@@ -28,7 +28,7 @@
  * Official Authorization Site:
  * https://auth-love.kikiw.cn/
  *
- * Warning      : LGNewUi is an original work. Any unauthorized
+ * Warning      : withU is an original work. Any unauthorized
  *                copying, scraping, resale, redistribution, or
  *                commercial use is forbidden.
  * Notice       : Development and long-term maintenance require
@@ -152,14 +152,14 @@
 }
 
 /* ============================================================
-   相册头部 — lgnew-new-photo-head 命名空间
+   相册头部 — withu-new-photo-head 命名空间
    ============================================================ */
 
-.lgnew-new-photo-head-wrapper {
+.withu-new-photo-head-wrapper {
     background-color: #ffffff;
 }
 
-.lgnew-new-photo-head-hero-header {
+.withu-new-photo-head-hero-header {
     position: relative;
     width: 100%;
     height: 75vh;
@@ -170,7 +170,7 @@
 }
 
 /* 噪点纹理 */
-.lgnew-new-photo-head-hero-header::before {
+.withu-new-photo-head-hero-header::before {
     content: "";
     position: absolute;
     inset: 0;
@@ -179,27 +179,27 @@
     pointer-events: none;
 }
 
-.lgnew-new-photo-head-hero-img {
+.withu-new-photo-head-hero-img {
     width: 100%;
     height: 100%;
     object-fit: cover;
     box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
-    animation: lgnew-heroZoom 6s ease-out both;
+    animation: withu-heroZoom 6s ease-out both;
     transition: filter 0.6s ease, transform 0.6s ease;
 }
 
-.lgnew-new-photo-head-hero-header:hover .lgnew-new-photo-head-hero-img {
+.withu-new-photo-head-hero-header:hover .withu-new-photo-head-hero-img {
     -webkit-filter: blur(6px);
     filter: blur(6px);
     transform: scale(1.03);
 }
 
-@keyframes lgnew-heroZoom {
+@keyframes withu-heroZoom {
     from { transform: scale(1.05); }
     to { transform: scale(1); }
 }
 
-.lgnew-new-photo-head-hero-gradient {
+.withu-new-photo-head-hero-gradient {
     position: absolute;
     inset: 0;
     background: linear-gradient(to top, rgba(0,0,0,0.65) 0%, rgba(0,0,0,0.3) 45%, transparent 100%);
@@ -207,7 +207,7 @@
     z-index: 2;
 }
 
-.lgnew-new-photo-head-hero-footer {
+.withu-new-photo-head-hero-footer {
     position: absolute;
     bottom: 1.5rem;
     left: 1.5rem;
@@ -219,7 +219,7 @@
 }
 
 @media (min-width: 768px) {
-    .lgnew-new-photo-head-hero-footer {
+    .withu-new-photo-head-hero-footer {
         bottom: 2.5rem;
         left: 5rem;
         right: 5rem;
@@ -227,13 +227,13 @@
 }
 
 /* 上层：标题模块 — 独立呼吸空间 */
-.lgnew-new-photo-head-hero-footer > .lgnew-new-photo-head-title-area {
+.withu-new-photo-head-hero-footer > .withu-new-photo-head-title-area {
     margin-bottom: 0;
-    animation: lgnew-slideUp 0.8s ease-out 0.3s both;
+    animation: withu-slideUp 0.8s ease-out 0.3s both;
 }
 
 /* 下层：信息标签栏 */
-.lgnew-new-photo-head-info-bar {
+.withu-new-photo-head-info-bar {
     display: flex;
     flex-direction: column;
     gap: 0.75rem;
@@ -241,7 +241,7 @@
     position: relative;
 }
 
-.lgnew-new-photo-head-info-bar::before {
+.withu-new-photo-head-info-bar::before {
     content: "";
     position: absolute;
     top: 0;
@@ -254,21 +254,21 @@
 }
 
 @media (min-width: 768px) {
-    .lgnew-new-photo-head-info-bar {
+    .withu-new-photo-head-info-bar {
         flex-direction: row;
         justify-content: space-between;
         align-items: flex-end;
     }
 }
 
-.lgnew-new-photo-head-info-left {
+.withu-new-photo-head-info-left {
     display: flex;
     flex-direction: column;
     gap: 0.75rem;
     align-items: flex-start;
 }
 
-.lgnew-new-photo-head-info-right {
+.withu-new-photo-head-info-right {
     display: flex;
     flex-direction: row;
     gap: 0.75rem;
@@ -276,32 +276,32 @@
 }
 
 @media (min-width: 768px) {
-    .lgnew-new-photo-head-info-right {
+    .withu-new-photo-head-info-right {
         flex-direction: column;
         align-items: flex-end;
     }
 }
 
-.lgnew-new-photo-head-chips-group {
+.withu-new-photo-head-chips-group {
     display: flex;
     flex-wrap: wrap;
     gap: 0.75rem;
 }
 
-.lgnew-new-photo-head-chips-group .lgnew-new-photo-head-chip {
-    animation: lgnew-chipIn 0.5s ease-out both;
+.withu-new-photo-head-chips-group .withu-new-photo-head-chip {
+    animation: withu-chipIn 0.5s ease-out both;
 }
-.lgnew-new-photo-head-chips-group .lgnew-new-photo-head-chip:nth-child(1) { animation-delay: 0.7s; }
-.lgnew-new-photo-head-chips-group .lgnew-new-photo-head-chip:nth-child(2) { animation-delay: 0.85s; }
-.lgnew-new-photo-head-chips-group .lgnew-new-photo-head-chip:nth-child(3) { animation-delay: 1.0s; }
-.lgnew-new-photo-head-chips-group .lgnew-new-photo-head-chip:nth-child(4) { animation-delay: 1.15s; }
+.withu-new-photo-head-chips-group .withu-new-photo-head-chip:nth-child(1) { animation-delay: 0.7s; }
+.withu-new-photo-head-chips-group .withu-new-photo-head-chip:nth-child(2) { animation-delay: 0.85s; }
+.withu-new-photo-head-chips-group .withu-new-photo-head-chip:nth-child(3) { animation-delay: 1.0s; }
+.withu-new-photo-head-chips-group .withu-new-photo-head-chip:nth-child(4) { animation-delay: 1.15s; }
 
-@keyframes lgnew-chipIn {
+@keyframes withu-chipIn {
     from { opacity: 0; transform: translateY(0.75rem) scale(0.95); }
     to { opacity: 1; transform: translateY(0) scale(1); }
 }
 
-.lgnew-new-photo-head-watermark {
+.withu-new-photo-head-watermark {
     font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
     font-size: 0.7rem;
     color: rgba(255, 255, 255, 0.75);
@@ -312,15 +312,15 @@
     gap: 0.5rem;
     text-shadow: 0 1px 4px rgba(0,0,0,0.5);
     margin-bottom: 0.25rem;
-    animation: lgnew-fadeIn 0.6s ease-out 0.6s both;
+    animation: withu-fadeIn 0.6s ease-out 0.6s both;
 }
 
-@keyframes lgnew-fadeIn {
+@keyframes withu-fadeIn {
     from { opacity: 0; }
     to { opacity: 1; }
 }
 
-.lgnew-new-photo-head-watermark-dot {
+.withu-new-photo-head-watermark-dot {
     width: 4px;
     height: 4px;
     background-color: #3b82f6;
@@ -328,7 +328,7 @@
     box-shadow: 0 0 8px #3b82f6;
 }
 
-.lgnew-new-photo-head-chip {
+.withu-new-photo-head-chip {
     background-color: rgba(20, 20, 20, 0.4);
     backdrop-filter: blur(12px);
     -webkit-backdrop-filter: blur(12px);
@@ -346,21 +346,21 @@
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.12);
 }
 
-.lgnew-new-photo-head-chip:hover {
+.withu-new-photo-head-chip:hover {
     background-color: rgba(40, 40, 40, 0.5);
 }
 
 /* 归属地 chip — 可点击交互 */
-.lgnew-new-photo-head-chip-location {
+.withu-new-photo-head-chip-location {
     cursor: pointer;
 }
 
-.lgnew-new-photo-head-chip-location:active {
+.withu-new-photo-head-chip-location:active {
     transform: scale(0.93);
     background-color: rgba(0, 0, 0, 0.5);
 }
 
-.lgnew-new-photo-head-chip-icon-bg {
+.withu-new-photo-head-chip-icon-bg {
     width: 1.75rem;
     height: 1.75rem;
     border-radius: 50%;
@@ -372,12 +372,12 @@
     color: #ffffff;
 }
 
-.lgnew-new-photo-head-chip-icon-bg i {
+.withu-new-photo-head-chip-icon-bg i {
     font-size: 14px;
     line-height: 1;
 }
 
-.lgnew-new-photo-head-chip-avatar {
+.withu-new-photo-head-chip-avatar {
     width: 1.75rem;
     height: 1.75rem;
     border-radius: 50%;
@@ -386,20 +386,20 @@
     border: 1px solid rgba(255, 255, 255, 0.3);
 }
 
-.lgnew-new-photo-head-chip-text {
+.withu-new-photo-head-chip-text {
     padding-right: 0.1rem;
 }
 
-.lgnew-new-photo-head-title-area {
-    animation: lgnew-slideUp 0.8s ease-out 0.3s both;
+.withu-new-photo-head-title-area {
+    animation: withu-slideUp 0.8s ease-out 0.3s both;
 }
 
-@keyframes lgnew-slideUp {
+@keyframes withu-slideUp {
     from { opacity: 0; transform: translateY(1.5rem); }
     to { opacity: 1; transform: translateY(0); }
 }
 
-.lgnew-new-photo-head-title {
+.withu-new-photo-head-title {
     font-size: 2rem;
     font-weight: 900;
     color: #ffffff;
@@ -409,10 +409,10 @@
 }
 
 @media (min-width: 768px) {
-    .lgnew-new-photo-head-title { font-size: 3.25rem; }
+    .withu-new-photo-head-title { font-size: 3.25rem; }
 }
 
-.lgnew-new-photo-head-desc {
+.withu-new-photo-head-desc {
     font-size: 1rem;
     color: rgba(255, 255, 255, 0.8);
     line-height: 1.5;
@@ -421,17 +421,17 @@
 }
 
 @media (min-width: 768px) {
-    .lgnew-new-photo-head-desc { font-size: 1.2rem; }
+    .withu-new-photo-head-desc { font-size: 1.2rem; }
 }
 
 @media screen and (max-width: 768px) {
-    .lgnew-new-photo-head-hero-header {
+    .withu-new-photo-head-hero-header {
         height: 55vh;
         min-height: 380px;
         border-bottom-left-radius: 2rem;
         border-bottom-right-radius: 2rem;
     }
-    .lgnew-new-photo-head-desc {
+    .withu-new-photo-head-desc {
         font-size: 1rem;
     }
 }
@@ -450,7 +450,7 @@ body {
 
 
 .row.central.nav_k,
-.Width_limit_10re.lg_20rem {
+.Width_limit_10re.withu_20rem {
     display: none;
 }
 
@@ -483,10 +483,10 @@ body {
 
 
 /* ============================================================
-   imglist.php 瀑布流卡片样式 (.lgnewui-new-photo 命名空间)
+   imglist.php 瀑布流卡片样式 (.withu-new-photo 命名空间)
    ============================================================ */
 
-.lgnewui-new-photo {
+.withu-new-photo {
     font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
     padding: 2rem 1rem 3rem;
     box-sizing: border-box;
@@ -495,34 +495,34 @@ body {
 }
 
 /* Masonry 网格 */
-.lgnewui-new-photo .imglist-masonry-grid {
+.withu-new-photo .imglist-masonry-grid {
     width: 100%;
 }
 
-.lgnewui-new-photo .imglist-masonry-col {
+.withu-new-photo .imglist-masonry-col {
     width: 25%;
     padding: 6px;
     box-sizing: border-box;
 }
 
 @media screen and (max-width: 1200px) {
-    .lgnewui-new-photo .imglist-masonry-col {
+    .withu-new-photo .imglist-masonry-col {
         width: 33.333%;
     }
 }
 
 @media screen and (max-width: 768px) {
-    .lgnewui-new-photo .imglist-masonry-col {
+    .withu-new-photo .imglist-masonry-col {
         width: 50%;
     }
 
-    .lgnewui-new-photo {
+    .withu-new-photo {
         padding: 1rem 0.5rem 2rem;
     }
 }
 
 @media screen and (max-width: 480px) {
-    .lgnewui-new-photo .imglist-masonry-col {
+    .withu-new-photo .imglist-masonry-col {
         width: 50%;
         padding: 4px;
     }
@@ -531,7 +531,7 @@ body {
 /* === 以下完全复制自 card-v1.html demo === */
 
 /* 基础卡片外框 */
-.lgnewui-new-photo .card {
+.withu-new-photo .card {
     position: relative;
     width: 100%;
     border-radius: 20px;
@@ -543,7 +543,7 @@ body {
 }
 
 /* 背景图片 — 自然高度，瀑布流参差效果 */
-.lgnewui-new-photo .bg-img {
+.withu-new-photo .bg-img {
     display: block;
     width: 100%;
     height: auto;
@@ -557,13 +557,13 @@ body {
     padding: 0 !important;
 }
 
-.lgnewui-new-photo .card .bg-img.loaded {
+.withu-new-photo .card .bg-img.loaded {
     filter: saturate(0.8) brightness(0.9) blur(0);
     opacity: 1;
 }
 
 /* 左上角：Mini 标签聚合 */
-.lgnewui-new-photo .tags-group {
+.withu-new-photo .tags-group {
     position: absolute;
     top: 16px;
     left: 16px;
@@ -573,7 +573,7 @@ body {
     max-width: calc(100% - 32px);
 }
 
-.lgnewui-new-photo .tag {
+.withu-new-photo .tag {
     background: rgba(0, 0, 0, 0.35);
     backdrop-filter: blur(12px);
     -webkit-backdrop-filter: blur(12px);
@@ -592,13 +592,13 @@ body {
     overflow: hidden;
 }
 
-.lgnewui-new-photo .tag i {
+.withu-new-photo .tag i {
     font-size: 14px;
     color: rgba(255, 255, 255, 0.9);
     flex-shrink: 0;
 }
 
-.lgnewui-new-photo .tag span {
+.withu-new-photo .tag span {
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
@@ -607,17 +607,17 @@ body {
 
 
 
-.lgnewui-new-photo .location-tag.has-coords {
+.withu-new-photo .location-tag.has-coords {
     cursor: pointer;
 }
 
 
-.lgnewui-new-photo .location-tag.has-coords:active {
+.withu-new-photo .location-tag.has-coords:active {
     transform: scale(0.95);
 }
 
 /* 中心：视频播放按钮 */
-.lgnewui-new-photo .play-btn {
+.withu-new-photo .play-btn {
     position: absolute;
     top: 50%;
     left: 50%;
@@ -643,18 +643,18 @@ body {
     will-change: transform;
 }
 
-.lgnewui-new-photo .play-btn i {
+.withu-new-photo .play-btn i {
     font-size: 24px;
     line-height: 1;
 }
 
-.lgnewui-new-photo .card:hover .play-btn {
+.withu-new-photo .card:hover .play-btn {
     background: rgba(255, 255, 255, 0.4);
     transform: translate(-50%, -50%) scale(1.15);
     box-shadow: 0 8px 24px rgba(0, 0, 0, 0.25);
 }
 
-.lgnewui-new-photo .play-btn:active {
+.withu-new-photo .play-btn:active {
     transform: translate(-50%, -50%) scale(0.85) !important;
     background: rgba(255, 255, 255, 0.55) !important;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2) !important;
@@ -662,7 +662,7 @@ body {
 }
 
 /* 独立磨砂背景层 */
-.lgnewui-new-photo .overlay-blur {
+.withu-new-photo .overlay-blur {
     position: absolute;
     bottom: 0;
     left: 0;
@@ -682,7 +682,7 @@ body {
 }
 
 /* 底部信息板块：纯文字层，无磨砂 */
-.lgnewui-new-photo .overlay {
+.withu-new-photo .overlay {
     position: absolute;
     bottom: 0;
     left: 0;
@@ -701,7 +701,7 @@ body {
     will-change: opacity, transform;
 }
 
-.lgnewui-new-photo .title {
+.withu-new-photo .title {
     font-size: 15px;
     font-weight: 300;
     margin: 0 0 16px 0;
@@ -710,7 +710,7 @@ body {
     transition: all 0.5s cubic-bezier(0.2, 0.8, 0.2, 1);
 }
 
-.lgnewui-new-photo .footer {
+.withu-new-photo .footer {
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -719,13 +719,13 @@ body {
     transition: all 0.5s cubic-bezier(0.2, 0.8, 0.2, 1);
 }
 
-.lgnewui-new-photo .user-info {
+.withu-new-photo .user-info {
     display: flex;
     align-items: center;
     gap: 8px;
 }
 
-.lgnewui-new-photo .avatar {
+.withu-new-photo .avatar {
     width: 30px;
     height: 30px;
     border-radius: 50%;
@@ -737,47 +737,47 @@ body {
     flex-shrink: 0;
 }
 
-.lgnewui-new-photo .author-name {
+.withu-new-photo .author-name {
     display: inline-flex;
     align-items: center;
     gap: 3px;
 }
 
-.lgnewui-new-photo .gender-icon {
+.withu-new-photo .gender-icon {
     font-size: 12px;
     line-height: 1;
 }
 
-.lgnewui-new-photo .gender-icon.male {
+.withu-new-photo .gender-icon.male {
     color: #60a5fa;
 }
 
-.lgnewui-new-photo .gender-icon.female {
+.withu-new-photo .gender-icon.female {
     color: #f472b6;
 }
 
-.lgnewui-new-photo .date-text {
+.withu-new-photo .date-text {
     font-size: 11px;
     opacity: 0.65;
     white-space: nowrap;
 }
 
 /* 控制信息板块默认显示的 Class：.show-info-default */
-.lgnewui-new-photo .card.show-info-default .overlay-blur,
-.lgnewui-new-photo .card.show-info-default .overlay {
+.withu-new-photo .card.show-info-default .overlay-blur,
+.withu-new-photo .card.show-info-default .overlay {
     opacity: 1;
     transform: translateY(0);
     pointer-events: auto;
 }
 
 /* show-info-default 激活时隐藏 info 按钮 */
-.lgnewui-new-photo .card.show-info-default .info-toggle-btn {
+.withu-new-photo .card.show-info-default .info-toggle-btn {
     opacity: 0;
     pointer-events: none;
 }
 
 /* 移动端 info 按钮 — 右下角小圆按钮 */
-.lgnewui-new-photo .info-toggle-btn {
+.withu-new-photo .info-toggle-btn {
     display: none;
     position: absolute;
     bottom: 12px;
@@ -800,54 +800,54 @@ body {
     -webkit-appearance: none;
 }
 
-.lgnewui-new-photo .info-toggle-btn i {
+.withu-new-photo .info-toggle-btn i {
     font-size: 16px;
     line-height: 1;
 }
 
-.lgnewui-new-photo .info-toggle-btn:active {
+.withu-new-photo .info-toggle-btn:active {
     transform: scale(0.88);
 }
 
 @media screen and (max-width: 768px) {
-    .lgnewui-new-photo .info-toggle-btn {
+    .withu-new-photo .info-toggle-btn {
         display: flex;
     }
-    .lgnewui-new-photo .overlay-blur {
+    .withu-new-photo .overlay-blur {
         height: 100%;
         mask-image: linear-gradient(to bottom, transparent 0%, rgba(0, 0, 0, 0.1) 20%, rgba(0, 0, 0, 0.4) 40%, rgba(0, 0, 0, 0.8) 60%, black 75%);
         -webkit-mask-image: linear-gradient(to bottom, transparent 0%, rgba(0, 0, 0, 0.1) 20%, rgba(0, 0, 0, 0.4) 40%, rgba(0, 0, 0, 0.8) 60%, black 75%);
     }
-    .lgnewui-new-photo .overlay {
+    .withu-new-photo .overlay {
         padding: 14px;
     }
-    .lgnewui-new-photo .title {
+    .withu-new-photo .title {
         margin: 0 0 8px 0;
         font-size: 12px;
         line-height: 1.4;
     }
-    .lgnewui-new-photo .footer {
+    .withu-new-photo .footer {
         font-size: 11px;
         flex-wrap: wrap;
         gap: 6px 10px;
     }
-    .lgnewui-new-photo .avatar {
+    .withu-new-photo .avatar {
         width: 24px;
         height: 24px;
     }
-    .lgnewui-new-photo .gender-icon {
+    .withu-new-photo .gender-icon {
         font-size: 10px;
     }
-    .lgnewui-new-photo .date-text {
+    .withu-new-photo .date-text {
         font-size: 10px;
     }
     /* 移动端 tag 只显示图标 */
-    .lgnewui-new-photo .type-tag {
+    .withu-new-photo .type-tag {
         padding: 5px;
         font-size: 0;
         gap: 0;
     }
-    .lgnewui-new-photo .type-tag i {
+    .withu-new-photo .type-tag i {
         font-size: 12px;
     }
 }
@@ -855,13 +855,13 @@ body {
 /* 当信息默认显示时，鼠标悬浮不做标题动画 */
 
 /* 全局悬浮动效：焕彩微旋 */
-.lgnewui-new-photo .card:hover .bg-img.loaded {
+.withu-new-photo .card:hover .bg-img.loaded {
     transform: scale(1.08) rotate(1.5deg);
     filter: saturate(1.2) brightness(1.05) blur(0);
 }
 
-.lgnewui-new-photo .card:hover .overlay-blur,
-.lgnewui-new-photo .card:hover .overlay {
+.withu-new-photo .card:hover .overlay-blur,
+.withu-new-photo .card:hover .overlay {
     opacity: 1;
     transform: translateY(0);
     pointer-events: auto;
@@ -870,12 +870,12 @@ body {
 /* === 以上完全复制自 card-v1.html demo === */
 
 /* 加载更多 */
-.lgnewui-new-photo .imglist-load-more {
+.withu-new-photo .imglist-load-more {
     text-align: center;
     padding: 2rem 0;
 }
 
-.lgnewui-new-photo .imglist-load-btn {
+.withu-new-photo .imglist-load-btn {
     display: inline-flex;
     align-items: center;
     gap: 8px;
@@ -894,26 +894,26 @@ body {
     box-shadow: 0 2px 12px rgba(0, 0, 0, 0.15), inset 0 1px 0 rgba(255, 255, 255, 0.08);
 }
 
-.lgnewui-new-photo .imglist-load-btn:hover {
+.withu-new-photo .imglist-load-btn:hover {
     background: linear-gradient(135deg, #3a3a3a, #222);
     transform: translateY(-2px);
     box-shadow: 0 6px 20px rgba(0, 0, 0, 0.2), inset 0 1px 0 rgba(255, 255, 255, 0.1);
     color: #fff;
 }
 
-.lgnewui-new-photo .imglist-load-btn:active {
+.withu-new-photo .imglist-load-btn:active {
     transform: translateY(0) scale(0.97);
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
 }
 
-.lgnewui-new-photo .imglist-load-btn:disabled {
+.withu-new-photo .imglist-load-btn:disabled {
     opacity: 0.75;
     cursor: not-allowed;
     transform: none;
 }
 
 /* 到底提示 */
-.lgnewui-new-photo .imglist-load-done {
+.withu-new-photo .imglist-load-done {
     display: flex;
     align-items: center;
     justify-content: center;
@@ -924,26 +924,26 @@ body {
     letter-spacing: 1px;
 }
 
-.lgnewui-new-photo .imglist-done-line {
+.withu-new-photo .imglist-done-line {
     width: 48px;
     height: 1px;
     background: linear-gradient(to right, transparent, #ddd, transparent);
 }
 
 /* 按钮内图标对齐 */
-.lgnewui-new-photo .imglist-load-btn .btn-text {
+.withu-new-photo .imglist-load-btn .btn-text {
     display: inline-flex;
     align-items: center;
     gap: 6px;
 }
 
-.lgnewui-new-photo .imglist-load-btn .btn-text i {
+.withu-new-photo .imglist-load-btn .btn-text i {
     font-size: 14px;
     line-height: 1;
 }
 
 /* spinner 转圈 */
-.lgnewui-new-photo .imglist-spin {
+.withu-new-photo .imglist-spin {
     display: inline-block;
     animation: imglist-spin 0.9s linear infinite;
 }
@@ -954,7 +954,7 @@ body {
 }
 
 /* 加载中 — 圆点流动动画 */
-.lgnewui-new-photo .imglist-loading {
+.withu-new-photo .imglist-loading {
     text-align: center;
     padding: 3rem 0;
     display: flex;
@@ -962,13 +962,13 @@ body {
     justify-content: center;
 }
 
-.lgnewui-new-photo .imglist-dots {
+.withu-new-photo .imglist-dots {
     display: flex;
     gap: 16px;
     align-items: center;
 }
 
-.lgnewui-new-photo .imglist-dot {
+.withu-new-photo .imglist-dot {
     display: inline-block;
     width: 10px;
     height: 10px;
@@ -977,9 +977,9 @@ body {
     animation: imglist-dot-flow 1.4s ease-in-out infinite;
 }
 
-.lgnewui-new-photo .imglist-dot:nth-child(1) { animation-delay: 0s; }
-.lgnewui-new-photo .imglist-dot:nth-child(2) { animation-delay: 0.16s; }
-.lgnewui-new-photo .imglist-dot:nth-child(3) { animation-delay: 0.32s; }
+.withu-new-photo .imglist-dot:nth-child(1) { animation-delay: 0s; }
+.withu-new-photo .imglist-dot:nth-child(2) { animation-delay: 0.16s; }
+.withu-new-photo .imglist-dot:nth-child(3) { animation-delay: 0.32s; }
 
 @keyframes imglist-dot-flow {
     0%, 100% {

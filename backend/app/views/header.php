@@ -146,7 +146,7 @@ foreach (($themeConfig['colors'] ?? []) as $themeName => $themeValue) {
     $themeInlineStyle .= '--withu-custom-' . $themeName . ':' . $themeValue . ';';
 }
 
-// 所有前台页面共享 LG-inspired 视觉壳，页面类型只作为附加 class
+// 所有前台页面共享 withU-inspired 视觉壳，页面类型只作为附加 class
 $bodyClass = 'withu-front-modern';
 if (!empty($isAlbumDetail)) {
     $bodyClass .= ' page-album-detail';
@@ -191,7 +191,7 @@ if ($headerDb && (string)get_setting('front_animation_enabled', '1') !== '1') {
     <meta property="og:title" content="<?php echo e($fullTitle); ?>">
     <link rel="stylesheet" href="/assets/css/style.css?v=withu-logo-20260718">
     <link rel="stylesheet" href="/assets/css/theme.css?v=withu-theme-20260719-3">
-    <link rel="stylesheet" href="/assets/css/withu_lg_ui.css?v=withu-lg-20260809-2">
+    <link rel="stylesheet" href="/assets/css/withu-sakura.css?v=withu-20260809-2">
     <link rel="stylesheet" href="/assets/css/withu_polish.css?v=withu-polish-20260818">
     <link rel="stylesheet" href="/assets/css/withustrm_home.css?v=withustrm-home-20260815">
     <?php if (!empty($isArticleDetail)): ?>
@@ -284,7 +284,7 @@ if ($headerDb && (string)get_setting('front_animation_enabled', '1') !== '1') {
                         </div>
                     </div>
                 <?php elseif ($isWithuHomePage && $headerUser1 && $headerUser2): ?>
-                <section class="withu-lg-hero" aria-label="情侣主页">
+                <section class="withu-hero" aria-label="情侣主页">
                     <div class="withu-hero-glow withu-hero-glow-a"></div>
                     <div class="withu-hero-glow withu-hero-glow-b"></div>
                     <div class="withu-hero-particles" id="withu-hero-particles" aria-hidden="true"></div>
@@ -350,26 +350,26 @@ if ($headerDb && (string)get_setting('front_animation_enabled', '1') !== '1') {
         </div>
     </header>
 
-    <nav class="main-nav lgnewui-nav-wrapper" aria-label="情侣功能导航">
-        <div class="nav-buttons lgnewui-nav-island-container">
-            <a href="/articles.php" class="nav-button lgnewui-nav-island-item gradient-green">
+    <nav class="main-nav withu-nav-wrapper" aria-label="情侣功能导航">
+        <div class="nav-buttons withu-nav-island-container">
+            <a href="/articles.php" class="nav-button withu-nav-island-item gradient-green">
                 <i class="fas fa-book"></i>
                 <span>点点滴滴</span>
             </a>
-            <a href="/messages.php" class="nav-button lgnewui-nav-island-item gradient-pink">
+            <a href="/messages.php" class="nav-button withu-nav-island-item gradient-pink">
                 <i class="fas fa-comment"></i>
                 <span>留言墙</span>
             </a>
-            <a href="/albums.php" class="nav-button lgnewui-nav-island-item gradient-blue">
+            <a href="/albums.php" class="nav-button withu-nav-island-item gradient-blue">
                 <i class="fas fa-images"></i>
                 <span>爱情相册</span>
             </a>
-            <a href="/events.php" class="nav-button lgnewui-nav-island-item gradient-purple">
+            <a href="/events.php" class="nav-button withu-nav-island-item gradient-purple">
                 <i class="fas fa-calendar-days"></i>
                 <span>纪念事件</span>
             </a>
             <?php if ($currentUser): ?>
-            <a href="/watch.php" class="nav-button lgnewui-nav-island-item gradient-pink">
+            <a href="/watch.php" class="nav-button withu-nav-island-item gradient-pink">
                 <i class="fas fa-film"></i>
                 <span>同步观影</span>
             </a>

@@ -108,7 +108,7 @@ const setMapZoomAndCenterSafely = (map, zoom, positionLike, immediately, duratio
     return true;
 };
 
-const MAP_DEBUG = !!(window.LG_CONFIG && window.LG_CONFIG.debugMap);
+const MAP_DEBUG = !!(window.WITHU_CONFIG && window.WITHU_CONFIG.debugMap);
 const mapDebugLog = (...args) => {
     if (MAP_DEBUG && typeof console !== 'undefined' && typeof console.log === 'function') {
         console.log(...args);
@@ -181,8 +181,8 @@ const showConfigError = (errors) => {
         </div>
     `;
 
-    // 添加到 .lg-map 容器或 body
-    const lgMapContainer = document.querySelector('.lg-map');
+    // 添加到 .withu-map 容器或 body
+    const lgMapContainer = document.querySelector('.withu-map');
     (lgMapContainer || document.body).appendChild(overlay);
 };
 
@@ -235,8 +235,8 @@ const showMapLoadError = (errorInfo) => {
         </div>
     `;
 
-    // 添加到 .lg-map 容器或 body
-    const lgMapContainer = document.querySelector('.lg-map');
+    // 添加到 .withu-map 容器或 body
+    const lgMapContainer = document.querySelector('.withu-map');
     (lgMapContainer || document.body).appendChild(overlay);
 };
 
@@ -331,7 +331,7 @@ window.LGMap = (function () {
             }
             _sdkLoading = true;
             const script = document.createElement('script');
-            script.src = ((window.LG_CONFIG && window.LG_CONFIG.assetBase) || '') + 'assets/js/map-sdk.js';
+            script.src = ((window.WITHU_CONFIG && window.WITHU_CONFIG.assetBase) || '') + 'assets/js/map-sdk.js';
             script.onload = () => {
                 _sdkLoaded = true;
                 _sdkLoading = false;
@@ -498,7 +498,7 @@ window.LGMap = (function () {
         el.style.display = 'flex';
         // 触发动画
         requestAnimationFrame(() => {
-            el.classList.add('lg-map-overlay-show');
+            el.classList.add('withu-map-overlay-show');
         });
         if (window.lgScrollLock) lgScrollLock();
         _mapVisible = true;
@@ -547,10 +547,10 @@ window.LGMap = (function () {
         _mapVisible = false;
 
         // 先移除 show，加入 closing 触发反向动画
-        el.classList.remove('lg-map-overlay-show');
-        el.classList.add('lg-map-overlay-closing');
+        el.classList.remove('withu-map-overlay-show');
+        el.classList.add('withu-map-overlay-closing');
         setTimeout(() => {
-            el.classList.remove('lg-map-overlay-closing');
+            el.classList.remove('withu-map-overlay-closing');
             el.style.display = 'none';
 
             // 清理 UI show 状态，以便下次 open 时重新触发动画
@@ -590,7 +590,7 @@ window.LGMap = (function () {
         // 清理 UI 状态
         const el = overlay();
         if (el) {
-            el.classList.remove('lg-map-overlay-show', 'lg-map-overlay-closing');
+            el.classList.remove('withu-map-overlay-show', 'withu-map-overlay-closing');
             el.style.display = 'none';
             ['.ui-footer-container', '.lovers-panel', '#anniversary-panel',
                 '.mode-switcher', '.map-controls', '.zoom-controls'].forEach(sel => {
@@ -619,7 +619,7 @@ window.LGMap = (function () {
     document.addEventListener('DOMContentLoaded', () => {
         // ESC 键关闭
         document.addEventListener('keydown', (e) => {
-            if (e.key === 'Escape' && overlay()?.classList.contains('lg-map-overlay-show')) {
+            if (e.key === 'Escape' && overlay()?.classList.contains('withu-map-overlay-show')) {
                 close();
             }
         });
@@ -644,7 +644,7 @@ window.LGMap = (function () {
         }
     });
 
-    return { open, close, destroy, isOpen: () => overlay()?.classList.contains('lg-map-overlay-show') || false, isVisible: () => _mapVisible, getMap: _getMapInstance };
+    return { open, close, destroy, isOpen: () => overlay()?.classList.contains('withu-map-overlay-show') || false, isVisible: () => _mapVisible, getMap: _getMapInstance };
 })();
 
 // 优化动画性能
@@ -2124,7 +2124,7 @@ const createLoveTrail = (map, coords1, coords2) => {
 
         // 地图容器不可见时暂停动画帧，等 start() 重新启动
         const overlay = document.getElementById('lgMapOverlay');
-        if (!overlay || overlay.style.display === 'none' || overlay.classList.contains('lg-map-overlay-closing')) {
+        if (!overlay || overlay.style.display === 'none' || overlay.classList.contains('withu-map-overlay-closing')) {
             _animationStopped = true;
             return;
         }
@@ -3754,8 +3754,8 @@ const createAnniversaryPanel = (anniversary) => {
         </div>
     `;
 
-    // 添加到 .lg-map 容器或 body
-    const lgMapContainer = document.querySelector('.lg-map');
+    // 添加到 .withu-map 容器或 body
+    const lgMapContainer = document.querySelector('.withu-map');
     (lgMapContainer || document.body).appendChild(container);
     return container;
 };
@@ -4289,7 +4289,7 @@ const AlbumPhotosManager = (() => {
             return config._apiBase;
         }
 
-        const lgConfig = window.LG_CONFIG || {};
+        const lgConfig = window.WITHU_CONFIG || {};
         if (lgConfig.endpoints && lgConfig.endpoints.mapApi) {
             return lgConfig.endpoints.mapApi;
         }
@@ -4908,7 +4908,7 @@ const AlbumPhotosManager = (() => {
     // 显示返回按钮
     const _showBackButton = () => {
         if (_backBtn) return;
-        const lgMap = document.querySelector('.lg-map');
+        const lgMap = document.querySelector('.withu-map');
         if (!lgMap) return;
 
         _backBtn = document.createElement('button');

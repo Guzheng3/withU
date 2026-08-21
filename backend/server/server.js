@@ -1,5 +1,5 @@
 // ============================================================
-// LG-NewUi 本地服务器：静态站点 + 前端服务接口（真实数据持久化）
+// withU 本地服务器：静态站点 + 前端服务接口（真实数据持久化）
 // + 高德地图 JS API 代理（/_AMapService） + 动态配置注入
 // ============================================================
 const http = require('http');
@@ -214,7 +214,7 @@ function serviceHandler(req, res, urlPath, reqUrl, body) {
     const mData = readMapAll();
     const raw = (mData && mData.moments) || [];
     const photos = listPhotos();
-    const cfg = store.loadLgConfig().LG_CONFIG || {};
+    const cfg = store.loadLgConfig().WITHU_CONFIG || {};
     const maleAvatar = cfg.maleAvatar || 'Lovefolder/20260411043037_69d95ded97293201118237.webp';
     const femaleAvatar = cfg.femaleAvatar || 'Lovefolder/20260411043046_69d95df639c33274072975.webp';
     const items = raw.map((r, i) => {
@@ -546,11 +546,11 @@ function injectMapConfig(html, mc) {
 }
 
 function injectLgConfig(html, cfg) {
-  const m = html.match(/window\.LG_CONFIG = Object\.assign\(window\.LG_CONFIG \|\| \{\}, \{[\s\S]*?\}\);/);
+  const m = html.match(/window\.WITHU_CONFIG = Object\.assign\(window\.WITHU_CONFIG \|\| \{\}, \{[\s\S]*?\}\);/);
   if (m) {
     const safe = JSON.stringify(cfg).replace(/</g, '\\u003c');
-    html = html.replace(m[0], 'window.LG_CONFIG = Object.assign(window.LG_CONFIG || {}, ' + safe + ');');
-    const t = cfg.title || 'LG-NewUi Demo';
+    html = html.replace(m[0], 'window.WITHU_CONFIG = Object.assign(window.WITHU_CONFIG || {}, ' + safe + ');');
+    const t = cfg.title || 'withU Demo';
     html = html.replace(/<title>[^<]*<\/title>/, '<title>' + t + ' — 小手一牵 岁岁年年～ 又一年了</title>');
   }
   return html;
@@ -594,7 +594,7 @@ const server = http.createServer((req, res) => {
         const alt = filePath.slice(0, -4) + '.html';
         if (fs.existsSync(alt)) filePath = alt;
       }
-      // ---- PHP 主站代理：lg-site 静态/回退均不存在时，转发到 1314 PHP 服务 ----
+      // ---- PHP 主站代理：withu-site 静态/回退均不存在时，转发到 1314 PHP 服务 ----
       if (!(filePath && fs.existsSync(filePath))) {
         const phpCandidate = path.join(PHP_ROOT, urlPath.replace(/^\//, ''));
         const isPhpPath = urlPath.endsWith('.php') || urlPath.startsWith('/api/');
@@ -628,7 +628,7 @@ const server = http.createServer((req, res) => {
           let html = data.toString('utf8');
           html = html.replace(/data-code="[^"]*"/, 'data-code="' + code + '"');
           html = html.replace(/data-album-name="[^"]*"/, 'data-album-name="' + (album.name || '') + '"');
-          html = html.replace(/<title>[^<]*<\/title>/, '<title>' + (album.name || '相册') + ' — LG-NewUi Demo</title>');
+          html = html.replace(/<title>[^<]*<\/title>/, '<title>' + (album.name || '相册') + ' — withU Demo</title>');
           html = injectMapConfig(html, store.loadMapConfig());
           res.writeHead(200, { 'Content-Type': 'text/html; charset=utf-8', 'Cache-Control': 'no-cache' });
           res.end(html);
@@ -653,19 +653,19 @@ const server = http.createServer((req, res) => {
         }
       }
 
-      // ---- LG_CONFIG 注入：后台保存的 lg-config.json → 页面 window.LG_CONFIG ----
+      // ---- WITHU_CONFIG 注入：后台保存的 withu-config.json → 页面 window.WITHU_CONFIG ----
       if (/^\/(index|about|albums|messages|timeline|lovelist|articles)(\.html|\.php)?$/.test(urlPath) || urlPath === '/') {
         const cfgFile = path.join(__dirname, 'app-config.json');
         if (fs.existsSync(cfgFile)) {
           try {
-            const cfg = JSON.parse(fs.readFileSync(cfgFile, 'utf8')).LG_CONFIG || {};
+            const cfg = JSON.parse(fs.readFileSync(cfgFile, 'utf8')).WITHU_CONFIG || {};
             let html = data.toString('utf8');
             const replaced = injectLgConfig(html, cfg);
             if (replaced !== html) {
               data = Buffer.from(replaced, 'utf8');
-              console.log('[lg-config] injected for', urlPath);
+              console.log('[withu-config] injected for', urlPath);
             }
-          } catch (e) { console.error('[lg-config inject err]', e.message); }
+          } catch (e) { console.error('[withu-config inject err]', e.message); }
         }
       }
 

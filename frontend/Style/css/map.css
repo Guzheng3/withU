@@ -1,7 +1,7 @@
 ﻿/* ==========================================
    足迹地图弹窗遮罩层
    ========================================== */
-.lg-map-overlay {
+.withu-map-overlay {
     position: fixed;
     top: 0;
     left: 0;
@@ -15,16 +15,16 @@
     transition: background 0.4s ease;
 }
 
-.lg-map-overlay.lg-map-overlay-show {
+.withu-map-overlay.withu-map-overlay-show {
     background: rgba(0, 0, 0, 0.6);
 }
 
-.lg-map-overlay.lg-map-overlay-closing {
+.withu-map-overlay.withu-map-overlay-closing {
     background: rgba(0, 0, 0, 0);
     transition: background 0.3s ease;
 }
 
-.lg-map-overlay .lg-map-modal {
+.withu-map-overlay .withu-map-modal {
     position: relative;
     width: 100%;
     height: 100%;
@@ -35,36 +35,36 @@
         transform 0.4s cubic-bezier(0.25, 0.1, 0.25, 1);
 }
 
-.lg-map-overlay.lg-map-overlay-show .lg-map-modal {
+.withu-map-overlay.withu-map-overlay-show .withu-map-modal {
     opacity: 1;
     transform: scale(1);
 }
 
-.lg-map-overlay.lg-map-overlay-closing .lg-map-modal {
+.withu-map-overlay.withu-map-overlay-closing .withu-map-modal {
     opacity: 0;
     transform: scale(0.96);
     transition: opacity 0.3s cubic-bezier(0.25, 0.1, 0.25, 1),
         transform 0.3s cubic-bezier(0.25, 0.1, 0.25, 1);
 }
 
-.lg-map-overlay .lg-map {
+.withu-map-overlay .withu-map {
     width: 100%;
     height: 100%;
 }
 
-.lg-map-overlay .missing-pets-wrap {
+.withu-map-overlay .missing-pets-wrap {
     height: 100% !important;
     border-radius: 0 !important;
 }
 
-.lg-map-overlay #missing-pets-map {
+.withu-map-overlay #missing-pets-map {
     height: 100% !important;
 }
 
 /* ==========================================
    地图模块主样式
    ========================================== */
-.lg-map #missing-pets-module {
+.withu-map #missing-pets-module {
     --hsla-raw: var(--footprint-hsla);
     --primary-color: hsl(var(--hsla-raw));
     --primary-hover: hsla(var(--hsla-raw), 0.8);
@@ -108,7 +108,7 @@
     }
 }
 
-.lg-map .msg-card {
+.withu-map .msg-card {
     width: 260px;
     background: #fff;
     border-radius: 16px;
@@ -118,11 +118,11 @@
     animation: cardSlideIn 0.3s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
 }
 
-.lg-map .msg-card * {
+.withu-map .msg-card * {
     box-sizing: border-box;
 }
 
-.lg-map .msg-card-head {
+.withu-map .msg-card-head {
     display: flex;
     align-items: center;
     gap: 12px;
@@ -130,7 +130,7 @@
     border-bottom: 1px solid #f0f0f0;
 }
 
-.lg-map .msg-card-avatar {
+.withu-map .msg-card-avatar {
     width: 46px;
     height: 46px;
     border-radius: 50%;
@@ -139,25 +139,25 @@
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
 
-.lg-map .msg-card-avatar img {
+.withu-map .msg-card-avatar img {
     width: 100%;
     height: 100%;
     object-fit: cover;
 }
 
-.lg-map .msg-card-info {
+.withu-map .msg-card-info {
     flex: 1;
     min-width: 0;
 }
 
-.lg-map .msg-card-name {
+.withu-map .msg-card-name {
     font-size: 15px;
     font-weight: 600;
     color: #1a1a1a;
     margin-bottom: 3px;
 }
 
-.lg-map .msg-card-loc {
+.withu-map .msg-card-loc {
     display: flex;
     align-items: center;
     gap: 4px;
@@ -165,30 +165,30 @@
     color: #888;
 }
 
-.lg-map .msg-card-loc svg {
+.withu-map .msg-card-loc svg {
     width: 12px;
     height: 12px;
     color: #ff4081;
     flex-shrink: 0;
 }
 
-.lg-map .msg-card-loc span {
+.withu-map .msg-card-loc span {
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
 }
 
-.lg-map .msg-card-time {
+.withu-map .msg-card-time {
     font-size: 11px;
     color: #bbb;
     flex-shrink: 0;
 }
 
-.lg-map .msg-card-body {
+.withu-map .msg-card-body {
     padding: 16px;
 }
 
-.lg-map .msg-card-text {
+.withu-map .msg-card-text {
     margin: 0;
     font-size: 14px;
     line-height: 1.7;
@@ -196,7 +196,7 @@
     word-break: break-word;
 }
 
-.lg-map .msg-card-foot {
+.withu-map .msg-card-foot {
     display: flex;
     align-items: center;
     gap: 6px;
@@ -207,19 +207,19 @@
     border-top: 1px solid #f0f0f0;
 }
 
-.lg-map .msg-card-foot svg {
+.withu-map .msg-card-foot svg {
     width: 12px;
     height: 12px;
     color: #ccc;
     flex-shrink: 0;
 }
 
-.lg-map #missing-pets-module * {
+.withu-map #missing-pets-module * {
     box-sizing: border-box;
     white-space: nowrap;
 }
 
-.lg-map #missing-pets-module .missing-pets-wrap {
+.withu-map #missing-pets-module .missing-pets-wrap {
     width: 100%;
     height: 75vh;
     position: relative;
@@ -229,7 +229,7 @@
     overflow: hidden;
 }
 
-.lg-map #missing-pets-module #missing-pets-map {
+.withu-map #missing-pets-module #missing-pets-map {
     position: relative;
     width: 100%;
     height: 100vh;
@@ -238,11 +238,11 @@
     overflow: hidden;
 }
 
-.lg-map #missing-pets-map.map-transitioning {
+.withu-map #missing-pets-map.map-transitioning {
     filter: brightness(0.95);
 }
 
-.lg-map #missing-pets-map.map-shake {
+.withu-map #missing-pets-map.map-shake {
     animation: shake 0.4s cubic-bezier(0.36, 0.07, 0.19, 0.97) both;
 }
 
@@ -271,7 +271,7 @@
 }
 
 /* ================= 底部信息栏 - 极简空气风格 ================= */
-.lg-map .ui-footer-container {
+.withu-map .ui-footer-container {
     position: fixed;
     bottom: 30px;
     left: 24px;
@@ -287,17 +287,17 @@
     transition: all 0.6s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-.lg-map .ui-footer-container.show {
+.withu-map .ui-footer-container.show {
     opacity: 1;
     visibility: visible;
     transform: translateY(0);
 }
 
-.lg-map .ui-footer-left {
+.withu-map .ui-footer-left {
     text-shadow: 0 2px 20px rgba(0, 0, 0, 0.95), 0 4px 40px rgba(0, 0, 0, 0.8);
 }
 
-.lg-map .ui-footer-title {
+.withu-map .ui-footer-title {
     font-size: 26px;
     font-weight: 800;
     color: #fff;
@@ -311,7 +311,7 @@
 }
 
 /* 数量徽章样式 */
-.lg-map .footer-count-badge {
+.withu-map .footer-count-badge {
     display: inline-flex;
     align-items: center;
     justify-content: center;
@@ -329,7 +329,7 @@
     animation: badgePop 0.3s ease-out;
 }
 
-.lg-map .ui-footer-sub {
+.withu-map .ui-footer-sub {
     font-size: 12px;
     color: rgba(255, 255, 255, 0.85);
     font-weight: 400;
@@ -338,7 +338,7 @@
     gap: 8px;
 }
 
-.lg-map .status-dot {
+.withu-map .status-dot {
     width: 6px;
     height: 6px;
     background: #f472b6;
@@ -378,7 +378,7 @@
     }
 }
 
-.lg-map .ui-footer-right {
+.withu-map .ui-footer-right {
     text-align: right;
     text-shadow: 0 2px 20px rgba(0, 0, 0, 0.95);
     opacity: 0.9;
@@ -388,7 +388,7 @@
 }
 
 
-.lg-map .lgnewui-badge {
+.withu-map .withu-badge {
     background: rgba(40, 40, 40, 0.75);
     backdrop-filter: blur(20px);
     -webkit-backdrop-filter: blur(20px);
@@ -405,7 +405,7 @@
     margin-bottom: 6px;
 }
 
-.lg-map .lgnewui-icon-circle {
+.withu-map .withu-icon-circle {
     width: 22px;
     height: 22px;
     background: #5e5e5e;
@@ -420,7 +420,7 @@
     flex-shrink: 0;
 }
 
-.lg-map .lgnewui-text-thin {
+.withu-map .withu-text-thin {
     font-size: 11px;
     font-weight: 300;
     color: #ffffff;
@@ -430,19 +430,19 @@
     line-height: 1;
 }
 
-.lg-map .lgnewui-badge:hover {
+.withu-map .withu-badge:hover {
     background: rgba(50, 50, 50, 0.85);
     border-color: rgba(255, 255, 255, 0.2);
     cursor: default;
 }
 
-.lg-map .ui-footer-copy {
+.withu-map .ui-footer-copy {
     font-size: 9px;
     color: rgba(255, 255, 255, 0.6);
     line-height: 1.5;
 }
 
-.lg-map .ui-footer-copy .footer-amap-logo {
+.withu-map .ui-footer-copy .footer-amap-logo {
     color: #4aa5ff;
     font-weight: 600;
     display: inline-flex;
@@ -450,7 +450,7 @@
     gap: 2px;
 }
 
-.lg-map .ui-footer-copy .footer-amap-logo svg {
+.withu-map .ui-footer-copy .footer-amap-logo svg {
     background: #fff;
     border-radius: 2px;
     width: 8px;
@@ -458,7 +458,7 @@
 }
 
 /* 地图控件样式 */
-.lg-map .map-controls {
+.withu-map .map-controls {
     position: fixed;
     left: 50%;
     bottom: 30px;
@@ -474,8 +474,8 @@
     z-index: 10001;
     border: 1px solid rgba(0, 0, 0, 0.06);
     box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08),
-        inset 0 0 0 1px rgba(255, 255, 255, 0.lg-map .5),
-        inset 0 2px 4px rgba(0, 0, 0, 0.lg-map .05);
+        inset 0 0 0 1px rgba(255, 255, 255, 0.withu-map .5),
+        inset 0 2px 4px rgba(0, 0, 0, 0.withu-map .05);
     width: auto;
     min-width: 340px;
     flex-wrap: wrap;
@@ -485,12 +485,12 @@
     transition: all 0.3s ease-out;
 }
 
-.lg-map .map-controls.show {
+.withu-map .map-controls.show {
     opacity: 1;
     transform: translateX(-50%) translateY(0);
 }
 
-.lg-map .control-buttons {
+.withu-map .control-buttons {
     display: flex;
     align-items: center;
     gap: 8px;
@@ -498,7 +498,7 @@
 }
 
 /* 按钮组通用样式 */
-.lg-map .button-group {
+.withu-map .button-group {
     display: flex;
     align-items: center;
     gap: 4px;
@@ -510,7 +510,7 @@
 }
 
 /* 基础图层按钮 */
-.lg-map .control-btn {
+.withu-map .control-btn {
     position: relative;
     padding: 8px 16px;
     background: transparent;
@@ -526,11 +526,11 @@
     transition: all 0.3s ease-out;
 }
 
-.lg-map .control-btn:hover {
+.withu-map .control-btn:hover {
     background: hsla(var(--hsla-raw), 0.1);
 }
 
-.lg-map .control-btn.active {
+.withu-map .control-btn.active {
     background: hsl(var(--hsla-raw));
     color: white;
     transform: translateY(-1px);
@@ -538,7 +538,7 @@
 }
 
 /* 卫星图层按钮激活样式 */
-.lg-map .control-btn[data-type="satellite"].active {
+.withu-map .control-btn[data-type="satellite"].active {
     background: hsl(var(--hsla-raw));
     color: white;
     border: none;
@@ -546,8 +546,8 @@
 }
 
 /* 开关按钮样式 */
-.lg-map .control-btn[data-type="road"],
-.lg-map .control-btn[data-type="traffic"] {
+.withu-map .control-btn[data-type="road"],
+.withu-map .control-btn[data-type="traffic"] {
     position: relative;
     padding: 6px 12px 6px 42px;
     font-weight: 500;
@@ -560,8 +560,8 @@
     text-align: left;
 }
 
-.lg-map .control-btn[data-type="road"]::before,
-.lg-map .control-btn[data-type="traffic"]::before {
+.withu-map .control-btn[data-type="road"]::before,
+.withu-map .control-btn[data-type="traffic"]::before {
     content: '';
     position: absolute;
     left: 8px;
@@ -575,8 +575,8 @@
     box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.1);
 }
 
-.lg-map .control-btn[data-type="road"]::after,
-.lg-map .control-btn[data-type="traffic"]::after {
+.withu-map .control-btn[data-type="road"]::after,
+.withu-map .control-btn[data-type="traffic"]::after {
     content: '';
     position: absolute;
     left: 10px;
@@ -590,42 +590,42 @@
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-.lg-map .control-btn[data-type="road"].active,
-.lg-map .control-btn[data-type="traffic"].active {
+.withu-map .control-btn[data-type="road"].active,
+.withu-map .control-btn[data-type="traffic"].active {
     background: rgba(255, 255, 255, 0.95);
     color: var(--primary-color);
     font-weight: 600;
     border: 1px solid rgba(0, 0, 0, 0.08);
 }
 
-.lg-map .control-btn[data-type="road"].active::before,
-.lg-map .control-btn[data-type="traffic"].active::before {
+.withu-map .control-btn[data-type="road"].active::before,
+.withu-map .control-btn[data-type="traffic"].active::before {
     background: hsl(var(--hsla-raw));
     box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.05);
 }
 
-.lg-map .control-btn[data-type="road"].active::after,
-.lg-map .control-btn[data-type="traffic"].active::after {
+.withu-map .control-btn[data-type="road"].active::after,
+.withu-map .control-btn[data-type="traffic"].active::after {
     left: 22px;
     background: #fff;
     box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
 }
 
-.lg-map .control-btn[data-type="road"]:hover,
-.lg-map .control-btn[data-type="traffic"]:hover {
+.withu-map .control-btn[data-type="road"]:hover,
+.withu-map .control-btn[data-type="traffic"]:hover {
     transform: translateY(-1px);
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
 }
 
 /* 缩放按钮组样式 */
-.lg-map .zoom-buttons {
+.withu-map .zoom-buttons {
     display: flex;
     align-items: center;
     gap: 4px;
     margin-left: 8px;
 }
 
-.lg-map .zoom-btn {
+.withu-map .zoom-btn {
     width: 32px;
     height: 32px;
     border: none;
@@ -641,13 +641,13 @@
     border-radius: 50%;
 }
 
-.lg-map .zoom-btn:hover {
+.withu-map .zoom-btn:hover {
     background-color: hsla(var(--hsla-raw), 0.1);
     color: hsl(var(--hsla-raw));
 }
 
-.lg-map .zoom-btn:active,
-.lg-map .zoom-btn.zoom-active {
+.withu-map .zoom-btn:active,
+.withu-map .zoom-btn.zoom-active {
     color: white;
     background: hsl(var(--hsla-raw));
     transform: translateY(1px);
@@ -655,9 +655,9 @@
 }
 
 /* 完全隐藏比例尺 */
-.lg-map .amap-scale,
-.lg-map .amap-scale-text,
-.lg-map .amap-scale-line {
+.withu-map .amap-scale,
+.withu-map .amap-scale-text,
+.withu-map .amap-scale-line {
     display: none !important;
     visibility: hidden !important;
     opacity: 0 !important;
@@ -669,7 +669,7 @@
 }
 
 /* 信息窗口样式 */
-.lg-map .info-window {
+.withu-map .info-window {
     width: 220px;
     height: 280px;
     background: white;
@@ -685,20 +685,20 @@
     cursor: pointer;
 }
 
-.lg-map .info-window .image {
+.withu-map .info-window .image {
     position: relative;
     width: 100%;
     height: 100%;
     overflow: hidden;
 }
 
-.lg-map .info-window .image img {
+.withu-map .info-window .image img {
     width: 100%;
     height: 100%;
     object-fit: cover;
 }
 
-.lg-map .info-window .image-info {
+.withu-map .info-window .image-info {
     position: absolute;
     bottom: 0;
     left: 0;
@@ -709,14 +709,14 @@
     z-index: 10;
 }
 
-.lg-map .info-window .title {
+.withu-map .info-window .title {
     font-size: 16px;
     font-weight: 600;
     margin: 0 0 8px 0;
     text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
 }
 
-.lg-map .info-window .description {
+.withu-map .info-window .description {
     font-size: 13px;
     line-height: 1.5;
     margin: 0 0 12px 0;
@@ -729,7 +729,7 @@
     text-overflow: ellipsis;
 }
 
-.lg-map .info-window .meta {
+.withu-map .info-window .meta {
     display: flex;
     align-items: center;
     gap: 12px;
@@ -738,7 +738,7 @@
     margin-bottom: 12px;
 }
 
-.lg-map .info-window .meta span {
+.withu-map .info-window .meta span {
     display: flex;
     align-items: center;
     gap: 4px;
@@ -746,21 +746,21 @@
     width: 100%;
 }
 
-.lg-map .info-window .meta svg {
+.withu-map .info-window .meta svg {
     width: 12px;
     height: 12px;
     opacity: 0.9;
     flex-shrink: 0;
 }
 
-.lg-map .info-window .meta span p {
+.withu-map .info-window .meta span p {
     overflow: hidden;
     white-space: nowrap;
     text-overflow: ellipsis;
     width: 100%;
 }
 
-.lg-map .info-window .article-btn {
+.withu-map .info-window .article-btn {
     --primary-color: rgba(255, 255, 255, 0.9);
     --secondary-color: rgba(0, 0, 0, 0.8);
     --hover-color: #fff;
@@ -782,13 +782,13 @@
     text-decoration: none;
 }
 
-.lg-map .info-window .article-btn .arrow-wrapper {
+.withu-map .info-window .article-btn .arrow-wrapper {
     display: flex;
     justify-content: center;
     align-items: center;
 }
 
-.lg-map .info-window .article-btn .arrow {
+.withu-map .info-window .article-btn .arrow {
     margin-top: 1px;
     width: 0;
     background: var(--secondary-color);
@@ -797,7 +797,7 @@
     transition: 0.2s;
 }
 
-.lg-map .info-window .article-btn .arrow::before {
+.withu-map .info-window .article-btn .arrow::before {
     content: "";
     box-sizing: border-box;
     position: absolute;
@@ -811,21 +811,21 @@
     transform: rotate(-45deg);
 }
 
-.lg-map .info-window .article-btn:hover {
+.withu-map .info-window .article-btn:hover {
     background-color: var(--hover-color);
     transform: translateY(-1px);
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
 }
 
-.lg-map .info-window .article-btn:hover .arrow {
+.withu-map .info-window .article-btn:hover .arrow {
     width: var(--arrow-width);
 }
 
-.lg-map .info-window .article-btn:hover .arrow:before {
+.withu-map .info-window .article-btn:hover .arrow:before {
     right: 0;
 }
 
-.lg-map .info-window .close-btn {
+.withu-map .info-window .close-btn {
     display: none;
 }
 
@@ -842,36 +842,36 @@
 }
 
 /* 隐藏高德地图默认的关闭按钮 */
-.lg-map .amap-info-close {
+.withu-map .amap-info-close {
     display: none !important;
 }
 
 /* 隐藏高德地图默认的信息窗体样式 */
-.lg-map .amap-info-content {
+.withu-map .amap-info-content {
     padding: 0 !important;
     background: transparent !important;
     border: none !important;
     box-shadow: none !important;
 }
 
-.lg-map .amap-info-outer,
-.lg-map .amap-info-inner {
+.withu-map .amap-info-outer,
+.withu-map .amap-info-inner {
     background: transparent !important;
     border: none !important;
     box-shadow: none !important;
 }
 
-.lg-map .amap-info-sharp {
+.withu-map .amap-info-sharp {
     display: none !important;
 }
 
 /* 标记点样式 */
-.lg-map .custom-marker {
+.withu-map .custom-marker {
     cursor: pointer;
     transition: var(--transition);
 }
 
-.lg-map .marker-image {
+.withu-map .marker-image {
     width: 36px;
     height: 36px;
     border-radius: 50%;
@@ -881,42 +881,42 @@
     transition: var(--transition);
 }
 
-.lg-map .marker-image img {
+.withu-map .marker-image img {
     width: 100%;
     height: 100%;
     object-fit: cover;
     transition: var(--transition);
 }
 
-.lg-map .custom-marker:hover .marker-image {
+.withu-map .custom-marker:hover .marker-image {
     transform: scale(1.15);
     box-shadow: 0 4px 12px var(--shadow-color);
 }
 
 /* 移除地图 Logo */
-.lg-map .amap-logo {
+.withu-map .amap-logo {
     display: none !important;
 }
 
-.lg-map .amap-copyright {
+.withu-map .amap-copyright {
     display: none !important;
 }
 
 /* 主题控制样式 */
-.lg-map .theme-control {
+.withu-map .theme-control {
     display: flex;
     align-items: center;
     padding: 0 15px;
     border-right: 1px solid rgba(0, 0, 0, 0.1);
 }
 
-.lg-map .theme-label {
+.withu-map .theme-label {
     color: rgba(0, 0, 0, 0.7);
     font-size: 13px;
     margin-right: 8px;
 }
 
-.lg-map .theme-select {
+.withu-map .theme-select {
     background: rgba(0, 0, 0, 0.05);
     border: none;
     border-radius: 4px;
@@ -932,26 +932,26 @@
     background-size: 16px;
 }
 
-.lg-map .theme-select:hover {
+.withu-map .theme-select:hover {
     background-color: rgba(0, 0, 0, 0.1);
     color: rgba(0, 0, 0, 0.9);
 }
 
-.lg-map .theme-select:focus {
+.withu-map .theme-select:focus {
     outline: none;
     background-color: rgba(0, 0, 0, 0.15);
     color: rgba(0, 0, 0, 0.9);
 }
 
 /* 按钮点击效果 */
-.lg-map .control-btn.btn-clicked {
+.withu-map .control-btn.btn-clicked {
     transform: scale(0.95) translateZ(0);
     opacity: 0.9;
     transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 /* 加载指示器样式优化 */
-.lg-map .loading-indicator {
+.withu-map .loading-indicator {
     position: fixed;
     top: 0;
     left: 0;
@@ -966,7 +966,7 @@
     transition: opacity 0.3s ease;
 }
 
-.lg-map .spinner {
+.withu-map .spinner {
     width: 40px;
     height: 40px;
     border: 3px solid hsla(var(--hsla-raw), 0.1);
@@ -975,7 +975,7 @@
     animation: spin 1s linear infinite;
 }
 
-.lg-map .loading-text {
+.withu-map .loading-text {
     margin-top: 16px;
     color: var(--text-light);
     font-size: 14px;
@@ -1068,49 +1068,49 @@
 }
 
 /* 控制栏动画 */
-.lg-map .map-controls {
+.withu-map .map-controls {
     opacity: 0;
     transform: translateX(-50%) translateY(20px);
     transition: all 0.3s ease-out;
 }
 
-.lg-map .map-controls.show {
+.withu-map .map-controls.show {
     opacity: 1;
     transform: translateX(-50%) translateY(0);
 }
 
-.lg-map .control-btn {
+.withu-map .control-btn {
     opacity: 0;
     transform: scale(0.8);
     transition: all 0.3s ease-out;
 }
 
-.lg-map .control-btn.show {
+.withu-map .control-btn.show {
     opacity: 1;
     transform: scale(1);
 }
 
-.lg-map .control-btn.scale-in {
+.withu-map .control-btn.scale-in {
     animation: scaleIn 0.3s ease-out;
 }
 
-.lg-map .zoom-controls button {
+.withu-map .zoom-controls button {
     opacity: 0;
     transform: translateX(-20px);
     transition: all 0.3s ease-out;
 }
 
-.lg-map .zoom-controls button.show {
+.withu-map .zoom-controls button.show {
     opacity: 1;
     transform: translateX(0);
 }
 
-.lg-map .zoom-controls button.slide-in {
+.withu-map .zoom-controls button.slide-in {
     animation: slideIn 0.3s ease-out;
 }
 
 /* 按钮点击动画 */
-.lg-map .btn-pulse {
+.withu-map .btn-pulse {
     animation: pulse 0.3s ease-out;
 }
 
@@ -1156,7 +1156,7 @@
 }
 
 /* 优化控制栏样式 */
-.lg-map .map-controls {
+.withu-map .map-controls {
     background: rgba(255, 255, 255, 0.9);
     backdrop-filter: blur(10px);
     border-radius: 12px;
@@ -1165,13 +1165,13 @@
     margin: 16px;
 }
 
-.lg-map .control-btn {
+.withu-map .control-btn {
     position: relative;
     overflow: hidden;
     transition: all 0.3s ease;
 }
 
-.lg-map .control-btn::after {
+.withu-map .control-btn::after {
     content: '';
     position: absolute;
     top: 50%;
@@ -1184,19 +1184,19 @@
     transition: transform 0.3s ease-out, opacity 0.3s ease-out;
 }
 
-.lg-map .control-btn:active::after {
+.withu-map .control-btn:active::after {
     transform: translate(-50%, -50%) scale(2);
     opacity: 1;
 }
 
-.lg-map .control-btn.active {
+.withu-map .control-btn.active {
     background: var(--primary-color);
     color: white;
     transform: translateY(-1px);
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
 }
 
-.lg-map #missing-pets-module {
+.withu-map #missing-pets-module {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
@@ -1211,19 +1211,19 @@
     background-color: #f5f5f5;
 }
 
-.lg-map .missing-pets-wrap {
+.withu-map .missing-pets-wrap {
     position: relative;
     width: 100%;
     height: 100%;
 }
 
-.lg-map #missing-pets-map {
+.withu-map #missing-pets-map {
     width: 100%;
     height: 100%;
 }
 
 /* Logo和描述 */
-.lg-map .logo-container {
+.withu-map .logo-container {
     position: fixed;
     bottom: 20px;
     left: 20px;
@@ -1231,27 +1231,27 @@
     max-width: 300px;
 }
 
-.lg-map .missing-pets-logo {
+.withu-map .missing-pets-logo {
     font-size: 2rem;
     color: var(--primary-color);
     margin-bottom: 8px;
     text-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
 }
 
-.lg-map .logo-version {
+.withu-map .logo-version {
     font-size: 0.8rem;
     vertical-align: super;
     opacity: 0.7;
 }
 
-.lg-map .missing-pets-slogan {
+.withu-map .missing-pets-slogan {
     font-size: 1rem;
     color: #a8a8a8;
     line-height: 1.4;
 }
 
 /* 控制台基础样式 */
-.lg-map .map-controls {
+.withu-map .map-controls {
     position: fixed;
     bottom: 20px;
     left: 50%;
@@ -1269,7 +1269,7 @@
 }
 
 /* 按钮组样式 */
-.lg-map .button-group {
+.withu-map .button-group {
     display: flex;
     align-items: center;
     gap: 8px;
@@ -1277,14 +1277,14 @@
 }
 
 /* 分隔线 */
-.lg-map .button-group:not(:last-child) {
+.withu-map .button-group:not(:last-child) {
     border-right: 1px solid rgba(255, 255, 255, 0.2);
     padding-right: 16px;
     margin-right: 8px;
 }
 
 /* 标准按钮样式 */
-.lg-map .control-btn {
+.withu-map .control-btn {
     background: rgba(255, 255, 255, 0.1);
     border: none;
     color: #fff;
@@ -1296,23 +1296,23 @@
     font-weight: 500;
 }
 
-.lg-map .control-btn:hover {
+.withu-map .control-btn:hover {
     background: rgba(255, 255, 255, 0.2);
 }
 
-.lg-map .control-btn.active {
+.withu-map .control-btn.active {
     background: var(--primary-color, #ff4081);
     color: #fff;
 }
 
 /* 缩放按钮组样式 */
-.lg-map .zoom-buttons {
+.withu-map .zoom-buttons {
     display: flex;
     align-items: center;
     gap: 4px;
 }
 
-.lg-map .zoom-btn {
+.withu-map .zoom-btn {
     width: 32px;
     height: 32px;
     border-radius: 50%;
@@ -1327,12 +1327,12 @@
     justify-content: center;
 }
 
-.lg-map .zoom-btn:hover {
+.withu-map .zoom-btn:hover {
     background: rgba(255, 255, 255, 0.2);
 }
 
 /* 比例尺文字样式 */
-.lg-map .amap-scale-text {
+.withu-map .amap-scale-text {
     color: #fff;
     font-size: 12px;
     opacity: 0.8;
@@ -1341,7 +1341,7 @@
 }
 
 /* 飞机开关样式优化 */
-.lg-map .plane-switch {
+.withu-map .plane-switch {
     --dot: #fff;
     --street: #6B6D76;
     --street-line: #A8AAB4;
@@ -1360,11 +1360,11 @@
     transition: all 0.3s ease;
 }
 
-.lg-map .plane-switch:hover {
+.withu-map .plane-switch:hover {
     background: rgba(255, 255, 255, 0.1);
 }
 
-.lg-map .plane-switch .switch-text {
+.withu-map .plane-switch .switch-text {
     color: #fff;
     font-size: 14px;
     font-weight: 500;
@@ -1374,11 +1374,11 @@
     text-align: center;
 }
 
-.lg-map .plane-switch input {
+.withu-map .plane-switch input {
     display: none;
 }
 
-.lg-map .plane-switch input+div {
+.withu-map .plane-switch input+div {
     -webkit-mask-image: -webkit-radial-gradient(white, black);
     position: relative;
     overflow: hidden;
@@ -1392,8 +1392,8 @@
     transition: background-position 0.6s;
 }
 
-.lg-map .plane-switch input+div:before,
-.lg-map .plane-switch input+div:after {
+.withu-map .plane-switch input+div:before,
+.withu-map .plane-switch input+div:after {
     content: "";
     display: block;
     position: absolute;
@@ -1401,7 +1401,7 @@
     transition: transform 0.3s;
 }
 
-.lg-map .plane-switch input+div:before {
+.withu-map .plane-switch input+div:before {
     width: 42px;
     right: 2px;
     top: 4px;
@@ -1410,7 +1410,7 @@
     box-shadow: 0 16px 0 0 var(--street-line);
 }
 
-.lg-map .plane-switch input+div:after {
+.withu-map .plane-switch input+div:after {
     width: 2px;
     height: 2px;
     border-radius: 50%;
@@ -1421,12 +1421,12 @@
     box-shadow: inset 0 0 0 2px var(--light-1), 0 21px 0 var(--light-1), 8px 0 0 var(--light-2), 8px 21px 0 var(--light-2), 16px 0 0 var(--light-2), 16px 21px 0 var(--light-2);
 }
 
-.lg-map .plane-switch input+div span {
+.withu-map .plane-switch input+div span {
     display: block;
     position: absolute;
 }
 
-.lg-map .plane-switch input+div span.street-middle {
+.withu-map .plane-switch input+div span.street-middle {
     top: 12px;
     left: 21px;
     width: 3px;
@@ -1437,7 +1437,7 @@
     transition: transform 0.3s;
 }
 
-.lg-map .plane-switch input+div span.cloud {
+.withu-map .plane-switch input+div span.cloud {
     width: 12px;
     height: 4px;
     border-radius: 2px;
@@ -1451,8 +1451,8 @@
     animation: clouds2 2s linear infinite var(--cd, 0s);
 }
 
-.lg-map .plane-switch input+div span.cloud:before,
-.lg-map .plane-switch input+div span.cloud:after {
+.withu-map .plane-switch input+div span.cloud:before,
+.withu-map .plane-switch input+div span.cloud:after {
     content: "";
     position: absolute;
     transform: translateX(var(--cx, 0));
@@ -1464,18 +1464,18 @@
     left: 1px;
 }
 
-.lg-map .plane-switch input+div span.cloud:after {
+.withu-map .plane-switch input+div span.cloud:after {
     --cs: 6px;
     --cx: 4px;
 }
 
-.lg-map .plane-switch input+div span.cloud.two {
+.withu-map .plane-switch input+div span.cloud.two {
     --ct: 20px;
     --cd: 1s;
     opacity: var(--co-2, 0);
 }
 
-.lg-map .plane-switch input+div div {
+.withu-map .plane-switch input+div div {
     display: table;
     position: relative;
     z-index: 1;
@@ -1486,7 +1486,7 @@
     transition: transform 0.6s cubic-bezier(0.2, 0.8, 0.35, 1.2);
 }
 
-.lg-map .plane-switch input+div div svg {
+.withu-map .plane-switch input+div div svg {
     width: 13px;
     height: 13px;
     display: block;
@@ -1494,7 +1494,7 @@
     transition: color 0.6s;
 }
 
-.lg-map .plane-switch input:checked+div {
+.withu-map .plane-switch input:checked+div {
     --p: 100%;
     --x: 25px;
     --s: -50px;
@@ -1545,7 +1545,7 @@
 @media screen and (max-width: 768px) {
 
     /* 足迹信息放到顶部 */
-    .lg-map .logo-container {
+    .withu-map .logo-container {
         position: fixed;
         top: 16px;
         bottom: auto;
@@ -1559,7 +1559,7 @@
         -webkit-backdrop-filter: none;
     }
 
-    .lg-map .missing-pets-logo {
+    .withu-map .missing-pets-logo {
         font-size: 1.8rem;
         margin-bottom: 6px;
         margin-right: 0;
@@ -1567,7 +1567,7 @@
         text-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
     }
 
-    .lg-map .missing-pets-slogan {
+    .withu-map .missing-pets-slogan {
         font-size: 0.9rem;
         line-height: 1.4;
         color: #a8a8a8;
@@ -1577,7 +1577,7 @@
     }
 
     /* 移动端控制台优化 */
-    .lg-map .map-controls {
+    .withu-map .map-controls {
         width: calc(100% - 24px);
         left: 50%;
         transform: translateX(-50%);
@@ -1596,7 +1596,7 @@
     }
 
     /* 图层按钮行 - 占据整行 */
-    .lg-map .map-controls .button-group:first-child {
+    .withu-map .map-controls .button-group:first-child {
         grid-column: 1 / 3;
         grid-row: 1;
         width: 100%;
@@ -1608,7 +1608,7 @@
     }
 
     /* 图层按钮样式 */
-    .lg-map .map-controls .button-group:first-child .control-btn {
+    .withu-map .map-controls .button-group:first-child .control-btn {
         flex: 1;
         max-width: 120px;
         background: rgba(0, 0, 0, 0.05);
@@ -1618,13 +1618,13 @@
         padding: 10px 0;
     }
 
-    .lg-map .map-controls .button-group:first-child .control-btn.active {
+    .withu-map .map-controls .button-group:first-child .control-btn.active {
         background: var(--primary-color);
         color: white;
     }
 
     /* 路网路况开关行 */
-    .lg-map .map-controls .button-group:nth-child(2) {
+    .withu-map .map-controls .button-group:nth-child(2) {
         grid-column: 1;
         grid-row: 2;
         width: 100%;
@@ -1637,8 +1637,8 @@
     }
 
     /* 缩放按钮和比例尺 */
-    .lg-map .map-controls .zoom-buttons,
-    .lg-map .map-controls .amap-scale-text {
+    .withu-map .map-controls .zoom-buttons,
+    .withu-map .map-controls .amap-scale-text {
         grid-column: 2;
         grid-row: 2;
         margin: 0;
@@ -1646,7 +1646,7 @@
     }
 
     /* 缩放按钮样式 */
-    .lg-map .map-controls .zoom-btn {
+    .withu-map .map-controls .zoom-btn {
         width: 36px;
         height: 36px;
         background: rgba(0, 0, 0, 0.05);
@@ -1656,20 +1656,20 @@
     }
 
     /* 路网路况开关样式 */
-    .lg-map .plane-switch {
+    .withu-map .plane-switch {
         padding: 4px;
         background: rgba(0, 0, 0, 0.03);
         border-radius: 20px;
     }
 
-    .lg-map .plane-switch .switch-text {
+    .withu-map .plane-switch .switch-text {
         color: #333;
         font-weight: 600;
         text-shadow: none;
     }
 
     /* 比例尺文字 */
-    .lg-map .amap-scale-text {
+    .withu-map .amap-scale-text {
         color: #666;
         font-size: 12px;
         padding-left: 10px;
@@ -1682,179 +1682,179 @@
    ======================================== */
 
 /* 定位和布局 */
-.lg-map .absolute {
+.withu-map .absolute {
     position: absolute;
 }
 
-.lg-map .relative {
+.withu-map .relative {
     position: relative;
 }
 
-.lg-map .fixed {
+.withu-map .fixed {
     position: fixed;
 }
 
 /* Flexbox */
-.lg-map .flex {
+.withu-map .flex {
     display: flex;
 }
 
-.lg-map .inline-flex {
+.withu-map .inline-flex {
     display: inline-flex;
 }
 
-.lg-map .items-center {
+.withu-map .items-center {
     align-items: center;
 }
 
-.lg-map .justify-center {
+.withu-map .justify-center {
     justify-content: center;
 }
 
-.lg-map .flex-shrink {
+.withu-map .flex-shrink {
     flex-shrink: 1;
 }
 
-.lg-map .flex-shrink-0 {
+.withu-map .flex-shrink-0 {
     flex-shrink: 0;
 }
 
 /* 间距 */
-.lg-map .gap-1 {
+.withu-map .gap-1 {
     gap: 0.25rem;
 }
 
-.lg-map .gap-2 {
+.withu-map .gap-2 {
     gap: 0.5rem;
 }
 
 /* 位置 */
-.lg-map .top-1 {
+.withu-map .top-1 {
     top: 0.25rem;
 }
 
-.lg-map .left-1\/2 {
+.withu-map .left-1\/2 {
     left: 50%;
 }
 
-.lg-map .-translate-x-1\/2 {
+.withu-map .-translate-x-1\/2 {
     transform: translateX(-50%);
 }
 
 /* 内边距 */
-.lg-map .px-1 {
+.withu-map .px-1 {
     padding-left: 0.25rem;
     padding-right: 0.25rem;
 }
 
-.lg-map .px-1\.5 {
+.withu-map .px-1\.5 {
     padding-left: 0.375rem;
     padding-right: 0.375rem;
 }
 
-.lg-map .px-2 {
+.withu-map .px-2 {
     padding-left: 0.5rem;
     padding-right: 0.5rem;
 }
 
-.lg-map .py-0\.5 {
+.withu-map .py-0\.5 {
     padding-top: 0.125rem;
     padding-bottom: 0.125rem;
 }
 
-.lg-map .py-1 {
+.withu-map .py-1 {
     padding-top: 0.25rem;
     padding-bottom: 0.25rem;
 }
 
 /* 外边距 */
-.lg-map .mr-1 {
+.withu-map .mr-1 {
     margin-right: 0.25rem;
 }
 
-.lg-map .ml-2 {
+.withu-map .ml-2 {
     margin-left: 0.5rem;
 }
 
 /* 宽高 */
-.lg-map .w-4 {
+.withu-map .w-4 {
     width: 1rem;
 }
 
-.lg-map .h-4 {
+.withu-map .h-4 {
     height: 1rem;
 }
 
-.lg-map .w-6 {
+.withu-map .w-6 {
     width: 1.5rem;
 }
 
-.lg-map .h-6 {
+.withu-map .h-6 {
     height: 1.5rem;
 }
 
 /* 背景色 */
-.lg-map .bg-black\/80 {
+.withu-map .bg-black\/80 {
     background-color: rgba(0, 0, 0, 0.8);
 }
 
 /* 文字颜色 */
-.lg-map .text-gray-100 {
+.withu-map .text-gray-100 {
     color: #f3f4f6;
 }
 
-.lg-map .text-white {
+.withu-map .text-white {
     color: #ffffff;
 }
 
-.lg-map .text-blue-500 {
+.withu-map .text-blue-500 {
     color: #3b82f6;
 }
 
-.lg-map .text-red-500 {
+.withu-map .text-red-500 {
     color: #ef4444;
 }
 
 /* 文字大小 */
-.lg-map .text-xs {
+.withu-map .text-xs {
     font-size: 0.75rem;
     line-height: 1rem;
 }
 
 /* 边框 */
-.lg-map .border {
+.withu-map .border {
     border-width: 1px;
     border-style: solid;
 }
 
-.lg-map .border-blue-500 {
+.withu-map .border-blue-500 {
     border-color: #3b82f6;
 }
 
-.lg-map .border-red-500 {
+.withu-map .border-red-500 {
     border-color: #ef4444;
 }
 
 /* 圆角 */
-.lg-map .rounded-lg {
+.withu-map .rounded-lg {
     border-radius: 0.5rem;
 }
 
-.lg-map .rounded-md {
+.withu-map .rounded-md {
     border-radius: 0.375rem;
 }
 
-.lg-map .rounded-full {
+.withu-map .rounded-full {
     border-radius: 9999px;
 }
 
 /* SVG 填充 */
-.lg-map .fill-current {
+.withu-map .fill-current {
     fill: currentColor;
 }
 
 /* 控制图标按钮样式 */
-.lg-map .full-screen-function {
+.withu-map .full-screen-function {
     position: fixed;
     top: 20px;
     right: 20px;
@@ -1864,7 +1864,7 @@
 }
 
 /* 缩放倍数显示器 */
-.lg-map .zoom-indicator {
+.withu-map .zoom-indicator {
     position: fixed;
     top: 20px;
     left: 20px;
@@ -1881,19 +1881,19 @@
     z-index: 120;
 }
 
-.lg-map .zoom-current {
+.withu-map .zoom-current {
     font-size: 18px;
     font-weight: 600;
     color: #fff;
 }
 
-.lg-map .zoom-range {
+.withu-map .zoom-range {
     font-size: 11px;
     color: rgba(255, 255, 255, 0.6);
 }
 
 
-.lg-map .control-icon-button {
+.withu-map .control-icon-button {
     display: inline-flex;
     align-items: center;
     justify-content: center;
@@ -1909,28 +1909,28 @@
     -webkit-backdrop-filter: blur(6px);
 }
 
-.lg-map .control-icon-button:hover {
+.withu-map .control-icon-button:hover {
     background: rgba(255, 255, 255, 0.3);
     transform: translateY(-1px);
 }
 
-.lg-map .control-icon-button:active {
+.withu-map .control-icon-button:active {
     transform: translateY(0);
     background: rgba(255, 255, 255, 0.22);
 }
 
-.lg-map .control-icon {
+.withu-map .control-icon {
     width: 22px;
     height: 22px;
     transition: color 0.3s ease;
 }
 
-.lg-map .control-icon-button:hover .control-icon {
+.withu-map .control-icon-button:hover .control-icon {
     color: hsl(var(--hsla-raw));
 }
 
 /* 信息窗口内的悬赏金额标签 */
-.lg-map .info-window .reward-badge {
+.withu-map .info-window .reward-badge {
     position: absolute;
     top: 0.25rem;
     left: 50%;
@@ -1944,20 +1944,20 @@
     z-index: 10;
 }
 
-.lg-map .info-window .reward-badge svg {
+.withu-map .info-window .reward-badge svg {
     width: 1rem;
     height: 1rem;
     flex-shrink: 0;
     margin-right: 0.25rem;
 }
 
-.lg-map .info-window .reward-badge span {
+.withu-map .info-window .reward-badge span {
     font-size: 0.75rem;
     line-height: 1rem;
 }
 
 /* 性别标签 */
-.lg-map .info-window .gender-badge {
+.withu-map .info-window .gender-badge {
     display: inline-flex;
     margin-left: 0.5rem;
     font-size: 0.75rem;
@@ -1968,18 +1968,18 @@
     font-weight: normal;
 }
 
-.lg-map .info-window .gender-badge.male {
+.withu-map .info-window .gender-badge.male {
     border-color: #3b82f6;
     color: #3b82f6;
 }
 
-.lg-map .info-window .gender-badge.female {
+.withu-map .info-window .gender-badge.female {
     border-color: #ef4444;
     color: #ef4444;
 }
 
 /* 距离面板样式 */
-.lg-map .love-distance-panel {
+.withu-map .love-distance-panel {
     position: fixed;
     bottom: 100px;
     left: 50%;
@@ -1995,20 +1995,20 @@
     display: none;
 }
 
-.lg-map .love-distance-panel .panel-title {
+.withu-map .love-distance-panel .panel-title {
     font-size: 14px;
     color: #666;
     margin-bottom: 8px;
 }
 
-.lg-map .love-distance-panel .panel-body {
+.withu-map .love-distance-panel .panel-body {
     font-size: 18px;
     font-weight: 600;
     color: hsl(var(--hsla-raw));
 }
 
 /* ================= 情侣面板 - 黑曜石风格 ================= */
-.lg-map .lovers-panel {
+.withu-map .lovers-panel {
     position: fixed;
     top: 20px;
     left: 50%;
@@ -2032,12 +2032,12 @@
     transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-.lg-map .lovers-panel.show {
+.withu-map .lovers-panel.show {
     opacity: 1;
     visibility: visible;
 }
 
-.lg-map .lover-card {
+.withu-map .lover-card {
     display: flex;
     align-items: center;
     gap: 6px;
@@ -2049,25 +2049,25 @@
     border-radius: 30px 10px 10px 30px;
 }
 
-.lg-map .lover-card:hover {
+.withu-map .lover-card:hover {
     background: rgba(255, 255, 255, 0.05);
 }
 
-.lg-map .lover-card:hover .avatar-img {
+.withu-map .lover-card:hover .avatar-img {
     transform: scale(1.05);
     border-color: rgba(244, 114, 182, 0.4);
 }
 
-.lg-map .lover-card:active {
+.withu-map .lover-card:active {
     transform: scale(0.98);
 }
 
-.lg-map .lover-card.lover-right {
+.withu-map .lover-card.lover-right {
     justify-content: flex-end;
     border-radius: 10px 30px 30px 10px;
 }
 
-.lg-map .lover-info {
+.withu-map .lover-info {
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -2076,18 +2076,18 @@
     z-index: 1;
 }
 
-.lg-map .lover-card.lover-right .lover-info {
+.withu-map .lover-card.lover-right .lover-info {
     text-align: right;
 }
 
-.lg-map .lover-name {
+.withu-map .lover-name {
     font-size: 15px;
     font-weight: 700;
     white-space: nowrap;
     color: #f1f5f9;
 }
 
-.lg-map .lover-meta {
+.withu-map .lover-meta {
     font-size: 11px;
     margin-top: 4px;
     display: flex;
@@ -2098,19 +2098,19 @@
     color: #cbd5e1;
 }
 
-.lg-map .lover-card.lover-right .lover-meta {
+.withu-map .lover-card.lover-right .lover-meta {
     justify-content: flex-end;
     flex-direction: row;
 }
 
-.lg-map .avatar-box {
+.withu-map .avatar-box {
     position: relative;
     width: 48px;
     height: 48px;
     flex-shrink: 0;
 }
 
-.lg-map .avatar-img {
+.withu-map .avatar-img {
     width: 100%;
     height: 100%;
     border-radius: 50%;
@@ -2122,7 +2122,7 @@
 }
 
 /* 中间距离区域 */
-.lg-map .love-distance-center {
+.withu-map .love-distance-center {
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -2134,23 +2134,23 @@
     transition: transform 0.2s ease, opacity 0.2s ease;
 }
 
-.lg-map .love-distance-center:hover {
+.withu-map .love-distance-center:hover {
     transform: scale(1.05);
     opacity: 0.9;
 }
 
-.lg-map .love-distance-center:active {
+.withu-map .love-distance-center:active {
     transform: scale(0.95);
 }
 
-.lg-map .distance-icon {
+.withu-map .distance-icon {
     font-size: 18px;
     color: #bbbbbb;
     margin-bottom: 2px;
     display: inline-block;
 }
 
-.lg-map .distance-val {
+.withu-map .distance-val {
     font-family: "DIN Alternate", "Roboto Mono", monospace;
     font-size: 13px;
     font-weight: bold;
@@ -2160,31 +2160,31 @@
 }
 
 /* 附近模式：图标变红，旋转 */
-.lg-map .lovers-panel.mode-near .distance-icon {
+.withu-map .lovers-panel.mode-near .distance-icon {
     color: #f43f5e;
     transform: rotate(43deg);
     transform-origin: center center;
 }
 
-.lg-map .lovers-panel.mode-near .distance-val {
+.withu-map .lovers-panel.mode-near .distance-val {
     color: #f43f5e;
 }
 
 /* 身边模式：背景光晕 + 爱心动画 */
-.lg-map .lovers-panel.mode-together {
+.withu-map .lovers-panel.mode-together {
     background: radial-gradient(circle at center, rgba(236, 72, 153, 0.15) 0%, rgba(18, 18, 20, 0.95) 80%);
     border-color: rgba(236, 72, 153, 0.3);
     box-shadow: 0 15px 50px rgba(236, 72, 153, 0.15);
 }
 
-.lg-map .lovers-panel.mode-together .distance-icon {
+.withu-map .lovers-panel.mode-together .distance-icon {
     font-size: 24px;
     color: #f472b6;
     filter: drop-shadow(0 0 10px rgba(244, 114, 182, 0.6));
     animation: heartbeat 1.5s infinite ease-in-out;
 }
 
-.lg-map .lovers-panel.mode-together .distance-val {
+.withu-map .lovers-panel.mode-together .distance-val {
     font-family: "Brush Script MT", cursive, sans-serif;
     font-size: 14px;
     color: #fce7f3;
@@ -2215,7 +2215,7 @@
 }
 
 /* 小爱心飘散效果 */
-.lg-map .heart-particle {
+.withu-map .heart-particle {
     position: absolute;
     width: 12px;
     height: 12px;
@@ -2224,7 +2224,7 @@
     animation: floatUp 1s ease-out forwards;
 }
 
-.lg-map .heart-particle svg {
+.withu-map .heart-particle svg {
     width: 100%;
     height: 100%;
 }
@@ -2241,7 +2241,7 @@
     }
 }
 
-.lg-map .distance-text {
+.withu-map .distance-text {
     font-size: 11px;
     font-weight: 600;
     color: #ff4081;
@@ -2251,8 +2251,8 @@
 }
 
 /* 连接线装饰 */
-.lg-map .love-distance-center::before,
-.lg-map .love-distance-center::after {
+.withu-map .love-distance-center::before,
+.withu-map .love-distance-center::after {
     content: '';
     position: absolute;
     top: 50%;
@@ -2261,27 +2261,27 @@
     background: linear-gradient(90deg, transparent, rgba(255, 64, 129, 0.3), transparent);
 }
 
-.lg-map .love-distance-center::before {
+.withu-map .love-distance-center::before {
     right: 100%;
     margin-right: 4px;
 }
 
-.lg-map .love-distance-center::after {
+.withu-map .love-distance-center::after {
     left: 100%;
     margin-left: 4px;
 }
 
 /* 爱心标记点样式 */
-.lg-map .heart-marker {
+.withu-map .heart-marker {
     cursor: pointer;
     transition: transform 0.3s ease;
 }
 
-.lg-map .heart-marker:hover {
+.withu-map .heart-marker:hover {
     transform: scale(1.2);
 }
 
-.lg-map .heart-marker-icon {
+.withu-map .heart-marker-icon {
     width: 36px;
     height: 36px;
     color: hsl(var(--hsla-raw));
@@ -2289,7 +2289,7 @@
 }
 
 /* 流动爱心样式 */
-.lg-map .flowing-heart {
+.withu-map .flowing-heart {
     width: 20px;
     height: 20px;
     color: #ff4081;
@@ -2297,13 +2297,13 @@
     animation: pulse-heart 1s ease-in-out infinite;
 }
 
-.lg-map .flowing-heart svg {
+.withu-map .flowing-heart svg {
     width: 100%;
     height: 100%;
 }
 
 /* 轨迹散落小爱心 */
-.lg-map .trail-dot {
+.withu-map .trail-dot {
     width: 10px;
     height: 10px;
     color: #ff4081;
@@ -2312,7 +2312,7 @@
     transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
 }
 
-.lg-map .trail-dot svg {
+.withu-map .trail-dot svg {
     width: 100%;
     height: 100%;
     display: block;
@@ -2321,12 +2321,12 @@
 }
 
 /* 主爱心经过后点亮 - 脚印效果 */
-.lg-map .trail-dot.active {
+.withu-map .trail-dot.active {
     opacity: 1;
     transform: scale(1.5);
 }
 
-.lg-map .trail-dot.active svg {
+.withu-map .trail-dot.active svg {
     filter: drop-shadow(0 0 8px rgba(255, 64, 129, 0.8));
     animation: dotLightUp 0.5s ease-out;
 }
@@ -2348,7 +2348,7 @@
 }
 
 /* 主流动爱心 */
-.lg-map .trail-heart-main {
+.withu-map .trail-heart-main {
     width: 24px;
     height: 24px;
     color: #ff4081;
@@ -2356,7 +2356,7 @@
     animation: mainHeartPulse 1.5s ease-in-out infinite;
 }
 
-.lg-map .trail-heart-main svg {
+.withu-map .trail-heart-main svg {
     width: 100%;
     height: 100%;
     display: block;
@@ -2377,7 +2377,7 @@
 }
 
 /* 简洁流动爱心 - 保留兼容 */
-.lg-map .trail-heart-simple {
+.withu-map .trail-heart-simple {
     width: 20px;
     height: 20px;
     color: #ff4081;
@@ -2385,7 +2385,7 @@
     animation: simpleHeartPulse 1.5s ease-in-out infinite;
 }
 
-.lg-map .trail-heart-simple svg {
+.withu-map .trail-heart-simple svg {
     width: 100%;
     height: 100%;
     display: block;
@@ -2406,7 +2406,7 @@
 }
 
 /* 单个流动爱心 - 更流畅 */
-.lg-map .flowing-heart-single {
+.withu-map .flowing-heart-single {
     width: 28px;
     height: 28px;
     color: #ff4081;
@@ -2415,7 +2415,7 @@
     will-change: transform;
 }
 
-.lg-map .flowing-heart-single svg {
+.withu-map .flowing-heart-single svg {
     width: 100%;
     height: 100%;
 }
@@ -2449,20 +2449,20 @@
 }
 
 /* 聚合标记样式 */
-.lg-map .cluster-marker {
+.withu-map .cluster-marker {
     cursor: pointer;
     transition: transform 0.2s ease;
 }
 
-.lg-map .cluster-marker:hover {
+.withu-map .cluster-marker:hover {
     transform: scale(1.1);
 }
 
-.lg-map .cluster-marker:active {
+.withu-map .cluster-marker:active {
     transform: scale(0.95);
 }
 
-.lg-map .cluster-content {
+.withu-map .cluster-content {
     display: flex;
     align-items: center;
     justify-content: center;
@@ -2472,14 +2472,14 @@
     box-shadow: 0 4px 15px rgba(255, 64, 129, 0.4);
 }
 
-.lg-map .cluster-count {
+.withu-map .cluster-count {
     font-size: 14px;
     font-weight: 700;
     color: #fff;
     z-index: 1;
 }
 
-.lg-map .cluster-heart {
+.withu-map .cluster-heart {
     position: absolute;
     width: 100%;
     height: 100%;
@@ -2488,7 +2488,7 @@
 }
 
 /* 精美留言卡片样式 */
-.lg-map .love-card {
+.withu-map .love-card {
     width: 260px;
     background: #fff;
     border-radius: 16px;
@@ -2496,7 +2496,7 @@
     box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
 }
 
-.lg-map .love-card-header {
+.withu-map .love-card-header {
     display: flex;
     align-items: center;
     gap: 12px;
@@ -2505,7 +2505,7 @@
     border-bottom: 1px solid #fce4ec;
 }
 
-.lg-map .love-card-avatar {
+.withu-map .love-card-avatar {
     width: 44px;
     height: 44px;
     border-radius: 50%;
@@ -2514,25 +2514,25 @@
     flex-shrink: 0;
 }
 
-.lg-map .love-card-avatar img {
+.withu-map .love-card-avatar img {
     width: 100%;
     height: 100%;
     object-fit: cover;
 }
 
-.lg-map .love-card-info {
+.withu-map .love-card-info {
     flex: 1;
     min-width: 0;
 }
 
-.lg-map .love-card-name {
+.withu-map .love-card-name {
     font-size: 15px;
     font-weight: 600;
     color: #333;
     margin-bottom: 2px;
 }
 
-.lg-map .love-card-meta {
+.withu-map .love-card-meta {
     display: flex;
     align-items: center;
     gap: 4px;
@@ -2540,11 +2540,11 @@
     color: #888;
 }
 
-.lg-map .love-card-body {
+.withu-map .love-card-body {
     padding: 14px;
 }
 
-.lg-map .love-card-text {
+.withu-map .love-card-text {
     margin: 0;
     font-size: 14px;
     line-height: 1.6;
@@ -2552,7 +2552,7 @@
     word-break: break-word;
 }
 
-.lg-map .love-card-footer {
+.withu-map .love-card-footer {
     padding: 10px 14px;
     background: #fafafa;
     font-size: 11px;
@@ -2561,22 +2561,22 @@
 }
 
 /* 情侣位置标记样式 */
-.lg-map .lover-marker {
+.withu-map .lover-marker {
     cursor: pointer;
     transition: transform 0.3s ease;
 }
 
-.lg-map .lover-marker:hover {
+.withu-map .lover-marker:hover {
     transform: scale(1.1);
 }
 
-.lg-map .lover-marker-content {
+.withu-map .lover-marker-content {
     display: flex;
     flex-direction: column;
     align-items: center;
 }
 
-.lg-map .lover-marker-avatar {
+.withu-map .lover-marker-avatar {
     width: 46px;
     height: 46px;
     border-radius: 50%;
@@ -2586,24 +2586,24 @@
     background: #fff;
 }
 
-.lg-map .lover-marker-avatar img {
+.withu-map .lover-marker-avatar img {
     width: 100%;
     height: 100%;
     object-fit: cover;
 }
 
-.lg-map .lover-marker.is-owner .lover-marker-avatar {
+.withu-map .lover-marker.is-owner .lover-marker-avatar {
     border-color: rgba(255, 154, 186, 0.95);
     box-shadow: 0 8px 24px rgba(255, 120, 163, 0.22);
 }
 
-.lg-map .lover-marker.is-visitor .lover-marker-avatar {
+.withu-map .lover-marker.is-visitor .lover-marker-avatar {
     border-color: rgba(125, 163, 255, 0.95);
     box-shadow: 0 8px 24px rgba(92, 133, 255, 0.24);
     background: linear-gradient(135deg, rgba(248, 251, 255, 0.98), rgba(230, 238, 248, 0.98));
 }
 
-.lg-map .lover-marker-label {
+.withu-map .lover-marker-label {
     margin-top: 4px;
     background: hsl(var(--hsla-raw));
     color: #fff;
@@ -2615,7 +2615,7 @@
     box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
 }
 
-.lg-map .lover-marker-heart {
+.withu-map .lover-marker-heart {
     position: absolute;
     top: -6px;
     right: -6px;
@@ -2626,14 +2626,14 @@
 }
 
 /* ================= 同一位置的情侣合并标记 - 黑曜石风格 ================= */
-.lg-map .lovers-together-marker {
+.withu-map .lovers-together-marker {
     cursor: pointer;
     transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
     position: relative;
 }
 
 /* 外层光晕 */
-.lg-map .lovers-together-marker::before {
+.withu-map .lovers-together-marker::before {
     content: '';
     position: absolute;
     top: 50%;
@@ -2641,7 +2641,7 @@
     transform: translate(-50%, -50%);
     width: 140px;
     height: 140px;
-    background: radial-gradient(circle, rgba(244, 114, 182, 0.lg-map .25) 0%, rgba(236, 72, 153, 0.lg-map .1) 40%,
+    background: radial-gradient(circle, rgba(244, 114, 182, 0.withu-map .25) 0%, rgba(236, 72, 153, 0.withu-map .1) 40%,
             transparent 70%);
     border-radius: 50%;
     animation: togetherGlow 3s ease-in-out infinite;
@@ -2649,7 +2649,7 @@
 }
 
 /* 内层脉冲环 */
-.lg-map .lovers-together-marker::after {
+.withu-map .lovers-together-marker::after {
     content: '';
     position: absolute;
     top: 50%;
@@ -2663,11 +2663,11 @@
     pointer-events: none;
 }
 
-.lg-map .lovers-together-marker:hover {
+.withu-map .lovers-together-marker:hover {
     transform: scale(1.05);
 }
 
-.lg-map .together-avatars {
+.withu-map .together-avatars {
     display: flex;
     align-items: center;
     position: relative;
@@ -2680,10 +2680,10 @@
     box-shadow:
         0 8px 32px rgba(0, 0, 0, 0.6),
         0 0 20px rgba(244, 114, 182, 0.15),
-        inset 0 1px 0 rgba(255, 255, 255, 0.lg-map .05);
+        inset 0 1px 0 rgba(255, 255, 255, 0.withu-map .05);
 }
 
-.lg-map .together-avatar {
+.withu-map .together-avatar {
     width: 52px;
     height: 52px;
     border-radius: 50%;
@@ -2696,7 +2696,7 @@
 }
 
 /* 头像光环 */
-.lg-map .together-avatar::after {
+.withu-map .together-avatar::after {
     content: '';
     position: absolute;
     inset: -3px;
@@ -2707,37 +2707,37 @@
     transition: opacity 0.3s ease;
 }
 
-.lg-map .lovers-together-marker:hover .together-avatar::after {
+.withu-map .lovers-together-marker:hover .together-avatar::after {
     opacity: 1;
 }
 
-.lg-map .together-avatar.left {
+.withu-map .together-avatar.left {
     z-index: 2;
 }
 
-.lg-map .together-avatar.right {
+.withu-map .together-avatar.right {
     margin-left: -16px;
     z-index: 1;
 }
 
-.lg-map .lovers-together-marker:hover .together-avatar.left {
+.withu-map .lovers-together-marker:hover .together-avatar.left {
     transform: translateX(-4px) rotate(-5deg);
     border-color: rgba(244, 114, 182, 0.5);
 }
 
-.lg-map .lovers-together-marker:hover .together-avatar.right {
+.withu-map .lovers-together-marker:hover .together-avatar.right {
     transform: translateX(4px) rotate(5deg);
     border-color: rgba(244, 114, 182, 0.5);
 }
 
-.lg-map .together-avatar img {
+.withu-map .together-avatar img {
     width: 100%;
     height: 100%;
     object-fit: cover;
 }
 
 /* 中间爱心 */
-.lg-map .together-heart {
+.withu-map .together-heart {
     position: absolute;
     top: 50%;
     left: 50%;
@@ -2750,12 +2750,12 @@
     animation: togetherHeartPulse 1.5s ease-in-out infinite;
 }
 
-.lg-map .together-heart svg {
+.withu-map .together-heart svg {
     width: 100%;
     height: 100%;
 }
 
-.lg-map .together-center {
+.withu-map .together-center {
     position: absolute;
     top: 50%;
     left: 50%;
@@ -2767,20 +2767,20 @@
     filter: drop-shadow(0 0 10px rgba(122, 162, 255, 0.7));
 }
 
-.lg-map .together-center svg {
+.withu-map .together-center svg {
     width: 100%;
     height: 100%;
 }
 
-.lg-map .lovers-together-marker.is-solo::before {
+.withu-map .lovers-together-marker.is-solo::before {
     background: radial-gradient(circle, rgba(122, 162, 255, 0.24) 0%, rgba(122, 162, 255, 0.08) 40%, transparent 70%);
 }
 
-.lg-map .lovers-together-marker.is-solo::after {
+.withu-map .lovers-together-marker.is-solo::after {
     border-color: rgba(122, 162, 255, 0.28);
 }
 
-.lg-map .lovers-together-marker.is-solo .together-avatars {
+.withu-map .lovers-together-marker.is-solo .together-avatars {
     border-color: rgba(122, 162, 255, 0.28);
     box-shadow:
         0 8px 32px rgba(0, 0, 0, 0.6),
@@ -2788,21 +2788,21 @@
         inset 0 1px 0 rgba(255, 255, 255, 0.05);
 }
 
-.lg-map .lovers-together-marker.is-solo .together-avatar::after {
+.withu-map .lovers-together-marker.is-solo .together-avatar::after {
     background: linear-gradient(135deg, #7aa2ff, #5fa8ff, #3b82f6);
 }
 
-.lg-map .lovers-together-marker.is-solo:hover .together-avatar.left,
-.lg-map .lovers-together-marker.is-solo:hover .together-avatar.right {
+.withu-map .lovers-together-marker.is-solo:hover .together-avatar.left,
+.withu-map .lovers-together-marker.is-solo:hover .together-avatar.right {
     border-color: rgba(122, 162, 255, 0.5);
 }
 
-.lg-map .trail-dot--solo svg,
-.lg-map .trail-heart-main--solo svg {
+.withu-map .trail-dot--solo svg,
+.withu-map .trail-heart-main--solo svg {
     color: #7aa2ff;
 }
 
-.lg-map .trail-dot--solo {
+.withu-map .trail-dot--solo {
     width: 12px;
     height: 12px;
     color: #7aa2ff;
@@ -2810,22 +2810,22 @@
     transform: scale(0.72);
 }
 
-.lg-map .trail-dot--solo svg {
+.withu-map .trail-dot--solo svg {
     filter: drop-shadow(0 0 4px rgba(122, 162, 255, 0.22));
 }
 
-.lg-map .trail-dot--solo.active {
+.withu-map .trail-dot--solo.active {
     opacity: 1;
     transform: scale(1.45);
 }
 
-.lg-map .trail-dot--solo.active svg {
+.withu-map .trail-dot--solo.active svg {
     filter:
         drop-shadow(0 0 6px rgba(122, 162, 255, 0.8))
         drop-shadow(0 0 14px rgba(95, 168, 255, 0.45));
 }
 
-.lg-map .trail-heart-main--solo {
+.withu-map .trail-heart-main--solo {
     width: 22px;
     height: 22px;
     color: #7aa2ff;
@@ -2835,7 +2835,7 @@
     animation: soloTrailPulse 1.6s ease-in-out infinite;
 }
 
-.lg-map .trail-heart-main--solo svg {
+.withu-map .trail-heart-main--solo svg {
     stroke-linecap: round;
     stroke-linejoin: round;
 }
@@ -2908,7 +2908,7 @@
 }
 
 /* 底部标签 */
-.lg-map .together-label {
+.withu-map .together-label {
     position: absolute;
     bottom: -32px;
     left: 50%;
@@ -2934,7 +2934,7 @@
 @media screen and (max-width: 768px) {
 
     /* 移动端 lovers-panel 位置 - 顶部居中，避开控制按钮 */
-    .lg-map .lovers-panel {
+    .withu-map .lovers-panel {
         top: 58px;
         bottom: auto;
         left: 50%;
@@ -2947,16 +2947,16 @@
         min-width: 280px;
     }
 
-    .lg-map .avatar-box {
+    .withu-map .avatar-box {
         width: 40px;
         height: 40px;
     }
 
-    .lg-map .lover-name {
+    .withu-map .lover-name {
         font-size: 13px;
     }
 
-    .lg-map .lover-meta {
+    .withu-map .lover-meta {
         font-size: 10px;
         max-width: 70px;
         overflow: hidden;
@@ -2964,36 +2964,36 @@
         white-space: nowrap;
     }
 
-    .lg-map .distance-icon {
+    .withu-map .distance-icon {
         font-size: 16px;
     }
 
-    .lg-map .distance-val {
+    .withu-map .distance-val {
         font-size: 11px;
     }
 
-    .lg-map .love-distance-center {
+    .withu-map .love-distance-center {
         padding: 0 10px;
     }
 
     /* 移动端缩放显示器位置 */
-    .lg-map .zoom-indicator {
+    .withu-map .zoom-indicator {
         top: 12px;
         left: 12px;
         padding: 4px 10px;
     }
 
-    .lg-map .zoom-current {
+    .withu-map .zoom-current {
         font-size: 14px;
     }
 
-    .lg-map .zoom-range {
+    .withu-map .zoom-range {
         font-size: 10px;
     }
 }
 
 /* Logo 徽章样式 */
-.lg-map .logo-badge {
+.withu-map .logo-badge {
     display: inline-flex;
     align-items: center;
     justify-content: center;
@@ -3007,7 +3007,7 @@
     animation: heartbeat 1.5s ease-in-out infinite;
 }
 
-.lg-map .logo-badge svg {
+.withu-map .logo-badge svg {
     width: 14px;
     height: 14px;
     display: block;
@@ -3034,7 +3034,7 @@
     }
 }
 
-.lg-map .cluster-collect {
+.withu-map .cluster-collect {
     animation: clusterCollect 0.4s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
 }
 
@@ -3056,7 +3056,7 @@
     }
 }
 
-.lg-map .cluster-explode {
+.withu-map .cluster-explode {
     animation: clusterExplode 0.3s cubic-bezier(0.4, 0, 0.2, 1) forwards;
 }
 
@@ -3077,7 +3077,7 @@
     }
 }
 
-.lg-map .marker-pop-in {
+.withu-map .marker-pop-in {
     animation: markerPopIn 0.4s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
 }
 
@@ -3094,7 +3094,7 @@
     }
 }
 
-.lg-map .marker-fly-out {
+.withu-map .marker-fly-out {
     animation: markerFlyOut 0.3s cubic-bezier(0.4, 0, 0.2, 1) forwards;
 }
 
@@ -3103,7 +3103,7 @@
    ======================================== */
 
 /* 留言卡片 - 简洁现代风格 */
-.lg-map .message-card {
+.withu-map .message-card {
     width: 260px;
     background: #fff;
     border-radius: 16px;
@@ -3124,7 +3124,7 @@
     }
 }
 
-.lg-map .message-card-header {
+.withu-map .message-card-header {
     display: flex;
     align-items: center;
     gap: 12px;
@@ -3132,7 +3132,7 @@
     border-bottom: 1px solid #f5f5f5;
 }
 
-.lg-map .message-card-avatar {
+.withu-map .message-card-avatar {
     width: 44px;
     height: 44px;
     border-radius: 50%;
@@ -3141,25 +3141,25 @@
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
 
-.lg-map .message-card-avatar img {
+.withu-map .message-card-avatar img {
     width: 100%;
     height: 100%;
     object-fit: cover;
 }
 
-.lg-map .message-card-user {
+.withu-map .message-card-user {
     flex: 1;
     min-width: 0;
 }
 
-.lg-map .message-card-name {
+.withu-map .message-card-name {
     font-size: 15px;
     font-weight: 600;
     color: #1a1a1a;
     margin-bottom: 2px;
 }
 
-.lg-map .message-card-location {
+.withu-map .message-card-location {
     display: flex;
     align-items: center;
     gap: 4px;
@@ -3167,22 +3167,22 @@
     color: #999;
 }
 
-.lg-map .message-card-location svg {
+.withu-map .message-card-location svg {
     color: #ff4081;
     flex-shrink: 0;
 }
 
-.lg-map .message-card-time {
+.withu-map .message-card-time {
     font-size: 11px;
     color: #bbb;
     flex-shrink: 0;
 }
 
-.lg-map .message-card-body {
+.withu-map .message-card-body {
     padding: 14px 16px;
 }
 
-.lg-map .message-card-text {
+.withu-map .message-card-text {
     margin: 0;
     font-size: 14px;
     line-height: 1.6;
@@ -3190,7 +3190,7 @@
     word-break: break-word;
 }
 
-.lg-map .message-card-footer {
+.withu-map .message-card-footer {
     display: flex;
     align-items: center;
     gap: 6px;
@@ -3200,12 +3200,12 @@
     color: #bbb;
 }
 
-.lg-map .message-card-footer svg {
+.withu-map .message-card-footer svg {
     color: #ccc;
 }
 
 /* 旧的 love-card 样式保留兼容 */
-.lg-map .love-card {
+.withu-map .love-card {
     width: 280px;
     background: #fff;
     border-radius: 20px;
@@ -3214,7 +3214,7 @@
 }
 
 /* 封面区域 */
-.lg-map .love-card-cover {
+.withu-map .love-card-cover {
     position: relative;
     width: 100%;
     height: 140px;
@@ -3222,28 +3222,28 @@
     border-radius: 20px 20px 0 0;
 }
 
-.lg-map .love-card-cover>img {
+.withu-map .love-card-cover>img {
     width: 100%;
     height: 100%;
     object-fit: cover;
     transition: transform 0.5s ease;
 }
 
-.lg-map .love-card:hover .love-card-cover>img {
+.withu-map .love-card:hover .love-card-cover>img {
     transform: scale(1.05);
 }
 
 /* 封面渐变遮罩 */
-.lg-map .love-card-cover-overlay {
+.withu-map .love-card-cover-overlay {
     position: absolute;
     inset: 0;
-    background: linear-gradient(to bottom, transparent 0%, rgba(0, 0, 0, 0.lg-map .1) 50%,
-            rgba(0, 0, 0, 0.lg-map .5) 100%);
+    background: linear-gradient(to bottom, transparent 0%, rgba(0, 0, 0, 0.withu-map .1) 50%,
+            rgba(0, 0, 0, 0.withu-map .5) 100%);
     pointer-events: none;
 }
 
 /* 封面上的头像 */
-.lg-map .love-card-avatar-wrap {
+.withu-map .love-card-avatar-wrap {
     position: absolute;
     bottom: -28px;
     left: 20px;
@@ -3257,14 +3257,14 @@
     background: #fff;
 }
 
-.lg-map .love-card-avatar-wrap img {
+.withu-map .love-card-avatar-wrap img {
     width: 100%;
     height: 100%;
     object-fit: cover;
 }
 
 /* 内容区域 */
-.lg-map .love-card-content {
+.withu-map .love-card-content {
     padding: 36px 20px 18px;
     border-radius: 0 0 20px 20px;
     background: #fff;
@@ -3272,21 +3272,21 @@
 }
 
 /* 用户信息行 */
-.lg-map .love-card-user {
+.withu-map .love-card-user {
     display: flex;
     align-items: center;
     gap: 8px;
     margin-bottom: 12px;
 }
 
-.lg-map .love-card-name {
+.withu-map .love-card-name {
     font-size: 16px;
     font-weight: 700;
     color: #1a1a1a;
     letter-spacing: -0.02em;
 }
 
-.lg-map .love-card-badge {
+.withu-map .love-card-badge {
     display: inline-flex;
     align-items: center;
     justify-content: center;
@@ -3297,13 +3297,13 @@
     color: #fff;
 }
 
-.lg-map .love-card-badge svg {
+.withu-map .love-card-badge svg {
     width: 12px;
     height: 12px;
 }
 
 /* 留言文字 */
-.lg-map .love-card-message {
+.withu-map .love-card-message {
     font-size: 14px;
     line-height: 1.7;
     color: #444;
@@ -3316,7 +3316,7 @@
 }
 
 /* 元信息列表 */
-.lg-map .love-card-meta-list {
+.withu-map .love-card-meta-list {
     display: flex;
     flex-direction: column;
     gap: 8px;
@@ -3324,7 +3324,7 @@
     border-top: 1px solid #f0f0f0;
 }
 
-.lg-map .love-card-meta-item {
+.withu-map .love-card-meta-item {
     display: flex;
     align-items: center;
     gap: 8px;
@@ -3332,14 +3332,14 @@
     color: #888;
 }
 
-.lg-map .love-card-meta-item svg {
+.withu-map .love-card-meta-item svg {
     width: 14px;
     height: 14px;
     color: #bbb;
     flex-shrink: 0;
 }
 
-.lg-map .love-card-meta-item span {
+.withu-map .love-card-meta-item span {
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
@@ -3349,7 +3349,7 @@
    情侣详情卡片样式 - 高斯模糊风格
    ======================================== */
 
-.lg-map .lover-detail-card {
+.withu-map .lover-detail-card {
     width: 280px;
     background: rgba(255, 255, 255, 0.95);
     backdrop-filter: blur(20px);
@@ -3361,11 +3361,11 @@
     position: relative;
 }
 
-.lg-map .lover-detail-bg {
+.withu-map .lover-detail-bg {
     display: none;
 }
 
-.lg-map .lover-detail-header {
+.withu-map .lover-detail-header {
     display: flex;
     align-items: center;
     gap: 14px;
@@ -3373,7 +3373,7 @@
     background: linear-gradient(135deg, #ff6b9d 0%, #ff4081 100%);
 }
 
-.lg-map .lover-detail-header .lover-detail-avatar {
+.withu-map .lover-detail-header .lover-detail-avatar {
     position: relative;
     width: 56px;
     height: 56px;
@@ -3384,23 +3384,23 @@
     flex-shrink: 0;
 }
 
-.lg-map .lover-detail-header .lover-detail-avatar img {
+.withu-map .lover-detail-header .lover-detail-avatar img {
     width: 100%;
     height: 100%;
     object-fit: cover;
 }
 
-.lg-map .lover-avatar-ring {
+.withu-map .lover-avatar-ring {
     display: none;
 }
 
-.lg-map .lover-detail-body {
+.withu-map .lover-detail-body {
     padding: 0;
     text-align: left;
     flex: 1;
 }
 
-.lg-map .lover-detail-name {
+.withu-map .lover-detail-name {
     font-size: 18px;
     font-weight: 700;
     color: #fff;
@@ -3408,7 +3408,7 @@
     text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
 }
 
-.lg-map .lover-detail-location {
+.withu-map .lover-detail-location {
     display: inline-flex;
     align-items: center;
     gap: 4px;
@@ -3420,13 +3420,13 @@
     margin-bottom: 0;
 }
 
-.lg-map .lover-detail-location svg {
+.withu-map .lover-detail-location svg {
     width: 12px;
     height: 12px;
     color: rgba(255, 255, 255, 0.9);
 }
 
-.lg-map .lover-detail-stats {
+.withu-map .lover-detail-stats {
     display: flex;
     align-items: center;
     justify-content: space-around;
@@ -3434,24 +3434,24 @@
     background: #fff;
 }
 
-.lg-map .lover-stat {
+.withu-map .lover-stat {
     text-align: center;
     flex: 1;
 }
 
-.lg-map .lover-stat-value {
+.withu-map .lover-stat-value {
     font-size: 20px;
     font-weight: 700;
     color: #333;
 }
 
-.lg-map .lover-stat-label {
+.withu-map .lover-stat-label {
     font-size: 11px;
     color: #999;
     margin-top: 2px;
 }
 
-.lg-map .lover-stat-divider {
+.withu-map .lover-stat-divider {
     color: #ff4081;
     width: 24px;
     height: 24px;
@@ -3461,26 +3461,26 @@
     animation: heartbeat 1.5s ease-in-out infinite;
 }
 
-.lg-map .lover-stat-divider svg {
+.withu-map .lover-stat-divider svg {
     width: 20px;
     height: 20px;
 }
 
-.lg-map .lover-detail-footer {
+.withu-map .lover-detail-footer {
     padding: 12px 16px;
     background: #f8f8f8;
     text-align: center;
     border-top: 1px solid #eee;
 }
 
-.lg-map .lover-detail-quote {
+.withu-map .lover-detail-quote {
     font-size: 13px;
     color: #666;
     font-style: italic;
     line-height: 1.4;
 }
 
-.lg-map .lover-detail-badge {
+.withu-map .lover-detail-badge {
     display: none;
 }
 
@@ -3489,16 +3489,16 @@
    ======================================== */
 
 /* 点点滴滴标记 - 简洁圆形 */
-.lg-map .moment-marker {
+.withu-map .moment-marker {
     cursor: pointer;
     transition: transform 0.2s ease;
 }
 
-.lg-map .moment-marker:hover {
+.withu-map .moment-marker:hover {
     transform: translateY(-2px);
 }
 
-.lg-map .moment-marker-content {
+.withu-map .moment-marker-content {
     width: 40px;
     height: 40px;
     border-radius: 10px;
@@ -3511,27 +3511,27 @@
     color: #c9b896;
 }
 
-.lg-map .moment-marker-content svg {
+.withu-map .moment-marker-content svg {
     width: 18px;
     height: 18px;
 }
 
-.lg-map .moment-marker.encrypted .moment-marker-content {
+.withu-map .moment-marker.encrypted .moment-marker-content {
     background: linear-gradient(145deg, #2a2025, #1e161a);
     color: #c9a0a8;
 }
 
 /* 点点滴滴聚合标记 */
-.lg-map .moment-cluster-marker {
+.withu-map .moment-cluster-marker {
     cursor: pointer;
     transition: transform 0.2s ease;
 }
 
-.lg-map .moment-cluster-marker:hover {
+.withu-map .moment-cluster-marker:hover {
     transform: translateY(-2px);
 }
 
-.lg-map .moment-cluster-content {
+.withu-map .moment-cluster-content {
     display: flex;
     align-items: center;
     justify-content: center;
@@ -3541,14 +3541,14 @@
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
 }
 
-.lg-map .moment-cluster-count {
+.withu-map .moment-cluster-count {
     color: #c9b896;
     font-size: 13px;
     font-weight: 600;
 }
 
 /* 点点滴滴信息卡片 - 渐变微光风格 */
-.lg-map .moment-card {
+.withu-map .moment-card {
     width: 280px;
     background: linear-gradient(145deg, #1e1a16, #14120f);
     border-radius: 12px;
@@ -3571,7 +3571,7 @@
 }
 
 /* 渐变边框效果 */
-.lg-map .moment-card::before {
+.withu-map .moment-card::before {
     content: "";
     position: absolute;
     inset: 0;
@@ -3584,18 +3584,18 @@
     pointer-events: none;
 }
 
-.lg-map .moment-card-inner {
+.withu-map .moment-card-inner {
     background: linear-gradient(145deg, #1e1a16, #14120f);
     border-radius: 11px;
     padding: 16px;
 }
 
-.lg-map .moment-card-header {
+.withu-map .moment-card-header {
     padding: 0;
     margin-bottom: 12px;
 }
 
-.lg-map .moment-card-title {
+.withu-map .moment-card-title {
     font-size: 15px;
     font-weight: 600;
     color: #fff;
@@ -3607,7 +3607,7 @@
     overflow: hidden;
 }
 
-.lg-map .moment-card-author {
+.withu-map .moment-card-author {
     display: flex;
     align-items: center;
     gap: 6px;
@@ -3615,17 +3615,17 @@
     color: #c9b896;
 }
 
-.lg-map .moment-card-author svg {
+.withu-map .moment-card-author svg {
     width: 12px;
     height: 12px;
     opacity: 0.7;
 }
 
-.lg-map .moment-card.encrypted .moment-card-author {
+.withu-map .moment-card.encrypted .moment-card-author {
     color: #c9a0a8;
 }
 
-.lg-map .moment-card-meta {
+.withu-map .moment-card-meta {
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -3633,7 +3633,7 @@
     border-top: 1px solid rgba(255, 255, 255, 0.06);
 }
 
-.lg-map .moment-card-location {
+.withu-map .moment-card-location {
     display: flex;
     align-items: center;
     gap: 4px;
@@ -3641,18 +3641,18 @@
     color: #888;
 }
 
-.lg-map .moment-card-location svg {
+.withu-map .moment-card-location svg {
     width: 12px;
     height: 12px;
     opacity: 0.5;
 }
 
-.lg-map .moment-card-time {
+.withu-map .moment-card-time {
     font-size: 11px;
     color: #666;
 }
 
-.lg-map .moment-card-icon {
+.withu-map .moment-card-icon {
     display: none;
 }
 
@@ -3661,22 +3661,22 @@
    ======================================== */
 
 /* 留言聚合标记 - 胶囊药丸风格 */
-.lg-map .cluster-marker {
+.withu-map .cluster-marker {
     cursor: pointer;
     transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
     filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.1));
 }
 
-.lg-map .cluster-marker:hover {
+.withu-map .cluster-marker:hover {
     transform: scale(1.08) translateY(-2px);
     filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.15));
 }
 
-.lg-map .cluster-marker:active {
+.withu-map .cluster-marker:active {
     transform: scale(0.98);
 }
 
-.lg-map .cluster-content {
+.withu-map .cluster-content {
     display: flex;
     align-items: center;
     justify-content: center;
@@ -3692,7 +3692,7 @@
     overflow: hidden;
 }
 
-.lg-map .cluster-content::before {
+.withu-map .cluster-content::before {
     content: '';
     position: absolute;
     top: 0;
@@ -3703,7 +3703,7 @@
     border-radius: 20px 20px 0 0;
 }
 
-.lg-map .cluster-count {
+.withu-map .cluster-count {
     font-size: 13px;
     font-weight: 600;
     color: #fff;
@@ -3713,16 +3713,16 @@
     text-shadow: 0 1px 1px rgba(0, 0, 0, 0.1);
 }
 
-.lg-map .cluster-heart {
+.withu-map .cluster-heart {
     display: none;
 }
 
 /* 聚合标记动画 */
-.lg-map .cluster-marker.cluster-collect {
+.withu-map .cluster-marker.cluster-collect {
     animation: clusterCollect 0.3s ease-out;
 }
 
-.lg-map .cluster-marker.cluster-explode {
+.withu-map .cluster-marker.cluster-explode {
     animation: clusterExplode 0.25s ease-in forwards;
 }
 
@@ -3759,7 +3759,7 @@
    模式切换器样式
    ======================================== */
 
-.lg-map .mode-switcher {
+.withu-map .mode-switcher {
     position: fixed;
     right: 20px;
     top: 50%;
@@ -3779,12 +3779,12 @@
     transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-.lg-map .mode-switcher.show {
+.withu-map .mode-switcher.show {
     opacity: 1;
     visibility: visible;
 }
 
-.lg-map .mode-btn {
+.withu-map .mode-btn {
     width: 44px;
     height: 44px;
     border: none;
@@ -3799,72 +3799,72 @@
     position: relative;
 }
 
-.lg-map .mode-btn svg {
+.withu-map .mode-btn svg {
     width: 22px;
     height: 22px;
 }
 
 /* 情侣模式 - 粉色 */
-.lg-map .mode-btn[data-mode="lovers"]:hover {
+.withu-map .mode-btn[data-mode="lovers"]:hover {
     background: rgba(255, 64, 129, 0.1);
     color: #ff4081;
 }
 
-.lg-map .mode-btn[data-mode="lovers"].active {
+.withu-map .mode-btn[data-mode="lovers"].active {
     background: linear-gradient(135deg, #ff6b9d 0%, #ff4081 100%);
     color: #fff;
     box-shadow: 0 4px 12px rgba(255, 64, 129, 0.4);
 }
 
 /* 留言模式 - 橙色 */
-.lg-map .mode-btn[data-mode="messages"]:hover {
+.withu-map .mode-btn[data-mode="messages"]:hover {
     background: rgba(255, 112, 67, 0.1);
     color: #ff7043;
 }
 
-.lg-map .mode-btn[data-mode="messages"].active {
+.withu-map .mode-btn[data-mode="messages"].active {
     background: linear-gradient(135deg, #ff8a65 0%, #ff7043 100%);
     color: #fff;
     box-shadow: 0 4px 12px rgba(255, 112, 67, 0.4);
 }
 
 /* 相册模式 - 紫色 */
-.lg-map .mode-btn[data-mode="albums"]:hover {
+.withu-map .mode-btn[data-mode="albums"]:hover {
     background: rgba(124, 77, 255, 0.1);
     color: #7c4dff;
 }
 
-.lg-map .mode-btn[data-mode="albums"].active {
+.withu-map .mode-btn[data-mode="albums"].active {
     background: linear-gradient(135deg, #9c7cff 0%, #7c4dff 100%);
     color: #fff;
     box-shadow: 0 4px 12px rgba(124, 77, 255, 0.4);
 }
 
 /* 事件模式 - 蓝色 */
-.lg-map .mode-btn[data-mode="events"]:hover {
+.withu-map .mode-btn[data-mode="events"]:hover {
     background: rgba(33, 150, 243, 0.1);
     color: #2196f3;
 }
 
-.lg-map .mode-btn[data-mode="events"].active {
+.withu-map .mode-btn[data-mode="events"].active {
     background: linear-gradient(135deg, #64b5f6 0%, #2196f3 100%);
     color: #fff;
     box-shadow: 0 4px 12px rgba(33, 150, 243, 0.4);
 }
 
 /* 点点滴滴模式 - 暖棕色 */
-.lg-map .mode-btn[data-mode="moments"]:hover {
+.withu-map .mode-btn[data-mode="moments"]:hover {
     background: rgba(201, 184, 150, 0.15);
     color: #c9b896;
 }
 
-.lg-map .mode-btn[data-mode="moments"].active {
+.withu-map .mode-btn[data-mode="moments"].active {
     background: linear-gradient(135deg, #3d3530, #2a2520);
     color: #c9b896;
     box-shadow: 0 4px 12px rgb(101 91 85 / 34%);
 }
 
-.lg-map .mode-btn::after {
+.withu-map .mode-btn::after {
     content: attr(title);
     position: absolute;
     right: 54px;
@@ -3881,14 +3881,14 @@
     pointer-events: none;
 }
 
-.lg-map .mode-btn:hover::after {
+.withu-map .mode-btn:hover::after {
     opacity: 1;
     visibility: visible;
     transform: translateX(0);
 }
 
 /* 情侣模式 - 纯净信息面板 */
-.lg-map .love-info-panel {
+.withu-map .love-info-panel {
     position: fixed;
     bottom: 100px;
     left: 50%;
@@ -3904,7 +3904,7 @@
     max-width: 90%;
 }
 
-.lg-map .love-info-panel.show {
+.withu-map .love-info-panel.show {
     display: block;
     animation: slideUp 0.4s cubic-bezier(0.16, 1, 0.3, 1);
 }
@@ -3921,37 +3921,37 @@
     }
 }
 
-.lg-map .love-stats {
+.withu-map .love-stats {
     display: flex;
     align-items: center;
     gap: 32px;
 }
 
-.lg-map .love-stat-item {
+.withu-map .love-stat-item {
     text-align: center;
 }
 
-.lg-map .love-stat-value {
+.withu-map .love-stat-value {
     font-size: 28px;
     font-weight: 700;
     color: #ff4081;
     line-height: 1.2;
 }
 
-.lg-map .love-stat-label {
+.withu-map .love-stat-label {
     font-size: 12px;
     color: #888;
     margin-top: 4px;
 }
 
-.lg-map .love-stat-divider {
+.withu-map .love-stat-divider {
     width: 1px;
     height: 40px;
     background: #eee;
 }
 
 /* 相册卡片样式 - 拍立得风格 */
-.lg-map .polaroid-card {
+.withu-map .polaroid-card {
     width: 220px;
     background: #fefefe;
     padding: 8px 8px 0 8px;
@@ -3974,7 +3974,7 @@
     }
 }
 
-.lg-map .polaroid-tape-top {
+.withu-map .polaroid-tape-top {
     position: absolute;
     top: -10px;
     left: 50%;
@@ -3985,41 +3985,41 @@
     box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
 }
 
-.lg-map .polaroid-inner {
+.withu-map .polaroid-inner {
     background: #fff;
 }
 
-.lg-map .polaroid-photo {
+.withu-map .polaroid-photo {
     width: 100%;
     aspect-ratio: 1;
     overflow: hidden;
     background: #111;
 }
 
-.lg-map .polaroid-photo img {
+.withu-map .polaroid-photo img {
     width: 100%;
     height: 100%;
     object-fit: cover;
 }
 
-.lg-map .polaroid-caption {
+.withu-map .polaroid-caption {
     padding: 12px 4px 8px 4px;
     min-height: 50px;
 }
 
-.lg-map .polaroid-handwriting {
+.withu-map .polaroid-handwriting {
     font-size: 15px;
     color: #333;
     line-height: 1.3;
     margin-bottom: 4px;
 }
 
-.lg-map .polaroid-date-stamp {
+.withu-map .polaroid-date-stamp {
     font-size: 11px;
     color: #999;
 }
 
-.lg-map .polaroid-footer {
+.withu-map .polaroid-footer {
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -4028,7 +4028,7 @@
     margin-top: 4px;
 }
 
-.lg-map .polaroid-location {
+.withu-map .polaroid-location {
     display: flex;
     align-items: center;
     gap: 4px;
@@ -4036,13 +4036,13 @@
     color: #888;
 }
 
-.lg-map .polaroid-location svg {
+.withu-map .polaroid-location svg {
     width: 12px;
     height: 12px;
     color: #888;
 }
 
-.lg-map .polaroid-view-btn {
+.withu-map .polaroid-view-btn {
     display: flex;
     align-items: center;
     gap: 2px;
@@ -4053,26 +4053,26 @@
     transition: color 0.2s;
 }
 
-.lg-map .polaroid-view-btn:hover {
+.withu-map .polaroid-view-btn:hover {
     color: #333;
 }
 
-.lg-map .polaroid-view-btn svg {
+.withu-map .polaroid-view-btn svg {
     width: 14px;
     height: 14px;
 }
 
 /* 相册标记样式 */
-.lg-map .album-marker {
+.withu-map .album-marker {
     cursor: pointer;
     transition: transform 0.3s ease;
 }
 
-.lg-map .album-marker:hover {
+.withu-map .album-marker:hover {
     transform: scale(1.1);
 }
 
-.lg-map .album-marker-content {
+.withu-map .album-marker-content {
     width: 50px;
     height: 50px;
     border-radius: 12px;
@@ -4081,7 +4081,7 @@
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
 }
 
-.lg-map .album-marker-content img {
+.withu-map .album-marker-content img {
     width: 100%;
     height: 100%;
     object-fit: cover;
@@ -4090,37 +4090,37 @@
 
 /* 移动端适配 */
 @media screen and (max-width: 768px) {
-    .lg-map .mode-switcher {
+    .withu-map .mode-switcher {
         right: 12px;
         top: auto;
         bottom: 200px;
         transform: none;
     }
 
-    .lg-map .mode-btn {
+    .withu-map .mode-btn {
         width: 40px;
         height: 40px;
     }
 
-    .lg-map .mode-btn svg {
+    .withu-map .mode-btn svg {
         width: 20px;
         height: 20px;
     }
 
-    .lg-map .mode-btn::after {
+    .withu-map .mode-btn::after {
         display: none;
     }
 
-    .lg-map .love-info-panel {
+    .withu-map .love-info-panel {
         bottom: 200px;
         padding: 16px 20px;
     }
 
-    .lg-map .love-stats {
+    .withu-map .love-stats {
         gap: 20px;
     }
 
-    .lg-map .love-stat-value {
+    .withu-map .love-stat-value {
         font-size: 22px;
     }
 }
@@ -4130,25 +4130,25 @@
    相册聚合标记样式 - 堆叠照片风格
    ======================================== */
 
-.lg-map .album-cluster-marker {
+.withu-map .album-cluster-marker {
     cursor: pointer;
     transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-.lg-map .album-cluster-marker:hover {
+.withu-map .album-cluster-marker:hover {
     transform: scale(1.08) translateY(-2px);
 }
 
-.lg-map .album-cluster-marker:hover .album-cluster-content {
+.withu-map .album-cluster-marker:hover .album-cluster-content {
     box-shadow: 0 8px 20px rgba(124, 77, 255, 0.35);
 }
 
 /* 相册聚合收集动画 */
-.lg-map .album-cluster-marker.cluster-collect {
+.withu-map .album-cluster-marker.cluster-collect {
     animation: clusterCollect 0.3s ease-out;
 }
 
-.lg-map .album-cluster-content {
+.withu-map .album-cluster-content {
     display: flex;
     align-items: center;
     justify-content: center;
@@ -4156,12 +4156,12 @@
     border-radius: 10px;
     position: relative;
     box-shadow:
-        0 2px 8px rgba(124, 77, 255, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.lg-map .2);
+        0 2px 8px rgba(124, 77, 255, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.withu-map .2);
 }
 
 /* 堆叠效果 */
-.lg-map .album-cluster-content::before,
-.lg-map .album-cluster-content::after {
+.withu-map .album-cluster-content::before,
+.withu-map .album-cluster-content::after {
     content: '';
     position: absolute;
     width: 100%;
@@ -4171,29 +4171,29 @@
     z-index: -1;
 }
 
-.lg-map .album-cluster-content::before {
+.withu-map .album-cluster-content::before {
     transform: rotate(-6deg) translate(-2px, 2px);
     opacity: 0.6;
 }
 
-.lg-map .album-cluster-content::after {
+.withu-map .album-cluster-content::after {
     transform: rotate(4deg) translate(2px, 1px);
     opacity: 0.4;
 }
 
-.lg-map .album-cluster-count {
+.withu-map .album-cluster-count {
     font-size: 14px;
     font-weight: 700;
     color: #fff;
     text-shadow: 0 1px 2px rgba(0, 0, 0, 0.15);
 }
 
-.lg-map .album-cluster-icon {
+.withu-map .album-cluster-icon {
     display: none;
 }
 
 /* 相册标记动画 */
-.lg-map .album-marker {
+.withu-map .album-marker {
     animation: albumMarkerIn 0.3s ease-out;
 }
 
@@ -4215,16 +4215,16 @@
    ======================================== */
 
 /* 事件标记样式 */
-.lg-map .event-marker {
+.withu-map .event-marker {
     cursor: pointer;
     transition: transform 0.3s ease;
 }
 
-.lg-map .event-marker:hover {
+.withu-map .event-marker:hover {
     transform: scale(1.1);
 }
 
-.lg-map .event-marker-content {
+.withu-map .event-marker-content {
     width: 50px;
     height: 50px;
     border-radius: 12px;
@@ -4234,13 +4234,13 @@
     position: relative;
 }
 
-.lg-map .event-marker-content img {
+.withu-map .event-marker-content img {
     width: 100%;
     height: 100%;
     object-fit: cover;
 }
 
-.lg-map .event-marker-check {
+.withu-map .event-marker-check {
     position: absolute;
     bottom: -4px;
     right: -4px;
@@ -4255,32 +4255,32 @@
     box-shadow: 0 2px 6px rgba(34, 197, 94, 0.4);
 }
 
-.lg-map .event-marker-check svg {
+.withu-map .event-marker-check svg {
     width: 12px;
     height: 12px;
     color: #fff;
 }
 
 /* 事件聚合标记样式 - 徽章风格 */
-.lg-map .event-cluster-marker {
+.withu-map .event-cluster-marker {
     cursor: pointer;
     transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-.lg-map .event-cluster-marker:hover {
+.withu-map .event-cluster-marker:hover {
     transform: scale(1.08) translateY(-2px);
 }
 
-.lg-map .event-cluster-marker:hover .event-cluster-content {
+.withu-map .event-cluster-marker:hover .event-cluster-content {
     box-shadow: 0 6px 16px rgba(33, 150, 243, 0.4);
 }
 
 /* 事件聚合收集动画 */
-.lg-map .event-cluster-marker.cluster-collect {
+.withu-map .event-cluster-marker.cluster-collect {
     animation: clusterCollect 0.3s ease-out;
 }
 
-.lg-map .event-cluster-content {
+.withu-map .event-cluster-content {
     display: flex;
     align-items: center;
     justify-content: center;
@@ -4288,11 +4288,11 @@
     border-radius: 50%;
     position: relative;
     box-shadow:
-        0 2px 8px rgba(33, 150, 243, 0.35), inset 0 1px 0 rgba(255, 255, 255, 0.lg-map .25);
+        0 2px 8px rgba(33, 150, 243, 0.35), inset 0 1px 0 rgba(255, 255, 255, 0.withu-map .25);
 }
 
 /* 徽章光环效果 */
-.lg-map .event-cluster-content::before {
+.withu-map .event-cluster-content::before {
     content: '';
     position: absolute;
     top: -3px;
@@ -4318,19 +4318,19 @@
     }
 }
 
-.lg-map .event-cluster-count {
+.withu-map .event-cluster-count {
     font-size: 13px;
     font-weight: 700;
     color: #fff;
     text-shadow: 0 1px 1px rgba(0, 0, 0, 0.1);
 }
 
-.lg-map .event-cluster-icon {
+.withu-map .event-cluster-icon {
     display: none;
 }
 
 /* 事件卡片样式 - 成就勋章风格 */
-.lg-map .achievement-card {
+.withu-map .achievement-card {
     width: 260px;
     background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
     border-radius: 20px;
@@ -4356,13 +4356,13 @@
     }
 }
 
-.lg-map .achievement-glow {
+.withu-map .achievement-glow {
     position: absolute;
     top: -50%;
     left: -50%;
     width: 200%;
     height: 200%;
-    background: radial-gradient(circle at center, rgba(255, 215, 0, 0.lg-map .15) 0%,
+    background: radial-gradient(circle at center, rgba(255, 215, 0, 0.withu-map .15) 0%,
             transparent 50%);
     animation: glowPulse 2s ease-in-out infinite;
 }
@@ -4381,15 +4381,15 @@
     }
 }
 
-.lg-map .achievement-badge {
+.withu-map .achievement-badge {
     position: relative;
     display: flex;
     justify-content: center;
     margin-bottom: 16px;
 }
 
-.lg-map .achievement-ribbon-left,
-.lg-map .achievement-ribbon-right {
+.withu-map .achievement-ribbon-left,
+.withu-map .achievement-ribbon-right {
     position: absolute;
     bottom: -8px;
     width: 24px;
@@ -4397,20 +4397,20 @@
     background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%);
 }
 
-.lg-map .achievement-ribbon-left {
+.withu-map .achievement-ribbon-left {
     left: calc(50% - 36px);
     transform: skewX(15deg);
     border-radius: 0 0 0 4px;
 }
 
-.lg-map .achievement-ribbon-right {
+.withu-map .achievement-ribbon-right {
     right: calc(50% - 36px);
     transform: skewX(-15deg);
     border-radius: 0 0 4px 0;
 }
 
-.lg-map .achievement-ribbon-left::after,
-.lg-map .achievement-ribbon-right::after {
+.withu-map .achievement-ribbon-left::after,
+.withu-map .achievement-ribbon-right::after {
     content: '';
     position: absolute;
     bottom: 0;
@@ -4419,19 +4419,19 @@
     border-style: solid;
 }
 
-.lg-map .achievement-ribbon-left::after {
+.withu-map .achievement-ribbon-left::after {
     left: 0;
     border-width: 8px 12px 0 0;
     border-color: #c0392b transparent transparent transparent;
 }
 
-.lg-map .achievement-ribbon-right::after {
+.withu-map .achievement-ribbon-right::after {
     right: 0;
     border-width: 8px 0 0 12px;
     border-color: #c0392b transparent transparent transparent;
 }
 
-.lg-map .achievement-medal {
+.withu-map .achievement-medal {
     width: 72px;
     height: 72px;
     background: linear-gradient(135deg, #ffd700 0%, #ffb700 50%, #ff9500 100%);
@@ -4441,13 +4441,13 @@
     justify-content: center;
     box-shadow:
         0 4px 20px rgba(255, 215, 0, 0.5),
-        inset 0 2px 4px rgba(255, 255, 255, 0.lg-map .5),
-        inset 0 -2px 4px rgba(0, 0, 0, 0.lg-map .2);
+        inset 0 2px 4px rgba(255, 255, 255, 0.withu-map .5),
+        inset 0 -2px 4px rgba(0, 0, 0, 0.withu-map .2);
     position: relative;
     z-index: 1;
 }
 
-.lg-map .achievement-medal::before {
+.withu-map .achievement-medal::before {
     content: '';
     position: absolute;
     inset: 4px;
@@ -4455,7 +4455,7 @@
     border: 2px solid rgba(255, 255, 255, 0.3);
 }
 
-.lg-map .achievement-medal-inner {
+.withu-map .achievement-medal-inner {
     width: 52px;
     height: 52px;
     background: linear-gradient(135deg, #fff8dc 0%, #ffd700 100%);
@@ -4466,19 +4466,19 @@
     box-shadow: inset 0 2px 8px rgba(0, 0, 0, 0.15);
 }
 
-.lg-map .achievement-medal-inner svg {
+.withu-map .achievement-medal-inner svg {
     width: 28px;
     height: 28px;
     color: #b8860b;
 }
 
-.lg-map .achievement-content {
+.withu-map .achievement-content {
     text-align: center;
     position: relative;
     z-index: 1;
 }
 
-.lg-map .achievement-label {
+.withu-map .achievement-label {
     font-size: 11px;
     font-weight: 600;
     color: #ffd700;
@@ -4487,7 +4487,7 @@
     margin-bottom: 8px;
 }
 
-.lg-map .achievement-title {
+.withu-map .achievement-title {
     font-size: 15px;
     font-weight: 600;
     color: #fff;
@@ -4495,7 +4495,7 @@
     margin-bottom: 12px;
 }
 
-.lg-map .achievement-info {
+.withu-map .achievement-info {
     display: flex;
     flex-direction: column;
     gap: 6px;
@@ -4503,7 +4503,7 @@
     border-top: 1px solid rgba(255, 255, 255, 0.1);
 }
 
-.lg-map .achievement-info-item {
+.withu-map .achievement-info-item {
     display: flex;
     align-items: center;
     justify-content: center;
@@ -4512,13 +4512,13 @@
     color: rgba(255, 255, 255, 0.7);
 }
 
-.lg-map .achievement-info-item svg {
+.withu-map .achievement-info-item svg {
     width: 14px;
     height: 14px;
     color: #ffd700;
 }
 
-.lg-map .achievement-link {
+.withu-map .achievement-link {
     display: flex;
     align-items: center;
     justify-content: center;
@@ -4532,23 +4532,23 @@
     border-top: 1px solid rgba(255, 255, 255, 0.1);
 }
 
-.lg-map .achievement-link:hover {
+.withu-map .achievement-link:hover {
     color: #ffd700;
 }
 
-.lg-map .achievement-link svg {
+.withu-map .achievement-link svg {
     width: 14px;
     height: 14px;
 }
 
-.lg-map .achievement-sparkles {
+.withu-map .achievement-sparkles {
     position: absolute;
     inset: 0;
     pointer-events: none;
     overflow: hidden;
 }
 
-.lg-map .achievement-sparkles span {
+.withu-map .achievement-sparkles span {
     position: absolute;
     width: 6px;
     height: 6px;
@@ -4557,25 +4557,25 @@
     animation: sparkle 1.5s ease-in-out infinite;
 }
 
-.lg-map .achievement-sparkles span:nth-child(1) {
+.withu-map .achievement-sparkles span:nth-child(1) {
     top: 20%;
     left: 15%;
     animation-delay: 0s;
 }
 
-.lg-map .achievement-sparkles span:nth-child(2) {
+.withu-map .achievement-sparkles span:nth-child(2) {
     top: 30%;
     right: 20%;
     animation-delay: 0.3s;
 }
 
-.lg-map .achievement-sparkles span:nth-child(3) {
+.withu-map .achievement-sparkles span:nth-child(3) {
     bottom: 25%;
     left: 20%;
     animation-delay: 0.6s;
 }
 
-.lg-map .achievement-sparkles span:nth-child(4) {
+.withu-map .achievement-sparkles span:nth-child(4) {
     bottom: 35%;
     right: 15%;
     animation-delay: 0.9s;
@@ -4596,7 +4596,7 @@
 }
 
 /* 事件清单面板样式 */
-.lg-map .events-panel {
+.withu-map .events-panel {
     position: fixed;
     left: 20px;
     top: 50%;
@@ -4614,18 +4614,18 @@
     width: 240px;
 }
 
-.lg-map .events-panel.show {
+.withu-map .events-panel.show {
     display: block;
     animation: slideRight 0.4s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-.lg-map .events-panel-header {
+.withu-map .events-panel-header {
     margin-bottom: 14px;
     padding-bottom: 12px;
     border-bottom: 1px solid #f0f0f0;
 }
 
-.lg-map .events-panel-title {
+.withu-map .events-panel-title {
     font-size: 14px;
     font-weight: 600;
     color: #333;
@@ -4635,26 +4635,26 @@
     margin-bottom: 10px;
 }
 
-.lg-map .events-panel-title svg {
+.withu-map .events-panel-title svg {
     width: 18px;
     height: 18px;
     color: #ff4081;
 }
 
-.lg-map .events-panel-progress {
+.withu-map .events-panel-progress {
     display: flex;
     align-items: center;
     gap: 10px;
 }
 
-.lg-map .progress-text {
+.withu-map .progress-text {
     font-size: 12px;
     font-weight: 600;
     color: #ff4081;
     min-width: 40px;
 }
 
-.lg-map .progress-bar {
+.withu-map .progress-bar {
     flex: 1;
     height: 6px;
     background: #e5e7eb;
@@ -4662,20 +4662,20 @@
     overflow: hidden;
 }
 
-.lg-map .progress-fill {
+.withu-map .progress-fill {
     height: 100%;
     background: linear-gradient(90deg, #ff6b9d 0%, #ff4081 100%);
     border-radius: 3px;
     transition: width 0.5s ease;
 }
 
-.lg-map .events-panel-list {
+.withu-map .events-panel-list {
     display: flex;
     flex-direction: column;
     gap: 8px;
 }
 
-.lg-map .events-panel-item {
+.withu-map .events-panel-item {
     display: flex;
     align-items: flex-start;
     gap: 10px;
@@ -4685,15 +4685,15 @@
     transition: all 0.2s ease;
 }
 
-.lg-map .events-panel-item:hover {
+.withu-map .events-panel-item:hover {
     background: #f3f4f6;
 }
 
-.lg-map .events-panel-item.done {
+.withu-map .events-panel-item.done {
     background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%);
 }
 
-.lg-map .event-check-icon {
+.withu-map .event-check-icon {
     width: 22px;
     height: 22px;
     flex-shrink: 0;
@@ -4703,66 +4703,66 @@
     margin-top: 1px;
 }
 
-.lg-map .events-panel-item:not(.done) .event-check-icon svg {
+.withu-map .events-panel-item:not(.done) .event-check-icon svg {
     width: 18px;
     height: 18px;
     color: #d1d5db;
 }
 
-.lg-map .events-panel-item.done .event-check-icon svg {
+.withu-map .events-panel-item.done .event-check-icon svg {
     width: 18px;
     height: 18px;
     color: #ff4081;
 }
 
-.lg-map .event-item-content {
+.withu-map .event-item-content {
     flex: 1;
     min-width: 0;
 }
 
-.lg-map .event-item-name {
+.withu-map .event-item-name {
     font-size: 13px;
     color: #333;
     line-height: 1.4;
     word-break: break-word;
 }
 
-.lg-map .events-panel-item:not(.done) .event-item-name {
+.withu-map .events-panel-item:not(.done) .event-item-name {
     color: #9ca3af;
 }
 
-.lg-map .events-panel-item.done .event-item-name {
+.withu-map .events-panel-item.done .event-item-name {
     color: #166534;
     font-weight: 500;
 }
 
-.lg-map .event-item-date {
+.withu-map .event-item-date {
     font-size: 11px;
     color: #ff4081;
     margin-top: 4px;
 }
 
 /* 事件面板滚动条样式 */
-.lg-map .events-panel::-webkit-scrollbar {
+.withu-map .events-panel::-webkit-scrollbar {
     width: 4px;
 }
 
-.lg-map .events-panel::-webkit-scrollbar-track {
+.withu-map .events-panel::-webkit-scrollbar-track {
     background: transparent;
 }
 
-.lg-map .events-panel::-webkit-scrollbar-thumb {
+.withu-map .events-panel::-webkit-scrollbar-thumb {
     background: #d1d5db;
     border-radius: 2px;
 }
 
-.lg-map .events-panel::-webkit-scrollbar-thumb:hover {
+.withu-map .events-panel::-webkit-scrollbar-thumb:hover {
     background: #9ca3af;
 }
 
 /* 移动端事件面板适配 */
 @media screen and (max-width: 768px) {
-    .lg-map .events-panel {
+    .withu-map .events-panel {
         left: 12px;
         right: 12px;
         top: auto;
@@ -4773,11 +4773,11 @@
         animation: slideUp 0.4s cubic-bezier(0.16, 1, 0.3, 1);
     }
 
-    .lg-map .events-panel.show {
+    .withu-map .events-panel.show {
         animation: slideUp 0.4s cubic-bezier(0.16, 1, 0.3, 1);
     }
 
-    .lg-map .events-panel-list {
+    .withu-map .events-panel-list {
         max-height: 200px;
         overflow-y: auto;
     }
@@ -4791,7 +4791,7 @@
 @media screen and (max-width: 768px) {
 
     /* 情侣面板 - 移动端优化，位置在控制按钮下方 */
-    .lg-map .lovers-panel {
+    .withu-map .lovers-panel {
         top: 58px;
         bottom: auto;
         left: 50%;
@@ -4804,25 +4804,25 @@
         width: 100%;
     }
 
-    .lg-map .lover-card {
+    .withu-map .lover-card {
         gap: 6px;
         padding: 4px 8px 4px 4px;
     }
 
-    .lg-map .lover-card.lover-right {
+    .withu-map .lover-card.lover-right {
         padding: 6px;
     }
 
-    .lg-map .avatar-box {
+    .withu-map .avatar-box {
         width: 36px;
         height: 36px;
     }
 
-    .lg-map .lover-name {
+    .withu-map .lover-name {
         font-size: 12px;
     }
 
-    .lg-map .lover-meta {
+    .withu-map .lover-meta {
         font-size: 9px;
         overflow: hidden;
         text-overflow: ellipsis;
@@ -4830,20 +4830,20 @@
     }
 
 
-    .lg-map .love-distance-center {
+    .withu-map .love-distance-center {
         padding: 0 8px;
     }
 
-    .lg-map .distance-icon {
+    .withu-map .distance-icon {
         font-size: 14px;
     }
 
-    .lg-map .distance-val {
+    .withu-map .distance-val {
         font-size: 10px;
     }
 
     /* 模式切换器 - 移动端底部横向排列 */
-    .lg-map .mode-switcher {
+    .withu-map .mode-switcher {
         position: fixed;
         right: auto;
         left: 50%;
@@ -4856,22 +4856,22 @@
         gap: 4px;
     }
 
-    .lg-map .mode-btn {
+    .withu-map .mode-btn {
         width: 48px;
         height: 48px;
     }
 
-    .lg-map .mode-btn svg {
+    .withu-map .mode-btn svg {
         width: 22px;
         height: 22px;
     }
 
-    .lg-map .mode-btn::after {
+    .withu-map .mode-btn::after {
         display: none;
     }
 
     /* 控制按钮 - 移动端位置调整 */
-    .lg-map .full-screen-function {
+    .withu-map .full-screen-function {
         position: fixed;
         top: 12px;
         right: 12px;
@@ -4880,19 +4880,19 @@
         gap: 8px;
     }
 
-    .lg-map .control-icon-button {
+    .withu-map .control-icon-button {
         width: 38px;
         height: 38px;
         border-radius: 10px;
     }
 
-    .lg-map .control-icon {
+    .withu-map .control-icon {
         width: 18px;
         height: 18px;
     }
 
     /* 底部信息栏 - 移动端整合到 tab 栏上方 */
-    .lg-map .ui-footer-container {
+    .withu-map .ui-footer-container {
         bottom: 86px;
         left: 50%;
         right: auto;
@@ -4909,22 +4909,22 @@
         max-width: calc(100% - 24px);
     }
 
-    .lg-map .ui-footer-container.show {
+    .withu-map .ui-footer-container.show {
         transform: translateX(-50%) translateY(0);
     }
 
-    .lg-map .ui-footer-left {
+    .withu-map .ui-footer-left {
         text-align: center;
     }
 
-    .lg-map .ui-footer-title {
+    .withu-map .ui-footer-title {
         font-size: 16px;
         margin-bottom: 2px;
         gap: 8px;
         justify-content: center;
     }
 
-    .lg-map .footer-count-badge {
+    .withu-map .footer-count-badge {
         min-width: 20px;
         height: 20px;
         padding: 0 6px;
@@ -4932,24 +4932,24 @@
         border-radius: 10px;
     }
 
-    .lg-map .ui-footer-sub {
+    .withu-map .ui-footer-sub {
         font-size: 10px;
         gap: 6px;
         justify-content: center;
     }
 
-    .lg-map .status-dot {
+    .withu-map .status-dot {
         width: 5px;
         height: 5px;
     }
 
     /* 移动端隐藏右侧品牌信息 */
-    .lg-map .ui-footer-right {
+    .withu-map .ui-footer-right {
         display: none;
     }
 
     /* 事件面板 - 移动端底部弹出 */
-    .lg-map .events-panel {
+    .withu-map .events-panel {
         position: fixed;
         left: 12px;
         right: 12px;
@@ -4961,212 +4961,212 @@
         border-radius: 16px;
     }
 
-    .lg-map .events-panel-list {
+    .withu-map .events-panel-list {
         max-height: 180px;
         overflow-y: auto;
     }
 
-    .lg-map .events-panel-item {
+    .withu-map .events-panel-item {
         padding: 8px;
     }
 
-    .lg-map .event-item-name {
+    .withu-map .event-item-name {
         font-size: 12px;
     }
 
     /* 信息卡片 - 移动端优化 */
-    .lg-map .message-card {
+    .withu-map .message-card {
         width: 240px;
     }
 
-    .lg-map .message-card-header {
+    .withu-map .message-card-header {
         padding: 12px 14px 10px;
         gap: 10px;
     }
 
-    .lg-map .message-card-avatar {
+    .withu-map .message-card-avatar {
         width: 38px;
         height: 38px;
     }
 
-    .lg-map .message-card-name {
+    .withu-map .message-card-name {
         font-size: 14px;
     }
 
-    .lg-map .message-card-body {
+    .withu-map .message-card-body {
         padding: 12px 14px;
     }
 
-    .lg-map .message-card-text {
+    .withu-map .message-card-text {
         font-size: 13px;
     }
 
-    .lg-map .love-card {
+    .withu-map .love-card {
         width: 240px;
     }
 
-    .lg-map .love-card-cover {
+    .withu-map .love-card-cover {
         height: 120px;
     }
 
     /* 拍立得卡片 - 移动端优化 */
-    .lg-map .polaroid-card {
+    .withu-map .polaroid-card {
         width: 200px;
         transform: rotate(-1deg);
     }
 
-    .lg-map .polaroid-handwriting {
+    .withu-map .polaroid-handwriting {
         font-size: 14px;
     }
 
-    .lg-map .polaroid-footer {
+    .withu-map .polaroid-footer {
         padding: 8px 4px;
     }
 
     /* 成就卡片 - 移动端优化 */
-    .lg-map .achievement-card {
+    .withu-map .achievement-card {
         width: 240px;
         padding: 20px 16px 16px;
     }
 
-    .lg-map .achievement-medal {
+    .withu-map .achievement-medal {
         width: 60px;
         height: 60px;
     }
 
-    .lg-map .achievement-medal-inner {
+    .withu-map .achievement-medal-inner {
         width: 44px;
         height: 44px;
     }
 
-    .lg-map .achievement-medal-inner svg {
+    .withu-map .achievement-medal-inner svg {
         width: 24px;
         height: 24px;
     }
 
-    .lg-map .achievement-label {
+    .withu-map .achievement-label {
         font-size: 10px;
     }
 
-    .lg-map .achievement-title {
+    .withu-map .achievement-title {
         font-size: 14px;
     }
 
-    .lg-map .achievement-info-item {
+    .withu-map .achievement-info-item {
         font-size: 11px;
     }
 
-    .lg-map .achievement-link {
+    .withu-map .achievement-link {
         padding: 8px;
         font-size: 12px;
         margin-top: 12px;
     }
 
     /* 情侣详情卡片 - 移动端优化 */
-    .lg-map .lover-detail-card {
+    .withu-map .lover-detail-card {
         width: 200px;
     }
 
-    .lg-map .lover-detail-header {
+    .withu-map .lover-detail-header {
         padding: 20px 16px 14px;
     }
 
-    .lg-map .lover-detail-header .lover-detail-avatar {
+    .withu-map .lover-detail-header .lover-detail-avatar {
         width: 60px;
         height: 60px;
         border-width: 3px;
     }
 
-    .lg-map .lover-detail-badge {
+    .withu-map .lover-detail-badge {
         width: 24px;
         height: 24px;
         top: 12px;
         right: 12px;
     }
 
-    .lg-map .lover-detail-badge svg {
+    .withu-map .lover-detail-badge svg {
         width: 14px;
         height: 14px;
     }
 
-    .lg-map .lover-detail-body {
+    .withu-map .lover-detail-body {
         padding: 12px 16px 16px;
     }
 
-    .lg-map .lover-detail-name {
+    .withu-map .lover-detail-name {
         font-size: 16px;
     }
 
-    .lg-map .lover-detail-location {
+    .withu-map .lover-detail-location {
         font-size: 12px;
         padding: 5px 12px;
     }
 
     /* 标记点 - 移动端优化 */
-    .lg-map .marker-image {
+    .withu-map .marker-image {
         width: 32px;
         height: 32px;
     }
 
-    .lg-map .lover-marker-avatar {
+    .withu-map .lover-marker-avatar {
         width: 40px;
         height: 40px;
         border-width: 2px;
     }
 
-    .lg-map .lover-marker-label {
+    .withu-map .lover-marker-label {
         font-size: 10px;
         padding: 2px 8px;
     }
 
-    .lg-map .lover-marker-heart {
+    .withu-map .lover-marker-heart {
         width: 14px;
         height: 14px;
         top: -4px;
         right: -4px;
     }
 
-    .lg-map .album-marker-content {
+    .withu-map .album-marker-content {
         width: 42px;
         height: 42px;
         border-radius: 10px;
         border-width: 2px;
     }
 
-    .lg-map .event-marker-content {
+    .withu-map .event-marker-content {
         width: 42px;
         height: 42px;
         border-radius: 10px;
         border-width: 2px;
     }
 
-    .lg-map .event-marker-check {
+    .withu-map .event-marker-check {
         width: 16px;
         height: 16px;
         bottom: -3px;
         right: -3px;
     }
 
-    .lg-map .event-marker-check svg {
+    .withu-map .event-marker-check svg {
         width: 10px;
         height: 10px;
     }
 
     /* 聚合标记 - 移动端优化 */
-    .lg-map .cluster-content,
-    .lg-map .album-cluster-content,
-    .lg-map .event-cluster-content {
+    .withu-map .cluster-content,
+    .withu-map .album-cluster-content,
+    .withu-map .event-cluster-content {
         transform: scale(0.85);
     }
 
-    .lg-map .cluster-count,
-    .lg-map .album-cluster-count,
-    .lg-map .event-cluster-count {
+    .withu-map .cluster-count,
+    .withu-map .album-cluster-count,
+    .withu-map .event-cluster-count {
         font-size: 13px;
     }
 
     /* 流动爱心 - 移动端缩小 */
-    .lg-map .trail-heart-simple {
+    .withu-map .trail-heart-simple {
         width: 16px;
         height: 16px;
     }
@@ -5175,83 +5175,83 @@
 /* 超小屏幕适配 (iPhone SE 等) */
 @media screen and (max-width: 375px) {
 
-    .lg-map .moment-pill-card {
+    .withu-map .moment-pill-card {
         max-width: 210px;
     }
 
-    .lg-map .event-pill-card {
+    .withu-map .event-pill-card {
         max-width: 230px;
     }
 
-    .lg-map .event-pill-card .evt-title {
+    .withu-map .event-pill-card .evt-title {
         font-size: 12px !important;
     }
 
-    .lg-map .event-pill-card .evt-meta-row {
+    .withu-map .event-pill-card .evt-meta-row {
         font-size: 8px !important;
     }
 
-    .lg-map .lovers-panel {
+    .withu-map .lovers-panel {
         padding: 0;
         /* min-width: 260px; */
     }
 
-    .lg-map .avatar-box {
+    .withu-map .avatar-box {
         width: 32px;
         height: 32px;
     }
 
-    .lg-map .lover-name {
+    .withu-map .lover-name {
         font-size: 11px;
     }
 
-    .lg-map .lover-meta {
+    .withu-map .lover-meta {
         font-size: 9px;
     }
 
-    .lg-map .distance-icon {
+    .withu-map .distance-icon {
         font-size: 12px;
     }
 
-    .lg-map .distance-val {
+    .withu-map .distance-val {
         font-size: 9px;
     }
 
-    .lg-map .love-distance-center {
+    .withu-map .love-distance-center {
         padding: 0 6px;
     }
 
-    .lg-map .mode-btn {
+    .withu-map .mode-btn {
         width: 42px;
         height: 42px;
     }
 
-    .lg-map .mode-btn svg {
+    .withu-map .mode-btn svg {
         width: 20px;
         height: 20px;
     }
 
-    .lg-map .mode-switcher {
+    .withu-map .mode-switcher {
         bottom: 12px;
         padding: 5px;
         gap: 3px;
     }
 
-    .lg-map .ui-footer-container {
+    .withu-map .ui-footer-container {
         bottom: 72px;
         padding: 8px 16px;
     }
 
-    .lg-map .ui-footer-container.show {
+    .withu-map .ui-footer-container.show {
         transform: translateX(-50%) translateY(0);
     }
 
-    .lg-map .ui-footer-title {
+    .withu-map .ui-footer-title {
         font-size: 14px;
         gap: 6px;
     }
 
-    .lg-map .footer-count-badge {
+    .withu-map .footer-count-badge {
         min-width: 18px;
         height: 18px;
         padding: 0 5px;
@@ -5259,26 +5259,26 @@
         border-radius: 9px;
     }
 
-    .lg-map .ui-footer-sub {
+    .withu-map .ui-footer-sub {
         font-size: 9px;
     }
 
-    .lg-map .events-panel {
+    .withu-map .events-panel {
         bottom: 80px;
         max-height: 30vh;
     }
 
-    .lg-map .polaroid-frame,
-    .lg-map .love-card,
-    .lg-map .achievement-card {
+    .withu-map .polaroid-frame,
+    .withu-map .love-card,
+    .withu-map .achievement-card {
         width: 200px;
     }
 
-    .lg-map .polaroid-photo {
+    .withu-map .polaroid-photo {
         height: 130px;
     }
 
-    .lg-map .love-card-cover {
+    .withu-map .love-card-cover {
         height: 100px;
     }
 }
@@ -5289,7 +5289,7 @@
    ======================================== */
 
 /* 恋爱天数面板 - 右下角 */
-.lg-map .love-days-panel {
+.withu-map .love-days-panel {
     position: fixed;
     right: 20px;
     bottom: 100px;
@@ -5307,13 +5307,13 @@
     transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-.lg-map .love-days-panel.show {
+.withu-map .love-days-panel.show {
     opacity: 1;
     visibility: visible;
     transform: translateY(0);
 }
 
-.lg-map .love-days-number {
+.withu-map .love-days-number {
     font-size: 42px;
     font-weight: 700;
     color: hsl(var(--hsla-raw));
@@ -5321,20 +5321,20 @@
     letter-spacing: -2px;
 }
 
-.lg-map .love-days-label {
+.withu-map .love-days-label {
     font-size: 14px;
     color: hsl(var(--hsla-raw));
     margin-top: 2px;
 }
 
-.lg-map .love-days-text {
+.withu-map .love-days-text {
     font-size: 12px;
     color: #999;
     margin-top: 6px;
 }
 
 /* 纪念日倒计时面板 - 右下角恋爱天数上方 */
-.lg-map .anniversary-panel {
+.withu-map .anniversary-panel {
     position: fixed;
     right: 20px;
     bottom: 200px;
@@ -5354,13 +5354,13 @@
     transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-.lg-map .anniversary-panel.show {
+.withu-map .anniversary-panel.show {
     opacity: 1;
     visibility: visible;
     transform: translateY(0);
 }
 
-.lg-map .anniversary-icon {
+.withu-map .anniversary-icon {
     width: 36px;
     height: 36px;
     background: #fff5f7;
@@ -5370,42 +5370,42 @@
     justify-content: center;
 }
 
-.lg-map .anniversary-icon svg {
+.withu-map .anniversary-icon svg {
     width: 20px;
     height: 20px;
     color: hsl(var(--hsla-raw));
 }
 
-.lg-map .anniversary-content {
+.withu-map .anniversary-content {
     text-align: left;
 }
 
-.lg-map .anniversary-title {
+.withu-map .anniversary-title {
     font-size: 12px;
     color: #666;
     margin-bottom: 2px;
 }
 
-.lg-map .anniversary-countdown {
+.withu-map .anniversary-countdown {
     display: flex;
     align-items: baseline;
     gap: 2px;
 }
 
-.lg-map .countdown-number {
+.withu-map .countdown-number {
     font-size: 22px;
     font-weight: 700;
     color: hsl(var(--hsla-raw));
     line-height: 1;
 }
 
-.lg-map .countdown-unit {
+.withu-map .countdown-unit {
     font-size: 12px;
     color: #999;
 }
 
 /* 爱情数据统计面板 - 底部中央 */
-.lg-map .love-stats-panel {
+.withu-map .love-stats-panel {
     position: fixed;
     bottom: 100px;
     left: 50%;
@@ -5425,17 +5425,17 @@
     transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-.lg-map .love-stats-panel.show {
+.withu-map .love-stats-panel.show {
     opacity: 1;
     visibility: visible;
     transform: translateX(-50%) translateY(0);
 }
 
-.lg-map .stats-item {
+.withu-map .stats-item {
     text-align: center;
 }
 
-.lg-map .stats-icon {
+.withu-map .stats-icon {
     width: 28px;
     height: 28px;
     margin: 0 auto 6px;
@@ -5444,33 +5444,33 @@
     justify-content: center;
 }
 
-.lg-map .stats-icon svg {
+.withu-map .stats-icon svg {
     width: 20px;
     height: 20px;
     color: #999;
 }
 
-.lg-map .stats-value {
+.withu-map .stats-value {
     font-size: 18px;
     font-weight: 700;
     color: #333;
     line-height: 1;
 }
 
-.lg-map .stats-label {
+.withu-map .stats-label {
     font-size: 11px;
     color: #999;
     margin-top: 4px;
 }
 
-.lg-map .stats-divider {
+.withu-map .stats-divider {
     width: 1px;
     height: 36px;
     background: #eee;
 }
 
 /* 随机情话面板 - 底部偏左 */
-.lg-map .love-quote-panel {
+.withu-map .love-quote-panel {
     position: fixed;
     bottom: 100px;
     left: 240px;
@@ -5489,17 +5489,17 @@
     transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-.lg-map .love-quote-panel.show {
+.withu-map .love-quote-panel.show {
     opacity: 1;
     visibility: visible;
     transform: translateY(0);
 }
 
-.lg-map .love-quote-panel:hover {
+.withu-map .love-quote-panel:hover {
     box-shadow: 0 6px 24px rgba(0, 0, 0, 0.12);
 }
 
-.lg-map .love-quote-panel.quote-change {
+.withu-map .love-quote-panel.quote-change {
     animation: quoteShake 0.3s ease;
 }
 
@@ -5519,26 +5519,26 @@
     }
 }
 
-.lg-map .quote-icon {
+.withu-map .quote-icon {
     width: 20px;
     height: 20px;
     margin-bottom: 8px;
 }
 
-.lg-map .quote-icon svg {
+.withu-map .quote-icon svg {
     width: 100%;
     height: 100%;
     color: hsl(var(--hsla-raw));
     opacity: 0.6;
 }
 
-.lg-map .quote-text {
+.withu-map .quote-text {
     font-size: 13px;
     color: #555;
     line-height: 1.6;
 }
 
-.lg-map .quote-hint {
+.withu-map .quote-hint {
     font-size: 10px;
     color: #bbb;
     margin-top: 8px;
@@ -5549,7 +5549,7 @@
 @media screen and (max-width: 768px) {
 
     /* 恋爱天数 - 移到右上角 */
-    .lg-map .love-days-panel {
+    .withu-map .love-days-panel {
         position: fixed;
         right: 70px;
         bottom: auto;
@@ -5558,32 +5558,32 @@
         border-radius: 12px;
     }
 
-    .lg-map .love-days-number {
+    .withu-map .love-days-number {
         font-size: 24px;
         letter-spacing: -1px;
     }
 
-    .lg-map .love-days-label {
+    .withu-map .love-days-label {
         font-size: 11px;
         display: inline;
     }
 
-    .lg-map .love-days-text {
+    .withu-map .love-days-text {
         display: none;
     }
 
     /* 纪念日 - 隐藏 */
-    .lg-map .anniversary-panel {
+    .withu-map .anniversary-panel {
         display: none !important;
     }
 
     /* 统计面板 - 隐藏 */
-    .lg-map .love-stats-panel {
+    .withu-map .love-stats-panel {
         display: none !important;
     }
 
     /* 情话面板 - 底部显示 */
-    .lg-map .love-quote-panel {
+    .withu-map .love-quote-panel {
         left: 12px;
         right: 12px;
         bottom: 80px;
@@ -5591,31 +5591,31 @@
         padding: 12px 14px;
     }
 
-    .lg-map .quote-icon {
+    .withu-map .quote-icon {
         display: none;
     }
 
-    .lg-map .quote-text {
+    .withu-map .quote-text {
         font-size: 12px;
     }
 
-    .lg-map .quote-hint {
+    .withu-map .quote-hint {
         display: none;
     }
 }
 
 /* 超小屏幕 */
 @media screen and (max-width: 375px) {
-    .lg-map .love-days-panel {
+    .withu-map .love-days-panel {
         right: 60px;
         padding: 6px 10px;
     }
 
-    .lg-map .love-days-number {
+    .withu-map .love-days-number {
         font-size: 20px;
     }
 
-    .lg-map .love-quote-panel {
+    .withu-map .love-quote-panel {
         bottom: 75px;
     }
 }
@@ -5623,7 +5623,7 @@
 /* ========================================
    同坐标列表选择器样式
    ======================================== */
-.lg-map .location-picker {
+.withu-map .location-picker {
     width: 240px;
     max-height: 320px;
     background: #fff;
@@ -5645,7 +5645,7 @@
     }
 }
 
-.lg-map .location-picker-header {
+.withu-map .location-picker-header {
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -5654,13 +5654,13 @@
     border-bottom: 1px solid #eee;
 }
 
-.lg-map .location-picker-title {
+.withu-map .location-picker-title {
     font-size: 13px;
     font-weight: 600;
     color: #333;
 }
 
-.lg-map .location-picker-count {
+.withu-map .location-picker-count {
     font-size: 11px;
     color: #888;
     background: #eee;
@@ -5668,22 +5668,22 @@
     border-radius: 10px;
 }
 
-.lg-map .location-picker-list {
+.withu-map .location-picker-list {
     max-height: 260px;
     overflow-y: auto;
     padding: 6px 0;
 }
 
-.lg-map .location-picker-list::-webkit-scrollbar {
+.withu-map .location-picker-list::-webkit-scrollbar {
     width: 4px;
 }
 
-.lg-map .location-picker-list::-webkit-scrollbar-thumb {
+.withu-map .location-picker-list::-webkit-scrollbar-thumb {
     background: #ddd;
     border-radius: 2px;
 }
 
-.lg-map .location-picker-item {
+.withu-map .location-picker-item {
     display: flex;
     align-items: center;
     gap: 10px;
@@ -5692,16 +5692,16 @@
     transition: background 0.15s ease;
 }
 
-.lg-map .location-picker-item:hover {
+.withu-map .location-picker-item:hover {
     background: #f5f5f5;
 }
 
-.lg-map .location-picker-item:active {
+.withu-map .location-picker-item:active {
     background: #eee;
 }
 
 /* 留言模式列表项 */
-.lg-map .location-picker-item.msg-item .picker-avatar {
+.withu-map .location-picker-item.msg-item .picker-avatar {
     width: 36px;
     height: 36px;
     border-radius: 50%;
@@ -5710,18 +5710,18 @@
     border: 2px solid #ff4081;
 }
 
-.lg-map .location-picker-item.msg-item .picker-avatar img {
+.withu-map .location-picker-item.msg-item .picker-avatar img {
     width: 100%;
     height: 100%;
     object-fit: cover;
 }
 
-.lg-map .location-picker-item .picker-info {
+.withu-map .location-picker-item .picker-info {
     flex: 1;
     min-width: 0;
 }
 
-.lg-map .location-picker-item .picker-name {
+.withu-map .location-picker-item .picker-name {
     font-size: 13px;
     font-weight: 500;
     color: #333;
@@ -5731,7 +5731,7 @@
     white-space: nowrap;
 }
 
-.lg-map .location-picker-item .picker-desc {
+.withu-map .location-picker-item .picker-desc {
     font-size: 11px;
     color: #888;
     overflow: hidden;
@@ -5739,7 +5739,7 @@
     white-space: nowrap;
 }
 
-.lg-map .location-picker-item .picker-arrow {
+.withu-map .location-picker-item .picker-arrow {
     width: 16px;
     height: 16px;
     color: #ccc;
@@ -5747,7 +5747,7 @@
 }
 
 /* 相册模式列表项 */
-.lg-map .location-picker-item.album-item .picker-thumb {
+.withu-map .location-picker-item.album-item .picker-thumb {
     width: 44px;
     height: 44px;
     border-radius: 6px;
@@ -5756,14 +5756,14 @@
     border: 2px solid #667eea;
 }
 
-.lg-map .location-picker-item.album-item .picker-thumb img {
+.withu-map .location-picker-item.album-item .picker-thumb img {
     width: 100%;
     height: 100%;
     object-fit: cover;
 }
 
 /* 事件模式列表项 */
-.lg-map .location-picker-item.event-item .picker-icon {
+.withu-map .location-picker-item.event-item .picker-icon {
     width: 36px;
     height: 36px;
     border-radius: 8px;
@@ -5774,7 +5774,7 @@
     flex-shrink: 0;
 }
 
-.lg-map .location-picker-item.event-item .picker-icon svg {
+.withu-map .location-picker-item.event-item .picker-icon svg {
     width: 18px;
     height: 18px;
     color: #fff;
@@ -5782,22 +5782,22 @@
 
 /* 移动端适配 */
 @media screen and (max-width: 768px) {
-    .lg-map .location-picker {
+    .withu-map .location-picker {
         width: 220px;
         max-height: 280px;
     }
 
-    .lg-map .location-picker-item {
+    .withu-map .location-picker-item {
         padding: 8px 12px;
     }
 
-    .lg-map .location-picker-item.msg-item .picker-avatar,
-    .lg-map .location-picker-item.event-item .picker-icon {
+    .withu-map .location-picker-item.msg-item .picker-avatar,
+    .withu-map .location-picker-item.event-item .picker-icon {
         width: 32px;
         height: 32px;
     }
 
-    .lg-map .location-picker-item.album-item .picker-thumb {
+    .withu-map .location-picker-item.album-item .picker-thumb {
         width: 38px;
         height: 38px;
     }
@@ -5806,7 +5806,7 @@
 /* ========================================
    同坐标轮播选择器样式
    ======================================== */
-.lg-map .location-carousel {
+.withu-map .location-carousel {
     display: none;
     /* 废弃旧样式 */
 }
@@ -5814,7 +5814,7 @@
 /* ========================================
    同位置卡片选择器（简洁版）
    ======================================== */
-.lg-map .loc-picker-wrap {
+.withu-map .loc-picker-wrap {
     --picker-color: #ff4081;
     position: relative;
     display: flex;
@@ -5822,12 +5822,12 @@
     justify-content: center;
 }
 
-.lg-map .loc-picker-card {
+.withu-map .loc-picker-card {
     position: relative;
 }
 
 /* 左右切换按钮 */
-.lg-map .loc-side-btn {
+.withu-map .loc-side-btn {
     position: absolute;
     top: 50%;
     transform: translateY(-50%);
@@ -5846,32 +5846,32 @@
     z-index: 10;
 }
 
-.lg-map .loc-side-prev {
+.withu-map .loc-side-prev {
     left: -44px;
 }
 
-.lg-map .loc-side-next {
+.withu-map .loc-side-next {
     right: -44px;
 }
 
-.lg-map .loc-side-btn:hover:not(:disabled) {
+.withu-map .loc-side-btn:hover:not(:disabled) {
     background: var(--picker-color);
     color: #fff;
     transform: translateY(-50%) scale(1.1);
 }
 
-.lg-map .loc-side-btn:disabled {
+.withu-map .loc-side-btn:disabled {
     opacity: 0.3;
     cursor: not-allowed;
 }
 
-.lg-map .loc-side-btn svg {
+.withu-map .loc-side-btn svg {
     width: 16px;
     height: 16px;
 }
 
 /* 指示器圆点 - 居中在卡片下方 */
-.lg-map .loc-dots {
+.withu-map .loc-dots {
     position: absolute;
     bottom: -24px;
     left: 50%;
@@ -5885,7 +5885,7 @@
     border-radius: 10px;
 }
 
-.lg-map .loc-dot {
+.withu-map .loc-dot {
     width: 6px;
     height: 6px;
     border-radius: 50%;
@@ -5893,7 +5893,7 @@
     transition: all 0.2s ease;
 }
 
-.lg-map .loc-dot.active {
+.withu-map .loc-dot.active {
     background: #fff;
     transform: scale(1.3);
 }
@@ -5905,7 +5905,7 @@
    ======================================== */
 
 /* === 通用 SVG 图标样式 === */
-.lg-map .icon-svg {
+.withu-map .icon-svg {
     width: 13px;
     height: 13px;
     fill: none;
@@ -5919,7 +5919,7 @@
     opacity: 0.8;
 }
 
-.lg-map .icon-svg-lg {
+.withu-map .icon-svg-lg {
     width: 20px;
     height: 20px;
     stroke: #555;
@@ -5930,7 +5930,7 @@
 /* ========================================
    1. 事件清单卡片 - 胶囊横向布局
    ======================================== */
-.lg-map .event-pill-card {
+.withu-map .event-pill-card {
     width: 300px;
     background: rgba(20, 20, 20, 0.95);
     border-radius: 999px;
@@ -5945,12 +5945,12 @@
     box-sizing: border-box;
 }
 
-.lg-map .event-pill-card.done {
+.withu-map .event-pill-card.done {
     border: 1px solid #2b2b2b;
     background: rgba(20, 20, 20, 0.85);
 }
 
-.lg-map .event-pill-card .evt-thumb {
+.withu-map .event-pill-card .evt-thumb {
     width: 52px;
     height: 52px;
     border-radius: 50%;
@@ -5965,13 +5965,13 @@
     overflow: hidden;
 }
 
-.lg-map .event-pill-card .evt-thumb img {
+.withu-map .event-pill-card .evt-thumb img {
     width: 100%;
     height: 100%;
     object-fit: cover;
 }
 
-.lg-map .event-pill-card .evt-info {
+.withu-map .event-pill-card .evt-info {
     flex: 1;
     display: flex;
     flex-direction: column;
@@ -5979,7 +5979,7 @@
     min-width: 0;
 }
 
-.lg-map .event-pill-card .evt-title {
+.withu-map .event-pill-card .evt-title {
     font-size: 14px;
     font-weight: 600;
     color: #eee;
@@ -5989,7 +5989,7 @@
     text-overflow: ellipsis;
 }
 
-.lg-map .event-pill-card .evt-meta-row {
+.withu-map .event-pill-card .evt-meta-row {
     display: flex;
     align-items: center;
     font-size: 11px;
@@ -5997,12 +5997,12 @@
     gap: 8px;
 }
 
-.lg-map .event-pill-card .evt-meta-row span {
+.withu-map .event-pill-card .evt-meta-row span {
     display: flex;
     align-items: center;
 }
 
-.lg-map .event-pill-card .evt-meta-row svg {
+.withu-map .event-pill-card .evt-meta-row svg {
     width: 12px;
     height: 12px;
     stroke: #666;
@@ -6011,13 +6011,13 @@
     flex-shrink: 0;
 }
 
-.lg-map .event-pill-card .evt-divider {
+.withu-map .event-pill-card .evt-divider {
     width: 1px;
     height: 10px;
     background: #444;
 }
 
-.lg-map .event-pill-card .evt-status-icon {
+.withu-map .event-pill-card .evt-status-icon {
     display: flex;
     align-items: center;
     justify-content: center;
@@ -6027,21 +6027,21 @@
     transform: translateY(-50%);
 }
 
-.lg-map .event-pill-card .evt-status-icon svg {
+.withu-map .event-pill-card .evt-status-icon svg {
     width: 22px;
     height: 22px;
     stroke: #2196f3;
     fill: none;
 }
 
-.lg-map .event-pill-card.done .evt-status-icon svg {
+.withu-map .event-pill-card.done .evt-status-icon svg {
     stroke: #4caf50;
 }
 
 /* ========================================
    2. 相册卡片 - 堆叠照片风格
    ======================================== */
-.lg-map .album-stack-card {
+.withu-map .album-stack-card {
     width: 300px;
     background: rgba(18, 18, 18, 0.96);
     border: 1px solid #333;
@@ -6056,12 +6056,12 @@
     transition: all .3s;
 }
 
-.lg-map .album-stack-card:hover {
+.withu-map .album-stack-card:hover {
     border-color: #555;
     cursor: pointer;
 }
 
-.lg-map .album-stack-card .alb-stack {
+.withu-map .album-stack-card .alb-stack {
     width: 76px;
     height: 76px;
     flex-shrink: 0;
@@ -6069,7 +6069,7 @@
     margin-left: 4px;
 }
 
-.lg-map .album-stack-card .alb-cover {
+.withu-map .album-stack-card .alb-cover {
     width: 100%;
     height: 100%;
     border-radius: 8px;
@@ -6081,7 +6081,7 @@
     z-index: 3;
 }
 
-.lg-map .album-stack-card .alb-stack::after {
+.withu-map .album-stack-card .alb-stack::after {
     content: '';
     position: absolute;
     inset: 0;
@@ -6093,7 +6093,7 @@
     transition: all .3s;
 }
 
-.lg-map .album-stack-card .alb-stack::before {
+.withu-map .album-stack-card .alb-stack::before {
     content: '';
     position: absolute;
     inset: 0;
@@ -6106,16 +6106,16 @@
 }
 
 
-.lg-map .album-stack-card:hover .alb-stack::after {
+.withu-map .album-stack-card:hover .alb-stack::after {
     transform: rotate(10deg);
 }
 
-.lg-map .album-stack-card:hover .alb-stack::before {
+.withu-map .album-stack-card:hover .alb-stack::before {
     transform: rotate(-10deg);
 
 }
 
-.lg-map .album-stack-card .alb-info {
+.withu-map .album-stack-card .alb-info {
     flex: 1;
     display: flex;
     flex-direction: column;
@@ -6124,14 +6124,14 @@
     gap: 4px;
 }
 
-.lg-map .album-stack-card .alb-header {
+.withu-map .album-stack-card .alb-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
     margin-bottom: 2px;
 }
 
-.lg-map .album-stack-card .alb-title {
+.withu-map .album-stack-card .alb-title {
     font-size: 15px;
     font-weight: 700;
     color: #fff;
@@ -6141,7 +6141,7 @@
     max-width: 150px;
 }
 
-.lg-map .album-stack-card .alb-count {
+.withu-map .album-stack-card .alb-count {
     font-size: 10px;
     color: #888;
     background: #1a1a1a;
@@ -6152,7 +6152,7 @@
     margin-left: 8px;
 }
 
-.lg-map .album-stack-card .alb-desc {
+.withu-map .album-stack-card .alb-desc {
     font-size: 12px;
     color: #888;
     margin-bottom: 2px;
@@ -6162,7 +6162,7 @@
     width: 100%;
 }
 
-.lg-map .album-stack-card .alb-meta {
+.withu-map .album-stack-card .alb-meta {
     display: flex;
     align-items: center;
     font-size: 11px;
@@ -6172,7 +6172,7 @@
     overflow: hidden;
 }
 
-.lg-map .album-stack-card .alb-meta span {
+.withu-map .album-stack-card .alb-meta span {
     display: flex;
     align-items: center;
     gap: 4px;
@@ -6180,19 +6180,19 @@
 }
 
 /* Let the second span (location) shrink but keep the first span (date) intact if needed */
-.lg-map .album-stack-card .alb-meta span:last-child {
+.withu-map .album-stack-card .alb-meta span:last-child {
     flex: 1;
     min-width: 0;
 }
 
-.lg-map .album-stack-card .alb-meta span .alb-text {
+.withu-map .album-stack-card .alb-meta span .alb-text {
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
     display: block;
 }
 
-.lg-map .album-stack-card .alb-meta svg {
+.withu-map .album-stack-card .alb-meta svg {
     width: 12px;
     height: 12px;
     stroke: #666;
@@ -6204,7 +6204,7 @@
 /* ========================================
    3. 留言卡片 - 气泡对话风格
    ======================================== */
-.lg-map .msg-bubble-card {
+.withu-map .msg-bubble-card {
     width: 260px;
     background: #111;
     /* border: 1px solid #333; */
@@ -6217,7 +6217,7 @@
 }
 
 /* 气泡小尾巴 - 底部中心指向下方 */
-.lg-map .msg-bubble-card::after {
+.withu-map .msg-bubble-card::after {
     content: '';
     position: absolute;
     bottom: -8px;
@@ -6231,14 +6231,14 @@
 }
 
 
-.lg-map .msg-bubble-card .msg-top {
+.withu-map .msg-bubble-card .msg-top {
     display: flex;
     justify-content: space-between;
     align-items: center;
     margin-bottom: 8px;
 }
 
-.lg-map .msg-bubble-card .msg-name {
+.withu-map .msg-bubble-card .msg-name {
     font-size: 14px;
     font-weight: 700;
     color: #fff;
@@ -6247,7 +6247,7 @@
     text-overflow: ellipsis;
 }
 
-.lg-map .msg-bubble-card .msg-time {
+.withu-map .msg-bubble-card .msg-time {
     font-size: 10px;
     color: #666;
     font-weight: 400;
@@ -6255,7 +6255,7 @@
     margin-left: 8px;
 }
 
-.lg-map .msg-bubble-card .msg-text {
+.withu-map .msg-bubble-card .msg-text {
     font-size: 13px;
     color: #aaa;
     line-height: 1.6;
@@ -6268,7 +6268,7 @@
     text-overflow: ellipsis;
 }
 
-.lg-map .msg-bubble-card .msg-text img {
+.withu-map .msg-bubble-card .msg-text img {
     max-height: 22px;
     max-width: 22px;
     height: 22px;
@@ -6278,7 +6278,7 @@
     display: inline;
 }
 
-.lg-map .msg-bubble-card .msg-footer {
+.withu-map .msg-bubble-card .msg-footer {
     border-top: 1px solid #222;
     padding-top: 10px;
     display: flex;
@@ -6288,7 +6288,7 @@
     color: #666;
 }
 
-.lg-map .msg-bubble-card .msg-footer svg {
+.withu-map .msg-bubble-card .msg-footer svg {
     width: 12px;
     height: 12px;
     stroke: #666;
@@ -6297,7 +6297,7 @@
     flex-shrink: 0;
 }
 
-.lg-map .msg-bubble-card .msg-footer-item {
+.withu-map .msg-bubble-card .msg-footer-item {
     display: flex;
     align-items: center;
 }
@@ -6305,7 +6305,7 @@
 /* ========================================
    4. 点点滴滴卡片 - 胶囊横向布局
    ======================================== */
-.lg-map .moment-pill-card {
+.withu-map .moment-pill-card {
     width: 300px;
     background: rgba(18, 18, 18, 0.96);
     border: 1px solid #333;
@@ -6320,11 +6320,11 @@
     box-sizing: border-box;
 }
 
-.lg-map .moment-pill-card.encrypted {
+.withu-map .moment-pill-card.encrypted {
     border-color: rgba(201, 160, 168, 0.3);
 }
 
-.lg-map .moment-pill-card .mmt-icon {
+.withu-map .moment-pill-card .mmt-icon {
     width: 44px;
     height: 44px;
     border-radius: 50%;
@@ -6337,20 +6337,20 @@
     flex-shrink: 0;
 }
 
-.lg-map .moment-pill-card .mmt-icon svg {
+.withu-map .moment-pill-card .mmt-icon svg {
     width: 20px;
     height: 20px;
     stroke: currentColor;
     fill: none;
 }
 
-.lg-map .moment-pill-card.encrypted .mmt-icon {
+.withu-map .moment-pill-card.encrypted .mmt-icon {
     background: linear-gradient(145deg, #2a2025, #1e161a);
     border-color: rgba(201, 160, 168, 0.2);
     color: #c9a0a8;
 }
 
-.lg-map .moment-pill-card .mmt-info {
+.withu-map .moment-pill-card .mmt-info {
     flex: 1;
     display: flex;
     flex-direction: column;
@@ -6358,7 +6358,7 @@
     min-width: 0;
 }
 
-.lg-map .moment-pill-card .mmt-title {
+.withu-map .moment-pill-card .mmt-title {
     font-size: 13px;
     font-weight: 600;
     color: #eee;
@@ -6368,11 +6368,11 @@
     text-overflow: ellipsis;
 }
 
-.lg-map .moment-pill-card.encrypted .mmt-title {
+.withu-map .moment-pill-card.encrypted .mmt-title {
     color: #888;
 }
 
-.lg-map .moment-pill-card .mmt-meta-row {
+.withu-map .moment-pill-card .mmt-meta-row {
     display: flex;
     align-items: center;
     font-size: 11px;
@@ -6380,12 +6380,12 @@
     gap: 8px;
 }
 
-.lg-map .moment-pill-card .mmt-meta-row span {
+.withu-map .moment-pill-card .mmt-meta-row span {
     display: flex;
     align-items: center;
 }
 
-.lg-map .moment-pill-card .mmt-meta-row svg {
+.withu-map .moment-pill-card .mmt-meta-row svg {
     width: 12px;
     height: 12px;
     stroke: #666;
@@ -6394,7 +6394,7 @@
     flex-shrink: 0;
 }
 
-.lg-map .moment-pill-card .mmt-divider {
+.withu-map .moment-pill-card .mmt-divider {
     width: 1px;
     height: 10px;
     background: #444;
@@ -6419,7 +6419,7 @@
 /* ========================================
    情侣详情卡片 - 精致纵向风格
    ======================================== */
-.lg-map .lover-profile-card {
+.withu-map .lover-profile-card {
     width: 220px;
     background: linear-gradient(180deg, rgba(30, 30, 30, 0.95) 0%, rgba(15, 15, 15, 0.98) 100%);
     border: 1px solid rgba(255, 255, 255, 0.08);
@@ -6436,7 +6436,7 @@
 }
 
 /* 顶部高光线 */
-.lg-map .lover-profile-card::after {
+.withu-map .lover-profile-card::after {
     content: '';
     position: absolute;
     top: 0;
@@ -6447,7 +6447,7 @@
 }
 
 /* 悬浮头像区 */
-.lg-map .lpc-avatar-box {
+.withu-map .lpc-avatar-box {
     position: relative;
     margin-top: -36px;
     margin-bottom: 14px;
@@ -6458,7 +6458,7 @@
     justify-content: center;
 }
 
-.lg-map .lpc-avatar {
+.withu-map .lpc-avatar {
     width: 100%;
     height: 100%;
     border-radius: 50%;
@@ -6471,7 +6471,7 @@
 }
 
 /* 柔和的雷达波纹 */
-.lg-map .lpc-avatar-box::before {
+.withu-map .lpc-avatar-box::before {
     content: '';
     position: absolute;
     inset: -1px;
@@ -6495,7 +6495,7 @@
 }
 
 /* 名字 */
-.lg-map .lpc-name {
+.withu-map .lpc-name {
     font-size: 17px;
     font-weight: 700;
     color: #fff;
@@ -6504,7 +6504,7 @@
 }
 
 /* 胶囊位置 */
-.lg-map .lpc-location-pill {
+.withu-map .lpc-location-pill {
     display: inline-flex;
     align-items: center;
     font-size: 12px;
@@ -6516,7 +6516,7 @@
     margin-bottom: 18px;
 }
 
-.lg-map .lpc-location-pill svg {
+.withu-map .lpc-location-pill svg {
     width: 13px;
     height: 13px;
     stroke: #9ca3af;
@@ -6525,7 +6525,7 @@
 }
 
 /* 底部数据仪表盘 */
-.lg-map .lpc-dashboard {
+.withu-map .lpc-dashboard {
     width: 100%;
     border-top: 1px solid rgba(255, 255, 255, 0.06);
     padding-top: 14px;
@@ -6535,7 +6535,7 @@
     gap: 18px;
 }
 
-.lg-map .lpc-stat-item {
+.withu-map .lpc-stat-item {
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -6544,7 +6544,7 @@
     min-width: 0;
 }
 
-.lg-map .lpc-stat-label {
+.withu-map .lpc-stat-label {
     font-size: 9px;
     color: #555;
     font-weight: 600;
@@ -6552,28 +6552,28 @@
     text-transform: uppercase;
 }
 
-.lg-map .lpc-stat-val {
+.withu-map .lpc-stat-val {
     font-family: 'Inter', sans-serif;
     font-size: 13px;
     color: #eee;
     font-weight: 500;
 }
 
-.lg-map .lpc-stat-val--mono {
+.withu-map .lpc-stat-val--mono {
     font-family: 'SFMono-Regular', 'Menlo', 'Monaco', 'Consolas', monospace;
     font-size: 12px;
     letter-spacing: 0.02em;
     white-space: nowrap;
 }
 
-.lg-map .lpc-divider-v {
+.withu-map .lpc-divider-v {
     width: 1px;
     height: 24px;
     background: rgba(255, 255, 255, 0.06);
 }
 
 /* ================= 高德地图配置错误提示 ================= */
-.lg-map .amap-config-overlay {
+.withu-map .amap-config-overlay {
     position: fixed;
     top: 0;
     left: 0;
@@ -6589,7 +6589,7 @@
     animation: amapFadeIn 0.5s ease-out;
 }
 
-.lg-map .amap-config-card {
+.withu-map .amap-config-card {
     width: 340px;
     max-width: 90vw;
     background: rgba(30, 30, 35, 0.65);
@@ -6600,13 +6600,13 @@
     text-align: center;
     position: relative;
     box-shadow:
-        inset 0 0 0 1px rgba(255, 255, 255, 0.lg-map .08),
+        inset 0 0 0 1px rgba(255, 255, 255, 0.withu-map .08),
         0 25px 50px -12px rgba(0, 0, 0, 0.6);
     overflow: hidden;
     animation: amapScaleUp 0.4s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-.lg-map .amap-config-card::before {
+.withu-map .amap-config-card::before {
     content: '';
     position: absolute;
     top: -50%;
@@ -6617,7 +6617,7 @@
     pointer-events: none;
 }
 
-.lg-map .amap-config-icon-wrap {
+.withu-map .amap-config-icon-wrap {
     width: 72px;
     height: 72px;
     margin: 0 auto 24px;
@@ -6631,7 +6631,7 @@
     position: relative;
 }
 
-.lg-map .amap-config-icon-wrap::after {
+.withu-map .amap-config-icon-wrap::after {
     content: '';
     position: absolute;
     inset: 0;
@@ -6640,22 +6640,22 @@
     animation: amapBreathe 3s infinite ease-in-out;
 }
 
-.lg-map .amap-config-icon-wrap.amap-config-icon-error {
+.withu-map .amap-config-icon-wrap.amap-config-icon-error {
     background: linear-gradient(135deg, rgba(239, 68, 68, 0.2), rgba(239, 68, 68, 0.05));
     border-color: rgba(239, 68, 68, 0.2);
 }
 
-.lg-map .amap-config-icon-wrap.amap-config-icon-error::after {
+.withu-map .amap-config-icon-wrap.amap-config-icon-error::after {
     box-shadow: 0 0 20px rgba(239, 68, 68, 0.2);
 }
 
-.lg-map .amap-config-icon {
+.withu-map .amap-config-icon {
     font-size: 32px;
     color: #fff;
     opacity: 0.95;
 }
 
-.lg-map .amap-config-title {
+.withu-map .amap-config-title {
     font-size: 20px;
     font-weight: 700;
     color: #fff;
@@ -6663,20 +6663,20 @@
     letter-spacing: 0.5px;
 }
 
-.lg-map .amap-config-desc {
+.withu-map .amap-config-desc {
     font-size: 13px;
     color: rgba(255, 255, 255, 0.55);
     line-height: 1.6;
     margin-bottom: 32px;
 }
 
-.lg-map .amap-config-actions {
+.withu-map .amap-config-actions {
     display: flex;
     gap: 12px;
     justify-content: center;
 }
 
-.lg-map .amap-btn-base {
+.withu-map .amap-btn-base {
     flex: 1;
     padding: 12px 0;
     border-radius: 50px;
@@ -6691,35 +6691,35 @@
     white-space: nowrap;
 }
 
-.lg-map .amap-btn-primary {
+.withu-map .amap-btn-primary {
     background: #fff;
     color: #000;
     border: none;
     box-shadow: 0 4px 15px rgba(255, 255, 255, 0.2);
 }
 
-.lg-map .amap-btn-primary:hover {
+.withu-map .amap-btn-primary:hover {
     background: #f0f0f0;
     transform: translateY(-1px);
     box-shadow: 0 6px 20px rgba(255, 255, 255, 0.3);
 }
 
-.lg-map .amap-btn-primary:active {
+.withu-map .amap-btn-primary:active {
     transform: scale(0.96);
 }
 
-.lg-map .amap-btn-secondary {
+.withu-map .amap-btn-secondary {
     background: rgba(255, 255, 255, 0.05);
     color: #fff;
     border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
-.lg-map .amap-btn-secondary:hover {
+.withu-map .amap-btn-secondary:hover {
     background: rgba(255, 255, 255, 0.1);
     border-color: rgba(255, 255, 255, 0.2);
 }
 
-.lg-map .amap-btn-secondary:active {
+.withu-map .amap-btn-secondary:active {
     transform: scale(0.96);
     background: rgba(255, 255, 255, 0.02);
 }

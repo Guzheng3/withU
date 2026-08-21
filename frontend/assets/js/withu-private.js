@@ -1,5 +1,5 @@
 /**
- * lgnewui-private.js — 加密页面交互逻辑（PJAX 兼容版）
+ * withu-private.js — 加密页面交互逻辑（PJAX 兼容版）
  * 通过 AJAX 调用 EncryptCheck.php 校验密码
  */
 (function () {
@@ -31,9 +31,9 @@
         // 辅助：按钮恢复到初始状态
         function resetBtn() {
             submitBtn.innerHTML =
-                '<span class="lgnewui-private-btn-text">' + originalBtnText + '</span>' +
-                '<i data-lucide="chevron-right" class="lgnewui-private-btn-icon"></i>' +
-                '<div class="lgnewui-private-btn-shimmer"></div>';
+                '<span class="withu-private-btn-text">' + originalBtnText + '</span>' +
+                '<i data-lucide="chevron-right" class="withu-private-btn-icon"></i>' +
+                '<div class="withu-private-btn-shimmer"></div>';
             refreshIcons();
             submitBtn.classList.remove('is-loading', 'is-success');
             isSubmitting = false;
@@ -62,13 +62,13 @@
 
             // 按钮进入加载状态
             submitBtn.innerHTML =
-                '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lgnewui-private-btn-icon lgnewui-private-spin">' +
+                '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="withu-private-btn-icon withu-private-spin">' +
                 '<path d="M12 2v4"/><path d="m16.2 7.8 2.9-2.9"/><path d="M18 12h4"/><path d="m16.2 16.2 2.9 2.9"/>' +
                 '<path d="M12 18v4"/><path d="m4.9 19.1 2.9-2.9"/><path d="M2 12h4"/><path d="m4.9 4.9 2.9 2.9"/></svg>' +
-                '<span class="lgnewui-private-btn-text">核对中...</span>';
+                '<span class="withu-private-btn-text">核对中...</span>';
             submitBtn.classList.add('is-loading');
 
-            accessForm.classList.remove('lgnewui-private-shake');
+            accessForm.classList.remove('withu-private-shake');
 
             // 发起 AJAX 校验
             $.ajax({
@@ -98,7 +98,7 @@
             showToast('success', '密码验证通过 正在跳转...');
 
             // 输入区域淡出
-            var inputWrapper = accessForm.querySelector('.lgnewui-private-input-wrapper');
+            var inputWrapper = accessForm.querySelector('.withu-private-input-wrapper');
             if (inputWrapper) {
                 inputWrapper.style.transition = 'opacity 0.4s ease';
                 inputWrapper.style.opacity = '0';
@@ -111,14 +111,14 @@
                 submitBtn.classList.remove('is-unlocking');
                 submitBtn.classList.add('is-success');
                 submitBtn.innerHTML =
-                    '<i data-lucide="lock-open" class="lgnewui-private-btn-icon"></i>' +
-                    '<span class="lgnewui-private-btn-text">已解锁</span>';
+                    '<i data-lucide="lock-open" class="withu-private-btn-icon"></i>' +
+                    '<span class="withu-private-btn-text">已解锁</span>';
                 refreshIcons();
             }, 550);
 
             // 整体退场动画
             setTimeout(function () {
-                var wrapper = document.getElementById('lgnewuiPrivateWrapper');
+                var wrapper = document.getElementById('withuPrivateWrapper');
                 var capsule = document.getElementById('privateCapsule');
 
                 if (capsule) {
@@ -131,7 +131,7 @@
 
                 // 动画完成后通过 PJAX 跳转
                 setTimeout(function () {
-                    document.documentElement.classList.remove('lgnewui-private-mode');
+                    document.documentElement.classList.remove('withu-private-mode');
 
                     // 先将容器设为透明，防止新内容「弹」出来导致布局跳动
                     var container = document.getElementById('pjax-container');
@@ -175,9 +175,9 @@
             resetBtn();
 
             // 触发震动反馈
-            accessForm.classList.remove('lgnewui-private-shake');
+            accessForm.classList.remove('withu-private-shake');
             void accessForm.offsetWidth;
-            accessForm.classList.add('lgnewui-private-shake');
+            accessForm.classList.add('withu-private-shake');
 
             showToast('error', message);
         }
@@ -193,7 +193,7 @@
                 if (icon) {
                     var newIcon = document.createElement('i');
                     newIcon.setAttribute('data-lucide', type === 'password' ? 'eye' : 'eye-off');
-                    newIcon.className = 'lgnewui-private-eye-icon';
+                    newIcon.className = 'withu-private-eye-icon';
                     this.replaceChild(newIcon, icon);
                     refreshIcons();
                 }

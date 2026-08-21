@@ -1,5 +1,5 @@
 /**
- * LGContextMenu — LGNewUi 自定义右键菜单
+ * LGContextMenu — withU 自定义右键菜单
  * 支持多级嵌套、智能边缘定位、上下文感知分组、Toastify 反馈、音乐联动
  */
 (function(win, doc) {
@@ -607,7 +607,7 @@
     /* ═══════════════════ 默认菜单方案 ═══════════════════ */
 
     function loadDefaults() {
-        var homeUrl = (win.LG_CONFIG && win.LG_CONFIG.siteBase) || '/';
+        var homeUrl = (win.WITHU_CONFIG && win.WITHU_CONFIG.siteBase) || '/';
 
         var hasText = function(ctx) { return ctx.text && ctx.text.trim().length > 0; };
         var hasShortText = function(ctx) { return hasText(ctx) && ctx.text.trim().length < 200; };
@@ -713,9 +713,9 @@
                         label: function() { return isMusicPlaying() ? '暂停播放' : '播放音乐'; },
                         icon: function() { return isMusicPlaying() ? 'ri-pause-line' : 'ri-play-line'; },
                         action: function() {
-                            if (!win.lg_love) return;
+                            if (!win.withu_love) return;
                             var playing = isMusicPlaying();
-                            win.lg_love.musicToggle(true);
+                            win.withu_love.musicToggle(true);
                             setTimeout(function() {
                                 var title = getMusicTitle();
                                 toast('info', playing ? '已暂停' : (title ? '正在播放：' + title : '开始播放'));
@@ -728,8 +728,8 @@
                         label: '上一首',
                         icon: 'ri-skip-back-line',
                         action: function() {
-                            if (!win.lg_love) return;
-                            win.lg_love.musicSkipBack();
+                            if (!win.withu_love) return;
+                            win.withu_love.musicSkipBack();
                             setTimeout(function() { var t = getMusicTitle(); if (t) toast('info', t); }, 300);
                         },
                         when: function() { return isMusicPlaying(); }
@@ -739,8 +739,8 @@
                         label: '下一首',
                         icon: 'ri-skip-forward-line',
                         action: function() {
-                            if (!win.lg_love) return;
-                            win.lg_love.musicSkipForward();
+                            if (!win.withu_love) return;
+                            win.withu_love.musicSkipForward();
                             setTimeout(function() { var t = getMusicTitle(); if (t) toast('info', t); }, 300);
                         },
                         when: function() { return isMusicPlaying(); }

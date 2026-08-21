@@ -1,5 +1,5 @@
 /**
- * LG_NewUI 爱情清单页面模块
+ * withU 爱情清单页面模块
  * @version 2.0.0
  * @description lovelist.php 页面的 JS 逻辑（PJAX 兼容）
  */
@@ -103,7 +103,7 @@
 
             // 计算导航栏遮挡高度
             const getNavOffset = () => {
-                const navIsland = document.querySelector('.lgnewui-nav-island-container');
+                const navIsland = document.querySelector('.withu-nav-island-container');
                 if (navIsland) {
                     const rect = navIsland.getBoundingClientRect();
                     return rect.bottom + 50;
@@ -136,9 +136,9 @@
             });
 
             // 高亮效果
-            $targetCard.addClass('lgnewui-highlight');
+            $targetCard.addClass('withu-highlight');
             setTimeout(() => {
-                $targetCard.removeClass('lgnewui-highlight lgnewui-highlight-fade');
+                $targetCard.removeClass('withu-highlight withu-highlight-fade');
             }, 4500);
         },
 
@@ -349,8 +349,8 @@
                 return;
             }
 
-            $('#list_data, .query_data').hide().removeClass('lg-list-loading-stage');
-            $target.show().addClass('lg-list-fade-in');
+            $('#list_data, .query_data').hide().removeClass('withu-list-loading-stage');
+            $target.show().addClass('withu-list-fade-in');
 
             requestAnimationFrame(() => {
                 requestAnimationFrame(() => {
@@ -359,7 +359,7 @@
                     this._releaseContainerHeight(400);
                     // 移除淡入动画类（动画结束后）
                     setTimeout(() => {
-                        $target.removeClass('lg-list-fade-in');
+                        $target.removeClass('withu-list-fade-in');
                     }, 400);
                 });
             });
@@ -612,15 +612,15 @@
                         } else {
                             $('#list_data').hide();
                             $('.query_data').html(
-                                '<div class="lgnewui-no-data lgnewui-no-data--search">' +
-                                '<div class="lgnewui-no-data-wrap"><div class="lgnewui-no-data-content">' +
-                                '<div class="lgnewui-no-data-icon lgnewui-no-data-icon--search">' +
+                                '<div class="withu-no-data withu-no-data--search">' +
+                                '<div class="withu-no-data-wrap"><div class="withu-no-data-content">' +
+                                '<div class="withu-no-data-icon withu-no-data-icon--search">' +
                                 '<svg viewBox="0 0 24 24" fill="none" stroke="#f59e0b" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="5.8"/><path d="m19 19-3.6-3.6"/><path d="M9.6 11h2.8"/></svg>' +
                                 '</div>' +
-                                '<h3 class="lgnewui-no-data-title">\u6ca1\u6709\u627e\u5230\u5339\u914d\u7684\u5185\u5bb9</h3>' +
-                                '<p class="lgnewui-no-data-desc">\u6362\u4e00\u4e2a\u5173\u952e\u8bcd\u3001\u51cf\u5c11\u7b5b\u9009\u6761\u4ef6\uff0c\u6216\u8005\u76f4\u63a5\u8fd4\u56de\u67e5\u770b\u5168\u90e8\u5185\u5bb9\u3002</p>' +
-                                '<div class="lgnewui-no-data-actions">' +
-                                '<a class="lgnewui-no-data-btn lgnewui-no-data-btn-primary" href="javascript:;" onclick="$(\'.LgLoveList-tab[data-id=2]\').trigger(\'click\');"><i class="ph ph-arrow-counter-clockwise"></i> \u67e5\u770b\u5168\u90e8</a>' +
+                                '<h3 class="withu-no-data-title">\u6ca1\u6709\u627e\u5230\u5339\u914d\u7684\u5185\u5bb9</h3>' +
+                                '<p class="withu-no-data-desc">\u6362\u4e00\u4e2a\u5173\u952e\u8bcd\u3001\u51cf\u5c11\u7b5b\u9009\u6761\u4ef6\uff0c\u6216\u8005\u76f4\u63a5\u8fd4\u56de\u67e5\u770b\u5168\u90e8\u5185\u5bb9\u3002</p>' +
+                                '<div class="withu-no-data-actions">' +
+                                '<a class="withu-no-data-btn withu-no-data-btn-primary" href="javascript:;" onclick="$(\'.LgLoveList-tab[data-id=2]\').trigger(\'click\');"><i class="ph ph-arrow-counter-clockwise"></i> \u67e5\u770b\u5168\u90e8</a>' +
                                 '</div>' +
                                 '</div></div></div>'
                             );

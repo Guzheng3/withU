@@ -17,8 +17,8 @@
     'use strict';
 
     function getApiUrl() {
-        return (window.LG_CONFIG && window.LG_CONFIG.endpoints && window.LG_CONFIG.endpoints.interaction)
-            || ((window.LG_CONFIG && window.LG_CONFIG.siteBase) || '') + 'services/interaction.php';
+        return (window.WITHU_CONFIG && window.WITHU_CONFIG.endpoints && window.WITHU_CONFIG.endpoints.interaction)
+            || ((window.WITHU_CONFIG && window.WITHU_CONFIG.siteBase) || '') + 'services/interaction.php';
     }
     var _initialized = false;
     var _pendingViews = [];
@@ -62,8 +62,8 @@
         },
 
         _handleLikeClick: function (btn) {
-            if (btn.classList.contains('lg-interaction-loading')) return;
-            btn.classList.add('lg-interaction-loading');
+            if (btn.classList.contains('withu-interaction-loading')) return;
+            btn.classList.add('withu-interaction-loading');
 
             var targetType = btn.getAttribute('data-like-target');
             var targetId = btn.getAttribute('data-like-id');
@@ -73,7 +73,7 @@
                 target_type: targetType,
                 target_id: targetId
             }, function (res) {
-                btn.classList.remove('lg-interaction-loading');
+                btn.classList.remove('withu-interaction-loading');
                 if (res.code === 200 && res.data) {
                     var liked = res.data.liked;
                     var count = res.data.like_count;
@@ -101,7 +101,7 @@
                 }
             }, function (err) {
                 console.error('[LGInteraction] like failed', err);
-                btn.classList.remove('lg-interaction-loading');
+                btn.classList.remove('withu-interaction-loading');
                 self._showFeedback(btn, '网络错误');
             });
         },
@@ -112,13 +112,13 @@
         _setLikeState: function (btn, liked, count) {
             var icon = btn.querySelector('i.ph-heart, i.ph, i.ph-fill');
             if (liked) {
-                btn.classList.add('lg-interaction-liked');
+                btn.classList.add('withu-interaction-liked');
                 btn.classList.add('is-liked');
                 if (icon) {
                     icon.className = icon.className.replace(/\bph\b(?!\-)/, 'ph-fill');
                 }
             } else {
-                btn.classList.remove('lg-interaction-liked');
+                btn.classList.remove('withu-interaction-liked');
                 btn.classList.remove('is-liked');
                 if (icon) {
                     icon.className = icon.className.replace(/\bph-fill\b/, 'ph');
@@ -126,8 +126,8 @@
             }
 
             // 兼容多种类名的计数元素
-            var countEl = btn.querySelector('.lg-interaction-like-num');
-            if (!countEl && btn.nextElementSibling && btn.nextElementSibling.classList.contains('lgnewui-message-like-count')) {
+            var countEl = btn.querySelector('.withu-interaction-like-num');
+            if (!countEl && btn.nextElementSibling && btn.nextElementSibling.classList.contains('withu-message-like-count')) {
                 countEl = btn.nextElementSibling;
             }
             if (countEl) {
@@ -151,15 +151,15 @@
             }
 
             // 按钮弹跳
-            btn.classList.add('lg-interaction-bounce');
+            btn.classList.add('withu-interaction-bounce');
             setTimeout(function () {
-                btn.classList.remove('lg-interaction-bounce');
+                btn.classList.remove('withu-interaction-bounce');
             }, 600);
         },
 
         _createHeartParticle: function (x, y, index) {
             var particle = document.createElement('div');
-            particle.className = 'lg-interaction-heart-particle';
+            particle.className = 'withu-interaction-heart-particle';
             particle.innerHTML = '<i class="ph-fill ph-heart"></i>';
 
             var angle = (index / 6) * Math.PI * 2 + (Math.random() - 0.5) * 0.8;
@@ -252,8 +252,8 @@
         // 记录页面浏览
         // ============================================
         _recordPageView: function () {
-            // 优先从 #lg-view-meta 读取（PJAX 模式下内容会被替换）
-            var meta = document.getElementById('lg-view-meta');
+            // 优先从 #withu-view-meta 读取（PJAX 模式下内容会被替换）
+            var meta = document.getElementById('withu-view-meta');
             var vt, vid;
             if (meta) {
                 vt = meta.getAttribute('data-view-target');
@@ -287,25 +287,25 @@
             for (var i = 0; i < els.length; i++) {
                 els[i].textContent = formatted;
                 // 数字变化动画
-                els[i].classList.add('lg-interaction-count-update');
+                els[i].classList.add('withu-interaction-count-update');
                 (function (el) {
                     setTimeout(function () {
-                        el.classList.remove('lg-interaction-count-update');
+                        el.classList.remove('withu-interaction-count-update');
                     }, 300);
                 })(els[i]);
             }
 
-            // 更新包含该计数的 Tooltip (data-lg-tip 属性)
+            // 更新包含该计数的 Tooltip (data-withu-tip 属性)
             if (type === 'like') {
-                var tipBtns = document.querySelectorAll('[data-lg-tip*="' + attr + "='" + key + "'" + '"]');
+                var tipBtns = document.querySelectorAll('[data-withu-tip*="' + attr + "='" + key + "'" + '"]');
                 for (var j = 0; j < tipBtns.length; j++) {
-                    var tipHtml = tipBtns[j].getAttribute('data-lg-tip');
+                    var tipHtml = tipBtns[j].getAttribute('data-withu-tip');
                     // 替换 span 内的数字
                     var newTip = tipHtml.replace(
                         new RegExp("(<span[^>]*" + attr + "=['\"]" + key.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + "['\"][^>]*>)\\d*(<\\/span>)"),
                         '$1' + formatted + '$2'
                     );
-                    tipBtns[j].setAttribute('data-lg-tip', newTip);
+                    tipBtns[j].setAttribute('data-withu-tip', newTip);
                 }
             }
         },

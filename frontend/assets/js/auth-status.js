@@ -12,15 +12,15 @@
     }
 
     function applyState(loggedIn) {
-        var loginEl = document.querySelector('#lgnewuiHeaderActions a[data-entry="login"]');
-        var adminEl = document.querySelector('#lgnewuiHeaderActions a[data-entry="admin"]');
+        var loginEl = document.querySelector('#withuHeaderActions a[data-entry="login"]');
+        var adminEl = document.querySelector('#withuHeaderActions a[data-entry="admin"]');
         if (loginEl) loginEl.style.display = loggedIn ? 'none' : '';
         if (adminEl) adminEl.style.display = loggedIn ? '' : 'none';
     }
 
     ready(function () {
-        if (!document.querySelector('#lgnewuiHeaderActions a[data-entry="login"]') &&
-            !document.querySelector('#lgnewuiHeaderActions a[data-entry="admin"]')) {
+        if (!document.querySelector('#withuHeaderActions a[data-entry="login"]') &&
+            !document.querySelector('#withuHeaderActions a[data-entry="admin"]')) {
             return;
         }
 

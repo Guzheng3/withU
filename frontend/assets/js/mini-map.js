@@ -12,7 +12,7 @@
 var LGMiniMap = (function() {
     'use strict';
 
-    var MAP_DEBUG = !!(window.LG_CONFIG && window.LG_CONFIG.debugMap);
+    var MAP_DEBUG = !!(window.WITHU_CONFIG && window.WITHU_CONFIG.debugMap);
     function mapDebugWarn() {
         if (MAP_DEBUG && typeof console !== 'undefined' && typeof console.warn === 'function') {
             console.warn.apply(console, arguments);
@@ -52,7 +52,7 @@ var LGMiniMap = (function() {
         if (_sdkLoading) return;
         _sdkLoading = true;
         var s = document.createElement('script');
-        s.src = ((window.LG_CONFIG && window.LG_CONFIG.assetBase) || '') + 'assets/js/map-sdk.js';
+        s.src = ((window.WITHU_CONFIG && window.WITHU_CONFIG.assetBase) || '') + 'assets/js/map-sdk.js';
         s.onload = function() {
             _sdkReady = true;
             _sdkLoading = false;
@@ -119,7 +119,7 @@ var LGMiniMap = (function() {
 
         el.innerHTML = '';
         var wrap = document.createElement('div');
-        wrap.className = 'lg-minimap-wrap';
+        wrap.className = 'withu-minimap-wrap';
 
         // 骨架屏（覆盖在地图上方，地图加载完后淡出）
         var skeleton = document.createElement('div');
@@ -132,7 +132,7 @@ var LGMiniMap = (function() {
         wrap.appendChild(skeleton);
 
         var mapDiv = document.createElement('div');
-        mapDiv.className = 'lg-minimap-container';
+        mapDiv.className = 'withu-minimap-container';
         mapDiv.id = id + '-map';
         wrap.appendChild(mapDiv);
 

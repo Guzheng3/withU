@@ -27,7 +27,7 @@
         }
 
         /* 风格2：清新拟物 */
-        .lgnewui-chat-device[data-theme="theme2"] {
+        .withu-chat-device[data-theme="theme2"] {
             --bg-body: #e8ecef;
             --shell-bg: #f7f7f7;
             --shell-border: #d1d5db;
@@ -53,7 +53,7 @@
         }
 
         /* 聊天页居中容器 */
-        .lgnewui-chat-wrapper {
+        .withu-chat-wrapper {
             display: flex;
             justify-content: center;
             align-items: center;
@@ -62,7 +62,7 @@
         }
 
         /* 模拟设备外壳 */
-        .lgnewui-chat-device {
+        .withu-chat-device {
             width: 95vw;
             height: 90vh;
             max-width: 420px;
@@ -79,14 +79,14 @@
         }
 
         @media (min-width: 1024px) {
-            .lgnewui-chat-device {
+            .withu-chat-device {
                 max-width: 900px;
                 max-height: 700px;
             }
         }
 
         /* --- 顶部导航栏 --- */
-        .lgnewui-chat-header {
+        .withu-chat-header {
             height: 80px;
             padding: 0 20px;
             background: var(--header-bg);
@@ -104,25 +104,25 @@
         }
 
         /* 顶部左侧信息 (居左) */
-        .lgnewui-chat-header-info {
+        .withu-chat-header-info {
             display: flex;
             align-items: center;
             gap: 12px;
         }
 
-        .lgnewui-chat-header-info .lgnewui-chat-avatar {
+        .withu-chat-header-info .withu-chat-avatar {
             width: 40px;
             height: 40px;
             border-radius: 50%;
             object-fit: cover;
         }
 
-        .lgnewui-chat-user-info { display: flex; flex-direction: column; align-items: flex-start; }
-        .lgnewui-chat-user-name { font-size: 16px; font-weight: 600; line-height: 1.2; }
-        .lgnewui-chat-user-status { font-size: 12px; color: #8e8e93; display: flex; align-items: center; gap: 4px; margin-top: 2px;}
-        .lgnewui-chat-status-dot { width: 8px; height: 8px; background: #34c759; border-radius: 50%; }
+        .withu-chat-user-info { display: flex; flex-direction: column; align-items: flex-start; }
+        .withu-chat-user-name { font-size: 16px; font-weight: 600; line-height: 1.2; }
+        .withu-chat-user-status { font-size: 12px; color: #8e8e93; display: flex; align-items: center; gap: 4px; margin-top: 2px;}
+        .withu-chat-status-dot { width: 8px; height: 8px; background: #34c759; border-radius: 50%; }
 
-        .lgnewui-chat-header-icon {
+        .withu-chat-header-icon {
             width: 40px;
             height: 40px;
             display: flex;
@@ -136,11 +136,11 @@
             position: relative;
         }
 
-        .lgnewui-chat-header-icon:active { transform: scale(0.9); }
-        .lgnewui-chat-header-icon:hover { background: rgba(0,0,0,0.05); }
+        .withu-chat-header-icon:active { transform: scale(0.9); }
+        .withu-chat-header-icon:hover { background: rgba(0,0,0,0.05); }
 
         /* --- 自定义下拉菜单 (修复动画) --- */
-        .lgnewui-chat-dropdown-menu {
+        .withu-chat-dropdown-menu {
             position: absolute;
             top: 86px;
             right: 20px;
@@ -161,13 +161,13 @@
             border: 1px solid rgba(0,0,0,0.05);
         }
         
-        .lgnewui-chat-dropdown-menu.show {
+        .withu-chat-dropdown-menu.show {
             opacity: 1;
             pointer-events: auto;
             transform: translateY(0);
         }
 
-        .lgnewui-chat-menu-item {
+        .withu-chat-menu-item {
             padding: 12px 16px;
             display: flex;
             align-items: center;
@@ -181,13 +181,13 @@
             white-space: nowrap;
         }
 
-        .lgnewui-chat-menu-item:hover { background: rgba(0,0,0,0.05); }
-        .lgnewui-chat-menu-item i { font-size: 18px; opacity: 0.8; }
-        .lgnewui-chat-menu-divider { height: 1px; background: rgba(0,0,0,0.06); margin: 6px 0; }
-        .lgnewui-chat-menu-item.danger { color: #ff3b30; }
+        .withu-chat-menu-item:hover { background: rgba(0,0,0,0.05); }
+        .withu-chat-menu-item i { font-size: 18px; opacity: 0.8; }
+        .withu-chat-menu-divider { height: 1px; background: rgba(0,0,0,0.06); margin: 6px 0; }
+        .withu-chat-menu-item.danger { color: #ff3b30; }
 
         /* --- 聊天区域 --- */
-        .lgnewui-chat-container {
+        .withu-chat-container {
             flex: 1;
             background: var(--chat-bg);
             padding: 100px 16px 120px; /* 留出底部空间以便透过毛玻璃看消息 */
@@ -197,27 +197,27 @@
             gap: 20px;
             scroll-behavior: smooth;
         }
-        .lgnewui-chat-container::-webkit-scrollbar { width: 0; }
+        .withu-chat-container::-webkit-scrollbar { width: 0; }
 
         /* --- 系统声明条 --- */
-        .lgnewui-chat-system-notice {
+        .withu-chat-system-notice {
             display: flex;
             align-items: center;
             justify-content: center;
             margin: 24px 16px 8px;
             gap: 10px;
         }
-        .lgnewui-chat-system-notice::before,
-        .lgnewui-chat-system-notice::after {
+        .withu-chat-system-notice::before,
+        .withu-chat-system-notice::after {
             content: '';
             flex: 1;
             height: 1px;
             background: linear-gradient(to right, transparent, rgba(0,0,0,0.1));
         }
-        .lgnewui-chat-system-notice::after {
+        .withu-chat-system-notice::after {
             background: linear-gradient(to left, transparent, rgba(0,0,0,0.1));
         }
-        .lgnewui-chat-system-notice span {
+        .withu-chat-system-notice span {
             font-size: 11px;
             color: #a1a1a6;
             letter-spacing: 0.5px;
@@ -228,7 +228,7 @@
         }
 
         /* --- 消息行动画与样式 (更柔和的动画，去除了阴影) --- */
-        .lgnewui-chat-msg-row {
+        .withu-chat-msg-row {
             display: flex;
             align-items: flex-end;
             gap: 8px;
@@ -236,13 +236,13 @@
             opacity: 0;
         }
 
-        .lgnewui-chat-msg-row.left { 
+        .withu-chat-msg-row.left { 
             align-self: flex-start;
             transform-origin: bottom left;
             animation: messagePopLeft 0.4s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
         }
         
-        .lgnewui-chat-msg-row.right { 
+        .withu-chat-msg-row.right { 
             align-self: flex-end; 
             flex-direction: row-reverse; 
             transform-origin: bottom right;
@@ -259,7 +259,7 @@
             100% { opacity: 1; transform: scale(1) translateY(0); }
         }
 
-        .lgnewui-chat-avatar {
+        .withu-chat-avatar {
             width: 38px;
             height: 38px;
             border-radius: 50%;
@@ -268,7 +268,7 @@
         }
 
         /* 彻底移除气泡阴影 */
-        .lgnewui-chat-bubble {
+        .withu-chat-bubble {
             padding: 10px 16px;
             font-size: 15px;
             line-height: 1.5;
@@ -278,35 +278,35 @@
             transition: transform 0.1s;
         }
 
-        .lgnewui-chat-msg-row.left .lgnewui-chat-bubble {
+        .withu-chat-msg-row.left .withu-chat-bubble {
             background: var(--msg-left-bg);
             color: var(--msg-left-text);
             border-bottom-left-radius: 4px;
         }
 
-        .lgnewui-chat-msg-row.right .lgnewui-chat-bubble {
+        .withu-chat-msg-row.right .withu-chat-bubble {
             background: var(--msg-right-bg);
             color: var(--msg-right-text);
             border-bottom-right-radius: 4px;
         }
 
         /* 正在输入动画 */
-        .lgnewui-chat-typing-indicator {
+        .withu-chat-typing-indicator {
             display: flex;
             align-items: center;
             gap: 4px;
             height: 24px;
             padding: 0 12px;
         }
-        .lgnewui-chat-typing-dot {
+        .withu-chat-typing-dot {
             width: 6px; height: 6px;
             background: currentColor;
             opacity: 0.4;
             border-radius: 50%;
             animation: typingBounce 1.4s infinite ease-in-out;
         }
-        .lgnewui-chat-typing-dot:nth-child(1) { animation-delay: -0.32s; }
-        .lgnewui-chat-typing-dot:nth-child(2) { animation-delay: -0.16s; }
+        .withu-chat-typing-dot:nth-child(1) { animation-delay: -0.32s; }
+        .withu-chat-typing-dot:nth-child(2) { animation-delay: -0.16s; }
         
         @keyframes typingBounce {
             0%, 80%, 100% { transform: scale(0); opacity: 0.5; }
@@ -314,7 +314,7 @@
         }
 
         /* --- 媒体样式优化 (移除阴影) --- */
-        .lgnewui-chat-media-img {
+        .withu-chat-media-img {
             max-width: 200px;
             border-radius: 14px;
             display: block;
@@ -322,10 +322,10 @@
             border: 1px solid rgba(0,0,0,0.05);
             transition: transform 0.2s;
         }
-        .lgnewui-chat-media-img:active { transform: scale(0.95); }
+        .withu-chat-media-img:active { transform: scale(0.95); }
 
         /* 视频容器与完美居中的实心播放按钮 */
-        .lgnewui-chat-media-video {
+        .withu-chat-media-video {
             width: 220px;
             height: 150px;
             background: #000;
@@ -338,18 +338,18 @@
             cursor: pointer;
             transition: transform 0.2s;
         }
-        .lgnewui-chat-media-video:active { transform: scale(0.95); }
-        .lgnewui-chat-media-video img {
+        .withu-chat-media-video:active { transform: scale(0.95); }
+        .withu-chat-media-video img {
             width: 100%;
             height: 100%;
             object-fit: cover;
             opacity: 0.8;
             transition: opacity 0.3s;
         }
-        .lgnewui-chat-media-video:hover img { opacity: 0.6; }
+        .withu-chat-media-video:hover img { opacity: 0.6; }
 
         /* 视频播放按钮（与相册风格统一：半透明毛玻璃 + 白色图标） */
-        .lgnewui-chat-play-btn-overlay {
+        .withu-chat-play-btn-overlay {
             position: absolute;
             top: 50%;
             left: 50%;
@@ -366,19 +366,19 @@
             z-index: 2;
             transition: all 0.25s ease;
         }
-        .lgnewui-chat-media-video:hover .lgnewui-chat-play-btn-overlay {
+        .withu-chat-media-video:hover .withu-chat-play-btn-overlay {
             background: rgba(0, 0, 0, 0.65);
             transform: translate(-50%, -50%) scale(1.1);
         }
         
-        .lgnewui-chat-media-play-icon {
+        .withu-chat-media-play-icon {
             font-size: 20px;
             color: #fff;
             margin-left: 2px; 
         }
 
         /* 语音消息 */
-        .lgnewui-chat-voice-msg {
+        .withu-chat-voice-msg {
             display: flex;
             align-items: center;
             gap: 12px;
@@ -387,29 +387,29 @@
             min-width: 90px;
             transition: transform 0.1s;
         }
-        .lgnewui-chat-voice-msg:active { transform: scale(0.98); }
-        .lgnewui-chat-voice-icon { display: flex; align-items: center; flex-shrink: 0; }
-        .lgnewui-chat-voice-icon svg { width: 24px; height: 24px; fill: currentColor; }
-        .lgnewui-chat-voice-waves { display: flex; align-items: center; gap: 3px; height: 16px; }
-        .lgnewui-chat-voice-waves span { width: 3px; background: currentColor; border-radius: 2px; opacity: 0.6; }
-        .lgnewui-chat-voice-waves span:nth-child(1) { height: 6px; }
-        .lgnewui-chat-voice-waves span:nth-child(2) { height: 14px; }
-        .lgnewui-chat-voice-waves span:nth-child(3) { height: 8px; }
-        .lgnewui-chat-voice-waves span:nth-child(4) { height: 16px; }
-        .lgnewui-chat-voice-waves span:nth-child(5) { height: 5px; }
+        .withu-chat-voice-msg:active { transform: scale(0.98); }
+        .withu-chat-voice-icon { display: flex; align-items: center; flex-shrink: 0; }
+        .withu-chat-voice-icon svg { width: 24px; height: 24px; fill: currentColor; }
+        .withu-chat-voice-waves { display: flex; align-items: center; gap: 3px; height: 16px; }
+        .withu-chat-voice-waves span { width: 3px; background: currentColor; border-radius: 2px; opacity: 0.6; }
+        .withu-chat-voice-waves span:nth-child(1) { height: 6px; }
+        .withu-chat-voice-waves span:nth-child(2) { height: 14px; }
+        .withu-chat-voice-waves span:nth-child(3) { height: 8px; }
+        .withu-chat-voice-waves span:nth-child(4) { height: 16px; }
+        .withu-chat-voice-waves span:nth-child(5) { height: 5px; }
         
-        .lgnewui-chat-voice-msg.playing .lgnewui-chat-voice-waves span {
+        .withu-chat-voice-msg.playing .withu-chat-voice-waves span {
             animation: waveBounce 0.5s infinite alternate;
         }
-        .lgnewui-chat-voice-msg.playing .lgnewui-chat-voice-waves span:nth-child(2) { animation-delay: 0.1s; }
-        .lgnewui-chat-voice-msg.playing .lgnewui-chat-voice-waves span:nth-child(3) { animation-delay: 0.2s; }
-        .lgnewui-chat-voice-msg.playing .lgnewui-chat-voice-waves span:nth-child(4) { animation-delay: 0.3s; }
+        .withu-chat-voice-msg.playing .withu-chat-voice-waves span:nth-child(2) { animation-delay: 0.1s; }
+        .withu-chat-voice-msg.playing .withu-chat-voice-waves span:nth-child(3) { animation-delay: 0.2s; }
+        .withu-chat-voice-msg.playing .withu-chat-voice-waves span:nth-child(4) { animation-delay: 0.3s; }
         @keyframes waveBounce { 0% { transform: scaleY(0.5); } 100% { transform: scaleY(1.2); } }
         
-        .lgnewui-chat-voice-time { font-size: 14px; opacity: 0.9; font-variant-numeric: tabular-nums; font-weight: 500; }
+        .withu-chat-voice-time { font-size: 14px; opacity: 0.9; font-variant-numeric: tabular-nums; font-weight: 500; }
 
         /* --- 底部悬浮控制台 (明显磨砂，无绿色) --- */
-        .lgnewui-chat-controls-wrapper {
+        .withu-chat-controls-wrapper {
             position: absolute;
             bottom: 24px;
             left: 0; right: 0;
@@ -419,7 +419,7 @@
             z-index: 60;
         }
 
-        .lgnewui-chat-controls {
+        .withu-chat-controls {
             width: auto;
             min-width: 250px;
             height: 52px;
@@ -438,7 +438,7 @@
             gap: 2px;
         }
 
-        .lgnewui-chat-ctrl-btn {
+        .withu-chat-ctrl-btn {
             width: 40px;
             height: 40px;
             border-radius: 50%;
@@ -452,11 +452,11 @@
             user-select: none;
         }
 
-        .lgnewui-chat-ctrl-btn:active { transform: scale(0.85); background: rgba(0,0,0,0.1); }
-        .lgnewui-chat-ctrl-btn:hover { background: var(--footer-btn-hover); }
+        .withu-chat-ctrl-btn:active { transform: scale(0.85); background: rgba(0,0,0,0.1); }
+        .withu-chat-ctrl-btn:hover { background: var(--footer-btn-hover); }
 
         /* 重新设计的倍速按钮，干净文字无冗余边框 */
-        .lgnewui-chat-speed-btn-text {
+        .withu-chat-speed-btn-text {
             font-size: 14px;
             font-weight: 700;
             font-family: -apple-system, monospace;
@@ -464,7 +464,7 @@
         }
 
         /* 中心的核心播放/暂停键 */
-        .lgnewui-chat-ctrl-btn.lgnewui-chat-play-btn {
+        .withu-chat-ctrl-btn.withu-chat-play-btn {
             width: 44px;
             height: 44px;
             background: var(--footer-play-bg);
@@ -472,11 +472,11 @@
             font-size: 22px;
             margin: 0 6px;
         }
-        .lgnewui-chat-ctrl-btn.lgnewui-chat-play-btn:active { transform: scale(0.9); }
-        .lgnewui-chat-ctrl-btn.lgnewui-chat-play-btn:hover { opacity: 0.9; background: var(--footer-play-bg); color: var(--footer-play-text);}
+        .withu-chat-ctrl-btn.withu-chat-play-btn:active { transform: scale(0.9); }
+        .withu-chat-ctrl-btn.withu-chat-play-btn:hover { opacity: 0.9; background: var(--footer-play-bg); color: var(--footer-play-text);}
         
         /* 暂停时变为粉色脉冲 */
-        .lgnewui-chat-ctrl-btn.lgnewui-chat-play-btn.paused {
+        .withu-chat-ctrl-btn.withu-chat-play-btn.paused {
             background: #ff2d55;
             color: #ffffff;
             animation: pulse-pink 2s infinite;
@@ -490,7 +490,7 @@
         /* --- 导出长图弹窗 --- */
 
         /* ====== 亮色毛玻璃遮罩 ====== */
-        .lgnewui-chat-overlay-backdrop {
+        .withu-chat-overlay-backdrop {
             position: fixed;
             inset: 0;
             background: rgba(247, 247, 249, 0.65);
@@ -506,18 +506,18 @@
         }
 
         /* 激活态：主页面模糊 + 遮罩显现 + 面板弹入 */
-        body.lgnewui-chat-is-exporting .lgnewui-chat-overlay-backdrop {
+        body.withu-chat-is-exporting .withu-chat-overlay-backdrop {
             opacity: 1;
             pointer-events: auto;
         }
-        body.lgnewui-chat-is-exporting .lgnewui-chat-device {
+        body.withu-chat-is-exporting .withu-chat-device {
             filter: blur(4px) brightness(0.96);
             transform: scale(0.98);
             transition: filter 0.6s cubic-bezier(0.16, 1, 0.3, 1), transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
         }
 
         /* ====== 面板容器 ====== */
-        .lgnewui-chat-export-panel {
+        .withu-chat-export-panel {
             width: min(340px, 88vw);
             background: #FFFFFF;
             border-radius: 24px;
@@ -530,13 +530,13 @@
             position: relative;
             height: 480px;
         }
-        body.lgnewui-chat-is-exporting .lgnewui-chat-export-panel {
+        body.withu-chat-is-exporting .withu-chat-export-panel {
             transform: translateY(0) scale(1);
             opacity: 1;
         }
 
         /* 面板内部容器（绝对定位实现无缝状态切换） */
-        .lgnewui-chat-panel-content {
+        .withu-chat-panel-content {
             position: absolute;
             top: 0; left: 0;
             width: 100%; height: 100%;
@@ -545,21 +545,21 @@
             flex-direction: column;
             transition: opacity 0.5s cubic-bezier(0.65, 0, 0.35, 1), visibility 0.5s;
         }
-        .lgnewui-chat-hidden-state {
+        .withu-chat-hidden-state {
             opacity: 0;
             visibility: hidden;
             pointer-events: none;
         }
 
         /* ====== 状态 A：生成中（骨架屏） ====== */
-        .lgnewui-chat-state-generating {
+        .withu-chat-state-generating {
             align-items: center;
             justify-content: center;
             text-align: center;
         }
 
         /* 骨架屏：模拟气泡排版 */
-        .lgnewui-chat-skeleton-chat {
+        .withu-chat-skeleton-chat {
             width: 160px;
             height: 260px;
             background: #F4F5F7;
@@ -571,26 +571,26 @@
             gap: 16px;
             overflow: hidden;
         }
-        .lgnewui-chat-sk-row {
+        .withu-chat-sk-row {
             display: flex;
             flex-direction: column;
             width: 100%;
         }
-        .lgnewui-chat-sk-row.sk-other { align-items: flex-start; }
-        .lgnewui-chat-sk-row.sk-self { align-items: flex-end; }
-        .lgnewui-chat-sk-bubble {
+        .withu-chat-sk-row.sk-other { align-items: flex-start; }
+        .withu-chat-sk-row.sk-self { align-items: flex-end; }
+        .withu-chat-sk-bubble {
             height: 26px;
             border-radius: 12px;
             background: #EAEBEE;
             position: relative;
             overflow: hidden;
         }
-        .lgnewui-chat-sk-row.sk-other .lgnewui-chat-sk-bubble { border-bottom-left-radius: 4px; }
-        .lgnewui-chat-sk-row.sk-self .lgnewui-chat-sk-bubble { border-bottom-right-radius: 4px; background: #E2E8F0; }
-        .lgnewui-chat-sk-media { height: 60px; border-radius: 8px; }
+        .withu-chat-sk-row.sk-other .withu-chat-sk-bubble { border-bottom-left-radius: 4px; }
+        .withu-chat-sk-row.sk-self .withu-chat-sk-bubble { border-bottom-right-radius: 4px; background: #E2E8F0; }
+        .withu-chat-sk-media { height: 60px; border-radius: 8px; }
 
         /* 骨架屏光影扫过动画 */
-        .lgnewui-chat-sk-bubble::after {
+        .withu-chat-sk-bubble::after {
             content: '';
             position: absolute;
             top: 0; left: -150%;
@@ -604,49 +604,49 @@
         }
 
         /* 加载旋转图标 */
-        .lgnewui-chat-icon-spin {
+        .withu-chat-icon-spin {
             animation: exportSpin 1s linear infinite;
             color: #5C6370;
         }
         @keyframes exportSpin { 100% { transform: rotate(360deg); } }
 
         /* 文案区域 */
-        .lgnewui-chat-gen-title-wrapper {
+        .withu-chat-gen-title-wrapper {
             display: flex;
             align-items: center;
             justify-content: center;
             gap: 8px;
             margin-bottom: 8px;
         }
-        .lgnewui-chat-gen-title-wrapper i { font-size: 16px; }
-        .lgnewui-chat-gen-title {
+        .withu-chat-gen-title-wrapper i { font-size: 16px; }
+        .withu-chat-gen-title {
             font-size: 16px; font-weight: 500; color: #1C1E21;
             transition: opacity 0.3s;
         }
-        .lgnewui-chat-gen-subtitle {
+        .withu-chat-gen-subtitle {
             font-size: 13px; color: #A0A5B1;
             transition: opacity 0.3s;
         }
 
         /* ====== 状态 B：预览（作品感） ====== */
-        .lgnewui-chat-state-preview {
+        .withu-chat-state-preview {
             justify-content: space-between;
         }
 
         /* 预览头部 */
-        .lgnewui-chat-preview-header {
+        .withu-chat-preview-header {
             text-align: center;
             margin-bottom: 20px;
         }
-        .lgnewui-chat-preview-header h2 {
+        .withu-chat-preview-header h2 {
             font-size: 18px; font-weight: 600; color: #1C1E21; margin-bottom: 4px;
         }
-        .lgnewui-chat-preview-header p {
+        .withu-chat-preview-header p {
             font-size: 13px; color: #A0A5B1;
         }
 
         /* 预览缩略图 */
-        .lgnewui-chat-preview-thumbnail-wrapper {
+        .withu-chat-preview-thumbnail-wrapper {
             flex: 1;
             background: #F4F5F7;
             border: none;
@@ -659,7 +659,7 @@
             position: relative;
             overflow: hidden;
         }
-        .lgnewui-chat-scroll-window {
+        .withu-chat-scroll-window {
             width: 140px;
             height: 220px;
             border-radius: 8px;
@@ -667,7 +667,7 @@
             background: #FFFFFF;
             position: relative;
         }
-        .lgnewui-chat-scrolling-img {
+        .withu-chat-scrolling-img {
             width: 100%;
             height: auto;
             display: block;
@@ -683,7 +683,7 @@
         }
 
         /* 角标 */
-        .lgnewui-chat-preview-badge {
+        .withu-chat-preview-badge {
             position: absolute;
             bottom: 12px; right: 12px;
             background: rgba(255, 255, 255, 0.9);
@@ -697,15 +697,15 @@
             backdrop-filter: blur(8px);
             -webkit-backdrop-filter: blur(8px);
         }
-        .lgnewui-chat-preview-badge i { font-size: 12px; }
+        .withu-chat-preview-badge i { font-size: 12px; }
 
         /* 操作按钮 */
-        .lgnewui-chat-actions-group {
+        .withu-chat-actions-group {
             display: flex;
             flex-direction: column;
             gap: 12px;
         }
-        .lgnewui-chat-export-btn {
+        .withu-chat-export-btn {
             width: 100%;
             height: 44px;
             border-radius: 28px;
@@ -719,15 +719,15 @@
             border: none;
             outline: none;
         }
-        .lgnewui-chat-export-btn-primary {
+        .withu-chat-export-btn-primary {
             background-color: #1C1E21;
             color: #FFFFFF;
         }
-        .lgnewui-chat-export-btn-primary:active {
+        .withu-chat-export-btn-primary:active {
             filter: brightness(0.95);
             transform: scale(0.98);
         }
-        .lgnewui-chat-export-btn-primary:disabled {
+        .withu-chat-export-btn-primary:disabled {
             background-color: #1C1E21;
             color: #FFFFFF;
             opacity: 0.75;
@@ -735,7 +735,7 @@
         }
 
         /* 右上角关闭按钮 */
-        .lgnewui-chat-export-close-btn {
+        .withu-chat-export-close-btn {
             position: absolute;
             top: 20px; right: 20px;
             width: 32px; height: 32px;
@@ -751,7 +751,7 @@
             z-index: 10;
             font-size: 18px;
         }
-        .lgnewui-chat-export-close-btn:hover {
+        .withu-chat-export-close-btn:hover {
             background: #F4F5F7;
             color: #5C6370;
         }
@@ -764,17 +764,17 @@
             border-radius: 0; /* 截图时不需要大圆角 */
             font-family: var(--font-family);
         }
-        .lgnewui-chat-poster-header-box { text-align: center; margin-bottom: 30px; }
-        .lgnewui-chat-poster-title { font-size: 24px; font-weight: bold; color: var(--header-text); }
-        .lgnewui-chat-poster-date { font-size: 14px; color: #888; margin-top: 6px; }
+        .withu-chat-poster-header-box { text-align: center; margin-bottom: 30px; }
+        .withu-chat-poster-title { font-size: 24px; font-weight: bold; color: var(--header-text); }
+        .withu-chat-poster-date { font-size: 14px; color: #888; margin-top: 6px; }
         
-        .lgnewui-chat-poster-footer-box { 
+        .withu-chat-poster-footer-box { 
             text-align: center; 
             margin-top: 50px; 
             padding: 30px 20px 10px; 
             position: relative; 
         }
-        .lgnewui-chat-poster-footer-box::before { 
+        .withu-chat-poster-footer-box::before { 
             content: ''; 
             position: absolute; 
             top: 0; 
@@ -784,14 +784,14 @@
             height: 1px; 
             background: rgba(0,0,0,0.1); 
         }
-        .lgnewui-chat-footer-quote { 
+        .withu-chat-footer-quote { 
             font-size: 15px; 
             color: var(--header-text); 
             letter-spacing: 2px; 
             margin-bottom: 8px; 
             font-weight: 500; 
         }
-        .lgnewui-chat-footer-brand { 
+        .withu-chat-footer-brand { 
             font-size: 11px; 
             color: #a1a1a6; 
             letter-spacing: 2px; 

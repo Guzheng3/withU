@@ -1,5 +1,5 @@
 /**
- * LG_NewUI 可复用组件模块
+ * withU 可复用组件模块
  * @version 2.0.0
  * @description 轮播图、礼花效果、头像交互、Masonry 等组件
  */
@@ -344,7 +344,7 @@
         },
 
         _bindCoupleAvatarsClick() {
-            const coupleAvatars = document.querySelector('.lgnewui-couple-avatars-right');
+            const coupleAvatars = document.querySelector('.withu-couple-avatars-right');
             if (!coupleAvatars) return;
 
             coupleAvatars.style.cursor = 'pointer';
@@ -391,7 +391,7 @@
             if ($grid.length === 0) return null;
 
             const defaultOptions = {
-                itemSelector: '.lg-masonry-col',
+                itemSelector: '.withu-masonry-col',
                 percentPosition: true
             };
 
@@ -557,16 +557,16 @@
          * 初始化导航栏
          */
         init() {
-            this._indicator = document.getElementById('lgnewuiNavIndicator');
-            this._items = document.querySelectorAll('.lgnewui-nav-island-item');
-            this._heroTitle = document.getElementById('lgnewuiHeroTitle');
-            this._metaTag = document.getElementById('lgnewuiMetaTag');
-            this._metaText = document.getElementById('lgnewuiMetaText');
-            this._metaLine = document.getElementById('lgnewuiMetaLine');
-            this._navWrapper = document.getElementById('lgnewuiNavWrapper');
-            this._navPlaceholder = document.getElementById('lgnewuiNavPlaceholder');
-            this._navIsland = document.getElementById('lgnewuiNavIsland');
-            this._pageHeader = document.querySelector('.lgnewui-page-header');
+            this._indicator = document.getElementById('withuNavIndicator');
+            this._items = document.querySelectorAll('.withu-nav-island-item');
+            this._heroTitle = document.getElementById('withuHeroTitle');
+            this._metaTag = document.getElementById('withuMetaTag');
+            this._metaText = document.getElementById('withuMetaText');
+            this._metaLine = document.getElementById('withuMetaLine');
+            this._navWrapper = document.getElementById('withuNavWrapper');
+            this._navPlaceholder = document.getElementById('withuNavPlaceholder');
+            this._navIsland = document.getElementById('withuNavIsland');
+            this._pageHeader = document.querySelector('.withu-page-header');
 
             if (!this._indicator || !this._items.length || !this._heroTitle || !this._navWrapper) {
                 return;
@@ -614,8 +614,8 @@
             });
 
             // 默认首页
-            if (!document.querySelector('.lgnewui-nav-island-item.active')) {
-                const homeItem = document.querySelector('.lgnewui-nav-island-item.nav-home');
+            if (!document.querySelector('.withu-nav-island-item.active')) {
+                const homeItem = document.querySelector('.withu-nav-island-item.nav-home');
                 if (homeItem) homeItem.classList.add('active');
             }
         },
@@ -645,8 +645,8 @@
 
             // 缓存 DOM 查询
             const logoEl = this._logoEl || (this._logoEl = document.querySelector('.alogo'));
-            const actionsEl = this._actionsEl || (this._actionsEl = document.querySelector('.lgnewui-header-actions'));
-            const leftAvatarEl = this._leftAvatarEl || (this._leftAvatarEl = document.querySelector('.lgnewui-header-left-avatar'));
+            const actionsEl = this._actionsEl || (this._actionsEl = document.querySelector('.withu-header-actions'));
+            const leftAvatarEl = this._leftAvatarEl || (this._leftAvatarEl = document.querySelector('.withu-header-left-avatar'));
             // 缓存天气足迹元素
             const weatherEl = this._weatherEl || (this._weatherEl = document.getElementById('lgHeaderVisitorWeather'));
             const mapBtnEl = this._mapBtnEl || (this._mapBtnEl = document.getElementById('lgMapOpenBtn'));
@@ -659,23 +659,23 @@
                     this._navWrapper.classList.add('is-fixed');
                     this._navPlaceholder.classList.add('is-active');
                     this._navPlaceholder.style.height = this._navHeight + 'px';
-                    this._navIsland.classList.add('lgnewui-is-stuck');
+                    this._navIsland.classList.add('withu-is-stuck');
                     if (headerWrap) headerWrap.classList.add('is-stuck');
 
-                    if (logoEl) logoEl.classList.add('lgnewui-logo-faded');
-                    if (leftAvatarEl) leftAvatarEl.classList.add('lgnewui-avatar-visible');
-                    if (weatherEl) weatherEl.classList.add('lgnewui-weather-visible');
-                    if (mapBtnEl) mapBtnEl.classList.add('lgnewui-weather-visible');
+                    if (logoEl) logoEl.classList.add('withu-logo-faded');
+                    if (leftAvatarEl) leftAvatarEl.classList.add('withu-avatar-visible');
+                    if (weatherEl) weatherEl.classList.add('withu-weather-visible');
+                    if (mapBtnEl) mapBtnEl.classList.add('withu-weather-visible');
                 } else {
-                    this._navIsland.classList.remove('lgnewui-is-stuck');
+                    this._navIsland.classList.remove('withu-is-stuck');
                     this._navWrapper.classList.remove('is-fixed');
                     this._navPlaceholder.classList.remove('is-active');
                     if (headerWrap) headerWrap.classList.remove('is-stuck');
 
-                    if (logoEl) logoEl.classList.remove('lgnewui-logo-faded');
-                    if (leftAvatarEl) leftAvatarEl.classList.remove('lgnewui-avatar-visible');
-                    if (weatherEl) weatherEl.classList.remove('lgnewui-weather-visible');
-                    if (mapBtnEl) mapBtnEl.classList.remove('lgnewui-weather-visible');
+                    if (logoEl) logoEl.classList.remove('withu-logo-faded');
+                    if (leftAvatarEl) leftAvatarEl.classList.remove('withu-avatar-visible');
+                    if (weatherEl) weatherEl.classList.remove('withu-weather-visible');
+                    if (mapBtnEl) mapBtnEl.classList.remove('withu-weather-visible');
                 }
                 this._snapIndicator(true);
             }
@@ -687,7 +687,7 @@
             const fadeChanged = shouldFadePoem !== this._fadePoem;
             if (fadeChanged) {
                 this._fadePoem = shouldFadePoem;
-                if (actionsEl) actionsEl.classList.toggle('lgnewui-actions-visible', shouldFadePoem);
+                if (actionsEl) actionsEl.classList.toggle('withu-actions-visible', shouldFadePoem);
             }
 
             // 子页面吸顶状态下：根据滚动方向切换 logo 和返回按钮
@@ -695,10 +695,10 @@
         },
 
         _toggleBackBtn(isStuck) {
-            const capsule = this._backBtnEl || (this._backBtnEl = document.querySelector('.lg-capsule-back'));
+            const capsule = this._backBtnEl || (this._backBtnEl = document.querySelector('.withu-capsule-back'));
             if (!capsule || !capsule.classList.contains('subpage-back-ready')) return;
 
-            const leftAvatarEl = this._leftAvatarEl || (this._leftAvatarEl = document.querySelector('.lgnewui-header-left-avatar'));
+            const leftAvatarEl = this._leftAvatarEl || (this._leftAvatarEl = document.querySelector('.withu-header-left-avatar'));
             // 不缓存titleLogoEl，每次重新查询（PJAX后DOM可能变化）
             const titleLogoEl = document.querySelector('.header .logo');
             const isMobile = window.innerWidth <= 768;
@@ -735,7 +735,7 @@
          * @param {boolean} animate - true: 带过渡动画滑过去(tab切换/吸附切换); false: 无过渡直接跳(初始化)
          */
         _snapIndicator(animate) {
-            const active = document.querySelector('.lgnewui-nav-island-item.active');
+            const active = document.querySelector('.withu-nav-island-item.active');
             if (!active) return;
 
             if (this._rafId) cancelAnimationFrame(this._rafId);
@@ -810,7 +810,7 @@
         },
 
         _initNav() {
-            const active = document.querySelector('.lgnewui-nav-island-item.active');
+            const active = document.querySelector('.withu-nav-island-item.active');
             if (active) {
                 const desc = active.getAttribute('data-desc');
                 const meta = active.getAttribute('data-meta');
@@ -842,7 +842,7 @@
                 this._updateNavPosition();
 
                 this._indicator.classList.add('no-transition');
-                const active = document.querySelector('.lgnewui-nav-island-item.active');
+                const active = document.querySelector('.withu-nav-island-item.active');
                 if (active) {
                     const left = active.offsetLeft;
                     const width = active.offsetWidth;
@@ -869,16 +869,16 @@
             // PJAX 完成后重新初始化
             $(document).off('pjax:complete.lgNav').on('pjax:complete.lgNav', () => {
                 // 重新获取 DOM 引用（确保引用有效）
-                this._heroTitle = document.getElementById('lgnewuiHeroTitle');
-                this._metaTag = document.getElementById('lgnewuiMetaTag');
-                this._metaText = document.getElementById('lgnewuiMetaText');
-                this._metaLine = document.getElementById('lgnewuiMetaLine');
-                this._pageHeader = document.querySelector('.lgnewui-page-header');
+                this._heroTitle = document.getElementById('withuHeroTitle');
+                this._metaTag = document.getElementById('withuMetaTag');
+                this._metaText = document.getElementById('withuMetaText');
+                this._metaLine = document.getElementById('withuMetaLine');
+                this._pageHeader = document.querySelector('.withu-page-header');
 
                 this._setActiveByPath();
                 this._updateHeaderVisibility();
 
-                const active = document.querySelector('.lgnewui-nav-island-item.active');
+                const active = document.querySelector('.withu-nav-island-item.active');
                 if (active) {
                     // 确保移除 no-transition 类，让 indicator 有滑动动画
                     if (this._indicator) {
@@ -928,7 +928,7 @@
 
                 // PJAX后清理logo上的scroll-logo-hidden类
                 const titleLogoEl = document.querySelector('.header .logo');
-                const leftAvatarEl = document.querySelector('.lgnewui-header-left-avatar');
+                const leftAvatarEl = document.querySelector('.withu-header-left-avatar');
                 if (titleLogoEl) titleLogoEl.classList.remove('scroll-logo-hidden');
                 if (leftAvatarEl) leftAvatarEl.classList.remove('scroll-logo-hidden');
 
@@ -971,7 +971,7 @@
 
             if (this._$scrollTopBtn.length === 0) return;
 
-            this._$scrollTopBtn.removeClass('lgnewui-fab-visible');
+            this._$scrollTopBtn.removeClass('withu-fab-visible');
 
             // 滚动显示/隐藏 - 使用 RAF 节流
             $(window).off('scroll.lgScrollBtn').on('scroll.lgScrollBtn', () => {
@@ -979,9 +979,9 @@
                 this._scrollTicking = true;
                 requestAnimationFrame(() => {
                     if (window.scrollY > 1000) {
-                        this._$scrollTopBtn.addClass('lgnewui-fab-visible');
+                        this._$scrollTopBtn.addClass('withu-fab-visible');
                     } else {
-                        this._$scrollTopBtn.removeClass('lgnewui-fab-visible');
+                        this._$scrollTopBtn.removeClass('withu-fab-visible');
                     }
                     this._scrollTicking = false;
                 });
@@ -1022,7 +1022,7 @@
         _handleResize: null,
 
         init() {
-            if (window.LG_CONFIG && window.LG_CONFIG.weatherEnabled === false) {
+            if (window.WITHU_CONFIG && window.WITHU_CONFIG.weatherEnabled === false) {
                 var _wRoot = document.getElementById('lgHeaderVisitorWeather');
                 if (_wRoot) _wRoot.style.display = 'none';
                 return;
@@ -1065,8 +1065,8 @@
 
             try {
                 this._setLoading(true);
-                const _wtParam = (window.LG_CONFIG && window.LG_CONFIG.weatherToken) ? '&_wt=' + encodeURIComponent(window.LG_CONFIG.weatherToken) : '';
-                var _siteBase = (window.LG_CONFIG && window.LG_CONFIG.siteBase) || '';
+                const _wtParam = (window.WITHU_CONFIG && window.WITHU_CONFIG.weatherToken) ? '&_wt=' + encodeURIComponent(window.WITHU_CONFIG.weatherToken) : '';
+                var _siteBase = (window.WITHU_CONFIG && window.WITHU_CONFIG.siteBase) || '';
                 this._pendingRequest = fetch(_siteBase + 'services/weather.php?mode=ip' + _wtParam, {
                     method: 'GET',
                     credentials: 'same-origin',
@@ -1105,7 +1105,7 @@
                 await this._pendingRequest;
             } catch (err) {
                 this._setLoading(false);
-                this._iconEl.className = 'qi-999-fill lgnewui-header-weather-icon';
+                this._iconEl.className = 'qi-999-fill withu-header-weather-icon';
                 this._textEl.textContent = '暂无天气';
                 this._renderPanel({
                     city: '暂无天气',
@@ -1124,7 +1124,7 @@
             this._setLoading(false);
             const iconCodeRaw = String(data.icon || '999').replace(/[^\d]/g, '');
             const iconCode = iconCodeRaw !== '' ? iconCodeRaw : '999';
-            this._iconEl.className = `qi-${iconCode}-fill lgnewui-header-weather-icon`;
+            this._iconEl.className = `qi-${iconCode}-fill withu-header-weather-icon`;
 
             const tempText = (data.temp !== undefined && data.temp !== null && String(data.temp) !== '')
                 ? `${data.temp}°`
@@ -1162,58 +1162,58 @@
             const updatedText = this._escapeHtml(this._formatUpdateTime(String(data.obsTime || '')));
 
             this._panelEl.innerHTML = `
-                <div class="lgnewui-header-weather-sheet">
-                    <div class="lgnewui-header-weather-hero">
-                        <div class="lgnewui-header-weather-hero-icon">
+                <div class="withu-header-weather-sheet">
+                    <div class="withu-header-weather-hero">
+                        <div class="withu-header-weather-hero-icon">
                             <i class="qi-${iconCode}-fill"></i>
                         </div>
-                        <div class="lgnewui-header-weather-hero-main">
-                            <div class="lgnewui-header-weather-hero-title">
-                                <span class="lgnewui-header-weather-hero-desc">${descText}</span>
+                        <div class="withu-header-weather-hero-main">
+                            <div class="withu-header-weather-hero-title">
+                                <span class="withu-header-weather-hero-desc">${descText}</span>
                             </div>
-                            <div class="lgnewui-header-weather-hero-sub">
+                            <div class="withu-header-weather-hero-sub">
                                 <i class="ph ph-map-pin-area"></i>
                                 <span>${cityText}</span>
                             </div>
                         </div>
-                        <span class="lgnewui-header-weather-hero-temp">${tempText}</span>
+                        <span class="withu-header-weather-hero-temp">${tempText}</span>
                     </div>
-                    <div class="lgnewui-header-weather-meta">
-                        <div class="lgnewui-header-weather-meta-item">
-                            <span class="lgnewui-header-weather-meta-icon"><i class="ph ph-thermometer-simple"></i></span>
-                            <span class="lgnewui-header-weather-meta-copy">
-                                <span class="lgnewui-header-weather-meta-label">体感</span>
-                                <span class="lgnewui-header-weather-meta-value">${feelsText}</span>
+                    <div class="withu-header-weather-meta">
+                        <div class="withu-header-weather-meta-item">
+                            <span class="withu-header-weather-meta-icon"><i class="ph ph-thermometer-simple"></i></span>
+                            <span class="withu-header-weather-meta-copy">
+                                <span class="withu-header-weather-meta-label">体感</span>
+                                <span class="withu-header-weather-meta-value">${feelsText}</span>
                             </span>
                         </div>
-                        <div class="lgnewui-header-weather-meta-item">
-                            <span class="lgnewui-header-weather-meta-icon"><i class="ph ph-drop"></i></span>
-                            <span class="lgnewui-header-weather-meta-copy">
-                                <span class="lgnewui-header-weather-meta-label">湿度</span>
-                                <span class="lgnewui-header-weather-meta-value">${humidityText}</span>
+                        <div class="withu-header-weather-meta-item">
+                            <span class="withu-header-weather-meta-icon"><i class="ph ph-drop"></i></span>
+                            <span class="withu-header-weather-meta-copy">
+                                <span class="withu-header-weather-meta-label">湿度</span>
+                                <span class="withu-header-weather-meta-value">${humidityText}</span>
                             </span>
                         </div>
-                        <div class="lgnewui-header-weather-meta-item">
-                            <span class="lgnewui-header-weather-meta-icon"><i class="ph ph-wind"></i></span>
-                            <span class="lgnewui-header-weather-meta-copy">
-                                <span class="lgnewui-header-weather-meta-label">风向</span>
-                                <span class="lgnewui-header-weather-meta-value">${windText}</span>
+                        <div class="withu-header-weather-meta-item">
+                            <span class="withu-header-weather-meta-icon"><i class="ph ph-wind"></i></span>
+                            <span class="withu-header-weather-meta-copy">
+                                <span class="withu-header-weather-meta-label">风向</span>
+                                <span class="withu-header-weather-meta-value">${windText}</span>
                             </span>
                         </div>
-                        <div class="lgnewui-header-weather-meta-item">
-                            <span class="lgnewui-header-weather-meta-icon"><i class="ph ph-eye"></i></span>
-                            <span class="lgnewui-header-weather-meta-copy">
-                                <span class="lgnewui-header-weather-meta-label">能见度</span>
-                                <span class="lgnewui-header-weather-meta-value">${visText}</span>
+                        <div class="withu-header-weather-meta-item">
+                            <span class="withu-header-weather-meta-icon"><i class="ph ph-eye"></i></span>
+                            <span class="withu-header-weather-meta-copy">
+                                <span class="withu-header-weather-meta-label">能见度</span>
+                                <span class="withu-header-weather-meta-value">${visText}</span>
                             </span>
                         </div>
                     </div>
-                    <div class="lgnewui-header-weather-foot">
-                        <span class="lgnewui-header-weather-updated">
+                    <div class="withu-header-weather-foot">
+                        <span class="withu-header-weather-updated">
                             <i class="ph ph-clock-countdown"></i>
                             <span>${updatedText}</span>
                         </span>
-                        <span class="lgnewui-header-weather-note">
+                        <span class="withu-header-weather-note">
                             <i class="ph ph-cloud"></i>
                             <span>当前天气</span>
                         </span>
@@ -1320,7 +1320,7 @@
 
             panel = document.createElement('div');
             panel.id = 'lgHeaderVisitorWeatherPanel';
-            panel.className = 'lgnewui-header-weather-panel';
+            panel.className = 'withu-header-weather-panel';
             panel.setAttribute('aria-hidden', 'true');
             document.body.appendChild(panel);
             return panel;

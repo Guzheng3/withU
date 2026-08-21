@@ -1,5 +1,5 @@
 /**
- * LG_NewUI 点点滴滴页面模块
+ * withU 点点滴滴页面模块
  * @version 2.0.0
  * @description articles.php 页面的 JS 逻辑（点赞系统）
  * @note 瀑布流和弥散光效果已迁移到 pjax.js 的 MasonryManager 和 AuroraEffect
@@ -12,7 +12,7 @@
     // 点赞系统模块
     // ============================================
     const LikeSystem = {
-        _storageKey: 'lgnewui_article_likes',
+        _storageKey: 'withu_article_likes',
         _toastTimer: null,
 
         /**
@@ -57,7 +57,7 @@
          */
         _render() {
             const self = this;
-            $('.lgnewui-article-like').each(function() {
+            $('.withu-article-like').each(function() {
                 const $btn = $(this);
                 const id = $btn.attr('data-id');
                 if (id && self._isLiked(id)) {
@@ -71,7 +71,7 @@
          * @param {string} msg - 提示消息
          */
         _showToast(msg) {
-            const $toast = $('#lgnewui-toast');
+            const $toast = $('#withu-toast');
             $toast.text(msg).addClass('show');
 
             if (this._toastTimer) clearTimeout(this._toastTimer);
@@ -87,7 +87,7 @@
             const self = this;
 
             // 使用事件委托，支持 PJAX 动态加载
-            $(document).off('click.lgLike', '.lgnewui-article-like').on('click.lgLike', '.lgnewui-article-like', function(e) {
+            $(document).off('click.lgLike', '.withu-article-like').on('click.lgLike', '.withu-article-like', function(e) {
                 e.preventDefault();
                 e.stopPropagation();
 
@@ -172,7 +172,7 @@
     // ============================================
     $(function() {
         // 检测是否在点点滴滴页面
-        if ($('#lgnewui-article-masonry').length > 0) {
+        if ($('#withu-article-masonry').length > 0) {
             LittleModule.init();
 
             // 初始化 Masonry 瀑布流
@@ -189,7 +189,7 @@
 
     // PJAX 完成后重新初始化
     $(document).on('pjax:end.lgLittle', function() {
-        if ($('#lgnewui-article-masonry').length > 0) {
+        if ($('#withu-article-masonry').length > 0) {
             LittleModule.refresh();
         }
     });

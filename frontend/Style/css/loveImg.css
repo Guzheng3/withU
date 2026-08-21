@@ -7,7 +7,7 @@
  *
  *      ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
  *
- * Project      : LGNewUi
+ * Project      : withU
  * Author       : Ki
  * Last Updated : 2026-03-31
  * Description  : A private place to preserve love, memory, and the
@@ -28,7 +28,7 @@
  * Official Authorization Site:
  * https://auth-love.kikiw.cn/
  *
- * Warning      : LGNewUi is an original work. Any unauthorized
+ * Warning      : withU is an original work. Any unauthorized
  *                copying, scraping, resale, redistribution, or
  *                commercial use is forbidden.
  * Notice       : Development and long-term maintenance require
@@ -37,20 +37,20 @@
  *
  */
 :root {
-    --lg-font-family: 'Inter', sans-serif;
-    --lg-bg-body: #f0f2f5;
-    --lg-text-main: #111827;
-    --lg-text-sub: #9ca3af;
-    --lg-text-accent: #4b5563;
-    --lg-primary: #6fb4ff;
-    --lg-primary-light: #eff6ff;
-    --lg-radius-card: 24px;
-    --lg-radius-media: 16px;
-    --lg-grid-gap: 4px;
+    --withu-font-family: 'Inter', sans-serif;
+    --withu-bg-body: #f0f2f5;
+    --withu-text-main: #111827;
+    --withu-text-sub: #9ca3af;
+    --withu-text-accent: #4b5563;
+    --withu-primary: #6fb4ff;
+    --withu-primary-light: #eff6ff;
+    --withu-radius-card: 24px;
+    --withu-radius-media: 16px;
+    --withu-grid-gap: 4px;
 }
 
 /* 布局容器 */
-.lg-page-container {
+.withu-page-container {
     width: 100%;
     max-width: 1100px;
     margin: 20px auto;
@@ -59,11 +59,11 @@
 }
 
 /* Masonry Grid 系统 */
-.lg-masonry-grid {
+.withu-masonry-grid {
     width: 100%;
 }
 
-.lg-masonry-col {
+.withu-masonry-col {
     float: left;
     width: 100%;
     padding: 8px 0;
@@ -71,17 +71,17 @@
 }
 
 @media (min-width: 640px) {
-    .lg-masonry-col {
+    .withu-masonry-col {
         width: 50%;
         padding: 14px;
     }
 }
 
 /* LG Card 组件 */
-.lg-card {
-    font-family: var(--lg-font-family);
+.withu-card {
+    font-family: var(--withu-font-family);
     background: #ffffff;
-    border-radius: var(--lg-radius-card);
+    border-radius: var(--withu-radius-card);
     padding: 18px;
     box-shadow: 1px -1px 40px -10px rgba(0, 0, 0, 0.05), 0 10px 20px -10px rgba(0, 0, 0, 0.02);
     display: flex;
@@ -94,18 +94,18 @@
 }
 
 @media (min-width: 640px) {
-    .lg-card {
+    .withu-card {
         padding: 32px;
     }
 }
 
-.lg-card:hover {
+.withu-card:hover {
     transform: translateY(-4px);
     box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.06), 0 8px 10px -6px rgba(0, 0, 0, 0.02);
 }
 
 /* Header */
-.lg-header {
+.withu-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -113,10 +113,10 @@
 
 /* Header */
 
-/* Header - 头像区域已迁移到公共组件 .lg-author */
+/* Header - 头像区域已迁移到公共组件 .withu-author */
 
 /* Header Action */
-.lg-header-action {
+.withu-header-action {
     width: 36px;
     height: 36px;
     border-radius: 50%;
@@ -132,7 +132,7 @@
     text-decoration: none;
 }
 
-.lg-header-action:hover {
+.withu-header-action:hover {
     background-color: #111827;
     border-color: #111827;
     color: #ffffff;
@@ -141,13 +141,13 @@
 }
 
 /* Content */
-.lg-content {
+.withu-content {
     display: flex;
     flex-direction: column;
     gap: 8px;
 }
 
-.lg-title {
+.withu-title {
     font-family: 'Noto Serif SC', serif;
     font-size: 16px;
     font-weight: 700;
@@ -157,7 +157,7 @@
 }
 
 /* 相册描述 */
-.lg-desc {
+.withu-desc {
     font-size: 13px;
     font-weight: 300;
     line-height: 1.7;
@@ -170,42 +170,42 @@
 }
 
 /* Media Grid */
-.lg-media {
+.withu-media {
     display: grid;
-    gap: var(--lg-grid-gap);
-    border-radius: var(--lg-radius-media);
+    gap: var(--withu-grid-gap);
+    border-radius: var(--withu-radius-media);
     overflow: hidden;
     width: 100%;
 }
 
-.lg-photo-box {
+.withu-photo-box {
     position: relative;
     width: 100%;
     overflow: hidden;
     cursor: pointer;
 }
 
-.lg-photo-box.square {
+.withu-photo-box.square {
     aspect-ratio: 1 / 1;
 }
 
-.lg-photo {
+.withu-photo {
     width: 100%;
     height: 100%;
     object-fit: cover;
     display: block;
 }
 
-.lg-photo.loaded {
+.withu-photo.loaded {
     transition: transform 0.5s cubic-bezier(0.25, 1, 0.5, 1), .7s filter linear, .7s -webkit-filter linear;
 }
 
-.lg-photo-box:hover .lg-photo {
+.withu-photo-box:hover .withu-photo {
     transform: scale(1.1);
 }
 
 /* 文件大小标签 */
-.lg-file-size {
+.withu-file-size {
     position: absolute;
     top: 8px;
     right: 8px;
@@ -225,12 +225,12 @@
     letter-spacing: -0.5px;
 }
 
-.lg-photo-box:hover .lg-file-size {
+.withu-photo-box:hover .withu-file-size {
     opacity: 1;
     transform: translateY(0);
 }
 
-.lg-overlay {
+.withu-overlay {
     position: absolute;
     top: 0;
     left: 0;
@@ -250,7 +250,7 @@
     letter-spacing: -0.5px;
 }
 
-.lg-overlay:hover {
+.withu-overlay:hover {
     background: rgba(0, 0, 0, 0.5);
 }
 
@@ -271,7 +271,7 @@
     aspect-ratio: 4/3;
 }
 
-.grid-3 .lg-photo-box:nth-child(1) {
+.grid-3 .withu-photo-box:nth-child(1) {
     grid-row: span 2;
     height: 100%;
 }
@@ -285,13 +285,13 @@
     grid-template-columns: repeat(6, 1fr);
 }
 
-.grid-5 .lg-photo-box:nth-child(1),
-.grid-5 .lg-photo-box:nth-child(2) {
+.grid-5 .withu-photo-box:nth-child(1),
+.grid-5 .withu-photo-box:nth-child(2) {
     grid-column: span 3;
     aspect-ratio: 3/2;
 }
 
-.grid-5 .lg-photo-box:nth-child(n+3) {
+.grid-5 .withu-photo-box:nth-child(n+3) {
     grid-column: span 2;
     aspect-ratio: 1/1;
 }
@@ -304,12 +304,12 @@
     grid-template-columns: repeat(3, 1fr);
 }
 
-.grid-7 .lg-photo-box:nth-child(1) {
+.grid-7 .withu-photo-box:nth-child(1) {
     grid-column: span 3;
     aspect-ratio: 2/1;
 }
 
-.grid-7 .lg-photo-box:nth-child(n+2) {
+.grid-7 .withu-photo-box:nth-child(n+2) {
     aspect-ratio: 1/1;
 }
 
@@ -317,13 +317,13 @@
     grid-template-columns: repeat(6, 1fr);
 }
 
-.grid-8 .lg-photo-box:nth-child(1),
-.grid-8 .lg-photo-box:nth-child(2) {
+.grid-8 .withu-photo-box:nth-child(1),
+.grid-8 .withu-photo-box:nth-child(2) {
     grid-column: span 3;
     aspect-ratio: 3/2;
 }
 
-.grid-8 .lg-photo-box:nth-child(n+3) {
+.grid-8 .withu-photo-box:nth-child(n+3) {
     grid-column: span 2;
     aspect-ratio: 1/1;
 }
@@ -334,19 +334,19 @@
 }
 
 /* Footer */
-.lg-footer {
+.withu-footer {
     display: flex;
     justify-content: space-between;
     align-items: center;
     padding-top: 8px;
 }
 
-.lg-actions-left {
+.withu-actions-left {
     display: flex;
     gap: 16px;
 }
 
-.lg-action-item {
+.withu-action-item {
     display: flex;
     align-items: center;
     gap: 6px;
@@ -358,20 +358,20 @@
     padding: 4px 0;
 }
 
-.lg-action-item:hover {
-    color: var(--lg-primary);
+.withu-action-item:hover {
+    color: var(--withu-primary);
 }
 
-.lg-action-item i{
+.withu-action-item i{
     font-size: 20px;
 }
 
-.lg-icon {
+.withu-icon {
     font-size: 20px;
 }
 
 /* Location Tag（点滴风格：浅灰背景、hover蓝色） */
-.lg-location-tag {
+.withu-location-tag {
     display: inline-flex;
     align-items: center;
     gap: 6px;
@@ -388,7 +388,7 @@
     max-width: 180px;
 }
 
-.lg-location-tag i {
+.withu-location-tag i {
     display: flex;
     align-items: center;
     justify-content: center;
@@ -402,7 +402,7 @@
     transition: all 0.2s ease;
 }
 
-.lg-location-tag span {
+.withu-location-tag span {
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
@@ -410,46 +410,46 @@
     min-width: 0;
 }
 
-.lg-location-tag:hover {
+.withu-location-tag:hover {
     background: #f0f9ff;
 }
 
-.lg-location-tag:hover i {
+.withu-location-tag:hover i {
     background: #dbeafe;
     color: #3b82f6;
 }
 
-.lg-location-tag:hover {
+.withu-location-tag:hover {
     color: #3b82f6;
 }
 
-.lg-location-tag:active {
+.withu-location-tag:active {
     transform: scale(0.95);
 }
 
-.lg-location-tag.is-empty {
+.withu-location-tag.is-empty {
     color: #d1d5db;
     cursor: default;
 }
 
-.lg-location-tag.is-empty i {
+.withu-location-tag.is-empty i {
     background: #f9fafb;
     color: #e5e7eb;
 }
 
-.lg-location-tag.is-empty:hover {
+.withu-location-tag.is-empty:hover {
     background: #fff;
     color: #d1d5db;
     transform: none;
 }
 
-.lg-location-tag.is-empty:hover i {
+.withu-location-tag.is-empty:hover i {
     background: #f9fafb;
     color: #e5e7eb;
 }
 
 /* 私密相册（亮色风格，与点点滴滴统一） */
-.lg-private-card {
+.withu-private-card {
     background: #ffffff;
     border: none;
     color: #44403c;
@@ -461,11 +461,11 @@
     cursor: pointer;
 }
 
-.lg-private-bg-circle {
+.withu-private-bg-circle {
     display: none;
 }
 
-.lg-private-content {
+.withu-private-content {
     z-index: 1;
     flex: 1;
     display: flex;
@@ -480,7 +480,7 @@
 }
 
 /* 点阵遮罩背景 */
-.lg-private-content::before {
+.withu-private-content::before {
     content: '';
     position: absolute;
     top: 0;
@@ -496,7 +496,7 @@
     pointer-events: none;
 }
 
-.lg-private-icon-box {
+.withu-private-icon-box {
     width: 56px;
     height: 56px;
     background: rgba(255, 255, 255, 0.8);
@@ -511,22 +511,22 @@
     z-index: 1;
 }
 
-.lg-private-card:hover .lg-private-icon-box {
+.withu-private-card:hover .withu-private-icon-box {
     transform: scale(1.1);
     background: #fff;
 }
 
-.lg-private-icon {
+.withu-private-icon {
     font-size: 26px;
     color: #6b7280;
     transition: color 0.3s;
 }
 
-.lg-private-card:hover .lg-private-icon {
+.withu-private-card:hover .withu-private-icon {
     color: #ef4444;
 }
 
-.lg-private-title {
+.withu-private-title {
     font-size: 16px;
     font-weight: 600;
     letter-spacing: 0.5px;
@@ -536,7 +536,7 @@
     z-index: 1;
 }
 
-.lg-private-desc {
+.withu-private-desc {
     font-size: 11px;
     letter-spacing: 0.15em;
     text-transform: uppercase;
@@ -549,13 +549,13 @@
     z-index: 1;
 }
 
-.lg-private-card:hover .lg-private-desc {
+.withu-private-card:hover .withu-private-desc {
     opacity: 1;
     transform: translateY(0);
 }
 
 /* 已解锁提示：胶囊样式 */
-.lg-unlocked-badge {
+.withu-unlocked-badge {
     display: inline-flex;
     align-items: center;
     gap: 6px;
@@ -570,7 +570,7 @@
     width: fit-content;
 }
 
-.lg-unlocked-badge i {
+.withu-unlocked-badge i {
     font-size: 13px;
 }
 
@@ -579,16 +579,16 @@
 }
 
 /* loveImg 页面专属：日期恢复原始 Space Mono 字体 */
-.lg-card .lg-author__meta {
+.withu-card .withu-author__meta {
     font-family: 'Space Mono', monospace;
     font-size: 12px;
     font-weight: 500;
     opacity: 1;
-    color: var(--lg-text-sub);
+    color: var(--withu-text-sub);
     letter-spacing: -0.5px;
 }
 
-.lg-photo-count {
+.withu-photo-count {
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -600,7 +600,7 @@
     user-select: none;
 }
 
-.lg-photo-count .num {
+.withu-photo-count .num {
     font-family: 'Space Mono', monospace;
     font-size: 18px;
     font-weight: 700;
@@ -608,7 +608,7 @@
     letter-spacing: -0.5px;
 }
 
-.lg-photo-count .label {
+.withu-photo-count .label {
     font-family: -apple-system, BlinkMacSystemFont, sans-serif;
     font-size: 9px;
     color: #9ca3af;
@@ -619,11 +619,11 @@
 }
 
 /* Video Icon */
-.lg-photo-box.is-video {
+.withu-photo-box.is-video {
     cursor: pointer;
 }
 
-.lg-video-icon {
+.withu-video-icon {
     position: absolute;
     top: 50%;
     left: 50%;
@@ -643,7 +643,7 @@
     pointer-events: none;
 }
 
-.lg-photo-box.is-video:hover .lg-video-icon {
+.withu-photo-box.is-video:hover .withu-video-icon {
     background: rgba(0, 0, 0, 0.65);
     transform: translate(-50%, -50%) scale(1.1);
 }

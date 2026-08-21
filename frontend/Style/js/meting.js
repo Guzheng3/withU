@@ -144,7 +144,7 @@ class MetingJSElement extends HTMLElement {
       });
   }
   _loadPlayer(a) {
-    let b = { audio: a, mutex: !0, lrcType: this.meta.lrcType || 3, storageName: "lgnewui-music-set" };
+    let b = { audio: a, mutex: !0, lrcType: this.meta.lrcType || 3, storageName: "withu-music-set" };
     if (a.length) {
       let a = _objectSpread({}, b, this.config);
       for (let b in a) ("true" === a[b] || "false" === a[b]) && (a[b] = "true" === a[b]);

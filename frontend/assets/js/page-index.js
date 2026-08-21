@@ -1,5 +1,5 @@
 /**
- * LG_NewUI 首页模块
+ * withU 首页模块
  * @version 2.0.0
  * @description index.php 页面专属 JS 逻辑
  */
@@ -8,7 +8,7 @@
     'use strict';
 
     const { Utils, TimerManager } = window.LGApp || {};
-    const config = window.LG_CONFIG || {};
+    const config = window.WITHU_CONFIG || {};
 
     // ============================================
     // 倒计时模块
@@ -20,10 +20,10 @@
 
         init() {
             this._els = {
-                days: document.getElementById('lgnewui-day-counter-days'),
-                hours: document.getElementById('lgnewui-day-counter-hours'),
-                minutes: document.getElementById('lgnewui-day-counter-minutes'),
-                seconds: document.getElementById('lgnewui-day-counter-seconds')
+                days: document.getElementById('withu-day-counter-days'),
+                hours: document.getElementById('withu-day-counter-hours'),
+                minutes: document.getElementById('withu-day-counter-minutes'),
+                seconds: document.getElementById('withu-day-counter-seconds')
             };
 
             if (!this._els.days) return;
@@ -77,10 +77,10 @@
             if (el.innerText !== newStr) {
                 el.innerText = newStr;
                 // 用 rAF 双帧技巧重置动画，避免 void el.offsetWidth 强制回流
-                el.classList.remove('lgnewui-day-anim-active');
+                el.classList.remove('withu-day-anim-active');
                 requestAnimationFrame(() => {
                     requestAnimationFrame(() => {
-                        el.classList.add('lgnewui-day-anim-active');
+                        el.classList.add('withu-day-anim-active');
                     });
                 });
             }
@@ -98,8 +98,8 @@
 
         _bindEvents() {
             // 使用事件委托
-            $(document).off('click.loveDayFilter', '.lgnewui-ios-tab');
-            $(document).on('click.loveDayFilter', '.lgnewui-ios-tab', (e) => {
+            $(document).off('click.loveDayFilter', '.withu-ios-tab');
+            $(document).on('click.loveDayFilter', '.withu-ios-tab', (e) => {
                 const btn = e.currentTarget;
                 const type = btn.dataset.filter;
                 this.filter(type, btn);
@@ -107,8 +107,8 @@
         },
 
         _initSliderPosition() {
-            const activeTab = document.querySelector('.lgnewui-ios-tab.active');
-            const slider = document.querySelector('.lgnewui-ios-tabs-slider');
+            const activeTab = document.querySelector('.withu-ios-tab.active');
+            const slider = document.querySelector('.withu-ios-tabs-slider');
             if (activeTab && slider) {
                 slider.style.width = activeTab.offsetWidth + 'px';
                 slider.style.transform = 'translateX(' + activeTab.offsetLeft + 'px)';
@@ -116,8 +116,8 @@
         },
 
         filter(type, btn) {
-            const tabs = document.querySelectorAll('.lgnewui-ios-tab');
-            const slider = document.querySelector('.lgnewui-ios-tabs-slider');
+            const tabs = document.querySelectorAll('.withu-ios-tab');
+            const slider = document.querySelector('.withu-ios-tabs-slider');
 
             // 更新激活状态
             tabs.forEach(tab => tab.classList.remove('active'));
@@ -130,12 +130,12 @@
             }
 
             // 筛选项目（骨架卡片过渡）
-            const items = document.querySelectorAll('.lgnewui-widget--loveday-vibrant');
+            const items = document.querySelectorAll('.withu-widget--loveday-vibrant');
             let visibleIndex = 0;
 
             items.forEach(item => {
-                const isPast = item.classList.contains('lgnewui-widget--loveday-past');
-                const isFuture = item.classList.contains('lgnewui-widget--loveday-future');
+                const isPast = item.classList.contains('withu-widget--loveday-past');
+                const isFuture = item.classList.contains('withu-widget--loveday-future');
                 const wrapper = item.closest('[data-aos]') || item;
 
                 let show = false;
@@ -146,20 +146,20 @@
                 if (show) {
                     wrapper.style.display = '';
                     // 先显示骨架态
-                    item.classList.add('lgnewui-skeleton-card');
+                    item.classList.add('withu-skeleton-card');
                     // 插入圆角骨架条
-                    var bars = item.querySelector('.lgnewui-skeleton-bars');
+                    var bars = item.querySelector('.withu-skeleton-bars');
                     if (!bars) {
                         bars = document.createElement('div');
-                        bars.className = 'lgnewui-skeleton-bars';
+                        bars.className = 'withu-skeleton-bars';
                         bars.innerHTML = '<div class="sk-left"><div class="sk-bar sk-title"></div><div class="sk-bar sk-date"></div></div><div class="sk-right"><div class="sk-bar sk-num"></div><div class="sk-bar sk-unit"></div></div>';
                         item.appendChild(bars);
                     }
                     wrapper.classList.add('aos-animate');
                     // 延迟后移除骨架，恢复真实内容（保证最低可感知时间）
                     setTimeout(() => {
-                        item.classList.remove('lgnewui-skeleton-card');
-                        var b = item.querySelector('.lgnewui-skeleton-bars');
+                        item.classList.remove('withu-skeleton-card');
+                        var b = item.querySelector('.withu-skeleton-bars');
                         if (b) b.remove();
                     }, 450 + visibleIndex * 80);
                     visibleIndex++;
@@ -176,13 +176,13 @@
     // ============================================
     const CountUpAnimation = {
         _observer: null,
-        // 开关：window.LG_COUNTUP_ENABLED = false 可关闭，默认开启
+        // 开关：window.WITHU_COUNTUP_ENABLED = false 可关闭，默认开启
         _enabled: false,
 
         init() {
             // 读取全局开关
-            if (typeof window.LG_COUNTUP_ENABLED !== 'undefined') {
-                this._enabled = !!window.LG_COUNTUP_ENABLED;
+            if (typeof window.WITHU_COUNTUP_ENABLED !== 'undefined') {
+                this._enabled = !!window.WITHU_COUNTUP_ENABLED;
             }
             if (!this._enabled) {
                 return;
@@ -204,7 +204,7 @@
             }, { threshold: 0.5 });
 
             // 观察所有统计数字元素
-            document.querySelectorAll('.lgnewui-stats-num, .lgnewui-runtime-num, .lgnewui-num-huge span:first-child').forEach(el => {
+            document.querySelectorAll('.withu-stats-num, .withu-runtime-num, .withu-num-huge span:first-child').forEach(el => {
                 this._observer.observe(el);
             });
         },
@@ -246,17 +246,17 @@
             this.isAnimating = false;
 
             // DOM 元素缓存
-            this.mediaContainer = this.container.querySelector('.lgnewui-smart-card__media');
-            this.switchBtn = this.container.querySelector('.lgnewui-smart-card__switch-btn');
-            this.elAvatar = this.container.querySelector('.lgnewui-smart-card__avatar');
-            this.elName = this.container.querySelector('.lgnewui-smart-card__name');
-            this.elTime = this.container.querySelector('.lgnewui-smart-card__time');
-            this.elLocPill = this.container.querySelector('.lgnewui-smart-card__location-pill');
-            this.elLocText = this.container.querySelector('.lgnewui-smart-card__location-text');
-            this.elTitle = this.container.querySelector('.lgnewui-smart-card__title');
-            this.elDate = this.container.querySelector('.lgnewui-smart-card__date');
-            this.elDesc = this.container.querySelector('.lgnewui-smart-card__desc');
-            this.elAlbumLink = this.container.querySelector('.lgnewui-smart-card__album-link');
+            this.mediaContainer = this.container.querySelector('.withu-smart-card__media');
+            this.switchBtn = this.container.querySelector('.withu-smart-card__switch-btn');
+            this.elAvatar = this.container.querySelector('.withu-smart-card__avatar');
+            this.elName = this.container.querySelector('.withu-smart-card__name');
+            this.elTime = this.container.querySelector('.withu-smart-card__time');
+            this.elLocPill = this.container.querySelector('.withu-smart-card__location-pill');
+            this.elLocText = this.container.querySelector('.withu-smart-card__location-text');
+            this.elTitle = this.container.querySelector('.withu-smart-card__title');
+            this.elDate = this.container.querySelector('.withu-smart-card__date');
+            this.elDesc = this.container.querySelector('.withu-smart-card__desc');
+            this.elAlbumLink = this.container.querySelector('.withu-smart-card__album-link');
 
             this.animDuration = 1200;
 
@@ -292,7 +292,7 @@
             // 视频播放按钮：事件委托
             if (this.mediaContainer) {
                 this.mediaContainer.addEventListener('click', (e) => {
-                    const playBtn = e.target.closest('.lgnewui-smart-card__play-btn');
+                    const playBtn = e.target.closest('.withu-smart-card__play-btn');
                     if (playBtn && window.VideoModal) {
                         e.preventDefault();
                         e.stopPropagation();
@@ -331,20 +331,20 @@
             if (this.switchBtn) this.switchBtn.classList.add('loading');
 
             const newLayer = document.createElement('div');
-            newLayer.className = 'lgnewui-smart-card__media-layer lgnewui-smart-card__anim-enter';
+            newLayer.className = 'withu-smart-card__media-layer withu-smart-card__anim-enter';
 
             if (item.type === 'video') {
                 const coverSrc = item.video_cover || item.url || '';
-                newLayer.innerHTML = `<img data-src="${coverSrc}" alt="${item.title || ''}" class="lgnewui-smart-card__media-layer lazy">` +
-                    `<button class="lgnewui-smart-card__play-btn" data-video-url="${item.original || ''}" data-video-cover="${coverSrc}">` +
+                newLayer.innerHTML = `<img data-src="${coverSrc}" alt="${item.title || ''}" class="withu-smart-card__media-layer lazy">` +
+                    `<button class="withu-smart-card__play-btn" data-video-url="${item.original || ''}" data-video-cover="${coverSrc}">` +
                     `<i class="ph-fill ph-play"></i></button>`;
             } else {
-                newLayer.innerHTML = `<img data-src="${item.url}" data-original="${item.original}" alt="${item.title || ''}" class="lgnewui-smart-card__media-layer lazy view-image-media">`;
+                newLayer.innerHTML = `<img data-src="${item.url}" data-original="${item.original}" alt="${item.title || ''}" class="withu-smart-card__media-layer lazy view-image-media">`;
             }
 
             const oldLayer = this.mediaContainer.lastElementChild;
             if (oldLayer) {
-                oldLayer.className = 'lgnewui-smart-card__media-layer lgnewui-smart-card__anim-exit';
+                oldLayer.className = 'withu-smart-card__media-layer withu-smart-card__anim-exit';
             }
 
             this.mediaContainer.appendChild(newLayer);
@@ -381,13 +381,13 @@
             const animElements = [this.elTitle, this.elDate, this.elDesc];
             animElements.forEach(el => {
                 if (!el) return;
-                el.classList.remove('lgnewui-smart-card__text-stagger');
+                el.classList.remove('withu-smart-card__text-stagger');
                 el.style.opacity = '0';
             });
 
             // 重置 location pill 动画
             if (this.elLocPill) {
-                this.elLocPill.classList.remove('lgnewui-smart-card__loc-anim');
+                this.elLocPill.classList.remove('withu-smart-card__loc-anim');
                 this.elLocPill.style.opacity = '0';
                 this.elLocPill.style.transform = 'scale(0.8)';
             }
@@ -419,7 +419,7 @@
             if (this.elTitle) {
                 setTimeout(() => {
                     this.elTitle.style.opacity = '';
-                    this.elTitle.classList.add('lgnewui-smart-card__text-stagger');
+                    this.elTitle.classList.add('withu-smart-card__text-stagger');
                 }, 50);
             }
 
@@ -427,21 +427,21 @@
                 setTimeout(() => {
                     this.elLocPill.style.opacity = '';
                     this.elLocPill.style.transform = '';
-                    this.elLocPill.classList.add('lgnewui-smart-card__loc-anim');
+                    this.elLocPill.classList.add('withu-smart-card__loc-anim');
                 }, 120);
             }
 
             if (item.date && this.elDate) {
                 setTimeout(() => {
                     this.elDate.style.opacity = '';
-                    this.elDate.classList.add('lgnewui-smart-card__text-stagger');
+                    this.elDate.classList.add('withu-smart-card__text-stagger');
                 }, 180);
             }
 
             if (item.description && this.elDesc) {
                 setTimeout(() => {
                     this.elDesc.style.opacity = '';
-                    this.elDesc.classList.add('lgnewui-smart-card__text-stagger');
+                    this.elDesc.classList.add('withu-smart-card__text-stagger');
                 }, 240);
             }
         }
@@ -530,7 +530,7 @@
             if (mesBtn) {
                 mesBtn.click();
             } else {
-                this._pjaxNavigate((window.LG_CONFIG && window.LG_CONFIG.siteBase || '') + 'messages.html');
+                this._pjaxNavigate((window.WITHU_CONFIG && window.WITHU_CONFIG.siteBase || '') + 'messages.html');
             }
         },
 
@@ -543,7 +543,7 @@
 
         async _randomAlbum() {
             try {
-                const base = (window.LG_CONFIG && window.LG_CONFIG.siteBase) || '';
+                const base = (window.WITHU_CONFIG && window.WITHU_CONFIG.siteBase) || '';
                 const res = await fetch(base + 'services/random_album.php');
                 const data = await res.json();
                 if (data && data.code === 200 && data.img_code) {
@@ -554,7 +554,7 @@
                     }
                 }
             } catch (e) {
-                this._pjaxNavigate((window.LG_CONFIG && window.LG_CONFIG.siteBase || '') + 'albums.html');
+                this._pjaxNavigate((window.WITHU_CONFIG && window.WITHU_CONFIG.siteBase || '') + 'albums.html');
             }
         },
 
@@ -569,7 +569,7 @@
 
         async _randomArticle() {
             try {
-                const base = (window.LG_CONFIG && window.LG_CONFIG.siteBase) || '';
+                const base = (window.WITHU_CONFIG && window.WITHU_CONFIG.siteBase) || '';
                 const res = await fetch(base + 'services/random_article.php');
                 const data = await res.json();
                 if (data && data.code === 200 && data.id) {
@@ -580,7 +580,7 @@
                     }
                 }
             } catch (e) {
-                this._pjaxNavigate((window.LG_CONFIG && window.LG_CONFIG.siteBase || '') + 'articles.html');
+                this._pjaxNavigate((window.WITHU_CONFIG && window.WITHU_CONFIG.siteBase || '') + 'articles.html');
             }
         }
     };
@@ -599,7 +599,7 @@
                 return;
             }
 
-            const weatherCards = document.querySelectorAll('.lgnewui-home-weather-card');
+            const weatherCards = document.querySelectorAll('.withu-home-weather-card');
             if (!weatherCards.length) {
                 return;
             }
@@ -614,12 +614,12 @@
         },
 
         _buildUrl(cardEl) {
-            const base = (window.LG_CONFIG && window.LG_CONFIG.siteBase) || '';
+            const base = (window.WITHU_CONFIG && window.WITHU_CONFIG.siteBase) || '';
             const u = new URL(base + this._config.apiBase, window.location.origin);
             const slot = cardEl.getAttribute('data-weather-slot') || '1';
             u.searchParams.set('mode', 'couple');
             u.searchParams.set('slot', slot);
-            const wt = (window.LG_CONFIG && window.LG_CONFIG.weatherToken) || '';
+            const wt = (window.WITHU_CONFIG && window.WITHU_CONFIG.weatherToken) || '';
             if (wt) u.searchParams.set('_wt', wt);
             return u.toString();
         },
@@ -649,23 +649,23 @@
         },
 
         _renderCard(cardEl, payload) {
-            const timeTag = cardEl.querySelector('.lgnewui-home-weather-time-tag');
+            const timeTag = cardEl.querySelector('.withu-home-weather-time-tag');
             if (timeTag) timeTag.textContent = this._getRelativeTime(payload.obsTime);
 
-            const tempEl = cardEl.querySelector('.lgnewui-home-weather-text-temp');
+            const tempEl = cardEl.querySelector('.withu-home-weather-text-temp');
             if (tempEl) tempEl.textContent = (payload.temp ?? '--') + '°';
 
             const cityName = payload.city || cardEl.getAttribute('data-location-name') || '--';
             const statusText = payload.desc || '--';
-            const cityEl = cardEl.querySelector('.lgnewui-home-weather-text-city');
-            const statusEl = cardEl.querySelector('.lgnewui-home-weather-text-status');
+            const cityEl = cardEl.querySelector('.withu-home-weather-text-city');
+            const statusEl = cardEl.querySelector('.withu-home-weather-text-status');
             if (cityEl) cityEl.textContent = cityName;
             if (statusEl) statusEl.textContent = statusText;
 
-            const iconEl = cardEl.querySelector('.lgnewui-home-weather-icon-main');
+            const iconEl = cardEl.querySelector('.withu-home-weather-icon-main');
             const iconCode = payload.icon || '999';
             if (iconEl) {
-                iconEl.className = `qi-${iconCode}-fill lgnewui-home-weather-icon-main`;
+                iconEl.className = `qi-${iconCode}-fill withu-home-weather-icon-main`;
             }
 
             const humidityEl = cardEl.querySelector('.stat-humidity');
@@ -686,14 +686,14 @@
                 return true;
             } catch (e) {
                 console.error('Weather update failed:', e);
-                const statusEl = cardEl.querySelector('.lgnewui-home-weather-text-status');
+                const statusEl = cardEl.querySelector('.withu-home-weather-text-status');
                 if (statusEl) statusEl.textContent = '离线';
                 return false;
             }
         },
 
         async _refreshAll() {
-            const weatherCards = document.querySelectorAll('.lgnewui-home-weather-card');
+            const weatherCards = document.querySelectorAll('.withu-home-weather-card');
             await Promise.all(Array.from(weatherCards).map(card => this._updateCard(card)));
         }
     };
@@ -731,7 +731,7 @@
             this._initLockedCardGlow();
 
             // 留言滚动卡片
-            this._messageScroller = new LgNewUiHomeMessageScroller('#messageCarousel', { speed: 0.8 });
+            this._messageScroller = new WithUHomeMessageScroller('#messageCarousel', { speed: 0.8 });
 
             this._initialized = true;
         },
@@ -744,7 +744,7 @@
         },
 
         _initLockedCardGlow() {
-            var cards = document.querySelectorAll('.lgnewui-event-card--locked');
+            var cards = document.querySelectorAll('.withu-event-card--locked');
             var colors = [
                 'rgba(196, 181, 253, 0.22)', // 淡紫
                 'rgba(147, 197, 253, 0.22)',  // 淡蓝
@@ -816,12 +816,12 @@
     // ============================================
     // 留言无缝滚动组件
     // ============================================
-    class LgNewUiHomeMessageScroller {
+    class WithUHomeMessageScroller {
         constructor(containerSelector, options) {
             options = options || {};
             this.container = document.querySelector(containerSelector);
             if (!this.container) return;
-            this.track = this.container.querySelector('.lgnewui-home-message-track');
+            this.track = this.container.querySelector('.withu-home-message-track');
             if (!this.track) return;
 
             this.speed = options.speed || 0.8;

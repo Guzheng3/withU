@@ -1,5 +1,5 @@
 /**
- * LG_NewUI 留言板页面模块
+ * withU 留言板页面模块
  * @version 3.0.0
  * @description messages.php 页面的 JS 逻辑
  *   - AJAX 分页加载留言卡片（骨架屏 + 动画）
@@ -12,8 +12,8 @@
 ;(function(window, $) {
     'use strict';
 
-    var LGConfig = window.LG_CONFIG || {};
-    var siteTitle = LGConfig.title || 'LG_NewUi';
+    var LGConfig = window.WITHU_CONFIG || {};
+    var siteTitle = LGConfig.title || 'withU';
     var endpoints = LGConfig.endpoints || {};
 
     // ============================================
@@ -90,24 +90,24 @@
         var level = badge.level || 0;
         var label = escapeHtml(badge.label || '');
 
-        var cls = 'lgnewui-message-badge';
+        var cls = 'withu-message-badge';
         var iconHtml = '';
 
         if (type === 'dev') {
-            cls += ' lgnewui-message-badge-dev';
+            cls += ' withu-message-badge-dev';
             iconHtml = '<i class="ph-fill ph-seal-check"></i>';
         } else if (type === 'admin') {
-            cls += ' lgnewui-message-badge-admin lgnewui-message-badge-shine';
+            cls += ' withu-message-badge-admin withu-message-badge-shine';
             iconHtml = '<i class="ph-fill ph-crown"></i>';
         } else {
-            cls += ' lgnewui-message-badge-lv lgnewui-message-badge-lv' + level;
-            if (level >= 6) cls += ' lgnewui-message-badge-shine';
+            cls += ' withu-message-badge-lv withu-message-badge-lv' + level;
+            if (level >= 6) cls += ' withu-message-badge-shine';
             iconHtml = '<i class="ph-fill ph-star-four"></i>';
         }
 
         return '<span class="' + cls + '">' +
-            '<span class="lgnewui-message-badge-icon-box">' + iconHtml + '</span>' +
-            '<span class="lgnewui-message-badge-text">' + label + '</span>' +
+            '<span class="withu-message-badge-icon-box">' + iconHtml + '</span>' +
+            '<span class="withu-message-badge-text">' + label + '</span>' +
         '</span>';
     }
 
@@ -115,9 +115,9 @@
      * 渲染"待审核"徽章 HTML
      */
     function renderPendingBadge() {
-        return '<span class="lgnewui-message-badge lgnewui-message-badge-pending">' +
-            '<span class="lgnewui-message-badge-icon-box"><i class="ph-fill ph-hourglass"></i></span>' +
-            '<span class="lgnewui-message-badge-text">待审核</span>' +
+        return '<span class="withu-message-badge withu-message-badge-pending">' +
+            '<span class="withu-message-badge-icon-box"><i class="ph-fill ph-hourglass"></i></span>' +
+            '<span class="withu-message-badge-text">待审核</span>' +
         '</span>';
     }
 
@@ -127,13 +127,13 @@
     function _insertPendingCard(qq, name, contentHtml) {
         var grid = document.getElementById('lgmsgCardGrid');
         if (!grid) return;
-        var avatarUrl = localStorage.getItem('lg_comment_avatar') || getAvatarUrl(qq);
+        var avatarUrl = localStorage.getItem('withu_comment_avatar') || getAvatarUrl(qq);
         var now = new Date();
         var pad = function(n) { return n < 10 ? '0' + n : '' + n; };
         var timeStr = now.getFullYear() + '-' + pad(now.getMonth() + 1) + '-' + pad(now.getDate()) + ' ' + pad(now.getHours()) + ':' + pad(now.getMinutes());
 
         var wrap = document.createElement('div');
-        wrap.className = 'MessageCard col-lg-6 col-md-6 col-sm-12 col-sm-x-12 is-pending';
+        wrap.className = 'MessageCard col-withu-6 col-md-6 col-sm-12 col-sm-x-12 is-pending';
         wrap.setAttribute('data-aos', 'fade-up');
 
         wrap.innerHTML =
@@ -486,16 +486,16 @@
                             }
 
                             if ($('#lgmsgCardGrid .MessageCard').length === 0) {
-                                var _ab = (window.LG_CONFIG && window.LG_CONFIG.assetBase) || '';
-                                var _sb = (window.LG_CONFIG && window.LG_CONFIG.siteBase) || '';
+                                var _ab = (window.WITHU_CONFIG && window.WITHU_CONFIG.assetBase) || '';
+                                var _sb = (window.WITHU_CONFIG && window.WITHU_CONFIG.siteBase) || '';
                                 $('#lgmsgCardGrid').html(
                                     '<div style="grid-column:1/-1;">' +
-                                    '<div class="lgnewui-no-data lgnewui-no-data--pink">' +
-                                    '<div class="lgnewui-no-data-wrap"><div class="lgnewui-no-data-content">' +
-                                    '<div class="lgnewui-no-data-icon lgnewui-no-data-icon--pink"><svg viewBox="0 0 24 24" fill="none" stroke="#ec4899" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></div>' +
-                                    '<h3 class="lgnewui-no-data-title">\u8fd8\u6ca1\u6709\u4eba\u7559\u4e0b\u75d5\u8ff9</h3>' +
-                                    '<p class="lgnewui-no-data-desc">\u8fd9\u91cc\u5f88\u5b89\u9759\uff0c\u6210\u4e3a\u7b2c\u4e00\u4e2a\u7559\u8a00\u7684\u4eba\u5427\u3002</p>' +
-                                    '<div class="lgnewui-no-data-actions"><a class="lgnewui-no-data-btn lgnewui-no-data-btn-primary" href="javascript:;" id="lgmsgEmptyWriteBtn"><i class="ph ph-pencil-simple"></i> \u7559\u4e0b\u75d5\u8ff9</a></div>' +
+                                    '<div class="withu-no-data withu-no-data--pink">' +
+                                    '<div class="withu-no-data-wrap"><div class="withu-no-data-content">' +
+                                    '<div class="withu-no-data-icon withu-no-data-icon--pink"><svg viewBox="0 0 24 24" fill="none" stroke="#ec4899" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></div>' +
+                                    '<h3 class="withu-no-data-title">\u8fd8\u6ca1\u6709\u4eba\u7559\u4e0b\u75d5\u8ff9</h3>' +
+                                    '<p class="withu-no-data-desc">\u8fd9\u91cc\u5f88\u5b89\u9759\uff0c\u6210\u4e3a\u7b2c\u4e00\u4e2a\u7559\u8a00\u7684\u4eba\u5427\u3002</p>' +
+                                    '<div class="withu-no-data-actions"><a class="withu-no-data-btn withu-no-data-btn-primary" href="javascript:;" id="lgmsgEmptyWriteBtn"><i class="ph ph-pencil-simple"></i> \u7559\u4e0b\u75d5\u8ff9</a></div>' +
                                     '</div></div></div></div>'
                                 );
                                 $('#lgmsgEmptyWriteBtn').on('click', function(e) {
@@ -608,11 +608,11 @@
                             var replyEl = document.getElementById('lgmsg-' + replyId);
                             if (!replyEl) return;
                             replyEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
-                            var $bubble = $(replyEl).find('.lgnewui-message-msg-bubble').first();
+                            var $bubble = $(replyEl).find('.withu-message-msg-bubble').first();
                             if ($bubble.length) {
-                                $bubble.removeClass('lgnewui-message-bubble-highlight');
+                                $bubble.removeClass('withu-message-bubble-highlight');
                                 void $bubble[0].offsetWidth;
-                                $bubble.addClass('lgnewui-message-bubble-highlight');
+                                $bubble.addClass('withu-message-bubble-highlight');
                             }
                         }, 200);
                     };
@@ -636,10 +636,10 @@
                 var msg = items[i];
                 var wrap = document.createElement('div');
                 wrap.id = 'comment_' + msg.id;
-                wrap.className = 'MessageCard col-lg-6 col-md-6 col-sm-12 col-sm-x-12';
+                wrap.className = 'MessageCard col-withu-6 col-md-6 col-sm-12 col-sm-x-12';
                 wrap.setAttribute('data-msg-id', msg.id);
                 // AOS 动画：使用全局配置
-                var aosCfg = window.LG_AOS_CONFIG || {};
+                var aosCfg = window.WITHU_AOS_CONFIG || {};
                 if (aosCfg.enabled !== false) {
                     var aosDelay = Math.min((aosCfg.delay || 0) + i * (aosCfg.interval || 50), aosCfg.maxDelay || 300);
                     wrap.setAttribute('data-aos', aosCfg.animation || 'fade-up');
@@ -662,21 +662,21 @@
                 if (cityDisplay) {
                     var hasCoords = msg.lng && msg.lat && isFinite(msg.lng) && isFinite(msg.lat);
                     if (hasCoords) {
-                        infoItemsHtml += '<span class="InfoItem lgmsg-location-link lgmsg-location-has-coords" data-lng="' + msg.lng + '" data-lat="' + msg.lat + '" data-marker-id="' + msg.id + '" data-lg-tip="' + cityDisplay + '"><i data-lucide="map-pin" class="lgmsg-ico"></i><span class="lgmsg-info-text">' + cityDisplay + '</span></span>';
+                        infoItemsHtml += '<span class="InfoItem lgmsg-location-link lgmsg-location-has-coords" data-lng="' + msg.lng + '" data-lat="' + msg.lat + '" data-marker-id="' + msg.id + '" data-withu-tip="' + cityDisplay + '"><i data-lucide="map-pin" class="lgmsg-ico"></i><span class="lgmsg-info-text">' + cityDisplay + '</span></span>';
                     } else {
-                        infoItemsHtml += '<span class="InfoItem" data-lg-tip="' + cityDisplay + '"><i data-lucide="map-pin" class="lgmsg-ico"></i><span class="lgmsg-info-text">' + cityDisplay + '</span></span>';
+                        infoItemsHtml += '<span class="InfoItem" data-withu-tip="' + cityDisplay + '"><i data-lucide="map-pin" class="lgmsg-ico"></i><span class="lgmsg-info-text">' + cityDisplay + '</span></span>';
                     }
                 }
                 // ③ 相对时间（移动端仅图标，点击 tooltip 显示）
                 if (timeAgo) {
-                    infoItemsHtml += '<span class="InfoItem lgmsg-info-hideable" data-lg-tip="' + escapeHtml(timeAgo) + '" data-lg-tip-force="true"><i data-lucide="clock" class="lgmsg-ico"></i><span class="lgmsg-info-text">' + escapeHtml(timeAgo) + '</span></span>';
+                    infoItemsHtml += '<span class="InfoItem lgmsg-info-hideable" data-withu-tip="' + escapeHtml(timeAgo) + '" data-withu-tip-force="true"><i data-lucide="clock" class="lgmsg-ico"></i><span class="lgmsg-info-text">' + escapeHtml(timeAgo) + '</span></span>';
                 }
                 // ④ 天气（移动端仅图标，点击 tooltip 显示）
                 var weatherDisplay = msg.weather ? escapeHtml(msg.weather) : '';
                 if (weatherDisplay) {
                     var wiCode = msg.weather_icon || '';
                     var wiClass = wiCode ? 'qi-' + wiCode + '-fill' : 'qi-999-fill';
-                    infoItemsHtml += '<span class="InfoItem lgmsg-info-weather lgmsg-info-hideable" data-lg-tip="' + weatherDisplay + '" data-lg-tip-force="true"><i class="' + wiClass + ' lgmsg-ico"></i><span class="lgmsg-info-text">' + weatherDisplay + '</span></span>';
+                    infoItemsHtml += '<span class="InfoItem lgmsg-info-weather lgmsg-info-hideable" data-withu-tip="' + weatherDisplay + '" data-withu-tip-force="true"><i class="' + wiClass + ' lgmsg-ico"></i><span class="lgmsg-info-text">' + weatherDisplay + '</span></span>';
                 }
                 // ⑤ 设备 + 浏览器（移动端仅图标，点击 tooltip 显示）
                 var deviceParts = [];
@@ -684,12 +684,12 @@
                 if (browserDisplay) deviceParts.push(browserDisplay);
                 if (deviceParts.length) {
                     var deviceFull = deviceParts.join(' · ');
-                    infoItemsHtml += '<span class="InfoItem lgmsg-info-device lgmsg-info-hideable" data-lg-tip="' + deviceFull + '" data-lg-tip-force="true"><i data-lucide="monitor" class="lgmsg-ico"></i><span class="lgmsg-info-text">' + deviceFull + '</span></span>';
+                    infoItemsHtml += '<span class="InfoItem lgmsg-info-device lgmsg-info-hideable" data-withu-tip="' + deviceFull + '" data-withu-tip-force="true"><i data-lucide="monitor" class="lgmsg-ico"></i><span class="lgmsg-info-text">' + deviceFull + '</span></span>';
                 }
 
                 // ⑥ 点赞按钮
                 var likeCount = parseInt(msg.like_count) || 0;
-                infoItemsHtml += '<span class="InfoItem lg-interaction-inline-btn" data-like-target="message" data-like-id="' + msg.id + '"><i data-lucide="heart" class="lgmsg-ico"></i><span class="lgmsg-info-text lg-interaction-like-num">' + likeCount + '</span></span>';
+                infoItemsHtml += '<span class="InfoItem withu-interaction-inline-btn" data-like-target="message" data-like-id="' + msg.id + '"><i data-lucide="heart" class="lgmsg-ico"></i><span class="lgmsg-info-text withu-interaction-like-num">' + likeCount + '</span></span>';
 
                 wrap.innerHTML =
                     '<div class="MsgTime"><span>' + escapeHtml(msg.timeStr) + '</span></div>' +
@@ -789,7 +789,7 @@
             });
 
             // 点赞按钮（抽屉内二级评论）- 复用 LGInteraction
-            $(document).off('click.lgmsgLikeBtn').on('click.lgmsgLikeBtn', '.lgnewui-message-like-btn', function(e) {
+            $(document).off('click.lgmsgLikeBtn').on('click.lgmsgLikeBtn', '.withu-message-like-btn', function(e) {
                 e.stopPropagation();
                 // 直接调用 LGInteraction 的处理逻辑
                 if (typeof LGInteraction !== 'undefined' && LGInteraction._handleLikeClick) {
@@ -800,7 +800,7 @@
             // 关闭抽屉
             $('#lgmsgDrawerClose').off('click.lgmsg').on('click.lgmsg', function() { self.close(); });
             $('#lgmsgDrawer').off('click.lgmsg').on('click.lgmsg', function(e) {
-                if (e.target === this || $(e.target).hasClass('lgnewui-message-drawer-overlay')) self.close();
+                if (e.target === this || $(e.target).hasClass('withu-message-drawer-overlay')) self.close();
             });
 
             // 展开/收起底部输入区
@@ -809,7 +809,7 @@
 
             // 点击消息区域（非底部输入区）时收起输入面板
             $('#lgmsgDrawerBody').off('click.lgmsgCollapse').on('click.lgmsgCollapse', function(e) {
-                if (!$(e.target).closest('.lgnewui-message-msg-bubble, .lgnewui-message-avatar-wrap, .lgnewui-message-at-tag, blockquote, .lgnewui-message-context-menu, .lgmsg-location-link').length) {
+                if (!$(e.target).closest('.withu-message-msg-bubble, .withu-message-avatar-wrap, .withu-message-at-tag, blockquote, .withu-message-context-menu, .lgmsg-location-link').length) {
                     self._collapseFooter();
                 }
             });
@@ -823,9 +823,9 @@
             $('#lgmsgReplySendBtn').off('click.lgmsg').on('click.lgmsg', function() { self._handleSendReply(); });
 
             // 点击回复消息的名字 → @回复（与头像点击逻辑一致）
-            $(document).off('click.lgmsgReplyName', '.lgnewui-message-msg-name').on('click.lgmsgReplyName', '.lgnewui-message-msg-name', function(e) {
+            $(document).off('click.lgmsgReplyName', '.withu-message-msg-name').on('click.lgmsgReplyName', '.withu-message-msg-name', function(e) {
                 e.stopPropagation();
-                var $item = $(this).closest('.lgnewui-message-msg-item');
+                var $item = $(this).closest('.withu-message-msg-item');
                 if ($item.hasClass('is-me')) return;
                 var name = $(this).text();
                 var id = $item.attr('id') ? $item.attr('id').replace('lgmsg-', '') : '';
@@ -833,7 +833,7 @@
                 self._expandFooter();
                 var editor = document.getElementById('lgmsgDrawerEditor');
                 if (!editor) return;
-                if (id && editor.querySelector('.lgnewui-message-at-tag[data-target="' + id + '"]')) {
+                if (id && editor.querySelector('.withu-message-at-tag[data-target="' + id + '"]')) {
                     editor.focus();
                     return;
                 }
@@ -843,7 +843,7 @@
                 if (target.innerHTML === '<br>' || target.innerHTML === '<div><br></div>') target.innerHTML = '';
                 target.focus();
                 var atElem = document.createElement('span');
-                atElem.className = 'lgnewui-message-at-tag';
+                atElem.className = 'withu-message-at-tag';
                 atElem.contentEditable = 'false';
                 atElem.setAttribute('data-target', id);
                 atElem.textContent = '@' + name;
@@ -859,34 +859,34 @@
             });
 
             // 点击 @标签 或 blockquote[data-target] → 滚动到对应消息并高亮
-            $(document).off('click.lgmsgScrollTarget').on('click.lgmsgScrollTarget', '.lgnewui-message-at-tag[data-target], blockquote[data-target], .lg-msg-at[data-id]', function() {
+            $(document).off('click.lgmsgScrollTarget').on('click.lgmsgScrollTarget', '.withu-message-at-tag[data-target], blockquote[data-target], .withu-msg-at[data-id]', function() {
                 var targetId = $(this).attr('data-target') || $(this).attr('data-id');
                 if (!targetId) return;
                 var $msgEl = $('#lgmsg-' + targetId);
                 if ($msgEl.length) {
                     $msgEl[0].scrollIntoView({ behavior: 'smooth', block: 'center' });
-                    var $bubble = $msgEl.find('.lgnewui-message-msg-bubble').first();
+                    var $bubble = $msgEl.find('.withu-message-msg-bubble').first();
                     if ($bubble.length) {
-                        $bubble.removeClass('lgnewui-message-bubble-highlight');
+                        $bubble.removeClass('withu-message-bubble-highlight');
                         void $bubble[0].offsetWidth;
-                        $bubble.addClass('lgnewui-message-bubble-highlight');
+                        $bubble.addClass('withu-message-bubble-highlight');
                     }
                 }
             });
 
-            // 头像点击 → @回复（匹配demo的atUser：插入span.lgnewui-message-at-tag到编辑器）
-            $(document).off('click.lgmsgAvatarAt', '.lgnewui-message-avatar-wrap').on('click.lgmsgAvatarAt', '.lgnewui-message-avatar-wrap', function(e) {
+            // 头像点击 → @回复（匹配demo的atUser：插入span.withu-message-at-tag到编辑器）
+            $(document).off('click.lgmsgAvatarAt', '.withu-message-avatar-wrap').on('click.lgmsgAvatarAt', '.withu-message-avatar-wrap', function(e) {
                 e.stopPropagation();
-                var $item = $(this).closest('.lgnewui-message-msg-item');
+                var $item = $(this).closest('.withu-message-msg-item');
                 if ($item.hasClass('is-me')) return;
-                var name = $item.find('.lgnewui-message-msg-name').first().text() || '';
+                var name = $item.find('.withu-message-msg-name').first().text() || '';
                 var id = $item.attr('id') ? $item.attr('id').replace('lgmsg-', '') : '';
                 if (!name) return;
                 self._expandFooter();
                 var editor = document.getElementById('lgmsgDrawerEditor');
                 if (!editor) return;
                 // 防重复
-                if (id && editor.querySelector('.lgnewui-message-at-tag[data-target="' + id + '"]')) {
+                if (id && editor.querySelector('.withu-message-at-tag[data-target="' + id + '"]')) {
                     editor.focus();
                     return;
                 }
@@ -896,7 +896,7 @@
                 if (target.innerHTML === '<br>' || target.innerHTML === '<div><br></div>') target.innerHTML = '';
                 target.focus();
                 var atElem = document.createElement('span');
-                atElem.className = 'lgnewui-message-at-tag';
+                atElem.className = 'withu-message-at-tag';
                 atElem.contentEditable = 'false';
                 atElem.setAttribute('data-target', id);
                 atElem.textContent = '@' + name;
@@ -912,10 +912,10 @@
             });
 
             // 消息气泡点击 → 显示上下文菜单
-            $(document).off('click.lgmsgBubbleCtx', '.lgnewui-message-msg-bubble').on('click.lgmsgBubbleCtx', '.lgnewui-message-msg-bubble', function(e) {
+            $(document).off('click.lgmsgBubbleCtx', '.withu-message-msg-bubble').on('click.lgmsgBubbleCtx', '.withu-message-msg-bubble', function(e) {
                 e.stopPropagation();
                 var $bubble = $(this);
-                var $item = $bubble.closest('.lgnewui-message-msg-item');
+                var $item = $bubble.closest('.withu-message-msg-item');
                 self._activeCtxItem = $item;
                 self._activeCtxBubble = $bubble;
                 var rect = this.getBoundingClientRect();
@@ -934,7 +934,7 @@
             });
 
             // 上下文菜单动作
-            $(document).off('click.lgmsgCtxAction', '.lgnewui-message-cm-item').on('click.lgmsgCtxAction', '.lgnewui-message-cm-item', function() {
+            $(document).off('click.lgmsgCtxAction', '.withu-message-cm-item').on('click.lgmsgCtxAction', '.withu-message-cm-item', function() {
                 var action = $(this).data('action');
                 self._handleContextAction(action);
             });
@@ -942,7 +942,7 @@
             // 点击其他区域关闭上下文菜单
             $(document).off('click.lgmsgCtxClose').on('click.lgmsgCtxClose', function(e) {
                 var $menu = $('#lgmsgContextMenu');
-                if ($menu.hasClass('active') && !$menu[0].contains(e.target) && !$(e.target).closest('.lgnewui-message-msg-bubble').length) {
+                if ($menu.hasClass('active') && !$menu[0].contains(e.target) && !$(e.target).closest('.withu-message-msg-bubble').length) {
                     $menu.removeClass('active');
                 }
             });
@@ -992,14 +992,14 @@
             });
 
             // Enter 发送开关
-            var enterToSend = localStorage.getItem('lg_enter_to_send') === 'true';
+            var enterToSend = localStorage.getItem('withu_enter_to_send') === 'true';
             if (enterToSend) $('#lgmsgDrawerEnterSwitch').addClass('active');
             $('#lgmsgDrawerEnterSwitch').off('click.lgmsg').on('click.lgmsg', function() {
                 enterToSend = !enterToSend;
-                localStorage.setItem('lg_enter_to_send', enterToSend);
+                localStorage.setItem('withu_enter_to_send', enterToSend);
                 $(this).toggleClass('active', enterToSend);
                 // 同步弹窗内的开关
-                $('.lgnewui-message-switch-wrap').each(function() {
+                $('.withu-message-switch-wrap').each(function() {
                     if (enterToSend) $(this).addClass('active');
                     else $(this).removeClass('active');
                 });
@@ -1007,7 +1007,7 @@
 
             // Enter 快捷发送
             $('#lgmsgDrawerEditor').off('keydown.lgmsgEnter').on('keydown.lgmsgEnter', function(e) {
-                var ets = localStorage.getItem('lg_enter_to_send') === 'true';
+                var ets = localStorage.getItem('withu_enter_to_send') === 'true';
                 if (ets && e.key === 'Enter' && !e.shiftKey && !e.ctrlKey && !e.metaKey) {
                     e.preventDefault();
                     self._handleSendReply();
@@ -1019,9 +1019,9 @@
         },
 
         _checkAutoAuth: function() {
-            var cachedQQ = localStorage.getItem('lg_comment_qq');
-            var cachedName = localStorage.getItem('lg_comment_anon_name') || '';
-            var confirmed = !!localStorage.getItem('lg_comment_auth_confirmed');
+            var cachedQQ = localStorage.getItem('withu_comment_qq');
+            var cachedName = localStorage.getItem('withu_comment_anon_name') || '';
+            var confirmed = !!localStorage.getItem('withu_comment_auth_confirmed');
 
             // 清理旧元素
             $('#lgmsgDrawerQQHint').remove();
@@ -1030,11 +1030,11 @@
             if (confirmed) {
                 // 已确认身份 → 填充完整身份信息
                 if (cachedQQ && cachedQQ.length >= 5 && cachedName) {
-                    var avatarUrl = localStorage.getItem('lg_comment_avatar') || _defaultAvatar;
+                    var avatarUrl = localStorage.getItem('withu_comment_avatar') || _defaultAvatar;
                     var maskedQQ = cachedQQ.slice(0, 3) + '**' + cachedQQ.slice(-2);
                     $('#lgmsgDrawerIdentityAvatar').attr('src', avatarUrl);
                     $('#lgmsgDrawerIdentityName').text(cachedName).css('color', 'var(--lgmsg-text-main)');
-                    var $qqSub = $('<small id="lgmsgDrawerQQSub" class="lgnewui-message-drawer-qq-sub"></small>');
+                    var $qqSub = $('<small id="lgmsgDrawerQQSub" class="withu-message-drawer-qq-sub"></small>');
                     $('#lgmsgDrawerIdentityName').after($qqSub);
                     $qqSub.text(maskedQQ).show();
                 } else if (cachedName) {
@@ -1042,7 +1042,7 @@
                 }
             } else if (cachedQQ && cachedQQ.length >= 5) {
                 // 未确认但有缓存 QQ（来自一级留言弹窗）→ 显示可点击的快捷身份徽章
-                var hintAvatar = localStorage.getItem('lg_comment_avatar') || _defaultAvatar;
+                var hintAvatar = localStorage.getItem('withu_comment_avatar') || _defaultAvatar;
                 var hintMasked = cachedQQ.slice(0, 3) + '**' + cachedQQ.slice(-2);
                 var $hint = $('<div id="lgmsgDrawerQQHint" style="display:flex;align-items:center;gap:4px;padding:3px 8px 3px 3px;border-radius:16px;background:var(--lgmsg-bg-secondary,#f2f2f7);cursor:pointer;flex-shrink:0;font-size:12px;color:var(--lgmsg-text-muted,#8e8e93);white-space:nowrap;transition:opacity .3s;">' +
                     '<img src="' + escapeHtml(hintAvatar) + '" style="width:20px;height:20px;border-radius:50%;object-fit:cover;flex-shrink:0;" onerror="this.src=\'' + escapeHtml(_defaultAvatar) + '\'">' +
@@ -1053,7 +1053,7 @@
                     e.stopPropagation();
                     if (cachedName) {
                         // QQ + 昵称都有 → 直接确认身份
-                        localStorage.setItem('lg_comment_auth_confirmed', '1');
+                        localStorage.setItem('withu_comment_auth_confirmed', '1');
                         Drawer._checkAutoAuth();
                         if (typeof Toastify !== 'undefined') Toastify.showScenario('success', { text: '身份已确认' });
                     } else {
@@ -1143,20 +1143,20 @@
             var loc = VisitorDetect.location || '--';
 
             $tags.html(
-                '<div class="lgnewui-message-v-tag">' +
-                    '<div class="lgnewui-message-v-tag-icon"><i data-lucide="monitor"></i></div>' +
+                '<div class="withu-message-v-tag">' +
+                    '<div class="withu-message-v-tag-icon"><i data-lucide="monitor"></i></div>' +
                     '<span id="lgmsgTagOS">' + escapeHtml(os) + '</span>' +
                 '</div>' +
-                '<div class="lgnewui-message-v-tag">' +
-                    '<div class="lgnewui-message-v-tag-icon"><i data-lucide="globe"></i></div>' +
+                '<div class="withu-message-v-tag">' +
+                    '<div class="withu-message-v-tag-icon"><i data-lucide="globe"></i></div>' +
                     '<span id="lgmsgTagBrowser">' + escapeHtml(browser) + '</span>' +
                 '</div>' +
-                '<div class="lgnewui-message-v-tag">' +
-                    '<div class="lgnewui-message-v-tag-icon"><i data-lucide="map-pin"></i></div>' +
+                '<div class="withu-message-v-tag">' +
+                    '<div class="withu-message-v-tag-icon"><i data-lucide="map-pin"></i></div>' +
                     '<span id="lgmsgTagLocation">' + escapeHtml(loc) + '</span>' +
                 '</div>' +
-                '<div class="lgnewui-message-v-tag">' +
-                    '<div class="lgnewui-message-v-tag-icon lgnewui-message-icon-weather"><i class="qi-100-fill" id="lgmsgWeatherIcon"></i></div>' +
+                '<div class="withu-message-v-tag">' +
+                    '<div class="withu-message-v-tag-icon withu-message-icon-weather"><i class="qi-100-fill" id="lgmsgWeatherIcon"></i></div>' +
                     '<span id="lgmsgTagWeather">--</span>' +
                 '</div>'
             );
@@ -1171,8 +1171,8 @@
 
             // 居中 spinner + 文案（与 demo 一致）
             body.innerHTML =
-                '<div class="lgnewui-message-drawer-loading">' +
-                    '<svg class="lgnewui-message-lucide-loader" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">' +
+                '<div class="withu-message-drawer-loading">' +
+                    '<svg class="withu-message-lucide-loader" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">' +
                         '<line x1="12" y1="2" x2="12" y2="6"></line><line x1="12" y1="18" x2="12" y2="22"></line>' +
                         '<line x1="4.93" y1="4.93" x2="7.76" y2="7.76"></line><line x1="16.24" y1="16.24" x2="19.07" y2="19.07"></line>' +
                         '<line x1="2" y1="12" x2="6" y2="12"></line><line x1="18" y1="12" x2="22" y2="12"></line>' +
@@ -1197,7 +1197,7 @@
                             self._renderDrawerContent(res.data.parent, res.data.replies || []);
                             updateLazyLoad();
                         } else {
-                            body.innerHTML = '<div class="lgnewui-message-drawer-empty">加载失败</div>';
+                            body.innerHTML = '<div class="withu-message-drawer-empty">加载失败</div>';
                         }
                     }, minDelay);
                 },
@@ -1205,7 +1205,7 @@
                     var elapsed = Date.now() - skeletonStart;
                     var minDelay = Math.max(0, 400 - elapsed);
                     setTimeout(function() {
-                        body.innerHTML = '<div class="lgnewui-message-drawer-empty">网络错误，请稍后重试</div>';
+                        body.innerHTML = '<div class="withu-message-drawer-empty">网络错误，请稍后重试</div>';
                     }, minDelay);
                 }
             });
@@ -1251,14 +1251,14 @@
             var popIn = opts.popIn || false;
             var delay = opts.delay || 0;
 
-            var cls = 'lgnewui-message-msg-item';
+            var cls = 'withu-message-msg-item';
             if (isMe) cls += ' is-me';
-            if (popIn) cls += ' lgnewui-message-msg-pop-in';
+            if (popIn) cls += ' withu-message-msg-pop-in';
             var styleAttr = delay ? ' style="animation-delay:' + delay + 'ms;"' : '';
 
             var metaHtml = this._buildMsgMeta(msg);
 
-            var overlayHtml = isMe ? '' : '<div class="lgnewui-message-avatar-overlay"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"></circle><path d="M16 8v5a3 3 0 0 0 6 0v-1a10 10 0 1 0-4.5 8.5"></path></svg></div>';
+            var overlayHtml = isMe ? '' : '<div class="withu-message-avatar-overlay"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"></circle><path d="M16 8v5a3 3 0 0 0 6 0v-1a10 10 0 1 0-4.5 8.5"></path></svg></div>';
             var avatarCursor = isMe ? '' : ' style="cursor:pointer;"';
 
             // 处理引用回复：基于 reply_to_id 生成 blockquote 引用块
@@ -1267,22 +1267,22 @@
 
             // 点赞按钮（二级评论也支持）- 始终渲染数量元素
             var likeCount = msg.like_count || 0;
-            var likeHtml = '<button class="lgnewui-message-like-btn" data-like-target="message" data-like-id="' + msg.id + '" title="点赞">' +
+            var likeHtml = '<button class="withu-message-like-btn" data-like-target="message" data-like-id="' + msg.id + '" title="点赞">' +
                 '<i class="ph-fill ph-heart"></i>' +
-            '</button><span class="lgnewui-message-like-count">' + likeCount + '</span>';
+            '</button><span class="withu-message-like-count">' + likeCount + '</span>';
 
             return '<div class="' + cls + '" id="lgmsg-' + msg.id + '" data-reply-id="' + msg.id + '"' + styleAttr + '>' +
-                '<div class="lgnewui-message-avatar-wrap"' + avatarCursor + '>' +
-                    '<img class="lgnewui-message-msg-avatar" src="' + escapeHtml(avatarUrl) + '" alt="' + escapeHtml(msgDisplayName) + '" loading="lazy" decoding="async">' +
+                '<div class="withu-message-avatar-wrap"' + avatarCursor + '>' +
+                    '<img class="withu-message-msg-avatar" src="' + escapeHtml(avatarUrl) + '" alt="' + escapeHtml(msgDisplayName) + '" loading="lazy" decoding="async">' +
                     overlayHtml +
                 '</div>' +
-                '<div class="lgnewui-message-msg-main">' +
-                    '<div class="lgnewui-message-msg-info">' +
-                        '<span class="lgnewui-message-msg-name"' + avatarCursor + ' data-tooltip="' + escapeHtml(msgDisplayName) + '">' + escapeHtml(msgDisplayName) + '</span>' +
+                '<div class="withu-message-msg-main">' +
+                    '<div class="withu-message-msg-info">' +
+                        '<span class="withu-message-msg-name"' + avatarCursor + ' data-tooltip="' + escapeHtml(msgDisplayName) + '">' + escapeHtml(msgDisplayName) + '</span>' +
                         renderBadge(msg.badge) +
                     '</div>' +
-                    '<div class="lgnewui-message-msg-bubble">' + bubbleContent + '<div class="lgnewui-message-like-wrap">' + likeHtml + '</div></div>' +
-                    (metaHtml ? '<div class="lgnewui-message-msg-meta">' + metaHtml + '</div>' : '') +
+                    '<div class="withu-message-msg-bubble">' + bubbleContent + '<div class="withu-message-like-wrap">' + likeHtml + '</div></div>' +
+                    (metaHtml ? '<div class="withu-message-msg-meta">' + metaHtml + '</div>' : '') +
                 '</div>' +
             '</div>';
         },
@@ -1306,7 +1306,7 @@
             if (!body) return;
             var self = this;
             var html = '';
-            var myQQHash = localStorage.getItem('lg_comment_qq_hash') || '';
+            var myQQHash = localStorage.getItem('withu_comment_qq_hash') || '';
 
             // 更新副标题回复数（骨架屏 → 渐显文字）
             var subtitle = document.getElementById('lgmsgDrawerSubtitle');
@@ -1324,15 +1324,15 @@
             // 父留言（带时间）
             var parentTimeLabel = formatMsgTime(parent.timestamp, true);
             if (parentTimeLabel) {
-                html += '<div class="lgnewui-message-time-divider">' + escapeHtml(parentTimeLabel) + '</div>';
+                html += '<div class="withu-message-time-divider">' + escapeHtml(parentTimeLabel) + '</div>';
             }
             html += self._renderMsgItem(parent, { isMe: false, popIn: false });
 
             // 分隔线
-            html += '<div class="lgnewui-message-drawer-divider"></div>';
+            html += '<div class="withu-message-drawer-divider"></div>';
 
             if (replies.length === 0) {
-                html += '<div class="lgnewui-message-drawer-empty"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M7.9 20A9 9 0 1 0 4 16.1L2 22Z"/></svg><div>还没有人回复这条留言，在下方说点什么吧</div></div>';
+                html += '<div class="withu-message-drawer-empty"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M7.9 20A9 9 0 1 0 4 16.1L2 22Z"/></svg><div>还没有人回复这条留言，在下方说点什么吧</div></div>';
             } else {
                 var prevTs = parent.timestamp;
                 for (var i = 0; i < replies.length; i++) {
@@ -1340,7 +1340,7 @@
                     var isGroupFirst = !isSameDay(prevTs, r.timestamp);
                     var timeLabel = formatMsgTime(r.timestamp, isGroupFirst);
                     if (timeLabel) {
-                        html += '<div class="lgnewui-message-time-divider">' + escapeHtml(timeLabel) + '</div>';
+                        html += '<div class="withu-message-time-divider">' + escapeHtml(timeLabel) + '</div>';
                     }
                     var isMe = myQQHash && r.qq_hash === myQQHash;
                     html += self._renderMsgItem(r, { isMe: isMe, popIn: true, delay: i * 50 });
@@ -1386,11 +1386,11 @@
 
             var self = this;
             var msgId = $item.attr('id') ? $item.attr('id').replace('lgmsg-', '') : '';
-            var replyName = $item.find('.lgnewui-message-msg-name').first().text() || '匿名';
+            var replyName = $item.find('.withu-message-msg-name').first().text() || '匿名';
 
             if (action === 'like') {
                 // 点赞功能 - 触发消息气泡旁的点赞按钮
-                var likeBtn = $item.find('.lgnewui-message-like-btn')[0];
+                var likeBtn = $item.find('.withu-message-like-btn')[0];
                 if (likeBtn && typeof LGInteraction !== 'undefined') {
                     LGInteraction._handleLikeClick(likeBtn);
                 }
@@ -1448,7 +1448,7 @@
                                     if (imgSrc) {
                                         out += '<img class="emoji" src="' + escapeHtml(imgSrc) + '" style="height:18px;width:18px;vertical-align:text-bottom;margin:0 1px;">';
                                     }
-                                } else if (child.classList && (child.classList.contains('lgnewui-message-at-tag') || child.classList.contains('lg-msg-at'))) {
+                                } else if (child.classList && (child.classList.contains('withu-message-at-tag') || child.classList.contains('withu-msg-at'))) {
                                     out += child.outerHTML;
                                 } else if (child.tagName === 'BR') { out += ' '; }
                                 else { out += extractQuoteHtml(child); }
@@ -1545,12 +1545,12 @@
                                 } else if (emojiCode) {
                                     document.execCommand('insertText', false, emojiCode);
                                 }
-                            } else if (child.classList && (child.classList.contains('lg-msg-at') || child.classList.contains('lgnewui-message-at-tag'))) {
+                            } else if (child.classList && (child.classList.contains('withu-msg-at') || child.classList.contains('withu-message-at-tag'))) {
                                 // @标签 → 编辑器 at-tag 格式
                                 var atId = child.getAttribute('data-id') || child.getAttribute('data-target') || '';
                                 var atText = child.textContent || '';
                                 var atSpan = document.createElement('span');
-                                atSpan.className = 'lgnewui-message-at-tag';
+                                atSpan.className = 'withu-message-at-tag';
                                 atSpan.contentEditable = 'false';
                                 atSpan.setAttribute('data-target', atId);
                                 atSpan.textContent = atText;
@@ -1580,9 +1580,9 @@
             }
 
             // 高亮气泡
-            $bubble.removeClass('lgnewui-message-bubble-highlight');
+            $bubble.removeClass('withu-message-bubble-highlight');
             void $bubble[0].offsetWidth;
-            $bubble.addClass('lgnewui-message-bubble-highlight');
+            $bubble.addClass('withu-message-bubble-highlight');
         },
 
         _clearReplyTo: function() {
@@ -1612,7 +1612,7 @@
                         if (node.tagName === 'BLOCKQUOTE') continue;
                         if (node.tagName === 'IMG' && node.classList.contains('emoji')) {
                             result += node.getAttribute('data-emoji') || node.getAttribute('data-value') || '';
-                        } else if (node.classList && node.classList.contains('lgnewui-message-at-tag')) {
+                        } else if (node.classList && node.classList.contains('withu-message-at-tag')) {
                             var atTarget = node.getAttribute('data-target') || '';
                             var atName = (node.textContent || '').replace(/^@/, '');
                             result += '@[' + atName + '#' + atTarget + ']';
@@ -1651,7 +1651,7 @@
             }
 
             // 未确认身份时，强制弹出身份选择弹窗
-            if (!localStorage.getItem('lg_comment_auth_confirmed')) {
+            if (!localStorage.getItem('withu_comment_auth_confirmed')) {
                 if (typeof Toastify !== 'undefined') Toastify.showScenario('warning', { text: '请先设置身份后再回复' });
                 AuthModal.open();
                 return;
@@ -1663,7 +1663,7 @@
 
             if (geetestAvailable) {
                 var $sendBtn = $('#lgmsgReplySendBtn');
-                $sendBtn.prop('disabled', true).html('<i data-lucide="loader" class="lgnewui-message-lucide-loader" style="width:16px;height:16px;"></i>');
+                $sendBtn.prop('disabled', true).html('<i data-lucide="loader" class="withu-message-lucide-loader" style="width:16px;height:16px;"></i>');
                 if (typeof lucide !== 'undefined') lucide.createIcons({ nodes: [$sendBtn[0]] });
                 // 存储待提交数据，供 submitMessage 全局回调使用
                 self._pendingReply = { text: text, parentId: parentId };
@@ -1689,11 +1689,11 @@
         _submitReply: function(text, parentId, geetestResult) {
             var self = this;
             var $btn = $('#lgmsgReplySendBtn');
-            $btn.prop('disabled', true).html('<i data-lucide="loader" class="lgnewui-message-lucide-loader" style="width:16px;height:16px;"></i>');
+            $btn.prop('disabled', true).html('<i data-lucide="loader" class="withu-message-lucide-loader" style="width:16px;height:16px;"></i>');
             if (typeof lucide !== 'undefined') lucide.createIcons({ nodes: [$btn[0]] });
 
-            var qq = localStorage.getItem('lg_comment_qq') || 'anon';
-            var name = localStorage.getItem('lg_comment_anon_name') || '匿名';
+            var qq = localStorage.getItem('withu_comment_qq') || 'anon';
+            var name = localStorage.getItem('withu_comment_anon_name') || '匿名';
 
             var postData = {
                 qq: qq,
@@ -1727,12 +1727,12 @@
                         var drawerEditor = document.getElementById('lgmsgDrawerEditor');
                         if (body) {
                             // 移除空状态提示
-                            var emptyEl = body.querySelector('.lgnewui-message-drawer-empty');
+                            var emptyEl = body.querySelector('.withu-message-drawer-empty');
                             if (emptyEl) emptyEl.remove();
 
-                            var myQQ = localStorage.getItem('lg_comment_qq') || 'anon';
-                            var myName = localStorage.getItem('lg_comment_anon_name') || '匿名';
-                            var myAvatar = localStorage.getItem('lg_comment_avatar') || getAvatarUrl(myQQ);
+                            var myQQ = localStorage.getItem('withu_comment_qq') || 'anon';
+                            var myName = localStorage.getItem('withu_comment_anon_name') || '匿名';
+                            var myAvatar = localStorage.getItem('withu_comment_avatar') || getAvatarUrl(myQQ);
                             var contentStr = drawerEditor ? drawerEditor.innerHTML : '';
 
                             var metaHtml = self._buildMsgMeta({
@@ -1747,7 +1747,7 @@
                             var quoteHtml = '';
                             if (self._replyToId && self._replyToName) {
                                 // 查找被引用消息的内容（带表情HTML）
-                                var refBubble = document.querySelector('#lgmsg-' + self._replyToId + ' .lgnewui-message-msg-bubble');
+                                var refBubble = document.querySelector('#lgmsg-' + self._replyToId + ' .withu-message-msg-bubble');
                                 var refHtml = '';
                                 if (refBubble) {
                                     var refClone = refBubble.cloneNode(true);
@@ -1768,7 +1768,7 @@
                             var timeLabel = formatMsgTime(nowTs, true);
                             if (timeLabel) {
                                 var timeDivider = document.createElement('div');
-                                timeDivider.className = 'lgnewui-message-time-divider';
+                                timeDivider.className = 'withu-message-time-divider';
                                 timeDivider.textContent = timeLabel;
                                 body.appendChild(timeDivider);
                             }
@@ -1776,19 +1776,19 @@
                             var newMsgId = 'local-' + Date.now();
                             var isPendingReply = !!res.pending;
                             var item = document.createElement('div');
-                            item.className = 'lgnewui-message-msg-item is-me lgnewui-message-msg-pop-in' + (isPendingReply ? ' is-pending' : '');
+                            item.className = 'withu-message-msg-item is-me withu-message-msg-pop-in' + (isPendingReply ? ' is-pending' : '');
                             item.id = 'lgmsg-' + newMsgId;
                             item.innerHTML =
-                                '<div class="lgnewui-message-avatar-wrap">' +
-                                    '<img class="lgnewui-message-msg-avatar" src="' + escapeHtml(myAvatar) + '" loading="lazy" decoding="async">' +
+                                '<div class="withu-message-avatar-wrap">' +
+                                    '<img class="withu-message-msg-avatar" src="' + escapeHtml(myAvatar) + '" loading="lazy" decoding="async">' +
                                 '</div>' +
-                                '<div class="lgnewui-message-msg-main">' +
-                                    '<div class="lgnewui-message-msg-info">' +
-                                        '<span class="lgnewui-message-msg-name">' + escapeHtml(myName) + '</span>' +
+                                '<div class="withu-message-msg-main">' +
+                                    '<div class="withu-message-msg-info">' +
+                                        '<span class="withu-message-msg-name">' + escapeHtml(myName) + '</span>' +
                                         (isPendingReply ? renderPendingBadge() : '') +
                                     '</div>' +
-                                    '<div class="lgnewui-message-msg-bubble">' + contentStr + '</div>' +
-                                    (metaHtml ? '<div class="lgnewui-message-msg-meta">' + metaHtml + '</div>' : '') +
+                                    '<div class="withu-message-msg-bubble">' + contentStr + '</div>' +
+                                    (metaHtml ? '<div class="withu-message-msg-meta">' + metaHtml + '</div>' : '') +
                                 '</div>';
                             body.appendChild(item);
                             if (typeof lucide !== 'undefined') lucide.createIcons();
@@ -1834,26 +1834,26 @@
                                             // 插入气泡到抽屉
                                             var body = document.getElementById('lgmsgDrawerBody');
                                             if (body) {
-                                                var emptyEl = body.querySelector('.lgnewui-message-drawer-empty');
+                                                var emptyEl = body.querySelector('.withu-message-drawer-empty');
                                                 if (emptyEl) emptyEl.remove();
-                                                var myQQ = localStorage.getItem('lg_comment_qq') || 'anon';
-                                                var myName = localStorage.getItem('lg_comment_anon_name') || '匿名';
-                                                var myAvatar = localStorage.getItem('lg_comment_avatar') || getAvatarUrl(myQQ);
+                                                var myQQ = localStorage.getItem('withu_comment_qq') || 'anon';
+                                                var myName = localStorage.getItem('withu_comment_anon_name') || '匿名';
+                                                var myAvatar = localStorage.getItem('withu_comment_avatar') || getAvatarUrl(myQQ);
                                                 var quoteHtml2 = '';
                                                 if (devReplyToId && devReplyToName) {
-                                                    var refB = document.querySelector('#lgmsg-' + devReplyToId + ' .lgnewui-message-msg-bubble');
+                                                    var refB = document.querySelector('#lgmsg-' + devReplyToId + ' .withu-message-msg-bubble');
                                                     var refH = refB ? refB.cloneNode(true).innerHTML.substring(0, 200) : '';
                                                     quoteHtml2 = self._buildReplyQuote({ reply_to_id: devReplyToId, replyToName: devReplyToName, replyToHtml: refH });
                                                 }
                                                 var finalContent = quoteHtml2 + devContentStr;
                                                 var devPending = !!r2.pending;
                                                 var devItem = document.createElement('div');
-                                                devItem.className = 'lgnewui-message-msg-item is-me lgnewui-message-msg-pop-in' + (devPending ? ' is-pending' : '');
+                                                devItem.className = 'withu-message-msg-item is-me withu-message-msg-pop-in' + (devPending ? ' is-pending' : '');
                                                 devItem.id = 'lgmsg-local-' + Date.now();
                                                 devItem.innerHTML =
-                                                    '<div class="lgnewui-message-avatar-wrap"><img class="lgnewui-message-msg-avatar" src="' + escapeHtml(myAvatar) + '" loading="lazy" decoding="async"></div>' +
-                                                    '<div class="lgnewui-message-msg-main"><div class="lgnewui-message-msg-info"><span class="lgnewui-message-msg-name">' + escapeHtml(myName) + '</span>' + (devPending ? renderPendingBadge() : '') + '</div>' +
-                                                    '<div class="lgnewui-message-msg-bubble">' + finalContent + '</div></div>';
+                                                    '<div class="withu-message-avatar-wrap"><img class="withu-message-msg-avatar" src="' + escapeHtml(myAvatar) + '" loading="lazy" decoding="async"></div>' +
+                                                    '<div class="withu-message-msg-main"><div class="withu-message-msg-info"><span class="withu-message-msg-name">' + escapeHtml(myName) + '</span>' + (devPending ? renderPendingBadge() : '') + '</div>' +
+                                                    '<div class="withu-message-msg-bubble">' + finalContent + '</div></div>';
                                                 body.appendChild(devItem);
                                                 if (typeof lucide !== 'undefined') lucide.createIcons();
                                                 var scroller = document.getElementById('lgmsgDrawerScroll');
@@ -2069,7 +2069,7 @@
             var $grid = $('#lgmsgEmojiGrid');
             var skeletonHtml = '';
             for (var s = 0; s < 20; s++) {
-                skeletonHtml += '<div class="lgnewui-message-emoji-skeleton"></div>';
+                skeletonHtml += '<div class="withu-message-emoji-skeleton"></div>';
             }
             $grid.html(skeletonHtml);
 
@@ -2117,15 +2117,15 @@
                 var tabContent = firstIcon
                     ? '<img class="lazy" data-src="' + escapeHtml(owoBase + '/' + firstIcon) + '" alt="' + escapeHtml(catKey) + '">'
                     : escapeHtml(catKey);
-                html += '<div class="lgnewui-message-e-tab' + (i === 0 ? ' active' : '') + '" data-cat-index="' + i + '">' + tabContent + '</div>';
+                html += '<div class="withu-message-e-tab' + (i === 0 ? ' active' : '') + '" data-cat-index="' + i + '">' + tabContent + '</div>';
             }
             $tabs.html(html);
             updateLazyLoad();
 
             var self = this;
-            $tabs.off('click.lgmsg', '.lgnewui-message-e-tab').on('click.lgmsg', '.lgnewui-message-e-tab', function() {
+            $tabs.off('click.lgmsg', '.withu-message-e-tab').on('click.lgmsg', '.withu-message-e-tab', function() {
                 var idx = parseInt($(this).data('cat-index'), 10);
-                $tabs.find('.lgnewui-message-e-tab').removeClass('active');
+                $tabs.find('.withu-message-e-tab').removeClass('active');
                 $(this).addClass('active');
                 self._renderGrid(idx);
             });
@@ -2156,7 +2156,7 @@
             var cols = Math.floor($grid[0].clientWidth / 46) || 8;
             var skeletonCount = cols * 5;
             var skHtml = '';
-            for (var s = 0; s < skeletonCount; s++) skHtml += '<div class="lgnewui-message-emoji-skeleton"></div>';
+            for (var s = 0; s < skeletonCount; s++) skHtml += '<div class="withu-message-emoji-skeleton"></div>';
             $grid.html(skHtml);
 
             var startTime = performance.now();
@@ -2168,7 +2168,7 @@
                 for (var i = 0; i < items.length; i++) {
                     var em = items[i];
                     var div = document.createElement('div');
-                    div.className = 'lgnewui-message-emoji-item';
+                    div.className = 'withu-message-emoji-item';
                     div.setAttribute('data-emoji-data', em.data);
                     div.setAttribute('data-emoji-icon', owoBase + '/' + em.icon);
                     div.setAttribute('data-emoji-text', em.text || em.data);
@@ -2206,7 +2206,7 @@
             }
 
             // 点击表情 → 插入到当前目标 contenteditable 编辑器
-            $grid.off('click.lgmsg', '.lgnewui-message-emoji-item').on('click.lgmsg', '.lgnewui-message-emoji-item', function(e) {
+            $grid.off('click.lgmsg', '.withu-message-emoji-item').on('click.lgmsg', '.withu-message-emoji-item', function(e) {
                 // 触发来源为 touchend 手动 trigger('click.lgmsg') 时 e.originalEvent 为空，正常执行
                 // 来源为浏览器合成 click 时 e.originalEvent 存在且该 item 已被标记 → 拦截
                 if (e && e.originalEvent && recentlyTouchedSet && recentlyTouchedSet.has(this)) {
@@ -2280,12 +2280,12 @@
                 if (p) p.classList.remove('active');
             }
 
-            $grid.off('mouseenter.lgmsgPreview mouseleave.lgmsgPreview', '.lgnewui-message-emoji-item')
-                .on('mouseenter.lgmsgPreview', '.lgnewui-message-emoji-item', function() {
+            $grid.off('mouseenter.lgmsgPreview mouseleave.lgmsgPreview', '.withu-message-emoji-item')
+                .on('mouseenter.lgmsgPreview', '.withu-message-emoji-item', function() {
                     clearTimeout(previewHoverTimer);
                     showEmojiPreview(this);
                 })
-                .on('mouseleave.lgmsgPreview', '.lgnewui-message-emoji-item', function() {
+                .on('mouseleave.lgmsgPreview', '.withu-message-emoji-item', function() {
                     previewHoverTimer = setTimeout(hideEmojiPreview, 30);
                 });
 
@@ -2300,8 +2300,8 @@
             var touchStartX = 0, touchStartY = 0;
             var TOUCH_MOVE_THRESHOLD = 10; // px
 
-            $grid.off('touchstart.lgmsgTouch touchmove.lgmsgTouch touchend.lgmsgTouch touchcancel.lgmsgTouch', '.lgnewui-message-emoji-item')
-                .on('touchstart.lgmsgTouch', '.lgnewui-message-emoji-item', function(e) {
+            $grid.off('touchstart.lgmsgTouch touchmove.lgmsgTouch touchend.lgmsgTouch touchcancel.lgmsgTouch', '.withu-message-emoji-item')
+                .on('touchstart.lgmsgTouch', '.withu-message-emoji-item', function(e) {
                     var item = this;
                     touchIsLong = false;
                     touchMoved = false;
@@ -2315,7 +2315,7 @@
                         showEmojiPreview(item);
                     }, 400);
                 })
-                .on('touchmove.lgmsgTouch', '.lgnewui-message-emoji-item', function(e) {
+                .on('touchmove.lgmsgTouch', '.withu-message-emoji-item', function(e) {
                     var t = e.originalEvent && e.originalEvent.touches && e.originalEvent.touches[0];
                     if (!t) return;
                     var dx = Math.abs(t.clientX - touchStartX);
@@ -2330,7 +2330,7 @@
                         }
                     }
                 })
-                .on('touchend.lgmsgTouch', '.lgnewui-message-emoji-item', function(e) {
+                .on('touchend.lgmsgTouch', '.withu-message-emoji-item', function(e) {
                     clearTimeout(touchLongTimer);
                     touchLongTimer = null;
                     if (touchMoved) {
@@ -2351,7 +2351,7 @@
                     markRecentlyTouched(this);
                     $(this).trigger('click.lgmsg');
                 })
-                .on('touchcancel.lgmsgTouch', '.lgnewui-message-emoji-item', function() {
+                .on('touchcancel.lgmsgTouch', '.withu-message-emoji-item', function() {
                     clearTimeout(touchLongTimer);
                     touchLongTimer = null;
                     if (touchIsLong) hideEmojiPreview();
@@ -2376,7 +2376,7 @@
                 if (!items || items.length === 0) continue;
                 var item = items[Math.floor(Math.random() * items.length)];
                 var div = document.createElement('div');
-                div.className = 'lgnewui-message-emoji-bubble';
+                div.className = 'withu-message-emoji-bubble';
                 div.setAttribute('data-category', catKey);
                 div.setAttribute('data-data', item.data);
                 div.innerHTML = '<img class="lazy" data-src="' + escapeHtml(owoBase + '/' + item.icon) + '"><span>' + escapeHtml(item.text || item.data) + '</span>';
@@ -2387,7 +2387,7 @@
             updateLazyLoad();
 
             // 点击气泡 → 插入3个表情 + 动画替换
-            $container.off('click.lgmsgBubble').on('click.lgmsgBubble', '.lgnewui-message-emoji-bubble', function() {
+            $container.off('click.lgmsgBubble').on('click.lgmsgBubble', '.withu-message-emoji-bubble', function() {
                 var $bubble = $(this);
                 var $img = $bubble.find('img');
                 var imgSrc = $img.attr('src') || $img.attr('data-src');
@@ -2423,7 +2423,7 @@
                 }
 
                 // 动画：淡出当前气泡
-                $bubble.addClass('lgnewui-message-bubble-out').css('pointer-events', 'none');
+                $bubble.addClass('withu-message-bubble-out').css('pointer-events', 'none');
                 $bubble.one('animationend', function() {
                     var container = $bubble.parent();
                     $bubble.remove();
@@ -2435,13 +2435,13 @@
                     var newItem = filtered.length > 0 ? filtered[Math.floor(Math.random() * filtered.length)] : catItems[0];
 
                     var newDiv = document.createElement('div');
-                    newDiv.className = 'lgnewui-message-emoji-bubble lgnewui-message-bubble-in';
+                    newDiv.className = 'withu-message-emoji-bubble withu-message-bubble-in';
                     newDiv.setAttribute('data-category', catKey);
                     newDiv.setAttribute('data-data', newItem.data);
                     newDiv.innerHTML = '<img class="lazy" data-src="' + escapeHtml(owoBase + '/' + newItem.icon) + '"><span>' + escapeHtml(newItem.text || newItem.data) + '</span>';
                     container.append(newDiv);
                     updateLazyLoad();
-                    $(newDiv).one('animationend', function() { $(this).removeClass('lgnewui-message-bubble-in'); });
+                    $(newDiv).one('animationend', function() { $(this).removeClass('withu-message-bubble-in'); });
                 });
             });
         }
@@ -2523,8 +2523,8 @@
         },
 
         _fetchWeather: function() {
-            if (window.LG_CONFIG && window.LG_CONFIG.weatherEnabled === false) {
-                $('#lgmsgTagWeather').parent('.lgnewui-message-v-tag').hide();
+            if (window.WITHU_CONFIG && window.WITHU_CONFIG.weatherEnabled === false) {
+                $('#lgmsgTagWeather').parent('.withu-message-v-tag').hide();
                 return;
             }
             // 优先复用 header 天气组件的全局缓存（60秒内有效），避免重复请求
@@ -2535,9 +2535,9 @@
             }
             $('#lgmsgTagWeather').text('获取中...');
             var self = this;
-            var _siteBase = (window.LG_CONFIG && window.LG_CONFIG.siteBase) || '';
+            var _siteBase = (window.WITHU_CONFIG && window.WITHU_CONFIG.siteBase) || '';
             var weatherUrl = (endpoints.weatherApi || (_siteBase + 'services/weather.php')) + '&mode=ip';
-            var wToken = (window.LG_CONFIG && window.LG_CONFIG.weatherToken) || '';
+            var wToken = (window.WITHU_CONFIG && window.WITHU_CONFIG.weatherToken) || '';
             if (wToken) weatherUrl += '&_wt=' + encodeURIComponent(wToken);
             $.ajax({
                 url: weatherUrl,
@@ -2557,13 +2557,13 @@
                     } else {
                         self.weather = '';
                         self.weatherIcon = '';
-                        $('#lgmsgTagWeather').parent('.lgnewui-message-v-tag').hide();
+                        $('#lgmsgTagWeather').parent('.withu-message-v-tag').hide();
                     }
                 },
                 error: function() {
                     self.weather = '';
                     self.weatherIcon = '';
-                    $('#lgmsgTagWeather').parent('.lgnewui-message-v-tag').hide();
+                    $('#lgmsgTagWeather').parent('.withu-message-v-tag').hide();
                 }
             });
         },
@@ -2588,7 +2588,7 @@
     // 确认弹窗 & 随机一言公共函数
     // ============================================
     var _quoteConfirmCallback = null;
-    var QUOTE_CONFIRM_KEY = 'lg_quote_confirm_shown';
+    var QUOTE_CONFIRM_KEY = 'withu_quote_confirm_shown';
     var QUOTE_CONFIRM_EXPIRE = 24 * 60 * 60 * 1000; // 1天过期
 
     // 检查是否需要显示确认弹窗（首次提醒，1天内不再提醒）
@@ -2657,7 +2657,7 @@
     function _doFetchQuote($btn, editor, clearFirst) {
         $btn.data('quoteLoading', true);
         var svgSparkles = '<svg viewBox="0 0 24 24"><path d="M9.937 15.5A2 2 0 0 0 8.5 14.063l-6.135-1.582a.5.5 0 0 1 0-.962L8.5 9.936A2 2 0 0 0 9.937 8.5l1.582-6.135a.5.5 0 0 1 .963 0L14.063 8.5A2 2 0 0 0 15.5 9.937l6.135 1.582a.5.5 0 0 1 0 .962L15.5 14.063a2 2 0 0 0-1.437 1.437l-1.582 6.135a.5.5 0 0 1-.963 0z"/><path d="M20 3v4"/><path d="M22 5h-4"/></svg>';
-        var svgLoader = '<svg class="lgnewui-message-lucide-loader" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="2" x2="12" y2="6"/><line x1="12" y1="18" x2="12" y2="22"/><line x1="4.93" y1="4.93" x2="7.76" y2="7.76"/><line x1="16.24" y1="16.24" x2="19.07" y2="19.07"/><line x1="2" y1="12" x2="6" y2="12"/><line x1="18" y1="12" x2="22" y2="12"/><line x1="4.93" y1="19.07" x2="7.76" y2="16.24"/><line x1="16.24" y1="7.76" x2="19.07" y2="4.93"/></svg>';
+        var svgLoader = '<svg class="withu-message-lucide-loader" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="2" x2="12" y2="6"/><line x1="12" y1="18" x2="12" y2="22"/><line x1="4.93" y1="4.93" x2="7.76" y2="7.76"/><line x1="16.24" y1="16.24" x2="19.07" y2="19.07"/><line x1="2" y1="12" x2="6" y2="12"/><line x1="18" y1="12" x2="22" y2="12"/><line x1="4.93" y1="19.07" x2="7.76" y2="16.24"/><line x1="16.24" y1="7.76" x2="19.07" y2="4.93"/></svg>';
         $btn.html(svgLoader).css('pointer-events', 'none');
         var startTime = Date.now();
         var minDisplayMs = 800;
@@ -2705,7 +2705,7 @@
         _savedRange: null,
 
         init: function() {
-            this._enterToSend = localStorage.getItem('lg_enter_to_send') === 'true';
+            this._enterToSend = localStorage.getItem('withu_enter_to_send') === 'true';
             this._bindEvents();
             this._initSlider();
             this._renderInputs();
@@ -2744,11 +2744,11 @@
             });
 
             // Tab 切换
-            $('#lgmsgTabContainer').off('click.lgmsg', '.lgnewui-message-ios-tab').on('click.lgmsg', '.lgnewui-message-ios-tab', function() {
+            $('#lgmsgTabContainer').off('click.lgmsg', '.withu-message-ios-tab').on('click.lgmsg', '.withu-message-ios-tab', function() {
                 var mode = $(this).data('mode');
                 if (mode && mode !== self._currentMode) {
                     self._currentMode = mode;
-                    $(this).addClass('active').siblings('.lgnewui-message-ios-tab').removeClass('active');
+                    $(this).addClass('active').siblings('.withu-message-ios-tab').removeClass('active');
                     self._moveSlider(this);
                     self._renderInputs();
                 }
@@ -2760,7 +2760,7 @@
             // Enter 发送切换
             $('#lgmsgEnterToSendWrap').off('click.lgmsg').on('click.lgmsg', function() {
                 self._enterToSend = !self._enterToSend;
-                localStorage.setItem('lg_enter_to_send', self._enterToSend);
+                localStorage.setItem('withu_enter_to_send', self._enterToSend);
                 self._updateEnterToSendUI();
             });
 
@@ -2812,14 +2812,14 @@
         },
 
         _initSlider: function() {
-            var $active = $('#lgmsgTabContainer .lgnewui-message-ios-tab.active');
+            var $active = $('#lgmsgTabContainer .withu-message-ios-tab.active');
             if ($active.length) this._moveSlider($active[0]);
         },
 
         _moveSlider: function(tab) {
             var $slider = $('#lgmsgTabSlider');
             if (!$slider.length || !tab) return;
-            var container = $(tab).closest('.lgnewui-message-ios-tabs')[0];
+            var container = $(tab).closest('.withu-message-ios-tabs')[0];
             if (!container) return;
             var cRect = container.getBoundingClientRect();
             var tRect = tab.getBoundingClientRect();
@@ -2834,28 +2834,28 @@
             if (!$row.length) return;
             var self = this;
             var svgUser = '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>';
-            var svgLoader = '<svg class="lgnewui-message-lucide-loader" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="2" x2="12" y2="6"/><line x1="12" y1="18" x2="12" y2="22"/><line x1="4.93" y1="4.93" x2="7.76" y2="7.76"/><line x1="16.24" y1="16.24" x2="19.07" y2="19.07"/><line x1="2" y1="12" x2="6" y2="12"/><line x1="18" y1="12" x2="22" y2="12"/><line x1="4.93" y1="19.07" x2="7.76" y2="16.24"/><line x1="16.24" y1="7.76" x2="19.07" y2="4.93"/></svg>';
+            var svgLoader = '<svg class="withu-message-lucide-loader" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="2" x2="12" y2="6"/><line x1="12" y1="18" x2="12" y2="22"/><line x1="4.93" y1="4.93" x2="7.76" y2="7.76"/><line x1="16.24" y1="16.24" x2="19.07" y2="19.07"/><line x1="2" y1="12" x2="6" y2="12"/><line x1="18" y1="12" x2="22" y2="12"/><line x1="4.93" y1="19.07" x2="7.76" y2="16.24"/><line x1="16.24" y1="7.76" x2="19.07" y2="4.93"/></svg>';
 
             $row.css('opacity', '0');
             var $privacyHint = $('#lgmsgPrivacyHint');
             setTimeout(function() {
                 if (self._currentMode === 'qq') {
                     $privacyHint.slideDown(200, function() { if (typeof lucide !== 'undefined') lucide.createIcons({ nodes: [$privacyHint[0]] }); });
-                    var cachedQQ = localStorage.getItem('lg_comment_qq') || '';
+                    var cachedQQ = localStorage.getItem('withu_comment_qq') || '';
                     var cacheHint = '';
                     if (cachedQQ.length >= 5) {
-                        cacheHint = '<div class="lgnewui-message-qq-cache-hint" id="lgmsgQQCacheHint">' +
-                            '<img src="' + escapeHtml(localStorage.getItem('lg_comment_avatar') || _defaultAvatar) + '" onerror="this.style.display=\'none\'">' +
+                        cacheHint = '<div class="withu-message-qq-cache-hint" id="lgmsgQQCacheHint">' +
+                            '<img src="' + escapeHtml(localStorage.getItem('withu_comment_avatar') || _defaultAvatar) + '" onerror="this.style.display=\'none\'">' +
                             '<span>QQ ' + escapeHtml(cachedQQ.slice(0, 3)) + '**' + escapeHtml(cachedQQ.slice(-2)) + '</span></div>';
                     }
                     $row.html(
-                        '<div class="lgnewui-message-input-wrapper">' +
-                            '<div class="lgnewui-message-i-icon" id="lgmsgQQIcon"><img class="lgnewui-message-input-avatar" src="' + _defaultAvatar + '"></div>' +
+                        '<div class="withu-message-input-wrapper">' +
+                            '<div class="withu-message-i-icon" id="lgmsgQQIcon"><img class="withu-message-input-avatar" src="' + _defaultAvatar + '"></div>' +
                             '<input type="text" id="lgmsgQQInput" inputmode="numeric" placeholder="输入 QQ 号"' + (cacheHint ? ' style="padding-right:150px"' : '') + '>' +
                             cacheHint +
                         '</div>' +
-                        '<div class="lgnewui-message-input-wrapper">' +
-                            '<div class="lgnewui-message-i-icon">' + svgUser + '</div>' +
+                        '<div class="withu-message-input-wrapper">' +
+                            '<div class="withu-message-i-icon">' + svgUser + '</div>' +
                             '<input type="text" id="lgmsgNicknameInput" placeholder="昵称 (必填)">' +
                         '</div>'
                     );
@@ -2868,14 +2868,14 @@
                         var $nick = $('#lgmsgNicknameInput');
                         var $hint = $('#lgmsgQQCacheHint');
                         if ($hint.length) {
-                            if (val.length > 0) { $hint.addClass('lgnewui-message-hint-hidden'); $(this).css('padding-right', ''); }
-                            else { $hint.removeClass('lgnewui-message-hint-hidden'); $(this).css('padding-right', '150px'); }
+                            if (val.length > 0) { $hint.addClass('withu-message-hint-hidden'); $(this).css('padding-right', ''); }
+                            else { $hint.removeClass('withu-message-hint-hidden'); $(this).css('padding-right', '150px'); }
                         }
                         if (val.length >= 5) {
                             $icon.html(svgLoader);
                             var seq = ++_qqSeq;
                             qqTimer = setTimeout(function() {
-                                localStorage.setItem('lg_comment_qq', val);
+                                localStorage.setItem('withu_comment_qq', val);
                                 $.ajax({
                                     url: endpoints.infoService || 'services/info-service.php',
                                     type: 'POST',
@@ -2884,14 +2884,14 @@
                                     success: function(res) {
                                         if (seq !== _qqSeq) return;
                                         if (res.Status && res.data) {
-                                            if (res.data.qq_hash) localStorage.setItem('lg_comment_qq_hash', res.data.qq_hash);
+                                            if (res.data.qq_hash) localStorage.setItem('withu_comment_qq_hash', res.data.qq_hash);
                                             var avatar = res.data.avatar || _defaultAvatar;
-                                            localStorage.setItem('lg_comment_avatar', avatar);
-                                            $icon.html('<img src="' + escapeHtml(avatar) + '" class="lgnewui-message-input-avatar" style="opacity:0;transition:opacity 0.4s ease" onload="this.style.opacity=1" onerror="this.onerror=null;this.src=\'' + _defaultAvatar.replace(/'/g, '%27') + '\';this.style.opacity=1;">');
+                                            localStorage.setItem('withu_comment_avatar', avatar);
+                                            $icon.html('<img src="' + escapeHtml(avatar) + '" class="withu-message-input-avatar" style="opacity:0;transition:opacity 0.4s ease" onload="this.style.opacity=1" onerror="this.onerror=null;this.src=\'' + _defaultAvatar.replace(/'/g, '%27') + '\';this.style.opacity=1;">');
                                             var nick = res.data.nickname || res.data.nick || '';
                                             if (nick) $nick.val(nick);
                                         } else {
-                                            $icon.html('<img src="' + _defaultAvatar + '" class="lgnewui-message-input-avatar">');
+                                            $icon.html('<img src="' + _defaultAvatar + '" class="withu-message-input-avatar">');
                                             if (!$nick.val() || $nick.val().indexOf('\u670b\u53cb(') === 0) {
                                                 $nick.val('\u670b\u53cb(' + val.slice(-2) + ')');
                                             }
@@ -2899,7 +2899,7 @@
                                     },
                                     error: function() {
                                         if (seq !== _qqSeq) return;
-                                        $icon.html('<img src="' + _defaultAvatar + '" class="lgnewui-message-input-avatar">');
+                                        $icon.html('<img src="' + _defaultAvatar + '" class="withu-message-input-avatar">');
                                         if (!$nick.val() || $nick.val().indexOf('\u670b\u53cb(') === 0) {
                                             $nick.val('\u670b\u53cb(' + val.slice(-2) + ')');
                                         }
@@ -2908,7 +2908,7 @@
                             }, 600);
                         } else {
                             ++_qqSeq;
-                            $icon.html('<img class="lgnewui-message-input-avatar" src="' + _defaultAvatar + '">');
+                            $icon.html('<img class="withu-message-input-avatar" src="' + _defaultAvatar + '">');
                             $nick.val('');
                         }
                     });
@@ -2923,8 +2923,8 @@
                 } else {
                     $privacyHint.slideUp(200);
                     $row.html(
-                        '<div class="lgnewui-message-input-wrapper">' +
-                            '<div class="lgnewui-message-i-icon">' + svgUser + '</div>' +
+                        '<div class="withu-message-input-wrapper">' +
+                            '<div class="withu-message-i-icon">' + svgUser + '</div>' +
                             '<input type="text" id="lgmsgNicknameInput" placeholder="昵称 (必填)">' +
                         '</div>'
                     );
@@ -2938,7 +2938,7 @@
             if (this._enterToSend) $wrap.addClass('active');
             else $wrap.removeClass('active');
             // 同步到抽屉的 switch
-            $('.lgnewui-message-switch-wrap').each(function() {
+            $('.withu-message-switch-wrap').each(function() {
                 if (CommentModal._enterToSend) $(this).addClass('active');
                 else $(this).removeClass('active');
             });
@@ -3028,7 +3028,7 @@
                         if (node.tagName === 'BLOCKQUOTE') continue;
                         if (node.tagName === 'IMG' && node.classList.contains('emoji')) {
                             result += node.getAttribute('data-emoji') || node.getAttribute('data-value') || '';
-                        } else if (node.classList && node.classList.contains('lgnewui-message-at-tag')) {
+                        } else if (node.classList && node.classList.contains('withu-message-at-tag')) {
                             var atTarget = node.getAttribute('data-target') || '';
                             var atName = (node.textContent || '').replace(/^@/, '');
                             result += '@[' + atName + '#' + atTarget + ']';
@@ -3135,11 +3135,11 @@
                 success: function(res) {
                     if (res.Status) {
                         $btn.removeClass('is-loading').addClass('is-success');
-                        $btn.find('.lgnewui-message-submit-label').text('发送成功');
+                        $btn.find('.withu-message-submit-label').text('发送成功');
 
                         // 编辑器收缩 → 纸条打包 → 纸飞机飞走
-                        var $editorWrap = $('.lgnewui-message-editor-wrap');
-                        $editorWrap.addClass('lgnewui-message-fly-shrink');
+                        var $editorWrap = $('.withu-message-editor-wrap');
+                        $editorWrap.addClass('withu-message-fly-shrink');
                         launchPackedPlane($editorWrap[0]);
 
                         // 庆祝礼花
@@ -3151,8 +3151,8 @@
                         var isPending = !!res.pending;
                         setTimeout(function() {
                             $btn.removeClass('is-success');
-                            $btn.find('.lgnewui-message-submit-label').text('发送留言');
-                            $editorWrap.removeClass('lgnewui-message-fly-shrink');
+                            $btn.find('.withu-message-submit-label').text('发送留言');
+                            $editorWrap.removeClass('withu-message-fly-shrink');
                             self.close();
                             if ($('#lgmsgCardGrid').length > 0) {
                                 if (isPending) {
@@ -3183,9 +3183,9 @@
                                         var r2Pending = !!r2.pending;
                                         showSuccess(function() {
                                             $btn.removeClass('is-loading').addClass('is-success');
-                                            $btn.find('.lgnewui-message-submit-label').text('发送成功');
-                                            var $editorWrap = $('.lgnewui-message-editor-wrap');
-                                            $editorWrap.addClass('lgnewui-message-fly-shrink');
+                                            $btn.find('.withu-message-submit-label').text('发送成功');
+                                            var $editorWrap = $('.withu-message-editor-wrap');
+                                            $editorWrap.addClass('withu-message-fly-shrink');
                                             launchPackedPlane($editorWrap[0]);
                                             setTimeout(function() { celebrateConfetti(); }, 500);
                                             if (typeof Toastify !== 'undefined') Toastify.showScenario('success', { text: r2.message || '留言成功' });
@@ -3193,8 +3193,8 @@
                                             _clearQuoteConfirmMark(); // 清除随机一言确认标记
                                             setTimeout(function() {
                                                 $btn.removeClass('is-success');
-                                                $btn.find('.lgnewui-message-submit-label').text('发送留言');
-                                                $editorWrap.removeClass('lgnewui-message-fly-shrink');
+                                                $btn.find('.withu-message-submit-label').text('发送留言');
+                                                $editorWrap.removeClass('withu-message-fly-shrink');
                                                 self.close();
                                                 if ($('#lgmsgCardGrid').length > 0) {
                                                     if (r2Pending) {
@@ -3256,11 +3256,11 @@
             });
 
             // Tab 切换
-            $('#lgmsgAuthTabContainer').off('click.lgmsg', '.lgnewui-message-ios-tab').on('click.lgmsg', '.lgnewui-message-ios-tab', function() {
+            $('#lgmsgAuthTabContainer').off('click.lgmsg', '.withu-message-ios-tab').on('click.lgmsg', '.withu-message-ios-tab', function() {
                 var mode = $(this).data('mode');
                 if (mode && mode !== self._currentMode) {
                     self._currentMode = mode;
-                    $(this).addClass('active').siblings('.lgnewui-message-ios-tab').removeClass('active');
+                    $(this).addClass('active').siblings('.withu-message-ios-tab').removeClass('active');
                     self._moveSlider(this);
                     self._renderInputs();
                 }
@@ -3271,7 +3271,7 @@
         },
 
         _initSlider: function() {
-            var $active = $('#lgmsgAuthTabContainer .lgnewui-message-ios-tab.active');
+            var $active = $('#lgmsgAuthTabContainer .withu-message-ios-tab.active');
             if ($active.length) this._moveSlider($active[0]);
         },
 
@@ -3289,7 +3289,7 @@
             var $row = $('#lgmsgAuthInputRow');
             if (!$row.length) return;
             var svgUser = '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>';
-            var svgLoader = '<svg class="lgnewui-message-lucide-loader" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="2" x2="12" y2="6"/><line x1="12" y1="18" x2="12" y2="22"/><line x1="4.93" y1="4.93" x2="7.76" y2="7.76"/><line x1="16.24" y1="16.24" x2="19.07" y2="19.07"/><line x1="2" y1="12" x2="6" y2="12"/><line x1="18" y1="12" x2="22" y2="12"/><line x1="4.93" y1="19.07" x2="7.76" y2="16.24"/><line x1="16.24" y1="7.76" x2="19.07" y2="4.93"/></svg>';
+            var svgLoader = '<svg class="withu-message-lucide-loader" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="2" x2="12" y2="6"/><line x1="12" y1="18" x2="12" y2="22"/><line x1="4.93" y1="4.93" x2="7.76" y2="7.76"/><line x1="16.24" y1="16.24" x2="19.07" y2="19.07"/><line x1="2" y1="12" x2="6" y2="12"/><line x1="18" y1="12" x2="22" y2="12"/><line x1="4.93" y1="19.07" x2="7.76" y2="16.24"/><line x1="16.24" y1="7.76" x2="19.07" y2="4.93"/></svg>';
             var self = this;
 
             $row.css('opacity', '0');
@@ -3297,14 +3297,14 @@
             setTimeout(function() {
                 if (self._currentMode === 'qq') {
                     $authPrivacyHint.slideDown(200, function() { if (typeof lucide !== 'undefined') lucide.createIcons({ nodes: [$authPrivacyHint[0]] }); });
-                    var cachedQQ = localStorage.getItem('lg_comment_qq') || '';
+                    var cachedQQ = localStorage.getItem('withu_comment_qq') || '';
                     $row.html(
-                        '<div class="lgnewui-message-input-wrapper">' +
-                            '<div class="lgnewui-message-i-icon" id="lgmsgAuthQQIcon"><img class="lgnewui-message-input-avatar" src="' + _defaultAvatar + '"></div>' +
+                        '<div class="withu-message-input-wrapper">' +
+                            '<div class="withu-message-i-icon" id="lgmsgAuthQQIcon"><img class="withu-message-input-avatar" src="' + _defaultAvatar + '"></div>' +
                             '<input type="text" id="lgmsgAuthQQInput" inputmode="numeric" placeholder="输入 QQ 号">' +
                         '</div>' +
-                        '<div class="lgnewui-message-input-wrapper">' +
-                            '<div class="lgnewui-message-i-icon">' + svgUser + '</div>' +
+                        '<div class="withu-message-input-wrapper">' +
+                            '<div class="withu-message-i-icon">' + svgUser + '</div>' +
                             '<input type="text" id="lgmsgAuthNicknameInput" placeholder="昵称 (必填)">' +
                         '</div>'
                     );
@@ -3318,7 +3318,7 @@
                             $icon.html(svgLoader);
                             var seq = ++_authQQSeq;
                             qqTimer = setTimeout(function() {
-                                localStorage.setItem('lg_comment_qq', val);
+                                localStorage.setItem('withu_comment_qq', val);
                                 $.ajax({
                                     url: endpoints.infoService || 'services/info-service.php',
                                     type: 'POST',
@@ -3327,14 +3327,14 @@
                                     success: function(res) {
                                         if (seq !== _authQQSeq) return;
                                         if (res.Status && res.data) {
-                                            if (res.data.qq_hash) localStorage.setItem('lg_comment_qq_hash', res.data.qq_hash);
+                                            if (res.data.qq_hash) localStorage.setItem('withu_comment_qq_hash', res.data.qq_hash);
                                             var avatar = res.data.avatar || _defaultAvatar;
-                                            localStorage.setItem('lg_comment_avatar', avatar);
-                                            $icon.html('<img src="' + escapeHtml(avatar) + '" class="lgnewui-message-input-avatar" style="opacity:0;transition:opacity 0.4s ease" onload="this.style.opacity=1" onerror="this.onerror=null;this.src=\'' + _defaultAvatar.replace(/'/g, '%27') + '\';this.style.opacity=1;">');
+                                            localStorage.setItem('withu_comment_avatar', avatar);
+                                            $icon.html('<img src="' + escapeHtml(avatar) + '" class="withu-message-input-avatar" style="opacity:0;transition:opacity 0.4s ease" onload="this.style.opacity=1" onerror="this.onerror=null;this.src=\'' + _defaultAvatar.replace(/'/g, '%27') + '\';this.style.opacity=1;">');
                                             var nick = res.data.nickname || res.data.nick || '';
                                             if (nick) $nick.val(nick);
                                         } else {
-                                            $icon.html('<img src="' + _defaultAvatar + '" class="lgnewui-message-input-avatar">');
+                                            $icon.html('<img src="' + _defaultAvatar + '" class="withu-message-input-avatar">');
                                             if (!$nick.val() || $nick.val().indexOf('\u670b\u53cb(') === 0) {
                                                 $nick.val('\u670b\u53cb(' + val.slice(-2) + ')');
                                             }
@@ -3342,7 +3342,7 @@
                                     },
                                     error: function() {
                                         if (seq !== _authQQSeq) return;
-                                        $icon.html('<img src="' + _defaultAvatar + '" class="lgnewui-message-input-avatar">');
+                                        $icon.html('<img src="' + _defaultAvatar + '" class="withu-message-input-avatar">');
                                         if (!$nick.val() || $nick.val().indexOf('\u670b\u53cb(') === 0) {
                                             $nick.val('\u670b\u53cb(' + val.slice(-2) + ')');
                                         }
@@ -3351,7 +3351,7 @@
                             }, 600);
                         } else {
                             ++_authQQSeq;
-                            $icon.html('<img class="lgnewui-message-input-avatar" src="' + _defaultAvatar + '">');
+                            $icon.html('<img class="withu-message-input-avatar" src="' + _defaultAvatar + '">');
                             $nick.val('');
                         }
                     });
@@ -3361,8 +3361,8 @@
                 } else {
                     $authPrivacyHint.slideUp(200);
                     $row.html(
-                        '<div class="lgnewui-message-input-wrapper">' +
-                            '<div class="lgnewui-message-i-icon">' + svgUser + '</div>' +
+                        '<div class="withu-message-input-wrapper">' +
+                            '<div class="withu-message-i-icon">' + svgUser + '</div>' +
                             '<input type="text" id="lgmsgAuthNicknameInput" placeholder="昵称 (必填)">' +
                         '</div>'
                     );
@@ -3379,7 +3379,7 @@
                 requestAnimationFrame(function() {
                     $modal.addClass('active');
                     // 初始化 slider
-                    var $activeTab = $('#lgmsgAuthTabContainer .lgnewui-message-ios-tab.active');
+                    var $activeTab = $('#lgmsgAuthTabContainer .withu-message-ios-tab.active');
                     if ($activeTab.length) {
                         var $slider = $('#lgmsgAuthTabSlider');
                         $slider.css({
@@ -3419,21 +3419,21 @@
                     if (typeof Toastify !== 'undefined') Toastify.showScenario('warning', { text: '请输入有效的QQ号' });
                     return;
                 }
-                localStorage.setItem('lg_comment_qq', qq);
-                localStorage.setItem('lg_comment_anon_name', nickname);
-                var avatarUrl = localStorage.getItem('lg_comment_avatar') || _defaultAvatar;
+                localStorage.setItem('withu_comment_qq', qq);
+                localStorage.setItem('withu_comment_anon_name', nickname);
+                var avatarUrl = localStorage.getItem('withu_comment_avatar') || _defaultAvatar;
                 $('#lgmsgDrawerIdentityAvatar').attr('src', avatarUrl);
                 $('#lgmsgDrawerIdentityName').text(nickname).css('color', 'var(--lgmsg-text-main)');
                 window.currentUserAuth = { mode: 'qq', qq: qq, name: nickname, avatar: avatarUrl };
             } else {
-                localStorage.setItem('lg_comment_anon_name', nickname);
-                var anonList = (window.LG_CONFIG && window.LG_CONFIG.anonAvatars) || [];
+                localStorage.setItem('withu_comment_anon_name', nickname);
+                var anonList = (window.WITHU_CONFIG && window.WITHU_CONFIG.anonAvatars) || [];
                 var anonAvatar = anonList.length ? anonList[Math.floor(Math.random() * anonList.length)] : _defaultAvatar;
                 $('#lgmsgDrawerIdentityAvatar').attr('src', anonAvatar);
                 $('#lgmsgDrawerIdentityName').text(nickname).css('color', 'var(--lgmsg-text-main)');
                 window.currentUserAuth = { mode: 'anonymous', qq: 'anon', name: nickname, avatar: anonAvatar };
             }
-            localStorage.setItem('lg_comment_auth_confirmed', '1');
+            localStorage.setItem('withu_comment_auth_confirmed', '1');
             if (typeof Toastify !== 'undefined') Toastify.showScenario('success', { text: '身份已保存' });
             Drawer._checkAutoAuth();
             this.close();
@@ -3521,7 +3521,7 @@
 
         // Phase 1: 小纸条出现
         var note = document.createElement('div');
-        note.className = 'lgnewui-message-flying-note';
+        note.className = 'withu-message-flying-note';
         note.textContent = previewText + (previewText.length >= 18 ? '...' : '');
         note.style.left = cx + 'px';
         note.style.top = cy + 'px';
@@ -3531,7 +3531,7 @@
         // Phase 2: 纸飞机
         setTimeout(function() {
             var plane = document.createElement('div');
-            plane.className = 'lgnewui-message-paper-plane-fly';
+            plane.className = 'withu-message-paper-plane-fly';
             plane.innerHTML = '<svg viewBox="0 0 24 24"><path d="M14.536 21.686a.5.5 0 0 0 .937-.024l6.5-19a.496.496 0 0 0-.635-.635l-19 6.5a.5.5 0 0 0-.024.937l7.93 3.18a2 2 0 0 1 1.112 1.11z"/><path d="m21.854 2.147-10.94 10.939"/></svg>';
             plane.style.left = (cx - 18) + 'px';
             plane.style.top = (cy - 18) + 'px';

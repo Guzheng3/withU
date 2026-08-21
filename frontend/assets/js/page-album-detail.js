@@ -148,7 +148,7 @@ window.ImglistApp = (function() {
 
                 setTimeout(() => {
                     if (isFirstPage && data.counts) {
-                        const chipText = totalCountEl.querySelector('.lgnew-new-photo-head-chip-text');
+                        const chipText = totalCountEl.querySelector('.withu-new-photo-head-chip-text');
                         if (chipText) chipText.textContent = `共 ${data.counts.total} 项`;
                         totalCountEl.style.display = '';
                     }

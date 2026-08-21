@@ -1,6 +1,6 @@
 <?php
 /**
- * 登录状态查询接口（供 lg-site 等跨域前端读取 withU 登录态）
+ * 登录状态查询接口（供 withu-site 等跨域前端读取 withU 登录态）
  */
 header('Content-Type: application/json; charset=UTF-8');
 header('Cache-Control: no-store, max-age=0');

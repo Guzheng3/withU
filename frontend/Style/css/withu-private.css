@@ -1,7 +1,7 @@
 
 
 
-.lgnewui-private-wrapper {
+.withu-private-wrapper {
     font-family: 'Inter', 'Noto Serif SC', sans-serif;
     background-color: #f8fafc;
     /* bg-slate-50 */
@@ -17,7 +17,7 @@
     z-index: 9999;
 }
 
-.lgnewui-private-wrapper ::selection {
+.withu-private-wrapper ::selection {
     background-color: #0f172a;
     /* selection:bg-slate-900 */
     color: #ffffff;
@@ -26,7 +26,7 @@
 /* 
  * 背景区域
  */
-.lgnewui-private-wrapper .lgnewui-private-bg {
+.withu-private-wrapper .withu-private-bg {
     position: absolute;
     top: 0;
     right: 0;
@@ -35,7 +35,7 @@
     z-index: 0;
 }
 
-.lgnewui-private-wrapper .lgnewui-private-bg-img {
+.withu-private-wrapper .withu-private-bg-img {
     width: 100%;
     height: 100%;
     object-fit: cover;
@@ -47,17 +47,17 @@
     pointer-events: none;
 }
 
-.lgnewui-private-wrapper .lgnewui-private-bg-img:hover {
+.withu-private-wrapper .withu-private-bg-img:hover {
     transform: scale(1.1);
 }
 
-.lgnewui-private-wrapper .lgnewui-private-bg-img.is-clear {
+.withu-private-wrapper .withu-private-bg-img.is-clear {
     filter: blur(0px);
     transform: scale(1.1);
     transition-duration: 1.5s;
 }
 
-.lgnewui-private-wrapper .lgnewui-private-bg-overlay {
+.withu-private-wrapper .withu-private-bg-overlay {
     position: absolute;
     top: 0;
     right: 0;
@@ -67,7 +67,7 @@
     transition: background-color 1s, background-image 1s;
 }
 
-.lgnewui-private-wrapper .lgnewui-private-bg-overlay.is-dark {
+.withu-private-wrapper .withu-private-bg-overlay.is-dark {
     background: linear-gradient(to bottom, rgba(0, 0, 0, 0.1), rgba(0, 0, 0, 0.05), rgba(0, 0, 0, 0.8));
     background-color: rgba(0, 0, 0, 0.4);
 }
@@ -75,7 +75,7 @@
 /* 
  * 主卡片区域
  */
-.lgnewui-private-wrapper .lgnewui-private-main-card {
+.withu-private-wrapper .withu-private-main-card {
     position: relative;
     z-index: 10;
     width: 100%;
@@ -95,26 +95,26 @@
     transform: translateY(30px);
 }
 
-.lgnewui-private-wrapper .lgnewui-private-main-card.fade-in-up {
-    animation: lgnewui-private-fadeInUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+.withu-private-wrapper .withu-private-main-card.fade-in-up {
+    animation: withu-private-fadeInUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
     animation-delay: 0.1s;
 }
 
-.lgnewui-private-wrapper .lgnewui-private-main-card:hover {
+.withu-private-wrapper .withu-private-main-card:hover {
     background: rgba(255, 255, 255, 0.65);
 }
 
-.lgnewui-private-wrapper .lgnewui-private-main-card.fade-out-scale {
-    animation: lgnewui-private-fadeOutScale 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+.withu-private-wrapper .withu-private-main-card.fade-out-scale {
+    animation: withu-private-fadeOutScale 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
 
 /* 头部信息 */
-.lgnewui-private-wrapper .lgnewui-private-header {
+.withu-private-wrapper .withu-private-header {
     text-align: center;
     margin-bottom: 2rem;
 }
 
-.lgnewui-private-wrapper .lgnewui-private-icon-box {
+.withu-private-wrapper .withu-private-icon-box {
     display: inline-flex;
     align-items: center;
     justify-content: center;
@@ -126,20 +126,20 @@
     color: #ffffff;
     margin-bottom: 0.5rem;
     box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
-    animation: lgnewui-private-pulse-slow 4s infinite alternate ease-in-out;
+    animation: withu-private-pulse-slow 4s infinite alternate ease-in-out;
 }
 
-.lgnewui-private-wrapper .lgnewui-private-icon-box svg {
+.withu-private-wrapper .withu-private-icon-box svg {
     width: 1.75rem;
     height: 1.75rem;
 }
 
 /* 场景标识 Badge */
-.lgnewui-private-wrapper .lgnewui-private-badge-container {
+.withu-private-wrapper .withu-private-badge-container {
     margin-bottom: 0.5rem;
 }
 
-.lgnewui-private-wrapper .lgnewui-private-badge {
+.withu-private-wrapper .withu-private-badge {
     display: inline-flex;
     align-items: center;
     justify-content: center;
@@ -156,7 +156,7 @@
     box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
 }
 
-.lgnewui-private-wrapper .lgnewui-private-title {
+.withu-private-wrapper .withu-private-title {
     font-size: 1.5rem;
     line-height: 2rem;
     font-weight: 700;
@@ -166,7 +166,7 @@
     margin-bottom: 0.75rem;
 }
 
-.lgnewui-private-wrapper .lgnewui-private-subtitle {
+.withu-private-wrapper .withu-private-subtitle {
     font-size: 0.75rem;
     font-weight: 500;
     color: #64748b;
@@ -179,19 +179,19 @@
     gap: 0.75rem;
 }
 
-.lgnewui-private-wrapper .lgnewui-private-divider-left {
+.withu-private-wrapper .withu-private-divider-left {
     height: 1px;
     width: 2.5rem;
     background: linear-gradient(to right, transparent, #94a3b8);
 }
 
-.lgnewui-private-wrapper .lgnewui-private-divider-right {
+.withu-private-wrapper .withu-private-divider-right {
     height: 1px;
     width: 2.5rem;
     background: linear-gradient(to right, #94a3b8, transparent);
 }
 
-.lgnewui-private-wrapper .lgnewui-private-highlight {
+.withu-private-wrapper .withu-private-highlight {
     color: #1e293b;
     font-weight: 600;
     font-size: 0.875rem;
@@ -200,17 +200,17 @@
 }
 
 /* 登录表单 */
-.lgnewui-private-wrapper .lgnewui-private-form {
+.withu-private-wrapper .withu-private-form {
     display: flex;
     flex-direction: column;
     gap: 1.5rem;
 }
 
-.lgnewui-private-wrapper .lgnewui-private-input-wrapper {
+.withu-private-wrapper .withu-private-input-wrapper {
     position: relative;
 }
 
-.lgnewui-private-wrapper .lgnewui-private-input-icon {
+.withu-private-wrapper .withu-private-input-icon {
     position: absolute;
     left: 1rem;
     top: 50%;
@@ -223,12 +223,12 @@
     z-index: 10;
 }
 
-.lgnewui-private-wrapper .lgnewui-private-input-wrapper:focus-within .lgnewui-private-input-icon {
+.withu-private-wrapper .withu-private-input-wrapper:focus-within .withu-private-input-icon {
     color: #1e293b;
     /* slate-800 */
 }
 
-.lgnewui-private-wrapper .lgnewui-private-input {
+.withu-private-wrapper .withu-private-input {
     width: 100%;
     padding: 0.875rem 2.75rem 0.875rem 2.75rem;
     background-color: rgba(255, 255, 255, 0.4);
@@ -247,25 +247,25 @@
     outline: none;
 }
 
-.lgnewui-private-wrapper .lgnewui-private-input::placeholder {
+.withu-private-wrapper .withu-private-input::placeholder {
     color: #94a3b8;
     letter-spacing: normal;
     font-family: 'Inter', sans-serif;
     font-weight: 300;
 }
 
-.lgnewui-private-wrapper .lgnewui-private-input:hover {
+.withu-private-wrapper .withu-private-input:hover {
     background-color: rgba(255, 255, 255, 0.5);
 }
 
-.lgnewui-private-wrapper .lgnewui-private-input:focus {
+.withu-private-wrapper .withu-private-input:focus {
     border-color: #ffffff;
     background-color: rgba(255, 255, 255, 0.7);
     box-shadow: 0 0 0 4px rgba(255, 255, 255, 0.3);
 }
 
 /* 密码可视切换按钮 */
-.lgnewui-private-wrapper .lgnewui-private-eye-btn {
+.withu-private-wrapper .withu-private-eye-btn {
     position: absolute;
     right: 1rem;
     top: 50%;
@@ -283,18 +283,18 @@
     outline: none;
 }
 
-.lgnewui-private-wrapper .lgnewui-private-eye-btn:hover,
-.lgnewui-private-wrapper .lgnewui-private-eye-btn:focus {
+.withu-private-wrapper .withu-private-eye-btn:hover,
+.withu-private-wrapper .withu-private-eye-btn:focus {
     color: #1e293b;
 }
 
-.lgnewui-private-wrapper .lgnewui-private-eye-icon {
+.withu-private-wrapper .withu-private-eye-icon {
     width: 1.125rem;
     height: 1.125rem;
 }
 
 /* 按钮 */
-.lgnewui-private-wrapper .lgnewui-private-btn {
+.withu-private-wrapper .withu-private-btn {
     width: 100%;
     padding: 0.875rem;
     background-color: #0f172a;
@@ -318,23 +318,23 @@
     outline: none;
 }
 
-.lgnewui-private-wrapper .lgnewui-private-btn:hover {
+.withu-private-wrapper .withu-private-btn:hover {
     background-color: #1e293b;
     /* hover:bg-slate-800 */
     box-shadow: 0 6px 20px rgba(15, 23, 42, 0.25);
 }
 
-.lgnewui-private-wrapper .lgnewui-private-btn:active {
+.withu-private-wrapper .withu-private-btn:active {
     transform: scale(0.98);
 }
 
-.lgnewui-private-wrapper .lgnewui-private-btn-text {
+.withu-private-wrapper .withu-private-btn-text {
     position: relative;
     z-index: 10;
     transition: transform 0.3s;
 }
 
-.lgnewui-private-wrapper .lgnewui-private-btn-icon {
+.withu-private-wrapper .withu-private-btn-icon {
     width: 1rem;
     height: 1rem;
     position: relative;
@@ -343,21 +343,21 @@
     opacity: 0.7;
 }
 
-.lgnewui-private-wrapper .lgnewui-private-btn.is-loading {
+.withu-private-wrapper .withu-private-btn.is-loading {
     opacity: 0.9;
     cursor: wait;
 }
 
-.lgnewui-private-wrapper .lgnewui-private-btn:not(.is-loading):hover .lgnewui-private-btn-text {
+.withu-private-wrapper .withu-private-btn:not(.is-loading):hover .withu-private-btn-text {
     transform: translateX(-2px);
 }
 
-.lgnewui-private-wrapper .lgnewui-private-btn:not(.is-loading):hover .lgnewui-private-btn-icon {
+.withu-private-wrapper .withu-private-btn:not(.is-loading):hover .withu-private-btn-icon {
     opacity: 1;
     transform: translateX(2px);
 }
 
-.lgnewui-private-wrapper .lgnewui-private-btn-shimmer {
+.withu-private-wrapper .withu-private-btn-shimmer {
     position: absolute;
     top: 0;
     bottom: 0;
@@ -371,21 +371,21 @@
     pointer-events: none;
 }
 
-.lgnewui-private-wrapper .lgnewui-private-btn:hover .lgnewui-private-btn-shimmer {
-    animation: lgnewui-private-shimmer 1.5s infinite;
+.withu-private-wrapper .withu-private-btn:hover .withu-private-btn-shimmer {
+    animation: withu-private-shimmer 1.5s infinite;
 }
 
 /* 按钮状态 - 加载 / 成功 */
-.lgnewui-private-wrapper .lgnewui-private-btn.is-loading {
+.withu-private-wrapper .withu-private-btn.is-loading {
     opacity: 0.9;
     cursor: wait;
 }
 
-.lgnewui-private-wrapper .lgnewui-private-btn.is-unlocking {
+.withu-private-wrapper .withu-private-btn.is-unlocking {
     pointer-events: none;
 }
 
-.lgnewui-private-wrapper .lgnewui-private-btn.is-unlocking::before {
+.withu-private-wrapper .withu-private-btn.is-unlocking::before {
     content: '';
     position: absolute;
     top: 0;
@@ -393,12 +393,12 @@
     width: 60%;
     height: 100%;
     background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.12), rgba(255, 255, 255, 0.3), rgba(255, 255, 255, 0.12), transparent);
-    animation: lgnewui-private-unlockSweep 0.6s ease-in-out forwards;
+    animation: withu-private-unlockSweep 0.6s ease-in-out forwards;
     z-index: 5;
     border-radius: inherit;
 }
 
-.lgnewui-private-wrapper .lgnewui-private-btn.is-success {
+.withu-private-wrapper .withu-private-btn.is-success {
     background: linear-gradient(135deg, #1e293b, #334155);
     box-shadow: 0 0 20px rgba(148, 163, 184, 0.12), 0 4px 14px rgba(15, 23, 42, 0.15);
     cursor: default;
@@ -407,7 +407,7 @@
 
 
 /* 底部头像区域 */
-.lgnewui-private-wrapper .lgnewui-private-avatars {
+.withu-private-wrapper .withu-private-avatars {
     margin-top: 2.5rem;
     display: flex;
     justify-content: center;
@@ -415,12 +415,12 @@
     gap: 0.75rem;
 }
 
-.lgnewui-private-wrapper .lgnewui-private-avatar-item {
+.withu-private-wrapper .withu-private-avatar-item {
     position: relative;
     cursor: pointer;
 }
 
-.lgnewui-private-wrapper .lgnewui-private-avatar-img-box {
+.withu-private-wrapper .withu-private-avatar-img-box {
     width: 3rem;
     height: 3rem;
     border-radius: 9999px;
@@ -430,12 +430,12 @@
     transition: all 0.5s;
 }
 
-.lgnewui-private-wrapper .lgnewui-private-avatar-item:hover .lgnewui-private-avatar-img-box {
+.withu-private-wrapper .withu-private-avatar-item:hover .withu-private-avatar-img-box {
     transform: scale(1.05);
     box-shadow: 0 0 20px rgba(255, 255, 255, 1);
 }
 
-.lgnewui-private-wrapper .lgnewui-private-avatar-img-box img {
+.withu-private-wrapper .withu-private-avatar-img-box img {
     width: 100%;
     height: 100%;
     object-fit: cover;
@@ -443,7 +443,7 @@
     pointer-events: none;
 }
 
-.lgnewui-private-wrapper .lgnewui-private-heart {
+.withu-private-wrapper .withu-private-heart {
     padding: 0 0.75rem;
     z-index: 10;
     display: flex;
@@ -451,7 +451,7 @@
     justify-content: center;
 }
 
-.lgnewui-private-glow-dot {
+.withu-private-glow-dot {
     display: block;
     width: 0.5rem;
     height: 0.5rem;
@@ -459,10 +459,10 @@
     background: rgba(251, 113, 133, 0.9);
     box-shadow: 0 0 6px 3px rgba(251, 113, 133, 0.4),
                 0 0 16px 6px rgba(251, 113, 133, 0.15);
-    animation: lgnewui-private-glow 2.4s ease-in-out infinite;
+    animation: withu-private-glow 2.4s ease-in-out infinite;
 }
 
-@keyframes lgnewui-private-glow {
+@keyframes withu-private-glow {
     0%, 100% {
         box-shadow: 0 0 6px 3px rgba(251, 113, 133, 0.4),
                     0 0 16px 6px rgba(251, 113, 133, 0.15);
@@ -476,23 +476,23 @@
 }
 
 /* 退场动画：纯 opacity + transform，走 GPU 合成层保证 60fps */
-.lgnewui-private-wrapper.is-exiting .lgnewui-private-main-card {
+.withu-private-wrapper.is-exiting .withu-private-main-card {
     will-change: transform, opacity;
-    animation: lgnewui-private-cardExit 0.8s cubic-bezier(0.22, 1, 0.36, 1) forwards !important;
+    animation: withu-private-cardExit 0.8s cubic-bezier(0.22, 1, 0.36, 1) forwards !important;
 }
 
-.lgnewui-private-wrapper.is-exiting .lgnewui-private-bg-img {
+.withu-private-wrapper.is-exiting .withu-private-bg-img {
     will-change: transform, opacity;
-    animation: lgnewui-private-bgExit 1.6s cubic-bezier(0.22, 1, 0.36, 1) forwards !important;
+    animation: withu-private-bgExit 1.6s cubic-bezier(0.22, 1, 0.36, 1) forwards !important;
 }
 
-.lgnewui-private-wrapper.is-exiting .lgnewui-private-bg-overlay {
+.withu-private-wrapper.is-exiting .withu-private-bg-overlay {
     will-change: opacity;
     transition: opacity 1.4s cubic-bezier(0.22, 1, 0.36, 1) !important;
     opacity: 0 !important;
 }
 
-.lgnewui-private-wrapper.is-exiting {
+.withu-private-wrapper.is-exiting {
     will-change: opacity;
     transition: opacity 0.5s cubic-bezier(0.22, 1, 0.36, 1) 1.2s;
     opacity: 0;
@@ -500,14 +500,14 @@
 
 
 /* Keyframes */
-@keyframes lgnewui-private-fadeInUp {
+@keyframes withu-private-fadeInUp {
     to {
         opacity: 1;
         transform: translateY(0);
     }
 }
 
-@keyframes lgnewui-private-pulse-slow {
+@keyframes withu-private-pulse-slow {
     0% {
         transform: scale(1);
         box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
@@ -519,7 +519,7 @@
     }
 }
 
-@keyframes lgnewui-private-fadeOutScale {
+@keyframes withu-private-fadeOutScale {
     to {
         opacity: 0;
         transform: scale(0.9) translateY(20px);
@@ -527,13 +527,13 @@
     }
 }
 
-@keyframes lgnewui-private-shimmer {
+@keyframes withu-private-shimmer {
     100% {
         transform: skewX(-12deg) translateX(200%);
     }
 }
 
-@keyframes lgnewui-private-pulse {
+@keyframes withu-private-pulse {
 
     0%,
     100% {
@@ -546,11 +546,11 @@
 }
 
 /* shake error */
-.lgnewui-private-wrapper .lgnewui-private-shake {
-    animation: lgnewui-private-headShake 0.5s ease-in-out;
+.withu-private-wrapper .withu-private-shake {
+    animation: withu-private-headShake 0.5s ease-in-out;
 }
 
-@keyframes lgnewui-private-headShake {
+@keyframes withu-private-headShake {
     0% {
         transform: translateX(0);
     }
@@ -577,14 +577,14 @@
 }
 
 /* 转圈动画 */
-.lgnewui-private-spin {
-    animation: lgnewui-private-spin 1s linear infinite !important;
+.withu-private-spin {
+    animation: withu-private-spin 1s linear infinite !important;
     transform-origin: center !important;
     /* 取消过渡防止跟 animation 冲突 */
     transition: none !important;
 }
 
-@keyframes lgnewui-private-spin {
+@keyframes withu-private-spin {
     from {
         transform: rotate(0deg);
     }
@@ -594,13 +594,13 @@
     }
 }
 
-@keyframes lgnewui-private-unlockSweep {
+@keyframes withu-private-unlockSweep {
     to {
         left: 140%;
     }
 }
 
-@keyframes lgnewui-private-cardExit {
+@keyframes withu-private-cardExit {
     0% {
         opacity: 1;
         transform: translateY(0) scale(1);
@@ -611,7 +611,7 @@
     }
 }
 
-@keyframes lgnewui-private-bgExit {
+@keyframes withu-private-bgExit {
     0% {
         opacity: 0.85;
         transform: scale(1.05);
@@ -631,24 +631,24 @@
  * 加密页面模式：隐藏导航和页脚等全局元素
  * ===================================================
  */
-html.lgnewui-private-mode body {
+html.withu-private-mode body {
     overflow: hidden;
 }
 
-html.lgnewui-private-mode .row.central.nav_k,
-html.lgnewui-private-mode #homePage,
-html.lgnewui-private-mode .footer-warp,
-html.lgnewui-private-mode #footer-animal,
-html.lgnewui-private-mode .div_marb_7rem-none,
-html.lgnewui-private-mode .lgnewui-mobile-nav-root,
-html.lgnewui-private-mode #NavBtnList,
-html.lgnewui-private-mode #isAdminIcon,
-html.lgnewui-private-mode #lgnewuiFloatingActions,
-html.lgnewui-private-mode .message_btn,
-html.lgnewui-private-mode #scrollTopBtn,
-html.lgnewui-private-mode .bg-wrap,
-html.lgnewui-private-mode #loader-wrapper,
-html.lgnewui-private-mode .Width_limit_10re {
+html.withu-private-mode .row.central.nav_k,
+html.withu-private-mode #homePage,
+html.withu-private-mode .footer-warp,
+html.withu-private-mode #footer-animal,
+html.withu-private-mode .div_marb_7rem-none,
+html.withu-private-mode .withu-mobile-nav-root,
+html.withu-private-mode #NavBtnList,
+html.withu-private-mode #isAdminIcon,
+html.withu-private-mode #withuFloatingActions,
+html.withu-private-mode .message_btn,
+html.withu-private-mode #scrollTopBtn,
+html.withu-private-mode .bg-wrap,
+html.withu-private-mode #loader-wrapper,
+html.withu-private-mode .Width_limit_10re {
     display: none !important;
 }
 
@@ -657,7 +657,7 @@ html.lgnewui-private-mode .Width_limit_10re {
  * 微信小程序风格胶囊按钮
  * ===================================================
  */
-.lgnewui-private-capsule {
+.withu-private-capsule {
     position: fixed;
     top: 20px;
     left: 50%;
@@ -673,10 +673,10 @@ html.lgnewui-private-mode .Width_limit_10re {
     padding: 4px 6px;
     gap: 2px;
     opacity: 0;
-    animation: lgnewui-private-capsuleFadeIn 0.6s 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    animation: withu-private-capsuleFadeIn 0.6s 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
 
-.lgnewui-private-capsule-btn {
+.withu-private-capsule-btn {
     display: flex;
     align-items: center;
     justify-content: center;
@@ -689,28 +689,28 @@ html.lgnewui-private-mode .Width_limit_10re {
     cursor: pointer;
 }
 
-.lgnewui-private-capsule-btn:hover {
+.withu-private-capsule-btn:hover {
     color: #ffffff;
     background: rgba(255, 255, 255, 0.15);
 }
 
-.lgnewui-private-capsule-btn:active {
+.withu-private-capsule-btn:active {
     transform: scale(0.92);
 }
 
-.lgnewui-private-capsule-btn svg {
+.withu-private-capsule-btn svg {
     width: 18px;
     height: 18px;
 }
 
-.lgnewui-private-capsule-divider {
+.withu-private-capsule-divider {
     width: 1px;
     height: 16px;
     background: rgba(255, 255, 255, 0.25);
     margin: 0 1px;
 }
 
-@keyframes lgnewui-private-capsuleFadeIn {
+@keyframes withu-private-capsuleFadeIn {
     to {
         opacity: 1;
         transform: translateX(-50%) translateY(0);
@@ -722,11 +722,11 @@ html.lgnewui-private-mode .Width_limit_10re {
  * 背景入场动画增强
  * ===================================================
  */
-.lgnewui-private-wrapper .lgnewui-private-bg-img {
-    animation: lgnewui-private-bgEntrance 30s ease-out forwards;
+.withu-private-wrapper .withu-private-bg-img {
+    animation: withu-private-bgEntrance 30s ease-out forwards;
 }
 
-@keyframes lgnewui-private-bgEntrance {
+@keyframes withu-private-bgEntrance {
     0% {
         transform: scale(1.15);
         filter: blur(6px);
@@ -745,16 +745,16 @@ html.lgnewui-private-mode .Width_limit_10re {
 
 /* 响应式断点 */
 @media (max-width: 768px) {
-    .lgnewui-private-wrapper .lgnewui-private-main-card {
+    .withu-private-wrapper .withu-private-main-card {
         margin: 1rem;
         padding: 2rem 1.5rem;
     }
 
-    .lgnewui-private-wrapper .lgnewui-private-title {
+    .withu-private-wrapper .withu-private-title {
         font-size: 1.25rem;
     }
 
-    .lgnewui-private-capsule {
+    .withu-private-capsule {
         top: 16px;
     }
 }

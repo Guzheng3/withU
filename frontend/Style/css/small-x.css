@@ -331,7 +331,7 @@ div#homePage .list .item {
   padding: 3rem 2rem;
 }
 
-.lg_card_block {
+.withu_card_block {
   display: none;
 }
 
@@ -460,7 +460,7 @@ div#homePage[data-Fullscreen] .bg-wrap.central.limg {
   left: 3rem;
 }
 
-.lgnewui-mobile-nav-root {
+.withu-mobile-nav-root {
   display: block;
 }
 
@@ -528,7 +528,7 @@ div#homePage[data-Fullscreen] .bg-wrap.central.limg {
 
 /* Header 移动端适配 - 简化版 */
 /* 1. 隐藏昵称logo */
-.lgnewui-header-left-avatar {
+.withu-header-left-avatar {
   display: none !important;
 }
 
@@ -540,14 +540,14 @@ div#homePage[data-Fullscreen] .bg-wrap.central.limg {
 }
 
 /* 3. 隐藏情侣头像、分隔线、更多按钮 */
-.lgnewui-couple-avatars-right,
-.lgnewui-header-divider,
-.lg-header-more-btn {
+.withu-couple-avatars-right,
+.withu-header-divider,
+.withu-header-more-btn {
   display: none !important;
 }
 
 /* 4. 移动端logo不要faded效果 */
-.alogo.lgnewui-logo-faded {
+.alogo.withu-logo-faded {
   opacity: 1 !important;
   transform: none !important;
 }
@@ -560,7 +560,7 @@ div#homePage[data-Fullscreen] .bg-wrap.central.limg {
 }
 
 /* 5. 移动端天气地图始终显示 */
-.lgnewui-header-actions {
+.withu-header-actions {
   opacity: 1 !important;
   pointer-events: auto !important;
   transform: translateY(-50%) !important;

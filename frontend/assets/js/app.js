@@ -1,5 +1,5 @@
 /**
- * LG_NewUI 核心应用框架
+ * withU 核心应用框架
  * @version 2.0.0
  * @description 统一管理配置、PJAX 生命周期、公共工具函数
  */
@@ -10,7 +10,7 @@
     // ============================================
     // 全局配置对象（由 PHP 注入）
     // ============================================
-    const LGConfig = window.LG_CONFIG || {};
+    const LGConfig = window.WITHU_CONFIG || {};
     const imageErrorFallback = LGConfig.imageErrorFallback || ((LGConfig.assetBase || '') + 'Style/img/file-placeholder.svg');
 
     // ============================================
@@ -711,7 +711,7 @@
                 : this._config.pcImgMaxHeight;
             if (height) {
                 $('.gallery img').css('min-height', height);
-                $('.lgnewui-new-photo .bg-img').css('min-height', height);
+                $('.withu-new-photo .bg-img').css('min-height', height);
             }
         },
 
@@ -731,7 +731,7 @@
          */
         setActiveTab() {
             const currentPage = window.location.pathname;
-            const navLinks = document.querySelectorAll('.LG_Tab_Item a');
+            const navLinks = document.querySelectorAll('.WithU_Tab_Item a');
             
             navLinks.forEach(link => {
                 const linkPage = link.getAttribute('href');
@@ -750,16 +750,16 @@
             const currentURL = window.location.pathname;
             const previousPage = sessionStorage.getItem('previousPage');
             const previousScroll = sessionStorage.getItem('previousScroll');
-            const $capsule = $('.lg-capsule-back');
+            const $capsule = $('.withu-capsule-back');
 
             const pageName = currentURL.split('/').pop() || '';
             if (pageName === 'page.html' || pageName === 'album-detail.html') {
                 // 子页面：激活胶囊，设置返回链接
                 $capsule.addClass('subpage-back-ready');
-                const homeUrl = (window.LG_CONFIG && window.LG_CONFIG.siteBase || '') + 'index.html';
-                $capsule.find('.lg-capsule-back__prev').attr('href', previousPage || homeUrl);
+                const homeUrl = (window.WITHU_CONFIG && window.WITHU_CONFIG.siteBase || '') + 'index.html';
+                $capsule.find('.withu-capsule-back__prev').attr('href', previousPage || homeUrl);
 
-                $capsule.find('.lg-capsule-back__prev').off('click.lg').on('click.lg', function() {
+                $capsule.find('.withu-capsule-back__prev').off('click.lg').on('click.lg', function() {
                     if (previousScroll) {
                         sessionStorage.setItem('restoreScroll', previousScroll);
                     }
@@ -768,7 +768,7 @@
                 // 非子页面：彻底清除胶囊状态
                 $capsule.removeClass('subpage-back-ready scroll-back-visible');
                 // 同时清除 logo 隐藏状态
-                $('.lgnewui-header-left-avatar').removeClass('scroll-logo-hidden');
+                $('.withu-header-left-avatar').removeClass('scroll-logo-hidden');
 
                 const restoreScroll = sessionStorage.getItem('restoreScroll');
                 if (restoreScroll) {
@@ -849,7 +849,7 @@
          */
         initViewImage() {
             if (window.ViewImage) {
-                ViewImage.init('.ConventionPhoto img, .grid-gallery img, #md-view img, .leav_card .aiv_qq img, img.photo_style, .lg-media img, .view-image-media');
+                ViewImage.init('.ConventionPhoto img, .grid-gallery img, #md-view img, .leav_card .aiv_qq img, img.photo_style, .withu-media img, .view-image-media');
             }
         },
 
@@ -932,7 +932,7 @@
 
         /**
          * 初始化 AOS
-         * @param {Object} config - 配置对象（从 PHP 注入的 LG_AOS_CONFIG）
+         * @param {Object} config - 配置对象（从 PHP 注入的 WITHU_AOS_CONFIG）
          */
         init(config = null) {
             if (typeof AOS === 'undefined') {
@@ -946,7 +946,7 @@
             }
 
             // 使用传入配置或全局配置
-            this._config = config || window.LG_AOS_CONFIG || {};
+            this._config = config || window.WITHU_AOS_CONFIG || {};
 
             // 如果未启用，直接返回
             if (this._config.enabled === false) {
@@ -1020,7 +1020,7 @@
             this._panel.querySelectorAll('[data-close-panel]').forEach(el => {
                 el.addEventListener('click', (e) => {
                     // 如果是功能按钮，先执行功能再关闭
-                    const actionItem = el.closest('.lg-header-more-action-item');
+                    const actionItem = el.closest('.withu-header-more-action-item');
                     if (actionItem) {
                         const id = actionItem.id;
                         if (id === 'lgMorePanelWeather') {
@@ -1356,7 +1356,7 @@
             console.log('%c未经授权 盗版必究 禁止抄袭 感谢配合', 'color:#fadfa3;background:#333;padding:8px 15px;');
             console.log('%c购买地址: https://blog.kikiw.cn/index.php/archives/65/', 'color:#fff;background-image:linear-gradient(to right,#1FA2FF 0%,#fdfdfd 21%,#fafafa 100%);padding:8px 15px;border-radius:5px;');
             console.log('%cContact Me: 3439780232 | mail@kikiw.cn', 'color:#fff;background:#000;padding:8px 15px;border-radius:10px');
-            console.log(`%cLG_NewUi ${version} | Powered by Ki`, 'color:#fff;background:linear-gradient(to right,hsl(206.57deg 100% 61.11%) 0%,hsl(57deg 100% 85.15%) 100%);padding:8px 15px;border-radius:15px');
+            console.log(`%cwithU ${version} | Powered by Ki`, 'color:#fff;background:linear-gradient(to right,hsl(206.57deg 100% 61.11%) 0%,hsl(57deg 100% 85.15%) 100%);padding:8px 15px;border-radius:15px');
             console.log('%cDependencies: APlayer | MetingJS | Plyr | PJAX | Masonry | QRCodeStyling | AOS | Fancybox', 'color:#fff;background:#475569;padding:8px 15px;border-radius:10px');
         }
     };

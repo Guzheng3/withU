@@ -34,7 +34,7 @@
     // ============================================================
 
     function switchTheme(theme) {
-        var device = document.querySelector('.lgnewui-chat-device');
+        var device = document.querySelector('.withu-chat-device');
         var pjax = document.getElementById('pjax-container');
         if (!device) return;
         if (theme === 'theme2') {
@@ -85,8 +85,8 @@
         if (!stateGen || !statePrev) return;
 
         // 初始化面板状态
-        stateGen.classList.remove('lgnewui-chat-hidden-state');
-        statePrev.classList.add('lgnewui-chat-hidden-state');
+        stateGen.classList.remove('withu-chat-hidden-state');
+        statePrev.classList.add('withu-chat-hidden-state');
         if (genTitle) { genTitle.style.opacity = 1; genTitle.textContent = _exportTextSeq[0].t; }
         if (genSubtitle) { genSubtitle.style.opacity = 1; genSubtitle.textContent = _exportTextSeq[0].s; }
 
@@ -94,7 +94,7 @@
         var overlay = document.getElementById('exportOverlay');
         if (overlay) overlay.style.display = 'flex';
         requestAnimationFrame(function() {
-            document.body.classList.add('lgnewui-chat-is-exporting');
+            document.body.classList.add('withu-chat-is-exporting');
         });
         if (window.lgScrollLock) lgScrollLock();
 
@@ -123,22 +123,22 @@
             var dateStr = now.getFullYear() + '年' + (now.getMonth() + 1) + '月' + now.getDate() + '日';
 
             zone.innerHTML =
-                '<div class="lgnewui-chat-poster-header-box">' +
-                    '<div class="lgnewui-chat-poster-title">我们的回忆记录</div>' +
-                    '<div class="lgnewui-chat-poster-date">' + dateStr + '</div>' +
+                '<div class="withu-chat-poster-header-box">' +
+                    '<div class="withu-chat-poster-title">我们的回忆记录</div>' +
+                    '<div class="withu-chat-poster-date">' + dateStr + '</div>' +
                 '</div>' +
-                '<div class="lgnewui-chat-container" style="padding:0; overflow:visible; display:flex; flex-direction:column; gap:20px; background:transparent;">' +
+                '<div class="withu-chat-container" style="padding:0; overflow:visible; display:flex; flex-direction:column; gap:20px; background:transparent;">' +
                     chatHtml +
                 '</div>' +
-                '<div class="lgnewui-chat-poster-footer-box">' +
-                    '<div class="lgnewui-chat-footer-quote">「 陪伴是最长情的告白 」</div>' +
-                    '<div class="lgnewui-chat-footer-brand">Memory of Us · 永恒珍藏</div>' +
+                '<div class="withu-chat-poster-footer-box">' +
+                    '<div class="withu-chat-footer-quote">「 陪伴是最长情的告白 」</div>' +
+                    '<div class="withu-chat-footer-brand">Memory of Us · 永恒珍藏</div>' +
                 '</div>';
 
             var typingNode = zone.querySelector('#typing');
             if (typingNode) typingNode.remove();
 
-            zone.querySelectorAll('.lgnewui-chat-msg-row').forEach(function(r) {
+            zone.querySelectorAll('.withu-chat-msg-row').forEach(function(r) {
                 r.style.animation = 'none';
                 r.style.opacity = '1';
                 r.style.transform = 'none';
@@ -177,9 +177,9 @@
             if (previewImg) previewImg.src = _exportImgUrl;
 
             // 无缝过渡到预览状态
-            stateGen.classList.add('lgnewui-chat-hidden-state');
+            stateGen.classList.add('withu-chat-hidden-state');
             _exportTransTimer = setTimeout(function() {
-                statePrev.classList.remove('lgnewui-chat-hidden-state');
+                statePrev.classList.remove('withu-chat-hidden-state');
             }, 100);
 
         } catch (e) {
@@ -191,7 +191,7 @@
     }
 
     function _closeExport() {
-        document.body.classList.remove('lgnewui-chat-is-exporting');
+        document.body.classList.remove('withu-chat-is-exporting');
         if (window.lgScrollUnlock) lgScrollUnlock();
         // 过渡结束后隐藏overlay，防止pjax闪烁
         var overlay = document.getElementById('exportOverlay');
@@ -205,8 +205,8 @@
         setTimeout(function() {
             var stateGen = document.getElementById('stateGenerating');
             var statePrev = document.getElementById('statePreview');
-            if (stateGen) stateGen.classList.remove('lgnewui-chat-hidden-state');
-            if (statePrev) statePrev.classList.add('lgnewui-chat-hidden-state');
+            if (stateGen) stateGen.classList.remove('withu-chat-hidden-state');
+            if (statePrev) statePrev.classList.add('withu-chat-hidden-state');
             var previewImg = document.getElementById('exportPreviewImg');
             if (previewImg) previewImg.src = '';
             _exportImgUrl = null;
@@ -218,7 +218,7 @@
         var btn = document.getElementById('exportDownloadBtn');
         if (btn) {
             btn.disabled = true;
-            btn.innerHTML = '<i class="ph ph-spinner-gap lgnewui-chat-icon-spin"></i> 正在保存...';
+            btn.innerHTML = '<i class="ph ph-spinner-gap withu-chat-icon-spin"></i> 正在保存...';
         }
         setTimeout(function() {
             var link = document.createElement('a');
@@ -321,8 +321,8 @@
         headerAvatar.src = targetAvatar;
         headerName.textContent = chatState.dialogueName || '亲爱的';
 
-        const statusEl = document.querySelector('.lgnewui-chat-user-status');
-        if (statusEl) statusEl.innerHTML = '<span class="lgnewui-chat-status-dot"></span> 对话回放中...';
+        const statusEl = document.querySelector('.withu-chat-user-status');
+        if (statusEl) statusEl.innerHTML = '<span class="withu-chat-status-dot"></span> 对话回放中...';
     }
 
     // ============================================================
@@ -354,13 +354,13 @@
         if (msg.type === 'notice') return '';
         const { actualRole, avatar } = getMessageMeta(msg);
         return `
-            <div class="lgnewui-chat-msg-row ${actualRole}" id="typing">
-                <img src="${avatar}" class="lgnewui-chat-avatar">
-                <div class="lgnewui-chat-bubble">
-                    <div class="lgnewui-chat-typing-indicator">
-                        <div class="lgnewui-chat-typing-dot"></div>
-                        <div class="lgnewui-chat-typing-dot"></div>
-                        <div class="lgnewui-chat-typing-dot"></div>
+            <div class="withu-chat-msg-row ${actualRole}" id="typing">
+                <img src="${avatar}" class="withu-chat-avatar">
+                <div class="withu-chat-bubble">
+                    <div class="withu-chat-typing-indicator">
+                        <div class="withu-chat-typing-dot"></div>
+                        <div class="withu-chat-typing-dot"></div>
+                        <div class="withu-chat-typing-dot"></div>
                     </div>
                 </div>
             </div>`;
@@ -371,35 +371,35 @@
         let inner = '';
 
         if (msg.type === 'text') {
-            inner = `<div class="lgnewui-chat-bubble">${escapeHtml(msg.content).replace(/\n/g, '<br>')}</div>`;
+            inner = `<div class="withu-chat-bubble">${escapeHtml(msg.content).replace(/\n/g, '<br>')}</div>`;
         } else if (msg.type === 'image') {
             const imgSrc = msg.thumbnail || msg.content;
-            inner = `<div><img src="${imgSrc}" data-original="${msg.content}" class="lgnewui-chat-media-img" onclick="chatOpenImage(this)"></div>`;
+            inner = `<div><img src="${imgSrc}" data-original="${msg.content}" class="withu-chat-media-img" onclick="chatOpenImage(this)"></div>`;
         } else if (msg.type === 'video') {
             const coverHtml = msg.thumbnail
                 ? `<img src="${msg.thumbnail}" style="width:100%;height:100%;object-fit:cover;display:block;">`
                 : `<div style="width:100%;height:100%;background:#1a1a1a;"></div>`;
             inner = `
-                <div class="lgnewui-chat-media-video" onclick="chatOpenVideo('${msg.content}')">
+                <div class="withu-chat-media-video" onclick="chatOpenVideo('${msg.content}')">
                     ${coverHtml}
-                    <div class="lgnewui-chat-play-btn-overlay">
-                        <i class="ph-fill ph-play lgnewui-chat-media-play-icon"></i>
+                    <div class="withu-chat-play-btn-overlay">
+                        <i class="ph-fill ph-play withu-chat-media-play-icon"></i>
                     </div>
                 </div>`;
         } else if (msg.type === 'audio') {
             inner = `
-                <div class="lgnewui-chat-bubble lgnewui-chat-voice-msg" data-audio-src="${msg.content}" onclick="playVoice(this)">
-                    <span class="lgnewui-chat-voice-icon">${VOICE_PLAY_SVG}</span>
-                    <div class="lgnewui-chat-voice-waves"><span></span><span></span><span></span><span></span><span></span></div>
-                    <div class="lgnewui-chat-voice-time">--"</div>
+                <div class="withu-chat-bubble withu-chat-voice-msg" data-audio-src="${msg.content}" onclick="playVoice(this)">
+                    <span class="withu-chat-voice-icon">${VOICE_PLAY_SVG}</span>
+                    <div class="withu-chat-voice-waves"><span></span><span></span><span></span><span></span><span></span></div>
+                    <div class="withu-chat-voice-time">--"</div>
                     <audio preload="metadata"></audio>
                 </div>`;
         }
 
         if (msg.type === 'notice') {
-            return `<div class="lgnewui-chat-system-notice"><span>${escapeHtml(msg.content)}</span></div>`;
+            return `<div class="withu-chat-system-notice"><span>${escapeHtml(msg.content)}</span></div>`;
         }
-        return `<div class="lgnewui-chat-msg-row ${actualRole}"><img src="${avatar}" class="lgnewui-chat-avatar">${inner}</div>`;
+        return `<div class="withu-chat-msg-row ${actualRole}"><img src="${avatar}" class="withu-chat-avatar">${inner}</div>`;
     }
 
     function escapeHtml(str) {
@@ -444,10 +444,10 @@
 
             // 语音消息：自动加载获取时长
             if (list[i].type === 'audio') {
-                const rows = chatBox.querySelectorAll('.lgnewui-chat-msg-row');
+                const rows = chatBox.querySelectorAll('.withu-chat-msg-row');
                 const lastRow = rows[rows.length - 1];
                 if (lastRow) {
-                    const voiceEl = lastRow.querySelector('.lgnewui-chat-voice-msg');
+                    const voiceEl = lastRow.querySelector('.withu-chat-voice-msg');
                     if (voiceEl) initVoiceDuration(voiceEl);
                 }
             }
@@ -462,7 +462,7 @@
             isPlaying = false;
             if (chatBox && chatState.endingText) {
                 const endEl = document.createElement('div');
-                endEl.className = 'lgnewui-chat-system-notice';
+                endEl.className = 'withu-chat-system-notice';
                 endEl.innerHTML = '<span>' + escapeHtml(chatState.endingText) + '</span>';
                 chatBox.appendChild(endEl);
                 chatBox.scrollTo({ top: chatBox.scrollHeight, behavior: 'smooth' });
@@ -484,7 +484,7 @@
 
         audio.addEventListener('loadedmetadata', function () {
             if (isFinite(this.duration) && this.duration > 0) {
-                el.querySelector('.lgnewui-chat-voice-time').textContent = fmtDuration(this.duration);
+                el.querySelector('.withu-chat-voice-time').textContent = fmtDuration(this.duration);
             }
         });
         audio.src = src;
@@ -495,10 +495,10 @@
         const audio = el.querySelector('audio');
         if (audio) { audio.pause(); audio.currentTime = 0; }
         el.classList.remove('playing');
-        el.querySelector('.lgnewui-chat-voice-icon').innerHTML = VOICE_PLAY_SVG;
+        el.querySelector('.withu-chat-voice-icon').innerHTML = VOICE_PLAY_SVG;
         if (_voiceTimer) { clearInterval(_voiceTimer); _voiceTimer = null; }
         if (audio && isFinite(audio.duration) && audio.duration > 0) {
-            el.querySelector('.lgnewui-chat-voice-time').textContent = fmtDuration(audio.duration);
+            el.querySelector('.withu-chat-voice-time').textContent = fmtDuration(audio.duration);
         }
     }
 
@@ -507,7 +507,7 @@
         const audio = el.querySelector('audio');
         if (audio) audio.pause();
         el.classList.remove('playing');
-        el.querySelector('.lgnewui-chat-voice-icon').innerHTML = VOICE_PLAY_SVG;
+        el.querySelector('.withu-chat-voice-icon').innerHTML = VOICE_PLAY_SVG;
         if (_voiceTimer) { clearInterval(_voiceTimer); _voiceTimer = null; }
     }
 
@@ -527,7 +527,7 @@
         }
 
         // 暂停其他正在播放的语音（保留其进度）
-        document.querySelectorAll('.lgnewui-chat-voice-msg.playing').forEach(node => {
+        document.querySelectorAll('.withu-chat-voice-msg.playing').forEach(node => {
             pauseVoice(node);
         });
 
@@ -535,13 +535,13 @@
 
         // 播放（从当前位置继续）
         el.classList.add('playing');
-        el.querySelector('.lgnewui-chat-voice-icon').innerHTML = VOICE_PAUSE_SVG;
+        el.querySelector('.withu-chat-voice-icon').innerHTML = VOICE_PAUSE_SVG;
         audio.play().catch(() => {});
 
         // 启动倒计时
         if (_voiceTimer) clearInterval(_voiceTimer);
         _voiceTimer = setInterval(function () {
-            var timeEl = el.querySelector('.lgnewui-chat-voice-time');
+            var timeEl = el.querySelector('.withu-chat-voice-time');
             if (timeEl && isFinite(audio.duration)) {
                 timeEl.textContent = fmtDuration(audio.duration - audio.currentTime);
             }
@@ -558,7 +558,7 @@
     function chatOpenImage(imgEl) {
         pausePlayback();
         if (!window.ViewImage) return;
-        var allImgs = chatBox.querySelectorAll('.lgnewui-chat-media-img');
+        var allImgs = chatBox.querySelectorAll('.withu-chat-media-img');
         var urls = Array.from(allImgs).map(function (img) { return img.getAttribute('data-original') || img.src; });
         var currentUrl = imgEl.getAttribute('data-original') || imgEl.src;
         ViewImage.display(urls, currentUrl);
@@ -674,7 +674,7 @@
     }
 
     function _loadMockConversation() {
-        var cfg = window.LG_CONFIG || {};
+        var cfg = window.WITHU_CONFIG || {};
         var boyName = cfg.maleName || '我';
         var girlName = cfg.femaleName || '你';
         var boyAvatar = cfg.maleAvatar || '';
@@ -757,7 +757,7 @@
         loadChatData();
 
         // 移除 FOUC 防护内联样式，CSS 已加载完毕
-        var wrapper = document.querySelector('.lgnewui-chat-wrapper');
+        var wrapper = document.querySelector('.withu-chat-wrapper');
         if (wrapper) {
             requestAnimationFrame(function() { wrapper.style.opacity = '1'; });
         }
@@ -800,7 +800,7 @@
                 var speeds = [1.0, 1.5, 2.0];
                 var idx = speeds.indexOf(playSpeed);
                 playSpeed = speeds[(idx + 1) % speeds.length];
-                speedBtn.querySelector('.lgnewui-chat-speed-btn-text').textContent = playSpeed.toFixed(1) + 'x';
+                speedBtn.querySelector('.withu-chat-speed-btn-text').textContent = playSpeed.toFixed(1) + 'x';
             });
         }
 
@@ -830,7 +830,7 @@
             perspectiveBtn.addEventListener('click', function () {
                 isReversed = !isReversed;
                 renderHeader();
-                document.querySelectorAll('.lgnewui-chat-msg-row').forEach(function (row) {
+                document.querySelectorAll('.withu-chat-msg-row').forEach(function (row) {
                     row.style.animation = 'none';
                     row.offsetHeight;
                     if (row.classList.contains('left')) {
@@ -859,7 +859,7 @@
         // 中断未完成的数据请求
         if (_xhr) { try { _xhr.abort(); } catch(e) {} _xhr = null; }
 
-        document.querySelectorAll('.lgnewui-chat-voice-msg.playing').forEach(function (node) {
+        document.querySelectorAll('.withu-chat-voice-msg.playing').forEach(function (node) {
             var a = node.querySelector('audio');
             if (a) { a.pause(); a.currentTime = 0; }
             node.classList.remove('playing');

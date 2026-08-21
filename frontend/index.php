@@ -1,25 +1,25 @@
-<meta name="x-lg-license-instance" content="858ee1d099b9">
+<meta name="x-withu-license-instance" content="858ee1d099b9">
 
 <link rel="icon" href="/favicon.png" />
 <meta name="viewport" content="width=device-width,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no">
-<meta name="description" content="LG_NewUi 是一个适合记录恋爱日常与纪念时刻的情侣小站，支持相册、时间轴、点滴文章、留言互动和邀请页面，让每一段关系都能拥有自己的专属回忆空间。">
-<meta name="keywords" content="情侣网站,恋爱记录,祝福留言,情侣相册,恋爱清单,爱情纪念,情侣头像框,祝福语句,情侣互动,爱情相册,情侣事件记录,情侣留言,爱情故事,情感交流,用户互动,祝福卡片,音乐分享,甜蜜瞬间,情侣活动,爱情动态,LGNewUI">
+<meta name="description" content="withU 是一个适合记录恋爱日常与纪念时刻的情侣小站，支持相册、时间轴、点滴文章、留言互动和邀请页面，让每一段关系都能拥有自己的专属回忆空间。">
+<meta name="keywords" content="情侣网站,恋爱记录,祝福留言,情侣相册,恋爱清单,爱情纪念,情侣头像框,祝福语句,情侣互动,爱情相册,情侣事件记录,情侣留言,爱情故事,情感交流,用户互动,祝福卡片,音乐分享,甜蜜瞬间,情侣活动,爱情动态,withU">
 <meta name="robots" content="index, follow">
 <link rel="canonical" href="/index.php">
 
 <!-- Open Graph (Facebook/微信/QQ) -->
 <meta property="og:type" content="website">
-<meta property="og:site_name" content="LG-NewUi Demo">
-<meta property="og:title" content="LG-NewUi Demo">
-<meta property="og:description" content="LG_NewUi 是一个适合记录恋爱日常与纪念时刻的情侣小站，支持相册、时间轴、点滴文章、留言互动和邀请页面，让每一段关系都能拥有自己的专属回忆空间。">
+<meta property="og:site_name" content="withU Demo">
+<meta property="og:title" content="withU Demo">
+<meta property="og:description" content="withU 是一个适合记录恋爱日常与纪念时刻的情侣小站，支持相册、时间轴、点滴文章、留言互动和邀请页面，让每一段关系都能拥有自己的专属回忆空间。">
 <meta property="og:url" content="/index.php">
-<meta property="og:image" content="LG Demo">
+<meta property="og:image" content="withU">
 
 <!-- Twitter Card -->
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="LG-NewUi Demo">
-<meta name="twitter:description" content="LG_NewUi 是一个适合记录恋爱日常与纪念时刻的情侣小站，支持相册、时间轴、点滴文章、留言互动和邀请页面，让每一段关系都能拥有自己的专属回忆空间。">
-<meta name="twitter:image" content="LG Demo">
+<meta name="twitter:title" content="withU Demo">
+<meta name="twitter:description" content="withU 是一个适合记录恋爱日常与纪念时刻的情侣小站，支持相册、时间轴、点滴文章、留言互动和邀请页面，让每一段关系都能拥有自己的专属回忆空间。">
+<meta name="twitter:image" content="withU">
 
     <!-- Google Fonts CDN 版本 -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -59,8 +59,8 @@
 <link rel="stylesheet" href="/Style/vendor/remixicon/remixicon.css">
 <link rel="stylesheet" href="/Style/css/tooltip.css">
 <link rel="stylesheet" href="/Style/css/interaction.css">
-<link rel="stylesheet" href="/Style/css/lgnewui-home-style.css">
-<link rel="stylesheet" href="/Style/css/lgnewui-detail.css">
+<link rel="stylesheet" href="/Style/css/withu-home-style.css">
+<link rel="stylesheet" href="/Style/css/withu-detail.css">
 <link rel="stylesheet" href="/Style/css/mobile-nav.css">
 <link rel="stylesheet" href="/Style/css/header.css">
 <!-- 自定义右键菜单 -->
@@ -81,7 +81,7 @@
 <script src="/Style/js/masonry.pkgd.min.js"></script>
 <script src="/Style/js/imagesloaded.pkgd.min.js"></script>
 <script src="/Style/js/loading.js"></script>
-<script src="/Style/js/LGNewUiOwO.js"></script>
+<script src="/Style/js/withu-owoui.js"></script>
 <!-- 全局滚动锁工具（所有弹窗共用，防止滚动条消失时布局跳动） -->
 <script>
 (function(){
@@ -90,21 +90,21 @@
         _count++;
         if (_count === 1) {
             var w = window.innerWidth - document.documentElement.clientWidth;
-            document.documentElement.style.setProperty('--lg-scrollbar-compensate', w + 'px');
-            document.documentElement.classList.add('lg-scroll-locked');
+            document.documentElement.style.setProperty('--withu-scrollbar-compensate', w + 'px');
+            document.documentElement.classList.add('withu-scroll-locked');
         }
     };
     window.lgScrollUnlock = function(){
         _count = Math.max(0, _count - 1);
         if (_count === 0) {
-            document.documentElement.classList.remove('lg-scroll-locked');
-            document.documentElement.style.removeProperty('--lg-scrollbar-compensate');
+            document.documentElement.classList.remove('withu-scroll-locked');
+            document.documentElement.style.removeProperty('--withu-scrollbar-compensate');
         }
     };
     window.lgScrollReset = function(){
         _count = 0;
-        document.documentElement.classList.remove('lg-scroll-locked');
-        document.documentElement.style.removeProperty('--lg-scrollbar-compensate');
+        document.documentElement.classList.remove('withu-scroll-locked');
+        document.documentElement.style.removeProperty('--withu-scrollbar-compensate');
     };
 })();
 </script>
@@ -123,16 +123,16 @@
 <!-- QR Code Styling (美化二维码) -->
 <script src="/Style/vendor/qr-code-styling/qr-code-styling.min.js"></script>
 
-<!-- LG_NewUI 核心框架 -->
+<!-- withU 核心框架 -->
 <script>
-    window.LG_CONFIG = Object.assign(window.LG_CONFIG || {}, {"title":"LG-NewUi Demo","boy":"Ki.","girl":"Really","startTime":"2023-07-19 00:00:00","version":"2.2.5","pcCarouselHeight":"80vh","mobileCarouselHeight":"50vh","pcPhotoCoverHeight":"80vh","mobilePhotoCoverHeight":"60vh","pcImgMaxHeight":"450px","mobileImgMaxHeight":"260px","maleName":"Ki.","maleAvatar":"/Lovefolder/20260411043037_69d95ded97293201118237.webp","femaleName":"Really","femaleAvatar":"/Lovefolder/20260411043046_69d95df639c33274072975.webp","siteBase":"","assetBase":"","imageErrorFallback":"/Style/img/file-placeholder.svg","owoBase":"/OwO","soloMode":false,"weatherEnabled":true,"weatherToken":"d4210665334edba618aecc1829a5e734701e2b824c5aebd4ff8859d7a2536721","soloOwnerGeo":{"lat":21.915454,"lng":110.856708},"bannedChars":"操屌","endpoints":{"mapApi":"/assets/map-api.php","weatherNow":"/services/weather.php","interaction":"/services/interaction.php"}});
+    window.WITHU_CONFIG = Object.assign(window.WITHU_CONFIG || {}, {"title":"withU Demo","boy":"Ki.","girl":"Really","startTime":"2023-07-19 00:00:00","version":"2.2.5","pcCarouselHeight":"80vh","mobileCarouselHeight":"50vh","pcPhotoCoverHeight":"80vh","mobilePhotoCoverHeight":"60vh","pcImgMaxHeight":"450px","mobileImgMaxHeight":"260px","maleName":"Ki.","maleAvatar":"/Lovefolder/20260411043037_69d95ded97293201118237.webp","femaleName":"Really","femaleAvatar":"/Lovefolder/20260411043046_69d95df639c33274072975.webp","siteBase":"","assetBase":"","imageErrorFallback":"/Style/img/file-placeholder.svg","owoBase":"/OwO","soloMode":false,"weatherEnabled":true,"weatherToken":"d4210665334edba618aecc1829a5e734701e2b824c5aebd4ff8859d7a2536721","soloOwnerGeo":{"lat":21.915454,"lng":110.856708},"bannedChars":"操屌","endpoints":{"mapApi":"/assets/map-api.php","weatherNow":"/services/weather.php","interaction":"/services/interaction.php"}});
 
     // AOS 动画配置（供 app.js 的 AOSManager 使用）
-    window.LG_AOS_CONFIG = {"enabled":true,"animation":"fade-up","duration":800,"delay":0,"interval":50,"maxDelay":300,"easing":"ease-out-cubic","offset":50,"once":true,"mirror":true,"anchorPlacement":"top-bottom"};
+    window.WITHU_AOS_CONFIG = {"enabled":true,"animation":"fade-up","duration":800,"delay":0,"interval":50,"maxDelay":300,"easing":"ease-out-cubic","offset":50,"once":true,"mirror":true,"anchorPlacement":"top-bottom"};
 
     window.LGVisitorGeoCache = window.LGVisitorGeoCache || (function () {
-        var storageKey = 'lgnewui_visitor_geo_v1';
-        var cookieKey = 'lg_visitor_geo';
+        var storageKey = 'withu_visitor_geo_v1';
+        var cookieKey = 'withu_visitor_geo';
         var maxAgeMs = 6 * 60 * 60 * 1000;
 
         function normalize(payload) {
@@ -272,7 +272,7 @@
 
         window.LGMAP_DATA_READY = window.LGMapData.fetchAll()
             .catch(function (err) {
-                if (window.LG_CONFIG && window.LG_CONFIG.debugMap && window.console && typeof window.console.warn === 'function') {
+                if (window.WITHU_CONFIG && window.WITHU_CONFIG.debugMap && window.console && typeof window.console.warn === 'function') {
                     window.console.warn('地图数据加载失败:', err);
                 }
             });
@@ -856,7 +856,7 @@
     }
 
     /* Logo 淡出效果 - 通过JS添加类控制 */
-    .alogo.lgnewui-logo-faded {
+    .alogo.withu-logo-faded {
         opacity: 0.3;
         transform: scale(0.92);
     }
@@ -868,7 +868,7 @@
 
     /* 左侧纯文字 Logo - 只有文字 */
     /* 左侧 Logo - 时尚杂志风格 */
-    .lgnewui-header-left-avatar {
+    .withu-header-left-avatar {
         position: absolute;
         left: 6%;
         top: 50%;
@@ -893,7 +893,7 @@
         will-change: transform, opacity;
     }
 
-    .lgnewui-header-left-avatar:hover {
+    .withu-header-left-avatar:hover {
         background: none;
         box-shadow: none;
         transform: translateY(-50%) translateX(-20px);
@@ -1529,17 +1529,17 @@
 
     /* 大屏下增加最大边距限制 */
     @media screen and (min-width: 1600px) {
-        .lgnewui-header-left-avatar {
+        .withu-header-left-avatar {
             left: 100px;
         }
 
-        .lgnewui-header-actions {
+        .withu-header-actions {
             right: 100px !important;
         }
     }
 
     /* 右侧工具区域 - 地图 + 情侣头像 */
-    .lgnewui-header-actions {
+    .withu-header-actions {
         position: absolute;
         right: 6%;
         top: 50%;
@@ -1558,14 +1558,14 @@
     }
 
     /* === 情侣头像组 - 丝滑交互版 === */
-    .lgnewui-couple-avatars-right {
+    .withu-couple-avatars-right {
         display: flex;
         align-items: center;
         position: relative;
         cursor: pointer;
     }
 
-    .lgnewui-avatar-group {
+    .withu-avatar-group {
         display: flex;
         align-items: center;
         position: relative;
@@ -1577,11 +1577,11 @@
             background 0.3s ease;
     }
 
-    .lgnewui-avatar-group:hover {
+    .withu-avatar-group:hover {
         background: rgba(0, 0, 0, 0.06);
     }
 
-    .lgnewui-avatar-group img {
+    .withu-avatar-group img {
         width: 36px;
         height: 36px;
         border-radius: 50%;
@@ -1593,17 +1593,17 @@
         transition: transform 0.5s cubic-bezier(0.23, 1, 0.32, 1);
     }
 
-    .lgnewui-avatar-group .avatar-male {
+    .withu-avatar-group .avatar-male {
         z-index: 2;
     }
 
-    .lgnewui-avatar-group .avatar-female {
+    .withu-avatar-group .avatar-female {
         margin-left: -10px;
         z-index: 1;
     }
 
     /* 中间连接点 - 简约小圆点 */
-    .lgnewui-right-heart {
+    .withu-right-heart {
         position: absolute;
         left: 50%;
         top: 50%;
@@ -1621,32 +1621,32 @@
     }
 
     /* === 悬停效果 - 整体放大 === */
-    .lgnewui-couple-avatars-right:hover .lgnewui-avatar-group {
+    .withu-couple-avatars-right:hover .withu-avatar-group {
         transform: scale(1.08);
     }
 
-    .lgnewui-couple-avatars-right:hover .lgnewui-right-heart {
+    .withu-couple-avatars-right:hover .withu-right-heart {
         transform: translate(-50%, -50%) scale(1.2);
     }
 
 
     /* 竖线分隔符 (位于 Avatar 和 图标之间) */
-    .lgnewui-header-divider {
+    .withu-header-divider {
         width: 1px;
         height: 18px;
         background: rgba(0, 0, 0, 0.1);
     }
 
     /* 吸附时显示 - 通过JS添加类控制 - 灵动岛弹出效果 */
-    .lgnewui-header-left-avatar.lgnewui-avatar-visible,
-    .lgnewui-header-actions.lgnewui-actions-visible {
+    .withu-header-left-avatar.withu-avatar-visible,
+    .withu-header-actions.withu-actions-visible {
         opacity: 1;
         transform: translateY(-50%) translateX(0) scale(1);
         pointer-events: auto;
     }
 
     /* ── 子页面胶囊返回按钮（微信小程序风格） ── */
-    .lg-capsule-back {
+    .withu-capsule-back {
         position: absolute;
         left: 6%;
         top: 50%;
@@ -1663,15 +1663,15 @@
         pointer-events: none;
         transition: opacity 0.3s ease, transform 0.3s ease;
     }
-    .lg-capsule-back.subpage-back-ready {
+    .withu-capsule-back.subpage-back-ready {
         display: flex;
     }
-    .lg-capsule-back.scroll-back-visible {
+    .withu-capsule-back.scroll-back-visible {
         opacity: 1;
         transform: translateY(-50%) translateX(0);
         pointer-events: auto;
     }
-    .lg-capsule-back__btn {
+    .withu-capsule-back__btn {
         display: flex;
         align-items: center;
         justify-content: center;
@@ -1683,21 +1683,21 @@
         transition: all 0.25s ease;
         font-size: 15px;
     }
-    .lg-capsule-back__btn:hover {
+    .withu-capsule-back__btn:hover {
         background: rgba(255, 255, 255, 0.85);
         color: #333;
         transform: scale(1.08);
     }
-    .lg-capsule-back__btn:active {
+    .withu-capsule-back__btn:active {
         transform: scale(0.95);
     }
-    .lg-capsule-back__btn svg {
+    .withu-capsule-back__btn svg {
         width: 18px;
         height: 18px;
     }
 
     /* 吸顶时左侧 logo 被胶囊替换的隐藏动画 */
-    .lgnewui-header-left-avatar.lgnewui-avatar-visible.scroll-logo-hidden {
+    .withu-header-left-avatar.withu-avatar-visible.scroll-logo-hidden {
         opacity: 0;
         transform: translateY(-50%) translateX(12px) scale(0.9);
         pointer-events: none;
@@ -1705,12 +1705,12 @@
 
     /* 大屏下胶囊 left 限制 */
     @media screen and (min-width: 1600px) {
-        .lg-capsule-back {
+        .withu-capsule-back {
             left: 100px;
         }
     }
 
-    .lgnewui-header-action-btn {
+    .withu-header-action-btn {
         display: flex;
         align-items: center;
         justify-content: center;
@@ -1725,17 +1725,17 @@
         font-size: 15px;
     }
 
-    .lgnewui-header-action-btn:hover {
+    .withu-header-action-btn:hover {
         background: rgba(0, 0, 0, 0.08);
         color: #333;
         transform: scale(1.08);
     }
 
-    .lgnewui-header-action-btn:active {
+    .withu-header-action-btn:active {
         transform: scale(0.95);
     }
 
-    .lgnewui-header-weather {
+    .withu-header-weather {
         position: relative;
         display: inline-flex;
         align-items: center;
@@ -1755,34 +1755,34 @@
         -webkit-tap-highlight-color: transparent;
     }
 
-    .lgnewui-header-weather:hover {
+    .withu-header-weather:hover {
         background: rgba(0, 0, 0, 0.08);
     }
 
-    .lgnewui-header-weather:focus {
+    .withu-header-weather:focus {
         outline: none;
     }
 
-    .lgnewui-header-weather:focus-visible {
+    .withu-header-weather:focus-visible {
         box-shadow:
             0 0 0 2px rgba(59, 130, 246, 0.18),
             0 10px 24px rgba(15, 23, 42, 0.08);
     }
 
-    .lgnewui-header-weather:active {
+    .withu-header-weather:active {
         transform: scale(0.98);
     }
 
-    .lgnewui-header-weather.is-loading .lgnewui-header-weather-icon,
-    .lgnewui-header-weather.is-loading .lgnewui-header-weather-text {
+    .withu-header-weather.is-loading .withu-header-weather-icon,
+    .withu-header-weather.is-loading .withu-header-weather-text {
         display: none;
     }
 
-    .lgnewui-header-weather:not(.is-loading) .lgnewui-header-weather-loading {
+    .withu-header-weather:not(.is-loading) .withu-header-weather-loading {
         display: none;
     }
 
-    .lgnewui-header-weather-icon-wrap {
+    .withu-header-weather-icon-wrap {
         display: inline-flex;
         align-items: center;
         justify-content: center;
@@ -1794,12 +1794,12 @@
         flex-shrink: 0;
     }
 
-    .lgnewui-header-weather-icon {
+    .withu-header-weather-icon {
         font-size: 14px;
         color: #5f6672;
     }
 
-    .lgnewui-header-weather-loading {
+    .withu-header-weather-loading {
         display: inline-flex;
         align-items: center;
         justify-content: center;
@@ -1808,13 +1808,13 @@
         color: #64748b;
     }
 
-    .lgnewui-header-weather-loading svg {
+    .withu-header-weather-loading svg {
         width: 16px;
         height: 16px;
         animation: lgHeaderWeatherSpin 0.9s linear infinite;
     }
 
-    .lgnewui-header-weather-text {
+    .withu-header-weather-text {
         display: inline-block;
         max-width: 96px;
         overflow: hidden;
@@ -1825,7 +1825,7 @@
         color: #334155;
     }
 
-    .lgnewui-header-weather-panel {
+    .withu-header-weather-panel {
         position: fixed;
         top: 0;
         left: 0;
@@ -1856,7 +1856,7 @@
         overflow: hidden;
     }
 
-    .lgnewui-header-weather-panel.is-open {
+    .withu-header-weather-panel.is-open {
         opacity: 1;
         visibility: visible;
         transform: translateY(0) scale(1);
@@ -1864,7 +1864,7 @@
         filter: blur(0);
     }
 
-    .lgnewui-header-weather-panel::before {
+    .withu-header-weather-panel::before {
         content: '';
         position: absolute;
         inset: 0;
@@ -1877,7 +1877,7 @@
         z-index: 0;
     }
 
-    .lgnewui-header-weather-panel::after {
+    .withu-header-weather-panel::after {
         content: '';
         position: absolute;
         inset: 1px;
@@ -1889,12 +1889,12 @@
         z-index: 0;
     }
 
-    .lgnewui-header-weather-sheet {
+    .withu-header-weather-sheet {
         position: relative;
         z-index: 1;
     }
 
-    .lgnewui-header-weather-hero {
+    .withu-header-weather-hero {
         display: grid;
         grid-template-columns: 42px minmax(0, 1fr) auto;
         align-items: center;
@@ -1902,7 +1902,7 @@
         padding: 2px 2px 14px;
     }
 
-    .lgnewui-header-weather-hero-icon {
+    .withu-header-weather-hero-icon {
         display: inline-flex;
         align-items: center;
         justify-content: center;
@@ -1919,7 +1919,7 @@
         flex-shrink: 0;
     }
 
-    .lgnewui-header-weather-hero-icon i {
+    .withu-header-weather-hero-icon i {
         font-size: 24px;
         background: linear-gradient(180deg, #667085 0%, #344054 100%);
         -webkit-background-clip: text;
@@ -1929,17 +1929,17 @@
         filter: drop-shadow(0 2px 6px rgba(255, 255, 255, 0.2));
     }
 
-    .lgnewui-header-weather-hero-main {
+    .withu-header-weather-hero-main {
         min-width: 0;
         padding-top: 0;
     }
 
-    .lgnewui-header-weather-hero-title {
+    .withu-header-weather-hero-title {
         display: block;
         margin-bottom: 4px;
     }
 
-    .lgnewui-header-weather-hero-desc {
+    .withu-header-weather-hero-desc {
         min-width: 0;
         display: block;
         font-size: 15px;
@@ -1950,7 +1950,7 @@
         letter-spacing: -0.02em;
     }
 
-    .lgnewui-header-weather-hero-temp {
+    .withu-header-weather-hero-temp {
         display: block;
         padding-top: 0;
         font-size: 28px;
@@ -1963,7 +1963,7 @@
         align-self: center;
     }
 
-    .lgnewui-header-weather-hero-sub {
+    .withu-header-weather-hero-sub {
         display: inline-flex;
         align-items: center;
         gap: 5px;
@@ -1972,19 +1972,19 @@
         line-height: 1.2;
     }
 
-    .lgnewui-header-weather-hero-sub i {
+    .withu-header-weather-hero-sub i {
         font-size: 13px;
         color: #8896ab;
     }
 
-    .lgnewui-header-weather-meta {
+    .withu-header-weather-meta {
         display: grid;
         grid-template-columns: repeat(2, minmax(0, 1fr));
         gap: 8px;
         margin-bottom: 10px;
     }
 
-    .lgnewui-header-weather-meta-item {
+    .withu-header-weather-meta-item {
         display: flex;
         align-items: center;
         gap: 10px;
@@ -2000,7 +2000,7 @@
         -webkit-backdrop-filter: blur(14px) saturate(145%);
     }
 
-    .lgnewui-header-weather-meta-icon {
+    .withu-header-weather-meta-icon {
         display: inline-flex;
         align-items: center;
         justify-content: center;
@@ -2013,15 +2013,15 @@
         flex-shrink: 0;
     }
 
-    .lgnewui-header-weather-meta-icon i {
+    .withu-header-weather-meta-icon i {
         font-size: 15px;
     }
 
-    .lgnewui-header-weather-meta-copy {
+    .withu-header-weather-meta-copy {
         min-width: 0;
     }
 
-    .lgnewui-header-weather-meta-label {
+    .withu-header-weather-meta-label {
         display: block;
         margin-bottom: 2px;
         font-size: 10px;
@@ -2030,7 +2030,7 @@
         letter-spacing: 0.08em;
     }
 
-    .lgnewui-header-weather-meta-value {
+    .withu-header-weather-meta-value {
         display: block;
         font-size: 12px;
         color: #162033;
@@ -2040,7 +2040,7 @@
         text-overflow: ellipsis;
     }
 
-    .lgnewui-header-weather-foot {
+    .withu-header-weather-foot {
         position: relative;
         display: flex;
         align-items: center;
@@ -2050,7 +2050,7 @@
         padding: 10px 4px 2px;
     }
 
-    .lgnewui-header-weather-foot::before {
+    .withu-header-weather-foot::before {
         content: '';
         position: absolute;
         top: 0;
@@ -2060,7 +2060,7 @@
         background: linear-gradient(90deg, rgba(255, 255, 255, 0), rgba(255, 255, 255, 0.72), rgba(255, 255, 255, 0));
     }
 
-    .lgnewui-header-weather-updated {
+    .withu-header-weather-updated {
         display: inline-flex;
         align-items: center;
         gap: 6px;
@@ -2069,12 +2069,12 @@
         min-width: 0;
     }
 
-    .lgnewui-header-weather-updated i {
+    .withu-header-weather-updated i {
         font-size: 13px;
         color: rgba(112, 124, 141, 0.88);
     }
 
-    .lgnewui-header-weather-note {
+    .withu-header-weather-note {
         display: inline-flex;
         align-items: center;
         gap: 6px;
@@ -2089,7 +2089,7 @@
         box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.3);
     }
 
-    .lgnewui-header-weather-note i {
+    .withu-header-weather-note i {
         font-size: 13px;
         color: rgba(104, 116, 134, 0.86);
     }
@@ -2104,11 +2104,11 @@
     }
 
     @media (max-width: 980px) {
-        .lgnewui-header-weather-text {
+        .withu-header-weather-text {
             max-width: 78px;
         }
 
-        .lgnewui-header-weather-panel {
+        .withu-header-weather-panel {
             width: 264px;
         }
     }
@@ -2124,18 +2124,18 @@
     }
 
     /* ================================== */
-    /* 公共头像组件 .lg-author             */
+    /* 公共头像组件 .withu-author             */
     /* 用于: 相册、点点滴滴、时间轴等       */
     /* 性别徽章: 父级加 .show-gender 显示  */
     /* ================================== */
-    .lg-author {
+    .withu-author {
         display: flex;
         align-items: center;
         gap: 12px;
         min-width: 0;
     }
 
-    .lg-author__ring {
+    .withu-author__ring {
         padding: 3px;
         background: linear-gradient(135deg, #f4f4f4 0%, #fafafa 100%);
         /* border: 1px solid rgba(0, 0, 0, 0.06); */
@@ -2147,7 +2147,7 @@
         /* box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04); */
     }
 
-    .lg-author__avatar {
+    .withu-author__avatar {
         width: 40px;
         height: 40px;
         border-radius: 10px;
@@ -2157,7 +2157,7 @@
         background-position: center;
     }
 
-    .lg-author__badge {
+    .withu-author__badge {
         position: absolute;
         bottom: -2px;
         right: -2px;
@@ -2173,26 +2173,26 @@
         color: white;
     }
 
-    .lg-author__badge.male {
+    .withu-author__badge.male {
         background: #3b82f6;
     }
 
-    .lg-author__badge.female {
+    .withu-author__badge.female {
         background: #ec4899;
     }
 
-    .show-gender .lg-author__badge {
+    .show-gender .withu-author__badge {
         display: flex;
     }
 
-    .lg-author__text {
+    .withu-author__text {
         display: flex;
         flex-direction: column;
         gap: 2px;
         min-width: 0;
     }
 
-    .lg-author__name {
+    .withu-author__name {
         font-family: 'Dancing Script', 'Noto Serif SC', cursive;
         font-size: 18px;
         font-weight: 700;
@@ -2204,7 +2204,7 @@
         letter-spacing: -0.02em;
     }
 
-    .lg-author__meta {
+    .withu-author__meta {
         font-size: 11px;
         opacity: 0.5;
         display: flex;
@@ -2215,18 +2215,18 @@
         min-width: 0;
     }
 
-    .lg-author__meta i {
+    .withu-author__meta i {
         font-size: 10px;
     }
 
     @media (min-width: 640px) {
-        .lg-author__badge {
+        .withu-author__badge {
             width: 20px;
             height: 20px;
             font-size: 10px;
         }
 
-        .lg-author__name {
+        .withu-author__name {
             font-size: 20px;
         }
     }
@@ -2473,7 +2473,7 @@
     }
 
     /* 页面描述区域 */
-    .lgnewui-page-header {
+    .withu-page-header {
         position: relative;
         display: flex;
         flex-direction: column;
@@ -2484,7 +2484,7 @@
         padding: 2rem 0 1rem;
     }
 
-    .lgnewui-meta-container {
+    .withu-meta-container {
         display: flex;
         flex-direction: column;
         align-items: center;
@@ -2492,7 +2492,7 @@
         margin-bottom: 16px;
     }
 
-    .lgnewui-meta-tag {
+    .withu-meta-tag {
         font-family: var(--font-display);
         font-size: 14px;
         letter-spacing: 0.15em;
@@ -2507,18 +2507,18 @@
         transition: all 0.6s var(--ease-smooth);
     }
 
-    .lgnewui-meta-tag.in {
+    .withu-meta-tag.in {
         opacity: 1;
         filter: blur(0);
         transform: translateY(0);
     }
 
-    .lgnewui-meta-icon {
+    .withu-meta-icon {
         font-size: 10px;
         color: #bbb;
     }
 
-    .lgnewui-meta-line {
+    .withu-meta-line {
         width: 44px;
         height: 1px;
         background: linear-gradient(90deg, transparent 0%, rgba(187, 187, 187, 0.75) 50%, transparent 100%);
@@ -2529,13 +2529,13 @@
         transition: opacity 0.5s var(--ease-smooth), transform 0.7s var(--ease-smooth), filter 0.5s var(--ease-smooth);
     }
 
-    .lgnewui-meta-line.in {
+    .withu-meta-line.in {
         opacity: 1;
         transform: scaleX(1) translateY(0);
         filter: blur(0);
     }
 
-    .lgnewui-hero-title {
+    .withu-hero-title {
         font-family: var(--font-serif);
         font-size: clamp(24px, 4vw, 36px);
         font-weight: 600;
@@ -2554,7 +2554,7 @@
         text-shadow: 0 20px 40px rgba(0, 0, 0, 0.05);
     }
 
-    .lgnewui-hero-title .char {
+    .withu-hero-title .char {
         opacity: 0;
         filter: blur(12px);
         transform: scale(0.95) translateY(10px);
@@ -2563,20 +2563,20 @@
         min-width: 0.2em;
     }
 
-    .lgnewui-hero-title .char.in {
+    .withu-hero-title .char.in {
         opacity: 1;
         filter: blur(0);
         transform: scale(1) translateY(0);
     }
 
-    .lgnewui-connector {
+    .withu-connector {
         width: 1px;
         height: 40px;
         background: linear-gradient(to bottom, rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.1) 40%, rgba(0, 0, 0, 0));
         margin: 10px 0;
     }
 
-    .lgnewui-sticky-sentinel {
+    .withu-sticky-sentinel {
         width: 100%;
         height: 1px;
         pointer-events: none;
@@ -2584,7 +2584,7 @@
     }
 
     /* 导航栏容器 */
-    .lgnewui-nav-wrapper {
+    .withu-nav-wrapper {
         position: -webkit-sticky;
         position: sticky;
         top: 70px;
@@ -2597,23 +2597,23 @@
         z-index: 9999;
     }
 
-    .lgnewui-nav-wrapper.is-fixed {
+    .withu-nav-wrapper.is-fixed {
         position: fixed;
         top: 14px;
         left: 0;
         right: 0;
     }
 
-    .lgnewui-nav-placeholder {
+    .withu-nav-placeholder {
         display: none;
     }
 
-    .lgnewui-nav-placeholder.is-active {
+    .withu-nav-placeholder.is-active {
         display: block;
     }
 
     /* 导航岛容器 - 灵动岛风格 */
-    .lgnewui-nav-island-container {
+    .withu-nav-island-container {
         pointer-events: auto;
         display: flex;
         align-items: center;
@@ -2637,7 +2637,7 @@
     }
 
     /* 吸顶时的收缩效果 - 灵动岛风格 */
-    .lgnewui-nav-island-container.lgnewui-is-stuck {
+    .withu-nav-island-container.withu-is-stuck {
         padding: 5px;
         background: rgba(248, 248, 248, 0.65);
         border-radius: 50px;
@@ -2646,27 +2646,27 @@
     }
 
     /* 吸顶Logo和工具图标 - 默认隐藏 */
-    .lgnewui-nav-stuck-logo,
-    .lgnewui-nav-stuck-actions {
+    .withu-nav-stuck-logo,
+    .withu-nav-stuck-actions {
         display: none;
         opacity: 0;
         transition: opacity 0.3s ease;
     }
 
-    .lgnewui-nav-island-container.lgnewui-is-stuck .lgnewui-nav-stuck-logo,
-    .lgnewui-nav-island-container.lgnewui-is-stuck .lgnewui-nav-stuck-actions {
+    .withu-nav-island-container.withu-is-stuck .withu-nav-stuck-logo,
+    .withu-nav-island-container.withu-is-stuck .withu-nav-stuck-actions {
         display: flex;
         opacity: 1;
     }
 
     /* 吸顶Logo样式 */
-    .lgnewui-nav-stuck-logo {
+    .withu-nav-stuck-logo {
         align-items: center;
         margin-right: 8px;
         padding-left: 8px;
     }
 
-    .lgnewui-nav-stuck-logo img {
+    .withu-nav-stuck-logo img {
         width: 28px;
         height: 28px;
         border-radius: 50%;
@@ -2674,14 +2674,14 @@
     }
 
     /* 工具图标区域 */
-    .lgnewui-nav-stuck-actions {
+    .withu-nav-stuck-actions {
         align-items: center;
         gap: 4px;
         margin-left: 8px;
         padding-right: 4px;
     }
 
-    .lgnewui-nav-stuck-action-btn {
+    .withu-nav-stuck-action-btn {
         display: flex;
         align-items: center;
         justify-content: center;
@@ -2696,38 +2696,38 @@
         font-size: 14px;
     }
 
-    .lgnewui-nav-stuck-action-btn:hover {
+    .withu-nav-stuck-action-btn:hover {
         background: rgba(0, 0, 0, 0.05);
         color: #333;
     }
 
-    .lgnewui-nav-stuck-divider {
+    .withu-nav-stuck-divider {
         width: 1px;
         height: 20px;
         background: rgba(0, 0, 0, 0.1);
         margin: 0 4px;
     }
 
-    .lgnewui-nav-island-container.lgnewui-is-stuck .lgnewui-nav-island-item {
+    .withu-nav-island-container.withu-is-stuck .withu-nav-island-item {
         padding: 10px 18px;
         font-size: 16px;
         gap: 6px;
     }
 
-    .lgnewui-nav-island-container.lgnewui-is-stuck .lgnewui-nav-island-item i {
+    .withu-nav-island-container.withu-is-stuck .withu-nav-island-item i {
         font-size: 13px;
     }
 
-    .lgnewui-nav-island-container.lgnewui-is-stuck .lgnewui-nav-island-item.nav-home {
+    .withu-nav-island-container.withu-is-stuck .withu-nav-island-item.nav-home {
         padding: 8px 24px;
     }
 
-    .lgnewui-nav-island-container.lgnewui-is-stuck .lgnewui-nav-island-item.nav-home i {
+    .withu-nav-island-container.withu-is-stuck .withu-nav-island-item.nav-home i {
         font-size: 15px;
     }
 
     /* 导航项 - 灵动岛风格过渡 */
-    .lgnewui-nav-island-item {
+    .withu-nav-island-item {
         position: relative;
         z-index: 1;
         display: flex;
@@ -2754,50 +2754,50 @@
             background-color 0.2s ease;
     }
 
-    .lgnewui-nav-island-item i {
+    .withu-nav-island-item i {
         transition: font-size 0.25s ease-out;
         font-size: 16px !important;
     }
 
-    .lgnewui-nav-wrapper.is-fixed .lgnewui-nav-island-item {
+    .withu-nav-wrapper.is-fixed .withu-nav-island-item {
         color: #000000;
     }
 
-    .lgnewui-nav-island-item:not(.active):hover {
+    .withu-nav-island-item:not(.active):hover {
         background-color: rgb(248 114 113 / 9%);
         color: #f87171;
     }
 
-    .lgnewui-nav-wrapper.is-fixed .lgnewui-nav-island-item:not(.active):hover {
+    .withu-nav-wrapper.is-fixed .withu-nav-island-item:not(.active):hover {
         background-color: rgb(255 255 255);
         color: #6f6f6f;
     }
 
     /* 首页 Tab */
-    .lgnewui-nav-island-item.nav-home {
+    .withu-nav-island-item.nav-home {
         padding: 10px 32px;
         margin: 0 4px;
         color: #1d1d1f;
         opacity: 0.8;
     }
 
-    .lgnewui-nav-island-item.nav-home.active {
+    .withu-nav-island-item.nav-home.active {
         opacity: 1;
         color: #fff;
     }
 
-    .lgnewui-nav-island-item.nav-home i {
+    .withu-nav-island-item.nav-home i {
         font-size: 18px;
         transition: color 0.2s ease;
     }
 
-    .lgnewui-nav-island-item.nav-home:hover {
+    .withu-nav-island-item.nav-home:hover {
         opacity: 1;
         background-color: rgba(0, 0, 0, 0.04);
     }
 
-    .lgnewui-nav-island-item.nav-home::before,
-    .lgnewui-nav-island-item.nav-home::after {
+    .withu-nav-island-item.nav-home::before,
+    .withu-nav-island-item.nav-home::after {
         content: '';
         position: absolute;
         top: 50%;
@@ -2808,31 +2808,31 @@
         transition: opacity 0.2s;
     }
 
-    .lgnewui-nav-island-item.nav-home::before {
+    .withu-nav-island-item.nav-home::before {
         left: 0;
     }
 
-    .lgnewui-nav-island-item.nav-home::after {
+    .withu-nav-island-item.nav-home::after {
         right: 0;
     }
 
-    .lgnewui-nav-island-item.nav-home:hover::before,
-    .lgnewui-nav-island-item.nav-home:hover::after,
-    .lgnewui-nav-island-item.nav-home.active::before,
-    .lgnewui-nav-island-item.nav-home.active::after,
-    .lgnewui-nav-island-container.lgnewui-is-stuck .lgnewui-nav-island-item.nav-home::before,
-    .lgnewui-nav-island-container.lgnewui-is-stuck .lgnewui-nav-island-item.nav-home::after {
+    .withu-nav-island-item.nav-home:hover::before,
+    .withu-nav-island-item.nav-home:hover::after,
+    .withu-nav-island-item.nav-home.active::before,
+    .withu-nav-island-item.nav-home.active::after,
+    .withu-nav-island-container.withu-is-stuck .withu-nav-island-item.nav-home::before,
+    .withu-nav-island-container.withu-is-stuck .withu-nav-island-item.nav-home::after {
         opacity: 0;
     }
 
-    .lgnewui-nav-wrapper.is-fixed .lgnewui-nav-island-item.active,
-    .lgnewui-nav-wrapper .lgnewui-nav-island-item.active {
+    .withu-nav-wrapper.is-fixed .withu-nav-island-item.active,
+    .withu-nav-wrapper .withu-nav-island-item.active {
         color: #fff;
         font-weight: 600;
     }
 
 
-    .lgnewui-nav-indicator {
+    .withu-nav-indicator {
         position: absolute;
         top: 8px;
         left: 0;
@@ -2845,7 +2845,7 @@
         /* box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1); */
     }
 
-    .lgnewui-nav-indicator::before {
+    .withu-nav-indicator::before {
         content: "";
         display: block;
         background: inherit;
@@ -2862,18 +2862,18 @@
         transform: scale(1, 1);
     }
 
-    .lgnewui-nav-indicator.no-transition {
+    .withu-nav-indicator.no-transition {
         transition: none !important;
     }
 
-    .lgnewui-nav-island-container.lgnewui-is-stuck .lgnewui-nav-indicator {
+    .withu-nav-island-container.withu-is-stuck .withu-nav-indicator {
         top: 5px;
         height: calc(100% - 10px);
         /* box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08); */
     }
 
     @media (max-width: 768px) {
-        .lgnewui-nav-island-container {
+        .withu-nav-island-container {
             max-width: 90vw;
             overflow-x: auto;
             justify-content: flex-start;
@@ -2882,16 +2882,16 @@
             padding: 4px;
         }
 
-        .lgnewui-nav-island-container::-webkit-scrollbar {
+        .withu-nav-island-container::-webkit-scrollbar {
             display: none;
         }
 
-        .lgnewui-nav-island-item {
+        .withu-nav-island-item {
             padding: 8px 16px;
             flex-shrink: 0;
         }
 
-        .lgnewui-hero-title {
+        .withu-hero-title {
             font-size: clamp(20px, 5vw, 28px);
         }
     }
@@ -3030,63 +3030,63 @@
 <div class="header-wrap">
     <div class="header">
         <!-- 吸顶 Logo（模板渲染：根据 $stuckLogoStyle 只输出选中的一套） -->
-                <div class="lgnewui-header-left-avatar">
+                <div class="withu-header-left-avatar">
                                 <div class="stuck-logo stuck-logo--en-v7">
-                        <span class="stuck-logo__name" data-lg-tip="Ki.">Ki.</span>
+                        <span class="stuck-logo__name" data-withu-tip="Ki.">Ki.</span>
                         <span class="stuck-logo__redline-l"></span>
                         <span class="stuck-logo__heart"><svg width="20" height="20" viewBox="0 0 256 256" fill="currentColor">
                                 <path
                                     d="M240,94c0,70-103.79,126.66-108.21,129a8,8,0,0,1-7.58,0C119.79,220.66,16,164,16,94A62.07,62.07,0,0,1,78,32c20.65,0,38.73,8.88,50,23.89C139.27,40.88,157.35,32,178,32A62.07,62.07,0,0,1,240,94Z" />
                             </svg></span>
                         <span class="stuck-logo__redline-r"></span>
-                        <span class="stuck-logo__name" data-lg-tip="Really">Really</span>
+                        <span class="stuck-logo__name" data-withu-tip="Really">Really</span>
                     </div>
                             </div>
 
-        <div class="lg-capsule-back">
-            <a href="javascript:void(0);" class="lg-capsule-back__btn lg-capsule-back__prev" title="返回">
+        <div class="withu-capsule-back">
+            <a href="javascript:void(0);" class="withu-capsule-back__btn withu-capsule-back__prev" title="返回">
                 <i data-lucide="chevron-left"></i>
             </a>
-            <a href="/index.php" class="lg-capsule-back__btn lg-capsule-back__home" title="首页">
+            <a href="/index.php" class="withu-capsule-back__btn withu-capsule-back__home" title="首页">
                 <i data-lucide="house"></i>
             </a>
         </div>
         <div class="logo">
-                        <h1><a class="alogo" href="index.php" style="font-family:'Niconne', cursive">LG Demo<span class="alogo-home-icon"><i class="ph-fill ph-house"></i></span></a></h1>
+                        <h1><a class="alogo" href="index.php" style="font-family:'Niconne', cursive">withU<span class="alogo-home-icon"><i class="ph-fill ph-house"></i></span></a></h1>
         </div>
         <!-- 吸顶时显示的右侧区域: 地图 + 情侣头像 -->
-        <div class="lgnewui-header-actions" id="lgnewuiHeaderActions">
-                            <div class="lgnewui-header-weather is-loading" id="lgHeaderVisitorWeather" title="点击查看当前天气信息" role="button" tabindex="0" aria-expanded="false">
-                    <span class="lgnewui-header-weather-loading" id="lgHeaderVisitorWeatherLoading" aria-label="天气加载中">
+        <div class="withu-header-actions" id="withuHeaderActions">
+                            <div class="withu-header-weather is-loading" id="lgHeaderVisitorWeather" title="点击查看当前天气信息" role="button" tabindex="0" aria-expanded="false">
+                    <span class="withu-header-weather-loading" id="lgHeaderVisitorWeatherLoading" aria-label="天气加载中">
                         <i data-lucide="loader-circle"></i>
                     </span>
-                    <span class="lgnewui-header-weather-icon-wrap">
-                        <i class="qi-999-fill lgnewui-header-weather-icon" id="lgHeaderVisitorWeatherIcon"></i>
+                    <span class="withu-header-weather-icon-wrap">
+                        <i class="qi-999-fill withu-header-weather-icon" id="lgHeaderVisitorWeatherIcon"></i>
                     </span>
-                    <span class="lgnewui-header-weather-text" id="lgHeaderVisitorWeatherText"></span>
+                    <span class="withu-header-weather-text" id="lgHeaderVisitorWeatherText"></span>
                 </div>
             
-                            <a href="javascript:void(0);" class="lgnewui-header-map" id="lgMapOpenBtn" title="足迹地图">
-                    <span class="lgnewui-header-map-icon-wrap">
+                            <a href="javascript:void(0);" class="withu-header-map" id="lgMapOpenBtn" title="足迹地图">
+                    <span class="withu-header-map-icon-wrap">
                         <i class="ph-fill ph-globe-hemisphere-west"></i>
                     </span>
-                    <span class="lgnewui-header-map-text">足迹</span>
+                    <span class="withu-header-map-text">足迹</span>
                 </a>
 
-                <div class="lgnewui-header-divider"></div>
+                <div class="withu-header-divider"></div>
             
-            <div class="lgnewui-couple-avatars-right">
-                <div class="lgnewui-avatar-group">
+            <div class="withu-couple-avatars-right">
+                <div class="withu-avatar-group">
                     <img src="/Lovefolder/20260411043046_69d95df639c33274072975.webp"
                         class="avatar-male" alt="She">
                                         <img src="/Lovefolder/20260411043037_69d95ded97293201118237.webp"
                         class="avatar-female" alt="He">
                                     </div>
-                                <span class="lgnewui-right-heart"></span>
+                                <span class="withu-right-heart"></span>
                             </div>
 
             <!-- 移动端更多按钮 -->
-            <button type="button" class="lg-header-more-btn" id="lgHeaderMoreBtn" aria-label="更多信息">
+            <button type="button" class="withu-header-more-btn" id="lgHeaderMoreBtn" aria-label="更多信息">
                 <i data-lucide="ellipsis"></i>
             </button>
         </div>
@@ -3094,38 +3094,38 @@
 </div>
 
 <!-- 移动端更多面板（毛玻璃磨砂效果） -->
-<div class="lg-header-more-panel" id="lgHeaderMorePanel">
-    <div class="lg-header-more-overlay" data-close-panel></div>
-    <div class="lg-header-more-sheet">
-        <button type="button" class="lg-header-more-close" data-close-panel aria-label="关闭">
+<div class="withu-header-more-panel" id="lgHeaderMorePanel">
+    <div class="withu-header-more-overlay" data-close-panel></div>
+    <div class="withu-header-more-sheet">
+        <button type="button" class="withu-header-more-close" data-close-panel aria-label="关闭">
             <i data-lucide="x"></i>
         </button>
 
         <!-- stuck-logo 展示 -->
-        <div class="lg-header-more-identity">
+        <div class="withu-header-more-identity">
                                 <div class="stuck-logo stuck-logo--en-v7">
-                        <span class="stuck-logo__name" data-lg-tip="Ki.">Ki.</span>
+                        <span class="stuck-logo__name" data-withu-tip="Ki.">Ki.</span>
                         <span class="stuck-logo__redline-l"></span>
                         <span class="stuck-logo__heart"><svg width="20" height="20" viewBox="0 0 256 256" fill="currentColor"><path d="M240,94c0,70-103.79,126.66-108.21,129a8,8,0,0,1-7.58,0C119.79,220.66,16,164,16,94A62.07,62.07,0,0,1,78,32c20.65,0,38.73,8.88,50,23.89C139.27,40.88,157.35,32,178,32A62.07,62.07,0,0,1,240,94Z"/></svg></span>
                         <span class="stuck-logo__redline-r"></span>
-                        <span class="stuck-logo__name" data-lg-tip="Really">Really</span>
+                        <span class="stuck-logo__name" data-withu-tip="Really">Really</span>
                     </div>
                         </div>
 
         <!-- 功能入口：天气、地图 -->
-        <div class="lg-header-more-actions">
-                        <a href="javascript:void(0);" class="lg-header-more-action-item" id="lgMorePanelWeather" data-close-panel>
-                <span class="lg-header-more-action-icon">
+        <div class="withu-header-more-actions">
+                        <a href="javascript:void(0);" class="withu-header-more-action-item" id="lgMorePanelWeather" data-close-panel>
+                <span class="withu-header-more-action-icon">
                     <i class="qi-999-fill" id="lgMorePanelWeatherIcon"></i>
                 </span>
-                <span class="lg-header-more-action-label" id="lgMorePanelWeatherText">天气</span>
+                <span class="withu-header-more-action-label" id="lgMorePanelWeatherText">天气</span>
             </a>
             
-                        <a href="javascript:void(0);" class="lg-header-more-action-item" id="lgMorePanelMap" data-close-panel>
-                <span class="lg-header-more-action-icon">
+                        <a href="javascript:void(0);" class="withu-header-more-action-item" id="lgMorePanelMap" data-close-panel>
+                <span class="withu-header-more-action-icon">
                     <i class="ph-fill ph-globe-hemisphere-west"></i>
                 </span>
-                <span class="lg-header-more-action-label">足迹地图</span>
+                <span class="withu-header-more-action-label">足迹地图</span>
             </a>
                     </div>
     </div>
@@ -3260,58 +3260,58 @@
 </div>
 
 <div class="Width_limit_10rem">
-    <div class="lgnewui-sticky-sentinel" id="lgnewuiStickySentinel"></div>
+    <div class="withu-sticky-sentinel" id="withuStickySentinel"></div>
 </div>
 
-<div class="lgnewui-nav-placeholder" id="lgnewuiNavPlaceholder"></div>
-<div class="lgnewui-nav-wrapper" id="lgnewuiNavWrapper">
-    <nav class="lgnewui-nav-island-container" id="lgnewuiNavIsland">
-        <div class="lgnewui-nav-indicator" id="lgnewuiNavIndicator"></div>
+<div class="withu-nav-placeholder" id="withuNavPlaceholder"></div>
+<div class="withu-nav-wrapper" id="withuNavWrapper">
+    <nav class="withu-nav-island-container" id="withuNavIsland">
+        <div class="withu-nav-indicator" id="withuNavIndicator"></div>
 
                 <a href="articles.php"
-           class="lgnewui-nav-island-item  "
+           class="withu-nav-island-item  "
            draggable="false"
            data-desc="写下日常、心情与想念"
            data-meta="Memory Notes">
             <i class="ph-fill ph-notebook"></i>
             <span>点滴</span>        </a>
                 <a href="messages.php"
-           class="lgnewui-nav-island-item  "
+           class="withu-nav-island-item  "
            draggable="false"
            data-desc="留下想说的话与温柔回应"
            data-meta="Kind Messages">
             <i class="ph-fill ph-chat-teardrop-dots"></i>
             <span>留言</span>        </a>
                 <a href="timeline.php"
-           class="lgnewui-nav-island-item  "
+           class="withu-nav-island-item  "
            draggable="false"
            data-desc="回看我们一路走来的轨迹"
            data-meta="Steps of Us">
             <i class="ph-fill ph-clock-countdown"></i>
             <span>轨迹</span>        </a>
                 <a href="index.php"
-           class="lgnewui-nav-island-item active nav-home"
+           class="withu-nav-island-item active nav-home"
            draggable="false"
            data-desc="收好我们的日常与心动"
            data-meta="Our Cozy Place">
             <i class="ph-fill ph-house"></i>
                     </a>
                 <a href="albums.php"
-           class="lgnewui-nav-island-item  "
+           class="withu-nav-island-item  "
            draggable="false"
            data-desc="收藏见面与出游的闪亮瞬间"
            data-meta="Photo Keepsakes">
             <i class="ph-fill ph-camera"></i>
             <span>相册</span>        </a>
                 <a href="lovelist.php"
-           class="lgnewui-nav-island-item  "
+           class="withu-nav-island-item  "
            draggable="false"
            data-desc="记下想一起完成的心愿"
            data-meta="Plans Together">
             <i class="ph-fill ph-list-checks"></i>
             <span>清单</span>        </a>
                 <a href="about.php"
-           class="lgnewui-nav-island-item  "
+           class="withu-nav-island-item  "
            draggable="false"
            data-desc="用对话回放我们的故事"
            data-meta="Story Replay">
@@ -3321,16 +3321,16 @@
 </div>
 
 <div class="Width_limit_10rem">
-    <div class="lgnewui-page-header">
-        <div class="lgnewui-meta-container">
-            <div class="lgnewui-meta-tag" id="lgnewuiMetaTag">
-                <i class="fa-solid fa-star-of-life lgnewui-meta-icon"></i>
-                <span id="lgnewuiMetaText">Sanctuary of Us</span>
-                <i class="fa-solid fa-star-of-life lgnewui-meta-icon"></i>
+    <div class="withu-page-header">
+        <div class="withu-meta-container">
+            <div class="withu-meta-tag" id="withuMetaTag">
+                <i class="fa-solid fa-star-of-life withu-meta-icon"></i>
+                <span id="withuMetaText">Sanctuary of Us</span>
+                <i class="fa-solid fa-star-of-life withu-meta-icon"></i>
             </div>
-            <div class="lgnewui-meta-line" id="lgnewuiMetaLine"></div>
+            <div class="withu-meta-line" id="withuMetaLine"></div>
         </div>
-        <h2 class="lgnewui-hero-title" id="lgnewuiHeroTitle"></h2>
+        <h2 class="withu-hero-title" id="withuHeroTitle"></h2>
     </div>
 </div>
 
@@ -3350,63 +3350,63 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>LG-NewUi Demo — 小手一牵 岁岁年年～ 又一年了</title>
+    <title>withU Demo — 小手一牵 岁岁年年～ 又一年了</title>
 
 </head>
 
 <body class="bg-pdot-vignette">
     <div id="pjax-container">
-        <main class="lgnewui-home lgnewui-container">
+        <main class="withu-home withu-container">
 
             <!-- Countdown Module -->
-            <div class="lgnewui-day-wrapper lgnewui-mb-4" data-aos="fade-up" data-aos-delay="0">
-                <div class="lgnewui-day-fusion-card">
+            <div class="withu-day-wrapper withu-mb-4" data-aos="fade-up" data-aos-delay="0">
+                <div class="withu-day-fusion-card">
                     <!-- 朦胧光斑 -->
-                    <div class="lgnewui-day-ambient-light"></div>
+                    <div class="withu-day-ambient-light"></div>
                     <!-- Mac 装饰点 -->
-                    <div class="lgnewui-day-mac-dots">
-                        <div class="lgnewui-day-dot lgnewui-day-dot-red"></div>
-                        <div class="lgnewui-day-dot lgnewui-day-dot-yellow"></div>
-                        <div class="lgnewui-day-dot lgnewui-day-dot-green"></div>
+                    <div class="withu-day-mac-dots">
+                        <div class="withu-day-dot withu-day-dot-red"></div>
+                        <div class="withu-day-dot withu-day-dot-yellow"></div>
+                        <div class="withu-day-dot withu-day-dot-green"></div>
                     </div>
                     <!-- 左侧 -->
-                    <div class="lgnewui-day-left-section">
-                        <div class="lgnewui-day-title-container">
-                            <h2 class="lgnewui-day-poetic-title">
+                    <div class="withu-day-left-section">
+                        <div class="withu-day-title-container">
+                            <h2 class="withu-day-poetic-title">
                                 朝暮与年岁并往， <br />
 与你行至天光。                            </h2>
                         </div>
                         <!-- 起始日 -->
-                        <div class="lgnewui-day-start-date-capsule">
-                            <div class="lgnewui-day-icon-circle">
+                        <div class="withu-day-start-date-capsule">
+                            <div class="withu-day-icon-circle">
                                 <i class="ph-fill ph-heart"></i>
                             </div>
-                            <div class="lgnewui-day-date-text-group">
-                                <span class="lgnewui-day-date-label-small">Together Since</span>
-                                <span class="lgnewui-day-date-value-clean"
-                                    id="lgnewui-day-start-date-display">2023-07-19 00:00</span>
+                            <div class="withu-day-date-text-group">
+                                <span class="withu-day-date-label-small">Together Since</span>
+                                <span class="withu-day-date-value-clean"
+                                    id="withu-day-start-date-display">2023-07-19 00:00</span>
                             </div>
                         </div>
                     </div>
                     <!-- 右侧 -->
-                    <div class="lgnewui-day-right-section">
-                        <div class="lgnewui-day-main-days-wrapper">
-                            <div class="lgnewui-day-main-days-number" id="lgnewui-day-counter-days">0</div>
-                            <div class="lgnewui-day-days-divider"></div>
-                            <div class="lgnewui-day-days-label">DAYS</div>
+                    <div class="withu-day-right-section">
+                        <div class="withu-day-main-days-wrapper">
+                            <div class="withu-day-main-days-number" id="withu-day-counter-days">0</div>
+                            <div class="withu-day-days-divider"></div>
+                            <div class="withu-day-days-label">DAYS</div>
                         </div>
-                        <div class="lgnewui-day-digital-timer">
-                            <div class="lgnewui-day-timer-block">
-                                <div class="lgnewui-day-timer-val" id="lgnewui-day-counter-hours">00</div>
-                                <div class="lgnewui-day-timer-label">Hours</div>
+                        <div class="withu-day-digital-timer">
+                            <div class="withu-day-timer-block">
+                                <div class="withu-day-timer-val" id="withu-day-counter-hours">00</div>
+                                <div class="withu-day-timer-label">Hours</div>
                             </div>
-                            <div class="lgnewui-day-timer-block">
-                                <div class="lgnewui-day-timer-val" id="lgnewui-day-counter-minutes">00</div>
-                                <div class="lgnewui-day-timer-label">Minutes</div>
+                            <div class="withu-day-timer-block">
+                                <div class="withu-day-timer-val" id="withu-day-counter-minutes">00</div>
+                                <div class="withu-day-timer-label">Minutes</div>
                             </div>
-                            <div class="lgnewui-day-timer-block">
-                                <div class="lgnewui-day-timer-val" id="lgnewui-day-counter-seconds">00</div>
-                                <div class="lgnewui-day-timer-label">Seconds</div>
+                            <div class="withu-day-timer-block">
+                                <div class="withu-day-timer-val" id="withu-day-counter-seconds">00</div>
+                                <div class="withu-day-timer-label">Seconds</div>
                             </div>
                         </div>
                     </div>
@@ -3415,181 +3415,181 @@
 
 
             <!-- 1. Top Section: Staggered Masonry -->
-            <section class="lgnewui-section">
-                <div class="lgnewui-grid">
+            <section class="withu-section">
+                <div class="withu-grid">
 
                     <!-- Card 1: Moment of the Day -->
-                                        <div class="lgnewui-col-2 lgnewui-row-2" data-aos="fade-up" data-aos-delay="0">                    <!-- 智能媒体卡片：时光碎片 -->
-                    <div id="moment-card" class="lgnewui-smart-card">
+                                        <div class="withu-col-2 withu-row-2" data-aos="fade-up" data-aos-delay="0">                    <!-- 智能媒体卡片：时光碎片 -->
+                    <div id="moment-card" class="withu-smart-card">
                         <!-- 媒体容器 -->
-                        <div class="lgnewui-smart-card__media"></div>
+                        <div class="withu-smart-card__media"></div>
                         <!-- 遮罩层 -->
-                        <div class="lgnewui-smart-card__overlay"></div>
+                        <div class="withu-smart-card__overlay"></div>
 
                         <!-- 顶部：发布者信息 + 相册入口 -->
-                        <div class="lgnewui-smart-card__header">
-                            <div class="lgnewui-smart-card__capsule">
-                                <img class="lgnewui-smart-card__avatar lazy" src="" alt="">
-                                <div class="lgnewui-smart-card__user-info">
-                                    <span class="lgnewui-smart-card__name"></span>
-                                    <span class="lgnewui-smart-card__time"></span>
+                        <div class="withu-smart-card__header">
+                            <div class="withu-smart-card__capsule">
+                                <img class="withu-smart-card__avatar lazy" src="" alt="">
+                                <div class="withu-smart-card__user-info">
+                                    <span class="withu-smart-card__name"></span>
+                                    <span class="withu-smart-card__time"></span>
                                 </div>
                             </div>
                             <!-- 相册入口链接 -->
-                            <a href="/albums.php" class="lgnewui-smart-card__album-link">
+                            <a href="/albums.php" class="withu-smart-card__album-link">
                                 <span>进入相册</span>
                                 <i class="ph-bold ph-arrow-right"></i>
                             </a>
                         </div>
 
                         <!-- 底部：内容区域 -->
-                        <div class="lgnewui-smart-card__content">
+                        <div class="withu-smart-card__content">
                             <!-- 地点胶囊 -->
-                            <div class="lgnewui-smart-card__location-pill">
+                            <div class="withu-smart-card__location-pill">
                                 <i class="ph-fill ph-map-pin"></i>
-                                <span class="lgnewui-smart-card__location-text"></span>
+                                <span class="withu-smart-card__location-text"></span>
                             </div>
                             <!-- 标题 -->
-                            <h2 class="lgnewui-smart-card__title"></h2>
+                            <h2 class="withu-smart-card__title"></h2>
                             <!-- 元数据 -->
-                            <div class="lgnewui-smart-card__meta">
-                                <span class="lgnewui-smart-card__date"></span>
-                                <p class="lgnewui-smart-card__desc"></p>
+                            <div class="withu-smart-card__meta">
+                                <span class="withu-smart-card__date"></span>
+                                <p class="withu-smart-card__desc"></p>
                             </div>
                         </div>
 
                         <!-- 切换按钮 -->
-                        <div class="lgnewui-smart-card__switch-btn-container">
-                            <button class="lgnewui-smart-card__switch-btn" type="button">
+                        <div class="withu-smart-card__switch-btn-container">
+                            <button class="withu-smart-card__switch-btn" type="button">
                                 <i class="ph-bold ph-arrows-clockwise"></i>
                             </button>
                         </div>
                     </div>
                     </div>
                                                             <!-- Card 2: Weather -->
-                    <div class="lgnewui-col-2 lgnewui-col-md-1 lgnewui-weather-wrapper" data-aos="fade-up" data-aos-delay="50">                    <div class="lgnewui-home-weather-card blue" data-weather-slot="1" data-location-name="--">
+                    <div class="withu-col-2 withu-col-md-1 withu-weather-wrapper" data-aos="fade-up" data-aos-delay="50">                    <div class="withu-home-weather-card blue" data-weather-slot="1" data-location-name="--">
 
                         <!-- 装饰背景 -->
-                        <div class="lgnewui-home-weather-bg-decoration"></div>
+                        <div class="withu-home-weather-bg-decoration"></div>
 
                         <!-- 顶部：用户 + 时间 -->
-                        <div class="lgnewui-home-weather-row-top">
-                            <div class="lgnewui-home-weather-user-pill">
+                        <div class="withu-home-weather-row-top">
+                            <div class="withu-home-weather-user-pill">
                                 <img src="/Lovefolder/20260411043037_69d95ded97293201118237.webp"
-                                    class="lgnewui-home-weather-avatar" alt="Ki.">
-                                <span class="lgnewui-home-weather-username">Ki.</span>
+                                    class="withu-home-weather-avatar" alt="Ki.">
+                                <span class="withu-home-weather-username">Ki.</span>
                             </div>
-                            <div class="lgnewui-home-weather-time-tag">--</div>
+                            <div class="withu-home-weather-time-tag">--</div>
                         </div>
 
                         <!-- 核心区：温度 + 图标 -->
-                        <div class="lgnewui-home-weather-row-main">
-                            <div class="lgnewui-home-weather-text-temp">--°</div>
-                            <i class="qi-100-fill lgnewui-home-weather-icon-main"></i>
+                        <div class="withu-home-weather-row-main">
+                            <div class="withu-home-weather-text-temp">--°</div>
+                            <i class="qi-100-fill withu-home-weather-icon-main"></i>
                         </div>
 
                         <!-- 地址信息 -->
-                        <div class="lgnewui-home-weather-row-location">
-                            <i class="ph-fill ph-map-pin lgnewui-home-weather-icon-pin"></i>
-                            <span class="lgnewui-home-weather-text-city">--</span>
-                            <span class="lgnewui-home-weather-dot-divider">•</span>
-                            <span class="lgnewui-home-weather-text-status">--</span>
+                        <div class="withu-home-weather-row-location">
+                            <i class="ph-fill ph-map-pin withu-home-weather-icon-pin"></i>
+                            <span class="withu-home-weather-text-city">--</span>
+                            <span class="withu-home-weather-dot-divider">•</span>
+                            <span class="withu-home-weather-text-status">--</span>
                         </div>
 
                         <!-- 底部指标 -->
-                        <div class="lgnewui-home-weather-grid-stats">
-                            <div class="lgnewui-home-weather-stat-pill">
-                                <i class="ph-fill ph-drop lgnewui-home-weather-icon-stat"></i>
-                                <span class="lgnewui-home-weather-text-stat stat-humidity">--%</span>
+                        <div class="withu-home-weather-grid-stats">
+                            <div class="withu-home-weather-stat-pill">
+                                <i class="ph-fill ph-drop withu-home-weather-icon-stat"></i>
+                                <span class="withu-home-weather-text-stat stat-humidity">--%</span>
                             </div>
-                            <div class="lgnewui-home-weather-stat-pill">
-                                <i class="ph-fill ph-eye lgnewui-home-weather-icon-stat"></i>
-                                <span class="lgnewui-home-weather-text-stat stat-vis">--km</span>
+                            <div class="withu-home-weather-stat-pill">
+                                <i class="ph-fill ph-eye withu-home-weather-icon-stat"></i>
+                                <span class="withu-home-weather-text-stat stat-vis">--km</span>
                             </div>
-                            <div class="lgnewui-home-weather-stat-pill">
-                                <i class="ph-fill ph-thermometer lgnewui-home-weather-icon-stat"></i>
-                                <span class="lgnewui-home-weather-text-stat stat-feels">--°</span>
+                            <div class="withu-home-weather-stat-pill">
+                                <i class="ph-fill ph-thermometer withu-home-weather-icon-stat"></i>
+                                <span class="withu-home-weather-text-stat stat-feels">--°</span>
                             </div>
                         </div>
                     </div>
                     </div>
                     <!-- Card 3: Weather (双人模式) -->
-                                        <div class="lgnewui-col-2 lgnewui-col-md-1 lgnewui-weather-wrapper" data-aos="fade-up" data-aos-delay="100">                    <div class="lgnewui-home-weather-card orange" data-weather-slot="2" data-location-name="--">
+                                        <div class="withu-col-2 withu-col-md-1 withu-weather-wrapper" data-aos="fade-up" data-aos-delay="100">                    <div class="withu-home-weather-card orange" data-weather-slot="2" data-location-name="--">
 
-                        <div class="lgnewui-home-weather-bg-decoration"></div>
+                        <div class="withu-home-weather-bg-decoration"></div>
 
-                        <div class="lgnewui-home-weather-row-top">
-                            <div class="lgnewui-home-weather-user-pill">
+                        <div class="withu-home-weather-row-top">
+                            <div class="withu-home-weather-user-pill">
                                 <img src="/Lovefolder/20260411043046_69d95df639c33274072975.webp"
-                                    class="lgnewui-home-weather-avatar" alt="Really">
-                                <span class="lgnewui-home-weather-username">Really</span>
+                                    class="withu-home-weather-avatar" alt="Really">
+                                <span class="withu-home-weather-username">Really</span>
                             </div>
-                            <div class="lgnewui-home-weather-time-tag">--</div>
+                            <div class="withu-home-weather-time-tag">--</div>
                         </div>
 
-                        <div class="lgnewui-home-weather-row-main">
-                            <div class="lgnewui-home-weather-text-temp">--°</div>
-                            <i class="qi-100-fill lgnewui-home-weather-icon-main"></i>
+                        <div class="withu-home-weather-row-main">
+                            <div class="withu-home-weather-text-temp">--°</div>
+                            <i class="qi-100-fill withu-home-weather-icon-main"></i>
                         </div>
 
-                        <div class="lgnewui-home-weather-row-location">
-                            <i class="ph-fill ph-map-pin lgnewui-home-weather-icon-pin"></i>
-                            <span class="lgnewui-home-weather-text-city">--</span>
-                            <span class="lgnewui-home-weather-dot-divider">•</span>
-                            <span class="lgnewui-home-weather-text-status">--</span>
+                        <div class="withu-home-weather-row-location">
+                            <i class="ph-fill ph-map-pin withu-home-weather-icon-pin"></i>
+                            <span class="withu-home-weather-text-city">--</span>
+                            <span class="withu-home-weather-dot-divider">•</span>
+                            <span class="withu-home-weather-text-status">--</span>
                         </div>
 
-                        <div class="lgnewui-home-weather-grid-stats">
-                            <div class="lgnewui-home-weather-stat-pill">
-                                <i class="ph-fill ph-drop lgnewui-home-weather-icon-stat"></i>
-                                <span class="lgnewui-home-weather-text-stat stat-humidity">--%</span>
+                        <div class="withu-home-weather-grid-stats">
+                            <div class="withu-home-weather-stat-pill">
+                                <i class="ph-fill ph-drop withu-home-weather-icon-stat"></i>
+                                <span class="withu-home-weather-text-stat stat-humidity">--%</span>
                             </div>
-                            <div class="lgnewui-home-weather-stat-pill">
-                                <i class="ph-fill ph-eye lgnewui-home-weather-icon-stat"></i>
-                                <span class="lgnewui-home-weather-text-stat stat-vis">--km</span>
+                            <div class="withu-home-weather-stat-pill">
+                                <i class="ph-fill ph-eye withu-home-weather-icon-stat"></i>
+                                <span class="withu-home-weather-text-stat stat-vis">--km</span>
                             </div>
-                            <div class="lgnewui-home-weather-stat-pill">
-                                <i class="ph-fill ph-thermometer lgnewui-home-weather-icon-stat"></i>
-                                <span class="lgnewui-home-weather-text-stat stat-feels">--°</span>
+                            <div class="withu-home-weather-stat-pill">
+                                <i class="ph-fill ph-thermometer withu-home-weather-icon-stat"></i>
+                                <span class="withu-home-weather-text-stat stat-feels">--°</span>
                             </div>
                         </div>
                     </div>
                     </div>                                        
                     <!-- Card 4: Love List -->
-                    <div class="lgnewui-col-2" data-aos="fade-up" data-aos-delay="150">                    <div class="lgnewui-widget lgnewui-widget--lovelist">
-                        <div class="lgnewui-widget__bg-icon lgnewui-lovelist-bg-icon">
+                    <div class="withu-col-2" data-aos="fade-up" data-aos-delay="150">                    <div class="withu-widget withu-widget--lovelist">
+                        <div class="withu-widget__bg-icon withu-lovelist-bg-icon">
                             <i class="ph-fill ph-shooting-star"></i>
                         </div>
 
-                        <div class="lgnewui-flex-col-between-relative">
-                            <div class="lgnewui-flex-between-center lgnewui-mb-4">
-                                <div class="lgnewui-flex-center-gap">
-                                    <div class="lgnewui-icon-box-glass">
-                                        <i class="ph-bold ph-list-heart lgnewui-icon-md-white"></i>
+                        <div class="withu-flex-col-between-relative">
+                            <div class="withu-flex-between-center withu-mb-4">
+                                <div class="withu-flex-center-gap">
+                                    <div class="withu-icon-box-glass">
+                                        <i class="ph-bold ph-list-heart withu-icon-md-white"></i>
                                     </div>
-                                    <div class="lgnewui-card-title-lg">清单</div>
+                                    <div class="withu-card-title-lg">清单</div>
                                 </div>
-                                <div class="lgnewui-card-subtitle">Plans Together</div>
+                                <div class="withu-card-subtitle">Plans Together</div>
                             </div>
 
-                            <div class="lgnewui-lovelist-bottom">
-                                <div class="lgnewui-lovelist-stats">
-                                    <div class="lgnewui-lovelist-fraction lgnewui-font-num">
+                            <div class="withu-lovelist-bottom">
+                                <div class="withu-lovelist-stats">
+                                    <div class="withu-lovelist-fraction withu-font-num">
                                         <span
-                                            class="lgnewui-lovelist-completed">23</span>
-                                        <span class="lgnewui-lovelist-divider">/</span>
+                                            class="withu-lovelist-completed">23</span>
+                                        <span class="withu-lovelist-divider">/</span>
                                         <span
-                                            class="lgnewui-lovelist-total">36</span>
+                                            class="withu-lovelist-total">36</span>
                                     </div>
 
-                                    <div class="lgnewui-font-num lgnewui-num-huge">
+                                    <div class="withu-font-num withu-num-huge">
                                         <span>64</span><span
-                                            class="lgnewui-num-suffix">%</span>
+                                            class="withu-num-suffix">%</span>
                                     </div>
                                 </div>
 
-                                <div class="lgnewui-progress lgnewui-progress-sm">
-                                    <div class="lgnewui-progress__bar lgnewui-progress-fill-white"
+                                <div class="withu-progress withu-progress-sm">
+                                    <div class="withu-progress__bar withu-progress-fill-white"
                                         style="width: 64%;"></div>
                                 </div>
                             </div>
@@ -3597,172 +3597,172 @@
                     </div>
                     </div>
                     <!-- Stats Cards -->
-                    <div class="lgnewui-col-2 lgnewui-col-md-1" data-aos="fade-up" data-aos-delay="200">                    <div class="lgnewui-widget lgnewui-widget--stats-vibrant-1">
-                        <div class="lgnewui-widget__bg-icon lgnewui-widget__bg-icon--tilted">
+                    <div class="withu-col-2 withu-col-md-1" data-aos="fade-up" data-aos-delay="200">                    <div class="withu-widget withu-widget--stats-vibrant-1">
+                        <div class="withu-widget__bg-icon withu-widget__bg-icon--tilted">
                             <i class="ph-fill ph-article"></i>
                         </div>
-                        <div class="lgnewui-flex-col-between-1">
+                        <div class="withu-flex-col-between-1">
                             <div>
-                                <div class="lgnewui-stats-header-row">
-                                    <div class="lgnewui-icon-circle-glass">
-                                        <i class="ph-bold ph-newspaper-clipping lgnewui-icon-sm-white"></i>
+                                <div class="withu-stats-header-row">
+                                    <div class="withu-icon-circle-glass">
+                                        <i class="ph-bold ph-newspaper-clipping withu-icon-sm-white"></i>
                                     </div>
-                                    <div class="lgnewui-stats-title" data-lg-tip="点滴">点滴</div>
+                                    <div class="withu-stats-title" data-withu-tip="点滴">点滴</div>
                                 </div>
                             </div>
-                            <div class="lgnewui-mt-1rem">
-                                <div class="lgnewui-font-num lgnewui-stats-num">
+                            <div class="withu-mt-1rem">
+                                <div class="withu-font-num withu-stats-num">
                                     10                                </div>
-                                <div class="lgnewui-stats-label lgnewui-stats-label--en">Memory Notes</div>
+                                <div class="withu-stats-label withu-stats-label--en">Memory Notes</div>
                             </div>
                         </div>
                     </div>
                     </div>
-                    <div class="lgnewui-col-2 lgnewui-col-md-1" data-aos="fade-up" data-aos-delay="250">                    <div class="lgnewui-widget lgnewui-widget--stats-vibrant-2">
-                        <div class="lgnewui-widget__bg-icon lgnewui-widget__bg-icon--tilted">
+                    <div class="withu-col-2 withu-col-md-1" data-aos="fade-up" data-aos-delay="250">                    <div class="withu-widget withu-widget--stats-vibrant-2">
+                        <div class="withu-widget__bg-icon withu-widget__bg-icon--tilted">
                             <i class="ph-fill ph-images"></i>
                         </div>
-                        <div class="lgnewui-flex-col-between-1">
+                        <div class="withu-flex-col-between-1">
                             <div>
-                                <div class="lgnewui-stats-header-row">
-                                    <div class="lgnewui-icon-circle-glass">
-                                        <i class="ph-bold ph-camera lgnewui-icon-sm-white"></i>
+                                <div class="withu-stats-header-row">
+                                    <div class="withu-icon-circle-glass">
+                                        <i class="ph-bold ph-camera withu-icon-sm-white"></i>
                                     </div>
-                                    <div class="lgnewui-stats-title" data-lg-tip="相册">相册</div>
+                                    <div class="withu-stats-title" data-withu-tip="相册">相册</div>
                                 </div>
                             </div>
-                            <div class="lgnewui-mt-1rem">
-                                <div class="lgnewui-font-num lgnewui-stats-num">
+                            <div class="withu-mt-1rem">
+                                <div class="withu-font-num withu-stats-num">
                                     144                                </div>
-                                <div class="lgnewui-stats-label lgnewui-stats-label--en">Photo Keepsakes</div>
+                                <div class="withu-stats-label withu-stats-label--en">Photo Keepsakes</div>
                             </div>
                         </div>
                     </div>
                     </div>
-                    <div class="lgnewui-col-2 lgnewui-col-md-1" data-aos="fade-up" data-aos-delay="300">                    <div class="lgnewui-widget lgnewui-widget--stats-vibrant-3">
-                        <div class="lgnewui-widget__bg-icon lgnewui-widget__bg-icon--tilted">
+                    <div class="withu-col-2 withu-col-md-1" data-aos="fade-up" data-aos-delay="300">                    <div class="withu-widget withu-widget--stats-vibrant-3">
+                        <div class="withu-widget__bg-icon withu-widget__bg-icon--tilted">
                             <i class="ph-fill ph-chat-circle-dots"></i>
                         </div>
-                        <div class="lgnewui-flex-col-between-1">
+                        <div class="withu-flex-col-between-1">
                             <div>
-                                <div class="lgnewui-stats-header-row">
-                                    <div class="lgnewui-icon-circle-glass">
-                                        <i class="ph-bold ph-chat-teardrop-dots lgnewui-icon-sm-white"></i>
+                                <div class="withu-stats-header-row">
+                                    <div class="withu-icon-circle-glass">
+                                        <i class="ph-bold ph-chat-teardrop-dots withu-icon-sm-white"></i>
                                     </div>
-                                    <div class="lgnewui-stats-title" data-lg-tip="留言">留言</div>
+                                    <div class="withu-stats-title" data-withu-tip="留言">留言</div>
                                 </div>
                             </div>
-                            <div class="lgnewui-mt-1rem">
-                                <div class="lgnewui-font-num lgnewui-stats-num">
+                            <div class="withu-mt-1rem">
+                                <div class="withu-font-num withu-stats-num">
                                     184                                </div>
-                                <div class="lgnewui-stats-label lgnewui-stats-label--en">Kind Messages</div>
+                                <div class="withu-stats-label withu-stats-label--en">Kind Messages</div>
                             </div>
                         </div>
                     </div>
                     </div>
-                    <div class="lgnewui-col-2 lgnewui-col-md-1" data-aos="fade-up" data-aos-delay="300">                    <div class="lgnewui-widget lgnewui-widget--stats-vibrant-4">
-                        <div class="lgnewui-widget__bg-icon lgnewui-widget__bg-icon--tilted">
+                    <div class="withu-col-2 withu-col-md-1" data-aos="fade-up" data-aos-delay="300">                    <div class="withu-widget withu-widget--stats-vibrant-4">
+                        <div class="withu-widget__bg-icon withu-widget__bg-icon--tilted">
                             <i class="ph-fill ph-hourglass-medium"></i>
                         </div>
-                        <div class="lgnewui-flex-col-between-1">
+                        <div class="withu-flex-col-between-1">
                             <div>
-                                <div class="lgnewui-stats-header-row">
-                                    <div class="lgnewui-icon-circle-glass">
-                                        <i class="ph-bold ph-timer lgnewui-icon-sm-white"></i>
+                                <div class="withu-stats-header-row">
+                                    <div class="withu-icon-circle-glass">
+                                        <i class="ph-bold ph-timer withu-icon-sm-white"></i>
                                     </div>
-                                    <div class="lgnewui-stats-title" data-lg-tip="轨迹">轨迹</div>
+                                    <div class="withu-stats-title" data-withu-tip="轨迹">轨迹</div>
                                 </div>
                             </div>
-                            <div class="lgnewui-mt-1rem">
-                                <div class="lgnewui-font-num lgnewui-stats-num">
+                            <div class="withu-mt-1rem">
+                                <div class="withu-font-num withu-stats-num">
                                     4                                </div>
-                                <div class="lgnewui-stats-label lgnewui-stats-label--en">Steps of Us</div>
+                                <div class="withu-stats-label withu-stats-label--en">Steps of Us</div>
                             </div>
                         </div>
                     </div>
                     </div>
-                    <div class="lgnewui-col-2 lgnewui-col-md-1" data-aos="fade-up" data-aos-delay="300">                    <div class="lgnewui-widget lgnewui-widget--stats-vibrant-5">
-                        <div class="lgnewui-widget__bg-icon lgnewui-widget__bg-icon--tilted">
+                    <div class="withu-col-2 withu-col-md-1" data-aos="fade-up" data-aos-delay="300">                    <div class="withu-widget withu-widget--stats-vibrant-5">
+                        <div class="withu-widget__bg-icon withu-widget__bg-icon--tilted">
                             <i class="ph-fill ph-heart"></i>
                         </div>
-                        <div class="lgnewui-traffic-card">
-                            <div class="lgnewui-stats-header-row">
-                                <div class="lgnewui-icon-circle-glass">
-                                    <i class="ph-bold ph-chart-line-up lgnewui-icon-sm-white"></i>
+                        <div class="withu-traffic-card">
+                            <div class="withu-stats-header-row">
+                                <div class="withu-icon-circle-glass">
+                                    <i class="ph-bold ph-chart-line-up withu-icon-sm-white"></i>
                                 </div>
-                                <div class="lgnewui-stats-title" data-lg-tip="今日访问">今日访问</div>
+                                <div class="withu-stats-title" data-withu-tip="今日访问">今日访问</div>
                             </div>
-                            <div class="lgnewui-traffic-metrics">
-                                <div class="lgnewui-traffic-metric"
-                                    data-lg-tip="访问次数：121" data-lg-tip-force="true">
-                                    <div class="lgnewui-font-num lgnewui-traffic-value">
+                            <div class="withu-traffic-metrics">
+                                <div class="withu-traffic-metric"
+                                    data-withu-tip="访问次数：121" data-withu-tip-force="true">
+                                    <div class="withu-font-num withu-traffic-value">
                                         121                                    </div>
-                                    <div class="lgnewui-traffic-label">访问次数</div>
+                                    <div class="withu-traffic-label">访问次数</div>
                                 </div>
-                                <div class="lgnewui-traffic-divider" aria-hidden="true"></div>
-                                <div class="lgnewui-traffic-metric"
-                                    data-lg-tip="今日访客：23" data-lg-tip-force="true">
-                                    <div class="lgnewui-font-num lgnewui-traffic-value">
+                                <div class="withu-traffic-divider" aria-hidden="true"></div>
+                                <div class="withu-traffic-metric"
+                                    data-withu-tip="今日访客：23" data-withu-tip-force="true">
+                                    <div class="withu-font-num withu-traffic-value">
                                         23                                    </div>
-                                    <div class="lgnewui-traffic-label">今日访客</div>
+                                    <div class="withu-traffic-label">今日访客</div>
                                 </div>
                             </div>
                         </div>
                     </div>
                     </div>
-                    <div class="lgnewui-col-2 lgnewui-col-md-1" data-aos="fade-up" data-aos-delay="300">                    <div class="lgnewui-widget lgnewui-widget--stats-vibrant-7">
-                        <div class="lgnewui-widget__bg-icon lgnewui-widget__bg-icon--tilted">
+                    <div class="withu-col-2 withu-col-md-1" data-aos="fade-up" data-aos-delay="300">                    <div class="withu-widget withu-widget--stats-vibrant-7">
+                        <div class="withu-widget__bg-icon withu-widget__bg-icon--tilted">
                             <i class="ph-fill ph-eye"></i>
                         </div>
-                        <div class="lgnewui-traffic-card">
-                            <div class="lgnewui-stats-header-row">
-                                <div class="lgnewui-icon-circle-glass">
-                                    <i class="ph-bold ph-users-three lgnewui-icon-sm-white"></i>
+                        <div class="withu-traffic-card">
+                            <div class="withu-stats-header-row">
+                                <div class="withu-icon-circle-glass">
+                                    <i class="ph-bold ph-users-three withu-icon-sm-white"></i>
                                 </div>
-                                <div class="lgnewui-stats-title" data-lg-tip="累计访问">累计访问</div>
+                                <div class="withu-stats-title" data-withu-tip="累计访问">累计访问</div>
                             </div>
-                            <div class="lgnewui-traffic-metrics">
-                                <div class="lgnewui-traffic-metric"
-                                    data-lg-tip="总访客数：4,047" data-lg-tip-force="true">
-                                    <div class="lgnewui-font-num lgnewui-traffic-value">
+                            <div class="withu-traffic-metrics">
+                                <div class="withu-traffic-metric"
+                                    data-withu-tip="总访客数：4,047" data-withu-tip-force="true">
+                                    <div class="withu-font-num withu-traffic-value">
                                         4,047                                    </div>
-                                    <div class="lgnewui-traffic-label">总访客数</div>
+                                    <div class="withu-traffic-label">总访客数</div>
                                 </div>
-                                <div class="lgnewui-traffic-divider" aria-hidden="true"></div>
-                                <div class="lgnewui-traffic-metric"
-                                    data-lg-tip="总访问次：14,998" data-lg-tip-force="true">
-                                    <div class="lgnewui-font-num lgnewui-traffic-value">
+                                <div class="withu-traffic-divider" aria-hidden="true"></div>
+                                <div class="withu-traffic-metric"
+                                    data-withu-tip="总访问次：14,998" data-withu-tip-force="true">
+                                    <div class="withu-font-num withu-traffic-value">
                                         14,998                                    </div>
-                                    <div class="lgnewui-traffic-label">总访问次</div>
+                                    <div class="withu-traffic-label">总访问次</div>
                                 </div>
                             </div>
                         </div>
                     </div>
                     </div>
-                    <div class="lgnewui-col-2" data-aos="fade-up" data-aos-delay="300">                    <div class="lgnewui-widget lgnewui-widget--stats-vibrant-6">
-                        <div class="lgnewui-widget__bg-icon lgnewui-runtime-bg-icon">
+                    <div class="withu-col-2" data-aos="fade-up" data-aos-delay="300">                    <div class="withu-widget withu-widget--stats-vibrant-6">
+                        <div class="withu-widget__bg-icon withu-runtime-bg-icon">
                             <i class="ph-fill ph-planet"></i>
                         </div>
 
-                        <div class="lgnewui-flex-col-runtime">
+                        <div class="withu-flex-col-runtime">
                             <div>
-                                <div class="lgnewui-header-row-sm">
-                                    <div class="lgnewui-icon-circle-glass">
-                                        <i class="ph-bold ph-planet lgnewui-icon-sm-white"></i>
+                                <div class="withu-header-row-sm">
+                                    <div class="withu-icon-circle-glass">
+                                        <i class="ph-bold ph-planet withu-icon-sm-white"></i>
                                     </div>
-                                    <div class="lgnewui-stats-title" data-lg-tip="我们的小世界">我们的小世界</div>
+                                    <div class="withu-stats-title" data-withu-tip="我们的小世界">我们的小世界</div>
                                 </div>
                             </div>
 
-                            <div class="lgnewui-mt-auto">
-                                <div class="lgnewui-runtime-values">
-                                    <div class="lgnewui-font-num lgnewui-runtime-num">
+                            <div class="withu-mt-auto">
+                                <div class="withu-runtime-values">
+                                    <div class="withu-font-num withu-runtime-num">
                                         1,115                                    </div>
 
-                                    <div class="lgnewui-runtime-meta">
-                                        <div class="lgnewui-runtime-days">DAYS</div>
-                                        <span class="lgnewui-runtime-divider"></span>
-                                        <div class="lgnewui-runtime-text">已平稳运行</div>
+                                    <div class="withu-runtime-meta">
+                                        <div class="withu-runtime-days">DAYS</div>
+                                        <span class="withu-runtime-divider"></span>
+                                        <div class="withu-runtime-text">已平稳运行</div>
                                     </div>
                                 </div>
                             </div>
@@ -3773,49 +3773,49 @@
 
 
 
-                        <section id="events" class="lgnewui-section">
-                <div class="lgnewui-section-header lgnewui-section-header--rose" data-aos="fade-up" data-aos-delay="0">
-                    <div class="lgnewui-section-header__left">
-                        <h2 class="lgnewui-section-title lgnewui-section-title-color-rose lgnewui-flex-center">
-                            <div class="lgnewui-section-icon-box lgnewui-section-icon-box--rose">
-                                <i class="ph-fill ph-heart lgnewui-icon-md-white"></i>
+                        <section id="events" class="withu-section">
+                <div class="withu-section-header withu-section-header--rose" data-aos="fade-up" data-aos-delay="0">
+                    <div class="withu-section-header__left">
+                        <h2 class="withu-section-title withu-section-title-color-rose withu-flex-center">
+                            <div class="withu-section-icon-box withu-section-icon-box--rose">
+                                <i class="ph-fill ph-heart withu-icon-md-white"></i>
                             </div>
                             <span>清单</span>
-                            <span class="lgnewui-badge-new">NEW</span>
+                            <span class="withu-badge-new">NEW</span>
                         </h2>
                     </div>
-                    <div class="lgnewui-section-header__right">
-                        <a href="/lovelist.php" class="lgnewui-link-more">
+                    <div class="withu-section-header__right">
+                        <a href="/lovelist.php" class="withu-link-more">
                             <i class="ph-bold ph-arrow-right"></i>
                         </a>
                     </div>
                 </div>
-                <div class="lgnewui-events-grid">
+                <div class="withu-events-grid">
                     
                                                     <!-- 有图片样式 -->
                             <div data-aos="fade-up" data-aos-delay="0">                            <a href="lovelist.php#event-36"
-                                class="lgnewui-event-card lgnewui-event-card--has-img lgnewui-event-card--link">
-                                <img class="lgnewui-event-bg-img lazy" data-src="/Lovefolder/20260411053515_69d96d13af174939872800.webp"
+                                class="withu-event-card withu-event-card--has-img withu-event-card--link">
+                                <img class="withu-event-bg-img lazy" data-src="/Lovefolder/20260411053515_69d96d13af174939872800.webp"
                                     alt="一起去吃淘蛙">
-                                <div class="lgnewui-event-overlay"></div>
-                                <div class="lgnewui-event-content">
+                                <div class="withu-event-overlay"></div>
+                                <div class="withu-event-content">
                                     <div>
-                                        <div class="lgnewui-event-icon">
+                                        <div class="withu-event-icon">
                                             <i class="ph-fill ph-heart"></i>
                                         </div>
                                     </div>
-                                    <div class="lgnewui-event-content-mt">
+                                    <div class="withu-event-content-mt">
                                         <h3
-                                            class="lgnewui-event-title lgnewui-text-white lgnewui-text-xl lgnewui-font-bold lgnewui-mb-1">
+                                            class="withu-event-title withu-text-white withu-text-xl withu-font-bold withu-mb-1">
                                             一起去吃淘蛙                                        </h3>
                                         <div
-                                            class="lgnewui-event-note lgnewui-text-white lgnewui-opacity-80 lgnewui-event-note-sm">
+                                            class="withu-event-note withu-text-white withu-opacity-80 withu-event-note-sm">
                                             好像一直都在吃的路上 个个不重样                                        </div>
                                     </div>
-                                    <div class="lgnewui-event-footer-glass">
-                                        <span class="lgnewui-chip lgnewui-chip--glass"><i class="ph-fill ph-map-pin"></i>
+                                    <div class="withu-event-footer-glass">
+                                        <span class="withu-chip withu-chip--glass"><i class="ph-fill ph-map-pin"></i>
                                             淘蛙(长安万达店)</span>
-                                        <span class="lgnewui-chip lgnewui-chip--glass"><i class="ph-fill ph-calendar-blank"></i>
+                                        <span class="withu-chip withu-chip--glass"><i class="ph-fill ph-calendar-blank"></i>
                                             2026-04-11</span>
                                     </div>
                                 </div>
@@ -3825,28 +3825,28 @@
                     
                                                     <!-- 有图片样式 -->
                             <div data-aos="fade-up" data-aos-delay="50">                            <a href="lovelist.php#event-35"
-                                class="lgnewui-event-card lgnewui-event-card--has-img lgnewui-event-card--link">
-                                <img class="lgnewui-event-bg-img lazy" data-src="Lovefolder/20260409211730_69d7a6eaecf46322029252.webp"
+                                class="withu-event-card withu-event-card--has-img withu-event-card--link">
+                                <img class="withu-event-bg-img lazy" data-src="Lovefolder/20260409211730_69d7a6eaecf46322029252.webp"
                                     alt="测试修改问题 2.0.7">
-                                <div class="lgnewui-event-overlay"></div>
-                                <div class="lgnewui-event-content">
+                                <div class="withu-event-overlay"></div>
+                                <div class="withu-event-content">
                                     <div>
-                                        <div class="lgnewui-event-icon">
+                                        <div class="withu-event-icon">
                                             <i class="ph-fill ph-heart"></i>
                                         </div>
                                     </div>
-                                    <div class="lgnewui-event-content-mt">
+                                    <div class="withu-event-content-mt">
                                         <h3
-                                            class="lgnewui-event-title lgnewui-text-white lgnewui-text-xl lgnewui-font-bold lgnewui-mb-1">
+                                            class="withu-event-title withu-text-white withu-text-xl withu-font-bold withu-mb-1">
                                             测试修改问题 2.0.7                                        </h3>
                                         <div
-                                            class="lgnewui-event-note lgnewui-text-white lgnewui-opacity-80 lgnewui-event-note-sm">
+                                            class="withu-event-note withu-text-white withu-opacity-80 withu-event-note-sm">
                                             又一个美好的回忆                                        </div>
                                     </div>
-                                    <div class="lgnewui-event-footer-glass">
-                                        <span class="lgnewui-chip lgnewui-chip--glass"><i class="ph-fill ph-map-pin"></i>
+                                    <div class="withu-event-footer-glass">
+                                        <span class="withu-chip withu-chip--glass"><i class="ph-fill ph-map-pin"></i>
                                             高州市</span>
-                                        <span class="lgnewui-chip lgnewui-chip--glass"><i class="ph-fill ph-calendar-blank"></i>
+                                        <span class="withu-chip withu-chip--glass"><i class="ph-fill ph-calendar-blank"></i>
                                             2026-02-17</span>
                                     </div>
                                 </div>
@@ -3856,24 +3856,24 @@
                     
                                                     <!-- 未完成/锁定样式 -->
                             <div data-aos="fade-up" data-aos-delay="100">                            <a href="lovelist.php#event-34"
-                                class="lgnewui-event-card lgnewui-event-card--locked lgnewui-event-card--link">
-                                <div class="lgnewui-event-content">
-                                    <div class="lgnewui-flex-between-start">
-                                        <div class="lgnewui-event-icon">
+                                class="withu-event-card withu-event-card--locked withu-event-card--link">
+                                <div class="withu-event-content">
+                                    <div class="withu-flex-between-start">
+                                        <div class="withu-event-icon">
                                             <i class="ph-duotone ph-lock-key"></i>
                                         </div>
-                                        <i class="ph-fill ph-lock-key lgnewui-event-seal"></i>
+                                        <i class="ph-fill ph-lock-key withu-event-seal"></i>
                                     </div>
-                                    <div class="lgnewui-event-content-mt">
-                                        <h3 class="lgnewui-event-title lgnewui-text-xl lgnewui-font-bold lgnewui-mb-1">
+                                    <div class="withu-event-content-mt">
+                                        <h3 class="withu-event-title withu-text-xl withu-font-bold withu-mb-1">
                                             测试最新版本新增问题                                        </h3>
-                                        <div class="lgnewui-event-note lgnewui-event-note-color">
+                                        <div class="withu-event-note withu-event-note-color">
                                             测试一下                                        </div>
                                     </div>
-                                    <div class="lgnewui-event-footer-light">
-                                        <span class="lgnewui-chip lgnewui-chip--light"><i class="ph-bold ph-map-pin"></i>
+                                    <div class="withu-event-footer-light">
+                                        <span class="withu-chip withu-chip--light"><i class="ph-bold ph-map-pin"></i>
                                             未设置</span>
-                                        <span class="lgnewui-chip lgnewui-chip--light"><i class="ph-bold ph-calendar-blank"></i>
+                                        <span class="withu-chip withu-chip--light"><i class="ph-bold ph-calendar-blank"></i>
                                             待解锁</span>
                                     </div>
                                 </div>
@@ -3882,28 +3882,28 @@
                     
                                                     <!-- 有图片样式 -->
                             <div data-aos="fade-up" data-aos-delay="150">                            <a href="lovelist.php#event-33"
-                                class="lgnewui-event-card lgnewui-event-card--has-img lgnewui-event-card--link">
-                                <img class="lgnewui-event-bg-img lazy" data-src="/Lovefolder/20260411053340_69d96cb4ec19c441742336.webp"
+                                class="withu-event-card withu-event-card--has-img withu-event-card--link">
+                                <img class="withu-event-bg-img lazy" data-src="/Lovefolder/20260411053340_69d96cb4ec19c441742336.webp"
                                     alt="一起去吃海底捞">
-                                <div class="lgnewui-event-overlay"></div>
-                                <div class="lgnewui-event-content">
+                                <div class="withu-event-overlay"></div>
+                                <div class="withu-event-content">
                                     <div>
-                                        <div class="lgnewui-event-icon">
+                                        <div class="withu-event-icon">
                                             <i class="ph-fill ph-heart"></i>
                                         </div>
                                     </div>
-                                    <div class="lgnewui-event-content-mt">
+                                    <div class="withu-event-content-mt">
                                         <h3
-                                            class="lgnewui-event-title lgnewui-text-white lgnewui-text-xl lgnewui-font-bold lgnewui-mb-1">
+                                            class="withu-event-title withu-text-white withu-text-xl withu-font-bold withu-mb-1">
                                             一起去吃海底捞                                        </h3>
                                         <div
-                                            class="lgnewui-event-note lgnewui-text-white lgnewui-opacity-80 lgnewui-event-note-sm">
+                                            class="withu-event-note withu-text-white withu-opacity-80 withu-event-note-sm">
                                             太好了 你妹也在这里了                                        </div>
                                     </div>
-                                    <div class="lgnewui-event-footer-glass">
-                                        <span class="lgnewui-chip lgnewui-chip--glass"><i class="ph-fill ph-map-pin"></i>
+                                    <div class="withu-event-footer-glass">
+                                        <span class="withu-chip withu-chip--glass"><i class="ph-fill ph-map-pin"></i>
                                             海底捞火锅(长安万科店)</span>
-                                        <span class="lgnewui-chip lgnewui-chip--glass"><i class="ph-fill ph-calendar-blank"></i>
+                                        <span class="withu-chip withu-chip--glass"><i class="ph-fill ph-calendar-blank"></i>
                                             2026-04-11</span>
                                     </div>
                                 </div>
@@ -3914,31 +3914,31 @@
             </section>
             
             <!-- Love Day List -->
-                            <section id="loveday-list" class="lgnewui-section">
-                    <div class="lgnewui-section-header lgnewui-section-header--purple" data-aos="fade-up" data-aos-delay="0">
-                        <div class="lgnewui-section-header__left">
-                            <h2 class="lgnewui-section-title lgnewui-section-title-color-purple lgnewui-flex-center">
-                                <div class="lgnewui-section-icon-box lgnewui-section-icon-box--purple">
-                                    <i class="ph-fill ph-calendar lgnewui-icon-md-white"></i>
+                            <section id="loveday-list" class="withu-section">
+                    <div class="withu-section-header withu-section-header--purple" data-aos="fade-up" data-aos-delay="0">
+                        <div class="withu-section-header__left">
+                            <h2 class="withu-section-title withu-section-title-color-purple withu-flex-center">
+                                <div class="withu-section-icon-box withu-section-icon-box--purple">
+                                    <i class="ph-fill ph-calendar withu-icon-md-white"></i>
                                 </div>
                                 <span>Love Day</span>
-                                <span class="lgnewui-badge-new">FULL</span>
+                                <span class="withu-badge-new">FULL</span>
                             </h2>
                         </div>
-                        <div class="lgnewui-section-header__right">
+                        <div class="withu-section-header__right">
                             <!-- iOS Style Tab Switcher with Slider -->
-                            <div class="lgnewui-ios-tabs">
-                                <div class="lgnewui-ios-tabs-slider"></div>
-                                <button class="lgnewui-ios-tab active" data-filter="all"
+                            <div class="withu-ios-tabs">
+                                <div class="withu-ios-tabs-slider"></div>
+                                <button class="withu-ios-tab active" data-filter="all"
                                     onclick="filterLoveDays('all', this)">
                                     <i class="ph-fill ph-squares-four"></i>
                                     <span>全部</span>
                                 </button>
-                                <button class="lgnewui-ios-tab" data-filter="past" onclick="filterLoveDays('past', this)">
+                                <button class="withu-ios-tab" data-filter="past" onclick="filterLoveDays('past', this)">
                                     <i class="ph-fill ph-heart"></i>
                                     <span>纪念日</span>
                                 </button>
-                                <button class="lgnewui-ios-tab" data-filter="future"
+                                <button class="withu-ios-tab" data-filter="future"
                                     onclick="filterLoveDays('future', this)">
                                     <i class="ph-fill ph-hourglass"></i>
                                     <span>倒计时</span>
@@ -3947,21 +3947,21 @@
                         </div>
                     </div>
 
-                    <div class="lgnewui-grid lgnewui-loveday-grid">
-                                                    <div data-aos="fade-up" data-aos-delay="0">                            <div class="lgnewui-widget lgnewui-widget--loveday-vibrant lgnewui-widget--loveday-future">
+                    <div class="withu-grid withu-loveday-grid">
+                                                    <div data-aos="fade-up" data-aos-delay="0">                            <div class="withu-widget withu-widget--loveday-vibrant withu-widget--loveday-future">
 
-                                                                <div class="lgnewui-loveday-sup-label">
+                                                                <div class="withu-loveday-sup-label">
                                     还有                                </div>
                                 <!-- Decorative BG Icon -->
-                                                                <svg class="lgnewui-loveday-bg-icon" viewBox="0 0 1024 1024" version="1.1"
+                                                                <svg class="withu-loveday-bg-icon" viewBox="0 0 1024 1024" version="1.1"
                                     xmlns="http://www.w3.org/2000/svg">
                                     <path d="M792 120H232a40 40 0 0 0-40 40v56c0 88.4 71.6 160 160 160 5.2 0 10.4-.2 15.6-.6 4.4 11.8 4.4 24.8 0 36.6-5.2-.4-10.4-.6-15.6-.6-88.4 0-160 71.6-160 160v56a40 40 0 0 0 40 40h560a40 40 0 0 0 40-40v-56c0-88.4-71.6-160-160-160-5.2 0-10.4.2-15.6.6-4.4-11.8-4.4-24.8 0-36.6 5.2.4 10.4.6 15.6.6 88.4 0 160-71.6 160-160v-56a40 40 0 0 0-40-40z" fill="currentColor"></path>
                                 </svg>
 
-                                <div class="lgnewui-flex-between-center lgnewui-loveday-content">
-                                    <div class="lgnewui-flex-center-gap"
+                                <div class="withu-flex-between-center withu-loveday-content">
+                                    <div class="withu-flex-center-gap"
                                         tabindex="0">
-                                        <div class=" lgnewui-icon-box-glass-white">
+                                        <div class=" withu-icon-box-glass-white">
                                                                                             <svg viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg">
                                                     <path
                                                         d="M810 249.5c-38.6-38.6-83.5-68.8-133.5-90-51.8-21.9-106.8-33-163.5-33s-111.7 11.1-163.5 33c-50 21.2-94.9 51.4-133.5 90-38.6 38.6-68.8 83.5-90 133.5-21.9 51.8-33 106.8-33 163.5s11.1 111.7 33 163.5c21.2 50 51.4 94.9 90 133.5s83.5 68.8 133.5 90c51.8 21.9 106.8 33 163.5 33s111.7-11.1 163.5-33c50-21.2 94.9-51.4 133.5-90S878.8 760 900 710c21.9-51.8 33-106.8 33-163.5S921.9 434.8 900 383c-21.2-50-51.5-94.9-90-133.5z m-297 657c-198.5 0-360-161.5-360-360s161.5-360 360-360 360 161.5 360 360-161.5 360-360 360zM357 96.5c-42.3-49.6-141-53.3-208.1 4s-77.3 153.9-35 203.5L357 96.5zM877.2 100.5C810 43.2 711.3 47 669 96.5L912.2 304c42.3-49.6 32.1-146.2-35-203.5z">
@@ -3971,182 +3971,182 @@
                                                     </path>
                                                 </svg>
                                                                                     </div>
-                                        <div class="lgnewui-loveday-copy">
-                                            <div class="lgnewui-loveday-title" data-lg-tip="咕噜的一岁生日">
+                                        <div class="withu-loveday-copy">
+                                            <div class="withu-loveday-title" data-withu-tip="咕噜的一岁生日">
                                                 咕噜的一岁生日                                            </div>
-                                            <div class="lgnewui-loveday-date">
-                                                <span class="lgnewui-loveday-date-line">
+                                            <div class="withu-loveday-date">
+                                                <span class="withu-loveday-date-line">
                                                     目标日：                                                    2027-07-11                                                </span>
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="lgnewui-text-right">
-                                        <div class="lgnewui-loveday-count">
-                                                                                            339<span class="lgnewui-loveday-unit">天</span>
+                                    <div class="withu-text-right">
+                                        <div class="withu-loveday-count">
+                                                                                            339<span class="withu-loveday-unit">天</span>
                                                                                     </div>
-                                                                                    <div class="lgnewui-loveday-lunar-inline">
+                                                                                    <div class="withu-loveday-lunar-inline">
                                                 农历 六月初八                                            </div>
                                                                             </div>
                                 </div>
                             </div>
-                            </div>                                                    <div data-aos="fade-up" data-aos-delay="50">                            <div class="lgnewui-widget lgnewui-widget--loveday-vibrant lgnewui-widget--loveday-past">
+                            </div>                                                    <div data-aos="fade-up" data-aos-delay="50">                            <div class="withu-widget withu-widget--loveday-vibrant withu-widget--loveday-past">
 
-                                                                <div class="lgnewui-loveday-sup-label">
+                                                                <div class="withu-loveday-sup-label">
                                     已经                                </div>
                                 <!-- Decorative BG Icon -->
-                                                                <svg class="lgnewui-loveday-bg-icon" viewBox="0 0 1024 1024" version="1.1"
+                                                                <svg class="withu-loveday-bg-icon" viewBox="0 0 1024 1024" version="1.1"
                                     xmlns="http://www.w3.org/2000/svg">
                                     <path d="M923 283.6a260.04 260.04 0 0 0-56.9-82.6c-64.5-70-170.8-84-245.5-32.9L512 216.7l-108.6-48.6c-74.7-51.1-181-37.1-245.5 32.9-64.5 70-79.9 174.6-44.1 262.8 33.3 82.3 98.7 151.7 185.3 227.1L512 884.2l212.9-193.3c86.6-75.4 152-144.8 185.3-227.1 35.8-88.2 20.4-192.8-44.1-262.8z" fill="currentColor"></path>
                                 </svg>
 
-                                <div class="lgnewui-flex-between-center lgnewui-loveday-content">
-                                    <div class="lgnewui-flex-center-gap"
+                                <div class="withu-flex-between-center withu-loveday-content">
+                                    <div class="withu-flex-center-gap"
                                         tabindex="0">
-                                        <div class=" lgnewui-icon-box-glass-white">
+                                        <div class=" withu-icon-box-glass-white">
                                                                                             <svg viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg">
                                                     <path
                                                         d="M470.4 204.8l44.8 44.8 44.8-44.8c99.2-99.2 262.4-99.2 361.6 0 48 48 73.6 112 73.6 179.2 0 19.2-12.8 32-32 32s-32-12.8-32-32c0-51.2-19.2-99.2-57.6-134.4-73.6-73.6-195.2-73.6-272 0l-67.2 67.2c-12.8 12.8-32 12.8-44.8 0l-67.2-67.2c-73.6-73.6-195.2-73.6-272 0-73.6 73.6-73.6 195.2 0 272L512 883.2c12.8 12.8 12.8 32 0 44.8s-32 12.8-44.8 0L105.6 566.4c-99.2-99.2-99.2-262.4 0-361.6 102.4-102.4 262.4-102.4 364.8 0z m176 710.4L425.6 694.4c-57.6-57.6-57.6-147.2 0-204.8 57.6-57.6 147.2-57.6 204.8 0l57.6 57.6 57.6-57.6c57.6-57.6 147.2-57.6 204.8 0 57.6 57.6 57.6 147.2 0 204.8L729.6 915.2c-9.6 9.6-25.6 16-38.4 16-19.2 0-32-6.4-44.8-16z m256-265.6c32-32 32-83.2 0-112-32-32-83.2-32-112 0l-80 80c-12.8 12.8-32 12.8-44.8 0l-80-80c-32-32-83.2-32-112 0-32 32-32 83.2 0 112L688 864l214.4-214.4z"
                                                         fill="#ffffff"></path>
                                                 </svg>
                                                                                     </div>
-                                        <div class="lgnewui-loveday-copy">
-                                            <div class="lgnewui-loveday-title" data-lg-tip="拉拉扯扯一周年啦">
+                                        <div class="withu-loveday-copy">
+                                            <div class="withu-loveday-title" data-withu-tip="拉拉扯扯一周年啦">
                                                 拉拉扯扯一周年啦                                            </div>
-                                            <div class="lgnewui-loveday-date">
-                                                <span class="lgnewui-loveday-date-line">
+                                            <div class="withu-loveday-date">
+                                                <span class="withu-loveday-date-line">
                                                     起始日：                                                    2024-07-19                                                </span>
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="lgnewui-text-right">
-                                        <div class="lgnewui-loveday-count">
-                                                                                            748<span class="lgnewui-loveday-unit">天</span>
+                                    <div class="withu-text-right">
+                                        <div class="withu-loveday-count">
+                                                                                            748<span class="withu-loveday-unit">天</span>
                                                                                     </div>
                                                                             </div>
                                 </div>
                             </div>
-                            </div>                                                    <div data-aos="fade-up" data-aos-delay="100">                            <div class="lgnewui-widget lgnewui-widget--loveday-vibrant lgnewui-widget--loveday-past">
+                            </div>                                                    <div data-aos="fade-up" data-aos-delay="100">                            <div class="withu-widget withu-widget--loveday-vibrant withu-widget--loveday-past">
 
-                                                                <div class="lgnewui-loveday-sup-label">
+                                                                <div class="withu-loveday-sup-label">
                                     已经                                </div>
                                 <!-- Decorative BG Icon -->
-                                                                <svg class="lgnewui-loveday-bg-icon" viewBox="0 0 1024 1024" version="1.1"
+                                                                <svg class="withu-loveday-bg-icon" viewBox="0 0 1024 1024" version="1.1"
                                     xmlns="http://www.w3.org/2000/svg">
                                     <path d="M923 283.6a260.04 260.04 0 0 0-56.9-82.6c-64.5-70-170.8-84-245.5-32.9L512 216.7l-108.6-48.6c-74.7-51.1-181-37.1-245.5 32.9-64.5 70-79.9 174.6-44.1 262.8 33.3 82.3 98.7 151.7 185.3 227.1L512 884.2l212.9-193.3c86.6-75.4 152-144.8 185.3-227.1 35.8-88.2 20.4-192.8-44.1-262.8z" fill="currentColor"></path>
                                 </svg>
 
-                                <div class="lgnewui-flex-between-center lgnewui-loveday-content">
-                                    <div class="lgnewui-flex-center-gap"
+                                <div class="withu-flex-between-center withu-loveday-content">
+                                    <div class="withu-flex-center-gap"
                                         tabindex="0">
-                                        <div class=" lgnewui-icon-box-glass-white">
+                                        <div class=" withu-icon-box-glass-white">
                                                                                             <svg viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg">
                                                     <path
                                                         d="M470.4 204.8l44.8 44.8 44.8-44.8c99.2-99.2 262.4-99.2 361.6 0 48 48 73.6 112 73.6 179.2 0 19.2-12.8 32-32 32s-32-12.8-32-32c0-51.2-19.2-99.2-57.6-134.4-73.6-73.6-195.2-73.6-272 0l-67.2 67.2c-12.8 12.8-32 12.8-44.8 0l-67.2-67.2c-73.6-73.6-195.2-73.6-272 0-73.6 73.6-73.6 195.2 0 272L512 883.2c12.8 12.8 12.8 32 0 44.8s-32 12.8-44.8 0L105.6 566.4c-99.2-99.2-99.2-262.4 0-361.6 102.4-102.4 262.4-102.4 364.8 0z m176 710.4L425.6 694.4c-57.6-57.6-57.6-147.2 0-204.8 57.6-57.6 147.2-57.6 204.8 0l57.6 57.6 57.6-57.6c57.6-57.6 147.2-57.6 204.8 0 57.6 57.6 57.6 147.2 0 204.8L729.6 915.2c-9.6 9.6-25.6 16-38.4 16-19.2 0-32-6.4-44.8-16z m256-265.6c32-32 32-83.2 0-112-32-32-83.2-32-112 0l-80 80c-12.8 12.8-32 12.8-44.8 0l-80-80c-32-32-83.2-32-112 0-32 32-32 83.2 0 112L688 864l214.4-214.4z"
                                                         fill="#ffffff"></path>
                                                 </svg>
                                                                                     </div>
-                                        <div class="lgnewui-loveday-copy">
-                                            <div class="lgnewui-loveday-title" data-lg-tip="搬新家就是今天">
+                                        <div class="withu-loveday-copy">
+                                            <div class="withu-loveday-title" data-withu-tip="搬新家就是今天">
                                                 搬新家就是今天                                            </div>
-                                            <div class="lgnewui-loveday-date">
-                                                <span class="lgnewui-loveday-date-line">
+                                            <div class="withu-loveday-date">
+                                                <span class="withu-loveday-date-line">
                                                     起始日：                                                    2024-07-20                                                </span>
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="lgnewui-text-right">
-                                        <div class="lgnewui-loveday-count">
-                                                                                            747<span class="lgnewui-loveday-unit">天</span>
+                                    <div class="withu-text-right">
+                                        <div class="withu-loveday-count">
+                                                                                            747<span class="withu-loveday-unit">天</span>
                                                                                     </div>
                                                                             </div>
                                 </div>
                             </div>
-                            </div>                                                    <div data-aos="fade-up" data-aos-delay="150">                            <div class="lgnewui-widget lgnewui-widget--loveday-vibrant lgnewui-widget--loveday-past">
+                            </div>                                                    <div data-aos="fade-up" data-aos-delay="150">                            <div class="withu-widget withu-widget--loveday-vibrant withu-widget--loveday-past">
 
-                                                                <div class="lgnewui-loveday-sup-label">
+                                                                <div class="withu-loveday-sup-label">
                                     已经                                </div>
                                 <!-- Decorative BG Icon -->
-                                                                <svg class="lgnewui-loveday-bg-icon" viewBox="0 0 1024 1024" version="1.1"
+                                                                <svg class="withu-loveday-bg-icon" viewBox="0 0 1024 1024" version="1.1"
                                     xmlns="http://www.w3.org/2000/svg">
                                     <path d="M923 283.6a260.04 260.04 0 0 0-56.9-82.6c-64.5-70-170.8-84-245.5-32.9L512 216.7l-108.6-48.6c-74.7-51.1-181-37.1-245.5 32.9-64.5 70-79.9 174.6-44.1 262.8 33.3 82.3 98.7 151.7 185.3 227.1L512 884.2l212.9-193.3c86.6-75.4 152-144.8 185.3-227.1 35.8-88.2 20.4-192.8-44.1-262.8z" fill="currentColor"></path>
                                 </svg>
 
-                                <div class="lgnewui-flex-between-center lgnewui-loveday-content">
-                                    <div class="lgnewui-flex-center-gap"
+                                <div class="withu-flex-between-center withu-loveday-content">
+                                    <div class="withu-flex-center-gap"
                                         tabindex="0">
-                                        <div class=" lgnewui-icon-box-glass-white">
+                                        <div class=" withu-icon-box-glass-white">
                                                                                             <svg viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg">
                                                     <path
                                                         d="M470.4 204.8l44.8 44.8 44.8-44.8c99.2-99.2 262.4-99.2 361.6 0 48 48 73.6 112 73.6 179.2 0 19.2-12.8 32-32 32s-32-12.8-32-32c0-51.2-19.2-99.2-57.6-134.4-73.6-73.6-195.2-73.6-272 0l-67.2 67.2c-12.8 12.8-32 12.8-44.8 0l-67.2-67.2c-73.6-73.6-195.2-73.6-272 0-73.6 73.6-73.6 195.2 0 272L512 883.2c12.8 12.8 12.8 32 0 44.8s-32 12.8-44.8 0L105.6 566.4c-99.2-99.2-99.2-262.4 0-361.6 102.4-102.4 262.4-102.4 364.8 0z m176 710.4L425.6 694.4c-57.6-57.6-57.6-147.2 0-204.8 57.6-57.6 147.2-57.6 204.8 0l57.6 57.6 57.6-57.6c57.6-57.6 147.2-57.6 204.8 0 57.6 57.6 57.6 147.2 0 204.8L729.6 915.2c-9.6 9.6-25.6 16-38.4 16-19.2 0-32-6.4-44.8-16z m256-265.6c32-32 32-83.2 0-112-32-32-83.2-32-112 0l-80 80c-12.8 12.8-32 12.8-44.8 0l-80-80c-32-32-83.2-32-112 0-32 32-32 83.2 0 112L688 864l214.4-214.4z"
                                                         fill="#ffffff"></path>
                                                 </svg>
                                                                                     </div>
-                                        <div class="lgnewui-loveday-copy">
-                                            <div class="lgnewui-loveday-title" data-lg-tip="不异地已经">
+                                        <div class="withu-loveday-copy">
+                                            <div class="withu-loveday-title" data-withu-tip="不异地已经">
                                                 不异地已经                                            </div>
-                                            <div class="lgnewui-loveday-date">
-                                                <span class="lgnewui-loveday-date-line">
+                                            <div class="withu-loveday-date">
+                                                <span class="withu-loveday-date-line">
                                                     起始日：                                                    2024-07-19                                                </span>
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="lgnewui-text-right">
-                                        <div class="lgnewui-loveday-count">
-                                                                                            748<span class="lgnewui-loveday-unit">天</span>
+                                    <div class="withu-text-right">
+                                        <div class="withu-loveday-count">
+                                                                                            748<span class="withu-loveday-unit">天</span>
                                                                                     </div>
                                                                             </div>
                                 </div>
                             </div>
-                            </div>                                                    <div data-aos="fade-up" data-aos-delay="200">                            <div class="lgnewui-widget lgnewui-widget--loveday-vibrant lgnewui-widget--loveday-past">
+                            </div>                                                    <div data-aos="fade-up" data-aos-delay="200">                            <div class="withu-widget withu-widget--loveday-vibrant withu-widget--loveday-past">
 
-                                                                <div class="lgnewui-loveday-sup-label">
+                                                                <div class="withu-loveday-sup-label">
                                     已经                                </div>
                                 <!-- Decorative BG Icon -->
-                                                                <svg class="lgnewui-loveday-bg-icon" viewBox="0 0 1024 1024" version="1.1"
+                                                                <svg class="withu-loveday-bg-icon" viewBox="0 0 1024 1024" version="1.1"
                                     xmlns="http://www.w3.org/2000/svg">
                                     <path d="M923 283.6a260.04 260.04 0 0 0-56.9-82.6c-64.5-70-170.8-84-245.5-32.9L512 216.7l-108.6-48.6c-74.7-51.1-181-37.1-245.5 32.9-64.5 70-79.9 174.6-44.1 262.8 33.3 82.3 98.7 151.7 185.3 227.1L512 884.2l212.9-193.3c86.6-75.4 152-144.8 185.3-227.1 35.8-88.2 20.4-192.8-44.1-262.8z" fill="currentColor"></path>
                                 </svg>
 
-                                <div class="lgnewui-flex-between-center lgnewui-loveday-content">
-                                    <div class="lgnewui-flex-center-gap"
+                                <div class="withu-flex-between-center withu-loveday-content">
+                                    <div class="withu-flex-center-gap"
                                         tabindex="0">
-                                        <div class=" lgnewui-icon-box-glass-white">
+                                        <div class=" withu-icon-box-glass-white">
                                                                                             <svg viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg">
                                                     <path
                                                         d="M470.4 204.8l44.8 44.8 44.8-44.8c99.2-99.2 262.4-99.2 361.6 0 48 48 73.6 112 73.6 179.2 0 19.2-12.8 32-32 32s-32-12.8-32-32c0-51.2-19.2-99.2-57.6-134.4-73.6-73.6-195.2-73.6-272 0l-67.2 67.2c-12.8 12.8-32 12.8-44.8 0l-67.2-67.2c-73.6-73.6-195.2-73.6-272 0-73.6 73.6-73.6 195.2 0 272L512 883.2c12.8 12.8 12.8 32 0 44.8s-32 12.8-44.8 0L105.6 566.4c-99.2-99.2-99.2-262.4 0-361.6 102.4-102.4 262.4-102.4 364.8 0z m176 710.4L425.6 694.4c-57.6-57.6-57.6-147.2 0-204.8 57.6-57.6 147.2-57.6 204.8 0l57.6 57.6 57.6-57.6c57.6-57.6 147.2-57.6 204.8 0 57.6 57.6 57.6 147.2 0 204.8L729.6 915.2c-9.6 9.6-25.6 16-38.4 16-19.2 0-32-6.4-44.8-16z m256-265.6c32-32 32-83.2 0-112-32-32-83.2-32-112 0l-80 80c-12.8 12.8-32 12.8-44.8 0l-80-80c-32-32-83.2-32-112 0-32 32-32 83.2 0 112L688 864l214.4-214.4z"
                                                         fill="#ffffff"></path>
                                                 </svg>
                                                                                     </div>
-                                        <div class="lgnewui-loveday-copy">
-                                            <div class="lgnewui-loveday-title" data-lg-tip="测试纪念日10年前">
+                                        <div class="withu-loveday-copy">
+                                            <div class="withu-loveday-title" data-withu-tip="测试纪念日10年前">
                                                 测试纪念日10年前                                            </div>
-                                            <div class="lgnewui-loveday-date">
-                                                <span class="lgnewui-loveday-date-line">
+                                            <div class="withu-loveday-date">
+                                                <span class="withu-loveday-date-line">
                                                     起始日：                                                    2014-05-15                                                </span>
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="lgnewui-text-right">
-                                        <div class="lgnewui-loveday-count">
-                                                                                            4466<span class="lgnewui-loveday-unit">天</span>
+                                    <div class="withu-text-right">
+                                        <div class="withu-loveday-count">
+                                                                                            4466<span class="withu-loveday-unit">天</span>
                                                                                     </div>
                                                                             </div>
                                 </div>
                             </div>
-                            </div>                                                    <div data-aos="fade-up" data-aos-delay="250">                            <div class="lgnewui-widget lgnewui-widget--loveday-vibrant lgnewui-widget--loveday-future">
+                            </div>                                                    <div data-aos="fade-up" data-aos-delay="250">                            <div class="withu-widget withu-widget--loveday-vibrant withu-widget--loveday-future">
 
-                                                                <div class="lgnewui-loveday-sup-label">
+                                                                <div class="withu-loveday-sup-label">
                                     还有                                </div>
                                 <!-- Decorative BG Icon -->
-                                                                <svg class="lgnewui-loveday-bg-icon" viewBox="0 0 1024 1024" version="1.1"
+                                                                <svg class="withu-loveday-bg-icon" viewBox="0 0 1024 1024" version="1.1"
                                     xmlns="http://www.w3.org/2000/svg">
                                     <path d="M792 120H232a40 40 0 0 0-40 40v56c0 88.4 71.6 160 160 160 5.2 0 10.4-.2 15.6-.6 4.4 11.8 4.4 24.8 0 36.6-5.2-.4-10.4-.6-15.6-.6-88.4 0-160 71.6-160 160v56a40 40 0 0 0 40 40h560a40 40 0 0 0 40-40v-56c0-88.4-71.6-160-160-160-5.2 0-10.4.2-15.6.6-4.4-11.8-4.4-24.8 0-36.6 5.2.4 10.4.6 15.6.6 88.4 0 160-71.6 160-160v-56a40 40 0 0 0-40-40z" fill="currentColor"></path>
                                 </svg>
 
-                                <div class="lgnewui-flex-between-center lgnewui-loveday-content">
-                                    <div class="lgnewui-flex-center-gap"
+                                <div class="withu-flex-between-center withu-loveday-content">
+                                    <div class="withu-flex-center-gap"
                                         tabindex="0">
-                                        <div class=" lgnewui-icon-box-glass-white">
+                                        <div class=" withu-icon-box-glass-white">
                                                                                             <svg viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg">
                                                     <path
                                                         d="M810 249.5c-38.6-38.6-83.5-68.8-133.5-90-51.8-21.9-106.8-33-163.5-33s-111.7 11.1-163.5 33c-50 21.2-94.9 51.4-133.5 90-38.6 38.6-68.8 83.5-90 133.5-21.9 51.8-33 106.8-33 163.5s11.1 111.7 33 163.5c21.2 50 51.4 94.9 90 133.5s83.5 68.8 133.5 90c51.8 21.9 106.8 33 163.5 33s111.7-11.1 163.5-33c50-21.2 94.9-51.4 133.5-90S878.8 760 900 710c21.9-51.8 33-106.8 33-163.5S921.9 434.8 900 383c-21.2-50-51.5-94.9-90-133.5z m-297 657c-198.5 0-360-161.5-360-360s161.5-360 360-360 360 161.5 360 360-161.5 360-360 360zM357 96.5c-42.3-49.6-141-53.3-208.1 4s-77.3 153.9-35 203.5L357 96.5zM877.2 100.5C810 43.2 711.3 47 669 96.5L912.2 304c42.3-49.6 32.1-146.2-35-203.5z">
@@ -4156,72 +4156,72 @@
                                                     </path>
                                                 </svg>
                                                                                     </div>
-                                        <div class="lgnewui-loveday-copy">
-                                            <div class="lgnewui-loveday-title" data-lg-tip="测试自动判断倒计时自动增加一年">
+                                        <div class="withu-loveday-copy">
+                                            <div class="withu-loveday-title" data-withu-tip="测试自动判断倒计时自动增加一年">
                                                 测试自动判断倒计时自动增加一年                                            </div>
-                                            <div class="lgnewui-loveday-date">
-                                                <span class="lgnewui-loveday-date-line">
+                                            <div class="withu-loveday-date">
+                                                <span class="withu-loveday-date-line">
                                                     目标日：                                                    2027-03-08                                                </span>
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="lgnewui-text-right">
-                                        <div class="lgnewui-loveday-count">
-                                                                                            214<span class="lgnewui-loveday-unit">天</span>
+                                    <div class="withu-text-right">
+                                        <div class="withu-loveday-count">
+                                                                                            214<span class="withu-loveday-unit">天</span>
                                                                                     </div>
                                                                             </div>
                                 </div>
                             </div>
-                            </div>                                                    <div data-aos="fade-up" data-aos-delay="300">                            <div class="lgnewui-widget lgnewui-widget--loveday-vibrant lgnewui-widget--loveday-past">
+                            </div>                                                    <div data-aos="fade-up" data-aos-delay="300">                            <div class="withu-widget withu-widget--loveday-vibrant withu-widget--loveday-past">
 
-                                                                <div class="lgnewui-loveday-sup-label">
+                                                                <div class="withu-loveday-sup-label">
                                     已经                                </div>
                                 <!-- Decorative BG Icon -->
-                                                                <svg class="lgnewui-loveday-bg-icon" viewBox="0 0 1024 1024" version="1.1"
+                                                                <svg class="withu-loveday-bg-icon" viewBox="0 0 1024 1024" version="1.1"
                                     xmlns="http://www.w3.org/2000/svg">
                                     <path d="M923 283.6a260.04 260.04 0 0 0-56.9-82.6c-64.5-70-170.8-84-245.5-32.9L512 216.7l-108.6-48.6c-74.7-51.1-181-37.1-245.5 32.9-64.5 70-79.9 174.6-44.1 262.8 33.3 82.3 98.7 151.7 185.3 227.1L512 884.2l212.9-193.3c86.6-75.4 152-144.8 185.3-227.1 35.8-88.2 20.4-192.8-44.1-262.8z" fill="currentColor"></path>
                                 </svg>
 
-                                <div class="lgnewui-flex-between-center lgnewui-loveday-content">
-                                    <div class="lgnewui-flex-center-gap"
+                                <div class="withu-flex-between-center withu-loveday-content">
+                                    <div class="withu-flex-center-gap"
                                         tabindex="0">
-                                        <div class=" lgnewui-icon-box-glass-white">
+                                        <div class=" withu-icon-box-glass-white">
                                                                                             <svg viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg">
                                                     <path
                                                         d="M470.4 204.8l44.8 44.8 44.8-44.8c99.2-99.2 262.4-99.2 361.6 0 48 48 73.6 112 73.6 179.2 0 19.2-12.8 32-32 32s-32-12.8-32-32c0-51.2-19.2-99.2-57.6-134.4-73.6-73.6-195.2-73.6-272 0l-67.2 67.2c-12.8 12.8-32 12.8-44.8 0l-67.2-67.2c-73.6-73.6-195.2-73.6-272 0-73.6 73.6-73.6 195.2 0 272L512 883.2c12.8 12.8 12.8 32 0 44.8s-32 12.8-44.8 0L105.6 566.4c-99.2-99.2-99.2-262.4 0-361.6 102.4-102.4 262.4-102.4 364.8 0z m176 710.4L425.6 694.4c-57.6-57.6-57.6-147.2 0-204.8 57.6-57.6 147.2-57.6 204.8 0l57.6 57.6 57.6-57.6c57.6-57.6 147.2-57.6 204.8 0 57.6 57.6 57.6 147.2 0 204.8L729.6 915.2c-9.6 9.6-25.6 16-38.4 16-19.2 0-32-6.4-44.8-16z m256-265.6c32-32 32-83.2 0-112-32-32-83.2-32-112 0l-80 80c-12.8 12.8-32 12.8-44.8 0l-80-80c-32-32-83.2-32-112 0-32 32-32 83.2 0 112L688 864l214.4-214.4z"
                                                         fill="#ffffff"></path>
                                                 </svg>
                                                                                     </div>
-                                        <div class="lgnewui-loveday-copy">
-                                            <div class="lgnewui-loveday-title" data-lg-tip="我们在一起咯">
+                                        <div class="withu-loveday-copy">
+                                            <div class="withu-loveday-title" data-withu-tip="我们在一起咯">
                                                 我们在一起咯                                            </div>
-                                            <div class="lgnewui-loveday-date">
-                                                <span class="lgnewui-loveday-date-line">
+                                            <div class="withu-loveday-date">
+                                                <span class="withu-loveday-date-line">
                                                     起始日：                                                    2023-07-19                                                </span>
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="lgnewui-text-right">
-                                        <div class="lgnewui-loveday-count">
-                                                                                            1114<span class="lgnewui-loveday-unit">天</span>
+                                    <div class="withu-text-right">
+                                        <div class="withu-loveday-count">
+                                                                                            1114<span class="withu-loveday-unit">天</span>
                                                                                     </div>
                                                                             </div>
                                 </div>
                             </div>
-                            </div>                                                    <div data-aos="fade-up" data-aos-delay="300">                            <div class="lgnewui-widget lgnewui-widget--loveday-vibrant lgnewui-widget--loveday-future">
+                            </div>                                                    <div data-aos="fade-up" data-aos-delay="300">                            <div class="withu-widget withu-widget--loveday-vibrant withu-widget--loveday-future">
 
-                                                                <div class="lgnewui-loveday-sup-label">
+                                                                <div class="withu-loveday-sup-label">
                                     还有                                </div>
                                 <!-- Decorative BG Icon -->
-                                                                <svg class="lgnewui-loveday-bg-icon" viewBox="0 0 1024 1024" version="1.1"
+                                                                <svg class="withu-loveday-bg-icon" viewBox="0 0 1024 1024" version="1.1"
                                     xmlns="http://www.w3.org/2000/svg">
                                     <path d="M792 120H232a40 40 0 0 0-40 40v56c0 88.4 71.6 160 160 160 5.2 0 10.4-.2 15.6-.6 4.4 11.8 4.4 24.8 0 36.6-5.2-.4-10.4-.6-15.6-.6-88.4 0-160 71.6-160 160v56a40 40 0 0 0 40 40h560a40 40 0 0 0 40-40v-56c0-88.4-71.6-160-160-160-5.2 0-10.4.2-15.6.6-4.4-11.8-4.4-24.8 0-36.6 5.2.4 10.4.6 15.6.6 88.4 0 160-71.6 160-160v-56a40 40 0 0 0-40-40z" fill="currentColor"></path>
                                 </svg>
 
-                                <div class="lgnewui-flex-between-center lgnewui-loveday-content">
-                                    <div class="lgnewui-flex-center-gap"
+                                <div class="withu-flex-between-center withu-loveday-content">
+                                    <div class="withu-flex-center-gap"
                                         tabindex="0">
-                                        <div class=" lgnewui-icon-box-glass-white">
+                                        <div class=" withu-icon-box-glass-white">
                                                                                             <svg viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg">
                                                     <path
                                                         d="M810 249.5c-38.6-38.6-83.5-68.8-133.5-90-51.8-21.9-106.8-33-163.5-33s-111.7 11.1-163.5 33c-50 21.2-94.9 51.4-133.5 90-38.6 38.6-68.8 83.5-90 133.5-21.9 51.8-33 106.8-33 163.5s11.1 111.7 33 163.5c21.2 50 51.4 94.9 90 133.5s83.5 68.8 133.5 90c51.8 21.9 106.8 33 163.5 33s111.7-11.1 163.5-33c50-21.2 94.9-51.4 133.5-90S878.8 760 900 710c21.9-51.8 33-106.8 33-163.5S921.9 434.8 900 383c-21.2-50-51.5-94.9-90-133.5z m-297 657c-198.5 0-360-161.5-360-360s161.5-360 360-360 360 161.5 360 360-161.5 360-360 360zM357 96.5c-42.3-49.6-141-53.3-208.1 4s-77.3 153.9-35 203.5L357 96.5zM877.2 100.5C810 43.2 711.3 47 669 96.5L912.2 304c42.3-49.6 32.1-146.2-35-203.5z">
@@ -4231,162 +4231,162 @@
                                                     </path>
                                                 </svg>
                                                                                     </div>
-                                        <div class="lgnewui-loveday-copy">
-                                            <div class="lgnewui-loveday-title" data-lg-tip="距离2028年春节">
+                                        <div class="withu-loveday-copy">
+                                            <div class="withu-loveday-title" data-withu-tip="距离2028年春节">
                                                 距离2028年春节                                            </div>
-                                            <div class="lgnewui-loveday-date">
-                                                <span class="lgnewui-loveday-date-line">
+                                            <div class="withu-loveday-date">
+                                                <span class="withu-loveday-date-line">
                                                     目标日：                                                    2028-01-26                                                </span>
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="lgnewui-text-right">
-                                        <div class="lgnewui-loveday-count">
-                                                                                            538<span class="lgnewui-loveday-unit">天</span>
+                                    <div class="withu-text-right">
+                                        <div class="withu-loveday-count">
+                                                                                            538<span class="withu-loveday-unit">天</span>
                                                                                     </div>
                                                                             </div>
                                 </div>
                             </div>
-                            </div>                                                    <div data-aos="fade-up" data-aos-delay="300">                            <div class="lgnewui-widget lgnewui-widget--loveday-vibrant lgnewui-widget--loveday-past">
+                            </div>                                                    <div data-aos="fade-up" data-aos-delay="300">                            <div class="withu-widget withu-widget--loveday-vibrant withu-widget--loveday-past">
 
-                                                                <div class="lgnewui-loveday-sup-label">
+                                                                <div class="withu-loveday-sup-label">
                                     已经                                </div>
                                 <!-- Decorative BG Icon -->
-                                                                <svg class="lgnewui-loveday-bg-icon" viewBox="0 0 1024 1024" version="1.1"
+                                                                <svg class="withu-loveday-bg-icon" viewBox="0 0 1024 1024" version="1.1"
                                     xmlns="http://www.w3.org/2000/svg">
                                     <path d="M923 283.6a260.04 260.04 0 0 0-56.9-82.6c-64.5-70-170.8-84-245.5-32.9L512 216.7l-108.6-48.6c-74.7-51.1-181-37.1-245.5 32.9-64.5 70-79.9 174.6-44.1 262.8 33.3 82.3 98.7 151.7 185.3 227.1L512 884.2l212.9-193.3c86.6-75.4 152-144.8 185.3-227.1 35.8-88.2 20.4-192.8-44.1-262.8z" fill="currentColor"></path>
                                 </svg>
 
-                                <div class="lgnewui-flex-between-center lgnewui-loveday-content">
-                                    <div class="lgnewui-flex-center-gap"
+                                <div class="withu-flex-between-center withu-loveday-content">
+                                    <div class="withu-flex-center-gap"
                                         tabindex="0">
-                                        <div class=" lgnewui-icon-box-glass-white">
+                                        <div class=" withu-icon-box-glass-white">
                                                                                             <svg viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg">
                                                     <path
                                                         d="M470.4 204.8l44.8 44.8 44.8-44.8c99.2-99.2 262.4-99.2 361.6 0 48 48 73.6 112 73.6 179.2 0 19.2-12.8 32-32 32s-32-12.8-32-32c0-51.2-19.2-99.2-57.6-134.4-73.6-73.6-195.2-73.6-272 0l-67.2 67.2c-12.8 12.8-32 12.8-44.8 0l-67.2-67.2c-73.6-73.6-195.2-73.6-272 0-73.6 73.6-73.6 195.2 0 272L512 883.2c12.8 12.8 12.8 32 0 44.8s-32 12.8-44.8 0L105.6 566.4c-99.2-99.2-99.2-262.4 0-361.6 102.4-102.4 262.4-102.4 364.8 0z m176 710.4L425.6 694.4c-57.6-57.6-57.6-147.2 0-204.8 57.6-57.6 147.2-57.6 204.8 0l57.6 57.6 57.6-57.6c57.6-57.6 147.2-57.6 204.8 0 57.6 57.6 57.6 147.2 0 204.8L729.6 915.2c-9.6 9.6-25.6 16-38.4 16-19.2 0-32-6.4-44.8-16z m256-265.6c32-32 32-83.2 0-112-32-32-83.2-32-112 0l-80 80c-12.8 12.8-32 12.8-44.8 0l-80-80c-32-32-83.2-32-112 0-32 32-32 83.2 0 112L688 864l214.4-214.4z"
                                                         fill="#ffffff"></path>
                                                 </svg>
                                                                                     </div>
-                                        <div class="lgnewui-loveday-copy">
-                                            <div class="lgnewui-loveday-title" data-lg-tip="Our first 100days">
+                                        <div class="withu-loveday-copy">
+                                            <div class="withu-loveday-title" data-withu-tip="Our first 100days">
                                                 Our first 100days                                            </div>
-                                            <div class="lgnewui-loveday-date">
-                                                <span class="lgnewui-loveday-date-line">
+                                            <div class="withu-loveday-date">
+                                                <span class="withu-loveday-date-line">
                                                     起始日：                                                    2023-10-27                                                </span>
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="lgnewui-text-right">
-                                        <div class="lgnewui-loveday-count">
-                                                                                            1014<span class="lgnewui-loveday-unit">天</span>
+                                    <div class="withu-text-right">
+                                        <div class="withu-loveday-count">
+                                                                                            1014<span class="withu-loveday-unit">天</span>
                                                                                     </div>
                                                                             </div>
                                 </div>
                             </div>
-                            </div>                                                    <div data-aos="fade-up" data-aos-delay="300">                            <div class="lgnewui-widget lgnewui-widget--loveday-vibrant lgnewui-widget--loveday-past">
+                            </div>                                                    <div data-aos="fade-up" data-aos-delay="300">                            <div class="withu-widget withu-widget--loveday-vibrant withu-widget--loveday-past">
 
-                                                                <div class="lgnewui-loveday-sup-label">
+                                                                <div class="withu-loveday-sup-label">
                                     已经                                </div>
                                 <!-- Decorative BG Icon -->
-                                                                <svg class="lgnewui-loveday-bg-icon" viewBox="0 0 1024 1024" version="1.1"
+                                                                <svg class="withu-loveday-bg-icon" viewBox="0 0 1024 1024" version="1.1"
                                     xmlns="http://www.w3.org/2000/svg">
                                     <path d="M923 283.6a260.04 260.04 0 0 0-56.9-82.6c-64.5-70-170.8-84-245.5-32.9L512 216.7l-108.6-48.6c-74.7-51.1-181-37.1-245.5 32.9-64.5 70-79.9 174.6-44.1 262.8 33.3 82.3 98.7 151.7 185.3 227.1L512 884.2l212.9-193.3c86.6-75.4 152-144.8 185.3-227.1 35.8-88.2 20.4-192.8-44.1-262.8z" fill="currentColor"></path>
                                 </svg>
 
-                                <div class="lgnewui-flex-between-center lgnewui-loveday-content">
-                                    <div class="lgnewui-flex-center-gap"
+                                <div class="withu-flex-between-center withu-loveday-content">
+                                    <div class="withu-flex-center-gap"
                                         tabindex="0">
-                                        <div class=" lgnewui-icon-box-glass-white">
+                                        <div class=" withu-icon-box-glass-white">
                                                                                             <svg viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg">
                                                     <path
                                                         d="M470.4 204.8l44.8 44.8 44.8-44.8c99.2-99.2 262.4-99.2 361.6 0 48 48 73.6 112 73.6 179.2 0 19.2-12.8 32-32 32s-32-12.8-32-32c0-51.2-19.2-99.2-57.6-134.4-73.6-73.6-195.2-73.6-272 0l-67.2 67.2c-12.8 12.8-32 12.8-44.8 0l-67.2-67.2c-73.6-73.6-195.2-73.6-272 0-73.6 73.6-73.6 195.2 0 272L512 883.2c12.8 12.8 12.8 32 0 44.8s-32 12.8-44.8 0L105.6 566.4c-99.2-99.2-99.2-262.4 0-361.6 102.4-102.4 262.4-102.4 364.8 0z m176 710.4L425.6 694.4c-57.6-57.6-57.6-147.2 0-204.8 57.6-57.6 147.2-57.6 204.8 0l57.6 57.6 57.6-57.6c57.6-57.6 147.2-57.6 204.8 0 57.6 57.6 57.6 147.2 0 204.8L729.6 915.2c-9.6 9.6-25.6 16-38.4 16-19.2 0-32-6.4-44.8-16z m256-265.6c32-32 32-83.2 0-112-32-32-83.2-32-112 0l-80 80c-12.8 12.8-32 12.8-44.8 0l-80-80c-32-32-83.2-32-112 0-32 32-32 83.2 0 112L688 864l214.4-214.4z"
                                                         fill="#ffffff"></path>
                                                 </svg>
                                                                                     </div>
-                                        <div class="lgnewui-loveday-copy">
-                                            <div class="lgnewui-loveday-title" data-lg-tip="第一次约会">
+                                        <div class="withu-loveday-copy">
+                                            <div class="withu-loveday-title" data-withu-tip="第一次约会">
                                                 第一次约会                                            </div>
-                                            <div class="lgnewui-loveday-date">
-                                                <span class="lgnewui-loveday-date-line">
+                                            <div class="withu-loveday-date">
+                                                <span class="withu-loveday-date-line">
                                                     起始日：                                                    2023-08-29                                                </span>
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="lgnewui-text-right">
-                                        <div class="lgnewui-loveday-count">
-                                                                                            1073<span class="lgnewui-loveday-unit">天</span>
+                                    <div class="withu-text-right">
+                                        <div class="withu-loveday-count">
+                                                                                            1073<span class="withu-loveday-unit">天</span>
                                                                                     </div>
                                                                             </div>
                                 </div>
                             </div>
-                            </div>                                                    <div data-aos="fade-up" data-aos-delay="300">                            <div class="lgnewui-widget lgnewui-widget--loveday-vibrant lgnewui-widget--loveday-past">
+                            </div>                                                    <div data-aos="fade-up" data-aos-delay="300">                            <div class="withu-widget withu-widget--loveday-vibrant withu-widget--loveday-past">
 
-                                                                <div class="lgnewui-loveday-sup-label">
+                                                                <div class="withu-loveday-sup-label">
                                     已经                                </div>
                                 <!-- Decorative BG Icon -->
-                                                                <svg class="lgnewui-loveday-bg-icon" viewBox="0 0 1024 1024" version="1.1"
+                                                                <svg class="withu-loveday-bg-icon" viewBox="0 0 1024 1024" version="1.1"
                                     xmlns="http://www.w3.org/2000/svg">
                                     <path d="M923 283.6a260.04 260.04 0 0 0-56.9-82.6c-64.5-70-170.8-84-245.5-32.9L512 216.7l-108.6-48.6c-74.7-51.1-181-37.1-245.5 32.9-64.5 70-79.9 174.6-44.1 262.8 33.3 82.3 98.7 151.7 185.3 227.1L512 884.2l212.9-193.3c86.6-75.4 152-144.8 185.3-227.1 35.8-88.2 20.4-192.8-44.1-262.8z" fill="currentColor"></path>
                                 </svg>
 
-                                <div class="lgnewui-flex-between-center lgnewui-loveday-content">
-                                    <div class="lgnewui-flex-center-gap"
+                                <div class="withu-flex-between-center withu-loveday-content">
+                                    <div class="withu-flex-center-gap"
                                         tabindex="0">
-                                        <div class=" lgnewui-icon-box-glass-white">
+                                        <div class=" withu-icon-box-glass-white">
                                                                                             <svg viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg">
                                                     <path
                                                         d="M470.4 204.8l44.8 44.8 44.8-44.8c99.2-99.2 262.4-99.2 361.6 0 48 48 73.6 112 73.6 179.2 0 19.2-12.8 32-32 32s-32-12.8-32-32c0-51.2-19.2-99.2-57.6-134.4-73.6-73.6-195.2-73.6-272 0l-67.2 67.2c-12.8 12.8-32 12.8-44.8 0l-67.2-67.2c-73.6-73.6-195.2-73.6-272 0-73.6 73.6-73.6 195.2 0 272L512 883.2c12.8 12.8 12.8 32 0 44.8s-32 12.8-44.8 0L105.6 566.4c-99.2-99.2-99.2-262.4 0-361.6 102.4-102.4 262.4-102.4 364.8 0z m176 710.4L425.6 694.4c-57.6-57.6-57.6-147.2 0-204.8 57.6-57.6 147.2-57.6 204.8 0l57.6 57.6 57.6-57.6c57.6-57.6 147.2-57.6 204.8 0 57.6 57.6 57.6 147.2 0 204.8L729.6 915.2c-9.6 9.6-25.6 16-38.4 16-19.2 0-32-6.4-44.8-16z m256-265.6c32-32 32-83.2 0-112-32-32-83.2-32-112 0l-80 80c-12.8 12.8-32 12.8-44.8 0l-80-80c-32-32-83.2-32-112 0-32 32-32 83.2 0 112L688 864l214.4-214.4z"
                                                         fill="#ffffff"></path>
                                                 </svg>
                                                                                     </div>
-                                        <div class="lgnewui-loveday-copy">
-                                            <div class="lgnewui-loveday-title" data-lg-tip="第一次一起玩游戏">
+                                        <div class="withu-loveday-copy">
+                                            <div class="withu-loveday-title" data-withu-tip="第一次一起玩游戏">
                                                 第一次一起玩游戏                                            </div>
-                                            <div class="lgnewui-loveday-date">
-                                                <span class="lgnewui-loveday-date-line">
+                                            <div class="withu-loveday-date">
+                                                <span class="withu-loveday-date-line">
                                                     起始日：                                                    2023-07-16                                                </span>
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="lgnewui-text-right">
-                                        <div class="lgnewui-loveday-count">
-                                                                                            1117<span class="lgnewui-loveday-unit">天</span>
+                                    <div class="withu-text-right">
+                                        <div class="withu-loveday-count">
+                                                                                            1117<span class="withu-loveday-unit">天</span>
                                                                                     </div>
                                                                             </div>
                                 </div>
                             </div>
-                            </div>                                                    <div data-aos="fade-up" data-aos-delay="300">                            <div class="lgnewui-widget lgnewui-widget--loveday-vibrant lgnewui-widget--loveday-past">
+                            </div>                                                    <div data-aos="fade-up" data-aos-delay="300">                            <div class="withu-widget withu-widget--loveday-vibrant withu-widget--loveday-past">
 
-                                                                <div class="lgnewui-loveday-sup-label">
+                                                                <div class="withu-loveday-sup-label">
                                     已经                                </div>
                                 <!-- Decorative BG Icon -->
-                                                                <svg class="lgnewui-loveday-bg-icon" viewBox="0 0 1024 1024" version="1.1"
+                                                                <svg class="withu-loveday-bg-icon" viewBox="0 0 1024 1024" version="1.1"
                                     xmlns="http://www.w3.org/2000/svg">
                                     <path d="M923 283.6a260.04 260.04 0 0 0-56.9-82.6c-64.5-70-170.8-84-245.5-32.9L512 216.7l-108.6-48.6c-74.7-51.1-181-37.1-245.5 32.9-64.5 70-79.9 174.6-44.1 262.8 33.3 82.3 98.7 151.7 185.3 227.1L512 884.2l212.9-193.3c86.6-75.4 152-144.8 185.3-227.1 35.8-88.2 20.4-192.8-44.1-262.8z" fill="currentColor"></path>
                                 </svg>
 
-                                <div class="lgnewui-flex-between-center lgnewui-loveday-content">
-                                    <div class="lgnewui-flex-center-gap"
+                                <div class="withu-flex-between-center withu-loveday-content">
+                                    <div class="withu-flex-center-gap"
                                         tabindex="0">
-                                        <div class=" lgnewui-icon-box-glass-white">
+                                        <div class=" withu-icon-box-glass-white">
                                                                                             <svg viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg">
                                                     <path
                                                         d="M470.4 204.8l44.8 44.8 44.8-44.8c99.2-99.2 262.4-99.2 361.6 0 48 48 73.6 112 73.6 179.2 0 19.2-12.8 32-32 32s-32-12.8-32-32c0-51.2-19.2-99.2-57.6-134.4-73.6-73.6-195.2-73.6-272 0l-67.2 67.2c-12.8 12.8-32 12.8-44.8 0l-67.2-67.2c-73.6-73.6-195.2-73.6-272 0-73.6 73.6-73.6 195.2 0 272L512 883.2c12.8 12.8 12.8 32 0 44.8s-32 12.8-44.8 0L105.6 566.4c-99.2-99.2-99.2-262.4 0-361.6 102.4-102.4 262.4-102.4 364.8 0z m176 710.4L425.6 694.4c-57.6-57.6-57.6-147.2 0-204.8 57.6-57.6 147.2-57.6 204.8 0l57.6 57.6 57.6-57.6c57.6-57.6 147.2-57.6 204.8 0 57.6 57.6 57.6 147.2 0 204.8L729.6 915.2c-9.6 9.6-25.6 16-38.4 16-19.2 0-32-6.4-44.8-16z m256-265.6c32-32 32-83.2 0-112-32-32-83.2-32-112 0l-80 80c-12.8 12.8-32 12.8-44.8 0l-80-80c-32-32-83.2-32-112 0-32 32-32 83.2 0 112L688 864l214.4-214.4z"
                                                         fill="#ffffff"></path>
                                                 </svg>
                                                                                     </div>
-                                        <div class="lgnewui-loveday-copy">
-                                            <div class="lgnewui-loveday-title" data-lg-tip="我们相遇的那天">
+                                        <div class="withu-loveday-copy">
+                                            <div class="withu-loveday-title" data-withu-tip="我们相遇的那天">
                                                 我们相遇的那天                                            </div>
-                                            <div class="lgnewui-loveday-date">
-                                                <span class="lgnewui-loveday-date-line">
+                                            <div class="withu-loveday-date">
+                                                <span class="withu-loveday-date-line">
                                                     起始日：                                                    2023-06-30                                                </span>
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="lgnewui-text-right">
-                                        <div class="lgnewui-loveday-count">
-                                                                                            1133<span class="lgnewui-loveday-unit">天</span>
+                                    <div class="withu-text-right">
+                                        <div class="withu-loveday-count">
+                                                                                            1133<span class="withu-loveday-unit">天</span>
                                                                                     </div>
                                                                             </div>
                                 </div>
@@ -4397,232 +4397,232 @@
                 </section>
             
             <!-- 3. Updates (日常点滴) -->
-                        <section id="updates" class="lgnewui-section">
-                <div class="lgnewui-section-header lgnewui-section-header--blue" data-aos="fade-up" data-aos-delay="0">
-                    <div class="lgnewui-section-header__left">
-                        <h2 class="lgnewui-section-title lgnewui-section-title-color-blue lgnewui-flex-center">
-                            <div class="lgnewui-section-icon-box lgnewui-section-icon-box--blue">
-                                <i class="ph-fill ph-star lgnewui-icon-md-white"></i>
+                        <section id="updates" class="withu-section">
+                <div class="withu-section-header withu-section-header--blue" data-aos="fade-up" data-aos-delay="0">
+                    <div class="withu-section-header__left">
+                        <h2 class="withu-section-title withu-section-title-color-blue withu-flex-center">
+                            <div class="withu-section-icon-box withu-section-icon-box--blue">
+                                <i class="ph-fill ph-star withu-icon-md-white"></i>
                             </div>
                             <span>点滴</span>
-                            <span class="lgnewui-badge-new">NEW</span>
+                            <span class="withu-badge-new">NEW</span>
                         </h2>
                     </div>
-                    <div class="lgnewui-section-header__right">
-                        <a href="/articles.php" class="lgnewui-link-more">
+                    <div class="withu-section-header__right">
+                        <a href="/articles.php" class="withu-link-more">
                             <i class="ph-bold ph-arrow-right"></i>
                         </a>
                     </div>
                 </div>
-                <div class="lgnewui-journal-grid">
+                <div class="withu-journal-grid">
                                                     <div data-aos="fade-up" data-aos-delay="0">                            <a href="page.php?id=12"
-                                class="lgnewui-journal-card lgnewui-journal-card--link">
-                                <div class="lgnewui-watermark">DAY 1002</div>
+                                class="withu-journal-card withu-journal-card--link">
+                                <div class="withu-watermark">DAY 1002</div>
 
-                                <div class="lgnewui-journal-header">
-                                    <div class="lgnewui-journal-user">
-                                        <img data-src="/Lovefolder/20260411043046_69d95df639c33274072975.webp" class="lgnewui-journal-avatar lazy">
+                                <div class="withu-journal-header">
+                                    <div class="withu-journal-user">
+                                        <img data-src="/Lovefolder/20260411043046_69d95df639c33274072975.webp" class="withu-journal-avatar lazy">
                                         <div>
-                                            <div class="lgnewui-font-sm-bold">Really</div>
-                                            <div class="lgnewui-journal-meta">2026-04-15 21:04</div>
+                                            <div class="withu-font-sm-bold">Really</div>
+                                            <div class="withu-journal-meta">2026-04-15 21:04</div>
                                         </div>
                                     </div>
                                 </div>
 
-                                <div class="lgnewui-journal-content">
-                                    <h3 class="lgnewui-journal-title lgnewui-journal-title-text">
+                                <div class="withu-journal-content">
+                                    <h3 class="withu-journal-title withu-journal-title-text">
                                         测试女主发布文章丨の 文章标题                                    </h3>
-                                    <p class="lgnewui-journal-body lgnewui-journal-body-clamp">
+                                    <p class="withu-journal-body withu-journal-body-clamp">
                                          自动识别1233。 test                                    </p>
                                 </div>
 
-                                <div class="lgnewui-journal-footer">
-                                    <div class="lgnewui-flex-gap-sm">
-                                        <span class="lgnewui-chip lgnewui-chip--light"><i class="ph-bold ph-map-pin"></i>
+                                <div class="withu-journal-footer">
+                                    <div class="withu-flex-gap-sm">
+                                        <span class="withu-chip withu-chip--light"><i class="ph-bold ph-map-pin"></i>
                                             广东 · 惠东</span>
-                                                                                <span class="lgnewui-chip lgnewui-chip--light"><i class="ph-bold ph-cloud-sun"></i>
+                                                                                <span class="withu-chip withu-chip--light"><i class="ph-bold ph-cloud-sun"></i>
                                             多云</span>
-                                                                                                                        <span class="lgnewui-chip lgnewui-chip--light"><i class="ph-bold ph-smiley"></i>
+                                                                                                                        <span class="withu-chip withu-chip--light"><i class="ph-bold ph-smiley"></i>
                                             开心</span>
-                                                                                <span class="lgnewui-chip lgnewui-chip--light"><i class="ph-bold ph-eye"></i>
+                                                                                <span class="withu-chip withu-chip--light"><i class="ph-bold ph-eye"></i>
                                             109</span>
-                                        <span class="lgnewui-chip lgnewui-chip--light"><i class="ph-bold ph-heart"></i>
+                                        <span class="withu-chip withu-chip--light"><i class="ph-bold ph-heart"></i>
                                             4</span>
                                     </div>
                                 </div>
                             </a>
                             </div>                                                    <div data-aos="fade-up" data-aos-delay="50">                            <a href="page.php?id=11"
-                                class="lgnewui-journal-card lgnewui-journal-card--link">
-                                <div class="lgnewui-watermark">DAY 997</div>
+                                class="withu-journal-card withu-journal-card--link">
+                                <div class="withu-watermark">DAY 997</div>
 
-                                <div class="lgnewui-journal-header">
-                                    <div class="lgnewui-journal-user">
-                                        <img data-src="/Lovefolder/20260411043037_69d95ded97293201118237.webp" class="lgnewui-journal-avatar lazy">
+                                <div class="withu-journal-header">
+                                    <div class="withu-journal-user">
+                                        <img data-src="/Lovefolder/20260411043037_69d95ded97293201118237.webp" class="withu-journal-avatar lazy">
                                         <div>
-                                            <div class="lgnewui-font-sm-bold">Ki.</div>
-                                            <div class="lgnewui-journal-meta">2026-04-10 17:39</div>
+                                            <div class="withu-font-sm-bold">Ki.</div>
+                                            <div class="withu-journal-meta">2026-04-10 17:39</div>
                                         </div>
                                     </div>
                                 </div>
 
-                                <div class="lgnewui-journal-content">
-                                    <h3 class="lgnewui-journal-title lgnewui-journal-title-text">
+                                <div class="withu-journal-content">
+                                    <h3 class="withu-journal-title withu-journal-title-text">
                                         测试 v2.0.7发布是否正常                                    </h3>
-                                    <p class="lgnewui-journal-body lgnewui-journal-body-clamp">
+                                    <p class="withu-journal-body withu-journal-body-clamp">
                                         测试 v2.0.7发布是否正常测试 v2.0.7发布是否正常测试 v2.0.7发布是否正常测试 v2.0.7发布是否正常测试 v2.0.7发布是否正常测试 v2.0.7发布是否正常测试 v2.0.7发布是否正常测试 v2.0.7发布是否正常                                    </p>
                                 </div>
 
-                                <div class="lgnewui-journal-footer">
-                                    <div class="lgnewui-flex-gap-sm">
-                                        <span class="lgnewui-chip lgnewui-chip--light"><i class="ph-bold ph-map-pin"></i>
+                                <div class="withu-journal-footer">
+                                    <div class="withu-flex-gap-sm">
+                                        <span class="withu-chip withu-chip--light"><i class="ph-bold ph-map-pin"></i>
                                             广东 · 惠东</span>
-                                                                                <span class="lgnewui-chip lgnewui-chip--light"><i class="ph-bold ph-cloud-sun"></i>
+                                                                                <span class="withu-chip withu-chip--light"><i class="ph-bold ph-cloud-sun"></i>
                                             多云</span>
-                                                                                                                        <span class="lgnewui-chip lgnewui-chip--light"><i class="ph-bold ph-smiley"></i>
+                                                                                                                        <span class="withu-chip withu-chip--light"><i class="ph-bold ph-smiley"></i>
                                             开心</span>
-                                                                                <span class="lgnewui-chip lgnewui-chip--light"><i class="ph-bold ph-eye"></i>
+                                                                                <span class="withu-chip withu-chip--light"><i class="ph-bold ph-eye"></i>
                                             85</span>
-                                        <span class="lgnewui-chip lgnewui-chip--light"><i class="ph-bold ph-heart"></i>
+                                        <span class="withu-chip withu-chip--light"><i class="ph-bold ph-heart"></i>
                                             2</span>
                                     </div>
                                 </div>
                             </a>
                             </div>                                                    <div data-aos="fade-up" data-aos-delay="100">                            <a href="page.php?id=10"
-                                class="lgnewui-journal-card lgnewui-journal-card--link">
-                                <div class="lgnewui-watermark">DAY 997</div>
+                                class="withu-journal-card withu-journal-card--link">
+                                <div class="withu-watermark">DAY 997</div>
 
-                                <div class="lgnewui-journal-header">
-                                    <div class="lgnewui-journal-user">
-                                        <img data-src="/Lovefolder/20260411043037_69d95ded97293201118237.webp" class="lgnewui-journal-avatar lazy">
+                                <div class="withu-journal-header">
+                                    <div class="withu-journal-user">
+                                        <img data-src="/Lovefolder/20260411043037_69d95ded97293201118237.webp" class="withu-journal-avatar lazy">
                                         <div>
-                                            <div class="lgnewui-font-sm-bold">Ki.</div>
-                                            <div class="lgnewui-journal-meta">2026-04-10 05:36</div>
+                                            <div class="withu-font-sm-bold">Ki.</div>
+                                            <div class="withu-journal-meta">2026-04-10 05:36</div>
                                         </div>
                                     </div>
                                 </div>
 
-                                <div class="lgnewui-journal-content">
-                                    <h3 class="lgnewui-journal-title lgnewui-journal-title-text">
+                                <div class="withu-journal-content">
+                                    <h3 class="withu-journal-title withu-journal-title-text">
                                         我再新增一遍测试                                    </h3>
-                                    <p class="lgnewui-journal-body lgnewui-journal-body-clamp">
+                                    <p class="withu-journal-body withu-journal-body-clamp">
                                         我再新增一遍测试我再新增一遍测试我再新增一遍测试我再新增一遍测试我再新增一遍测试我再新增一遍测试我再新增一遍测试我再新增一遍测试我再新增一遍测试我再新增一遍测试我再新增一遍测试我再新增一遍测试我再新增一遍测试我再新增一遍测试我再新增一遍测试                                    </p>
                                 </div>
 
-                                <div class="lgnewui-journal-footer">
-                                    <div class="lgnewui-flex-gap-sm">
-                                        <span class="lgnewui-chip lgnewui-chip--light"><i class="ph-bold ph-map-pin"></i>
+                                <div class="withu-journal-footer">
+                                    <div class="withu-flex-gap-sm">
+                                        <span class="withu-chip withu-chip--light"><i class="ph-bold ph-map-pin"></i>
                                             广东 · 惠东</span>
-                                                                                <span class="lgnewui-chip lgnewui-chip--light"><i class="ph-bold ph-cloud-sun"></i>
+                                                                                <span class="withu-chip withu-chip--light"><i class="ph-bold ph-cloud-sun"></i>
                                             多云</span>
-                                                                                                                        <span class="lgnewui-chip lgnewui-chip--light"><i class="ph-bold ph-smiley"></i>
+                                                                                                                        <span class="withu-chip withu-chip--light"><i class="ph-bold ph-smiley"></i>
                                             开心</span>
-                                                                                <span class="lgnewui-chip lgnewui-chip--light"><i class="ph-bold ph-eye"></i>
+                                                                                <span class="withu-chip withu-chip--light"><i class="ph-bold ph-eye"></i>
                                             36</span>
-                                        <span class="lgnewui-chip lgnewui-chip--light"><i class="ph-bold ph-heart"></i>
+                                        <span class="withu-chip withu-chip--light"><i class="ph-bold ph-heart"></i>
                                             1</span>
                                     </div>
                                 </div>
                             </a>
                             </div>                                                    <div data-aos="fade-up" data-aos-delay="150">                            <a href="page.php?id=9"
-                                class="lgnewui-journal-card lgnewui-journal-card--link">
-                                <div class="lgnewui-watermark">DAY 996</div>
+                                class="withu-journal-card withu-journal-card--link">
+                                <div class="withu-watermark">DAY 996</div>
 
-                                <div class="lgnewui-journal-header">
-                                    <div class="lgnewui-journal-user">
-                                        <img data-src="/Lovefolder/20260411043037_69d95ded97293201118237.webp" class="lgnewui-journal-avatar lazy">
+                                <div class="withu-journal-header">
+                                    <div class="withu-journal-user">
+                                        <img data-src="/Lovefolder/20260411043037_69d95ded97293201118237.webp" class="withu-journal-avatar lazy">
                                         <div>
-                                            <div class="lgnewui-font-sm-bold">Ki.</div>
-                                            <div class="lgnewui-journal-meta">2026-04-09 21:40</div>
+                                            <div class="withu-font-sm-bold">Ki.</div>
+                                            <div class="withu-journal-meta">2026-04-09 21:40</div>
                                         </div>
                                     </div>
                                 </div>
 
-                                <div class="lgnewui-journal-content">
-                                    <h3 class="lgnewui-journal-title lgnewui-journal-title-text">
+                                <div class="withu-journal-content">
+                                    <h3 class="withu-journal-title withu-journal-title-text">
                                         测试新增文章 目前时间                                    </h3>
-                                    <p class="lgnewui-journal-body lgnewui-journal-body-clamp">
+                                    <p class="withu-journal-body withu-journal-body-clamp">
                                         31232123123 123312123 123 123123 123 123 123 123 1231 312 123 312 123 123 123 123 123 123 123                                    </p>
                                 </div>
 
-                                <div class="lgnewui-journal-footer">
-                                    <div class="lgnewui-flex-gap-sm">
-                                        <span class="lgnewui-chip lgnewui-chip--light"><i class="ph-bold ph-map-pin"></i>
+                                <div class="withu-journal-footer">
+                                    <div class="withu-flex-gap-sm">
+                                        <span class="withu-chip withu-chip--light"><i class="ph-bold ph-map-pin"></i>
                                             广东 · 惠东</span>
-                                                                                <span class="lgnewui-chip lgnewui-chip--light"><i class="ph-bold ph-cloud-sun"></i>
+                                                                                <span class="withu-chip withu-chip--light"><i class="ph-bold ph-cloud-sun"></i>
                                             多云</span>
-                                                                                                                        <span class="lgnewui-chip lgnewui-chip--light"><i class="ph-bold ph-smiley"></i>
+                                                                                                                        <span class="withu-chip withu-chip--light"><i class="ph-bold ph-smiley"></i>
                                             开心</span>
-                                                                                <span class="lgnewui-chip lgnewui-chip--light"><i class="ph-bold ph-eye"></i>
+                                                                                <span class="withu-chip withu-chip--light"><i class="ph-bold ph-eye"></i>
                                             34</span>
-                                        <span class="lgnewui-chip lgnewui-chip--light"><i class="ph-bold ph-heart"></i>
+                                        <span class="withu-chip withu-chip--light"><i class="ph-bold ph-heart"></i>
                                             0</span>
                                     </div>
                                 </div>
                             </a>
                             </div>                                                    <div data-aos="fade-up" data-aos-delay="200">                            <a href="page.php?id=8"
-                                class="lgnewui-journal-card lgnewui-journal-card--link">
-                                <div class="lgnewui-watermark">DAY 996</div>
+                                class="withu-journal-card withu-journal-card--link">
+                                <div class="withu-watermark">DAY 996</div>
 
-                                <div class="lgnewui-journal-header">
-                                    <div class="lgnewui-journal-user">
-                                        <img data-src="/Lovefolder/20260411043037_69d95ded97293201118237.webp" class="lgnewui-journal-avatar lazy">
+                                <div class="withu-journal-header">
+                                    <div class="withu-journal-user">
+                                        <img data-src="/Lovefolder/20260411043037_69d95ded97293201118237.webp" class="withu-journal-avatar lazy">
                                         <div>
-                                            <div class="lgnewui-font-sm-bold">Ki.</div>
-                                            <div class="lgnewui-journal-meta">2026-04-09 20:09</div>
+                                            <div class="withu-font-sm-bold">Ki.</div>
+                                            <div class="withu-journal-meta">2026-04-09 20:09</div>
                                         </div>
                                     </div>
                                 </div>
 
-                                <div class="lgnewui-journal-content">
-                                    <h3 class="lgnewui-journal-title lgnewui-journal-title-text">
+                                <div class="withu-journal-content">
+                                    <h3 class="withu-journal-title withu-journal-title-text">
                                         测试新增点点滴滴内容😈表情测试《》                                    </h3>
-                                    <p class="lgnewui-journal-body lgnewui-journal-body-clamp">
+                                    <p class="withu-journal-body withu-journal-body-clamp">
                                         测试彩色标签 测试解析音乐 测试测试 21:38:34 《》《》：， 哈哈哈 测试一下测试 测试测试发布动画效果                                    </p>
                                 </div>
 
-                                <div class="lgnewui-journal-footer">
-                                    <div class="lgnewui-flex-gap-sm">
-                                        <span class="lgnewui-chip lgnewui-chip--light"><i class="ph-bold ph-map-pin"></i>
+                                <div class="withu-journal-footer">
+                                    <div class="withu-flex-gap-sm">
+                                        <span class="withu-chip withu-chip--light"><i class="ph-bold ph-map-pin"></i>
                                             广东 · 惠东</span>
-                                                                                <span class="lgnewui-chip lgnewui-chip--light"><i class="ph-bold ph-cloud-sun"></i>
+                                                                                <span class="withu-chip withu-chip--light"><i class="ph-bold ph-cloud-sun"></i>
                                             多云</span>
-                                                                                                                        <span class="lgnewui-chip lgnewui-chip--light"><i class="ph-bold ph-smiley"></i>
+                                                                                                                        <span class="withu-chip withu-chip--light"><i class="ph-bold ph-smiley"></i>
                                             开心</span>
-                                                                                <span class="lgnewui-chip lgnewui-chip--light"><i class="ph-bold ph-eye"></i>
+                                                                                <span class="withu-chip withu-chip--light"><i class="ph-bold ph-eye"></i>
                                             36</span>
-                                        <span class="lgnewui-chip lgnewui-chip--light"><i class="ph-bold ph-heart"></i>
+                                        <span class="withu-chip withu-chip--light"><i class="ph-bold ph-heart"></i>
                                             1</span>
                                     </div>
                                 </div>
                             </a>
                             </div>                                                    <div data-aos="fade-up" data-aos-delay="250">                            <a href="page.php?id=1"
-                                class="lgnewui-journal-card lgnewui-journal-card--link">
-                                <div class="lgnewui-watermark">DAY 554</div>
+                                class="withu-journal-card withu-journal-card--link">
+                                <div class="withu-watermark">DAY 554</div>
 
-                                <div class="lgnewui-journal-header">
-                                    <div class="lgnewui-journal-user">
-                                        <img data-src="/Lovefolder/20260411043037_69d95ded97293201118237.webp" class="lgnewui-journal-avatar lazy">
+                                <div class="withu-journal-header">
+                                    <div class="withu-journal-user">
+                                        <img data-src="/Lovefolder/20260411043037_69d95ded97293201118237.webp" class="withu-journal-avatar lazy">
                                         <div>
-                                            <div class="lgnewui-font-sm-bold">Ki.</div>
-                                            <div class="lgnewui-journal-meta">2025-01-22 09:03</div>
+                                            <div class="withu-font-sm-bold">Ki.</div>
+                                            <div class="withu-journal-meta">2025-01-22 09:03</div>
                                         </div>
                                     </div>
                                 </div>
 
-                                <div class="lgnewui-journal-content">
-                                    <h3 class="lgnewui-journal-title lgnewui-journal-title-text">
+                                <div class="withu-journal-content">
+                                    <h3 class="withu-journal-title withu-journal-title-text">
                                         音乐解析播放演示                                    </h3>
-                                    <p class="lgnewui-journal-body lgnewui-journal-body-clamp">
+                                    <p class="withu-journal-body withu-journal-body-clamp">
                                         音乐解析测试 音乐解析参考#直链解析 data-id：音乐ID data-type：netease 为网易云 tencent为QQ音乐 双双 Copy 音乐解析参考#直链解析+本地URL文件 data-id：音乐ID data-type：n                                    </p>
                                 </div>
 
-                                <div class="lgnewui-journal-footer">
-                                    <div class="lgnewui-flex-gap-sm">
-                                        <span class="lgnewui-chip lgnewui-chip--light"><i class="ph-bold ph-map-pin"></i>
+                                <div class="withu-journal-footer">
+                                    <div class="withu-flex-gap-sm">
+                                        <span class="withu-chip withu-chip--light"><i class="ph-bold ph-map-pin"></i>
                                             广东·深圳</span>
-                                                                                                                        <span class="lgnewui-chip lgnewui-chip--light"><i class="ph-bold ph-eye"></i>
+                                                                                                                        <span class="withu-chip withu-chip--light"><i class="ph-bold ph-eye"></i>
                                             45</span>
-                                        <span class="lgnewui-chip lgnewui-chip--light"><i class="ph-bold ph-heart"></i>
+                                        <span class="withu-chip withu-chip--light"><i class="ph-bold ph-heart"></i>
                                             1</span>
                                     </div>
                                 </div>
@@ -4631,96 +4631,96 @@
             </section>
             
             <!-- 4. Album (回忆相册) -->
-                        <section id="album" class="lgnewui-section">
-                <div class="lgnewui-section-header lgnewui-section-header--orange" data-aos="fade-up" data-aos-delay="0">
-                    <div class="lgnewui-section-header__left">
-                        <h2 class="lgnewui-section-title lgnewui-section-title-color-orange lgnewui-flex-center">
-                            <div class="lgnewui-section-icon-box lgnewui-section-icon-box--orange">
-                                <i class="ph-fill ph-image lgnewui-icon-md-white"></i>
+                        <section id="album" class="withu-section">
+                <div class="withu-section-header withu-section-header--orange" data-aos="fade-up" data-aos-delay="0">
+                    <div class="withu-section-header__left">
+                        <h2 class="withu-section-title withu-section-title-color-orange withu-flex-center">
+                            <div class="withu-section-icon-box withu-section-icon-box--orange">
+                                <i class="ph-fill ph-image withu-icon-md-white"></i>
                             </div>
                             <span>相册</span>
-                            <span class="lgnewui-badge-new">NEW</span>
+                            <span class="withu-badge-new">NEW</span>
                         </h2>
                     </div>
-                    <div class="lgnewui-section-header__right">
-                        <a href="/albums.php" class="lgnewui-link-more">
+                    <div class="withu-section-header__right">
+                        <a href="/albums.php" class="withu-link-more">
                             <i class="ph-bold ph-arrow-right"></i>
                         </a>
                     </div>
                 </div>
-                                <div class="lgnewui-mosaic-grid lgnewui-mosaic-count-3">
-                                            <div data-aos="fade-up" data-aos-delay="0">                        <a href="album-detail.php?code=1776318513866" class="lgnewui-mosaic-item">
-                            <img data-src="Lovefolder/20260409200702_69d79666f3e2b024272479.webp" class="lgnewui-mosaic-img lazy">
+                                <div class="withu-mosaic-grid withu-mosaic-count-3">
+                                            <div data-aos="fade-up" data-aos-delay="0">                        <a href="album-detail.php?code=1776318513866" class="withu-mosaic-item">
+                            <img data-src="Lovefolder/20260409200702_69d79666f3e2b024272479.webp" class="withu-mosaic-img lazy">
 
-                            <div class="lgnewui-mosaic-pos-tr">
-                                <div class="lgnewui-chip--dark-glass">
-                                    <span class="lgnewui-flex-center-gap-xs"><i class="ph-fill ph-map-pin"></i>
+                            <div class="withu-mosaic-pos-tr">
+                                <div class="withu-chip--dark-glass">
+                                    <span class="withu-flex-center-gap-xs"><i class="ph-fill ph-map-pin"></i>
                                         广州市</span>
-                                    <span class="lgnewui-mosaic-divider"></span>
-                                    <span class="lgnewui-flex-center-gap-xs"><i class="ph-fill ph-image"></i>
+                                    <span class="withu-mosaic-divider"></span>
+                                    <span class="withu-flex-center-gap-xs"><i class="ph-fill ph-image"></i>
                                         21</span>
                                 </div>
                             </div>
 
-                            <div class="lgnewui-mosaic-overlay">
-                                <div class="lgnewui-mosaic-overlay-content">
-                                    <div class="lgnewui-capsule lgnewui-capsule--avatar lgnewui-mosaic-avatar-mb">
-                                        <img data-src="/Lovefolder/20260411043046_69d95df639c33274072975.webp" class="lgnewui-capsule__img lazy">
-                                        <span class="lgnewui-capsule__text lgnewui-text-white">Really</span>
+                            <div class="withu-mosaic-overlay">
+                                <div class="withu-mosaic-overlay-content">
+                                    <div class="withu-capsule withu-capsule--avatar withu-mosaic-avatar-mb">
+                                        <img data-src="/Lovefolder/20260411043046_69d95df639c33274072975.webp" class="withu-capsule__img lazy">
+                                        <span class="withu-capsule__text withu-text-white">Really</span>
                                     </div>
 
-                                    <h3 class="u-font-serif lgnewui-mosaic-title">测试相册</h3>
-                                                                        <div class="u-font-serif lgnewui-mosaic-date">二〇二一年八月二十九日</div>
+                                    <h3 class="u-font-serif withu-mosaic-title">测试相册</h3>
+                                                                        <div class="u-font-serif withu-mosaic-date">二〇二一年八月二十九日</div>
                                 </div>
                             </div>
                         </a>
-                        </div>                                            <div data-aos="fade-up" data-aos-delay="50">                        <a href="album-detail.php?code=20250811124452" class="lgnewui-mosaic-item">
-                            <img data-src="Lovefolder/20250811124741_689975ed5796a_thumb.webp" class="lgnewui-mosaic-img lazy">
+                        </div>                                            <div data-aos="fade-up" data-aos-delay="50">                        <a href="album-detail.php?code=20250811124452" class="withu-mosaic-item">
+                            <img data-src="Lovefolder/20250811124741_689975ed5796a_thumb.webp" class="withu-mosaic-img lazy">
 
-                            <div class="lgnewui-mosaic-pos-tr">
-                                <div class="lgnewui-chip--dark-glass">
-                                    <span class="lgnewui-flex-center-gap-xs"><i class="ph-fill ph-map-pin"></i>
+                            <div class="withu-mosaic-pos-tr">
+                                <div class="withu-chip--dark-glass">
+                                    <span class="withu-flex-center-gap-xs"><i class="ph-fill ph-map-pin"></i>
                                         珠海渔女</span>
-                                    <span class="lgnewui-mosaic-divider"></span>
-                                    <span class="lgnewui-flex-center-gap-xs"><i class="ph-fill ph-image"></i>
+                                    <span class="withu-mosaic-divider"></span>
+                                    <span class="withu-flex-center-gap-xs"><i class="ph-fill ph-image"></i>
                                         26</span>
                                 </div>
                             </div>
 
-                            <div class="lgnewui-mosaic-overlay">
-                                <div class="lgnewui-mosaic-overlay-content">
-                                    <div class="lgnewui-capsule lgnewui-capsule--avatar lgnewui-mosaic-avatar-mb">
-                                        <img data-src="/Lovefolder/20260411043037_69d95ded97293201118237.webp" class="lgnewui-capsule__img lazy">
-                                        <span class="lgnewui-capsule__text lgnewui-text-white">Ki.</span>
+                            <div class="withu-mosaic-overlay">
+                                <div class="withu-mosaic-overlay-content">
+                                    <div class="withu-capsule withu-capsule--avatar withu-mosaic-avatar-mb">
+                                        <img data-src="/Lovefolder/20260411043037_69d95ded97293201118237.webp" class="withu-capsule__img lazy">
+                                        <span class="withu-capsule__text withu-text-white">Ki.</span>
                                     </div>
 
-                                    <h3 class="u-font-serif lgnewui-mosaic-title">Dalinshan</h3>
-                                                                        <div class="u-font-serif lgnewui-mosaic-date">二〇二五年八月十一日</div>
+                                    <h3 class="u-font-serif withu-mosaic-title">Dalinshan</h3>
+                                                                        <div class="u-font-serif withu-mosaic-date">二〇二五年八月十一日</div>
                                 </div>
                             </div>
                         </a>
-                        </div>                                            <div data-aos="fade-up" data-aos-delay="100">                        <a href="album-detail.php?code=20241225163641" class="lgnewui-mosaic-item">
-                            <img data-src="Lovefolder/20250310100354_67ce488abed5b_thumb.webp" class="lgnewui-mosaic-img lazy">
+                        </div>                                            <div data-aos="fade-up" data-aos-delay="100">                        <a href="album-detail.php?code=20241225163641" class="withu-mosaic-item">
+                            <img data-src="Lovefolder/20250310100354_67ce488abed5b_thumb.webp" class="withu-mosaic-img lazy">
 
-                            <div class="lgnewui-mosaic-pos-tr">
-                                <div class="lgnewui-chip--dark-glass">
-                                    <span class="lgnewui-flex-center-gap-xs"><i class="ph-fill ph-map-pin"></i>
+                            <div class="withu-mosaic-pos-tr">
+                                <div class="withu-chip--dark-glass">
+                                    <span class="withu-flex-center-gap-xs"><i class="ph-fill ph-map-pin"></i>
                                         广东·东莞</span>
-                                    <span class="lgnewui-mosaic-divider"></span>
-                                    <span class="lgnewui-flex-center-gap-xs"><i class="ph-fill ph-image"></i>
+                                    <span class="withu-mosaic-divider"></span>
+                                    <span class="withu-flex-center-gap-xs"><i class="ph-fill ph-image"></i>
                                         15</span>
                                 </div>
                             </div>
 
-                            <div class="lgnewui-mosaic-overlay">
-                                <div class="lgnewui-mosaic-overlay-content">
-                                    <div class="lgnewui-capsule lgnewui-capsule--avatar lgnewui-mosaic-avatar-mb">
-                                        <img data-src="/Lovefolder/20260411043037_69d95ded97293201118237.webp" class="lgnewui-capsule__img lazy">
-                                        <span class="lgnewui-capsule__text lgnewui-text-white">Ki.</span>
+                            <div class="withu-mosaic-overlay">
+                                <div class="withu-mosaic-overlay-content">
+                                    <div class="withu-capsule withu-capsule--avatar withu-mosaic-avatar-mb">
+                                        <img data-src="/Lovefolder/20260411043037_69d95ded97293201118237.webp" class="withu-capsule__img lazy">
+                                        <span class="withu-capsule__text withu-text-white">Ki.</span>
                                     </div>
 
-                                    <h3 class="u-font-serif lgnewui-mosaic-title">探索秋日山林的宁静之旅</h3>
-                                                                        <div class="u-font-serif lgnewui-mosaic-date">二〇二四年十二月二十五日</div>
+                                    <h3 class="u-font-serif withu-mosaic-title">探索秋日山林的宁静之旅</h3>
+                                                                        <div class="u-font-serif withu-mosaic-date">二〇二四年十二月二十五日</div>
                                 </div>
                             </div>
                         </a>
@@ -4728,560 +4728,560 @@
             </section>
             
             <!-- 5. Messages (祝福留言) -->
-                        <section id="messages" class="lgnewui-section">
-                <div class="lgnewui-section-header lgnewui-section-header--teal" data-aos="fade-up" data-aos-delay="0">
-                    <div class="lgnewui-section-header__left">
-                        <h2 class="lgnewui-section-title lgnewui-section-title-color-teal lgnewui-flex-center">
-                            <div class="lgnewui-section-icon-box lgnewui-section-icon-box--teal">
-                                <i class="ph-fill ph-chat-circle-text lgnewui-icon-md-white"></i>
+                        <section id="messages" class="withu-section">
+                <div class="withu-section-header withu-section-header--teal" data-aos="fade-up" data-aos-delay="0">
+                    <div class="withu-section-header__left">
+                        <h2 class="withu-section-title withu-section-title-color-teal withu-flex-center">
+                            <div class="withu-section-icon-box withu-section-icon-box--teal">
+                                <i class="ph-fill ph-chat-circle-text withu-icon-md-white"></i>
                             </div>
                             <span>留言</span>
-                            <span class="lgnewui-badge-new">NEW</span>
+                            <span class="withu-badge-new">NEW</span>
                         </h2>
                     </div>
-                    <div class="lgnewui-section-header__right">
-                        <a href="/messages.php" class="lgnewui-link-more">
+                    <div class="withu-section-header__right">
+                        <a href="/messages.php" class="withu-link-more">
                             <i class="ph-bold ph-arrow-right"></i>
                         </a>
                     </div>
                 </div>
 
-                <div class="lgnewui-home-message-container" id="messageCarousel">
-                    <div class="lgnewui-home-message-track">
-                                                                    <a href="/messages.php#comment_544" class="lgnewui-home-message-card">
-                            <div class="lgnewui-home-message-header">
-                                <img class="lgnewui-home-message-avatar" src="https://weavatar.com/avatar/4e11c40a0e83de42c9c91974b48630bf05a2f75a79827dd01491dd99a09a57e0?s=100&amp;d=mm&amp;r=g" alt="南城">
-                                <div class="lgnewui-home-message-user-info">
-                                    <div class="lgnewui-home-message-name-row">
-                                        <span class="lgnewui-home-message-user-name">南城</span>
+                <div class="withu-home-message-container" id="messageCarousel">
+                    <div class="withu-home-message-track">
+                                                                    <a href="/messages.php#comment_544" class="withu-home-message-card">
+                            <div class="withu-home-message-header">
+                                <img class="withu-home-message-avatar" src="https://weavatar.com/avatar/4e11c40a0e83de42c9c91974b48630bf05a2f75a79827dd01491dd99a09a57e0?s=100&amp;d=mm&amp;r=g" alt="南城">
+                                <div class="withu-home-message-user-info">
+                                    <div class="withu-home-message-name-row">
+                                        <span class="withu-home-message-user-name">南城</span>
                                                                             </div>
-                                    <span class="lgnewui-home-message-post-time">2026-08-02 13:10</span>
+                                    <span class="withu-home-message-post-time">2026-08-02 13:10</span>
                                 </div>
                             </div>
-                            <div class="lgnewui-home-message-content">已经支持了，价格不贵，不懂得兄弟也听热心解决，程序员懂美感的真心不多了<img class="lazy" data-src="/OwO/images/emoji/threekids/8.png" data-emoji=":@(TK_8)"/></div>
-                            <div class="lgnewui-home-message-divider"></div>
-                            <div class="lgnewui-home-message-footer">
-                                                                <span class="lgnewui-chip lgnewui-chip--light"><i class="ph-fill ph-map-pin"></i> 江苏 · 南京</span>
-                                                                                                <span class="lgnewui-chip lgnewui-chip--light lgnewui-chip--no-transform"><i class="ph-bold ph-devices"></i> Android</span>
-                                                                                                <span class="lgnewui-chip lgnewui-chip--light lgnewui-chip--no-transform"><i class="ph-bold ph-globe"></i> Chrome</span>
+                            <div class="withu-home-message-content">已经支持了，价格不贵，不懂得兄弟也听热心解决，程序员懂美感的真心不多了<img class="lazy" data-src="/OwO/images/emoji/threekids/8.png" data-emoji=":@(TK_8)"/></div>
+                            <div class="withu-home-message-divider"></div>
+                            <div class="withu-home-message-footer">
+                                                                <span class="withu-chip withu-chip--light"><i class="ph-fill ph-map-pin"></i> 江苏 · 南京</span>
+                                                                                                <span class="withu-chip withu-chip--light withu-chip--no-transform"><i class="ph-bold ph-devices"></i> Android</span>
+                                                                                                <span class="withu-chip withu-chip--light withu-chip--no-transform"><i class="ph-bold ph-globe"></i> Chrome</span>
                                                             </div>
                         </a>
-                                                                    <a href="/messages.php#comment_543" class="lgnewui-home-message-card">
-                            <div class="lgnewui-home-message-header">
-                                <img class="lgnewui-home-message-avatar" src="https://weavatar.com/avatar/4e11c40a0e83de42c9c91974b48630bf05a2f75a79827dd01491dd99a09a57e0?s=100&amp;d=mm&amp;r=g" alt="南城">
-                                <div class="lgnewui-home-message-user-info">
-                                    <div class="lgnewui-home-message-name-row">
-                                        <span class="lgnewui-home-message-user-name">南城</span>
+                                                                    <a href="/messages.php#comment_543" class="withu-home-message-card">
+                            <div class="withu-home-message-header">
+                                <img class="withu-home-message-avatar" src="https://weavatar.com/avatar/4e11c40a0e83de42c9c91974b48630bf05a2f75a79827dd01491dd99a09a57e0?s=100&amp;d=mm&amp;r=g" alt="南城">
+                                <div class="withu-home-message-user-info">
+                                    <div class="withu-home-message-name-row">
+                                        <span class="withu-home-message-user-name">南城</span>
                                                                             </div>
-                                    <span class="lgnewui-home-message-post-time">2026-08-01 14:25</span>
+                                    <span class="withu-home-message-post-time">2026-08-01 14:25</span>
                                 </div>
                             </div>
-                            <div class="lgnewui-home-message-content">看到blog做的这么好，必须买一个支持一下<img class="lazy" data-src="/OwO/images/emoji/aru/E8A385E5A4A7E6ACBE_2x.png" data-emoji=":@(装大款)"/><img class="lazy" data-src="/OwO/images/emoji/aru/E8A385E5A4A7E6ACBE_2x.png" data-emoji=":@(装大款)"/><img class="lazy" data-src="/OwO/images/emoji/aru/E8A385E5A4A7E6ACBE_2x.png" data-emoji=":@(装大款)"/></div>
-                            <div class="lgnewui-home-message-divider"></div>
-                            <div class="lgnewui-home-message-footer">
-                                                                <span class="lgnewui-chip lgnewui-chip--light"><i class="ph-fill ph-map-pin"></i> 江苏 · 南京</span>
-                                                                                                <span class="lgnewui-chip lgnewui-chip--light lgnewui-chip--no-transform"><i class="ph-bold ph-devices"></i> Windows</span>
-                                                                                                <span class="lgnewui-chip lgnewui-chip--light lgnewui-chip--no-transform"><i class="ph-bold ph-globe"></i> Chrome</span>
+                            <div class="withu-home-message-content">看到blog做的这么好，必须买一个支持一下<img class="lazy" data-src="/OwO/images/emoji/aru/E8A385E5A4A7E6ACBE_2x.png" data-emoji=":@(装大款)"/><img class="lazy" data-src="/OwO/images/emoji/aru/E8A385E5A4A7E6ACBE_2x.png" data-emoji=":@(装大款)"/><img class="lazy" data-src="/OwO/images/emoji/aru/E8A385E5A4A7E6ACBE_2x.png" data-emoji=":@(装大款)"/></div>
+                            <div class="withu-home-message-divider"></div>
+                            <div class="withu-home-message-footer">
+                                                                <span class="withu-chip withu-chip--light"><i class="ph-fill ph-map-pin"></i> 江苏 · 南京</span>
+                                                                                                <span class="withu-chip withu-chip--light withu-chip--no-transform"><i class="ph-bold ph-devices"></i> Windows</span>
+                                                                                                <span class="withu-chip withu-chip--light withu-chip--no-transform"><i class="ph-bold ph-globe"></i> Chrome</span>
                                                             </div>
                         </a>
-                                                                    <a href="/messages.php#comment_540" class="lgnewui-home-message-card">
-                            <div class="lgnewui-home-message-header">
-                                <img class="lgnewui-home-message-avatar" src="/Lovefolder/20250310095643_67ce46dbe283d.webp" alt="深卦">
-                                <div class="lgnewui-home-message-user-info">
-                                    <div class="lgnewui-home-message-name-row">
-                                        <span class="lgnewui-home-message-user-name">深卦</span>
+                                                                    <a href="/messages.php#comment_540" class="withu-home-message-card">
+                            <div class="withu-home-message-header">
+                                <img class="withu-home-message-avatar" src="/Lovefolder/20250310095643_67ce46dbe283d.webp" alt="深卦">
+                                <div class="withu-home-message-user-info">
+                                    <div class="withu-home-message-name-row">
+                                        <span class="withu-home-message-user-name">深卦</span>
                                                                             </div>
-                                    <span class="lgnewui-home-message-post-time">2026-07-19 23:53</span>
+                                    <span class="withu-home-message-post-time">2026-07-19 23:53</span>
                                 </div>
                             </div>
-                            <div class="lgnewui-home-message-content">两情相悦春常在 一世恩爱梦也甜<img class="lazy" data-src="/OwO/images/emoji/qq/5.gif" data-emoji="::(5)"/><img class="lazy" data-src="/OwO/images/emoji/qq/5.gif" data-emoji="::(5)"/><img class="lazy" data-src="/OwO/images/emoji/qq/5.gif" data-emoji="::(5)"/></div>
-                            <div class="lgnewui-home-message-divider"></div>
-                            <div class="lgnewui-home-message-footer">
-                                                                <span class="lgnewui-chip lgnewui-chip--light"><i class="ph-fill ph-map-pin"></i> 河南 · 信阳</span>
-                                                                                                <span class="lgnewui-chip lgnewui-chip--light lgnewui-chip--no-transform"><i class="ph-bold ph-devices"></i> Windows</span>
-                                                                                                <span class="lgnewui-chip lgnewui-chip--light lgnewui-chip--no-transform"><i class="ph-bold ph-globe"></i> Chrome</span>
+                            <div class="withu-home-message-content">两情相悦春常在 一世恩爱梦也甜<img class="lazy" data-src="/OwO/images/emoji/qq/5.gif" data-emoji="::(5)"/><img class="lazy" data-src="/OwO/images/emoji/qq/5.gif" data-emoji="::(5)"/><img class="lazy" data-src="/OwO/images/emoji/qq/5.gif" data-emoji="::(5)"/></div>
+                            <div class="withu-home-message-divider"></div>
+                            <div class="withu-home-message-footer">
+                                                                <span class="withu-chip withu-chip--light"><i class="ph-fill ph-map-pin"></i> 河南 · 信阳</span>
+                                                                                                <span class="withu-chip withu-chip--light withu-chip--no-transform"><i class="ph-bold ph-devices"></i> Windows</span>
+                                                                                                <span class="withu-chip withu-chip--light withu-chip--no-transform"><i class="ph-bold ph-globe"></i> Chrome</span>
                                                             </div>
                         </a>
-                                                                    <a href="/messages.php#reply_516_536" class="lgnewui-home-message-card">
-                            <div class="lgnewui-home-message-header">
-                                <img class="lgnewui-home-message-avatar" src="https://weavatar.com/avatar/e9f098f09a2ee8095e5bf8b2f862be96fb873ba805901d76f293162a53d69dee?s=100&amp;d=mm&amp;r=g" alt="独木舟">
-                                <div class="lgnewui-home-message-user-info">
-                                    <div class="lgnewui-home-message-name-row">
-                                        <span class="lgnewui-home-message-user-name">独木舟</span>
-                                        <span class="lgnewui-home-message-badge lgnewui-home-message-badge--level"><i class="ph ph-arrow-bend-down-right"></i> 二级</span>                                    </div>
-                                    <span class="lgnewui-home-message-post-time">2026-06-02 16:12</span>
+                                                                    <a href="/messages.php#reply_516_536" class="withu-home-message-card">
+                            <div class="withu-home-message-header">
+                                <img class="withu-home-message-avatar" src="https://weavatar.com/avatar/e9f098f09a2ee8095e5bf8b2f862be96fb873ba805901d76f293162a53d69dee?s=100&amp;d=mm&amp;r=g" alt="独木舟">
+                                <div class="withu-home-message-user-info">
+                                    <div class="withu-home-message-name-row">
+                                        <span class="withu-home-message-user-name">独木舟</span>
+                                        <span class="withu-home-message-badge withu-home-message-badge--level"><i class="ph ph-arrow-bend-down-right"></i> 二级</span>                                    </div>
+                                    <span class="withu-home-message-post-time">2026-06-02 16:12</span>
                                 </div>
                             </div>
-                            <div class="lgnewui-home-message-content">携手共赴红尘路 恩爱相伴到永远</div>
-                            <div class="lgnewui-home-message-divider"></div>
-                            <div class="lgnewui-home-message-footer">
-                                                                <span class="lgnewui-chip lgnewui-chip--light"><i class="ph-fill ph-map-pin"></i> 中国 · 河南</span>
-                                                                                                <span class="lgnewui-chip lgnewui-chip--light lgnewui-chip--no-transform"><i class="ph-bold ph-devices"></i> Windows</span>
-                                                                                                <span class="lgnewui-chip lgnewui-chip--light lgnewui-chip--no-transform"><i class="ph-bold ph-globe"></i> Chrome</span>
+                            <div class="withu-home-message-content">携手共赴红尘路 恩爱相伴到永远</div>
+                            <div class="withu-home-message-divider"></div>
+                            <div class="withu-home-message-footer">
+                                                                <span class="withu-chip withu-chip--light"><i class="ph-fill ph-map-pin"></i> 中国 · 河南</span>
+                                                                                                <span class="withu-chip withu-chip--light withu-chip--no-transform"><i class="ph-bold ph-devices"></i> Windows</span>
+                                                                                                <span class="withu-chip withu-chip--light withu-chip--no-transform"><i class="ph-bold ph-globe"></i> Chrome</span>
                                                             </div>
                         </a>
-                                                                    <a href="/messages.php#reply_533_535" class="lgnewui-home-message-card">
-                            <div class="lgnewui-home-message-header">
-                                <img class="lgnewui-home-message-avatar" src="https://weavatar.com/avatar/43c37253c302e96e98489ba43c055b5463e18bca05d4f70eaa544dfe834a6c71?s=100&amp;d=mm&amp;r=g" alt="Qing.Ruo(奶龙版)">
-                                <div class="lgnewui-home-message-user-info">
-                                    <div class="lgnewui-home-message-name-row">
-                                        <span class="lgnewui-home-message-user-name">Qing.Ruo(奶龙版)</span>
-                                        <span class="lgnewui-home-message-badge lgnewui-home-message-badge--level"><i class="ph ph-arrow-bend-down-right"></i> 二级</span>                                    </div>
-                                    <span class="lgnewui-home-message-post-time">2026-06-02 11:53</span>
+                                                                    <a href="/messages.php#reply_533_535" class="withu-home-message-card">
+                            <div class="withu-home-message-header">
+                                <img class="withu-home-message-avatar" src="https://weavatar.com/avatar/43c37253c302e96e98489ba43c055b5463e18bca05d4f70eaa544dfe834a6c71?s=100&amp;d=mm&amp;r=g" alt="Qing.Ruo(奶龙版)">
+                                <div class="withu-home-message-user-info">
+                                    <div class="withu-home-message-name-row">
+                                        <span class="withu-home-message-user-name">Qing.Ruo(奶龙版)</span>
+                                        <span class="withu-home-message-badge withu-home-message-badge--level"><i class="ph ph-arrow-bend-down-right"></i> 二级</span>                                    </div>
+                                    <span class="withu-home-message-post-time">2026-06-02 11:53</span>
                                 </div>
                             </div>
-                            <div class="lgnewui-home-message-content">这是二级回复测试</div>
-                            <div class="lgnewui-home-message-divider"></div>
-                            <div class="lgnewui-home-message-footer">
-                                                                <span class="lgnewui-chip lgnewui-chip--light"><i class="ph-fill ph-map-pin"></i> 湖北 · 武汉</span>
-                                                                                                <span class="lgnewui-chip lgnewui-chip--light lgnewui-chip--no-transform"><i class="ph-bold ph-devices"></i> Windows</span>
-                                                                                                <span class="lgnewui-chip lgnewui-chip--light lgnewui-chip--no-transform"><i class="ph-bold ph-globe"></i> Chrome</span>
+                            <div class="withu-home-message-content">这是二级回复测试</div>
+                            <div class="withu-home-message-divider"></div>
+                            <div class="withu-home-message-footer">
+                                                                <span class="withu-chip withu-chip--light"><i class="ph-fill ph-map-pin"></i> 湖北 · 武汉</span>
+                                                                                                <span class="withu-chip withu-chip--light withu-chip--no-transform"><i class="ph-bold ph-devices"></i> Windows</span>
+                                                                                                <span class="withu-chip withu-chip--light withu-chip--no-transform"><i class="ph-bold ph-globe"></i> Chrome</span>
                                                             </div>
                         </a>
-                                                                    <a href="/messages.php#comment_533" class="lgnewui-home-message-card">
-                            <div class="lgnewui-home-message-header">
-                                <img class="lgnewui-home-message-avatar" src="https://weavatar.com/avatar/43c37253c302e96e98489ba43c055b5463e18bca05d4f70eaa544dfe834a6c71?s=100&amp;d=mm&amp;r=g" alt="Qing.Ruo(奶龙版)">
-                                <div class="lgnewui-home-message-user-info">
-                                    <div class="lgnewui-home-message-name-row">
-                                        <span class="lgnewui-home-message-user-name">Qing.Ruo(奶龙版)</span>
+                                                                    <a href="/messages.php#comment_533" class="withu-home-message-card">
+                            <div class="withu-home-message-header">
+                                <img class="withu-home-message-avatar" src="https://weavatar.com/avatar/43c37253c302e96e98489ba43c055b5463e18bca05d4f70eaa544dfe834a6c71?s=100&amp;d=mm&amp;r=g" alt="Qing.Ruo(奶龙版)">
+                                <div class="withu-home-message-user-info">
+                                    <div class="withu-home-message-name-row">
+                                        <span class="withu-home-message-user-name">Qing.Ruo(奶龙版)</span>
                                                                             </div>
-                                    <span class="lgnewui-home-message-post-time">2026-06-01 11:50</span>
+                                    <span class="withu-home-message-post-time">2026-06-01 11:50</span>
                                 </div>
                             </div>
-                            <div class="lgnewui-home-message-content"><img class="lazy" data-src="/OwO/images/emoji/aru/E4B88DE587BAE68980E69699_2x.png" data-emoji=":@(不出所料)"/><img class="lazy" data-src="/OwO/images/emoji/aru/E4B88DE587BAE68980E69699_2x.png" data-emoji=":@(不出所料)"/><img class="lazy" data-src="/OwO/images/emoji/aru/E4B88DE587BAE68980E69699_2x.png" data-emoji=":@(不出所料)"/>百年好合</div>
-                            <div class="lgnewui-home-message-divider"></div>
-                            <div class="lgnewui-home-message-footer">
-                                                                <span class="lgnewui-chip lgnewui-chip--light"><i class="ph-fill ph-map-pin"></i> 湖北 · 武汉</span>
-                                                                                                <span class="lgnewui-chip lgnewui-chip--light lgnewui-chip--no-transform"><i class="ph-bold ph-devices"></i> Android</span>
-                                                                                                <span class="lgnewui-chip lgnewui-chip--light lgnewui-chip--no-transform"><i class="ph-bold ph-globe"></i> Chrome</span>
+                            <div class="withu-home-message-content"><img class="lazy" data-src="/OwO/images/emoji/aru/E4B88DE587BAE68980E69699_2x.png" data-emoji=":@(不出所料)"/><img class="lazy" data-src="/OwO/images/emoji/aru/E4B88DE587BAE68980E69699_2x.png" data-emoji=":@(不出所料)"/><img class="lazy" data-src="/OwO/images/emoji/aru/E4B88DE587BAE68980E69699_2x.png" data-emoji=":@(不出所料)"/>百年好合</div>
+                            <div class="withu-home-message-divider"></div>
+                            <div class="withu-home-message-footer">
+                                                                <span class="withu-chip withu-chip--light"><i class="ph-fill ph-map-pin"></i> 湖北 · 武汉</span>
+                                                                                                <span class="withu-chip withu-chip--light withu-chip--no-transform"><i class="ph-bold ph-devices"></i> Android</span>
+                                                                                                <span class="withu-chip withu-chip--light withu-chip--no-transform"><i class="ph-bold ph-globe"></i> Chrome</span>
                                                             </div>
                         </a>
-                                                                    <a href="/messages.php#comment_526" class="lgnewui-home-message-card">
-                            <div class="lgnewui-home-message-header">
-                                <img class="lgnewui-home-message-avatar" src="https://weavatar.com/avatar/9a4eeef886a23c8a579df9a93d74651bb41e5de8ed539d355d7c21db80c1e8da?s=100&amp;d=mm&amp;r=g" alt="听雨">
-                                <div class="lgnewui-home-message-user-info">
-                                    <div class="lgnewui-home-message-name-row">
-                                        <span class="lgnewui-home-message-user-name">听雨</span>
+                                                                    <a href="/messages.php#comment_526" class="withu-home-message-card">
+                            <div class="withu-home-message-header">
+                                <img class="withu-home-message-avatar" src="https://weavatar.com/avatar/9a4eeef886a23c8a579df9a93d74651bb41e5de8ed539d355d7c21db80c1e8da?s=100&amp;d=mm&amp;r=g" alt="听雨">
+                                <div class="withu-home-message-user-info">
+                                    <div class="withu-home-message-name-row">
+                                        <span class="withu-home-message-user-name">听雨</span>
                                                                             </div>
-                                    <span class="lgnewui-home-message-post-time">2026-05-17 02:13</span>
+                                    <span class="withu-home-message-post-time">2026-05-17 02:13</span>
                                 </div>
                             </div>
-                            <div class="lgnewui-home-message-content"><img class="lazy" data-src="/OwO/images/emoji/qq/88.gif" data-emoji="::(88)"/><img class="lazy" data-src="/OwO/images/emoji/qq/88.gif" data-emoji="::(88)"/><img class="lazy" data-src="/OwO/images/emoji/qq/88.gif" data-emoji="::(88)"/></div>
-                            <div class="lgnewui-home-message-divider"></div>
-                            <div class="lgnewui-home-message-footer">
-                                                                <span class="lgnewui-chip lgnewui-chip--light"><i class="ph-fill ph-map-pin"></i> 中国 · 新疆</span>
-                                                                                                <span class="lgnewui-chip lgnewui-chip--light lgnewui-chip--no-transform"><i class="ph-bold ph-devices"></i> Android</span>
-                                                                                                <span class="lgnewui-chip lgnewui-chip--light lgnewui-chip--no-transform"><i class="ph-bold ph-globe"></i> Chrome</span>
+                            <div class="withu-home-message-content"><img class="lazy" data-src="/OwO/images/emoji/qq/88.gif" data-emoji="::(88)"/><img class="lazy" data-src="/OwO/images/emoji/qq/88.gif" data-emoji="::(88)"/><img class="lazy" data-src="/OwO/images/emoji/qq/88.gif" data-emoji="::(88)"/></div>
+                            <div class="withu-home-message-divider"></div>
+                            <div class="withu-home-message-footer">
+                                                                <span class="withu-chip withu-chip--light"><i class="ph-fill ph-map-pin"></i> 中国 · 新疆</span>
+                                                                                                <span class="withu-chip withu-chip--light withu-chip--no-transform"><i class="ph-bold ph-devices"></i> Android</span>
+                                                                                                <span class="withu-chip withu-chip--light withu-chip--no-transform"><i class="ph-bold ph-globe"></i> Chrome</span>
                                                             </div>
                         </a>
-                                                                    <a href="/messages.php#comment_527" class="lgnewui-home-message-card">
-                            <div class="lgnewui-home-message-header">
-                                <img class="lgnewui-home-message-avatar" src="https://weavatar.com/avatar/a122f65031fefddae290ee10ef645e0457987386325d501444c5204eb84b6cf0?s=100&amp;d=mm&amp;r=g" alt="Ki.">
-                                <div class="lgnewui-home-message-user-info">
-                                    <div class="lgnewui-home-message-name-row">
-                                        <span class="lgnewui-home-message-user-name">Ki.</span>
-                                        <span class="lgnewui-home-message-badge lgnewui-home-message-badge--developer"><i class="ph-fill ph-terminal-window"></i> 开发者</span>                                    </div>
-                                    <span class="lgnewui-home-message-post-time">2026-05-17 02:13</span>
+                                                                    <a href="/messages.php#comment_527" class="withu-home-message-card">
+                            <div class="withu-home-message-header">
+                                <img class="withu-home-message-avatar" src="https://weavatar.com/avatar/a122f65031fefddae290ee10ef645e0457987386325d501444c5204eb84b6cf0?s=100&amp;d=mm&amp;r=g" alt="Ki.">
+                                <div class="withu-home-message-user-info">
+                                    <div class="withu-home-message-name-row">
+                                        <span class="withu-home-message-user-name">Ki.</span>
+                                        <span class="withu-home-message-badge withu-home-message-badge--developer"><i class="ph-fill ph-terminal-window"></i> 开发者</span>                                    </div>
+                                    <span class="withu-home-message-post-time">2026-05-17 02:13</span>
                                 </div>
                             </div>
-                            <div class="lgnewui-home-message-content">测试一条留言数据</div>
-                            <div class="lgnewui-home-message-divider"></div>
-                            <div class="lgnewui-home-message-footer">
-                                                                <span class="lgnewui-chip lgnewui-chip--light"><i class="ph-fill ph-map-pin"></i> 广东 · 惠州</span>
-                                                                                                                                <span class="lgnewui-chip lgnewui-chip--light lgnewui-chip--no-transform"><i class="ph-bold ph-globe"></i> Safari</span>
+                            <div class="withu-home-message-content">测试一条留言数据</div>
+                            <div class="withu-home-message-divider"></div>
+                            <div class="withu-home-message-footer">
+                                                                <span class="withu-chip withu-chip--light"><i class="ph-fill ph-map-pin"></i> 广东 · 惠州</span>
+                                                                                                                                <span class="withu-chip withu-chip--light withu-chip--no-transform"><i class="ph-bold ph-globe"></i> Safari</span>
                                                             </div>
                         </a>
-                                                                    <a href="/messages.php#comment_523" class="lgnewui-home-message-card">
-                            <div class="lgnewui-home-message-header">
-                                <img class="lgnewui-home-message-avatar" src="https://weavatar.com/avatar/f06b376a446f6b7a0526c79699a09af4d8f67e4f230174bb3f7915128962ffcb?s=100&amp;d=mm&amp;r=g" alt="一清化剑.">
-                                <div class="lgnewui-home-message-user-info">
-                                    <div class="lgnewui-home-message-name-row">
-                                        <span class="lgnewui-home-message-user-name">一清化剑.</span>
+                                                                    <a href="/messages.php#comment_523" class="withu-home-message-card">
+                            <div class="withu-home-message-header">
+                                <img class="withu-home-message-avatar" src="https://weavatar.com/avatar/f06b376a446f6b7a0526c79699a09af4d8f67e4f230174bb3f7915128962ffcb?s=100&amp;d=mm&amp;r=g" alt="一清化剑.">
+                                <div class="withu-home-message-user-info">
+                                    <div class="withu-home-message-name-row">
+                                        <span class="withu-home-message-user-name">一清化剑.</span>
                                                                             </div>
-                                    <span class="lgnewui-home-message-post-time">2026-04-30 21:25</span>
+                                    <span class="withu-home-message-post-time">2026-04-30 21:25</span>
                                 </div>
                             </div>
-                            <div class="lgnewui-home-message-content">天天开心.<img class="lazy" data-src="/OwO/images/emoji/qq/A01.gif" data-emoji="::(A01)"/><img class="lazy" data-src="/OwO/images/emoji/qq/A01.gif" data-emoji="::(A01)"/><img class="lazy" data-src="/OwO/images/emoji/qq/A01.gif" data-emoji="::(A01)"/></div>
-                            <div class="lgnewui-home-message-divider"></div>
-                            <div class="lgnewui-home-message-footer">
-                                                                <span class="lgnewui-chip lgnewui-chip--light"><i class="ph-fill ph-map-pin"></i> 中国 · 河南</span>
-                                                                                                <span class="lgnewui-chip lgnewui-chip--light lgnewui-chip--no-transform"><i class="ph-bold ph-devices"></i> Android</span>
-                                                                                                <span class="lgnewui-chip lgnewui-chip--light lgnewui-chip--no-transform"><i class="ph-bold ph-globe"></i> Chrome</span>
+                            <div class="withu-home-message-content">天天开心.<img class="lazy" data-src="/OwO/images/emoji/qq/A01.gif" data-emoji="::(A01)"/><img class="lazy" data-src="/OwO/images/emoji/qq/A01.gif" data-emoji="::(A01)"/><img class="lazy" data-src="/OwO/images/emoji/qq/A01.gif" data-emoji="::(A01)"/></div>
+                            <div class="withu-home-message-divider"></div>
+                            <div class="withu-home-message-footer">
+                                                                <span class="withu-chip withu-chip--light"><i class="ph-fill ph-map-pin"></i> 中国 · 河南</span>
+                                                                                                <span class="withu-chip withu-chip--light withu-chip--no-transform"><i class="ph-bold ph-devices"></i> Android</span>
+                                                                                                <span class="withu-chip withu-chip--light withu-chip--no-transform"><i class="ph-bold ph-globe"></i> Chrome</span>
                                                             </div>
                         </a>
-                                                                    <a href="/messages.php#reply_521_522" class="lgnewui-home-message-card">
-                            <div class="lgnewui-home-message-header">
-                                <img class="lgnewui-home-message-avatar" src="https://weavatar.com/avatar/a122f65031fefddae290ee10ef645e0457987386325d501444c5204eb84b6cf0?s=100&amp;d=mm&amp;r=g" alt="Ki.">
-                                <div class="lgnewui-home-message-user-info">
-                                    <div class="lgnewui-home-message-name-row">
-                                        <span class="lgnewui-home-message-user-name">Ki.</span>
-                                        <span class="lgnewui-home-message-badge lgnewui-home-message-badge--developer"><i class="ph-fill ph-terminal-window"></i> 开发者</span><span class="lgnewui-home-message-badge lgnewui-home-message-badge--level"><i class="ph ph-arrow-bend-down-right"></i> 二级</span>                                    </div>
-                                    <span class="lgnewui-home-message-post-time">2026-04-22 21:59</span>
+                                                                    <a href="/messages.php#reply_521_522" class="withu-home-message-card">
+                            <div class="withu-home-message-header">
+                                <img class="withu-home-message-avatar" src="https://weavatar.com/avatar/a122f65031fefddae290ee10ef645e0457987386325d501444c5204eb84b6cf0?s=100&amp;d=mm&amp;r=g" alt="Ki.">
+                                <div class="withu-home-message-user-info">
+                                    <div class="withu-home-message-name-row">
+                                        <span class="withu-home-message-user-name">Ki.</span>
+                                        <span class="withu-home-message-badge withu-home-message-badge--developer"><i class="ph-fill ph-terminal-window"></i> 开发者</span><span class="withu-home-message-badge withu-home-message-badge--level"><i class="ph ph-arrow-bend-down-right"></i> 二级</span>                                    </div>
+                                    <span class="withu-home-message-post-time">2026-04-22 21:59</span>
                                 </div>
                             </div>
-                            <div class="lgnewui-home-message-content">测试二级评论</div>
-                            <div class="lgnewui-home-message-divider"></div>
-                            <div class="lgnewui-home-message-footer">
-                                                                <span class="lgnewui-chip lgnewui-chip--light"><i class="ph-fill ph-map-pin"></i> 广东 · 惠州</span>
-                                                                                                <span class="lgnewui-chip lgnewui-chip--light lgnewui-chip--no-transform"><i class="ph-bold ph-devices"></i> Mac</span>
-                                                                                                <span class="lgnewui-chip lgnewui-chip--light lgnewui-chip--no-transform"><i class="ph-bold ph-globe"></i> Chrome</span>
+                            <div class="withu-home-message-content">测试二级评论</div>
+                            <div class="withu-home-message-divider"></div>
+                            <div class="withu-home-message-footer">
+                                                                <span class="withu-chip withu-chip--light"><i class="ph-fill ph-map-pin"></i> 广东 · 惠州</span>
+                                                                                                <span class="withu-chip withu-chip--light withu-chip--no-transform"><i class="ph-bold ph-devices"></i> Mac</span>
+                                                                                                <span class="withu-chip withu-chip--light withu-chip--no-transform"><i class="ph-bold ph-globe"></i> Chrome</span>
                                                             </div>
                         </a>
-                                                                    <a href="/messages.php#comment_521" class="lgnewui-home-message-card">
-                            <div class="lgnewui-home-message-header">
-                                <img class="lgnewui-home-message-avatar" src="https://weavatar.com/avatar/7ef891bf3c0bbd177ca5765a93b12f145f957dff9d862ddfc2d34ced7c4f2c4d?s=100&amp;d=mm&amp;r=g" alt="Ki.">
-                                <div class="lgnewui-home-message-user-info">
-                                    <div class="lgnewui-home-message-name-row">
-                                        <span class="lgnewui-home-message-user-name">Ki.</span>
-                                        <span class="lgnewui-home-message-badge lgnewui-home-message-badge--admin"><i class="ph-fill ph-seal-check"></i> 管理员</span>                                    </div>
-                                    <span class="lgnewui-home-message-post-time">2026-04-22 21:58</span>
+                                                                    <a href="/messages.php#comment_521" class="withu-home-message-card">
+                            <div class="withu-home-message-header">
+                                <img class="withu-home-message-avatar" src="https://weavatar.com/avatar/7ef891bf3c0bbd177ca5765a93b12f145f957dff9d862ddfc2d34ced7c4f2c4d?s=100&amp;d=mm&amp;r=g" alt="Ki.">
+                                <div class="withu-home-message-user-info">
+                                    <div class="withu-home-message-name-row">
+                                        <span class="withu-home-message-user-name">Ki.</span>
+                                        <span class="withu-home-message-badge withu-home-message-badge--admin"><i class="ph-fill ph-seal-check"></i> 管理员</span>                                    </div>
+                                    <span class="withu-home-message-post-time">2026-04-22 21:58</span>
                                 </div>
                             </div>
-                            <div class="lgnewui-home-message-content">测试一级评论<img class="lazy" data-src="/OwO/images/emoji/threekids/14.png" data-emoji=":@(TK_14)"/><img class="lazy" data-src="/OwO/images/emoji/threekids/14.png" data-emoji=":@(TK_14)"/><img class="lazy" data-src="/OwO/images/emoji/threekids/14.png" data-emoji=":@(TK_14)"/></div>
-                            <div class="lgnewui-home-message-divider"></div>
-                            <div class="lgnewui-home-message-footer">
-                                                                <span class="lgnewui-chip lgnewui-chip--light"><i class="ph-fill ph-map-pin"></i> 广东 · 惠州</span>
-                                                                                                <span class="lgnewui-chip lgnewui-chip--light lgnewui-chip--no-transform"><i class="ph-bold ph-devices"></i> Mac</span>
-                                                                                                <span class="lgnewui-chip lgnewui-chip--light lgnewui-chip--no-transform"><i class="ph-bold ph-globe"></i> Chrome</span>
+                            <div class="withu-home-message-content">测试一级评论<img class="lazy" data-src="/OwO/images/emoji/threekids/14.png" data-emoji=":@(TK_14)"/><img class="lazy" data-src="/OwO/images/emoji/threekids/14.png" data-emoji=":@(TK_14)"/><img class="lazy" data-src="/OwO/images/emoji/threekids/14.png" data-emoji=":@(TK_14)"/></div>
+                            <div class="withu-home-message-divider"></div>
+                            <div class="withu-home-message-footer">
+                                                                <span class="withu-chip withu-chip--light"><i class="ph-fill ph-map-pin"></i> 广东 · 惠州</span>
+                                                                                                <span class="withu-chip withu-chip--light withu-chip--no-transform"><i class="ph-bold ph-devices"></i> Mac</span>
+                                                                                                <span class="withu-chip withu-chip--light withu-chip--no-transform"><i class="ph-bold ph-globe"></i> Chrome</span>
                                                             </div>
                         </a>
-                                                                    <a href="/messages.php#comment_520" class="lgnewui-home-message-card">
-                            <div class="lgnewui-home-message-header">
-                                <img class="lgnewui-home-message-avatar" src="https://weavatar.com/avatar/b79d5dc704f398313e2dd108021a399c2bd0adfd568b794ccc9499c621ac61d4?s=100&amp;d=mm&amp;r=g" alt="江奕浩">
-                                <div class="lgnewui-home-message-user-info">
-                                    <div class="lgnewui-home-message-name-row">
-                                        <span class="lgnewui-home-message-user-name">江奕浩</span>
+                                                                    <a href="/messages.php#comment_520" class="withu-home-message-card">
+                            <div class="withu-home-message-header">
+                                <img class="withu-home-message-avatar" src="https://weavatar.com/avatar/b79d5dc704f398313e2dd108021a399c2bd0adfd568b794ccc9499c621ac61d4?s=100&amp;d=mm&amp;r=g" alt="江奕浩">
+                                <div class="withu-home-message-user-info">
+                                    <div class="withu-home-message-name-row">
+                                        <span class="withu-home-message-user-name">江奕浩</span>
                                                                             </div>
-                                    <span class="lgnewui-home-message-post-time">2026-04-22 21:22</span>
+                                    <span class="withu-home-message-post-time">2026-04-22 21:22</span>
                                 </div>
                             </div>
-                            <div class="lgnewui-home-message-content">祝福你们的心如同繁星闪耀 永远相伴不离 愿长长久久</div>
-                            <div class="lgnewui-home-message-divider"></div>
-                            <div class="lgnewui-home-message-footer">
-                                                                <span class="lgnewui-chip lgnewui-chip--light"><i class="ph-fill ph-map-pin"></i> 内蒙古 · 通辽</span>
-                                                                                                <span class="lgnewui-chip lgnewui-chip--light lgnewui-chip--no-transform"><i class="ph-bold ph-devices"></i> Android</span>
-                                                                                                <span class="lgnewui-chip lgnewui-chip--light lgnewui-chip--no-transform"><i class="ph-bold ph-globe"></i> Chrome</span>
+                            <div class="withu-home-message-content">祝福你们的心如同繁星闪耀 永远相伴不离 愿长长久久</div>
+                            <div class="withu-home-message-divider"></div>
+                            <div class="withu-home-message-footer">
+                                                                <span class="withu-chip withu-chip--light"><i class="ph-fill ph-map-pin"></i> 内蒙古 · 通辽</span>
+                                                                                                <span class="withu-chip withu-chip--light withu-chip--no-transform"><i class="ph-bold ph-devices"></i> Android</span>
+                                                                                                <span class="withu-chip withu-chip--light withu-chip--no-transform"><i class="ph-bold ph-globe"></i> Chrome</span>
                                                             </div>
                         </a>
-                                                                    <a href="/messages.php#comment_519" class="lgnewui-home-message-card">
-                            <div class="lgnewui-home-message-header">
-                                <img class="lgnewui-home-message-avatar" src="https://weavatar.com/avatar/6e4f1f21dce85d7fc7e9edf34d6e7796d5db3be2d5eda25de4c95ae8d345241b?s=100&amp;d=mm&amp;r=g" alt="轩">
-                                <div class="lgnewui-home-message-user-info">
-                                    <div class="lgnewui-home-message-name-row">
-                                        <span class="lgnewui-home-message-user-name">轩</span>
+                                                                    <a href="/messages.php#comment_519" class="withu-home-message-card">
+                            <div class="withu-home-message-header">
+                                <img class="withu-home-message-avatar" src="https://weavatar.com/avatar/6e4f1f21dce85d7fc7e9edf34d6e7796d5db3be2d5eda25de4c95ae8d345241b?s=100&amp;d=mm&amp;r=g" alt="轩">
+                                <div class="withu-home-message-user-info">
+                                    <div class="withu-home-message-name-row">
+                                        <span class="withu-home-message-user-name">轩</span>
                                                                             </div>
-                                    <span class="lgnewui-home-message-post-time">2026-04-22 21:21</span>
+                                    <span class="withu-home-message-post-time">2026-04-22 21:21</span>
                                 </div>
                             </div>
-                            <div class="lgnewui-home-message-content">两情相悦春常在 一世恩爱梦也甜</div>
-                            <div class="lgnewui-home-message-divider"></div>
-                            <div class="lgnewui-home-message-footer">
-                                                                <span class="lgnewui-chip lgnewui-chip--light"><i class="ph-fill ph-map-pin"></i> 江西 · 上饶</span>
-                                                                                                <span class="lgnewui-chip lgnewui-chip--light lgnewui-chip--no-transform"><i class="ph-bold ph-devices"></i> Android</span>
-                                                                                                <span class="lgnewui-chip lgnewui-chip--light lgnewui-chip--no-transform"><i class="ph-bold ph-globe"></i> Chrome</span>
+                            <div class="withu-home-message-content">两情相悦春常在 一世恩爱梦也甜</div>
+                            <div class="withu-home-message-divider"></div>
+                            <div class="withu-home-message-footer">
+                                                                <span class="withu-chip withu-chip--light"><i class="ph-fill ph-map-pin"></i> 江西 · 上饶</span>
+                                                                                                <span class="withu-chip withu-chip--light withu-chip--no-transform"><i class="ph-bold ph-devices"></i> Android</span>
+                                                                                                <span class="withu-chip withu-chip--light withu-chip--no-transform"><i class="ph-bold ph-globe"></i> Chrome</span>
                                                             </div>
                         </a>
-                                                                    <a href="/messages.php#comment_518" class="lgnewui-home-message-card">
-                            <div class="lgnewui-home-message-header">
-                                <img class="lgnewui-home-message-avatar" src="https://weavatar.com/avatar/7a92b8dc2bdc586c5b761c7bb3ded431a0edb6def62c8fad50f97e0a3496c4f8?s=100&amp;d=mm&amp;r=g" alt="小嘿">
-                                <div class="lgnewui-home-message-user-info">
-                                    <div class="lgnewui-home-message-name-row">
-                                        <span class="lgnewui-home-message-user-name">小嘿</span>
+                                                                    <a href="/messages.php#comment_518" class="withu-home-message-card">
+                            <div class="withu-home-message-header">
+                                <img class="withu-home-message-avatar" src="https://weavatar.com/avatar/7a92b8dc2bdc586c5b761c7bb3ded431a0edb6def62c8fad50f97e0a3496c4f8?s=100&amp;d=mm&amp;r=g" alt="小嘿">
+                                <div class="withu-home-message-user-info">
+                                    <div class="withu-home-message-name-row">
+                                        <span class="withu-home-message-user-name">小嘿</span>
                                                                             </div>
-                                    <span class="lgnewui-home-message-post-time">2026-04-22 21:21</span>
+                                    <span class="withu-home-message-post-time">2026-04-22 21:21</span>
                                 </div>
                             </div>
-                            <div class="lgnewui-home-message-content"><img class="lazy" data-src="/OwO/images/emoji/qq/9.gif" data-emoji="::(9)"/><img class="lazy" data-src="/OwO/images/emoji/qq/9.gif" data-emoji="::(9)"/><img class="lazy" data-src="/OwO/images/emoji/qq/9.gif" data-emoji="::(9)"/>祝福你们的心灵似广袤天空般辽阔 彼此成就不凡 愿你们99</div>
-                            <div class="lgnewui-home-message-divider"></div>
-                            <div class="lgnewui-home-message-footer">
-                                                                <span class="lgnewui-chip lgnewui-chip--light"><i class="ph-fill ph-map-pin"></i> 中国 · 浙江</span>
-                                                                                                <span class="lgnewui-chip lgnewui-chip--light lgnewui-chip--no-transform"><i class="ph-bold ph-devices"></i> iOS</span>
-                                                                                                <span class="lgnewui-chip lgnewui-chip--light lgnewui-chip--no-transform"><i class="ph-bold ph-globe"></i> Chrome</span>
+                            <div class="withu-home-message-content"><img class="lazy" data-src="/OwO/images/emoji/qq/9.gif" data-emoji="::(9)"/><img class="lazy" data-src="/OwO/images/emoji/qq/9.gif" data-emoji="::(9)"/><img class="lazy" data-src="/OwO/images/emoji/qq/9.gif" data-emoji="::(9)"/>祝福你们的心灵似广袤天空般辽阔 彼此成就不凡 愿你们99</div>
+                            <div class="withu-home-message-divider"></div>
+                            <div class="withu-home-message-footer">
+                                                                <span class="withu-chip withu-chip--light"><i class="ph-fill ph-map-pin"></i> 中国 · 浙江</span>
+                                                                                                <span class="withu-chip withu-chip--light withu-chip--no-transform"><i class="ph-bold ph-devices"></i> iOS</span>
+                                                                                                <span class="withu-chip withu-chip--light withu-chip--no-transform"><i class="ph-bold ph-globe"></i> Chrome</span>
                                                             </div>
                         </a>
-                                                                    <a href="/messages.php#reply_516_517" class="lgnewui-home-message-card">
-                            <div class="lgnewui-home-message-header">
-                                <img class="lgnewui-home-message-avatar" src="https://weavatar.com/avatar/86587ba68b4fea9e6f44e77d9860f9341b210610c323bdcb6ca3db88b233a809?s=100&amp;d=mm&amp;r=g" alt=".">
-                                <div class="lgnewui-home-message-user-info">
-                                    <div class="lgnewui-home-message-name-row">
-                                        <span class="lgnewui-home-message-user-name">.</span>
-                                        <span class="lgnewui-home-message-badge lgnewui-home-message-badge--admin"><i class="ph-fill ph-seal-check"></i> 管理员</span><span class="lgnewui-home-message-badge lgnewui-home-message-badge--level"><i class="ph ph-arrow-bend-down-right"></i> 二级</span>                                    </div>
-                                    <span class="lgnewui-home-message-post-time">2026-04-22 21:09</span>
+                                                                    <a href="/messages.php#reply_516_517" class="withu-home-message-card">
+                            <div class="withu-home-message-header">
+                                <img class="withu-home-message-avatar" src="https://weavatar.com/avatar/86587ba68b4fea9e6f44e77d9860f9341b210610c323bdcb6ca3db88b233a809?s=100&amp;d=mm&amp;r=g" alt=".">
+                                <div class="withu-home-message-user-info">
+                                    <div class="withu-home-message-name-row">
+                                        <span class="withu-home-message-user-name">.</span>
+                                        <span class="withu-home-message-badge withu-home-message-badge--admin"><i class="ph-fill ph-seal-check"></i> 管理员</span><span class="withu-home-message-badge withu-home-message-badge--level"><i class="ph ph-arrow-bend-down-right"></i> 二级</span>                                    </div>
+                                    <span class="withu-home-message-post-time">2026-04-22 21:09</span>
                                 </div>
                             </div>
-                            <div class="lgnewui-home-message-content">测试二级评论回复邮件问题<img class="lazy" data-src="/OwO/images/emoji/threekids/4.png" data-emoji=":@(TK_4)"/></div>
-                            <div class="lgnewui-home-message-divider"></div>
-                            <div class="lgnewui-home-message-footer">
-                                                                <span class="lgnewui-chip lgnewui-chip--light"><i class="ph-fill ph-map-pin"></i> 广东 · 惠州</span>
-                                                                                                <span class="lgnewui-chip lgnewui-chip--light lgnewui-chip--no-transform"><i class="ph-bold ph-devices"></i> Mac</span>
-                                                                                                <span class="lgnewui-chip lgnewui-chip--light lgnewui-chip--no-transform"><i class="ph-bold ph-globe"></i> Chrome</span>
+                            <div class="withu-home-message-content">测试二级评论回复邮件问题<img class="lazy" data-src="/OwO/images/emoji/threekids/4.png" data-emoji=":@(TK_4)"/></div>
+                            <div class="withu-home-message-divider"></div>
+                            <div class="withu-home-message-footer">
+                                                                <span class="withu-chip withu-chip--light"><i class="ph-fill ph-map-pin"></i> 广东 · 惠州</span>
+                                                                                                <span class="withu-chip withu-chip--light withu-chip--no-transform"><i class="ph-bold ph-devices"></i> Mac</span>
+                                                                                                <span class="withu-chip withu-chip--light withu-chip--no-transform"><i class="ph-bold ph-globe"></i> Chrome</span>
                                                             </div>
                         </a>
-                                                                    <a href="/messages.php#comment_516" class="lgnewui-home-message-card">
-                            <div class="lgnewui-home-message-header">
-                                <img class="lgnewui-home-message-avatar" src="https://weavatar.com/avatar/7ef891bf3c0bbd177ca5765a93b12f145f957dff9d862ddfc2d34ced7c4f2c4d?s=100&amp;d=mm&amp;r=g" alt="Ki.">
-                                <div class="lgnewui-home-message-user-info">
-                                    <div class="lgnewui-home-message-name-row">
-                                        <span class="lgnewui-home-message-user-name">Ki.</span>
-                                        <span class="lgnewui-home-message-badge lgnewui-home-message-badge--admin"><i class="ph-fill ph-seal-check"></i> 管理员</span>                                    </div>
-                                    <span class="lgnewui-home-message-post-time">2026-04-22 21:07</span>
+                                                                    <a href="/messages.php#comment_516" class="withu-home-message-card">
+                            <div class="withu-home-message-header">
+                                <img class="withu-home-message-avatar" src="https://weavatar.com/avatar/7ef891bf3c0bbd177ca5765a93b12f145f957dff9d862ddfc2d34ced7c4f2c4d?s=100&amp;d=mm&amp;r=g" alt="Ki.">
+                                <div class="withu-home-message-user-info">
+                                    <div class="withu-home-message-name-row">
+                                        <span class="withu-home-message-user-name">Ki.</span>
+                                        <span class="withu-home-message-badge withu-home-message-badge--admin"><i class="ph-fill ph-seal-check"></i> 管理员</span>                                    </div>
+                                    <span class="withu-home-message-post-time">2026-04-22 21:07</span>
                                 </div>
                             </div>
-                            <div class="lgnewui-home-message-content">测试邮件回复<img class="lazy" data-src="/OwO/images/emoji/qq/101.gif" data-emoji="::(101)"/><img class="lazy" data-src="/OwO/images/emoji/qq/101.gif" data-emoji="::(101)"/><img class="lazy" data-src="/OwO/images/emoji/qq/101.gif" data-emoji="::(101)"/></div>
-                            <div class="lgnewui-home-message-divider"></div>
-                            <div class="lgnewui-home-message-footer">
-                                                                <span class="lgnewui-chip lgnewui-chip--light"><i class="ph-fill ph-map-pin"></i> 广东 · 惠州</span>
-                                                                                                <span class="lgnewui-chip lgnewui-chip--light lgnewui-chip--no-transform"><i class="ph-bold ph-devices"></i> Mac</span>
-                                                                                                <span class="lgnewui-chip lgnewui-chip--light lgnewui-chip--no-transform"><i class="ph-bold ph-globe"></i> Chrome</span>
+                            <div class="withu-home-message-content">测试邮件回复<img class="lazy" data-src="/OwO/images/emoji/qq/101.gif" data-emoji="::(101)"/><img class="lazy" data-src="/OwO/images/emoji/qq/101.gif" data-emoji="::(101)"/><img class="lazy" data-src="/OwO/images/emoji/qq/101.gif" data-emoji="::(101)"/></div>
+                            <div class="withu-home-message-divider"></div>
+                            <div class="withu-home-message-footer">
+                                                                <span class="withu-chip withu-chip--light"><i class="ph-fill ph-map-pin"></i> 广东 · 惠州</span>
+                                                                                                <span class="withu-chip withu-chip--light withu-chip--no-transform"><i class="ph-bold ph-devices"></i> Mac</span>
+                                                                                                <span class="withu-chip withu-chip--light withu-chip--no-transform"><i class="ph-bold ph-globe"></i> Chrome</span>
                                                             </div>
                         </a>
-                                                                    <a href="/messages.php#comment_514" class="lgnewui-home-message-card">
-                            <div class="lgnewui-home-message-header">
-                                <img class="lgnewui-home-message-avatar" src="https://weavatar.com/avatar/43e538b0ccbd0e491d47baefe8d4816f77a1fdd58f5ed8663fb1283b377cfae6?s=100&amp;d=mm&amp;r=g" alt="泽北饱饱想吃糖">
-                                <div class="lgnewui-home-message-user-info">
-                                    <div class="lgnewui-home-message-name-row">
-                                        <span class="lgnewui-home-message-user-name">泽北饱饱想吃糖</span>
+                                                                    <a href="/messages.php#comment_514" class="withu-home-message-card">
+                            <div class="withu-home-message-header">
+                                <img class="withu-home-message-avatar" src="https://weavatar.com/avatar/43e538b0ccbd0e491d47baefe8d4816f77a1fdd58f5ed8663fb1283b377cfae6?s=100&amp;d=mm&amp;r=g" alt="泽北饱饱想吃糖">
+                                <div class="withu-home-message-user-info">
+                                    <div class="withu-home-message-name-row">
+                                        <span class="withu-home-message-user-name">泽北饱饱想吃糖</span>
                                                                             </div>
-                                    <span class="lgnewui-home-message-post-time">2026-04-21 09:59</span>
+                                    <span class="withu-home-message-post-time">2026-04-21 09:59</span>
                                 </div>
                             </div>
-                            <div class="lgnewui-home-message-content">心像花朵欣然绽放 每日都弥漫着甜蜜的芬芳 愿你们爱情长长久久</div>
-                            <div class="lgnewui-home-message-divider"></div>
-                            <div class="lgnewui-home-message-footer">
-                                                                <span class="lgnewui-chip lgnewui-chip--light"><i class="ph-fill ph-map-pin"></i> 贵州 · 黔西南布依族苗族自治州</span>
-                                                                                                <span class="lgnewui-chip lgnewui-chip--light lgnewui-chip--no-transform"><i class="ph-bold ph-devices"></i> Windows</span>
-                                                                                                <span class="lgnewui-chip lgnewui-chip--light lgnewui-chip--no-transform"><i class="ph-bold ph-globe"></i> Chrome</span>
+                            <div class="withu-home-message-content">心像花朵欣然绽放 每日都弥漫着甜蜜的芬芳 愿你们爱情长长久久</div>
+                            <div class="withu-home-message-divider"></div>
+                            <div class="withu-home-message-footer">
+                                                                <span class="withu-chip withu-chip--light"><i class="ph-fill ph-map-pin"></i> 贵州 · 黔西南布依族苗族自治州</span>
+                                                                                                <span class="withu-chip withu-chip--light withu-chip--no-transform"><i class="ph-bold ph-devices"></i> Windows</span>
+                                                                                                <span class="withu-chip withu-chip--light withu-chip--no-transform"><i class="ph-bold ph-globe"></i> Chrome</span>
                                                             </div>
                         </a>
-                                                                    <a href="/messages.php#comment_512" class="lgnewui-home-message-card">
-                            <div class="lgnewui-home-message-header">
-                                <img class="lgnewui-home-message-avatar" src="https://weavatar.com/avatar/a9b68c9c93d54c0670271c778cb349230a33d24b2f34473970532ca513d0baa1?s=100&amp;d=mm&amp;r=g" alt="小晴挽星河✨✨">
-                                <div class="lgnewui-home-message-user-info">
-                                    <div class="lgnewui-home-message-name-row">
-                                        <span class="lgnewui-home-message-user-name">小晴挽星河✨✨</span>
+                                                                    <a href="/messages.php#comment_512" class="withu-home-message-card">
+                            <div class="withu-home-message-header">
+                                <img class="withu-home-message-avatar" src="https://weavatar.com/avatar/a9b68c9c93d54c0670271c778cb349230a33d24b2f34473970532ca513d0baa1?s=100&amp;d=mm&amp;r=g" alt="小晴挽星河✨✨">
+                                <div class="withu-home-message-user-info">
+                                    <div class="withu-home-message-name-row">
+                                        <span class="withu-home-message-user-name">小晴挽星河✨✨</span>
                                                                             </div>
-                                    <span class="lgnewui-home-message-post-time">2026-04-21 00:27</span>
+                                    <span class="withu-home-message-post-time">2026-04-21 00:27</span>
                                 </div>
                             </div>
-                            <div class="lgnewui-home-message-content">执手相看情脉脉 倾心相守爱悠悠</div>
-                            <div class="lgnewui-home-message-divider"></div>
-                            <div class="lgnewui-home-message-footer">
-                                                                <span class="lgnewui-chip lgnewui-chip--light"><i class="ph-fill ph-map-pin"></i> 龙场镇</span>
-                                                                                                <span class="lgnewui-chip lgnewui-chip--light lgnewui-chip--no-transform"><i class="ph-bold ph-devices"></i> Android</span>
-                                                                                                <span class="lgnewui-chip lgnewui-chip--light lgnewui-chip--no-transform"><i class="ph-bold ph-globe"></i> Chrome</span>
+                            <div class="withu-home-message-content">执手相看情脉脉 倾心相守爱悠悠</div>
+                            <div class="withu-home-message-divider"></div>
+                            <div class="withu-home-message-footer">
+                                                                <span class="withu-chip withu-chip--light"><i class="ph-fill ph-map-pin"></i> 龙场镇</span>
+                                                                                                <span class="withu-chip withu-chip--light withu-chip--no-transform"><i class="ph-bold ph-devices"></i> Android</span>
+                                                                                                <span class="withu-chip withu-chip--light withu-chip--no-transform"><i class="ph-bold ph-globe"></i> Chrome</span>
                                                             </div>
                         </a>
-                                                                    <a href="/messages.php#reply_508_511" class="lgnewui-home-message-card">
-                            <div class="lgnewui-home-message-header">
-                                <img class="lgnewui-home-message-avatar" src="https://weavatar.com/avatar/86587ba68b4fea9e6f44e77d9860f9341b210610c323bdcb6ca3db88b233a809?s=100&amp;d=mm&amp;r=g" alt=".">
-                                <div class="lgnewui-home-message-user-info">
-                                    <div class="lgnewui-home-message-name-row">
-                                        <span class="lgnewui-home-message-user-name">.</span>
-                                        <span class="lgnewui-home-message-badge lgnewui-home-message-badge--level"><i class="ph ph-arrow-bend-down-right"></i> 二级</span>                                    </div>
-                                    <span class="lgnewui-home-message-post-time">2026-04-16 20:21</span>
+                                                                    <a href="/messages.php#reply_508_511" class="withu-home-message-card">
+                            <div class="withu-home-message-header">
+                                <img class="withu-home-message-avatar" src="https://weavatar.com/avatar/86587ba68b4fea9e6f44e77d9860f9341b210610c323bdcb6ca3db88b233a809?s=100&amp;d=mm&amp;r=g" alt=".">
+                                <div class="withu-home-message-user-info">
+                                    <div class="withu-home-message-name-row">
+                                        <span class="withu-home-message-user-name">.</span>
+                                        <span class="withu-home-message-badge withu-home-message-badge--level"><i class="ph ph-arrow-bend-down-right"></i> 二级</span>                                    </div>
+                                    <span class="withu-home-message-post-time">2026-04-16 20:21</span>
                                 </div>
                             </div>
-                            <div class="lgnewui-home-message-content">测试留言回复是否邮件通知<img class="lazy" data-src="/OwO/images/emoji/threekids/6.png" data-emoji=":@(TK_6)"/></div>
-                            <div class="lgnewui-home-message-divider"></div>
-                            <div class="lgnewui-home-message-footer">
-                                                                <span class="lgnewui-chip lgnewui-chip--light"><i class="ph-fill ph-map-pin"></i> 广东 · 惠州</span>
-                                                                                                <span class="lgnewui-chip lgnewui-chip--light lgnewui-chip--no-transform"><i class="ph-bold ph-devices"></i> Mac</span>
-                                                                                                <span class="lgnewui-chip lgnewui-chip--light lgnewui-chip--no-transform"><i class="ph-bold ph-globe"></i> Chrome</span>
+                            <div class="withu-home-message-content">测试留言回复是否邮件通知<img class="lazy" data-src="/OwO/images/emoji/threekids/6.png" data-emoji=":@(TK_6)"/></div>
+                            <div class="withu-home-message-divider"></div>
+                            <div class="withu-home-message-footer">
+                                                                <span class="withu-chip withu-chip--light"><i class="ph-fill ph-map-pin"></i> 广东 · 惠州</span>
+                                                                                                <span class="withu-chip withu-chip--light withu-chip--no-transform"><i class="ph-bold ph-devices"></i> Mac</span>
+                                                                                                <span class="withu-chip withu-chip--light withu-chip--no-transform"><i class="ph-bold ph-globe"></i> Chrome</span>
                                                             </div>
                         </a>
-                                                                    <a href="/messages.php#comment_508" class="lgnewui-home-message-card">
-                            <div class="lgnewui-home-message-header">
-                                <img class="lgnewui-home-message-avatar" src="https://weavatar.com/avatar/7ef891bf3c0bbd177ca5765a93b12f145f957dff9d862ddfc2d34ced7c4f2c4d?s=100&amp;d=mm&amp;r=g" alt="Ki.">
-                                <div class="lgnewui-home-message-user-info">
-                                    <div class="lgnewui-home-message-name-row">
-                                        <span class="lgnewui-home-message-user-name">Ki.</span>
-                                        <span class="lgnewui-home-message-badge lgnewui-home-message-badge--admin"><i class="ph-fill ph-seal-check"></i> 管理员</span>                                    </div>
-                                    <span class="lgnewui-home-message-post-time">2026-04-16 19:39</span>
+                                                                    <a href="/messages.php#comment_508" class="withu-home-message-card">
+                            <div class="withu-home-message-header">
+                                <img class="withu-home-message-avatar" src="https://weavatar.com/avatar/7ef891bf3c0bbd177ca5765a93b12f145f957dff9d862ddfc2d34ced7c4f2c4d?s=100&amp;d=mm&amp;r=g" alt="Ki.">
+                                <div class="withu-home-message-user-info">
+                                    <div class="withu-home-message-name-row">
+                                        <span class="withu-home-message-user-name">Ki.</span>
+                                        <span class="withu-home-message-badge withu-home-message-badge--admin"><i class="ph-fill ph-seal-check"></i> 管理员</span>                                    </div>
+                                    <span class="withu-home-message-post-time">2026-04-16 19:39</span>
                                 </div>
                             </div>
-                            <div class="lgnewui-home-message-content">测试一下邮件通知</div>
-                            <div class="lgnewui-home-message-divider"></div>
-                            <div class="lgnewui-home-message-footer">
-                                                                <span class="lgnewui-chip lgnewui-chip--light"><i class="ph-fill ph-map-pin"></i> 广东 · 惠州</span>
-                                                                                                <span class="lgnewui-chip lgnewui-chip--light lgnewui-chip--no-transform"><i class="ph-bold ph-devices"></i> Mac</span>
-                                                                                                <span class="lgnewui-chip lgnewui-chip--light lgnewui-chip--no-transform"><i class="ph-bold ph-globe"></i> Chrome</span>
+                            <div class="withu-home-message-content">测试一下邮件通知</div>
+                            <div class="withu-home-message-divider"></div>
+                            <div class="withu-home-message-footer">
+                                                                <span class="withu-chip withu-chip--light"><i class="ph-fill ph-map-pin"></i> 广东 · 惠州</span>
+                                                                                                <span class="withu-chip withu-chip--light withu-chip--no-transform"><i class="ph-bold ph-devices"></i> Mac</span>
+                                                                                                <span class="withu-chip withu-chip--light withu-chip--no-transform"><i class="ph-bold ph-globe"></i> Chrome</span>
                                                             </div>
                         </a>
-                                                                    <a href="/messages.php#comment_507" class="lgnewui-home-message-card">
-                            <div class="lgnewui-home-message-header">
-                                <img class="lgnewui-home-message-avatar" src="https://weavatar.com/avatar/86587ba68b4fea9e6f44e77d9860f9341b210610c323bdcb6ca3db88b233a809?s=100&amp;d=mm&amp;r=g" alt=".">
-                                <div class="lgnewui-home-message-user-info">
-                                    <div class="lgnewui-home-message-name-row">
-                                        <span class="lgnewui-home-message-user-name">.</span>
-                                        <span class="lgnewui-home-message-badge lgnewui-home-message-badge--admin"><i class="ph-fill ph-seal-check"></i> 管理员</span>                                    </div>
-                                    <span class="lgnewui-home-message-post-time">2026-04-14 19:00</span>
+                                                                    <a href="/messages.php#comment_507" class="withu-home-message-card">
+                            <div class="withu-home-message-header">
+                                <img class="withu-home-message-avatar" src="https://weavatar.com/avatar/86587ba68b4fea9e6f44e77d9860f9341b210610c323bdcb6ca3db88b233a809?s=100&amp;d=mm&amp;r=g" alt=".">
+                                <div class="withu-home-message-user-info">
+                                    <div class="withu-home-message-name-row">
+                                        <span class="withu-home-message-user-name">.</span>
+                                        <span class="withu-home-message-badge withu-home-message-badge--admin"><i class="ph-fill ph-seal-check"></i> 管理员</span>                                    </div>
+                                    <span class="withu-home-message-post-time">2026-04-14 19:00</span>
                                 </div>
                             </div>
-                            <div class="lgnewui-home-message-content">携手相伴情路远 爱意绵延岁月长<img class="lazy" data-src="/OwO/images/emoji/threekids/31.png" data-emoji=":@(TK_31)"/></div>
-                            <div class="lgnewui-home-message-divider"></div>
-                            <div class="lgnewui-home-message-footer">
-                                                                <span class="lgnewui-chip lgnewui-chip--light"><i class="ph-fill ph-map-pin"></i> 广东 · 惠州</span>
-                                                                                                <span class="lgnewui-chip lgnewui-chip--light lgnewui-chip--no-transform"><i class="ph-bold ph-devices"></i> Mac</span>
-                                                                                                <span class="lgnewui-chip lgnewui-chip--light lgnewui-chip--no-transform"><i class="ph-bold ph-globe"></i> Chrome</span>
+                            <div class="withu-home-message-content">携手相伴情路远 爱意绵延岁月长<img class="lazy" data-src="/OwO/images/emoji/threekids/31.png" data-emoji=":@(TK_31)"/></div>
+                            <div class="withu-home-message-divider"></div>
+                            <div class="withu-home-message-footer">
+                                                                <span class="withu-chip withu-chip--light"><i class="ph-fill ph-map-pin"></i> 广东 · 惠州</span>
+                                                                                                <span class="withu-chip withu-chip--light withu-chip--no-transform"><i class="ph-bold ph-devices"></i> Mac</span>
+                                                                                                <span class="withu-chip withu-chip--light withu-chip--no-transform"><i class="ph-bold ph-globe"></i> Chrome</span>
                                                             </div>
                         </a>
-                                                                    <a href="/messages.php#reply_501_506" class="lgnewui-home-message-card">
-                            <div class="lgnewui-home-message-header">
-                                <img class="lgnewui-home-message-avatar" src="/Lovefolder/20250310095445_67ce466597870.gif" alt="匿名">
-                                <div class="lgnewui-home-message-user-info">
-                                    <div class="lgnewui-home-message-name-row">
-                                        <span class="lgnewui-home-message-user-name">匿名</span>
-                                        <span class="lgnewui-home-message-badge lgnewui-home-message-badge--level"><i class="ph ph-arrow-bend-down-right"></i> 二级</span>                                    </div>
-                                    <span class="lgnewui-home-message-post-time">2026-04-12 16:42</span>
+                                                                    <a href="/messages.php#reply_501_506" class="withu-home-message-card">
+                            <div class="withu-home-message-header">
+                                <img class="withu-home-message-avatar" src="/Lovefolder/20250310095445_67ce466597870.gif" alt="匿名">
+                                <div class="withu-home-message-user-info">
+                                    <div class="withu-home-message-name-row">
+                                        <span class="withu-home-message-user-name">匿名</span>
+                                        <span class="withu-home-message-badge withu-home-message-badge--level"><i class="ph ph-arrow-bend-down-right"></i> 二级</span>                                    </div>
+                                    <span class="withu-home-message-post-time">2026-04-12 16:42</span>
                                 </div>
                             </div>
-                            <div class="lgnewui-home-message-content">同心同德情不断 相亲相爱到永远1 月底到期了吗？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？<img class="lazy" data-src="/OwO/images/emoji/threekids/1.png" data-emoji=":@(TK_1)"/><img class="lazy" data-src="/OwO/images/emoji/threekids/1.png" data-emoji=":@(TK_1)"/><img class="lazy" data-src="/OwO/images/emoji/threekids/1.png" data-emoji=":@(TK_1)"/></div>
-                            <div class="lgnewui-home-message-divider"></div>
-                            <div class="lgnewui-home-message-footer">
-                                                                <span class="lgnewui-chip lgnewui-chip--light"><i class="ph-fill ph-map-pin"></i> 广东 · 惠州</span>
-                                                                                                <span class="lgnewui-chip lgnewui-chip--light lgnewui-chip--no-transform"><i class="ph-bold ph-devices"></i> iOS</span>
-                                                                                                <span class="lgnewui-chip lgnewui-chip--light lgnewui-chip--no-transform"><i class="ph-bold ph-globe"></i> Chrome</span>
+                            <div class="withu-home-message-content">同心同德情不断 相亲相爱到永远1 月底到期了吗？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？<img class="lazy" data-src="/OwO/images/emoji/threekids/1.png" data-emoji=":@(TK_1)"/><img class="lazy" data-src="/OwO/images/emoji/threekids/1.png" data-emoji=":@(TK_1)"/><img class="lazy" data-src="/OwO/images/emoji/threekids/1.png" data-emoji=":@(TK_1)"/></div>
+                            <div class="withu-home-message-divider"></div>
+                            <div class="withu-home-message-footer">
+                                                                <span class="withu-chip withu-chip--light"><i class="ph-fill ph-map-pin"></i> 广东 · 惠州</span>
+                                                                                                <span class="withu-chip withu-chip--light withu-chip--no-transform"><i class="ph-bold ph-devices"></i> iOS</span>
+                                                                                                <span class="withu-chip withu-chip--light withu-chip--no-transform"><i class="ph-bold ph-globe"></i> Chrome</span>
                                                             </div>
                         </a>
-                                                                    <a href="/messages.php#comment_504" class="lgnewui-home-message-card">
-                            <div class="lgnewui-home-message-header">
-                                <img class="lgnewui-home-message-avatar" src="https://weavatar.com/avatar/87146fa766ead530e2fbe7ba1000ee30beab30e96c23d54c326db0864a18e441?s=100&amp;d=mm&amp;r=g" alt="Ki.">
-                                <div class="lgnewui-home-message-user-info">
-                                    <div class="lgnewui-home-message-name-row">
-                                        <span class="lgnewui-home-message-user-name">Ki.</span>
-                                        <span class="lgnewui-home-message-badge lgnewui-home-message-badge--admin"><i class="ph-fill ph-seal-check"></i> 管理员</span>                                    </div>
-                                    <span class="lgnewui-home-message-post-time">2026-04-10 17:43</span>
+                                                                    <a href="/messages.php#comment_504" class="withu-home-message-card">
+                            <div class="withu-home-message-header">
+                                <img class="withu-home-message-avatar" src="https://weavatar.com/avatar/87146fa766ead530e2fbe7ba1000ee30beab30e96c23d54c326db0864a18e441?s=100&amp;d=mm&amp;r=g" alt="Ki.">
+                                <div class="withu-home-message-user-info">
+                                    <div class="withu-home-message-name-row">
+                                        <span class="withu-home-message-user-name">Ki.</span>
+                                        <span class="withu-home-message-badge withu-home-message-badge--admin"><i class="ph-fill ph-seal-check"></i> 管理员</span>                                    </div>
+                                    <span class="withu-home-message-post-time">2026-04-10 17:43</span>
                                 </div>
                             </div>
-                            <div class="lgnewui-home-message-content">测试一下归属地问题</div>
-                            <div class="lgnewui-home-message-divider"></div>
-                            <div class="lgnewui-home-message-footer">
-                                                                <span class="lgnewui-chip lgnewui-chip--light"><i class="ph-fill ph-map-pin"></i> 广东 · 惠州</span>
-                                                                                                <span class="lgnewui-chip lgnewui-chip--light lgnewui-chip--no-transform"><i class="ph-bold ph-devices"></i> Mac</span>
-                                                                                                <span class="lgnewui-chip lgnewui-chip--light lgnewui-chip--no-transform"><i class="ph-bold ph-globe"></i> Chrome</span>
+                            <div class="withu-home-message-content">测试一下归属地问题</div>
+                            <div class="withu-home-message-divider"></div>
+                            <div class="withu-home-message-footer">
+                                                                <span class="withu-chip withu-chip--light"><i class="ph-fill ph-map-pin"></i> 广东 · 惠州</span>
+                                                                                                <span class="withu-chip withu-chip--light withu-chip--no-transform"><i class="ph-bold ph-devices"></i> Mac</span>
+                                                                                                <span class="withu-chip withu-chip--light withu-chip--no-transform"><i class="ph-bold ph-globe"></i> Chrome</span>
                                                             </div>
                         </a>
-                                                                    <a href="/messages.php#comment_503" class="lgnewui-home-message-card">
-                            <div class="lgnewui-home-message-header">
-                                <img class="lgnewui-home-message-avatar" src="https://weavatar.com/avatar/73e1eb095f75a569e42275bde8ae9fd38e71a471b680d85dbc4450834a4eaf55?s=100&amp;d=mm&amp;r=g" alt="𝘈𝘱𝘰𝘭𝘰𝘨𝘪𝘻𝘦">
-                                <div class="lgnewui-home-message-user-info">
-                                    <div class="lgnewui-home-message-name-row">
-                                        <span class="lgnewui-home-message-user-name">𝘈𝘱𝘰𝘭𝘰𝘨𝘪𝘻𝘦</span>
-                                        <span class="lgnewui-home-message-badge lgnewui-home-message-badge--admin"><i class="ph-fill ph-seal-check"></i> 管理员</span>                                    </div>
-                                    <span class="lgnewui-home-message-post-time">2026-04-10 16:57</span>
+                                                                    <a href="/messages.php#comment_503" class="withu-home-message-card">
+                            <div class="withu-home-message-header">
+                                <img class="withu-home-message-avatar" src="https://weavatar.com/avatar/73e1eb095f75a569e42275bde8ae9fd38e71a471b680d85dbc4450834a4eaf55?s=100&amp;d=mm&amp;r=g" alt="𝘈𝘱𝘰𝘭𝘰𝘨𝘪𝘻𝘦">
+                                <div class="withu-home-message-user-info">
+                                    <div class="withu-home-message-name-row">
+                                        <span class="withu-home-message-user-name">𝘈𝘱𝘰𝘭𝘰𝘨𝘪𝘻𝘦</span>
+                                        <span class="withu-home-message-badge withu-home-message-badge--admin"><i class="ph-fill ph-seal-check"></i> 管理员</span>                                    </div>
+                                    <span class="withu-home-message-post-time">2026-04-10 16:57</span>
                                 </div>
                             </div>
-                            <div class="lgnewui-home-message-content">测试</div>
-                            <div class="lgnewui-home-message-divider"></div>
-                            <div class="lgnewui-home-message-footer">
-                                                                <span class="lgnewui-chip lgnewui-chip--light"><i class="ph-fill ph-map-pin"></i> 未知</span>
-                                                                                                <span class="lgnewui-chip lgnewui-chip--light lgnewui-chip--no-transform"><i class="ph-bold ph-devices"></i> Mac</span>
-                                                                                                <span class="lgnewui-chip lgnewui-chip--light lgnewui-chip--no-transform"><i class="ph-bold ph-globe"></i> Chrome</span>
+                            <div class="withu-home-message-content">测试</div>
+                            <div class="withu-home-message-divider"></div>
+                            <div class="withu-home-message-footer">
+                                                                <span class="withu-chip withu-chip--light"><i class="ph-fill ph-map-pin"></i> 未知</span>
+                                                                                                <span class="withu-chip withu-chip--light withu-chip--no-transform"><i class="ph-bold ph-devices"></i> Mac</span>
+                                                                                                <span class="withu-chip withu-chip--light withu-chip--no-transform"><i class="ph-bold ph-globe"></i> Chrome</span>
                                                             </div>
                         </a>
-                                                                    <a href="/messages.php#comment_502" class="lgnewui-home-message-card">
-                            <div class="lgnewui-home-message-header">
-                                <img class="lgnewui-home-message-avatar" src="https://weavatar.com/avatar/87146fa766ead530e2fbe7ba1000ee30beab30e96c23d54c326db0864a18e441?s=100&amp;d=mm&amp;r=g" alt="袁小K">
-                                <div class="lgnewui-home-message-user-info">
-                                    <div class="lgnewui-home-message-name-row">
-                                        <span class="lgnewui-home-message-user-name">袁小K</span>
-                                        <span class="lgnewui-home-message-badge lgnewui-home-message-badge--admin"><i class="ph-fill ph-seal-check"></i> 管理员</span>                                    </div>
-                                    <span class="lgnewui-home-message-post-time">2026-04-09 19:06</span>
+                                                                    <a href="/messages.php#comment_502" class="withu-home-message-card">
+                            <div class="withu-home-message-header">
+                                <img class="withu-home-message-avatar" src="https://weavatar.com/avatar/87146fa766ead530e2fbe7ba1000ee30beab30e96c23d54c326db0864a18e441?s=100&amp;d=mm&amp;r=g" alt="袁小K">
+                                <div class="withu-home-message-user-info">
+                                    <div class="withu-home-message-name-row">
+                                        <span class="withu-home-message-user-name">袁小K</span>
+                                        <span class="withu-home-message-badge withu-home-message-badge--admin"><i class="ph-fill ph-seal-check"></i> 管理员</span>                                    </div>
+                                    <span class="withu-home-message-post-time">2026-04-09 19:06</span>
                                 </div>
                             </div>
-                            <div class="lgnewui-home-message-content">共赴爱河情无尽 同享人生乐无边<img class="lazy" data-src="/OwO/images/emoji/douyin/dy109.gif" data-emoji=":@(DY_109)"/><img class="lazy" data-src="/OwO/images/emoji/douyin/dy109.gif" data-emoji=":@(DY_109)"/><img class="lazy" data-src="/OwO/images/emoji/douyin/dy109.gif" data-emoji=":@(DY_109)"/></div>
-                            <div class="lgnewui-home-message-divider"></div>
-                            <div class="lgnewui-home-message-footer">
-                                                                <span class="lgnewui-chip lgnewui-chip--light"><i class="ph-fill ph-map-pin"></i> 广东 · 惠州</span>
-                                                                                                <span class="lgnewui-chip lgnewui-chip--light lgnewui-chip--no-transform"><i class="ph-bold ph-devices"></i> Mac</span>
-                                                                                                <span class="lgnewui-chip lgnewui-chip--light lgnewui-chip--no-transform"><i class="ph-bold ph-globe"></i> Chrome</span>
+                            <div class="withu-home-message-content">共赴爱河情无尽 同享人生乐无边<img class="lazy" data-src="/OwO/images/emoji/douyin/dy109.gif" data-emoji=":@(DY_109)"/><img class="lazy" data-src="/OwO/images/emoji/douyin/dy109.gif" data-emoji=":@(DY_109)"/><img class="lazy" data-src="/OwO/images/emoji/douyin/dy109.gif" data-emoji=":@(DY_109)"/></div>
+                            <div class="withu-home-message-divider"></div>
+                            <div class="withu-home-message-footer">
+                                                                <span class="withu-chip withu-chip--light"><i class="ph-fill ph-map-pin"></i> 广东 · 惠州</span>
+                                                                                                <span class="withu-chip withu-chip--light withu-chip--no-transform"><i class="ph-bold ph-devices"></i> Mac</span>
+                                                                                                <span class="withu-chip withu-chip--light withu-chip--no-transform"><i class="ph-bold ph-globe"></i> Chrome</span>
                                                             </div>
                         </a>
-                                                                    <a href="/messages.php#comment_501" class="lgnewui-home-message-card">
-                            <div class="lgnewui-home-message-header">
-                                <img class="lgnewui-home-message-avatar" src="https://weavatar.com/avatar/afe9b79a36417da3cf1149214441f97cd427ba11c30a731d9086a6d4672baedf?s=100&amp;d=mm&amp;r=g" alt="Mental derangement">
-                                <div class="lgnewui-home-message-user-info">
-                                    <div class="lgnewui-home-message-name-row">
-                                        <span class="lgnewui-home-message-user-name">Mental derangement</span>
+                                                                    <a href="/messages.php#comment_501" class="withu-home-message-card">
+                            <div class="withu-home-message-header">
+                                <img class="withu-home-message-avatar" src="https://weavatar.com/avatar/afe9b79a36417da3cf1149214441f97cd427ba11c30a731d9086a6d4672baedf?s=100&amp;d=mm&amp;r=g" alt="Mental derangement">
+                                <div class="withu-home-message-user-info">
+                                    <div class="withu-home-message-name-row">
+                                        <span class="withu-home-message-user-name">Mental derangement</span>
                                                                             </div>
-                                    <span class="lgnewui-home-message-post-time">2026-04-09 11:42</span>
+                                    <span class="withu-home-message-post-time">2026-04-09 11:42</span>
                                 </div>
                             </div>
-                            <div class="lgnewui-home-message-content"><img class="lazy" data-src="/OwO/images/emoji/threekids/12.png" data-emoji=":@(TK_12)"/>同心同德情不断 相亲相爱到永远</div>
-                            <div class="lgnewui-home-message-divider"></div>
-                            <div class="lgnewui-home-message-footer">
-                                                                <span class="lgnewui-chip lgnewui-chip--light"><i class="ph-fill ph-map-pin"></i> 中国 · 辽宁</span>
-                                                                                                                                <span class="lgnewui-chip lgnewui-chip--light lgnewui-chip--no-transform"><i class="ph-bold ph-globe"></i> Chrome</span>
+                            <div class="withu-home-message-content"><img class="lazy" data-src="/OwO/images/emoji/threekids/12.png" data-emoji=":@(TK_12)"/>同心同德情不断 相亲相爱到永远</div>
+                            <div class="withu-home-message-divider"></div>
+                            <div class="withu-home-message-footer">
+                                                                <span class="withu-chip withu-chip--light"><i class="ph-fill ph-map-pin"></i> 中国 · 辽宁</span>
+                                                                                                                                <span class="withu-chip withu-chip--light withu-chip--no-transform"><i class="ph-bold ph-globe"></i> Chrome</span>
                                                             </div>
                         </a>
-                                                                    <a href="/messages.php#comment_500" class="lgnewui-home-message-card">
-                            <div class="lgnewui-home-message-header">
-                                <img class="lgnewui-home-message-avatar" src="https://weavatar.com/avatar/a583b0a809b5cbfa2ce8c534e63d2cf8762c0345f049227453a4220bcd295d15?s=100&amp;d=mm&amp;r=g" alt="宇柯">
-                                <div class="lgnewui-home-message-user-info">
-                                    <div class="lgnewui-home-message-name-row">
-                                        <span class="lgnewui-home-message-user-name">宇柯</span>
+                                                                    <a href="/messages.php#comment_500" class="withu-home-message-card">
+                            <div class="withu-home-message-header">
+                                <img class="withu-home-message-avatar" src="https://weavatar.com/avatar/a583b0a809b5cbfa2ce8c534e63d2cf8762c0345f049227453a4220bcd295d15?s=100&amp;d=mm&amp;r=g" alt="宇柯">
+                                <div class="withu-home-message-user-info">
+                                    <div class="withu-home-message-name-row">
+                                        <span class="withu-home-message-user-name">宇柯</span>
                                                                             </div>
-                                    <span class="lgnewui-home-message-post-time">2026-04-09 07:05</span>
+                                    <span class="withu-home-message-post-time">2026-04-09 07:05</span>
                                 </div>
                             </div>
-                            <div class="lgnewui-home-message-content">于彼此陪伴之时 你们定能发掘生活的每一帧美好瞬间 愿爱情99</div>
-                            <div class="lgnewui-home-message-divider"></div>
-                            <div class="lgnewui-home-message-footer">
-                                                                <span class="lgnewui-chip lgnewui-chip--light"><i class="ph-fill ph-map-pin"></i> 江苏 · 扬州</span>
-                                                                                                                                <span class="lgnewui-chip lgnewui-chip--light lgnewui-chip--no-transform"><i class="ph-bold ph-globe"></i> Chrome</span>
+                            <div class="withu-home-message-content">于彼此陪伴之时 你们定能发掘生活的每一帧美好瞬间 愿爱情99</div>
+                            <div class="withu-home-message-divider"></div>
+                            <div class="withu-home-message-footer">
+                                                                <span class="withu-chip withu-chip--light"><i class="ph-fill ph-map-pin"></i> 江苏 · 扬州</span>
+                                                                                                                                <span class="withu-chip withu-chip--light withu-chip--no-transform"><i class="ph-bold ph-globe"></i> Chrome</span>
                                                             </div>
                         </a>
-                                                                    <a href="/messages.php#comment_496" class="lgnewui-home-message-card">
-                            <div class="lgnewui-home-message-header">
-                                <img class="lgnewui-home-message-avatar" src="https://weavatar.com/avatar/a122f65031fefddae290ee10ef645e0457987386325d501444c5204eb84b6cf0?s=100&amp;d=mm&amp;r=g" alt="Ki.">
-                                <div class="lgnewui-home-message-user-info">
-                                    <div class="lgnewui-home-message-name-row">
-                                        <span class="lgnewui-home-message-user-name">Ki.</span>
-                                        <span class="lgnewui-home-message-badge lgnewui-home-message-badge--developer"><i class="ph-fill ph-terminal-window"></i> 开发者</span>                                    </div>
-                                    <span class="lgnewui-home-message-post-time">2026-04-09 04:00</span>
+                                                                    <a href="/messages.php#comment_496" class="withu-home-message-card">
+                            <div class="withu-home-message-header">
+                                <img class="withu-home-message-avatar" src="https://weavatar.com/avatar/a122f65031fefddae290ee10ef645e0457987386325d501444c5204eb84b6cf0?s=100&amp;d=mm&amp;r=g" alt="Ki.">
+                                <div class="withu-home-message-user-info">
+                                    <div class="withu-home-message-name-row">
+                                        <span class="withu-home-message-user-name">Ki.</span>
+                                        <span class="withu-home-message-badge withu-home-message-badge--developer"><i class="ph-fill ph-terminal-window"></i> 开发者</span>                                    </div>
+                                    <span class="withu-home-message-post-time">2026-04-09 04:00</span>
                                 </div>
                             </div>
-                            <div class="lgnewui-home-message-content">测试一条留言数据</div>
-                            <div class="lgnewui-home-message-divider"></div>
-                            <div class="lgnewui-home-message-footer">
-                                                                <span class="lgnewui-chip lgnewui-chip--light"><i class="ph-fill ph-map-pin"></i> 广东 · 惠州</span>
-                                                                                                                                <span class="lgnewui-chip lgnewui-chip--light lgnewui-chip--no-transform"><i class="ph-bold ph-globe"></i> Safari</span>
+                            <div class="withu-home-message-content">测试一条留言数据</div>
+                            <div class="withu-home-message-divider"></div>
+                            <div class="withu-home-message-footer">
+                                                                <span class="withu-chip withu-chip--light"><i class="ph-fill ph-map-pin"></i> 广东 · 惠州</span>
+                                                                                                                                <span class="withu-chip withu-chip--light withu-chip--no-transform"><i class="ph-bold ph-globe"></i> Safari</span>
                                                             </div>
                         </a>
-                                                                    <a href="/messages.php#comment_495" class="lgnewui-home-message-card">
-                            <div class="lgnewui-home-message-header">
-                                <img class="lgnewui-home-message-avatar" src="https://weavatar.com/avatar/e9ea60a17075cc4a050bcefbd4f114afc9be98b8e5f938d3b63e01935ec563f2?s=100&amp;d=mm&amp;r=g" alt="星期六">
-                                <div class="lgnewui-home-message-user-info">
-                                    <div class="lgnewui-home-message-name-row">
-                                        <span class="lgnewui-home-message-user-name">星期六</span>
+                                                                    <a href="/messages.php#comment_495" class="withu-home-message-card">
+                            <div class="withu-home-message-header">
+                                <img class="withu-home-message-avatar" src="https://weavatar.com/avatar/e9ea60a17075cc4a050bcefbd4f114afc9be98b8e5f938d3b63e01935ec563f2?s=100&amp;d=mm&amp;r=g" alt="星期六">
+                                <div class="withu-home-message-user-info">
+                                    <div class="withu-home-message-name-row">
+                                        <span class="withu-home-message-user-name">星期六</span>
                                                                             </div>
-                                    <span class="lgnewui-home-message-post-time">2026-03-24 20:31</span>
+                                    <span class="withu-home-message-post-time">2026-03-24 20:31</span>
                                 </div>
                             </div>
-                            <div class="lgnewui-home-message-content">情定今生 爱如繁星闪耀 永恒璀璨</div>
-                            <div class="lgnewui-home-message-divider"></div>
-                            <div class="lgnewui-home-message-footer">
-                                                                <span class="lgnewui-chip lgnewui-chip--light"><i class="ph-fill ph-map-pin"></i> 未知</span>
-                                                                                                <span class="lgnewui-chip lgnewui-chip--light lgnewui-chip--no-transform"><i class="ph-bold ph-devices"></i> iOS</span>
-                                                                                                <span class="lgnewui-chip lgnewui-chip--light lgnewui-chip--no-transform"><i class="ph-bold ph-globe"></i> Chrome</span>
+                            <div class="withu-home-message-content">情定今生 爱如繁星闪耀 永恒璀璨</div>
+                            <div class="withu-home-message-divider"></div>
+                            <div class="withu-home-message-footer">
+                                                                <span class="withu-chip withu-chip--light"><i class="ph-fill ph-map-pin"></i> 未知</span>
+                                                                                                <span class="withu-chip withu-chip--light withu-chip--no-transform"><i class="ph-bold ph-devices"></i> iOS</span>
+                                                                                                <span class="withu-chip withu-chip--light withu-chip--no-transform"><i class="ph-bold ph-globe"></i> Chrome</span>
                                                             </div>
                         </a>
-                                                                    <a href="/messages.php#comment_494" class="lgnewui-home-message-card">
-                            <div class="lgnewui-home-message-header">
-                                <img class="lgnewui-home-message-avatar" src="https://weavatar.com/avatar/e9ea60a17075cc4a050bcefbd4f114afc9be98b8e5f938d3b63e01935ec563f2?s=100&amp;d=mm&amp;r=g" alt="星期六">
-                                <div class="lgnewui-home-message-user-info">
-                                    <div class="lgnewui-home-message-name-row">
-                                        <span class="lgnewui-home-message-user-name">星期六</span>
+                                                                    <a href="/messages.php#comment_494" class="withu-home-message-card">
+                            <div class="withu-home-message-header">
+                                <img class="withu-home-message-avatar" src="https://weavatar.com/avatar/e9ea60a17075cc4a050bcefbd4f114afc9be98b8e5f938d3b63e01935ec563f2?s=100&amp;d=mm&amp;r=g" alt="星期六">
+                                <div class="withu-home-message-user-info">
+                                    <div class="withu-home-message-name-row">
+                                        <span class="withu-home-message-user-name">星期六</span>
                                                                             </div>
-                                    <span class="lgnewui-home-message-post-time">2026-03-24 01:54</span>
+                                    <span class="withu-home-message-post-time">2026-03-24 01:54</span>
                                 </div>
                             </div>
-                            <div class="lgnewui-home-message-content">琴瑟和鸣 奏响爱情乐章 相伴到天荒</div>
-                            <div class="lgnewui-home-message-divider"></div>
-                            <div class="lgnewui-home-message-footer">
-                                                                <span class="lgnewui-chip lgnewui-chip--light"><i class="ph-fill ph-map-pin"></i> 未知</span>
-                                                                                                <span class="lgnewui-chip lgnewui-chip--light lgnewui-chip--no-transform"><i class="ph-bold ph-devices"></i> iOS</span>
-                                                                                                <span class="lgnewui-chip lgnewui-chip--light lgnewui-chip--no-transform"><i class="ph-bold ph-globe"></i> Safari</span>
+                            <div class="withu-home-message-content">琴瑟和鸣 奏响爱情乐章 相伴到天荒</div>
+                            <div class="withu-home-message-divider"></div>
+                            <div class="withu-home-message-footer">
+                                                                <span class="withu-chip withu-chip--light"><i class="ph-fill ph-map-pin"></i> 未知</span>
+                                                                                                <span class="withu-chip withu-chip--light withu-chip--no-transform"><i class="ph-bold ph-devices"></i> iOS</span>
+                                                                                                <span class="withu-chip withu-chip--light withu-chip--no-transform"><i class="ph-bold ph-globe"></i> Safari</span>
                                                             </div>
                         </a>
                                         </div>
@@ -5289,60 +5289,60 @@
             </section>
             
             <!-- 6. Ending: 笔记本卡片式结尾 -->
-            <section class="lgnewui-epilogue" data-aos="fade-up" data-aos-delay="300">
-                <div class="lgnewui-epilogue__card">
+            <section class="withu-epilogue" data-aos="fade-up" data-aos-delay="300">
+                <div class="withu-epilogue__card">
 
                     <!-- 顶部活页孔 -->
-                    <div class="lgnewui-epilogue__holes">
-                        <div class="lgnewui-epilogue__hole"></div>
-                        <div class="lgnewui-epilogue__hole"></div>
-                        <div class="lgnewui-epilogue__hole"></div>
-                        <div class="lgnewui-epilogue__hole"></div>
-                        <div class="lgnewui-epilogue__hole"></div>
-                        <div class="lgnewui-epilogue__hole"></div>
-                        <div class="lgnewui-epilogue__hole"></div>
-                        <div class="lgnewui-epilogue__hole"></div>
-                        <div class="lgnewui-epilogue__hole"></div>
-                        <div class="lgnewui-epilogue__hole"></div>
-                        <div class="lgnewui-epilogue__hole"></div>
-                        <div class="lgnewui-epilogue__hole"></div>
+                    <div class="withu-epilogue__holes">
+                        <div class="withu-epilogue__hole"></div>
+                        <div class="withu-epilogue__hole"></div>
+                        <div class="withu-epilogue__hole"></div>
+                        <div class="withu-epilogue__hole"></div>
+                        <div class="withu-epilogue__hole"></div>
+                        <div class="withu-epilogue__hole"></div>
+                        <div class="withu-epilogue__hole"></div>
+                        <div class="withu-epilogue__hole"></div>
+                        <div class="withu-epilogue__hole"></div>
+                        <div class="withu-epilogue__hole"></div>
+                        <div class="withu-epilogue__hole"></div>
+                        <div class="withu-epilogue__hole"></div>
                     </div>
 
                     <!-- 头部 -->
-                    <div class="lgnewui-epilogue__header">
-                        <div class="lgnewui-epilogue__title">未完 · 待续</div>
+                    <div class="withu-epilogue__header">
+                        <div class="withu-epilogue__title">未完 · 待续</div>
                     </div>
 
                     <!-- 文案区 -->
-                    <div class="lgnewui-epilogue__quote-container">
-                        <h3 id="epilogue-quote-text" class="lgnewui-epilogue__quote-text">
+                    <div class="withu-epilogue__quote-container">
+                        <h3 id="epilogue-quote-text" class="withu-epilogue__quote-text">
                             <!-- JS 动态注入 -->
                         </h3>
                     </div>
 
                     <!-- 底部功能区 -->
-                    <div class="lgnewui-epilogue__actions">
+                    <div class="withu-epilogue__actions">
 
                         <!-- 左侧导航 -->
-                        <div class="lgnewui-epilogue__nav">
-                            <a href="javascript:void(0)" class="lgnewui-epilogue__btn-pill" id="epilogue-leaving-btn">
+                        <div class="withu-epilogue__nav">
+                            <a href="javascript:void(0)" class="withu-epilogue__btn-pill" id="epilogue-leaving-btn">
                                 <i class="ph-bold ph-feather"></i> 留下祝福
                             </a>
-                            <a href="javascript:void(0)" class="lgnewui-epilogue__btn-pill" id="epilogue-random-album">
+                            <a href="javascript:void(0)" class="withu-epilogue__btn-pill" id="epilogue-random-album">
                                 <i class="ph-bold ph-aperture"></i> 随机光影
                             </a>
-                            <a href="javascript:void(0)" class="lgnewui-epilogue__btn-pill"
+                            <a href="javascript:void(0)" class="withu-epilogue__btn-pill"
                                 id="epilogue-random-article">
                                 <i class="ph-bold ph-coffee"></i> 随机碎片
                             </a>
                         </div>
 
                         <!-- 右侧工具 -->
-                        <div class="lgnewui-epilogue__tools">
-                            <button id="epilogue-btn-refresh" class="lgnewui-epilogue__btn-icon" title="换一句">
+                        <div class="withu-epilogue__tools">
+                            <button id="epilogue-btn-refresh" class="withu-epilogue__btn-icon" title="换一句">
                                 <i class="ph-bold ph-shuffle"></i>
                             </button>
-                            <button id="epilogue-btn-copy" class="lgnewui-epilogue__btn-icon" title="复制文案">
+                            <button id="epilogue-btn-copy" class="withu-epilogue__btn-icon" title="复制文案">
                                 <i class="ph-bold ph-copy"></i>
                             </button>
                         </div>
@@ -5373,15 +5373,15 @@
 
 
     <!-- 表情面板（全局可用，弹窗 & 抽屉共用） -->
-    <div class="lgnewui-message-emoji-panel" id="lgmsgEmojiPanel">
-        <div class="lgnewui-message-emoji-tabs-wrap">
-            <div class="lgnewui-message-emoji-tabs" id="lgmsgEmojiTabs"></div>
+    <div class="withu-message-emoji-panel" id="lgmsgEmojiPanel">
+        <div class="withu-message-emoji-tabs-wrap">
+            <div class="withu-message-emoji-tabs" id="lgmsgEmojiTabs"></div>
         </div>
-        <div class="lgnewui-message-emoji-cat-title" id="lgmsgEmojiCatTitle"></div>
-        <div class="lgnewui-message-emoji-list" id="lgmsgEmojiGrid"></div>
+        <div class="withu-message-emoji-cat-title" id="lgmsgEmojiCatTitle"></div>
+        <div class="withu-message-emoji-list" id="lgmsgEmojiGrid"></div>
     </div>
 
-    <div class="lgnewui-message-emoji-preview" id="lgmsgEmojiPreview">
+    <div class="withu-message-emoji-preview" id="lgmsgEmojiPreview">
         <img src="" id="lgmsgPreviewImg">
         <span id="lgmsgPreviewText"></span>
     </div>
@@ -5417,75 +5417,75 @@
     </div>
 
     <!-- 留言弹窗（全局可用） -->
-    <div class="lgnewui-message-modal-overlay" id="lgmsgCommentModal">
-        <div class="lgnewui-message-modal-content" id="lgmsgModalContent">
-            <div class="lgnewui-message-close-wrapper">
-                <button class="lgnewui-message-close-btn" id="lgmsgModalCloseBtn">
+    <div class="withu-message-modal-overlay" id="lgmsgCommentModal">
+        <div class="withu-message-modal-content" id="lgmsgModalContent">
+            <div class="withu-message-close-wrapper">
+                <button class="withu-message-close-btn" id="lgmsgModalCloseBtn">
                     <i data-lucide="x" style="width:20px;height:20px;"></i>
                 </button>
             </div>
-            <div class="lgnewui-message-modal-body">
-                <div class="lgnewui-message-head-titles">
-                    <div class="lgnewui-message-title">写一条留言</div>
-                    <div class="lgnewui-message-subtitle">在这里，留下属于你的印记</div>
+            <div class="withu-message-modal-body">
+                <div class="withu-message-head-titles">
+                    <div class="withu-message-title">写一条留言</div>
+                    <div class="withu-message-subtitle">在这里，留下属于你的印记</div>
                 </div>
-                <div class="lgnewui-message-ios-tabs-wrap">
-                    <div class="lgnewui-message-ios-tabs" id="lgmsgTabContainer">
-                        <div class="lgnewui-message-ios-tab-slider" id="lgmsgTabSlider"></div>
-                        <div class="lgnewui-message-ios-tab active" data-mode="qq">QQ留言</div>
-                        <div class="lgnewui-message-ios-tab" data-mode="anonymous">匿名留言</div>
+                <div class="withu-message-ios-tabs-wrap">
+                    <div class="withu-message-ios-tabs" id="lgmsgTabContainer">
+                        <div class="withu-message-ios-tab-slider" id="lgmsgTabSlider"></div>
+                        <div class="withu-message-ios-tab active" data-mode="qq">QQ留言</div>
+                        <div class="withu-message-ios-tab" data-mode="anonymous">匿名留言</div>
                     </div>
                 </div>
-                <div class="lgnewui-message-visitor-tags" id="lgmsgVisitorTags">
-                    <div class="lgnewui-message-v-tag">
-                        <div class="lgnewui-message-v-tag-icon lgnewui-message-icon-os">
+                <div class="withu-message-visitor-tags" id="lgmsgVisitorTags">
+                    <div class="withu-message-v-tag">
+                        <div class="withu-message-v-tag-icon withu-message-icon-os">
                             <i data-lucide="monitor"></i>
                         </div>
                         <span id="lgmsgTagOS">--</span>
                     </div>
-                    <div class="lgnewui-message-v-tag">
-                        <div class="lgnewui-message-v-tag-icon lgnewui-message-icon-browser">
+                    <div class="withu-message-v-tag">
+                        <div class="withu-message-v-tag-icon withu-message-icon-browser">
                             <i data-lucide="globe"></i>
                         </div>
                         <span id="lgmsgTagBrowser">--</span>
                     </div>
-                    <div class="lgnewui-message-v-tag">
-                        <div class="lgnewui-message-v-tag-icon lgnewui-message-icon-location">
+                    <div class="withu-message-v-tag">
+                        <div class="withu-message-v-tag-icon withu-message-icon-location">
                             <i data-lucide="map-pin"></i>
                         </div>
                         <span id="lgmsgTagLocation">--</span>
                     </div>
-                    <div class="lgnewui-message-v-tag">
-                        <div class="lgnewui-message-v-tag-icon lgnewui-message-icon-weather">
+                    <div class="withu-message-v-tag">
+                        <div class="withu-message-v-tag-icon withu-message-icon-weather">
                             <i class="qi-100-fill" id="lgmsgWeatherIcon"></i>
                         </div>
                         <span id="lgmsgTagWeather">--</span>
                     </div>
                 </div>
-                <div class="lgnewui-message-input-row" id="lgmsgInputRow"></div>
-                <div class="lgnewui-message-privacy-hint" id="lgmsgPrivacyHint"><i data-lucide="lock"></i>QQ 信息经过加密脱敏处理，不会公开展示，请放心留言</div>
-                <div class="lgnewui-message-editor-wrap">
-                    <div class="lgnewui-message-editor-content" id="lgmsgEditor" contenteditable="true" data-placeholder="想说点什么..."></div>
-                    <div class="lgnewui-message-emoji-bubbles" id="lgmsgEmojiBubbles"></div>
-                    <div class="lgnewui-message-editor-toolbar">
-                        <div class="lgnewui-message-tb-left">
-                            <button class="lgnewui-message-tb-btn" id="lgmsgBtnEmoji" title="表情">
+                <div class="withu-message-input-row" id="lgmsgInputRow"></div>
+                <div class="withu-message-privacy-hint" id="lgmsgPrivacyHint"><i data-lucide="lock"></i>QQ 信息经过加密脱敏处理，不会公开展示，请放心留言</div>
+                <div class="withu-message-editor-wrap">
+                    <div class="withu-message-editor-content" id="lgmsgEditor" contenteditable="true" data-placeholder="想说点什么..."></div>
+                    <div class="withu-message-emoji-bubbles" id="lgmsgEmojiBubbles"></div>
+                    <div class="withu-message-editor-toolbar">
+                        <div class="withu-message-tb-left">
+                            <button class="withu-message-tb-btn" id="lgmsgBtnEmoji" title="表情">
                                 <i data-lucide="smile"></i>
                             </button>
-                            <button class="lgnewui-message-tb-btn" id="lgmsgBtnQuote" title="随机一言">
+                            <button class="withu-message-tb-btn" id="lgmsgBtnQuote" title="随机一言">
                                 <i data-lucide="sparkles"></i>
                             </button>
-                            <div class="lgnewui-message-switch-wrap" id="lgmsgEnterToSendWrap">
-                                <div class="lgnewui-message-switch"></div>
-                                <span class="lgnewui-message-switch-text">Enter 发送</span>
+                            <div class="withu-message-switch-wrap" id="lgmsgEnterToSendWrap">
+                                <div class="withu-message-switch"></div>
+                                <span class="withu-message-switch-text">Enter 发送</span>
                             </div>
                         </div>
-                        <span class="lgnewui-message-char-counter" id="lgmsgCharCounter">0/500</span>
-                        <button class="lgnewui-message-submit-btn" id="lgmsgSubmitBtn">
-                            <span class="lgnewui-message-submit-label">发送留言</span>
-                            <i data-lucide="send" class="lgnewui-message-submit-icon" style="width:18px;height:18px;"></i>
-                            <i data-lucide="loader" class="lgnewui-message-submit-loader lgnewui-message-lucide-loader" style="width:18px;height:18px;"></i>
-                            <i data-lucide="check" class="lgnewui-message-submit-check" style="width:18px;height:18px;"></i>
+                        <span class="withu-message-char-counter" id="lgmsgCharCounter">0/500</span>
+                        <button class="withu-message-submit-btn" id="lgmsgSubmitBtn">
+                            <span class="withu-message-submit-label">发送留言</span>
+                            <i data-lucide="send" class="withu-message-submit-icon" style="width:18px;height:18px;"></i>
+                            <i data-lucide="loader" class="withu-message-submit-loader withu-message-lucide-loader" style="width:18px;height:18px;"></i>
+                            <i data-lucide="check" class="withu-message-submit-check" style="width:18px;height:18px;"></i>
                         </button>
                     </div>
                 </div>
@@ -5495,16 +5495,16 @@
 
     <!-- 留言弹窗配置输出 -->
     <script>
-        window.LG_CONFIG = window.LG_CONFIG || {};
-        window.LG_CONFIG.userCity = "湖北 · 武汉";
-        window.LG_CONFIG.anonymousAvatar = "/Lovefolder/20250310095445_67ce466597c27.webp";
+        window.WITHU_CONFIG = window.WITHU_CONFIG || {};
+        window.WITHU_CONFIG.userCity = "湖北 · 武汉";
+        window.WITHU_CONFIG.anonymousAvatar = "/Lovefolder/20250310095445_67ce466597c27.webp";
     </script>
 
     <!-- 极验验证与留言提交绑定 -->
     <script>
     $(function() {
         if (typeof GeetestHelper !== 'undefined') {
-            var siteTitle = (window.LG_CONFIG && window.LG_CONFIG.title) || '';
+            var siteTitle = (window.WITHU_CONFIG && window.WITHU_CONFIG.title) || '';
 
             GeetestHelper.init({
                 toast: {
@@ -5597,8 +5597,8 @@
 <script src="/Style/js/meting.js"></script>
 
 <div id="nav-music">
-    <div id="nav-music-hoverTips" onclick="lg_love.musicToggle()">
-        <svg viewBox="0 0 1024 1024" class="lgnewui-nav-music-play-icon" aria-hidden="true">
+    <div id="nav-music-hoverTips" onclick="withu_love.musicToggle()">
+        <svg viewBox="0 0 1024 1024" class="withu-nav-music-play-icon" aria-hidden="true">
             <path d="M324.085 95.787l500.422 300.664c82.373 50.453 79.284 136.946-1.03 186.37v0l-506.6 304.784c-41.187 23.683-87.522 37.068-131.798 9.267-36.037-22.653-46.335-58.691-46.335-97.819v-616.774c0-39.127 13.386-75.166 48.395-97.819 45.305-27.801 94.731-14.416 136.946 11.327v0z" fill="#ffffff" />
         </svg>
     </div>
@@ -5611,71 +5611,71 @@
     </meting-js>
     
     <div id="nav-music-progress">
-        <div class="lgnewui-nav-music-progress-loaded"></div>
-        <div class="lgnewui-nav-music-progress-played"></div>
-        <div class="lgnewui-nav-music-progress-thumb"></div>
-        <div class="lgnewui-nav-music-progress-loading">
+        <div class="withu-nav-music-progress-loaded"></div>
+        <div class="withu-nav-music-progress-played"></div>
+        <div class="withu-nav-music-progress-thumb"></div>
+        <div class="withu-nav-music-progress-loading">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                 <circle cx="12" cy="12" r="10" stroke-dasharray="31.4" stroke-dashoffset="10" />
             </svg>
         </div>
     </div>
 
-    <div class="lgnewui-nav-music-controls">
-        <button class="lgnewui-nav-music-btn lgnewui-nav-music-btn-back" type="button" onclick="lg_love.musicSkipBack()" aria-label="上一首">
-            <svg viewBox="0 0 24 24" class="lgnewui-nav-music-icon" aria-hidden="true"><path d="M6 5v14" /><path d="M18 5L10 12l8 7" /></svg>
+    <div class="withu-nav-music-controls">
+        <button class="withu-nav-music-btn withu-nav-music-btn-back" type="button" onclick="withu_love.musicSkipBack()" aria-label="上一首">
+            <svg viewBox="0 0 24 24" class="withu-nav-music-icon" aria-hidden="true"><path d="M6 5v14" /><path d="M18 5L10 12l8 7" /></svg>
         </button>
-        <button class="lgnewui-nav-music-btn lgnewui-nav-music-btn-toggle" type="button" onclick="lg_love.musicToggle()" aria-label="播放或暂停">
-            <svg viewBox="0 0 24 24" class="lgnewui-nav-music-icon lgnewui-nav-music-icon-play" aria-hidden="true"><path d="M8 5v14l9-7z" /></svg>
-            <svg viewBox="0 0 24 24" class="lgnewui-nav-music-icon lgnewui-nav-music-icon-pause" aria-hidden="true"><path d="M9 6v12" /><path d="M15 6v12" /></svg>
+        <button class="withu-nav-music-btn withu-nav-music-btn-toggle" type="button" onclick="withu_love.musicToggle()" aria-label="播放或暂停">
+            <svg viewBox="0 0 24 24" class="withu-nav-music-icon withu-nav-music-icon-play" aria-hidden="true"><path d="M8 5v14l9-7z" /></svg>
+            <svg viewBox="0 0 24 24" class="withu-nav-music-icon withu-nav-music-icon-pause" aria-hidden="true"><path d="M9 6v12" /><path d="M15 6v12" /></svg>
         </button>
-        <button class="lgnewui-nav-music-btn lgnewui-nav-music-btn-forward" type="button" onclick="lg_love.musicSkipForward()" aria-label="下一首">
-            <svg viewBox="0 0 24 24" class="lgnewui-nav-music-icon" aria-hidden="true"><path d="M18 5v14" /><path d="M6 5l8 7-8 7" /></svg>
+        <button class="withu-nav-music-btn withu-nav-music-btn-forward" type="button" onclick="withu_love.musicSkipForward()" aria-label="下一首">
+            <svg viewBox="0 0 24 24" class="withu-nav-music-icon" aria-hidden="true"><path d="M18 5v14" /><path d="M6 5l8 7-8 7" /></svg>
         </button>
     </div>
 </div>
 
 <!-- 音乐列表面板 -->
-<div class="lgnewui-music-playlist-panel" id="musicPlaylist">
-    <div class="lgnewui-music-playlist-header">
-        <div class="lgnewui-music-playlist-title">
+<div class="withu-music-playlist-panel" id="musicPlaylist">
+    <div class="withu-music-playlist-header">
+        <div class="withu-music-playlist-title">
             <svg viewBox="0 0 24 24" width="16" height="16" xmlns="http://www.w3.org/2000/svg">
                 <circle cx="12" cy="12" r="10" fill="currentColor" opacity="0.2" />
                 <circle cx="12" cy="12" r="4" fill="currentColor" />
                 <circle cx="12" cy="12" r="1" fill="rgba(255,255,255,0.8)" />
             </svg>
             <span>播放列表</span>
-            <span class="lgnewui-music-playlist-count" id="playlistCount"></span>
+            <span class="withu-music-playlist-count" id="playlistCount"></span>
         </div>
-        <div class="lgnewui-music-playlist-header-right">
-            <div class="lgnewui-music-playlist-mode" id="playlistMode" title="播放模式">
+        <div class="withu-music-playlist-header-right">
+            <div class="withu-music-playlist-mode" id="playlistMode" title="播放模式">
                 <svg class="mode-icon mode-random" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 3h5v5M4 20L21 3M21 16v5h-5M15 15l6 6M4 4l5 5" /></svg>
                 <svg class="mode-icon mode-loop" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display:none"><path d="M17 2l4 4-4 4M3 11V9a4 4 0 014-4h14M7 22l-4-4 4-4M21 13v2a4 4 0 01-4 4H3" /></svg>
                 <svg class="mode-icon mode-single" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:none"><path d="M17 2l4 4-4 4" /><path d="M3 11V9a4 4 0 014-4h14" /><path d="M7 22l-4-4 4-4" /><path d="M21 13v2a4 4 0 01-4 4H3" /><path d="M12 10v4" /></svg>
             </div>
-            <button class="lgnewui-music-playlist-close" id="playlistLocate" aria-label="定位当前" title="定位当前播放" style="margin-left:8px;">
+            <button class="withu-music-playlist-close" id="playlistLocate" aria-label="定位当前" title="定位当前播放" style="margin-left:8px;">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="16"></line><line x1="8" y1="12" x2="16" y2="12"></line></svg>
             </button>
-            <button class="lgnewui-music-playlist-close" id="playlistReset" aria-label="重置列表" title="重置播放列表" style="margin-left:4px;">
+            <button class="withu-music-playlist-close" id="playlistReset" aria-label="重置列表" title="重置播放列表" style="margin-left:4px;">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M3 12a9 9 0 0 1 9-9 9.75 9.75 0 0 1 6.74 2.74L21 8"></path><path d="M21 3v5h-5"></path><path d="M21 12a9 9 0 0 1-9 9 9.75 9.75 0 0 1-6.74-2.74L3 16"></path><path d="M8 16H3v5"></path></svg>
             </button>
         </div>
     </div>
-    <div class="lgnewui-music-playlist-content" id="playlistContent">
-        <div class="lgnewui-music-playlist-empty">
+    <div class="withu-music-playlist-content" id="playlistContent">
+        <div class="withu-music-playlist-empty">
             <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 3v10.55c-.59-.34-1.27-.55-2-.55-2.21 0-4 1.79-4 4s1.79 4 4 4 4-1.79 4-4V7h4V3h-6z" /></svg>
             <div>暂无音乐</div>
         </div>
     </div>
-    <div class="lgnewui-music-playlist-volume">
-        <div class="lgnewui-music-volume-value" id="volumeValue">50%</div>
-        <div class="lgnewui-music-volume-segment-track" id="volumeTrack"></div>
-        <button class="lgnewui-music-volume-icon-wrap" id="volumeBtn">
-            <svg class="lgnewui-music-volume-icon-svg" viewBox="0 0 24 24">
-                <g class="lgnewui-music-volume-icon-path lgnewui-path-mute"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon><line x1="23" y1="9" x2="17" y2="15"></line><line x1="17" y1="9" x2="23" y2="15"></line></g>
-                <g class="lgnewui-music-volume-icon-path lgnewui-path-low"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon></g>
-                <g class="lgnewui-music-volume-icon-path lgnewui-path-med"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon><path d="M15.54 8.46a5 5 0 0 1 0 7.07"></path></g>
-                <g class="lgnewui-music-volume-icon-path lgnewui-path-high"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon><path d="M15.54 8.46a5 5 0 0 1 0 7.07"></path><path d="M19.07 4.93a10 10 0 0 1 0 14.14"></path></g>
+    <div class="withu-music-playlist-volume">
+        <div class="withu-music-volume-value" id="volumeValue">50%</div>
+        <div class="withu-music-volume-segment-track" id="volumeTrack"></div>
+        <button class="withu-music-volume-icon-wrap" id="volumeBtn">
+            <svg class="withu-music-volume-icon-svg" viewBox="0 0 24 24">
+                <g class="withu-music-volume-icon-path withu-path-mute"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon><line x1="23" y1="9" x2="17" y2="15"></line><line x1="17" y1="9" x2="23" y2="15"></line></g>
+                <g class="withu-music-volume-icon-path withu-path-low"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon></g>
+                <g class="withu-music-volume-icon-path withu-path-med"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon><path d="M15.54 8.46a5 5 0 0 1 0 7.07"></path></g>
+                <g class="withu-music-volume-icon-path withu-path-high"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon><path d="M15.54 8.46a5 5 0 0 1 0 7.07"></path><path d="M19.07 4.93a10 10 0 0 1 0 14.14"></path></g>
             </svg>
         </button>
     </div>
@@ -5770,8 +5770,8 @@
         if (dismissed) saveMusicSetting('modalDismissed', true);
         modal.classList.remove('show');
         setTimeout(function () {
-            if (window.lg_love && typeof lg_love.musicToggle === 'function') {
-                lg_love.musicToggle();
+            if (window.withu_love && typeof withu_love.musicToggle === 'function') {
+                withu_love.musicToggle();
             }
         }, 300);
     });
@@ -5786,9 +5786,9 @@
 
 <!-- 足迹地图弹窗 -->
 <!-- ============ 足迹地图弹窗 ============ -->
-<div class="lg-map-overlay" id="lgMapOverlay" style="display:none;">
-    <div class="lg-map-modal">
-        <div class="lg-map">
+<div class="withu-map-overlay" id="lgMapOverlay" style="display:none;">
+    <div class="withu-map-modal">
+        <div class="withu-map">
             <section id="missing-pets-module">
                 <div class="missing-pets-wrap">
                     <div id="missing-pets-map"></div>
@@ -5802,9 +5802,9 @@
                             </div>
                         </div>
                         <div class="ui-footer-right">
-                            <div class="lgnewui-badge">
-                                <div class="lgnewui-icon-circle">LG</div>
-                                <div class="lgnewui-text-thin">LGNewUi</div>
+                            <div class="withu-badge">
+                                <div class="withu-icon-circle">withU</div>
+                                <div class="withu-text-thin">withU</div>
                             </div>
                             <div class="ui-footer-copy">
                                 Powered by <span class="footer-amap-logo">
@@ -5907,7 +5907,7 @@
 <div id="pjax-container">
 
     
-    <div id="lgnewuiFloatingActions">
+    <div id="withuFloatingActions">
         
         
         <a href="javascript:void(0)" id="scrollTopBtn" title="回到顶部">
@@ -5918,7 +5918,7 @@
     <script>
     // 加密免验提示点击
     (function () {
-        var btn = document.getElementById('lgnewuiEncryptHint');
+        var btn = document.getElementById('withuEncryptHint');
         if (!btn) return;
         btn.addEventListener('click', function () {
             var label = this.getAttribute('data-encrypt-label') || '加密';
@@ -5941,7 +5941,7 @@
 
             // 初始化 LGApp 核心框架
             if (window.LGApp && typeof window.LGApp.init === 'function') {
-                window.LGApp.setConfig(window.LG_CONFIG || {});
+                window.LGApp.setConfig(window.WITHU_CONFIG || {});
                 window.LGApp.init();
             }
 
@@ -6183,7 +6183,7 @@
                         <span class="badge-subject">Copyright</span>
                         <span class="badge-value bg-DIY1">
                             ©
-                            2026 LG_NewUi Web All Rights Reserved.
+                            2026 withU Web All Rights Reserved.
                         </span>
                     </a>
                 </p>
@@ -6192,42 +6192,42 @@
 </div>
 
 
-<div class="lgnewui-mobile-nav-root">
+<div class="withu-mobile-nav-root">
 
     <!-- 方案5: 极简包裹点阵 -->
-    <div class="lgnewui-tab-template-v5-container lgnewui-glass-panel" id="lgnewui-mobile-nav-v5">
-        <div class="lgnewui-tab-template-v5-indicator"></div>
-                                <a class="lgnewui-base-nav-item js-lgnewui-v5-item"
+    <div class="withu-tab-template-v5-container withu-glass-panel" id="withu-mobile-nav-v5">
+        <div class="withu-tab-template-v5-indicator"></div>
+                                <a class="withu-base-nav-item js-withu-v5-item"
                href="articles.php">
                 <i class="ph-fill ph-notebook"></i>
                 <span>点滴</span>
             </a>
-                                <a class="lgnewui-base-nav-item js-lgnewui-v5-item"
+                                <a class="withu-base-nav-item js-withu-v5-item"
                href="messages.php">
                 <i class="ph-fill ph-chat-teardrop-dots"></i>
                 <span>留言</span>
             </a>
-                                <a class="lgnewui-base-nav-item js-lgnewui-v5-item"
+                                <a class="withu-base-nav-item js-withu-v5-item"
                href="timeline.php">
                 <i class="ph-fill ph-clock-countdown"></i>
                 <span>轨迹</span>
             </a>
-                                <a class="lgnewui-base-nav-item js-lgnewui-v5-item active"
+                                <a class="withu-base-nav-item js-withu-v5-item active"
                href="index.php">
                 <i class="ph-fill ph-house"></i>
                 <span>首页</span>
             </a>
-                                <a class="lgnewui-base-nav-item js-lgnewui-v5-item"
+                                <a class="withu-base-nav-item js-withu-v5-item"
                href="albums.php">
                 <i class="ph-fill ph-camera"></i>
                 <span>相册</span>
             </a>
-                                <a class="lgnewui-base-nav-item js-lgnewui-v5-item"
+                                <a class="withu-base-nav-item js-withu-v5-item"
                href="lovelist.php">
                 <i class="ph-fill ph-list-checks"></i>
                 <span>清单</span>
             </a>
-                                <a class="lgnewui-base-nav-item js-lgnewui-v5-item"
+                                <a class="withu-base-nav-item js-withu-v5-item"
                href="about.php">
                 <i class="ph-fill ph-book-open-text"></i>
                 <span>关于</span>
@@ -6244,12 +6244,12 @@
     (function () {
         var requestId = "4bebfcc3df7cdfbe7508d5bb2b3477f1";
         var token = "128536b344d91809322d6d5ffb3d41b3720c1bd9ef067a116d2eb11831fac450";
-        window.LG_CONFIG = Object.assign(window.LG_CONFIG || {}, {
-            endpoints: Object.assign({}, (window.LG_CONFIG && window.LG_CONFIG.endpoints) || {}, {
+        window.WITHU_CONFIG = Object.assign(window.WITHU_CONFIG || {}, {
+            endpoints: Object.assign({}, (window.WITHU_CONFIG && window.WITHU_CONFIG.endpoints) || {}, {
                 accessBeacon: "/services/access-beacon.php"            })
         });
 
-        var endpoint = (window.LG_CONFIG && window.LG_CONFIG.endpoints && window.LG_CONFIG.endpoints.accessBeacon) || '';
+        var endpoint = (window.WITHU_CONFIG && window.WITHU_CONFIG.endpoints && window.WITHU_CONFIG.endpoints.accessBeacon) || '';
         if (!endpoint || !navigator.sendBeacon) {
             return;
         }
@@ -6316,8 +6316,8 @@
                 if (!xhr || typeof xhr.getResponseHeader !== 'function') {
                     return;
                 }
-                var nextRequestId = xhr.getResponseHeader('X-LG-Access-Request-Id') || '';
-                var nextToken = xhr.getResponseHeader('X-LG-Access-Beacon-Token') || '';
+                var nextRequestId = xhr.getResponseHeader('X-WithU-Access-Request-Id') || '';
+                var nextToken = xhr.getResponseHeader('X-WithU-Access-Beacon-Token') || '';
                 setContext(nextRequestId, nextToken);
             });
         }

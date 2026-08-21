@@ -1,8 +1,8 @@
 /*!
- * LGNewUi Pro - Custom Script
- * Copyright (c) Ki / LGNewUi. All rights reserved.
+ * withU Pro - Custom Script
+ * Copyright (c) Ki / withU. All rights reserved.
  *
- * 本文件为 LGNewUi 原创作品，仅限获得合法授权的用户在其自有站点使用。
+ * 本文件为 withU 原创作品，仅限获得合法授权的用户在其自有站点使用。
  * 未经书面许可，禁止以任何形式对本作品进行：
  *   - 代码爬取 / 批量抓取 / 自动化采集
  *   - 复制、改写、二次分发、出售、出租、开源发布
@@ -17,7 +17,7 @@
 (function () {
     try {
         console.log(
-            '%c LGNewUi Pro %c Copyright (c) Ki · 本作品受著作权法保护，未经授权禁止使用 / 传播 / 反编译',
+            '%c withU Pro %c Copyright (c) Ki · 本作品受著作权法保护，未经授权禁止使用 / 传播 / 反编译',
             'background:#0a0a0a;color:#fafafa;padding:4px 10px;border-radius:4px;font-weight:600;font-size:12px',
             'color:#888;font-size:12px;padding-left:6px'
         );
@@ -25,7 +25,7 @@
 })();
 
 // ==================================================================
-//  功能矩阵 · LGNewUi Pro 2026 马年限定版
+//  功能矩阵 · withU Pro 2026 马年限定版
 //  字段说明: open_source=开源可用 / paid=Pro可用 / highlight=特色亮点
 //  标 highlight 的功能会以高亮样式显示
 // ==================================================================
@@ -424,12 +424,12 @@ gsap.utils.toArray(".gsap-card").forEach((el) => {
     const REVIEWS = [
         { hash: '90b81c976910dbbfb5bcd331ffda9b73', name: '付费版用户', text: '整体感觉很舒服。界面干净清爽，不管是自己记录生活，还是和对象一起分享日常都很合适，发照片、特别适合保存生活里的小回忆，长期用下来体验非常歪瑞古德。' },
         { hash: '97b53f0aa82e7d1fd24c3d6985664e1b', name: '华年', text: '我应该最早一批买的了，虽然一直没有对象，但是情侣小站的审美真的超级在线，Ki 基本上也是有求必应，需要的功能基本上都满足了，比如单人模式，真的超级喜欢这个 UI。' },
-        { hash: '4128e541da6e77db2a35aaa025789a55', name: '江奕浩', text: 'LGNewUi，非常好用，超级推荐，用它来记录和女朋友的点点滴滴，准备结婚的时候放出去得瑟，撒狗粮和记录生活的必备品！！！' },
+        { hash: '4128e541da6e77db2a35aaa025789a55', name: '江奕浩', text: 'withU，非常好用，超级推荐，用它来记录和女朋友的点点滴滴，准备结婚的时候放出去得瑟，撒狗粮和记录生活的必备品！！！' },
         { hash: '6ea2ddf8fc659a9d92291d590f3276e1', name: '欲穷千里目', text: '我很喜欢这个情侣小站，原本打算做情侣论坛送女友当生日礼物。偶然在 B 站看到免费 5.2.0 版本教程，联系作者后一直用到现在，使用和维护都很惊喜，和作者也有互动，真心好评。' },
-        { hash: 'd293850576ac7057f6e72b36b89497a1', name: '同志们好跟党走', text: '大家都来使用 LGNewUi 情侣小站，记录你们甜蜜时刻，分享幸福瞬间，让我们一起见证你们的爱情，我反正已经用上了，功能非常齐全实用。' },
+        { hash: 'd293850576ac7057f6e72b36b89497a1', name: '同志们好跟党走', text: '大家都来使用 withU 情侣小站，记录你们甜蜜时刻，分享幸福瞬间，让我们一起见证你们的爱情，我反正已经用上了，功能非常齐全实用。' },
         { hash: 'a8bbae7cd3b9c5b93db791113fed6ef3', name: 'iseii', text: '整体设计简约温柔，交互很舒服。站点功能很贴合情侣需求，方便了记录日常，能感受到作者用心打磨细节，整体体验感很好。' },
-        { hash: '3ce8b50afffcef141111d79215e73a21', name: '小峰', text: '当初入手 LGNewUi 情侣小站，本是满心期待双向奔赴，如今依旧是我一人的小世界。但我依然在好好经营这份美好，静静等待我的那个他，踏着星光来到我身边。' },
-        { hash: 'e7a3d5d078b71b5bb253f0e67e98751d', name: '白哲', text: '我也算 LGNewUi 古老级用户了，Ki 总真的太勤奋了，逢年过节就更新版本，而且程序真的没话说，很适合情侣之间记录美好时刻，很推荐入手！支持 Ki 总！' },
+        { hash: '3ce8b50afffcef141111d79215e73a21', name: '小峰', text: '当初入手 withU 情侣小站，本是满心期待双向奔赴，如今依旧是我一人的小世界。但我依然在好好经营这份美好，静静等待我的那个他，踏着星光来到我身边。' },
+        { hash: 'e7a3d5d078b71b5bb253f0e67e98751d', name: '白哲', text: '我也算 withU 古老级用户了，Ki 总真的太勤奋了，逢年过节就更新版本，而且程序真的没话说，很适合情侣之间记录美好时刻，很推荐入手！支持 Ki 总！' },
         { hash: '3ed884b2bb7f19c01868d88a3a872851', name: '明天只吃一粒米', text: '响应这块没得说，很快。服务不错。' },
         { hash: '0e588b178a766dd2f20862a75fbeff96', name: '願', text: '起初因搭建环境特殊有些担忧，但在和你的沟通中，能感受到你是一个责任感很强的人，后期搭建积极反馈、高效排障，最终效果令人惊喜——功能丰富，细节处更充满「爱」，加油，愿我们越来越好。' },
         { hash: '3cfac7374f8e85791727a1b4704f1afa', name: '浮云', text: '真的挺喜欢这个情侣网站的，界面看着舒服，用起来也简单，平时跟对象存点照片、记点小事都很方便，没有乱七八糟的广告，整体感觉很温馨，推荐大家使用！' },
@@ -664,7 +664,7 @@ gsap.utils.toArray(".gsap-card").forEach((el) => {
                         <!-- 左 · 品牌方 -->
                         <div class="flex flex-col gap-2">
                             <span class="text-[9px] font-mono tracking-[0.4em] text-white/25 uppercase">Authorized</span>
-                            <span class="text-[15px] md:text-base font-medium text-white/85 tracking-[0.01em]">LGNewUi</span>
+                            <span class="text-[15px] md:text-base font-medium text-white/85 tracking-[0.01em]">withU</span>
                         </div>
                         <!-- 右 · 编号 (镜像结构) -->
                         <div class="flex flex-col gap-2 text-right">
@@ -1242,7 +1242,7 @@ document.querySelectorAll('.pro-features.swiper').forEach((el) => {
 });
 
 // ===== Logo 点击 · 平滑滚动回顶 (Lenis) =====
-document.querySelectorAll('a[aria-label="LGNewUi"]').forEach((logo) => {
+document.querySelectorAll('a[aria-label="withU"]').forEach((logo) => {
     logo.addEventListener('click', (e) => {
         e.preventDefault();
         if (typeof lenis !== 'undefined' && lenis && typeof lenis.scrollTo === 'function') {

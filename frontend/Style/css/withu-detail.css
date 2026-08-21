@@ -1,7 +1,7 @@
 /* ========================================
-   lgnewui-detail.css
+   withu-detail.css
    Localized CSS for Article Detail Page
-   All classes prefixed with lgnewui-detail-
+   All classes prefixed with withu-detail-
    ======================================== */
 
 /* ========================================
@@ -39,21 +39,21 @@ html {
    MAIN CONTAINER
    ======================================== */
 
-.lgnewui-detail-main-grid {
+.withu-detail-main-grid {
     max-width: 90rem;
     margin: 0 auto;
     padding: 2rem 1rem;
 }
 
 @media (min-width: 640px) {
-    .lgnewui-detail-main-grid {
+    .withu-detail-main-grid {
         padding-left: 1.5rem;
         padding-right: 1.5rem;
     }
 }
 
 @media (min-width: 1024px) {
-    .lgnewui-detail-main-grid {
+    .withu-detail-main-grid {
         padding-top: 4rem;
         padding-bottom: 4rem;
         padding-left: 2rem;
@@ -67,24 +67,24 @@ html {
 }
 
 /* Main Content Area */
-.lgnewui-detail-main-content {
+.withu-detail-main-content {
     width: 100%;
 }
 
 @media (min-width: 1024px) {
-    .lgnewui-detail-main-content {
+    .withu-detail-main-content {
         grid-column: span 8;
         animation: fadeInUp 0.6s ease-out forwards;
     }
 }
 
 /* Sidebar */
-.lgnewui-detail-sidebar {
+.withu-detail-sidebar {
     display: none;
 }
 
 @media (min-width: 1024px) {
-    .lgnewui-detail-sidebar {
+    .withu-detail-sidebar {
         display: block;
         grid-column: span 4;
         min-width: 0;
@@ -94,33 +94,33 @@ html {
 }
 
 /* Sidebar Sticky Content */
-.lgnewui-detail-sidebar-sticky {
+.withu-detail-sidebar-sticky {
     display: flex;
     flex-direction: column;
     gap: 1.5rem;
 }
 
 @media (min-width: 1024px) {
-    .lgnewui-detail-sidebar-sticky {
+    .withu-detail-sidebar-sticky {
         transition: transform 0.15s ease-out;
         will-change: transform;
     }
 
-    .lgnewui-detail-sidebar-sticky.is-sticky {
+    .withu-detail-sidebar-sticky.is-sticky {
         position: fixed;
         overflow-y: auto;
     }
 
-    .lgnewui-detail-sidebar-sticky.is-bottom {
+    .withu-detail-sidebar-sticky.is-bottom {
         position: absolute;
         bottom: 0;
     }
 
     /* 隐藏滚动条 */
-    .lgnewui-detail-sidebar-sticky::-webkit-scrollbar {
+    .withu-detail-sidebar-sticky::-webkit-scrollbar {
         display: none;
     }
-    .lgnewui-detail-sidebar-sticky {
+    .withu-detail-sidebar-sticky {
         scrollbar-width: none;
         -ms-overflow-style: none;
     }
@@ -131,7 +131,7 @@ html {
     overflow: visible !important;
 }
 
-#pjax-container .lgnewui-detail-main-grid {
+#pjax-container .withu-detail-main-grid {
     overflow: visible !important;
 }
 
@@ -140,7 +140,7 @@ html {
    CARD COMPONENT
    ======================================== */
 
-.lgnewui-detail-card {
+.withu-detail-card {
     background: #ffffff;
     border: 1px solid rgba(0, 0, 0, 0.04);
     border-radius: 1rem;
@@ -150,32 +150,32 @@ html {
 }
 
 /* Card Padding Variants */
-.lgnewui-detail-card-p-sm {
+.withu-detail-card-p-sm {
     padding: 1.5rem;
 }
 
-.lgnewui-detail-card-p-md {
+.withu-detail-card-p-md {
     padding: 1.5rem;
 }
 
 @media (min-width: 768px) {
-    .lgnewui-detail-card-p-md {
+    .withu-detail-card-p-md {
         padding: 2.5rem;
     }
 }
 
-.lgnewui-detail-card-p-lg {
+.withu-detail-card-p-lg {
     padding: 1.5rem;
 }
 
 @media (min-width: 768px) {
-    .lgnewui-detail-card-p-lg {
+    .withu-detail-card-p-lg {
         padding: 2.5rem;
     }
 }
 
 @media (min-width: 1024px) {
-    .lgnewui-detail-card-p-lg {
+    .withu-detail-card-p-lg {
         padding: 3rem;
     }
 }
@@ -184,31 +184,31 @@ html {
    HEADER CARD
    ======================================== */
 
-.lgnewui-detail-header-card {
+.withu-detail-header-card {
     margin-bottom: 2rem;
     position: relative;
     overflow: hidden;
 }
 
-.lgnewui-detail-header-bg {
+.withu-detail-header-bg {
     position: absolute;
     inset: 0;
     background: #ffffff;
 }
 
-.lgnewui-detail-header-blob-container {
+.withu-detail-header-blob-container {
     position: absolute;
     inset: 0;
     opacity: 0.5;
 }
 
-.lgnewui-detail-header-blob {
+.withu-detail-header-blob {
     position: absolute;
     border-radius: 50%;
     filter: blur(2.5rem);
 }
 
-.lgnewui-detail-blob-left {
+.withu-detail-blob-left {
     top: 0;
     left: 0;
     width: 8rem;
@@ -216,7 +216,7 @@ html {
     background: linear-gradient(135deg, #93c5fd 0%, transparent 100%);
 }
 
-.lgnewui-detail-blob-right {
+.withu-detail-blob-right {
     bottom: 0;
     right: 0;
     width: 10rem;
@@ -224,13 +224,13 @@ html {
     background: linear-gradient(315deg, #e9d5ff 0%, transparent 100%);
 }
 
-.lgnewui-detail-header-content {
+.withu-detail-header-content {
     position: relative;
     z-index: 10;
 }
 
 /* Header Watermark (右上角装饰) */
-.lgnewui-detail-header-watermark {
+.withu-detail-header-watermark {
     position: absolute;
     top: 1.25rem;
     right: 1.25rem;
@@ -245,24 +245,24 @@ html {
 }
 
 @media (min-width: 768px) {
-    .lgnewui-detail-header-watermark {
+    .withu-detail-header-watermark {
         top: 1.5rem;
         right: 1.5rem;
     }
 }
 
-.lgnewui-detail-watermark-icon {
+.withu-detail-watermark-icon {
     font-size: 2.5rem;
     color: #111827;
 }
 
 @media (min-width: 768px) {
-    .lgnewui-detail-watermark-icon {
+    .withu-detail-watermark-icon {
         font-size: 3.5rem;
     }
 }
 
-.lgnewui-detail-watermark-text {
+.withu-detail-watermark-text {
     font-size: 0.75rem;
     text-transform: uppercase;
     letter-spacing: 0.15em;
@@ -270,13 +270,13 @@ html {
 }
 
 @media (min-width: 768px) {
-    .lgnewui-detail-watermark-text {
+    .withu-detail-watermark-text {
         font-size: 0.75rem;
     }
 }
 
 /* Category Badge */
-.lgnewui-detail-category-badge {
+.withu-detail-category-badge {
     display: inline-flex;
     align-items: center;
     gap: 0.375rem;
@@ -293,15 +293,15 @@ html {
     transition: background-color 0.2s;
 }
 
-.lgnewui-detail-category-badge:hover {
+.withu-detail-category-badge:hover {
     background: #000000;
 }
 
-.lgnewui-detail-category-badge i {
+.withu-detail-category-badge i {
     font-size: 0.75rem;
 }
 
-.lgnewui-detail-category-wrapper {
+.withu-detail-category-wrapper {
     display: flex;
     align-items: center;
     gap: 0.75rem;
@@ -313,7 +313,7 @@ html {
    深色悬浮日期胶囊 - 哑光质感
    ======================================== */
 
-.lgnewui-detail-date-capsule {
+.withu-detail-date-capsule {
     display: inline-flex;
     align-items: center;
     background-color: #18181b;
@@ -331,7 +331,7 @@ html {
 /* 去掉胶囊 hover 效果 */
 
 /* 噪点纹理背景 */
-.lgnewui-detail-date-capsule::before {
+.withu-detail-date-capsule::before {
     content: "";
     position: absolute;
     inset: 0;
@@ -341,7 +341,7 @@ html {
 }
 
 /* 左侧文字区域 */
-.lgnewui-detail-date-text-wrapper {
+.withu-detail-date-text-wrapper {
     display: flex;
     align-items: center;
     margin-right: 0.5rem;
@@ -356,7 +356,7 @@ html {
 }
 
 /* Sparkle 图标 */
-.lgnewui-detail-date-icon-sparkle {
+.withu-detail-date-icon-sparkle {
     color: rgba(255, 255, 255, 0.4);
     font-size: 0.75rem;
     margin-right: 0.5rem;
@@ -366,7 +366,7 @@ html {
 }
 
 /* 渐变分割线 */
-.lgnewui-detail-date-gradient-divider {
+.withu-detail-date-gradient-divider {
     margin: 0 0.375rem;
     width: 1px;
     height: 1.275rem;
@@ -377,7 +377,7 @@ html {
 }
 
 /* 右侧日期圆圈 - 背景加亮 */
-.lgnewui-detail-date-circle {
+.withu-detail-date-circle {
     background-color: #3f3f46;
     color: #ffffff;
     border: 1px solid rgba(255, 255, 255, 0.15);
@@ -393,12 +393,12 @@ html {
     transition: background-color 0.2s ease;
 }
 
-.lgnewui-detail-date-circle:hover {
+.withu-detail-date-circle:hover {
     background-color: #52525b;
 }
 
 /* 日期数字 */
-.lgnewui-detail-date-day-number {
+.withu-detail-date-day-number {
     font-size: 0.875rem;
     font-weight: 800;
     line-height: 1;
@@ -409,32 +409,32 @@ html {
 
 /* 响应式适配 */
 @media (max-width: 640px) {
-    .lgnewui-detail-date-capsule {
+    .withu-detail-date-capsule {
         padding: 0.175rem 0.175rem 0.175rem 0.75rem;
     }
 
-    .lgnewui-detail-date-text-wrapper {
+    .withu-detail-date-text-wrapper {
         font-size: 0.8125rem;
         margin-right: 0.625rem;
     }
 
-    .lgnewui-detail-date-circle {
+    .withu-detail-date-circle {
         width: 1.75rem;
         height: 1.75rem;
     }
 
-    .lgnewui-detail-date-day-number {
+    .withu-detail-date-day-number {
         font-size: 0.8125rem;
     }
 
-    .lgnewui-detail-date-gradient-divider {
+    .withu-detail-date-gradient-divider {
         margin: 0 0.5rem;
         height: 0.875rem;
     }
 }
 
 /* Title */
-.lgnewui-detail-article-title {
+.withu-detail-article-title {
     font-family: 'Crimson Pro', 'Noto Serif SC', Georgia, serif;
     font-weight: 900;
     color: #111827;
@@ -446,25 +446,25 @@ html {
 }
 
 @media (min-width: 640px) {
-    .lgnewui-detail-article-title {
+    .withu-detail-article-title {
         font-size: 1.875rem;
     }
 }
 
 @media (min-width: 768px) {
-    .lgnewui-detail-article-title {
+    .withu-detail-article-title {
         font-size: 2.25rem;
     }
 }
 
 @media (min-width: 1024px) {
-    .lgnewui-detail-article-title {
+    .withu-detail-article-title {
         font-size: 3rem;
     }
 }
 
 /* Date Stamp */
-.lgnewui-detail-date-stamp {
+.withu-detail-date-stamp {
     position: absolute;
     top: 0;
     right: 0;
@@ -476,13 +476,13 @@ html {
 }
 
 @media (min-width: 768px) {
-    .lgnewui-detail-date-stamp {
+    .withu-detail-date-stamp {
         padding: 2rem;
     }
 }
 
 /* 垂直日期布局 */
-.lgnewui-detail-date-vertical {
+.withu-detail-date-vertical {
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -490,13 +490,13 @@ html {
 }
 
 @media (min-width: 768px) {
-    .lgnewui-detail-date-vertical {
+    .withu-detail-date-vertical {
         gap: 0.25rem;
     }
 }
 
 /* 日期数字 - 最大视觉焦点 */
-.lgnewui-detail-date-day {
+.withu-detail-date-day {
     font-size: 4rem;
     font-weight: 800;
     color: #111827;
@@ -506,13 +506,13 @@ html {
 }
 
 @media (min-width: 768px) {
-    .lgnewui-detail-date-day {
+    .withu-detail-date-day {
         font-size: 6rem;
     }
 }
 
 /* 月份 - 精致小号 */
-.lgnewui-detail-date-month {
+.withu-detail-date-month {
     font-size: 0.9375rem;
     font-weight: 500;
     color: #6b7280;
@@ -523,14 +523,14 @@ html {
 }
 
 @media (min-width: 768px) {
-    .lgnewui-detail-date-month {
+    .withu-detail-date-month {
         font-size: 1.125rem;
         letter-spacing: 0.25em;
     }
 }
 
 /* 年份 - 斜体衬线风格 */
-.lgnewui-detail-date-year {
+.withu-detail-date-year {
     font-size: 0.8125rem;
     font-weight: 400;
     color: #9ca3af;
@@ -542,14 +542,14 @@ html {
 }
 
 @media (min-width: 768px) {
-    .lgnewui-detail-date-year {
+    .withu-detail-date-year {
         font-size: 1rem;
         margin-top: 0.5rem;
     }
 }
 
 /* Author Section */
-.lgnewui-detail-author-section {
+.withu-detail-author-section {
     margin-top: 2.5rem;
     padding-top: 2rem;
     border-top: 1px solid #f3f4f6;
@@ -558,33 +558,33 @@ html {
     gap: 1.5rem;
 }
 
-.lgnewui-detail-author-row {
+.withu-detail-author-row {
     display: flex;
     flex-direction: column;
     gap: 1rem;
 }
 
 @media (min-width: 640px) {
-    .lgnewui-detail-author-row {
+    .withu-detail-author-row {
         flex-direction: row;
         align-items: center;
         justify-content: space-between;
     }
 }
 
-.lgnewui-detail-author-info {
+.withu-detail-author-info {
     display: flex;
     align-items: center;
     gap: 1rem;
 }
 
-.lgnewui-detail-author-avatar-wrapper {
+.withu-detail-author-avatar-wrapper {
     position: relative;
     cursor: pointer;
     flex-shrink: 0;
 }
 
-.lgnewui-detail-author-avatar-blur {
+.withu-detail-author-avatar-blur {
     position: absolute;
     inset: 0;
     background: #111827;
@@ -594,11 +594,11 @@ html {
     transition: opacity 0.2s;
 }
 
-.lgnewui-detail-author-avatar-wrapper:hover .lgnewui-detail-author-avatar-blur {
+.withu-detail-author-avatar-wrapper:hover .withu-detail-author-avatar-blur {
     opacity: 0.3;
 }
 
-.lgnewui-detail-author-avatar {
+.withu-detail-author-avatar {
     position: relative;
     width: 3rem;
     height: 3rem;
@@ -607,7 +607,7 @@ html {
     object-fit: cover;
 }
 
-.lgnewui-detail-author-badge {
+.withu-detail-author-badge {
     position: absolute;
     bottom: 0;
     right: -0.25rem;
@@ -621,17 +621,17 @@ html {
     justify-content: center;
 }
 
-.lgnewui-detail-author-badge i {
+.withu-detail-author-badge i {
     color: #3b82f6;
     font-size: 0.875rem;
 }
 
-.lgnewui-detail-author-text {
+.withu-detail-author-text {
     display: flex;
     flex-direction: column;
 }
 
-.lgnewui-detail-author-name {
+.withu-detail-author-name {
     font-family: 'Dancing Script', 'Noto Serif SC', cursive;
     font-weight: 700;
     color: #111827;
@@ -640,7 +640,7 @@ html {
     margin: 0;
 }
 
-.lgnewui-detail-main-content .lgnewui-detail-author-desc {
+.withu-detail-main-content .withu-detail-author-desc {
     font-size: 0.9375rem;
     color: #6b7280;
     margin-top: .3rem;
@@ -653,7 +653,7 @@ html {
     line-height: 1.5;
 }
 
-.lgnewui-detail-day-stamp {
+.withu-detail-day-stamp {
     display: inline-flex;
     align-items: center;
     background-color: #18181b;
@@ -669,7 +669,7 @@ html {
     transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 
-.lgnewui-detail-day-stamp:hover {
+.withu-detail-day-stamp:hover {
     transform: translateY(-1px);
     box-shadow:
         0 14px 28px -5px rgba(0, 0, 0, 0.18),
@@ -677,7 +677,7 @@ html {
 }
 
 /* 噪点纹理背景 */
-.lgnewui-detail-day-stamp::before {
+.withu-detail-day-stamp::before {
     content: "";
     position: absolute;
     inset: 0;
@@ -686,7 +686,7 @@ html {
     pointer-events: none;
 }
 
-.lgnewui-detail-day-label {
+.withu-detail-day-label {
     font-size: 0.8125rem;
     text-transform: uppercase;
     letter-spacing: 0.12em;
@@ -698,7 +698,7 @@ html {
     border-right: 1px solid rgba(255, 255, 255, 0.15);
 }
 
-.lgnewui-detail-day-value {
+.withu-detail-day-value {
     display: flex;
     align-items: center;
     gap: 0.4rem;
@@ -712,14 +712,14 @@ html {
     letter-spacing: -0.01em;
 }
 
-.lgnewui-detail-day-value i {
+.withu-detail-day-value i {
     font-size: 1rem;
     animation: pulse 2s infinite;
 }
 
 /* Day Stamp 移动端适配 */
 @media (max-width: 640px) {
-    .lgnewui-detail-day-stamp {
+    .withu-detail-day-stamp {
         padding: 0.375rem 0.875rem 0.375rem 0.75rem;
         gap: 0.5rem;
         /* 不铺满，自适应宽度 */
@@ -727,18 +727,18 @@ html {
         max-width: fit-content;
     }
 
-    .lgnewui-detail-day-label {
+    .withu-detail-day-label {
         font-size: 0.6875rem;
         padding-right: 0.5rem;
         letter-spacing: 0.08em;
     }
 
-    .lgnewui-detail-day-value {
+    .withu-detail-day-value {
         font-size: 0.8125rem;
         gap: 0.25rem;
     }
 
-    .lgnewui-detail-day-value i {
+    .withu-detail-day-value i {
         font-size: 0.8125rem;
     }
 }
@@ -758,14 +758,14 @@ html {
 }
 
 /* Metadata Badges */
-.lgnewui-detail-metadata-row {
+.withu-detail-metadata-row {
     display: flex;
     flex-wrap: wrap;
     align-items: center;
     gap: 0.75rem;
 }
 
-.lgnewui-detail-meta-badge {
+.withu-detail-meta-badge {
     display: inline-flex;
     align-items: center;
     padding: 0.15rem 0.75rem 0.15rem 0.15rem;
@@ -775,11 +775,11 @@ html {
     transition: background-color 0.2s, color 0.2s;
 }
 
-.lgnewui-detail-meta-badge:hover {
+.withu-detail-meta-badge:hover {
     background: #f3f4f6;
 }
 
-.lgnewui-detail-meta-icon-wrapper {
+.withu-detail-meta-icon-wrapper {
     width: 1.75rem;
     height: 1.75rem;
     display: flex;
@@ -792,15 +792,15 @@ html {
     transition: color 0.2s;
 }
 
-.lgnewui-detail-meta-badge:hover .lgnewui-detail-meta-icon-wrapper {
+.withu-detail-meta-badge:hover .withu-detail-meta-icon-wrapper {
     color: #4b5563;
 }
 
-.lgnewui-detail-meta-icon-wrapper i {
+.withu-detail-meta-icon-wrapper i {
     font-size: 0.875rem;
 }
 
-.lgnewui-detail-meta-text {
+.withu-detail-meta-text {
     margin-left: 0.375rem;
     font-size: 0.875rem;
     font-weight: 500;
@@ -808,7 +808,7 @@ html {
     transition: color 0.2s;
 }
 
-.lgnewui-detail-meta-badge:hover .lgnewui-detail-meta-text {
+.withu-detail-meta-badge:hover .withu-detail-meta-text {
     color: #374151;
 }
 
@@ -816,26 +816,26 @@ html {
    MOBILE AUTHOR CARD
    ======================================== */
 
-.lgnewui-detail-mobile-author-card {
+.withu-detail-mobile-author-card {
     display: block;
     padding: 1.5rem;
     margin-bottom: 1.5rem;
 }
 
 @media (min-width: 1024px) {
-    .lgnewui-detail-mobile-author-card {
+    .withu-detail-mobile-author-card {
         display: none;
     }
 }
 
-.lgnewui-detail-mobile-author-header {
+.withu-detail-mobile-author-header {
     display: flex;
     align-items: center;
     gap: 1rem;
     margin-bottom: 1.5rem;
 }
 
-.lgnewui-detail-mobile-author-avatar {
+.withu-detail-mobile-author-avatar {
     width: 3.5rem;
     height: 3.5rem;
     border-radius: 50%;
@@ -844,19 +844,19 @@ html {
     object-fit: cover;
 }
 
-.lgnewui-detail-mobile-author-name {
+.withu-detail-mobile-author-name {
     font-size: 1.125rem;
     font-weight: 700;
     color: #111827;
     font-family: 'Libre Baskerville', 'Crimson Pro', Georgia, serif;
 }
 
-.lgnewui-detail-mobile-author-check {
+.withu-detail-mobile-author-check {
     color: #3b82f6;
     font-size: 0.875rem;
 }
 
-.lgnewui-detail-mobile-author-days {
+.withu-detail-mobile-author-days {
     font-size: 0.9375rem;
     color: #6b7280;
     display: flex;
@@ -865,23 +865,23 @@ html {
     margin: 0;
 }
 
-.lgnewui-detail-mobile-author-days i {
+.withu-detail-mobile-author-days i {
     color: #f472b6;
 }
 
-.lgnewui-detail-mobile-author-grid {
+.withu-detail-mobile-author-grid {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
     gap: 0.75rem;
 }
 
 @media (max-width: 480px) {
-    .lgnewui-detail-mobile-author-grid {
+    .withu-detail-mobile-author-grid {
         grid-template-columns: 1fr;
     }
 }
 
-.lgnewui-detail-mobile-author-item {
+.withu-detail-mobile-author-item {
     display: flex;
     align-items: center;
     gap: 0.625rem;
@@ -890,11 +890,11 @@ html {
     border-radius: 0.75rem;
 }
 
-.lgnewui-detail-mobile-author-item i {
+.withu-detail-mobile-author-item i {
     color: #9ca3af;
 }
 
-.lgnewui-detail-mobile-item-label {
+.withu-detail-mobile-item-label {
     font-size: 0.9375rem;
     line-height: 1.25;
     color: #9ca3af;
@@ -904,7 +904,7 @@ html {
     min-width: 0;
 }
 
-.lgnewui-detail-mobile-item-value {
+.withu-detail-mobile-item-value {
     font-weight: 700;
     color: #374151;
 }
@@ -913,7 +913,7 @@ html {
    VERTICAL RAIL (Right Side Actions)
    ======================================== */
 
-.lgnewui-detail-vertical-rail {
+.withu-detail-vertical-rail {
     position: fixed;
     z-index: 1000;
     display: flex;
@@ -930,7 +930,7 @@ html {
 }
 
 @media (min-width: 1025px) {
-    .lgnewui-detail-vertical-rail {
+    .withu-detail-vertical-rail {
         right: 1.5rem;
         top: 50%;
         transform: translateY(-50%);
@@ -939,14 +939,14 @@ html {
 }
 
 @media (max-width: 1024px) {
-    .lgnewui-detail-vertical-rail {
+    .withu-detail-vertical-rail {
         right: 0.75rem;
         bottom: 18rem;
         background: rgba(255, 255, 255, 0.95);
     }
 }
 
-.lgnewui-detail-rail-btn {
+.withu-detail-rail-btn {
     width: 2.75rem;
     height: 2.75rem;
     border-radius: 50%;
@@ -962,25 +962,25 @@ html {
     padding: 0;
 }
 
-.lgnewui-detail-rail-btn:hover {
+.withu-detail-rail-btn:hover {
     background-color: #f3f4f6;
     color: #111827;
 }
 
-.lgnewui-detail-rail-btn.active {
+.withu-detail-rail-btn.active {
     color: #ef4444;
 }
 
-.lgnewui-detail-rail-btn.active i {
+.withu-detail-rail-btn.active i {
     font-weight: bold;
 }
 
-.lgnewui-detail-rail-btn i {
+.withu-detail-rail-btn i {
     font-size: 1.375rem;
 }
 
 /* Rail Tooltip */
-.lgnewui-detail-rail-tooltip {
+.withu-detail-rail-tooltip {
     position: absolute;
     right: 100%;
     margin-right: 0.75rem;
@@ -996,23 +996,23 @@ html {
 }
 
 @media (min-width: 1024px) {
-    .lgnewui-detail-rail-btn:hover .lgnewui-detail-rail-tooltip {
+    .withu-detail-rail-btn:hover .withu-detail-rail-tooltip {
         opacity: 1;
     }
 }
 
-.lgnewui-detail-rail-btn .lgnewui-detail-rail-tooltip {
+.withu-detail-rail-btn .withu-detail-rail-tooltip {
     display: none;
 }
 
 @media (min-width: 1024px) {
-    .lgnewui-detail-rail-btn .lgnewui-detail-rail-tooltip {
+    .withu-detail-rail-btn .withu-detail-rail-tooltip {
         display: block;
     }
 }
 
 /* Rail Notification Dot */
-.lgnewui-detail-rail-notification {
+.withu-detail-rail-notification {
     position: absolute;
     top: 0;
     right: 0;
@@ -1024,7 +1024,7 @@ html {
 }
 
 /* QR Code Popup */
-.lgnewui-detail-rail-qr-popup {
+.withu-detail-rail-qr-popup {
     position: absolute;
     right: 100%;
     top: 50%;
@@ -1043,30 +1043,30 @@ html {
     pointer-events: none;
 }
 
-.lgnewui-detail-rail-qr-wrapper:hover .lgnewui-detail-rail-qr-popup {
+.withu-detail-rail-qr-wrapper:hover .withu-detail-rail-qr-popup {
     opacity: 1;
     visibility: visible;
     transform: translateY(-50%) translateX(0);
     pointer-events: auto;
 }
 
-.lgnewui-detail-rail-qr-wrapper:hover .lgnewui-detail-rail-qr-popup {
+.withu-detail-rail-qr-wrapper:hover .withu-detail-rail-qr-popup {
     pointer-events: auto;
 }
 
-.lgnewui-detail-rail-qr-content {
+.withu-detail-rail-qr-content {
     display: flex;
     justify-content: center;
 }
 
-.lgnewui-detail-rail-qr-content img,
-.lgnewui-detail-rail-qr-content canvas {
+.withu-detail-rail-qr-content img,
+.withu-detail-rail-qr-content canvas {
     display: block;
     max-width: 100%;
     height: auto;
 }
 
-.lgnewui-detail-rail-qr-label {
+.withu-detail-rail-qr-label {
     text-align: center;
     font-size: 0.625rem;
     color: #9ca3af;
@@ -1076,26 +1076,26 @@ html {
 
 /* Mobile-only rail buttons */
 @media (min-width: 1024px) {
-    .lgnewui-detail-rail-mobile-only {
+    .withu-detail-rail-mobile-only {
         display: none !important;
     }
 }
 
 @media (max-width: 1023px) {
-    .lgnewui-detail-rail-mobile-only {
+    .withu-detail-rail-mobile-only {
         display: flex !important;
     }
 }
 
 /* Desktop-only rail buttons */
 @media (max-width: 1023px) {
-    .lgnewui-detail-rail-desktop-only {
+    .withu-detail-rail-desktop-only {
         display: none !important;
     }
 }
 
 @media (min-width: 1024px) {
-    .lgnewui-detail-rail-desktop-only {
+    .withu-detail-rail-desktop-only {
         display: block;
     }
 }
@@ -1104,13 +1104,13 @@ html {
    ARTICLE CONTENT
    ======================================== */
 
-.lgnewui-detail-article-card {
+.withu-detail-article-card {
     margin-bottom: 3rem;
     position: relative;
     overflow: hidden;
 }
 
-.lgnewui-detail-quote-icon {
+.withu-detail-quote-icon {
     position: absolute;
     top: 0;
     right: 12px;
@@ -1120,13 +1120,13 @@ html {
     z-index: 0;
 }
 
-.lgnewui-detail-quote-icon i {
+.withu-detail-quote-icon i {
     font-size: 6rem;
     transform: rotate(12deg);
     opacity: 0.5;
 }
 
-.lgnewui-detail-article-body {
+.withu-detail-article-body {
     position: relative;
     z-index: 10;
 }
@@ -1135,7 +1135,7 @@ html {
    READING GUIDE
    ======================================== */
 
-.lgnewui-detail-reading-guide {
+.withu-detail-reading-guide {
     width: 100%;
     margin-bottom: 3rem;
     user-select: none;
@@ -1143,7 +1143,7 @@ html {
     padding-bottom: 0.5rem;
 }
 
-.lgnewui-detail-reading-guide-inner {
+.withu-detail-reading-guide-inner {
     position: relative;
     display: flex;
     align-items: center;
@@ -1153,13 +1153,13 @@ html {
     cursor: default;
 }
 
-.lgnewui-detail-reading-guide-left {
+.withu-detail-reading-guide-left {
     display: flex;
     align-items: center;
     gap: 0.75rem;
 }
 
-.lgnewui-detail-reading-guide-icon {
+.withu-detail-reading-guide-icon {
     width: 1.75rem;
     height: 1.75rem;
     border-radius: 50%;
@@ -1172,16 +1172,16 @@ html {
     box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
 }
 
-.lgnewui-detail-reading-guide-inner:hover .lgnewui-detail-reading-guide-icon {
+.withu-detail-reading-guide-inner:hover .withu-detail-reading-guide-icon {
     background: #111827;
     color: #ffffff;
 }
 
-.lgnewui-detail-reading-guide-icon i {
+.withu-detail-reading-guide-icon i {
     font-size: 0.9375rem;
 }
 
-.lgnewui-detail-reading-guide-title {
+.withu-detail-reading-guide-title {
     font-size: 0.9375rem;
     font-weight: 700;
     letter-spacing: 0.1em;
@@ -1189,11 +1189,11 @@ html {
     transition: color 0.2s;
 }
 
-.lgnewui-detail-reading-guide-inner:hover .lgnewui-detail-reading-guide-title {
+.withu-detail-reading-guide-inner:hover .withu-detail-reading-guide-title {
     color: #4b5563;
 }
 
-.lgnewui-detail-reading-guide-spacer {
+.withu-detail-reading-guide-spacer {
     flex-grow: 1;
     height: 1px;
     background: linear-gradient(90deg, transparent 0%, #e5e7eb 20%, #d1d5db 50%, #e5e7eb 80%, transparent 100%);
@@ -1201,24 +1201,24 @@ html {
     transition: opacity 0.2s;
 }
 
-.lgnewui-detail-reading-guide-inner:hover .lgnewui-detail-reading-guide-spacer {
+.withu-detail-reading-guide-inner:hover .withu-detail-reading-guide-spacer {
     background: linear-gradient(90deg, transparent 0%, #d1d5db 20%, #9ca3af 50%, #d1d5db 80%, transparent 100%);
 }
 
-.lgnewui-detail-reading-guide-time {
+.withu-detail-reading-guide-time {
     display: flex;
     align-items: center;
     gap: 0.5rem;
     color: #111827;
 }
 
-.lgnewui-detail-reading-guide-time-value {
+.withu-detail-reading-guide-time-value {
     font-size: 1.125rem;
     font-weight: 700;
     color: #111827;
 }
 
-.lgnewui-detail-reading-guide-time-label {
+.withu-detail-reading-guide-time-label {
     font-size: 0.9375rem;
     color: #6b7280;
     font-weight: 500;
@@ -1228,25 +1228,25 @@ html {
    BOTTOM NAVIGATION (Previous/Next)
    ======================================== */
 
-.lgnewui-detail-bottom-nav {
+.withu-detail-bottom-nav {
     margin-top: 3rem;
     padding-top: 2rem;
     border-top: 1px solid #f3f4f6;
 }
 
-.lgnewui-detail-bottom-nav-grid {
+.withu-detail-bottom-nav-grid {
     display: grid;
     grid-template-columns: 1fr;
     gap: 1rem;
 }
 
 @media (min-width: 640px) {
-    .lgnewui-detail-bottom-nav-grid {
+    .withu-detail-bottom-nav-grid {
         grid-template-columns: repeat(2, 1fr);
     }
 }
 
-.lgnewui-detail-nav-card {
+.withu-detail-nav-card {
     display: block;
     padding: 1rem;
     border-radius: 1rem;
@@ -1256,11 +1256,11 @@ html {
     overflow: hidden;
 }
 
-.lgnewui-detail-nav-card:hover {
+.withu-detail-nav-card:hover {
     background: #f3f4f6;
 }
 
-.lgnewui-detail-nav-header {
+.withu-detail-nav-header {
     display: flex;
     align-items: center;
     gap: 0.5rem;
@@ -1269,27 +1269,27 @@ html {
     margin-bottom: 0.5rem;
 }
 
-.lgnewui-detail-nav-header i {
+.withu-detail-nav-header i {
     transition: transform 0.2s;
 }
 
-.lgnewui-detail-nav-card:hover .lgnewui-detail-nav-header i {
+.withu-detail-nav-card:hover .withu-detail-nav-header i {
     transform: translateX(-0.25rem);
 }
 
-.lgnewui-detail-nav-card-right .lgnewui-detail-nav-header {
+.withu-detail-nav-card-right .withu-detail-nav-header {
     justify-content: flex-end;
 }
 
-.lgnewui-detail-nav-card-right .lgnewui-detail-nav-header i {
+.withu-detail-nav-card-right .withu-detail-nav-header i {
     transform: none;
 }
 
-.lgnewui-detail-nav-card-right:hover .lgnewui-detail-nav-header i {
+.withu-detail-nav-card-right:hover .withu-detail-nav-header i {
     transform: translateX(0.25rem);
 }
 
-.lgnewui-detail-nav-title {
+.withu-detail-nav-title {
     font-size: 1rem;
     font-weight: 500;
     color: #1f2937;
@@ -1301,7 +1301,7 @@ html {
 }
 
 @media (max-width: 480px) {
-    .lgnewui-detail-nav-title {
+    .withu-detail-nav-title {
         font-size: 1rem;
         -webkit-line-clamp: 2;
         -webkit-box-orient: vertical;
@@ -1310,11 +1310,11 @@ html {
     }
 }
 
-.lgnewui-detail-nav-card:hover .lgnewui-detail-nav-title {
+.withu-detail-nav-card:hover .withu-detail-nav-title {
     color: #111827;
 }
 
-.lgnewui-detail-nav-footer {
+.withu-detail-nav-footer {
     display: flex;
     align-items: center;
     gap: 0.5rem;
@@ -1322,30 +1322,30 @@ html {
     color: #9ca3af;
 }
 
-.lgnewui-detail-nav-footer img {
+.withu-detail-nav-footer img {
     width: 1rem;
     height: 1rem;
     border-radius: 50%;
 }
 
-.lgnewui-detail-nav-card-right .lgnewui-detail-nav-footer {
+.withu-detail-nav-card-right .withu-detail-nav-footer {
     justify-content: flex-end;
 }
 
 /* Placeholder Card (回到首页/查看更多) - 保持统一布局，仅颜色区分 */
-.lgnewui-detail-nav-card-placeholder {
+.withu-detail-nav-card-placeholder {
     background: #f1f5f9;
 }
 
-.lgnewui-detail-nav-card-placeholder:hover {
+.withu-detail-nav-card-placeholder:hover {
     background: #e2e8f0;
 }
 
-.lgnewui-detail-nav-card-placeholder .lgnewui-detail-nav-title {
+.withu-detail-nav-card-placeholder .withu-detail-nav-title {
     color: #64748b;
 }
 
-.lgnewui-detail-nav-card-placeholder:hover .lgnewui-detail-nav-title {
+.withu-detail-nav-card-placeholder:hover .withu-detail-nav-title {
     color: #475569;
 }
 
@@ -1353,14 +1353,14 @@ html {
    COMMENTS SECTION
    ======================================== */
 
-.lgnewui-detail-comments-header {
+.withu-detail-comments-header {
     display: flex;
     align-items: center;
     justify-content: space-between;
     margin-bottom: 2rem;
 }
 
-.lgnewui-detail-comments-title {
+.withu-detail-comments-title {
     font-size: 1.25rem;
     font-weight: 700;
     font-family: 'Libre Baskerville', 'Crimson Pro', Georgia, serif;
@@ -1368,7 +1368,7 @@ html {
     margin: 0;
 }
 
-.lgnewui-detail-comments-count {
+.withu-detail-comments-count {
     font-size: 0.9375rem;
     font-weight: 700;
     color: #6b7280;
@@ -1378,12 +1378,12 @@ html {
 }
 
 /* Comment Form */
-.lgnewui-detail-comment-form-container {
+.withu-detail-comment-form-container {
     margin-bottom: 2.5rem;
     position: relative;
 }
 
-.lgnewui-detail-comment-form-card {
+.withu-detail-comment-form-card {
     position: relative;
     background: #ffffff;
     border-radius: 1rem;
@@ -1392,7 +1392,7 @@ html {
     transition: all 0.3s;
 }
 
-.lgnewui-detail-form-bg-effect {
+.withu-detail-form-bg-effect {
     position: absolute;
     inset: 0;
     background: linear-gradient(135deg, #404040 0%, #262626 50%, #404040 100%);
@@ -1403,16 +1403,16 @@ html {
     z-index: 0;
 }
 
-.lgnewui-detail-reply-context {
+.withu-detail-reply-context {
     position: relative;
     z-index: 10;
 }
 
-.lgnewui-detail-reply-context.hidden {
+.withu-detail-reply-context.hidden {
     display: none;
 }
 
-.lgnewui-detail-reply-bar {
+.withu-detail-reply-bar {
     padding: 1rem 1.5rem;
     border-bottom: 1px solid #f3f4f6;
     display: flex;
@@ -1421,7 +1421,7 @@ html {
     background: linear-gradient(90deg, rgba(249, 250, 251, 0.8) 0%, #ffffff 100%);
 }
 
-.lgnewui-detail-reply-info {
+.withu-detail-reply-info {
     display: flex;
     align-items: center;
     gap: 0.75rem;
@@ -1429,11 +1429,11 @@ html {
     min-width: 0;
 }
 
-.lgnewui-detail-reply-avatar-wrapper {
+.withu-detail-reply-avatar-wrapper {
     position: relative;
 }
 
-.lgnewui-detail-reply-avatar {
+.withu-detail-reply-avatar {
     width: 2.5rem;
     height: 2.5rem;
     border-radius: 50%;
@@ -1441,7 +1441,7 @@ html {
     border: 2px solid #ffffff;
 }
 
-.lgnewui-detail-reply-arrow-badge {
+.withu-detail-reply-arrow-badge {
     position: absolute;
     top: 50%;
     right: -0.125rem;
@@ -1455,17 +1455,17 @@ html {
     border: 2px solid #ffffff;
 }
 
-.lgnewui-detail-reply-arrow-badge i {
+.withu-detail-reply-arrow-badge i {
     color: #ffffff;
     font-size: 0.5rem;
 }
 
-.lgnewui-detail-reply-text {
+.withu-detail-reply-text {
     display: flex;
     flex-direction: column;
 }
 
-.lgnewui-detail-reply-label {
+.withu-detail-reply-label {
     font-size: 0.625rem;
     color: #9ca3af;
     font-weight: 500;
@@ -1473,13 +1473,13 @@ html {
     letter-spacing: 0.05em;
 }
 
-.lgnewui-detail-reply-username {
+.withu-detail-reply-username {
     font-size: 0.875rem;
     font-weight: 700;
     color: #111827;
 }
 
-.lgnewui-detail-reply-close {
+.withu-detail-reply-close {
     width: 2rem;
     height: 2rem;
     display: flex;
@@ -1494,28 +1494,28 @@ html {
     padding: 0;
 }
 
-.lgnewui-detail-reply-close:hover {
+.withu-detail-reply-close:hover {
     color: #6b7280;
     background: #f3f4f6;
 }
 
-.lgnewui-detail-reply-close i {
+.withu-detail-reply-close i {
     font-size: 0.875rem;
 }
 
 /* Form Body */
-.lgnewui-detail-form-body {
+.withu-detail-form-body {
     position: relative;
     z-index: 10;
     background: #ffffff;
     transition: background-color 0.3s;
 }
 
-.lgnewui-detail-form-body.bg-transparent {
+.withu-detail-form-body.bg-transparent {
     background: transparent;
 }
 
-.lgnewui-detail-form-textarea {
+.withu-detail-form-textarea {
     width: 100%;
     padding: 1.5rem;
     font-size: 0.9375rem;
@@ -1530,19 +1530,19 @@ html {
     font-family: inherit;
 }
 
-.lgnewui-detail-form-textarea::placeholder {
+.withu-detail-form-textarea::placeholder {
     color: #d1d5db;
 }
 
-.lgnewui-detail-form-textarea.text-white {
+.withu-detail-form-textarea.text-white {
     color: #ffffff;
 }
 
-.lgnewui-detail-form-textarea.text-white::placeholder {
+.withu-detail-form-textarea.text-white::placeholder {
     color: #a1a1aa;
 }
 
-.lgnewui-detail-private-watermark {
+.withu-detail-private-watermark {
     position: absolute;
     right: 1.5rem;
     bottom: 1.25rem;
@@ -1551,13 +1551,13 @@ html {
     transition: opacity 0.3s;
 }
 
-.lgnewui-detail-private-watermark i {
+.withu-detail-private-watermark i {
     color: rgba(203, 213, 225, 0.6);
     font-size: 3rem;
 }
 
 /* Form Footer */
-.lgnewui-detail-form-footer {
+.withu-detail-form-footer {
     position: relative;
     z-index: 10;
     padding: 1rem 1.25rem;
@@ -1565,12 +1565,12 @@ html {
     transition: all 0.3s;
 }
 
-.lgnewui-detail-form-footer.bg-neutral-800 {
+.withu-detail-form-footer.bg-neutral-800 {
     background: rgba(38, 38, 38, 0.9);
     border-color: #404040;
 }
 
-.lgnewui-detail-identity-area {
+.withu-detail-identity-area {
     transition: opacity 0.3s;
     display: flex;
     flex-direction: column;
@@ -1578,17 +1578,17 @@ html {
     margin-bottom: 1rem;
 }
 
-.lgnewui-detail-identity-area.hidden {
+.withu-detail-identity-area.hidden {
     display: none;
 }
 
-.lgnewui-detail-form-input-row {
+.withu-detail-form-input-row {
     display: flex;
     align-items: center;
     gap: 0.75rem;
 }
 
-.lgnewui-detail-form-avatar {
+.withu-detail-form-avatar {
     width: 2.25rem;
     height: 2.25rem;
     border-radius: 50%;
@@ -1601,16 +1601,16 @@ html {
     transition: all 0.3s;
 }
 
-.lgnewui-detail-form-avatar.bg-neutral-700 {
+.withu-detail-form-avatar.bg-neutral-700 {
     background: #404040;
     color: #d4d4d8;
 }
 
-.lgnewui-detail-form-avatar i {
+.withu-detail-form-avatar i {
     font-size: 1.25rem;
 }
 
-.lgnewui-detail-form-input {
+.withu-detail-form-input {
     background: #f9fafb;
     font-size: 0.875rem;
     font-weight: 500;
@@ -1623,46 +1623,46 @@ html {
     transition: all 0.3s;
 }
 
-.lgnewui-detail-form-input::placeholder {
+.withu-detail-form-input::placeholder {
     color: #9ca3af;
 }
 
-.lgnewui-detail-form-input.bg-neutral-700 {
+.withu-detail-form-input.bg-neutral-700 {
     background: #404040;
     color: #ffffff;
     border-color: #525252;
 }
 
-.lgnewui-detail-form-input.bg-neutral-700::placeholder {
+.withu-detail-form-input.bg-neutral-700::placeholder {
     color: #a1a1aa;
 }
 
-.lgnewui-detail-form-input-full {
+.withu-detail-form-input-full {
     width: 100%;
 }
 
-.lgnewui-detail-anon-indicator {
+.withu-detail-anon-indicator {
     opacity: 0;
     transition: opacity 0.3s;
     margin-bottom: 1rem;
     display: none;
 }
 
-.lgnewui-detail-anon-indicator.hidden {
+.withu-detail-anon-indicator.hidden {
     display: none;
 }
 
-.lgnewui-detail-anon-indicator.block {
+.withu-detail-anon-indicator.block {
     display: block;
 }
 
-.lgnewui-detail-anon-indicator-content {
+.withu-detail-anon-indicator-content {
     display: flex;
     align-items: center;
     gap: 0.75rem;
 }
 
-.lgnewui-detail-anon-avatar {
+.withu-detail-anon-avatar {
     width: 2.25rem;
     height: 2.25rem;
     border-radius: 50%;
@@ -1674,30 +1674,30 @@ html {
     flex-shrink: 0;
 }
 
-.lgnewui-detail-anon-avatar i {
+.withu-detail-anon-avatar i {
     font-size: 1.125rem;
 }
 
-.lgnewui-detail-anon-text {
+.withu-detail-anon-text {
     font-size: 0.875rem;
     font-weight: 500;
     color: #4b5563;
 }
 
 /* Form Tools */
-.lgnewui-detail-form-tools {
+.withu-detail-form-tools {
     display: flex;
     align-items: center;
     justify-content: space-between;
 }
 
-.lgnewui-detail-form-tools-left {
+.withu-detail-form-tools-left {
     display: flex;
     align-items: center;
     gap: 0.125rem;
 }
 
-.lgnewui-detail-tool-btn {
+.withu-detail-tool-btn {
     width: 2.25rem;
     height: 2.25rem;
     display: flex;
@@ -1712,46 +1712,46 @@ html {
     padding: 0;
 }
 
-.lgnewui-detail-tool-btn:hover {
+.withu-detail-tool-btn:hover {
     color: #fbbf24;
     background: #fef3c7;
 }
 
-.lgnewui-detail-tool-btn.bg-gray-800 {
+.withu-detail-tool-btn.bg-gray-800 {
     background: #1f2937;
     color: #ffffff;
 }
 
-.lgnewui-detail-tool-btn.bg-amber-100 {
+.withu-detail-tool-btn.bg-amber-100 {
     background: #fef3c7;
     color: #d97706;
 }
 
-.lgnewui-detail-tool-btn.bg-amber-100 i {
+.withu-detail-tool-btn.bg-amber-100 i {
     color: #f59e0b;
 }
 
-.lgnewui-detail-tool-btn.text-neutral-400 {
+.withu-detail-tool-btn.text-neutral-400 {
     color: #a1a1aa;
 }
 
-.lgnewui-detail-tool-btn.text-neutral-400:hover {
+.withu-detail-tool-btn.text-neutral-400:hover {
     color: #d4d4d8;
 }
 
-.lgnewui-detail-tool-btn:hover.bg-neutral-700 {
+.withu-detail-tool-btn:hover.bg-neutral-700 {
     background: #404040;
 }
 
-.lgnewui-detail-tool-btn i {
+.withu-detail-tool-btn i {
     font-size: 1.125rem;
 }
 
-.lgnewui-detail-tool-btn.ph-fill {
+.withu-detail-tool-btn.ph-fill {
     font-weight: bold;
 }
 
-.lgnewui-detail-submit-btn {
+.withu-detail-submit-btn {
     display: flex;
     align-items: center;
     justify-content: center;
@@ -1769,23 +1769,23 @@ html {
     flex-shrink: 0;
 }
 
-.lgnewui-detail-submit-btn:hover {
+.withu-detail-submit-btn:hover {
     background: #1f2937;
 }
 
-.lgnewui-detail-submit-btn i {
+.withu-detail-submit-btn i {
     font-size: 0.75rem;
     opacity: 0.6;
     transition: all 0.2s;
 }
 
-.lgnewui-detail-submit-btn:hover i {
+.withu-detail-submit-btn:hover i {
     opacity: 1;
     transform: translateX(0.125rem);
 }
 
 /* Emoji Picker */
-.lgnewui-detail-emoji-picker {
+.withu-detail-emoji-picker {
     position: absolute;
     left: 1.5rem;
     bottom: 100%;
@@ -1801,12 +1801,12 @@ html {
     width: 15rem;
 }
 
-.lgnewui-detail-emoji-picker.lgnewui-detail-hidden,
-.lgnewui-detail-emoji-picker.hidden {
+.withu-detail-emoji-picker.withu-detail-hidden,
+.withu-detail-emoji-picker.hidden {
     display: none;
 }
 
-.lgnewui-detail-emoji-btn {
+.withu-detail-emoji-btn {
     padding: 0.375rem;
     transition: transform 0.2s;
     background: none;
@@ -1816,23 +1816,23 @@ html {
     border-radius: 0.5rem;
 }
 
-.lgnewui-detail-emoji-btn:hover {
+.withu-detail-emoji-btn:hover {
     background: #f3f4f6;
     transform: scale(1.1);
 }
 
-.lgnewui-detail-emoji-btn:active {
+.withu-detail-emoji-btn:active {
     transform: scale(0.95);
 }
 
 /* Admin Toggle */
-.lgnewui-detail-admin-toggle {
+.withu-detail-admin-toggle {
     display: flex;
     justify-content: flex-end;
     margin-bottom: 1.5rem;
 }
 
-.lgnewui-detail-admin-toggle-label {
+.withu-detail-admin-toggle-label {
     display: flex;
     align-items: center;
     gap: 0.5rem;
@@ -1844,58 +1844,58 @@ html {
     transition: opacity 0.2s;
 }
 
-.lgnewui-detail-admin-toggle-label:hover {
+.withu-detail-admin-toggle-label:hover {
     opacity: 1;
 }
 
-.lgnewui-detail-admin-checkbox {
+.withu-detail-admin-checkbox {
     accent-color: #3b82f6;
 }
 
 /* Comment List */
-.lgnewui-detail-comment-list {
+.withu-detail-comment-list {
     display: block;
 }
 
 /* Comment Thread */
-.lgnewui-detail-comment-thread {
+.withu-detail-comment-thread {
     position: relative;
     padding-bottom: 2rem;
     margin-bottom: 2rem;
 }
 
-.lgnewui-detail-comment-thread:last-child {
+.withu-detail-comment-thread:last-child {
     border-bottom: none;
     margin-bottom: 0;
     padding-bottom: 0;
 }
 
-.lgnewui-detail-comment-thread.border-b,
-.lgnewui-detail-comment-thread-border {
+.withu-detail-comment-thread.border-b,
+.withu-detail-comment-thread-border {
     border-bottom: 1px solid #f3f4f6;
 }
 
 /* Comment Root */
-.lgnewui-detail-comment-root {
+.withu-detail-comment-root {
     display: flex;
     gap: 0.75rem;
     /* margin-bottom: 1.5rem; */
 }
 
 @media (min-width: 640px) {
-    .lgnewui-detail-comment-root {
+    .withu-detail-comment-root {
         gap: 1rem;
     }
 }
 
-.lgnewui-detail-comment-avatar-container {
+.withu-detail-comment-avatar-container {
     position: relative;
     flex-shrink: 0;
     width: 2.5rem;
     height: 2.5rem;
 }
 
-.lgnewui-detail-comment-avatar {
+.withu-detail-comment-avatar {
     width: 2.5rem;
     height: 2.5rem;
     border-radius: 50%;
@@ -1903,7 +1903,7 @@ html {
     object-fit: cover;
 }
 
-.lgnewui-detail-comment-avatar-placeholder {
+.withu-detail-comment-avatar-placeholder {
     width: 2.5rem;
     height: 2.5rem;
     border-radius: 50%;
@@ -1918,43 +1918,43 @@ html {
 }
 
 /* Avatar placeholder variants */
-.lgnewui-detail-avatar-pink {
+.withu-detail-avatar-pink {
     background: #fce7f3;
     color: #db2777;
     border-color: #fce7f3;
 }
 
-.lgnewui-detail-avatar-amber {
+.withu-detail-avatar-amber {
     background: #fef3c7;
     color: #d97706;
 }
 
-.lgnewui-detail-avatar-teal {
+.withu-detail-avatar-teal {
     background: #ccfbf1;
     color: #0d9488;
 }
 
-.lgnewui-detail-avatar-purple {
+.withu-detail-avatar-purple {
     background: #f3e8ff;
     color: #9333ea;
 }
 
-.lgnewui-detail-avatar-blue {
+.withu-detail-avatar-blue {
     background: #dbeafe;
     color: #2563eb;
 }
 
-.lgnewui-detail-avatar-orange {
+.withu-detail-avatar-orange {
     background: #ffedd5;
     color: #ea580c;
 }
 
-.lgnewui-detail-avatar-green {
+.withu-detail-avatar-green {
     background: #dcfce7;
     color: #16a34a;
 }
 
-.lgnewui-detail-avatar-badge {
+.withu-detail-avatar-badge {
     position: absolute;
     bottom: -0.25rem;
     right: -0.25rem;
@@ -1968,17 +1968,17 @@ html {
     box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
 }
 
-.lgnewui-detail-avatar-badge i {
+.withu-detail-avatar-badge i {
     color: #f59e0b;
     font-size: 0.75rem;
 }
 
-.lgnewui-detail-comment-content {
+.withu-detail-comment-content {
     flex: 1;
     min-width: 0;
 }
 
-.lgnewui-detail-comment-header {
+.withu-detail-comment-header {
     display: flex;
     align-items: flex-start;
     flex-wrap: wrap;
@@ -1986,24 +1986,24 @@ html {
     margin-bottom: 0.5rem;
 }
 
-.lgnewui-detail-comment-username {
+.withu-detail-comment-username {
     font-size: 0.875rem;
     font-weight: 700;
     color: #111827;
 }
 
-.lgnewui-detail-comment-username.text-amber-600 {
+.withu-detail-comment-username.text-amber-600 {
     color: #d97706;
 }
 
-.lgnewui-detail-comment-text {
+.withu-detail-comment-text {
     color: #374151;
     font-size: 0.875rem;
     line-height: 1.625;
     margin-bottom: 0.75rem;
 }
 
-.lgnewui-detail-comment-meta {
+.withu-detail-comment-meta {
     display: flex;
     flex-wrap: wrap;
     gap: 0.5rem;
@@ -2012,24 +2012,24 @@ html {
     margin-bottom: 0.75rem;
 }
 
-.lgnewui-detail-comment-meta-item {
+.withu-detail-comment-meta-item {
     display: flex;
     align-items: center;
     gap: 0.25rem;
 }
 
-.lgnewui-detail-comment-meta-item i {
+.withu-detail-comment-meta-item i {
     font-size: 0.75rem;
 }
 
-.lgnewui-detail-comment-actions {
+.withu-detail-comment-actions {
     display: flex;
     align-items: center;
     gap: 1rem;
     font-size: 0.8125rem;
 }
 
-.lgnewui-detail-like-btn {
+.withu-detail-like-btn {
     display: flex;
     align-items: center;
     gap: 0.25rem;
@@ -2042,19 +2042,19 @@ html {
     transition: color 0.2s;
 }
 
-.lgnewui-detail-like-btn:hover {
+.withu-detail-like-btn:hover {
     color: #ef4444;
 }
 
-.lgnewui-detail-like-btn.active {
+.withu-detail-like-btn.active {
     color: #ef4444;
 }
 
-.lgnewui-detail-like-btn.active i {
+.withu-detail-like-btn.active i {
     font-weight: bold;
 }
 
-.lgnewui-detail-reply-btn {
+.withu-detail-reply-btn {
     color: #6b7280;
     font-weight: 500;
     background: none;
@@ -2067,16 +2067,16 @@ html {
     transition: color 0.2s;
 }
 
-.lgnewui-detail-reply-btn:hover {
+.withu-detail-reply-btn:hover {
     color: #2563eb;
 }
 
-.lgnewui-detail-reply-btn i {
+.withu-detail-reply-btn i {
     font-size: 0.875rem;
 }
 
 /* Reply Button Badge */
-.lgnewui-detail-reply-badge {
+.withu-detail-reply-badge {
     display: flex;
     align-items: center;
     gap: 0.25rem;
@@ -2090,16 +2090,16 @@ html {
     border: none;
 }
 
-.lgnewui-detail-reply-badge:hover {
+.withu-detail-reply-badge:hover {
     background: #dbeafe;
 }
 
-.lgnewui-detail-reply-badge i {
+.withu-detail-reply-badge i {
     font-size: 0.625rem;
 }
 
 /* Gender Badges */
-.lgnewui-detail-badge-male {
+.withu-detail-badge-male {
     background: linear-gradient(135deg, #60A5FA 0%, #3B82F6 100%);
     color: white;
     padding: 0.125rem 0.625rem;
@@ -2113,11 +2113,11 @@ html {
     gap: 0.25rem;
 }
 
-.lgnewui-detail-badge-male i {
+.withu-detail-badge-male i {
     font-size: 0.75rem;
 }
 
-.lgnewui-detail-badge-female {
+.withu-detail-badge-female {
     background: linear-gradient(135deg, #F472B6 0%, #EC4899 100%);
     color: white;
     padding: 0.125rem 0.625rem;
@@ -2131,11 +2131,11 @@ html {
     gap: 0.25rem;
 }
 
-.lgnewui-detail-badge-female i {
+.withu-detail-badge-female i {
     font-size: 0.75rem;
 }
 
-.lgnewui-detail-badge-private {
+.withu-detail-badge-private {
     font-size: 0.625rem;
     background: #fef3c7;
     color: #b45309;
@@ -2145,22 +2145,22 @@ html {
 }
 
 /* Reply Container */
-.lgnewui-detail-reply-container {
+.withu-detail-reply-container {
     padding-left: 0;
     margin-left: 0;
     margin-top: 1.5rem;
 }
 
-.lgnewui-detail-reply-container .lgnewui-detail-comment-root {
+.withu-detail-reply-container .withu-detail-comment-root {
     margin-bottom: 1.5rem;
 }
 
-.lgnewui-detail-reply-container .lgnewui-detail-comment-root:last-child {
+.withu-detail-reply-container .withu-detail-comment-root:last-child {
     margin-bottom: 0;
 }
 
 /* Private Comment Hidden State */
-.lgnewui-detail-private-hidden {
+.withu-detail-private-hidden {
     padding: 1rem;
     background: linear-gradient(90deg, rgba(254, 252, 232, 0.5) 0%, rgba(254, 245, 208, 0.3) 100%);
     border-radius: 0.75rem;
@@ -2170,28 +2170,28 @@ html {
     gap: 0.75rem;
 }
 
-.lgnewui-detail-private-hidden i {
+.withu-detail-private-hidden i {
     color: #fcd34d;
     font-size: 1.25rem;
 }
 
-.lgnewui-detail-private-hidden-text {
+.withu-detail-private-hidden-text {
     color: #d97706;
     font-size: 0.875rem;
     font-weight: 500;
 }
 
-.lgnewui-detail-private-content.hidden {
+.withu-detail-private-content.hidden {
     display: none;
 }
 
 /* Load More Button */
-.lgnewui-detail-load-more-container {
+.withu-detail-load-more-container {
     margin-top: 2rem;
     text-align: center;
 }
 
-.lgnewui-detail-load-more-btn {
+.withu-detail-load-more-btn {
     background: #f9fafb;
     color: #4b5563;
     padding: 0.625rem 1.5rem;
@@ -2207,34 +2207,34 @@ html {
     cursor: pointer;
 }
 
-.lgnewui-detail-load-more-btn:hover {
+.withu-detail-load-more-btn:hover {
     background: #e5e7eb;
     color: #1f2937;
 }
 
-.lgnewui-detail-load-more-btn:active {
+.withu-detail-load-more-btn:active {
     transform: scale(0.95);
 }
 
-.lgnewui-detail-load-more-btn.loading {
+.withu-detail-load-more-btn.loading {
     pointer-events: none;
     opacity: 0.7;
 }
 
-.lgnewui-detail-load-more-btn.loading .lgnewui-detail-btn-text {
+.withu-detail-load-more-btn.loading .withu-detail-btn-text {
     opacity: 0.5;
 }
 
-.lgnewui-detail-btn-text {
+.withu-detail-btn-text {
     transition: opacity 0.2s;
 }
 
-.lgnewui-detail-load-more-btn .lgnewui-detail-btn-icon {
+.withu-detail-load-more-btn .withu-detail-btn-icon {
     transition: transform 0.2s;
 }
 
 /* Spinner */
-.lgnewui-detail-spinner {
+.withu-detail-spinner {
     display: inline-block;
     width: 0.875rem;
     height: 0.875rem;
@@ -2254,7 +2254,7 @@ html {
     }
 }
 
-.lgnewui-detail-spinner.hidden {
+.withu-detail-spinner.hidden {
     display: none;
 }
 
@@ -2262,7 +2262,7 @@ html {
    SIDEBAR
    ======================================== */
 
-.lgnewui-detail-sidebar-sticky {
+.withu-detail-sidebar-sticky {
     display: flex;
     flex-direction: column;
     gap: 1.5rem;
@@ -2271,25 +2271,25 @@ html {
     -ms-overflow-style: none;
 }
 
-.lgnewui-detail-sidebar-sticky::-webkit-scrollbar {
+.withu-detail-sidebar-sticky::-webkit-scrollbar {
     display: none;
 }
 
 /* Sidebar Author Card */
-.lgnewui-detail-sidebar-author {
+.withu-detail-sidebar-author {
     padding: 1.5rem;
     width: 100%;
     box-sizing: border-box;
 }
 
-.lgnewui-detail-sidebar-author-header {
+.withu-detail-sidebar-author-header {
     display: flex;
     align-items: center;
     gap: 1rem;
     margin-bottom: 1.5rem;
 }
 
-.lgnewui-detail-sidebar-author-avatar {
+.withu-detail-sidebar-author-avatar {
     width: 3.5rem;
     height: 3.5rem;
     border-radius: 50%;
@@ -2298,7 +2298,7 @@ html {
     object-fit: cover;
 }
 
-.lgnewui-detail-sidebar-author-name {
+.withu-detail-sidebar-author-name {
     display: flex;
     align-items: center;
     gap: 0.5rem;
@@ -2308,12 +2308,12 @@ html {
     font-family: 'Libre Baskerville', 'Crimson Pro', Georgia, serif;
 }
 
-.lgnewui-detail-sidebar-author-check {
+.withu-detail-sidebar-author-check {
     color: #3b82f6;
     font-size: 0.875rem;
 }
 
-.lgnewui-detail-sidebar-author-days {
+.withu-detail-sidebar-author-days {
     font-size: 0.8125rem;
     color: #6b7280;
     display: flex;
@@ -2322,18 +2322,18 @@ html {
     margin: 0;
 }
 
-.lgnewui-detail-sidebar-author-days i {
+.withu-detail-sidebar-author-days i {
     color: #f472b6;
 }
 
-.lgnewui-detail-sidebar-author-grid {
+.withu-detail-sidebar-author-grid {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
     gap: 0.75rem;
     min-width: 100%;
 }
 
-.lgnewui-detail-sidebar-author-item {
+.withu-detail-sidebar-author-item {
     display: flex;
     align-items: center;
     gap: 0.625rem;
@@ -2343,11 +2343,11 @@ html {
     min-width: 0;
 }
 
-.lgnewui-detail-sidebar-author-item i {
+.withu-detail-sidebar-author-item i {
     color: #9ca3af;
 }
 
-.lgnewui-detail-sidebar-item-label {
+.withu-detail-sidebar-item-label {
     font-size: 0.8125rem;
     line-height: 1.25;
     color: #9ca3af;
@@ -2355,21 +2355,21 @@ html {
     flex-shrink: 0;
 }
 
-.lgnewui-detail-sidebar-item-value {
+.withu-detail-sidebar-item-value {
     font-weight: 700;
     color: #374151;
     flex-shrink: 0;
 }
 
 /* Sidebar TOC */
-.lgnewui-detail-sidebar-toc {
+.withu-detail-sidebar-toc {
     padding: 1.5rem;
     overflow: visible;
     width: 100%;
     box-sizing: border-box;
 }
 
-.lgnewui-detail-toc-main-title {
+.withu-detail-toc-main-title {
     font-size: 1rem;
     font-weight: 600;
     color: #111827;
@@ -2379,7 +2379,7 @@ html {
     padding-left: 0.75rem;
 }
 
-.lgnewui-detail-toc-main-title::before {
+.withu-detail-toc-main-title::before {
     content: '';
     position: absolute;
     left: 0;
@@ -2391,7 +2391,7 @@ html {
     border-radius: 2px;
 }
 
-.lgnewui-detail-sidebar-toc-title {
+.withu-detail-sidebar-toc-title {
     font-size: 0.75rem;
     font-weight: 700;
     color: #9ca3af;
@@ -2400,13 +2400,13 @@ html {
     margin: 0 0 1rem 0;
 }
 
-.lgnewui-detail-toc-list {
+.withu-detail-toc-list {
     display: flex;
     flex-direction: column;
     gap: 0.25rem;
 }
 
-.lgnewui-detail-toc-link {
+.withu-detail-toc-link {
     display: flex;
     align-items: center;
     gap: 0.5rem;
@@ -2422,18 +2422,18 @@ html {
     white-space: nowrap;
 }
 
-.lgnewui-detail-toc-link:hover {
+.withu-detail-toc-link:hover {
     color: #374151;
     background: #f9fafb;
 }
 
-.lgnewui-detail-toc-link.active {
+.withu-detail-toc-link.active {
     color: #111827;
     font-weight: 600;
     background: linear-gradient(90deg, #f3f4f6, transparent);
 }
 
-.lgnewui-detail-toc-link.active::before {
+.withu-detail-toc-link.active::before {
     content: '';
     position: absolute;
     left: 0;
@@ -2444,7 +2444,7 @@ html {
     border-radius: 0 4px 4px 0;
 }
 
-.lgnewui-detail-toc-link.active::after {
+.withu-detail-toc-link.active::after {
     content: '';
     position: absolute;
     left: 0;
@@ -2470,26 +2470,26 @@ html {
     }
 }
 
-.lgnewui-detail-toc-link i {
+.withu-detail-toc-link i {
     flex-shrink: 0;
     transition: color 0.2s;
     font-size: 0.875rem;
 }
 
-.lgnewui-detail-toc-icon-default {
+.withu-detail-toc-icon-default {
     color: #d1d5db;
 }
 
-.lgnewui-detail-toc-icon-active {
+.withu-detail-toc-icon-active {
     color: #111827;
 }
 
-.lgnewui-detail-toc-link:hover i,
-.lgnewui-detail-toc-link.active i {
+.withu-detail-toc-link:hover i,
+.withu-detail-toc-link.active i {
     color: #111827;
 }
 
-.lgnewui-detail-toc-link-text {
+.withu-detail-toc-link-text {
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
@@ -2499,33 +2499,33 @@ html {
     min-width: 0;
 }
 
-.lgnewui-detail-toc-link-nested {
+.withu-detail-toc-link-nested {
     margin-left: 1.5rem;
     font-size: 0.8125rem;
 }
 
-.lgnewui-detail-toc-link-nested i {
+.withu-detail-toc-link-nested i {
     font-size: 0.75rem;
 }
 
-.lgnewui-detail-toc-link-nested-2 {
+.withu-detail-toc-link-nested-2 {
     margin-left: 3rem;
     font-size: 0.75rem;
 }
 
-.lgnewui-detail-toc-link-nested-2 i {
+.withu-detail-toc-link-nested-2 i {
     font-size: 0.625rem;
 }
 
 /* TOC Empty State - 目录空状态（骨架屏风格） */
-.lgnewui-toc-empty {
+.withu-toc-empty {
     display: flex;
     flex-direction: column;
     align-items: center;
     padding: 1.25rem 1rem 1.5rem;
 }
 
-.lgnewui-toc-skeleton {
+.withu-toc-skeleton {
     width: 100%;
     display: flex;
     flex-direction: column;
@@ -2533,13 +2533,13 @@ html {
     margin-bottom: 1.25rem;
 }
 
-.lgnewui-toc-skeleton-line {
+.withu-toc-skeleton-line {
     height: 10px;
     background: #f3f4f6;
     border-radius: 5px;
 }
 
-.lgnewui-toc-empty-badge {
+.withu-toc-empty-badge {
     display: inline-flex;
     align-items: center;
     gap: 0.5rem;
@@ -2550,19 +2550,19 @@ html {
     color: #9ca3af;
 }
 
-.lgnewui-toc-empty-badge i {
+.withu-toc-empty-badge i {
     font-size: 1rem;
     color: #9ca3af;
 }
 
 /* TOC Switcher Bar */
-.lgnewui-toc-switcher-bar {
+.withu-toc-switcher-bar {
     margin-bottom: 1rem;
     display: flex;
     justify-content: center;
 }
 
-.lgnewui-toc-switcher-mini {
+.withu-toc-switcher-mini {
     position: relative;
     display: inline-flex;
     background: #f9fafb;
@@ -2572,7 +2572,7 @@ html {
     border: 1px solid #f3f4f6;
 }
 
-.lgnewui-toc-tab-mini {
+.withu-toc-tab-mini {
     position: relative;
     z-index: 2;
     display: flex;
@@ -2590,28 +2590,28 @@ html {
     white-space: nowrap;
 }
 
-.lgnewui-toc-tab-mini i {
+.withu-toc-tab-mini i {
     font-size: 0.875rem;
     transition: transform 0.2s ease;
 }
 
-.lgnewui-toc-tab-mini:hover {
+.withu-toc-tab-mini:hover {
     color: #6b7280;
 }
 
-.lgnewui-toc-tab-mini:hover i {
+.withu-toc-tab-mini:hover i {
     transform: scale(1.1);
 }
 
-.lgnewui-toc-tab-mini.active {
+.withu-toc-tab-mini.active {
     color: #111827;
 }
 
-.lgnewui-toc-tab-mini.active i {
+.withu-toc-tab-mini.active i {
     font-weight: 600;
 }
 
-.lgnewui-toc-tab-indicator-mini {
+.withu-toc-tab-indicator-mini {
     position: absolute;
     top: 0.25rem;
     left: 0.25rem;
@@ -2625,7 +2625,7 @@ html {
 }
 
 /* TOC Prefix (Number/Tag) */
-.lgnewui-toc-prefix {
+.withu-toc-prefix {
     display: inline-flex;
     align-items: center;
     justify-content: center;
@@ -2643,12 +2643,12 @@ html {
     box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
 }
 
-.lgnewui-detail-toc-link:hover .lgnewui-toc-prefix {
+.withu-detail-toc-link:hover .withu-toc-prefix {
     background: linear-gradient(135deg, #e5e7eb 0%, #d1d5db 100%);
     color: #374151;
 }
 
-.lgnewui-detail-toc-link.active .lgnewui-toc-prefix {
+.withu-detail-toc-link.active .withu-toc-prefix {
     background: linear-gradient(135deg, #111827 0%, #374151 100%);
     color: #ffffff;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
@@ -2656,17 +2656,17 @@ html {
 
 /* Responsive for TOC Switcher */
 @media (max-width: 640px) {
-    .lgnewui-toc-tab-mini {
+    .withu-toc-tab-mini {
         padding: 0.3125rem 0.875rem;
         font-size: 0.75rem;
         gap: 0.3125rem;
     }
 
-    .lgnewui-toc-tab-mini i {
+    .withu-toc-tab-mini i {
         font-size: 0.8125rem;
     }
 
-    .lgnewui-toc-prefix {
+    .withu-toc-prefix {
         min-width: 1.75rem;
         height: 1.125rem;
         font-size: 0.625rem;
@@ -2675,7 +2675,7 @@ html {
 }
 
 /* Weather Widget */
-.lgnewui-detail-weather-widget {
+.withu-detail-weather-widget {
     background: #111827;
     color: #ffffff;
     padding: 1.5rem;
@@ -2685,7 +2685,7 @@ html {
     box-sizing: border-box;
 }
 
-.lgnewui-detail-weather-bg-icon {
+.withu-detail-weather-bg-icon {
     position: absolute;
     top: 0;
     right: 0;
@@ -2694,20 +2694,20 @@ html {
     transition: transform 0.7s;
 }
 
-.lgnewui-detail-weather-widget:hover .lgnewui-detail-weather-bg-icon {
+.withu-detail-weather-widget:hover .withu-detail-weather-bg-icon {
     transform: scale(1.1);
 }
 
-.lgnewui-detail-weather-bg-icon i {
+.withu-detail-weather-bg-icon i {
     font-size: 4.375rem;
 }
 
-.lgnewui-detail-weather-content {
+.withu-detail-weather-content {
     position: relative;
     z-index: 10;
 }
 
-.lgnewui-detail-weather-location-badge {
+.withu-detail-weather-location-badge {
     display: inline-flex;
     align-items: center;
     gap: 0.375rem;
@@ -2722,12 +2722,12 @@ html {
     flex-shrink: 0;
 }
 
-.lgnewui-detail-weather-location-badge i {
+.withu-detail-weather-location-badge i {
     font-size: 0.875rem;
     color: #ffffff;
 }
 
-.lgnewui-detail-weather-location-text {
+.withu-detail-weather-location-text {
     font-size: 0.75rem;
     font-weight: 700;
     text-transform: uppercase;
@@ -2735,7 +2735,7 @@ html {
     color: rgba(255, 255, 255, 0.9);
 }
 
-.lgnewui-detail-weather-temp-row {
+.withu-detail-weather-temp-row {
     display: flex;
     align-items: flex-end;
     gap: 0.5rem;
@@ -2743,19 +2743,19 @@ html {
     width: 100%;
 }
 
-.lgnewui-detail-weather-temp {
+.withu-detail-weather-temp {
     font-size: 3rem;
     font-weight: 700;
     letter-spacing: -0.05em;
 }
 
-.lgnewui-detail-weather-condition {
+.withu-detail-weather-condition {
     font-size: 1.125rem;
     opacity: 0.6;
     margin-bottom: 0.5rem;
 }
 
-.lgnewui-detail-weather-details {
+.withu-detail-weather-details {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
     gap: 0.5rem;
@@ -2764,7 +2764,7 @@ html {
     width: 100%;
 }
 
-.lgnewui-detail-weather-detail-item {
+.withu-detail-weather-detail-item {
     display: flex;
     align-items: center;
     gap: 0.5rem;
@@ -2772,7 +2772,7 @@ html {
     flex-shrink: 0;
 }
 
-.lgnewui-detail-weather-detail-item i {
+.withu-detail-weather-detail-item i {
     font-size: 0.875rem;
 }
 
@@ -2780,7 +2780,7 @@ html {
    MOBILE TOC SHEET
    ======================================== */
 
-.lgnewui-detail-sheet-overlay {
+.withu-detail-sheet-overlay {
     position: fixed;
     inset: 0;
     background: rgba(0, 0, 0, 0.2);
@@ -2790,12 +2790,12 @@ html {
     transition: opacity 0.3s;
 }
 
-.lgnewui-detail-sheet-overlay.open {
+.withu-detail-sheet-overlay.open {
     opacity: 1;
     pointer-events: auto;
 }
 
-.lgnewui-detail-mobile-sheet {
+.withu-detail-mobile-sheet {
     position: fixed;
     bottom: 0;
     left: 0;
@@ -2811,18 +2811,18 @@ html {
     overflow-y: auto;
 }
 
-.lgnewui-detail-mobile-sheet.open {
+.withu-detail-mobile-sheet.open {
     transform: translateY(0);
 }
 
-.lgnewui-detail-mobile-sheet-header {
+.withu-detail-mobile-sheet-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
     margin-bottom: 1.5rem;
 }
 
-.lgnewui-detail-mobile-sheet-title {
+.withu-detail-mobile-sheet-title {
     font-family: 'Libre Baskerville', 'Crimson Pro', Georgia, serif;
     font-weight: 700;
     font-size: 1.125rem;
@@ -2830,7 +2830,7 @@ html {
     color: #111827;
 }
 
-.lgnewui-detail-mobile-sheet-close {
+.withu-detail-mobile-sheet-close {
     padding: 0.5rem;
     background: #f9fafb;
     border-radius: 9999px;
@@ -2842,22 +2842,22 @@ html {
     cursor: pointer;
 }
 
-.lgnewui-detail-mobile-sheet-close:hover {
+.withu-detail-mobile-sheet-close:hover {
     background: #f3f4f6;
 }
 
-.lgnewui-detail-mobile-sheet-close i {
+.withu-detail-mobile-sheet-close i {
     font-size: 1rem;
 }
 
-.lgnewui-detail-mobile-sheet-nav {
+.withu-detail-mobile-sheet-nav {
     display: flex;
     flex-direction: column;
     gap: 0.25rem;
 }
 
 /* Mobile TOC Switcher */
-.lgnewui-detail-mobile-sheet .lgnewui-toc-switcher-bar {
+.withu-detail-mobile-sheet .withu-toc-switcher-bar {
     margin-bottom: 1.25rem;
     padding: 0 0.25rem;
 }
@@ -2866,7 +2866,7 @@ html {
    TOAST
    ======================================== */
 
-.lgnewui-detail-toast {
+.withu-detail-toast {
     position: fixed;
     top: 1.5rem;
     left: 50%;
@@ -2885,12 +2885,12 @@ html {
     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
 }
 
-.lgnewui-detail-toast.show {
+.withu-detail-toast.show {
     opacity: 1;
     transform: translate(-50%, 0);
 }
 
-.lgnewui-detail-toast i {
+.withu-detail-toast i {
     color: #4ade80;
 }
 
@@ -2898,62 +2898,62 @@ html {
    UTILITY CLASSES
    ======================================== */
 
-.lgnewui-detail-hidden {
+.withu-detail-hidden {
     display: none !important;
 }
 
-.lgnewui-detail-block {
+.withu-detail-block {
     display: block !important;
 }
 
-.lgnewui-detail-text-amber-600 {
+.withu-detail-text-amber-600 {
     color: #d97706;
 }
 
-.lgnewui-detail-text-white {
+.withu-detail-text-white {
     color: #ffffff !important;
 }
 
-.lgnewui-detail-text-neutral-400 {
+.withu-detail-text-neutral-400 {
     color: #a1a1aa !important;
 }
 
-.lgnewui-detail-text-neutral-500 {
+.withu-detail-text-neutral-500 {
     color: #737373 !important;
 }
 
-.lgnewui-detail-text-neutral-200 {
+.withu-detail-text-neutral-200 {
     color: #e5e5e5 !important;
 }
 
 /* Background utility classes */
-.lgnewui-detail-bg-gray-800 {
+.withu-detail-bg-gray-800 {
     background: #1f2937 !important;
 }
 
 /* Button style utility */
-.lgnewui-detail-tool-btn.bg-gray-800 {
+.withu-detail-tool-btn.bg-gray-800 {
     background: #1f2937 !important;
     color: #ffffff !important;
 }
 
-.lgnewui-detail-tool-btn.bg-amber-100 {
+.withu-detail-tool-btn.bg-amber-100 {
     background: #fef3c7 !important;
 }
 
-.lgnewui-detail-bg-transparent {
+.withu-detail-bg-transparent {
     background: transparent !important;
 }
 
-.lgnewui-detail-bg-neutral-700 {
+.withu-detail-bg-neutral-700 {
     background: #404040 !important;
 }
 
-.lgnewui-detail-bg-neutral-800 {
+.withu-detail-bg-neutral-800 {
     background: rgba(38, 38, 38, 0.9) !important;
 }
 
-.lgnewui-detail-border-neutral-700 {
+.withu-detail-border-neutral-700 {
     border-color: #404040 !important;
 }
 
@@ -2975,11 +2975,11 @@ html {
 
 /* ========================================
    ========================================
-   ARTICLE MAIN CONTENT STYLES (lgnewui-main)
+   ARTICLE MAIN CONTENT STYLES (withu-main)
    ========================================
    ======================================== */
 
-.lgnewui-main {
+.withu-main {
     font-family: 'Crimson Pro', Georgia, serif;
     color: #2d3748;
     line-height: 1.8;
@@ -2990,7 +2990,7 @@ html {
 }
 
 @media (min-width: 768px) {
-    .lgnewui-main {
+    .withu-main {
         font-size: 1.1625rem;
         line-height: 1.85;
     }
@@ -3000,15 +3000,15 @@ html {
    PARAGRAPHS
    ======================================== */
 
-.lgnewui-main p {
+.withu-main p {
     margin-bottom: 1.5em;
 }
-.lgnewui-main p:last-child {
+.withu-main p:last-child {
     margin-bottom: 0;
 }
 
 /* Drop Cap for first paragraph */
-.lgnewui-main>p:first-of-type::first-letter {
+.withu-main>p:first-of-type::first-letter {
     float: left;
     font-size: 3rem;
     line-height: 0.9;
@@ -3019,7 +3019,7 @@ html {
 }
 
 @media (min-width: 768px) {
-    .lgnewui-main>p:first-of-type::first-letter {
+    .withu-main>p:first-of-type::first-letter {
         font-size: 3.75rem;
     }
 }
@@ -3028,7 +3028,7 @@ html {
    HEADINGS
    ======================================== */
 
-.lgnewui-main h1 {
+.withu-main h1 {
     font-weight: 700;
     font-size: 2rem;
     color: #1a202c;
@@ -3038,12 +3038,12 @@ html {
 }
 
 @media (min-width: 768px) {
-    .lgnewui-main h1 {
+    .withu-main h1 {
         font-size: 2.5rem;
     }
 }
 
-.lgnewui-main h2 {
+.withu-main h2 {
     /* font-family: 'Libre Baskerville', Georgia, serif; */
     font-weight: 700;
     font-size: 1.375rem;
@@ -3055,12 +3055,12 @@ html {
 }
 
 @media (min-width: 768px) {
-    .lgnewui-main h2 {
+    .withu-main h2 {
         font-size: 1.75rem;
     }
 }
 
-.lgnewui-main h3 {
+.withu-main h3 {
     /* font-family: 'Libre Baskerville', Georgia, serif; */
     font-weight: 400;
     font-size: 1.25rem;
@@ -3071,12 +3071,12 @@ html {
 }
 
 @media (min-width: 768px) {
-    .lgnewui-main h3 {
+    .withu-main h3 {
         font-size: 1.25rem;
     }
 }
 
-.lgnewui-main h4 {
+.withu-main h4 {
     /* font-family: 'Libre Baskerville', Georgia, serif; */
     font-weight: 500;
     font-size: 1.125rem;
@@ -3085,7 +3085,7 @@ html {
     line-height: 1.4;
 }
 
-.lgnewui-main h5 {
+.withu-main h5 {
     /* font-family: 'Crimson Pro', Georgia, serif; */
     font-weight: 400;
     font-size: 1.0625rem;
@@ -3094,7 +3094,7 @@ html {
     line-height: 1.5;
 }
 
-.lgnewui-main h6 {
+.withu-main h6 {
     font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
     font-weight: 400;
     font-size: 0.875rem;
@@ -3107,18 +3107,18 @@ html {
    IMAGES AND FIGURES
    ======================================== */
 
-.lgnewui-main figure {
+.withu-main figure {
     margin: 2.5rem auto;
     position: relative;
     text-align: center;
     max-width: 100%;
 }
-.lgnewui-main figure:last-child {
+.withu-main figure:last-child {
     margin-bottom: 0;
 }
 
-.lgnewui-main figure img,
-.lgnewui-main figure video {
+.withu-main figure img,
+.withu-main figure video {
     border-radius: 0.75rem;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
     display: block;
@@ -3128,14 +3128,14 @@ html {
 }
 
 /* Hover：放大 + 阴影加深 */
-.lgnewui-main figure:hover img,
-.lgnewui-main figure:hover video {
+.withu-main figure:hover img,
+.withu-main figure:hover video {
     transform: scale(1.02);
     box-shadow: 0 20px 50px -15px rgba(0, 0, 0, 0.2);
 }
 
 /* figcaption：简约现代风格 */
-.lgnewui-main figcaption {
+.withu-main figcaption {
     display: inline-block;
     font-size: 0.75rem;
     color: #9ca3af;
@@ -3148,7 +3148,7 @@ html {
 }
 
 /* 小图标装饰 */
-.lgnewui-main figcaption::before {
+.withu-main figcaption::before {
     content: '◈';
     font-size: 0.5rem;
     opacity: 0.6;
@@ -3156,7 +3156,7 @@ html {
 }
 
 /* 底部进度条：两端透明渐变 */
-.lgnewui-main figcaption::after {
+.withu-main figcaption::after {
     content: '';
     position: absolute;
     bottom: 0;
@@ -3167,20 +3167,20 @@ html {
     transition: width 0.5s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-.lgnewui-main figure:hover figcaption {
+.withu-main figure:hover figcaption {
     color: #6b7280;
 }
 
-.lgnewui-main figure:hover figcaption::before {
+.withu-main figure:hover figcaption::before {
     opacity: 1;
 }
 
-.lgnewui-main figure:hover figcaption::after {
+.withu-main figure:hover figcaption::after {
     width: 100%;
 }
 
 /* Standalone images without figure wrapper */
-.lgnewui-main img {
+.withu-main img {
     max-width: 100%;
     width: auto;
     height: auto;
@@ -3189,11 +3189,11 @@ html {
     margin: 1.5rem auto;
     transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
-.lgnewui-main img:last-child {
+.withu-main img:last-child {
     margin-bottom: 0;
 }
 
-.lgnewui-main img:hover {
+.withu-main img:hover {
     box-shadow: 0 8px 20px -6px rgba(0, 0, 0, 0.15);
 }
 
@@ -3201,42 +3201,42 @@ html {
    LISTS
    ======================================== */
 
-.lgnewui-main ul {
+.withu-main ul {
     padding-left: 1.5rem;
     margin-bottom: 1.5rem;
 }
-.lgnewui-main ul:last-child {
+.withu-main ul:last-child {
     margin-bottom: 0;
 }
 
-.lgnewui-main ul li {
+.withu-main ul li {
     margin-bottom: 0.5rem;
     line-height: 1.8;
 }
 
-.lgnewui-main ul li::marker {
+.withu-main ul li::marker {
     color: #9ca3af;
 }
 
-.lgnewui-main ol {
+.withu-main ol {
     padding-left: 1.5rem;
     margin-bottom: 1.5rem;
 }
-.lgnewui-main ol:last-child {
+.withu-main ol:last-child {
     margin-bottom: 0;
 }
 
-.lgnewui-main ol li {
+.withu-main ol li {
     margin-bottom: 0.5rem;
     line-height: 1.8;
 }
 
-.lgnewui-main ol li::marker {
+.withu-main ol li::marker {
     color: #9ca3af;
     font-weight: 500;
 }
 
-.lgnewui-main li strong {
+.withu-main li strong {
     color: #111827;
     font-weight: 700;
 }
@@ -3246,7 +3246,7 @@ html {
    ======================================== */
 
 /* 引用块样式 */
-.lgnewui-detail-main-content blockquote {
+.withu-detail-main-content blockquote {
     border-left: 2px solid #ccc;
     position: relative;
     padding: 1rem;
@@ -3260,7 +3260,7 @@ html {
     border: none;
 }
 
-.lgnewui-detail-main-content blockquote::before {
+.withu-detail-main-content blockquote::before {
     content: '\f10d';
     font-family: 'Font Awesome 6 Free';
     font-weight: 900;
@@ -3274,12 +3274,12 @@ html {
     line-height: 1;
 }
 
-.lgnewui-detail-main-content p {
+.withu-detail-main-content p {
     color: #3a3a3a;
     line-height: 2em;
 }
 
-.lgnewui-detail-main-content blockquote p {
+.withu-detail-main-content blockquote p {
     color: #8b8b8b;
     margin: 0;
 }
@@ -3289,7 +3289,7 @@ html {
    HORIZONTAL RULE
    ======================================== */
 
-.lgnewui-main hr {
+.withu-main hr {
     border: none;
     height: 20px;
     background: transparent;
@@ -3299,11 +3299,11 @@ html {
     align-items: center;
     justify-content: center;
 }
-.lgnewui-main hr:last-child {
+.withu-main hr:last-child {
     margin-bottom: 0;
 }
 
-.lgnewui-main hr::after {
+.withu-main hr::after {
     content: '';
     position: absolute;
     left: 0;
@@ -3314,7 +3314,7 @@ html {
     z-index: 0;
 }
 
-.lgnewui-main hr::before {
+.withu-main hr::before {
     content: '\f498';
     font-family: 'remixicon' !important;
     position: relative;
@@ -3333,7 +3333,7 @@ html {
    CODE BLOCKS
    ======================================== */
 
-.lgnewui-main pre {
+.withu-main pre {
     background: #1f2937;
     color: #e5e7eb;
     padding: 1.5rem;
@@ -3345,18 +3345,18 @@ html {
     line-height: 1.7;
     box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
 }
-.lgnewui-main pre:last-child {
+.withu-main pre:last-child {
     margin-bottom: 0;
 }
 
-.lgnewui-main pre code {
+.withu-main pre code {
     color: inherit;
     background: transparent;
     padding: 0;
     font-weight: normal;
 }
 
-.lgnewui-main code {
+.withu-main code {
     background-color: rgba(226, 132, 44, 0.08);
     color: #e2842c;
     padding: 2px 6px;
@@ -3368,7 +3368,7 @@ html {
     transition: all 0.2s ease;
 }
 
-.lgnewui-main code:hover {
+.withu-main code:hover {
     background-color: rgba(226, 132, 44, 0.12);
 }
 
@@ -3376,18 +3376,18 @@ html {
    TABLES
    ======================================== */
 
-.lgnewui-main table {
+.withu-main table {
     width: 100%;
     border-collapse: collapse;
     font-size: 0.9rem;
     white-space: nowrap;
 }
 
-.lgnewui-main table[border] {
+.withu-main table[border] {
     border: none !important;
 }
 
-.lgnewui-main table th {
+.withu-main table th {
     text-align: left;
     padding: 1rem 1.5rem;
     font-weight: 600;
@@ -3397,15 +3397,15 @@ html {
     border: none !important;
 }
 
-.lgnewui-main table th:first-child {
+.withu-main table th:first-child {
     border-top-left-radius: 0.75rem;
 }
 
-.lgnewui-main table th:last-child {
+.withu-main table th:last-child {
     border-top-right-radius: 0.75rem;
 }
 
-.lgnewui-main table td {
+.withu-main table td {
     padding: 1rem 1.25rem;
     color: #4b5563;
     vertical-align: middle;
@@ -3414,8 +3414,8 @@ html {
 }
 
 /* For tables without thead, make first row look like header */
-.lgnewui-main table tbody:first-child tr:first-child td,
-.lgnewui-main table tbody:first-child tr:first-child th {
+.withu-main table tbody:first-child tr:first-child td,
+.withu-main table tbody:first-child tr:first-child th {
     background-color: #111827 !important;
     color: #ffffff !important;
     font-weight: 600 !important;
@@ -3424,11 +3424,11 @@ html {
 }
 
 /* Handle th in tbody (treat as header row) */
-.lgnewui-main table tbody tr:has(th) {
+.withu-main table tbody tr:has(th) {
     background-color: #111827 !important;
 }
 
-.lgnewui-main table tbody tr th {
+.withu-main table tbody tr th {
     background-color: #111827 !important;
     color: #ffffff !important;
     font-weight: 600 !important;
@@ -3437,51 +3437,51 @@ html {
 
 /* Zebra striping - skip rows with th */
 /* 使用更智能的选择器来处理 tbody 中包含 th 的情况 */
-.lgnewui-main table tbody tr:not(:has(th)) {
+.withu-main table tbody tr:not(:has(th)) {
     background-color: #ffffff;
 }
 
-.lgnewui-main table tbody tr:not(:has(th)):nth-of-type(even) {
+.withu-main table tbody tr:not(:has(th)):nth-of-type(even) {
     background-color: #f9fafb;
 }
 
 /* 如果第一行是 th 行，调整后续行的斑马纹 */
-.lgnewui-main table tbody tr:has(th)~tr:nth-of-type(odd) {
+.withu-main table tbody tr:has(th)~tr:nth-of-type(odd) {
     background-color: #f9fafb;
 }
 
-.lgnewui-main table tbody tr:has(th)~tr:nth-of-type(even) {
+.withu-main table tbody tr:has(th)~tr:nth-of-type(even) {
     background-color: #ffffff;
 }
 
 /* Hover 效果 - 确保优先级高于斑马纹 */
-.lgnewui-main table tbody tr:not(:has(th)):hover {
+.withu-main table tbody tr:not(:has(th)):hover {
     background-color: #f3f4f6 !important;
 }
 
-.lgnewui-main table td:first-child {
+.withu-main table td:first-child {
     font-weight: 600;
     color: #111827;
 }
 
-.lgnewui-main table tbody tr:last-child td:first-child {
+.withu-main table tbody tr:last-child td:first-child {
     border-bottom-left-radius: 0.75rem;
 }
 
-.lgnewui-main table tbody tr:last-child td:last-child {
+.withu-main table tbody tr:last-child td:last-child {
     border-bottom-right-radius: 0.75rem;
 }
 
 /* Fix tables without proper header */
-.lgnewui-main table>tbody>tr:first-child>td:first-child {
+.withu-main table>tbody>tr:first-child>td:first-child {
     border-top-left-radius: 0.75rem !important;
 }
 
-.lgnewui-main table>tbody>tr:first-child>td:last-child {
+.withu-main table>tbody>tr:first-child>td:last-child {
     border-top-right-radius: 0.75rem !important;
 }
 
-.lgnewui-table-wrapper {
+.withu-table-wrapper {
     position: relative;
     margin: 3rem 0;
     display: flex;
@@ -3489,12 +3489,12 @@ html {
     gap: 0;
 }
 
-.lgnewui-table-container-wrapper {
+.withu-table-container-wrapper {
     position: relative;
     width: 100%;
 }
 
-.lgnewui-table-container {
+.withu-table-container {
     width: 100%;
     overflow-x: auto;
     overflow-y: hidden;
@@ -3504,18 +3504,18 @@ html {
     position: relative;
 }
 
-.lgnewui-table-container::-webkit-scrollbar {
+.withu-table-container::-webkit-scrollbar {
     height: 0;
     background: transparent;
 }
 
-.lgnewui-table-container {
+.withu-table-container {
     -ms-overflow-style: none;
     scrollbar-width: none;
 }
 
 /* Custom Table Scroll Indicator - Mini Progress Bar */
-.lgnewui-table-scrollbar {
+.withu-table-scrollbar {
     position: relative;
     width: 100%;
     height: 24px;
@@ -3525,7 +3525,7 @@ html {
     margin-top: 0.75rem;
 }
 
-.lgnewui-table-progress-track {
+.withu-table-progress-track {
     width: 120px;
     height: 3px;
     background: #e5e7eb;
@@ -3533,7 +3533,7 @@ html {
     overflow: hidden;
 }
 
-.lgnewui-table-progress-bar {
+.withu-table-progress-bar {
     height: 100%;
     background: #374151;
     border-radius: 2px;
@@ -3542,12 +3542,12 @@ html {
 }
 
 /* Only show scrollbar container when scrollable */
-.lgnewui-table-wrapper:not(.is-scrollable) .lgnewui-table-scrollbar {
+.withu-table-wrapper:not(.is-scrollable) .withu-table-scrollbar {
     display: none;
 }
 
 /* Table Navigation Buttons */
-.lgnewui-table-nav-btn {
+.withu-table-nav-btn {
     position: absolute;
     top: 50%;
     transform: translateY(-50%);
@@ -3568,57 +3568,57 @@ html {
     backdrop-filter: blur(4px);
 }
 
-.lgnewui-table-nav-btn:hover:not(:disabled) {
+.withu-table-nav-btn:hover:not(:disabled) {
     background: rgba(255, 255, 255, 1);
     color: #374151;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
 }
 
-.lgnewui-table-nav-btn:active:not(:disabled) {
+.withu-table-nav-btn:active:not(:disabled) {
     transform: translateY(-50%) scale(0.95);
 }
 
-.lgnewui-table-nav-btn:disabled {
+.withu-table-nav-btn:disabled {
     background: rgba(248, 250, 252, 0.8);
     color: #d1d5db;
     cursor: not-allowed;
     box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
 }
 
-.lgnewui-table-nav-left {
+.withu-table-nav-left {
     left: -1rem;
 }
 
-.lgnewui-table-nav-right {
+.withu-table-nav-right {
     right: -1rem;
 }
 
 /* Hide navigation buttons when table is not scrollable */
-.lgnewui-table-wrapper:not(.is-scrollable) .lgnewui-table-nav-btn {
+.withu-table-wrapper:not(.is-scrollable) .withu-table-nav-btn {
     display: none;
 }
 
 @media (max-width: 768px) {
-    .lgnewui-table-nav-btn {
+    .withu-table-nav-btn {
         width: 1.75rem;
         height: 1.75rem;
         font-size: 0.75rem;
     }
 
-    .lgnewui-table-nav-left {
+    .withu-table-nav-left {
         left: -0.875rem;
     }
 
-    .lgnewui-table-nav-right {
+    .withu-table-nav-right {
         right: -0.875rem;
     }
 
-    .lgnewui-table-scrollbar {
+    .withu-table-scrollbar {
         height: 36px;
     }
 }
 
-.lgnewui-font-mono-cell {
+.withu-font-mono-cell {
     font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
     font-size: 0.85em;
     color: #6b7280;
@@ -3628,8 +3628,8 @@ html {
    AUDIO AND VIDEO
    ======================================== */
 
-.lgnewui-main video,
-.lgnewui-main audio {
+.withu-main video,
+.withu-main audio {
     width: 100%;
     max-width: 100%;
     border-radius: 0.75rem;
@@ -3642,13 +3642,13 @@ html {
 }
 
 /* Plyr播放器样式修复 */
-.lgnewui-main .plyr {
+.withu-main .plyr {
     border-radius: 0.75rem;
     overflow: hidden;
     max-height: 600px;
 }
 
-.lgnewui-main .plyr video {
+.withu-main .plyr video {
     margin: 0;
     box-shadow: none;
     border-radius: 0;
@@ -3657,7 +3657,7 @@ html {
 }
 
 /* 非全屏时的 video-wrapper 限制 */
-.lgnewui-main .plyr:not(.plyr--fullscreen) .plyr__video-wrapper {
+.withu-main .plyr:not(.plyr--fullscreen) .plyr__video-wrapper {
     background: #000;
     max-height: 600px;
 }
@@ -3717,7 +3717,7 @@ html {
 
 
 
-.lgnewui-audio-player-card {
+.withu-audio-player-card {
     background: #f9fafb;
     border-radius: 0.75rem;
     padding: 1rem;
@@ -3728,7 +3728,7 @@ html {
     margin: 1.5rem 0;
 }
 
-.lgnewui-audio-play-btn {
+.withu-audio-play-btn {
     width: 3rem;
     height: 3rem;
     background: #111827;
@@ -3740,27 +3740,27 @@ html {
     flex-shrink: 0;
 }
 
-.lgnewui-audio-play-btn i {
+.withu-audio-play-btn i {
     font-size: 1.25rem;
 }
 
-.lgnewui-audio-info {
+.withu-audio-info {
     flex: 1;
     min-width: 0;
 }
 
-.lgnewui-audio-title {
+.withu-audio-title {
     font-weight: 700;
     color: #111827;
     font-size: 0.875rem;
 }
 
-.lgnewui-audio-meta {
+.withu-audio-meta {
     font-size: 0.75rem;
     color: #6b7280;
 }
 
-.lgnewui-audio-element {
+.withu-audio-element {
     width: 12rem;
     height: 2rem;
     opacity: 0.8;
@@ -3772,7 +3772,7 @@ html {
    COLOR CARD (Highlight Box)
    ======================================== */
 
-.lgnewui-article-body .color-card {
+.withu-article-body .color-card {
     background-image: linear-gradient(to right, #29cfdd 0%, #ffafe3 100%);
     border-radius: 12px;
     color: #fff;
@@ -3786,7 +3786,7 @@ html {
     font-weight: 400;
 }
 
-.lgnewui-article-body .color-card::after {
+.withu-article-body .color-card::after {
     content: "";
     width: 4px;
     height: 40%;
@@ -3823,7 +3823,7 @@ html {
    ======================================== */
 
 /* Enhanced Link Styles */
-.lgnewui-main a {
+.withu-main a {
     position: relative;
     color: #007AFF;
     text-decoration: none;
@@ -3835,7 +3835,7 @@ html {
     margin: 0 8px;
 }
 
-.lgnewui-main a::after {
+.withu-main a::after {
     content: '';
     position: absolute;
     left: 0;
@@ -3848,17 +3848,17 @@ html {
     transition: transform 0.6s cubic-bezier(0.6, 0.1, 0, 1);
 }
 
-.lgnewui-main a:hover {
+.withu-main a:hover {
     color: #69b7ff;
 }
 
-.lgnewui-main a:hover::after {
+.withu-main a:hover::after {
     transform: scaleX(1);
     transform-origin: left;
 }
 
 /* Link Icon - Using Remix Icon ri-link */
-.lgnewui-main a::before {
+.withu-main a::before {
     content: '\eeb2';
     font-family: 'remixicon' !important;
     display: inline-block;
@@ -3871,13 +3871,13 @@ html {
     font-style: normal;
 }
 
-.lgnewui-main a:hover::before {
+.withu-main a:hover::before {
     transform: rotate(-45deg);
     color: #69b7ff;
 }
 
 /* Active state */
-.lgnewui-main a:active {
+.withu-main a:active {
     transform: scale(0.98);
 }
 
@@ -3885,22 +3885,22 @@ html {
    STRONG, BOLD, ITALIC, etc.
    ======================================== */
 
-.lgnewui-main strong,
-.lgnewui-main b {
+.withu-main strong,
+.withu-main b {
     color: #111827;
     font-weight: 600;
 }
 
 /* Only italicize em tags, not i tags (which are often icons) */
-.lgnewui-main em {
+.withu-main em {
     font-style: italic;
 }
 
-/* i tags inside .lgnewui-main are not italicized by default to avoid affecting icons */
+/* i tags inside .withu-main are not italicized by default to avoid affecting icons */
 
 /* Strikethrough */
-.lgnewui-main s,
-.lgnewui-main del {
+.withu-main s,
+.withu-main del {
     color: #9ca3af;
     text-decoration: none;
     background-image: repeating-linear-gradient(-45deg,
@@ -3919,26 +3919,26 @@ html {
    NO SCROLLBAR UTILITY
    ======================================== */
 
-.lgnewui-no-scrollbar {
+.withu-no-scrollbar {
     -ms-overflow-style: none;
     scrollbar-width: none;
 }
 
-.lgnewui-no-scrollbar::-webkit-scrollbar {
+.withu-no-scrollbar::-webkit-scrollbar {
     display: none;
 }
 
 
 /* Font Family Classes */
-.lgnewui-font-sans {
+.withu-font-sans {
     font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
 }
 
-.lgnewui-font-serif {
+.withu-font-serif {
     font-family: 'Libre Baskerville', 'Crimson Pro', Georgia, serif;
 }
 
-.lgnewui-font-article {
+.withu-font-article {
     font-family: 'Crimson Pro', Georgia, serif;
 }
 
@@ -3946,7 +3946,7 @@ html {
    ICON TEXT UTILITY
    ======================================== */
 
-.lgnewui-icon-text {
+.withu-icon-text {
     display: inline-flex;
     align-items: center;
     gap: 0.35em;
@@ -3959,18 +3959,18 @@ html {
    ======================================== */
 
 /* Font Switcher Bar at Top of Content */
-.lgnewui-detail-font-switcher-bar {
+.withu-detail-font-switcher-bar {
     width: 100%;
 }
 
-.lgnewui-detail-font-switcher-bar-inner {
+.withu-detail-font-switcher-bar-inner {
     display: flex;
     align-items: center;
     justify-content: center;
     gap: 1.5rem;
 }
 
-.lgnewui-detail-font-switcher-bar-left {
+.withu-detail-font-switcher-bar-left {
     display: flex;
     align-items: center;
     gap: 0.5rem;
@@ -3979,16 +3979,16 @@ html {
     font-weight: 500;
 }
 
-.lgnewui-detail-font-switcher-bar-left i {
+.withu-detail-font-switcher-bar-left i {
     font-size: 1rem;
 }
 
-.lgnewui-detail-font-switcher-bar-label {
+.withu-detail-font-switcher-bar-label {
     font-size: 0.875rem;
     color: #6b7280;
 }
 
-.lgnewui-detail-font-switcher-bar-right {
+.withu-detail-font-switcher-bar-right {
     color: #d1d5db;
     font-size: 1rem;
     animation: sparkleRotate 4s ease-in-out infinite;
@@ -4009,7 +4009,7 @@ html {
 }
 
 /* Mini Font Switcher */
-.lgnewui-font-switcher-mini {
+.withu-font-switcher-mini {
     position: relative;
     display: inline-flex;
     background: #f9fafb;
@@ -4018,7 +4018,7 @@ html {
     gap: 0.25rem;
 }
 
-.lgnewui-font-tab-mini {
+.withu-font-tab-mini {
     position: relative;
     z-index: 2;
     display: flex;
@@ -4036,28 +4036,28 @@ html {
     white-space: nowrap;
 }
 
-.lgnewui-font-tab-mini i {
+.withu-font-tab-mini i {
     font-size: 0.875rem;
     transition: transform 0.2s ease;
 }
 
-.lgnewui-font-tab-mini:hover {
+.withu-font-tab-mini:hover {
     color: #6b7280;
 }
 
-.lgnewui-font-tab-mini:hover i {
+.withu-font-tab-mini:hover i {
     transform: scale(1.1);
 }
 
-.lgnewui-font-tab-mini.active {
+.withu-font-tab-mini.active {
     color: #111827;
 }
 
-.lgnewui-font-tab-mini.active i {
+.withu-font-tab-mini.active i {
     font-weight: 600;
 }
 
-.lgnewui-font-tab-indicator-mini {
+.withu-font-tab-indicator-mini {
     position: absolute;
     top: 0.25rem;
     left: 0.25rem;
@@ -4071,31 +4071,31 @@ html {
 
 /* Responsive */
 @media (max-width: 640px) {
-    .lgnewui-detail-font-switcher-bar-inner {
+    .withu-detail-font-switcher-bar-inner {
         gap: 1rem;
     }
 
-    .lgnewui-detail-font-switcher-bar-left {
+    .withu-detail-font-switcher-bar-left {
         font-size: 0.8125rem;
     }
 
-    .lgnewui-detail-font-switcher-bar-right {
+    .withu-detail-font-switcher-bar-right {
         font-size: 0.875rem;
     }
 
 
-    .lgnewui-font-tab-mini i {
+    .withu-font-tab-mini i {
         font-size: 0.8125rem;
     }
 }
 
 /* Original inline font switcher (kept for compatibility) */
-.lgnewui-font-switcher {
+.withu-font-switcher {
     display: inline-flex;
     margin-right: 1rem;
 }
 
-.lgnewui-font-switcher-container {
+.withu-font-switcher-container {
     position: relative;
     display: inline-flex;
     background: #f3f4f6;
@@ -4104,7 +4104,7 @@ html {
     gap: 0.125rem;
 }
 
-.lgnewui-font-tab {
+.withu-font-tab {
     position: relative;
     z-index: 2;
     width: 1.75rem;
@@ -4123,21 +4123,21 @@ html {
     flex-shrink: 0;
 }
 
-.lgnewui-font-tab:hover {
+.withu-font-tab:hover {
     color: #6b7280;
 }
 
-.lgnewui-font-tab.active {
+.withu-font-tab.active {
     color: #111827;
 }
 
-.lgnewui-font-tab-text {
+.withu-font-tab-text {
     position: relative;
     z-index: 1;
     line-height: 1;
 }
 
-.lgnewui-font-tab-indicator {
+.withu-font-tab-indicator {
     position: absolute;
     top: 0.1875rem;
     left: 0.1875rem;
@@ -4151,7 +4151,7 @@ html {
     pointer-events: none;
 }
 
-.lgnewui-detail-reading-guide-right {
+.withu-detail-reading-guide-right {
     display: flex;
     align-items: center;
     gap: 0.75rem;
@@ -4160,77 +4160,77 @@ html {
 /* Font Classes */
 
 /* Default: Inter (applied to article body baseline) */
-.lgnewui-article-body {
+.withu-article-body {
     font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
 }
 
 /* Noto Serif SC — 宋体 */
-.lgnewui-article-body.font-noto {
+.withu-article-body.font-noto {
     font-family: 'Noto Serif SC', 'Libre Baskerville', 'Crimson Pro', Georgia, serif;
 }
 
-.lgnewui-article-body.font-noto .lgnewui-main-text,
-.lgnewui-article-body.font-noto p,
-.lgnewui-article-body.font-noto li,
-.lgnewui-article-body.font-noto blockquote,
-.lgnewui-article-body.font-noto h1,
-.lgnewui-article-body.font-noto h2,
-.lgnewui-article-body.font-noto h3,
-.lgnewui-article-body.font-noto h4,
-.lgnewui-article-body.font-noto h5,
-.lgnewui-article-body.font-noto h6,
-.lgnewui-article-body.font-noto figcaption,
-.lgnewui-article-body.font-noto td,
-.lgnewui-article-body.font-noto th,
-.lgnewui-article-body.font-noto .lgnewui-color-card,
-.lgnewui-article-body.font-noto center,
-.lgnewui-article-body.font-noto em,
-.lgnewui-article-body.font-noto strong,
-.lgnewui-article-body.font-noto b,
-.lgnewui-article-body.font-noto code {
+.withu-article-body.font-noto .withu-main-text,
+.withu-article-body.font-noto p,
+.withu-article-body.font-noto li,
+.withu-article-body.font-noto blockquote,
+.withu-article-body.font-noto h1,
+.withu-article-body.font-noto h2,
+.withu-article-body.font-noto h3,
+.withu-article-body.font-noto h4,
+.withu-article-body.font-noto h5,
+.withu-article-body.font-noto h6,
+.withu-article-body.font-noto figcaption,
+.withu-article-body.font-noto td,
+.withu-article-body.font-noto th,
+.withu-article-body.font-noto .withu-color-card,
+.withu-article-body.font-noto center,
+.withu-article-body.font-noto em,
+.withu-article-body.font-noto strong,
+.withu-article-body.font-noto b,
+.withu-article-body.font-noto code {
     font-family: 'Noto Serif SC', 'Libre Baskerville', 'Crimson Pro', Georgia, serif !important;
 }
 
 /* HarmonyOS Sans SC — 鸿蒙 */
-.lgnewui-article-body.font-harmony {
+.withu-article-body.font-harmony {
     font-family: 'HarmonyOS-Sans', 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
 }
 
-.lgnewui-article-body.font-harmony .lgnewui-main-text,
-.lgnewui-article-body.font-harmony p,
-.lgnewui-article-body.font-harmony li,
-.lgnewui-article-body.font-harmony blockquote,
-.lgnewui-article-body.font-harmony h1,
-.lgnewui-article-body.font-harmony h2,
-.lgnewui-article-body.font-harmony h3,
-.lgnewui-article-body.font-harmony h4,
-.lgnewui-article-body.font-harmony h5,
-.lgnewui-article-body.font-harmony h6,
-.lgnewui-article-body.font-harmony figcaption,
-.lgnewui-article-body.font-harmony td,
-.lgnewui-article-body.font-harmony th,
-.lgnewui-article-body.font-harmony .lgnewui-color-card,
-.lgnewui-article-body.font-harmony center,
-.lgnewui-article-body.font-harmony em,
-.lgnewui-article-body.font-harmony strong,
-.lgnewui-article-body.font-harmony b,
-.lgnewui-article-body.font-harmony code {
+.withu-article-body.font-harmony .withu-main-text,
+.withu-article-body.font-harmony p,
+.withu-article-body.font-harmony li,
+.withu-article-body.font-harmony blockquote,
+.withu-article-body.font-harmony h1,
+.withu-article-body.font-harmony h2,
+.withu-article-body.font-harmony h3,
+.withu-article-body.font-harmony h4,
+.withu-article-body.font-harmony h5,
+.withu-article-body.font-harmony h6,
+.withu-article-body.font-harmony figcaption,
+.withu-article-body.font-harmony td,
+.withu-article-body.font-harmony th,
+.withu-article-body.font-harmony .withu-color-card,
+.withu-article-body.font-harmony center,
+.withu-article-body.font-harmony em,
+.withu-article-body.font-harmony strong,
+.withu-article-body.font-harmony b,
+.withu-article-body.font-harmony code {
     font-family: 'HarmonyOS-Sans', 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif !important;
 }
 
 /* Responsive */
 @media (max-width: 640px) {
-    .lgnewui-font-switcher {
+    .withu-font-switcher {
         margin-right: 0.5rem;
     }
 
-    .lgnewui-font-tab {
+    .withu-font-tab {
         width: 1.5rem;
         height: 1.5rem;
         font-size: 0.6875rem;
     }
 
-    .lgnewui-font-tab-indicator {
+    .withu-font-tab-indicator {
         width: 1.5rem;
         height: 1.5rem;
     }
@@ -4240,7 +4240,7 @@ html {
 
 /*音乐样式*/
 
-.lgnewui-detail-text .mian_music {
+.withu-detail-text .mian_music {
     width: 300px;
     height: auto;
     background: #f5f5f6;
@@ -4254,7 +4254,7 @@ html {
     box-shadow: 3px 4px 15px #e4e4e487, -3px 4px 15px #e4e4e487;
 }
 
-.lgnewui-detail-text .mian_music::before {
+.withu-detail-text .mian_music::before {
     content: "";
     position: absolute;
     background: rgb(245 245 246 / 22%);
@@ -4263,7 +4263,7 @@ html {
     z-index: -1;
 }
 
-.lgnewui-detail-text .music_card {
+.withu-detail-text .music_card {
     display: flex;
     align-items: center;
     background: #ffffffcf;
@@ -4272,7 +4272,7 @@ html {
     border-radius: 5px;
 }
 
-.lgnewui-detail-text .music_card .cover {
+.withu-detail-text .music_card .cover {
     width: 25%;
     display: block;
     margin: 0;
@@ -4284,30 +4284,30 @@ html {
     aspect-ratio: 1 / 1 !important;
 }
 
-.lgnewui-detail-text .music_card .author {
+.withu-detail-text .music_card .author {
     margin-left: 0.9rem;
     width: calc(60% - 2rem);
 }
 
-.lgnewui-detail-text .music_card .author span {
+.withu-detail-text .music_card .author span {
     display: block;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
 }
 
-.lgnewui-detail-text .music_card .author .music_name {
+.withu-detail-text .music_card .author .music_name {
     color: #302e2e;
     font-weight: bold;
 }
 
-.lgnewui-detail-text .music_card .author .user {
+.withu-detail-text .music_card .author .user {
     color: #333;
     opacity: 0.7;
     font-size: 0.8rem;
 }
 
-.lgnewui-detail-text .music_card .music_play {
+.withu-detail-text .music_card .music_play {
     width: 2rem;
     height: 2rem;
     position: absolute;
@@ -4320,7 +4320,7 @@ html {
     /*transition: all 0.1s;*/
 }
 
-.lgnewui-detail-text .music_card .music_play:hover {
+.withu-detail-text .music_card .music_play:hover {
     cursor: pointer;
 }
 
@@ -4328,7 +4328,7 @@ html {
    AI SUMMARY CARD — Mini Glassmorphism
    ======================================== */
 
-.lgnewui-detail-summary-card {
+.withu-detail-summary-card {
     position: relative;
     background: linear-gradient(135deg, rgba(243, 246, 252, 0.65), rgba(237, 240, 249, 0.35));
     /* border: 1px solid rgba(226, 232, 240, 0.6); */
@@ -4341,7 +4341,7 @@ html {
     font-family: 'Inter', sans-serif;
 }
 
-.lgnewui-detail-summary-glow {
+.withu-detail-summary-glow {
     position: absolute;
     top: -16px;
     right: -16px;
@@ -4353,7 +4353,7 @@ html {
     pointer-events: none;
 }
 
-.lgnewui-detail-summary-header {
+.withu-detail-summary-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -4365,7 +4365,7 @@ html {
     border-radius: 30px;
 }
 
-/* .lgnewui-detail-summary-header::after {
+/* .withu-detail-summary-header::after {
     content: '';
     position: absolute;
     left: 0;
@@ -4376,14 +4376,14 @@ html {
     pointer-events: none;
 } */
 
-.lgnewui-detail-summary-title-group {
+.withu-detail-summary-title-group {
     display: flex;
     align-items: center;
     gap: 6px;
     color: #64748b;
 }
 
-.lgnewui-detail-summary-icon-box {
+.withu-detail-summary-icon-box {
     background-color: #94a3b8;
     color: white;
     padding: 4px;
@@ -4394,7 +4394,7 @@ html {
     box-shadow: 0 1px 4px rgba(100, 116, 139, 0.2);
 }
 
-.lgnewui-detail-summary-title {
+.withu-detail-summary-title {
     font-family: 'Noto Serif SC', 'Crimson Pro', Georgia, serif;
     font-weight: 600;
     font-size: 14px;
@@ -4402,7 +4402,7 @@ html {
     color: #64748b;
 }
 
-.lgnewui-detail-summary-badge {
+.withu-detail-summary-badge {
     font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
     font-size: 11px;
     font-weight: 500;
@@ -4412,7 +4412,7 @@ html {
     flex-shrink: 0;
 }
 
-.lgnewui-detail-summary-body {
+.withu-detail-summary-body {
     /* background: rgba(255, 255, 255, 0.5);
     border: 1px solid rgba(226, 232, 240, 0.45); */
     border-radius: 10px;
@@ -4422,11 +4422,11 @@ html {
     transition: border-color 0.2s;
 }
 
-.lgnewui-detail-summary-body:hover {
+.withu-detail-summary-body:hover {
     border-color: rgba(203, 213, 225, 0.7);
 }
 
-.lgnewui-detail-summary-text {
+.withu-detail-summary-text {
     font-family: 'Inter', sans-serif;
     margin: 0 !important;
     font-size: 13.5px;
@@ -4438,12 +4438,12 @@ html {
 }
 
 @media (max-width: 639px) {
-    .lgnewui-detail-summary-card {
+    .withu-detail-summary-card {
         padding: 12px 14px;
         border-radius: 12px;
     }
 
-    .lgnewui-detail-summary-text {
+    .withu-detail-summary-text {
         font-size: 14px;
         line-height: 1.7;
     }
@@ -4451,7 +4451,7 @@ html {
 
 /* ========================================
    文章正文 ul/ol/li 列表样式恢复
-   作用域：严格限定在 #article-content / .lgnewui-article-body 后代
+   作用域：严格限定在 #article-content / .withu-article-body 后代
    特异度：(0,1,0,1) > 全局 reset (0,0,0,1)，赢得过 list.css/content.css/loadinglike.css
    注意：不使用 !important，让 TinyMCE 的 inline style="list-style-type:..."
         （circle/square/decimal/lower-alpha/lower-roman/upper-alpha/upper-roman/lower-greek 等）
@@ -4460,14 +4460,14 @@ html {
 
 /* —— 默认 type：UL=disc / OL=decimal —— */
 #article-content ul,
-.lgnewui-article-body ul {
+.withu-article-body ul {
     list-style-type: disc;
     padding-left: 2em;
     margin: 1em 0;
 }
 
 #article-content ol,
-.lgnewui-article-body ol {
+.withu-article-body ol {
     list-style-type: decimal;
     padding-left: 2em;
     margin: 1em 0;
@@ -4475,29 +4475,29 @@ html {
 
 /* —— 嵌套层级默认 type（无 inline style 时使用） —— */
 #article-content ul ul,
-.lgnewui-article-body ul ul {
+.withu-article-body ul ul {
     list-style-type: circle;
 }
 
 #article-content ul ul ul,
-.lgnewui-article-body ul ul ul {
+.withu-article-body ul ul ul {
     list-style-type: square;
 }
 
 #article-content ol ol,
-.lgnewui-article-body ol ol {
+.withu-article-body ol ol {
     list-style-type: lower-alpha;
 }
 
 #article-content ol ol ol,
-.lgnewui-article-body ol ol ol {
+.withu-article-body ol ol ol {
     list-style-type: lower-roman;
 }
 
 /* —— li 显式继承 ul/ol 的 type，覆盖全局 li{list-style-type:none} —— */
 /* 只继承 list-style-type，不动 image/position；TinyMCE 给 li 直接打 inline 时仍由 inline 生效 */
 #article-content li,
-.lgnewui-article-body li {
+.withu-article-body li {
     list-style-type: inherit;
     margin: 0.25em 0;
 }

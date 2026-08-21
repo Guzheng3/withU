@@ -7,7 +7,7 @@
  *
  *      ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
  *
- * Project      : LGNewUi
+ * Project      : withU
  * Author       : Ki
  * Last Updated : 2026-03-31
  * Description  : A private place to preserve love, memory, and the
@@ -28,7 +28,7 @@
  * Official Authorization Site:
  * https://auth-love.kikiw.cn/
  *
- * Warning      : LGNewUi is an original work. Any unauthorized
+ * Warning      : withU is an original work. Any unauthorized
  *                copying, scraping, resale, redistribution, or
  *                commercial use is forbidden.
  * Notice       : Development and long-term maintenance require
@@ -57,7 +57,7 @@ function _owoEscapeHtml(str) {
 }
 
 function GetEm() {
-    var _owoBase = (window.LG_CONFIG && window.LG_CONFIG.owoBase) || '/OwO';
+    var _owoBase = (window.WITHU_CONFIG && window.WITHU_CONFIG.owoBase) || '/OwO';
     $.ajax({
         url: _owoBase + "/emoji.json",
         type: "GET",

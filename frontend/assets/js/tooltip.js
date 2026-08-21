@@ -1,10 +1,10 @@
 /**
- * LG_NewUI 前台全局 Tooltip 组件
+ * withU 前台全局 Tooltip 组件
  *
  * 使用方式：
- *   <span data-lg-tip="提示文本">内容</span>
- *   <span data-lg-tip="<b>HTML</b>" data-lg-tip-html="true">内容</span>
- *   <span data-lg-tip="强制显示" data-lg-tip-force="true">不检查溢出</span>
+ *   <span data-withu-tip="提示文本">内容</span>
+ *   <span data-withu-tip="<b>HTML</b>" data-withu-tip-html="true">内容</span>
+ *   <span data-withu-tip="强制显示" data-withu-tip-force="true">不检查溢出</span>
  *
  * 动画：
  *   - 首次出现：scale(0.92) → scale(1) + 淡入（is-entering）
@@ -30,13 +30,13 @@
     function _ensureDOM() {
         if (tipEl) return;
         tipEl = document.createElement('div');
-        tipEl.className = 'lg-tooltip';
+        tipEl.className = 'withu-tooltip';
         tipEl.innerHTML =
-            '<span class="lg-tooltip-text"></span>' +
-            '<span class="lg-tooltip-tail is-bottom">' + TAIL_SVG + '</span>';
+            '<span class="withu-tooltip-text"></span>' +
+            '<span class="withu-tooltip-tail is-bottom">' + TAIL_SVG + '</span>';
         document.body.appendChild(tipEl);
-        tipText = tipEl.querySelector('.lg-tooltip-text');
-        tipTail = tipEl.querySelector('.lg-tooltip-tail');
+        tipText = tipEl.querySelector('.withu-tooltip-text');
+        tipTail = tipEl.querySelector('.withu-tooltip-tail');
     }
 
     /**
@@ -115,24 +115,24 @@
 
         // 左右方向
         if (pos.dir === 'left' || pos.dir === 'right') {
-            tipEl.style.setProperty('--lg-tip-origin', (pos.dir === 'left' ? 'right' : 'left') + ' ' + pos.tailTop + 'px');
+            tipEl.style.setProperty('--withu-tip-origin', (pos.dir === 'left' ? 'right' : 'left') + ' ' + pos.tailTop + 'px');
             tipTail.style.left = '';
             tipTail.style.top = pos.tailTop + 'px';
             tipTail.style.transform = 'translateY(-50%)';
-            tipTail.className = 'lg-tooltip-tail is-' + (pos.dir === 'left' ? 'right' : 'left');
+            tipTail.className = 'withu-tooltip-tail is-' + (pos.dir === 'left' ? 'right' : 'left');
             return;
         }
 
         // 上下方向
-        tipEl.style.setProperty('--lg-tip-origin', pos.tailLeft + 'px ' + (pos.isAbove ? 'bottom' : 'top'));
+        tipEl.style.setProperty('--withu-tip-origin', pos.tailLeft + 'px ' + (pos.isAbove ? 'bottom' : 'top'));
         tipTail.style.top = '';
         tipTail.style.left = pos.tailLeft + 'px';
         tipTail.style.transform = 'translateX(-50%)';
 
         if (pos.isAbove) {
-            tipTail.className = 'lg-tooltip-tail is-bottom';
+            tipTail.className = 'withu-tooltip-tail is-bottom';
         } else {
-            tipTail.className = 'lg-tooltip-tail is-top';
+            tipTail.className = 'withu-tooltip-tail is-top';
         }
     }
 
@@ -232,18 +232,18 @@
         _ensureDOM();
 
         document.body.addEventListener('mouseover', function(e) {
-            var target = e.target.closest('[data-lg-tip]');
+            var target = e.target.closest('[data-withu-tip]');
             if (target) showFor(target);
         });
 
         document.body.addEventListener('mouseout', function(e) {
-            var target = e.target.closest('[data-lg-tip]');
+            var target = e.target.closest('[data-withu-tip]');
             if (target) hide();
         });
 
         // 移动端
         document.body.addEventListener('touchstart', function(e) {
-            var target = e.target.closest('[data-lg-tip]');
+            var target = e.target.closest('[data-withu-tip]');
             if (target) {
                 if (_isVisible && _currentTarget === target) {
                     hide();

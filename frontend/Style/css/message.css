@@ -1,5 +1,5 @@
 /* ============================================================
- * LG_NewUI 留言板页面样式
+ * withU 留言板页面样式
  * 包含：页面头部、加载更多、骨架屏、卡片回复徽章、
  *       侧边抽屉（1:1 来自 fullscreen-message-v2.html demo）
  * 卡片本体样式沿用 leav.css 中的 MessageCard
@@ -14,26 +14,26 @@
 }
 
 /* 滚动锁定 + 滚动条宽度补偿（加在 html 上，与后台弹窗方案一致） */
-html.lg-scroll-locked {
+html.withu-scroll-locked {
     overflow: hidden !important;
-    padding-right: var(--lg-scrollbar-compensate, 0px) !important;
+    padding-right: var(--withu-scrollbar-compensate, 0px) !important;
 }
 
-html.lg-scroll-locked body {
+html.withu-scroll-locked body {
     overflow: hidden !important;
 }
 
 /* 全宽固定定位元素：padding-right 缩小内容区，防止跳动 */
-html.lg-scroll-locked .header-wrap,
-html.lg-scroll-locked .lgnewui-mobile-nav-root,
-html.lg-scroll-locked #NavBtnList {
-    padding-right: var(--lg-scrollbar-compensate, 0px) !important;
+html.withu-scroll-locked .header-wrap,
+html.withu-scroll-locked .withu-mobile-nav-root,
+html.withu-scroll-locked #NavBtnList {
+    padding-right: var(--withu-scrollbar-compensate, 0px) !important;
 }
 
 /* 右锚定固定定位元素：margin-right 将整个元素推回原位 */
-html.lg-scroll-locked .message_btn,
-html.lg-scroll-locked #lgnewuiFloatingActions {
-    margin-right: var(--lg-scrollbar-compensate, 0px) !important;
+html.withu-scroll-locked .message_btn,
+html.withu-scroll-locked #withuFloatingActions {
+    margin-right: var(--withu-scrollbar-compensate, 0px) !important;
 }
 
 /* ── 留言页全局留言按钮样式覆盖（清新蓝色） ── */
@@ -54,10 +54,10 @@ html.lg-scroll-locked #lgnewuiFloatingActions {
     fill: var(--lgmsg-primary, #007AFF) !important;
 }
 
-/* ── @提及标签（PHP parseMessageContent 输出的 lg-msg-at） ── */
-.lg-msg-at,
-.MsgContent p .lg-msg-at,
-.lgnewui-message-msg-bubble .lg-msg-at {
+/* ── @提及标签（PHP parseMessageContent 输出的 withu-msg-at） ── */
+.withu-msg-at,
+.MsgContent p .withu-msg-at,
+.withu-message-msg-bubble .withu-msg-at {
     color: var(--lgmsg-primary) !important;
     font-weight: 500;
     cursor: pointer;
@@ -72,7 +72,7 @@ html.lg-scroll-locked #lgnewuiFloatingActions {
     margin: 0 2px;
 }
 
-.lg-msg-at:hover {
+.withu-msg-at:hover {
     background: rgba(0, 122, 255, 0.15);
 }
 
@@ -123,7 +123,7 @@ html.lg-scroll-locked #lgnewuiFloatingActions {
     white-space: nowrap;
     min-width: 0;
 }
-.Message_Wrap .MessageCard .UserName h1 > .lgnewui-message-badge {
+.Message_Wrap .MessageCard .UserName h1 > .withu-message-badge {
     flex-shrink: 0;
 }
 .Message_Wrap .MessageCard:nth-child(even) .UserName {
@@ -133,7 +133,7 @@ html.lg-scroll-locked #lgnewuiFloatingActions {
 .Message_Wrap .MessageCard:nth-child(even) .UserName h1 {
     flex-direction: row-reverse;
 }
-.Message_Wrap .MessageCard:nth-child(even) .UserName h1 > .lgnewui-message-badge {
+.Message_Wrap .MessageCard:nth-child(even) .UserName h1 > .withu-message-badge {
     margin-left: 0;
     margin-right: 6px;
 }
@@ -142,11 +142,11 @@ html.lg-scroll-locked #lgnewuiFloatingActions {
    留言徽章组件
    ═══════════════════════════════════════════════ */
 
-.Message_Wrap .MessageCard .UserName .lgnewui-message-badge{
+.Message_Wrap .MessageCard .UserName .withu-message-badge{
         font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
 }
 
-.lgnewui-message-badge {
+.withu-message-badge {
     display: inline-flex;
     align-items: center;
     height: 22px;
@@ -163,7 +163,7 @@ html.lg-scroll-locked #lgnewuiFloatingActions {
     margin-left: 6px;
 }
 
-.lgnewui-message-badge-icon-box {
+.withu-message-badge-icon-box {
     display: flex;
     align-items: center;
     justify-content: center;
@@ -175,60 +175,60 @@ html.lg-scroll-locked #lgnewuiFloatingActions {
     font-size: 11px;
 }
 
-.lgnewui-message-badge-text {
+.withu-message-badge-text {
     font-size: 10px;
     font-weight: 700;
     white-space: nowrap;
 }
 
 /* 程序开发者 */
-.lgnewui-message-badge-dev { background-color: #f1f5f9; }
-.lgnewui-message-badge-dev .lgnewui-message-badge-icon-box { background-color: #1e293b; color: #ffffff; }
-.lgnewui-message-badge-dev .lgnewui-message-badge-text { color: #334155; letter-spacing: 0.05em; }
+.withu-message-badge-dev { background-color: #f1f5f9; }
+.withu-message-badge-dev .withu-message-badge-icon-box { background-color: #1e293b; color: #ffffff; }
+.withu-message-badge-dev .withu-message-badge-text { color: #334155; letter-spacing: 0.05em; }
 
 /* 管理员 */
-.lgnewui-message-badge-admin { background-color: #fffbeb; }
-.lgnewui-message-badge-admin .lgnewui-message-badge-icon-box { background: linear-gradient(to bottom right, #fbbf24, #f97316); color: #ffffff; }
-.lgnewui-message-badge-admin .lgnewui-message-badge-text { color: #b45309; letter-spacing: 0.05em; }
+.withu-message-badge-admin { background-color: #fffbeb; }
+.withu-message-badge-admin .withu-message-badge-icon-box { background: linear-gradient(to bottom right, #fbbf24, #f97316); color: #ffffff; }
+.withu-message-badge-admin .withu-message-badge-text { color: #b45309; letter-spacing: 0.05em; }
 
 /* 游客通用 */
-.lgnewui-message-badge-lv .lgnewui-message-badge-icon-box { font-size: 10px; }
+.withu-message-badge-lv .withu-message-badge-icon-box { font-size: 10px; }
 
 /* Lv.1 */
-.lgnewui-message-badge-lv1 { background-color: #f8fafc; }
-.lgnewui-message-badge-lv1 .lgnewui-message-badge-icon-box { background-color: #e2e8f0; color: #64748b; }
-.lgnewui-message-badge-lv1 .lgnewui-message-badge-text { color: #475569; }
+.withu-message-badge-lv1 { background-color: #f8fafc; }
+.withu-message-badge-lv1 .withu-message-badge-icon-box { background-color: #e2e8f0; color: #64748b; }
+.withu-message-badge-lv1 .withu-message-badge-text { color: #475569; }
 
 /* Lv.2 */
-.lgnewui-message-badge-lv2 { background-color: #ecfdf5; }
-.lgnewui-message-badge-lv2 .lgnewui-message-badge-icon-box { background-color: #a7f3d0; color: #059669; }
-.lgnewui-message-badge-lv2 .lgnewui-message-badge-text { color: #059669; }
+.withu-message-badge-lv2 { background-color: #ecfdf5; }
+.withu-message-badge-lv2 .withu-message-badge-icon-box { background-color: #a7f3d0; color: #059669; }
+.withu-message-badge-lv2 .withu-message-badge-text { color: #059669; }
 
 /* Lv.3 */
-.lgnewui-message-badge-lv3 { background-color: #f0f9ff; }
-.lgnewui-message-badge-lv3 .lgnewui-message-badge-icon-box { background-color: #bae6fd; color: #0284c7; }
-.lgnewui-message-badge-lv3 .lgnewui-message-badge-text { color: #0284c7; }
+.withu-message-badge-lv3 { background-color: #f0f9ff; }
+.withu-message-badge-lv3 .withu-message-badge-icon-box { background-color: #bae6fd; color: #0284c7; }
+.withu-message-badge-lv3 .withu-message-badge-text { color: #0284c7; }
 
 /* Lv.4 */
-.lgnewui-message-badge-lv4 { background-color: #eef2ff; }
-.lgnewui-message-badge-lv4 .lgnewui-message-badge-icon-box { background-color: #c7d2fe; color: #4f46e5; }
-.lgnewui-message-badge-lv4 .lgnewui-message-badge-text { color: #4f46e5; }
+.withu-message-badge-lv4 { background-color: #eef2ff; }
+.withu-message-badge-lv4 .withu-message-badge-icon-box { background-color: #c7d2fe; color: #4f46e5; }
+.withu-message-badge-lv4 .withu-message-badge-text { color: #4f46e5; }
 
 /* Lv.5 */
-.lgnewui-message-badge-lv5 { background-color: #fff7ed; }
-.lgnewui-message-badge-lv5 .lgnewui-message-badge-icon-box { background-color: #fed7aa; color: #ea580c; }
-.lgnewui-message-badge-lv5 .lgnewui-message-badge-text { color: #ea580c; }
+.withu-message-badge-lv5 { background-color: #fff7ed; }
+.withu-message-badge-lv5 .withu-message-badge-icon-box { background-color: #fed7aa; color: #ea580c; }
+.withu-message-badge-lv5 .withu-message-badge-text { color: #ea580c; }
 
 /* Lv.6 */
-.lgnewui-message-badge-lv6 { background-color: #fff1f2; }
-.lgnewui-message-badge-lv6 .lgnewui-message-badge-icon-box { background-color: #f43f5e; color: #ffffff; }
-.lgnewui-message-badge-lv6 .lgnewui-message-badge-text { color: #e11d48; }
+.withu-message-badge-lv6 { background-color: #fff1f2; }
+.withu-message-badge-lv6 .withu-message-badge-icon-box { background-color: #f43f5e; color: #ffffff; }
+.withu-message-badge-lv6 .withu-message-badge-text { color: #e11d48; }
 
 /* 流光特效（管理员 + Lv.6 满级游客） */
-.lgnewui-message-badge-shine {
+.withu-message-badge-shine {
     position: relative;
 }
-.lgnewui-message-badge-shine::after {
+.withu-message-badge-shine::after {
     content: '';
     position: absolute;
     top: 0;
@@ -237,32 +237,32 @@ html.lg-scroll-locked #lgnewuiFloatingActions {
     height: 100%;
     background: linear-gradient(to right, transparent, rgba(255, 255, 255, 0.6), transparent);
     transform: skewX(-20deg);
-    animation: lgnewui-badge-shine 3s infinite;
+    animation: withu-badge-shine 3s infinite;
 }
-@keyframes lgnewui-badge-shine {
+@keyframes withu-badge-shine {
     0% { left: -100%; }
     20% { left: 200%; }
     100% { left: 200%; }
 }
 
 /* 侧边栏抽屉内徽章：紧跟用户名 */
-.lgnewui-message-msg-info .lgnewui-message-badge {
+.withu-message-msg-info .withu-message-badge {
     height: 20px;
     margin-left: 5px;
 }
-.lgnewui-message-msg-info .lgnewui-message-badge-icon-box {
+.withu-message-msg-info .withu-message-badge-icon-box {
     width: 20px;
     height: 20px;
     font-size: 10px;
 }
-.lgnewui-message-msg-info .lgnewui-message-badge-text {
+.withu-message-msg-info .withu-message-badge-text {
     font-size: 9px;
 }
 
 /* 待审核徽章 */
-.lgnewui-message-badge-pending { background-color: #fef3c7; }
-.lgnewui-message-badge-pending .lgnewui-message-badge-icon-box { background-color: #fbbf24; color: #ffffff; }
-.lgnewui-message-badge-pending .lgnewui-message-badge-text { color: #92400e; }
+.withu-message-badge-pending { background-color: #fef3c7; }
+.withu-message-badge-pending .withu-message-badge-icon-box { background-color: #fbbf24; color: #ffffff; }
+.withu-message-badge-pending .withu-message-badge-text { color: #92400e; }
 
 /* 待审核卡片半透明 */
 .MessageCard.is-pending .HeightCalc { opacity: 0.65; }
@@ -274,26 +274,26 @@ html.lg-scroll-locked #lgnewuiFloatingActions {
 }
 
 /* 待审核抽屉气泡半透明 */
-.lgnewui-message-msg-item.is-pending .lgnewui-message-msg-bubble { opacity: 0.65; }
+.withu-message-msg-item.is-pending .withu-message-msg-bubble { opacity: 0.65; }
 
 /* ═══════════════════════════════════════════════
    开发者身份验证弹窗（复用后台安全码验证弹窗风格）
    ═══════════════════════════════════════════════ */
 .lgmsg-security-overlay {
-    --lg-text-primary: #1D1D1F;
-    --lg-text-secondary: #86868B;
-    --lg-text-tertiary: #A1A1A6;
-    --lg-color-error: #FF3B30;
-    --lg-color-success: #34C759;
-    --lg-color-success-glow: rgba(52, 199, 89, 0.25);
-    --lg-overlay-bg: rgba(255, 255, 255, 0.45);
-    --lg-overlay-blur: blur(36px);
-    --lg-overlay-saturate: saturate(200%);
-    --lg-ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
-    --lg-ease-out: cubic-bezier(0.25, 0.1, 0.25, 1);
-    --lg-ease-smooth: cubic-bezier(0.32, 0.72, 0, 1);
-    --lg-duration-enter: 0.6s;
-    --lg-duration-exit: 0.5s;
+    --withu-text-primary: #1D1D1F;
+    --withu-text-secondary: #86868B;
+    --withu-text-tertiary: #A1A1A6;
+    --withu-color-error: #FF3B30;
+    --withu-color-success: #34C759;
+    --withu-color-success-glow: rgba(52, 199, 89, 0.25);
+    --withu-overlay-bg: rgba(255, 255, 255, 0.45);
+    --withu-overlay-blur: blur(36px);
+    --withu-overlay-saturate: saturate(200%);
+    --withu-ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+    --withu-ease-out: cubic-bezier(0.25, 0.1, 0.25, 1);
+    --withu-ease-smooth: cubic-bezier(0.32, 0.72, 0, 1);
+    --withu-duration-enter: 0.6s;
+    --withu-duration-exit: 0.5s;
 }
 .lgmsg-security-overlay *,
 .lgmsg-security-overlay *::before,
@@ -305,15 +305,15 @@ html.lg-scroll-locked #lgnewuiFloatingActions {
     position: fixed;
     inset: 0;
     z-index: 100010;
-    background: var(--lg-overlay-bg);
-    backdrop-filter: var(--lg-overlay-blur) var(--lg-overlay-saturate);
-    -webkit-backdrop-filter: var(--lg-overlay-blur) var(--lg-overlay-saturate);
+    background: var(--withu-overlay-bg);
+    backdrop-filter: var(--withu-overlay-blur) var(--withu-overlay-saturate);
+    -webkit-backdrop-filter: var(--withu-overlay-blur) var(--withu-overlay-saturate);
     display: flex;
     justify-content: center;
     align-items: center;
     opacity: 0;
     pointer-events: none;
-    transition: opacity var(--lg-duration-enter) var(--lg-ease-smooth);
+    transition: opacity var(--withu-duration-enter) var(--withu-ease-smooth);
 }
 .lgmsg-security-overlay::before {
     content: '';
@@ -334,8 +334,8 @@ html.lg-scroll-locked #lgnewuiFloatingActions {
     z-index: 1;
     transform: scale(0.92) translateY(20px);
     opacity: 0;
-    transition: transform var(--lg-duration-enter) var(--lg-ease-spring),
-                opacity calc(var(--lg-duration-enter) * 0.8) var(--lg-ease-smooth);
+    transition: transform var(--withu-duration-enter) var(--withu-ease-spring),
+                opacity calc(var(--withu-duration-enter) * 0.8) var(--withu-ease-smooth);
     will-change: transform, opacity, filter;
     width: 420px;
     max-width: 90vw;
@@ -350,22 +350,22 @@ html.lg-scroll-locked #lgnewuiFloatingActions {
 }
 .lgmsg-security-overlay.lgmsg-security-is-closing {
     opacity: 0;
-    transition-duration: var(--lg-duration-exit);
+    transition-duration: var(--withu-duration-exit);
 }
 .lgmsg-security-overlay.lgmsg-security-is-closing .lgmsg-security-base {
     transform: scale(0.94) translateY(-15px);
     opacity: 0;
     filter: blur(8px);
-    transition: transform var(--lg-duration-exit) var(--lg-ease-smooth),
-                opacity var(--lg-duration-exit) var(--lg-ease-smooth),
-                filter var(--lg-duration-exit) var(--lg-ease-smooth);
+    transition: transform var(--withu-duration-exit) var(--withu-ease-smooth),
+                opacity var(--withu-duration-exit) var(--withu-ease-smooth),
+                filter var(--withu-duration-exit) var(--withu-ease-smooth);
 }
 .lgmsg-security-overlay.lgmsg-security-is-closing .lgmsg-security-base.lgmsg-security-is-success {
     transform: scale(0.96) translateY(0);
     filter: blur(0px);
-    transition: transform 0.4s var(--lg-ease-smooth),
+    transition: transform 0.4s var(--withu-ease-smooth),
                 opacity 0.35s ease-out,
-                filter 0.4s var(--lg-ease-smooth);
+                filter 0.4s var(--withu-ease-smooth);
 }
 
 /* 表单内容层 */
@@ -373,9 +373,9 @@ html.lg-scroll-locked #lgnewuiFloatingActions {
     position: relative;
     padding: 40px;
     width: 100%;
-    transition: transform 0.6s var(--lg-ease-smooth),
-                opacity 0.6s var(--lg-ease-smooth),
-                filter 0.6s var(--lg-ease-smooth);
+    transition: transform 0.6s var(--withu-ease-smooth),
+                opacity 0.6s var(--withu-ease-smooth),
+                filter 0.6s var(--withu-ease-smooth);
     will-change: transform, opacity, filter;
 }
 .lgmsg-security-base.lgmsg-security-is-success .lgmsg-security-form-content {
@@ -390,7 +390,7 @@ html.lg-scroll-locked #lgnewuiFloatingActions {
     position: absolute;
     top: 20px;
     right: 20px;
-    color: var(--lg-text-tertiary);
+    color: var(--withu-text-tertiary);
     cursor: pointer;
     transition: all 0.2s;
     display: flex;
@@ -403,7 +403,7 @@ html.lg-scroll-locked #lgnewuiFloatingActions {
     font-size: 18px;
 }
 .lgmsg-security-close:hover {
-    color: var(--lg-text-primary);
+    color: var(--withu-text-primary);
     background: rgba(0,0,0,0.04);
     transform: scale(1.05);
 }
@@ -413,12 +413,12 @@ html.lg-scroll-locked #lgnewuiFloatingActions {
     font-size: 24px;
     font-weight: 600;
     margin: 0 0 10px 0;
-    color: var(--lg-text-primary);
+    color: var(--withu-text-primary);
     letter-spacing: -0.5px;
 }
 .lgmsg-security-desc {
     font-size: 15px;
-    color: var(--lg-text-secondary);
+    color: var(--withu-text-secondary);
     line-height: 1.6;
     margin: 0 0 32px 0;
 }
@@ -428,7 +428,7 @@ html.lg-scroll-locked #lgnewuiFloatingActions {
     display: block;
     font-size: 13px;
     font-weight: 600;
-    color: var(--lg-text-primary);
+    color: var(--withu-text-primary);
     margin-bottom: 8px;
 }
 
@@ -441,7 +441,7 @@ html.lg-scroll-locked #lgnewuiFloatingActions {
     left: 16px;
     top: 50%;
     transform: translateY(-50%);
-    color: var(--lg-text-tertiary);
+    color: var(--withu-text-tertiary);
     font-size: 20px;
     display: flex;
     pointer-events: none;
@@ -449,7 +449,7 @@ html.lg-scroll-locked #lgnewuiFloatingActions {
     z-index: 2;
 }
 .lgmsg-security-input-group:focus-within .lgmsg-security-input-icon {
-    color: var(--lg-text-primary);
+    color: var(--withu-text-primary);
 }
 .lgmsg-security-input-group .lgmsg-security-pw-wrap {
     position: relative;
@@ -467,7 +467,7 @@ html.lg-scroll-locked #lgnewuiFloatingActions {
     font-family: inherit;
     outline: none;
     background: #F3F4F6;
-    color: var(--lg-text-primary);
+    color: var(--withu-text-primary);
     letter-spacing: 2px;
     transition: background 0.3s;
 }
@@ -476,7 +476,7 @@ html.lg-scroll-locked #lgnewuiFloatingActions {
 }
 .lgmsg-security-input-group .lgmsg-security-pw-input::placeholder {
     letter-spacing: 0;
-    color: var(--lg-text-tertiary);
+    color: var(--withu-text-tertiary);
     font-size: 14px;
 }
 .lgmsg-security-pw-toggle {
@@ -490,14 +490,14 @@ html.lg-scroll-locked #lgnewuiFloatingActions {
     background: transparent;
     border: none;
     cursor: pointer;
-    color: var(--lg-text-tertiary);
+    color: var(--withu-text-tertiary);
     padding: 0;
     border-radius: 8px;
     transition: color 0.2s, background 0.2s, transform 0.15s ease;
     z-index: 2;
 }
 .lgmsg-security-pw-toggle:hover {
-    color: var(--lg-text-primary);
+    color: var(--withu-text-primary);
     background: rgba(0, 0, 0, 0.05);
 }
 .lgmsg-security-pw-toggle:focus-visible {
@@ -510,7 +510,7 @@ html.lg-scroll-locked #lgnewuiFloatingActions {
 
 /* 错误提示 */
 .lgmsg-security-error {
-    color: var(--lg-color-error);
+    color: var(--withu-color-error);
     font-size: 13px;
     margin-top: 8px;
     display: none;
@@ -537,7 +537,7 @@ html.lg-scroll-locked #lgnewuiFloatingActions {
     align-items: flex-start;
 }
 .lgmsg-security-hash-icon {
-    color: var(--lg-text-tertiary);
+    color: var(--withu-text-tertiary);
     margin-top: 2px;
     flex-shrink: 0;
     font-size: 16px;
@@ -545,7 +545,7 @@ html.lg-scroll-locked #lgnewuiFloatingActions {
 }
 .lgmsg-security-hash-text {
     font-size: 13.5px;
-    color: var(--lg-text-secondary);
+    color: var(--withu-text-secondary);
     line-height: 1.5;
     margin: 0;
 }
@@ -562,7 +562,7 @@ html.lg-scroll-locked #lgnewuiFloatingActions {
     border-radius: 999px;
     font-size: 16px;
     font-weight: 600;
-    transition: all 0.3s var(--lg-ease-out);
+    transition: all 0.3s var(--withu-ease-out);
     position: relative;
     border: none;
     outline: none;
@@ -633,13 +633,13 @@ html.lg-scroll-locked #lgnewuiFloatingActions {
     position: absolute;
     width: 140px;
     height: 140px;
-    background: var(--lg-color-success);
+    background: var(--withu-color-success);
     filter: blur(45px);
     border-radius: 50%;
     opacity: 0;
     transform: scale(0.3);
-    transition: transform 0.8s var(--lg-ease-smooth),
-                opacity 0.8s var(--lg-ease-smooth);
+    transition: transform 0.8s var(--withu-ease-smooth),
+                opacity 0.8s var(--withu-ease-smooth);
     z-index: 1;
 }
 .lgmsg-security-base.lgmsg-security-is-success .lgmsg-security-success-aura {
@@ -661,9 +661,9 @@ html.lg-scroll-locked #lgnewuiFloatingActions {
 .lgmsg-security-success-svg {
     width: 76px;
     height: 76px;
-    color: var(--lg-color-success);
+    color: var(--withu-color-success);
     margin-bottom: 24px;
-    filter: drop-shadow(0 8px 16px var(--lg-color-success-glow));
+    filter: drop-shadow(0 8px 16px var(--withu-color-success-glow));
 }
 .lgmsg-security-success-circle {
     stroke-dasharray: 151px;
@@ -691,11 +691,11 @@ html.lg-scroll-locked #lgnewuiFloatingActions {
 .lgmsg-security-success-text {
     font-size: 22px;
     font-weight: 600;
-    color: var(--lg-text-primary);
+    color: var(--withu-text-primary);
     letter-spacing: 1px;
     opacity: 0;
     transform: translateY(15px);
-    transition: opacity 0.5s ease, transform 0.6s var(--lg-ease-smooth);
+    transition: opacity 0.5s ease, transform 0.6s var(--withu-ease-smooth);
 }
 .lgmsg-security-base.lgmsg-security-is-success .lgmsg-security-success-text {
     opacity: 1;
@@ -1094,9 +1094,9 @@ html.lg-scroll-locked #lgnewuiFloatingActions {
 
 /* ============================================================
  * 侧边抽屉 (1:1 from fullscreen-message-v2.html demo)
- * 使用 lgnewui-message-* 命名空间
+ * 使用 withu-message-* 命名空间
  * ============================================================ */
-.lgnewui-message-drawer-overlay {
+.withu-message-drawer-overlay {
     position: fixed;
     inset: 0;
     z-index: 100001;
@@ -1104,7 +1104,7 @@ html.lg-scroll-locked #lgnewuiFloatingActions {
     pointer-events: none;
 }
 
-.lgnewui-message-drawer-overlay::before {
+.withu-message-drawer-overlay::before {
     content: '';
     position: absolute;
     inset: 0;
@@ -1119,18 +1119,18 @@ html.lg-scroll-locked #lgnewuiFloatingActions {
     /* will-change: opacity; */
 }
 
-.lgnewui-message-drawer-overlay.active {
+.withu-message-drawer-overlay.active {
     opacity: 1;
     pointer-events: auto;
 }
 
-.lgnewui-message-drawer-overlay.closing {
+.withu-message-drawer-overlay.closing {
     opacity: 0;
     pointer-events: none;
     transition: opacity 0.3s ease;
 }
 
-.lgnewui-message-drawer-content {
+.withu-message-drawer-content {
     position: absolute;
     right: 0;
     top: 0;
@@ -1144,7 +1144,7 @@ html.lg-scroll-locked #lgnewuiFloatingActions {
     background: transparent;
 }
 
-.lgnewui-message-drawer-bg {
+.withu-message-drawer-bg {
     position: absolute;
     inset: 0;
     z-index: 0;
@@ -1156,16 +1156,16 @@ html.lg-scroll-locked #lgnewuiFloatingActions {
     transform: translateZ(0);
 }
 
-.lgnewui-message-drawer-overlay.active .lgnewui-message-drawer-content {
+.withu-message-drawer-overlay.active .withu-message-drawer-content {
     transform: translateX(0);
 }
 
-.lgnewui-message-drawer-overlay.closing .lgnewui-message-drawer-content {
+.withu-message-drawer-overlay.closing .withu-message-drawer-content {
     transform: translateX(100%);
     transition: transform 0.3s ease;
 }
 
-.lgnewui-message-drawer-header {
+.withu-message-drawer-header {
     position: relative;
     z-index: 1;
     padding: 20px 24px;
@@ -1175,13 +1175,13 @@ html.lg-scroll-locked #lgnewuiFloatingActions {
     border-bottom: 1px solid rgba(0, 0, 0, 0.05);
 }
 
-.lgnewui-message-drawer-title-wrap {
+.withu-message-drawer-title-wrap {
     display: flex;
     align-items: center;
     gap: 12px;
 }
 
-.lgnewui-message-drawer-title-icon {
+.withu-message-drawer-title-icon {
     width: 36px;
     height: 36px;
     border-radius: 10px;
@@ -1193,13 +1193,13 @@ html.lg-scroll-locked #lgnewuiFloatingActions {
     flex-shrink: 0;
 }
 
-.lgnewui-message-drawer-title {
+.withu-message-drawer-title {
     font-size: 16px;
     font-weight: 600;
     line-height: 1.3;
 }
 
-.lgnewui-message-drawer-subtitle {
+.withu-message-drawer-subtitle {
     font-size: 12px;
     color: #a1a1a6;
     font-weight: 400;
@@ -1207,13 +1207,13 @@ html.lg-scroll-locked #lgnewuiFloatingActions {
 }
 
 /* ── 抽屉内容分隔线 ── */
-.lgnewui-message-drawer-divider {
+.withu-message-drawer-divider {
     height: 1px;
     background: linear-gradient(to right, transparent, rgba(0, 0, 0, 0.06) 20%, rgba(0, 0, 0, 0.06) 80%, transparent);
     margin: 16px 0;
 }
 
-.lgnewui-message-close-btn {
+.withu-message-close-btn {
     width: 34px;
     height: 34px;
     border-radius: 50%;
@@ -1227,12 +1227,12 @@ html.lg-scroll-locked #lgnewuiFloatingActions {
     transition: all 0.25s ease;
 }
 
-.lgnewui-message-close-btn:hover {
+.withu-message-close-btn:hover {
     background: rgba(0, 0, 0, 0.08);
     color: var(--lgmsg-text-main);
 }
 
-.lgnewui-message-drawer-scroll {
+.withu-message-drawer-scroll {
     position: relative;
     z-index: 1;
     flex: 1;
@@ -1244,11 +1244,11 @@ html.lg-scroll-locked #lgnewuiFloatingActions {
     -webkit-overflow-scrolling: touch;
 }
 
-.lgnewui-message-drawer-scroll::-webkit-scrollbar {
+.withu-message-drawer-scroll::-webkit-scrollbar {
     display: none;
 }
 
-.lgnewui-message-drawer-body {
+.withu-message-drawer-body {
     flex: 1;
     padding: 24px 20px 24px 20px;
     display: flex;
@@ -1257,18 +1257,18 @@ html.lg-scroll-locked #lgnewuiFloatingActions {
 }
 
 /* ── 抽屉内消息项（QQ 风格气泡） ── */
-.lgnewui-message-msg-item {
+.withu-message-msg-item {
     display: flex;
     gap: 12px;
     align-items: flex-start;
     contain: content;
 }
 
-.lgnewui-message-msg-item.is-me {
+.withu-message-msg-item.is-me {
     flex-direction: row-reverse;
 }
 
-.lgnewui-message-avatar-wrap {
+.withu-message-avatar-wrap {
     position: relative;
     width: 40px;
     height: 40px;
@@ -1279,7 +1279,7 @@ html.lg-scroll-locked #lgnewuiFloatingActions {
     user-select: none;
 }
 
-.lgnewui-message-avatar-wrap .lgnewui-message-avatar-overlay {
+.withu-message-avatar-wrap .withu-message-avatar-overlay {
     position: absolute;
     top: 0;
     left: 0;
@@ -1297,22 +1297,22 @@ html.lg-scroll-locked #lgnewuiFloatingActions {
     border-radius: 12px;
 }
 
-.lgnewui-message-avatar-wrap .lgnewui-message-avatar-overlay svg {
+.withu-message-avatar-wrap .withu-message-avatar-overlay svg {
     width: 16px;
     height: 16px;
     transform: scale(0.5);
     transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
 }
 
-.lgnewui-message-avatar-wrap:hover .lgnewui-message-avatar-overlay {
+.withu-message-avatar-wrap:hover .withu-message-avatar-overlay {
     opacity: 1;
 }
 
-.lgnewui-message-avatar-wrap:hover .lgnewui-message-avatar-overlay svg {
+.withu-message-avatar-wrap:hover .withu-message-avatar-overlay svg {
     transform: scale(1);
 }
 
-.lgnewui-message-msg-avatar {
+.withu-message-msg-avatar {
     width: 100%;
     height: 100%;
     border-radius: 12px;
@@ -1321,7 +1321,7 @@ html.lg-scroll-locked #lgnewuiFloatingActions {
     display: block;
 }
 
-.lgnewui-message-msg-main {
+.withu-message-msg-main {
     display: flex;
     flex-direction: column;
     gap: 6px;
@@ -1330,11 +1330,11 @@ html.lg-scroll-locked #lgnewuiFloatingActions {
     min-width: 0;
 }
 
-.lgnewui-message-msg-item.is-me .lgnewui-message-msg-main {
+.withu-message-msg-item.is-me .withu-message-msg-main {
     align-items: flex-end;
 }
 
-.lgnewui-message-msg-info {
+.withu-message-msg-info {
     font-size: 12px;
     color: var(--lgmsg-text-muted);
     display: flex;
@@ -1342,11 +1342,11 @@ html.lg-scroll-locked #lgnewuiFloatingActions {
     align-items: center;
 }
 
-.lgnewui-message-msg-item.is-me .lgnewui-message-msg-info {
+.withu-message-msg-item.is-me .withu-message-msg-info {
     flex-direction: row-reverse;
 }
 
-.lgnewui-message-msg-name {
+.withu-message-msg-name {
     font-weight: 500;
     color: #555;
     cursor: pointer;
@@ -1358,11 +1358,11 @@ html.lg-scroll-locked #lgnewuiFloatingActions {
     vertical-align: middle;
 }
 
-.lgnewui-message-msg-name:hover {
+.withu-message-msg-name:hover {
     color: var(--lgmsg-text-main);
 }
 
-.lgnewui-message-msg-bubble {
+.withu-message-msg-bubble {
     padding: 12px 16px;
     background: rgba(255, 255, 255, 0.9);
     border-radius: 4px 16px 16px 16px;
@@ -1378,12 +1378,12 @@ html.lg-scroll-locked #lgnewuiFloatingActions {
     min-width: 0;
 }
 
-.lgnewui-message-msg-bubble:active {
+.withu-message-msg-bubble:active {
     opacity: 0.8;
 }
 
-.lgnewui-message-msg-bubble img.emoji,
-.lgnewui-message-msg-bubble img[data-emoji] {
+.withu-message-msg-bubble img.emoji,
+.withu-message-msg-bubble img[data-emoji] {
     height: 24px;
     width: auto;
     max-width: 80px;
@@ -1394,19 +1394,19 @@ html.lg-scroll-locked #lgnewuiFloatingActions {
 }
 
 /* 兜底：气泡内所有非头像 img 限高，防止 textHtml 中的表情撑大 */
-.lgnewui-message-msg-bubble img:not(.lgnewui-message-msg-avatar) {
+.withu-message-msg-bubble img:not(.withu-message-msg-avatar) {
     max-height: 28px;
     vertical-align: bottom;
 }
 
-.lgnewui-message-msg-item.is-me .lgnewui-message-msg-bubble {
+.withu-message-msg-item.is-me .withu-message-msg-bubble {
     background: #007aff;
     color: #fff;
     border-radius: 16px 4px 16px 16px;
 }
 
 /* ── @ 标签 ── */
-.lgnewui-message-at-tag {
+.withu-message-at-tag {
     color: var(--lgmsg-text-main);
     background: rgba(0, 0, 0, 0.05);
     padding: 1px 5px;
@@ -1423,22 +1423,22 @@ html.lg-scroll-locked #lgnewuiFloatingActions {
     white-space: nowrap;
 }
 
-.lgnewui-message-at-tag:hover {
+.withu-message-at-tag:hover {
     background: rgba(0, 0, 0, 0.08);
 }
 
-.lgnewui-message-msg-item.is-me .lgnewui-message-at-tag {
+.withu-message-msg-item.is-me .withu-message-at-tag {
     color: #fff;
     background: rgba(255, 255, 255, 0.2);
 }
 
-.lgnewui-message-msg-item.is-me .lgnewui-message-at-tag:hover {
+.withu-message-msg-item.is-me .withu-message-at-tag:hover {
     background: rgba(255, 255, 255, 0.3);
 }
 
 /* ── 引用块 ── */
-.lgnewui-message-msg-bubble blockquote,
-.lgnewui-message-drawer-editor blockquote {
+.withu-message-msg-bubble blockquote,
+.withu-message-drawer-editor blockquote {
     margin: 0 0 8px 0;
     color: #555;
     font-size: 13px;
@@ -1549,35 +1549,35 @@ html.lg-scroll-locked #lgnewuiFloatingActions {
     display: inline;
 }
 
-.lgnewui-message-msg-item.is-me .lgmsg-reply-quote-name {
+.withu-message-msg-item.is-me .lgmsg-reply-quote-name {
     color: rgba(255, 255, 255, 0.95);
 }
 
-.lgnewui-message-msg-item.is-me .lgmsg-reply-quote-text {
+.withu-message-msg-item.is-me .lgmsg-reply-quote-text {
     color: rgba(255, 255, 255, 0.7);
 }
 
-.lgnewui-message-drawer-editor blockquote {
+.withu-message-drawer-editor blockquote {
     cursor: default;
 }
 
-.lgnewui-message-msg-item.is-me .lgnewui-message-msg-bubble blockquote {
+.withu-message-msg-item.is-me .withu-message-msg-bubble blockquote {
     color: rgba(255, 255, 255, 0.9);
     background: rgba(255, 255, 255, 0.18);
     border-left-color: rgba(255, 255, 255, 0.5);
 }
 
-.lgnewui-message-msg-item.is-me .lgnewui-message-msg-bubble .lg-msg-at {
+.withu-message-msg-item.is-me .withu-message-msg-bubble .withu-msg-at {
     color: #fff !important;
     background: rgba(255, 255, 255, 0.2);
 }
 
-.lgnewui-message-msg-item.is-me .lgnewui-message-msg-bubble .lg-msg-at:hover {
+.withu-message-msg-item.is-me .withu-message-msg-bubble .withu-msg-at:hover {
     background: rgba(255, 255, 255, 0.3);
 }
 
 /* ── 徽章 ── */
-.lgnewui-message-msg-badge {
+.withu-message-msg-badge {
     font-size: 10px;
     padding: 2px 6px;
     border-radius: 6px;
@@ -1588,37 +1588,37 @@ html.lg-scroll-locked #lgnewuiFloatingActions {
     gap: 3px;
 }
 
-.lgnewui-message-msg-badge svg {
+.withu-message-msg-badge svg {
     width: 10px;
     height: 10px;
     stroke-width: 2.5;
 }
 
-.lgnewui-message-msg-badge.author {
+.withu-message-msg-badge.author {
     color: #f5d787;
     background: linear-gradient(135deg, #2c2c2e, #1a1a1c);
     box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
 }
 
-.lgnewui-message-msg-badge.admin {
+.withu-message-msg-badge.admin {
     color: #fff;
     background: linear-gradient(135deg, #FF6B6B, #E03131);
     box-shadow: 0 1px 2px rgba(224, 49, 49, 0.2);
 }
 
-.lgnewui-message-msg-badge.pending {
+.withu-message-msg-badge.pending {
     color: #d97706;
     background: rgba(245, 158, 11, 0.1);
     border: none;
     box-shadow: none;
 }
 
-.lgnewui-message-msg-item.is-pending .lgnewui-message-msg-bubble {
+.withu-message-msg-item.is-pending .withu-message-msg-bubble {
     opacity: 0.85;
 }
 
 /* ── 消息元信息（城市、浏览器、OS） ── */
-.lgnewui-message-msg-meta {
+.withu-message-msg-meta {
     display: flex;
     gap: 6px;
     margin-top: 4px;
@@ -1629,7 +1629,7 @@ html.lg-scroll-locked #lgnewuiFloatingActions {
 
 /* 移动端：横向滚动 */
 @media (max-width: 768px) {
-    .lgnewui-message-msg-meta {
+    .withu-message-msg-meta {
         flex: none;
         width: 100%;
         flex-wrap: nowrap;
@@ -1639,11 +1639,11 @@ html.lg-scroll-locked #lgnewuiFloatingActions {
     }
 }
 
-.lgnewui-message-msg-meta::-webkit-scrollbar {
+.withu-message-msg-meta::-webkit-scrollbar {
     display: none;
 }
 
-.lgnewui-message-msg-meta span {
+.withu-message-msg-meta span {
     font-size: 11px;
     color: #98989d !important;
     background: rgba(0, 0, 0, 0.03);
@@ -1656,7 +1656,7 @@ html.lg-scroll-locked #lgnewuiFloatingActions {
     white-space: nowrap;
 }
 
-.lgnewui-message-msg-meta .lgmsg-ico-sm {
+.withu-message-msg-meta .lgmsg-ico-sm {
     width: 10px !important;
     height: 10px !important;
     flex-shrink: 0;
@@ -1667,26 +1667,26 @@ html.lg-scroll-locked #lgnewuiFloatingActions {
     stroke-linejoin: round;
 }
 
-.lgnewui-message-msg-meta i[class*="qi-"].lgmsg-ico-sm {
+.withu-message-msg-meta i[class*="qi-"].lgmsg-ico-sm {
     width: auto !important;
     height: auto !important;
     font-size: 11px;
     line-height: 1;
 }
 
-.lgnewui-message-msg-meta svg {
+.withu-message-msg-meta svg {
     width: 10px;
     height: 10px;
     color: inherit;
     stroke: currentColor;
 }
 
-.lgnewui-message-msg-item.is-me .lgnewui-message-msg-meta {
+.withu-message-msg-item.is-me .withu-message-msg-meta {
     justify-content: flex-end;
 }
 
 /* ── 消息底部（meta + 点赞按钮） ── */
-.lgnewui-message-msg-footer {
+.withu-message-msg-footer {
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -1696,12 +1696,12 @@ html.lg-scroll-locked #lgnewuiFloatingActions {
     width: 100%;
 }
 
-.lgnewui-message-msg-item.is-me .lgnewui-message-msg-footer {
+.withu-message-msg-item.is-me .withu-message-msg-footer {
     flex-direction: row-reverse;
 }
 
 /* ── 点赞包装器（气泡右上角，hover 显示） ── */
-.lgnewui-message-like-wrap {
+.withu-message-like-wrap {
     position: absolute;
     top: -6px;
     right: -6px;
@@ -1719,19 +1719,19 @@ html.lg-scroll-locked #lgnewuiFloatingActions {
     pointer-events: none;
 }
 
-.lgnewui-message-msg-bubble:hover .lgnewui-message-like-wrap {
+.withu-message-msg-bubble:hover .withu-message-like-wrap {
     opacity: 1;
     transform: scale(1);
     pointer-events: auto;
 }
 
-.lgnewui-message-msg-item.is-me .lgnewui-message-like-wrap {
+.withu-message-msg-item.is-me .withu-message-like-wrap {
     right: auto;
     left: -6px;
 }
 
 /* ── 点赞按钮 ── */
-.lgnewui-message-like-btn {
+.withu-message-like-btn {
     display: inline-flex;
     align-items: center;
     justify-content: center;
@@ -1747,33 +1747,33 @@ html.lg-scroll-locked #lgnewuiFloatingActions {
     flex-shrink: 0;
 }
 
-.lgnewui-message-like-btn:hover {
+.withu-message-like-btn:hover {
     color: #ef4444;
     background: rgba(239, 68, 68, 0.1);
     transform: scale(1.1);
 }
 
-.lgnewui-message-like-btn:active {
+.withu-message-like-btn:active {
     transform: scale(0.95);
 }
 
-.lgnewui-message-like-btn.is-liked,
-.lgnewui-message-like-btn[data-liked="true"] {
+.withu-message-like-btn.is-liked,
+.withu-message-like-btn[data-liked="true"] {
     color: #ef4444;
 }
 
-.lgnewui-message-like-btn.is-liked:hover,
-.lgnewui-message-like-btn[data-liked="true"]:hover {
+.withu-message-like-btn.is-liked:hover,
+.withu-message-like-btn[data-liked="true"]:hover {
     color: #dc2626;
 }
 
-.lgnewui-message-like-btn i {
+.withu-message-like-btn i {
     font-size: 12px;
     line-height: 1;
 }
 
 /* 点赞数量 */
-.lgnewui-message-like-count {
+.withu-message-like-count {
     font-size: 11px;
     color: #98989d;
     min-width: 12px;
@@ -1781,14 +1781,14 @@ html.lg-scroll-locked #lgnewuiFloatingActions {
 }
 
 /* AuthModal 层级高于 CommentModal */
-#lgmsgAuthModal.lgnewui-message-modal-overlay {
+#lgmsgAuthModal.withu-message-modal-overlay {
     z-index: 100002;
 }
 
 /* 上下文菜单项样式见下方主声明块 */
 
 /* ── 消息弹入动画 ── */
-.lgnewui-message-msg-pop-in {
+.withu-message-msg-pop-in {
     animation: msgPopIn 0.4s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
     transform-origin: bottom right;
 }
@@ -1835,16 +1835,16 @@ html.lg-scroll-locked #lgnewuiFloatingActions {
     }
 }
 
-.lgnewui-message-bubble-highlight {
+.withu-message-bubble-highlight {
     animation: highlightFlash 1.2s ease-out;
 }
 
-.lgnewui-message-msg-item.is-me .lgnewui-message-bubble-highlight {
+.withu-message-msg-item.is-me .withu-message-bubble-highlight {
     animation: highlightFlashMe 1.2s ease-out;
 }
 
 /* ── 抽屉底部 ── */
-.lgnewui-message-drawer-footer {
+.withu-message-drawer-footer {
     position: sticky;
     bottom: 0;
     z-index: 10;
@@ -1857,7 +1857,7 @@ html.lg-scroll-locked #lgnewuiFloatingActions {
     -webkit-backdrop-filter: blur(24px) saturate(200%);
 }
 
-.lgnewui-message-drawer-footer::before {
+.withu-message-drawer-footer::before {
     content: '';
     position: absolute;
     top: -40px;
@@ -1869,44 +1869,44 @@ html.lg-scroll-locked #lgnewuiFloatingActions {
     z-index: -1;
 }
 
-.lgnewui-message-drawer-footer-inner {
+.withu-message-drawer-footer-inner {
     display: flex;
     flex-direction: column;
 }
 
 /* 收起/展开状态 */
-.lgnewui-message-drawer-collapsed-wrap {
+.withu-message-drawer-collapsed-wrap {
     transition: max-height 0.3s cubic-bezier(0.25, 0.8, 0.25, 1), opacity 0.2s ease;
     max-height: 80px;
     opacity: 1;
     overflow: hidden;
 }
 
-.lgnewui-message-drawer-expanded-wrap {
+.withu-message-drawer-expanded-wrap {
     transition: max-height 0.3s cubic-bezier(0.25, 0.8, 0.25, 1), opacity 0.25s ease;
     max-height: 0;
     opacity: 0;
     overflow: hidden;
 }
 
-.lgnewui-message-drawer-footer.is-expanded .lgnewui-message-drawer-collapsed-wrap {
+.withu-message-drawer-footer.is-expanded .withu-message-drawer-collapsed-wrap {
     max-height: 0;
     opacity: 0;
     pointer-events: none;
 }
 
-.lgnewui-message-drawer-footer.is-expanded .lgnewui-message-drawer-expanded-wrap {
+.withu-message-drawer-footer.is-expanded .withu-message-drawer-expanded-wrap {
     max-height: 400px;
     opacity: 1;
     pointer-events: auto;
 }
 
-.lgnewui-message-drawer-collapsed {
+.withu-message-drawer-collapsed {
     cursor: pointer;
     padding: 0 4px;
 }
 
-.lgnewui-message-dc-input {
+.withu-message-dc-input {
     background: rgb(227 227 227 / 67%);
     /* border: 1px solid rgba(255, 255, 255, 0.4); */
     border-radius: 20px;
@@ -1919,18 +1919,18 @@ html.lg-scroll-locked #lgnewuiFloatingActions {
     transition: background 0.2s;
 }
 
-.lgnewui-message-dc-input:hover {
+.withu-message-dc-input:hover {
     background: rgba(0, 0, 0, 0.08);
 }
 
-.lgnewui-message-dc-input svg {
+.withu-message-dc-input svg {
     width: 16px;
     height: 16px;
     opacity: 0.7;
 }
 
 /* ── 身份栏 ── */
-.lgnewui-message-drawer-identity {
+.withu-message-drawer-identity {
     display: flex;
     align-items: center;
     gap: 10px;
@@ -1942,18 +1942,18 @@ html.lg-scroll-locked #lgnewuiFloatingActions {
     transition: background 0.2s ease;
 }
 
-.lgnewui-message-drawer-identity:hover {
+.withu-message-drawer-identity:hover {
     background: rgba(229, 229, 234, 0.42);
 }
 
-.lgnewui-message-drawer-identity img {
+.withu-message-drawer-identity img {
     width: 28px;
     height: 28px;
     border-radius: 50%;
     object-fit: cover;
 }
 
-.lgnewui-message-drawer-identity span {
+.withu-message-drawer-identity span {
     font-size: 13px;
     font-weight: 500;
     color: var(--lgmsg-text-main);
@@ -1963,7 +1963,7 @@ html.lg-scroll-locked #lgnewuiFloatingActions {
     text-overflow: ellipsis;
 }
 
-.lgnewui-message-drawer-identity .edit-icon {
+.withu-message-drawer-identity .edit-icon {
     color: var(--lgmsg-text-muted);
     width: 14px;
     height: 14px;
@@ -1971,37 +1971,37 @@ html.lg-scroll-locked #lgnewuiFloatingActions {
 }
 
 /* ── 访客标签 ── */
-.lgnewui-message-drawer-input-tags {
+.withu-message-drawer-input-tags {
     display: flex;
     gap: 8px;
     margin-bottom: 12px;
     flex-wrap: wrap;
 }
 
-.lgnewui-message-drawer-input-tags .lgnewui-message-v-tag {
+.withu-message-drawer-input-tags .withu-message-v-tag {
     font-size: 11px;
     padding: 4px 10px 4px 4px;
     background: rgba(242, 242, 247, 0.38);
     border-radius: var(--lgmsg-radius-round);
 }
 
-.lgnewui-message-drawer-input-tags .lgnewui-message-v-tag-icon {
+.withu-message-drawer-input-tags .withu-message-v-tag-icon {
     width: 20px;
     height: 20px;
 }
 
-.lgnewui-message-drawer-input-tags .lgnewui-message-v-tag-icon svg {
+.withu-message-drawer-input-tags .withu-message-v-tag-icon svg {
     width: 10px;
     height: 10px;
 }
 
-.lgnewui-message-drawer-input-tags .lgnewui-message-v-tag-icon i[class*="qi-"] {
+.withu-message-drawer-input-tags .withu-message-v-tag-icon i[class*="qi-"] {
     font-size: 12px;
     line-height: 1;
 }
 
 /* ── 编辑器 ── */
-.lgnewui-message-drawer-editor-wrap {
+.withu-message-drawer-editor-wrap {
     background: rgba(242, 242, 247, 0.38);
     border-radius: 10px;
     display: flex;
@@ -2009,11 +2009,11 @@ html.lg-scroll-locked #lgnewuiFloatingActions {
     transition: background 0.2s ease;
 }
 
-.lgnewui-message-drawer-editor-wrap:focus-within {
+.withu-message-drawer-editor-wrap:focus-within {
     background: rgba(229, 229, 234, 0.42);
 }
 
-.lgnewui-message-drawer-editor {
+.withu-message-drawer-editor {
     min-height: 60px;
     max-height: 150px;
     padding: 12px 14px;
@@ -2024,24 +2024,24 @@ html.lg-scroll-locked #lgnewuiFloatingActions {
     scrollbar-width: none;
 }
 
-.lgnewui-message-drawer-editor::-webkit-scrollbar {
+.withu-message-drawer-editor::-webkit-scrollbar {
     display: none;
 }
 
-.lgnewui-message-drawer-editor[data-placeholder]:empty::before {
+.withu-message-drawer-editor[data-placeholder]:empty::before {
     content: attr(data-placeholder);
     color: #a1a1a6;
     pointer-events: none;
 }
 
-.lgnewui-message-drawer-editor img.emoji {
+.withu-message-drawer-editor img.emoji {
     vertical-align: bottom;
     height: 24px;
     width: auto;
     margin: -2px 2px 0;
 }
 
-.lgnewui-message-drawer-toolbar {
+.withu-message-drawer-toolbar {
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -2049,12 +2049,12 @@ html.lg-scroll-locked #lgnewuiFloatingActions {
 }
 
 /* ── 工具按钮 ── */
-.lgnewui-message-tb-left {
+.withu-message-tb-left {
     display: flex;
     gap: 4px;
 }
 
-.lgnewui-message-tb-btn {
+.withu-message-tb-btn {
     background: transparent;
     border: none;
     outline: none;
@@ -2069,12 +2069,12 @@ html.lg-scroll-locked #lgnewuiFloatingActions {
     transition: all 0.2s ease;
 }
 
-.lgnewui-message-tb-btn:hover {
+.withu-message-tb-btn:hover {
     background: rgba(0, 0, 0, 0.06);
     color: var(--lgmsg-text-main);
 }
 
-.lgnewui-message-tb-btn svg {
+.withu-message-tb-btn svg {
     width: 22px;
     height: 22px;
     fill: none;
@@ -2085,7 +2085,7 @@ html.lg-scroll-locked #lgnewuiFloatingActions {
 }
 
 /* ── 发送按钮 ── */
-.lgnewui-message-reply-btn {
+.withu-message-reply-btn {
     padding: 10px 20px;
     border-radius: var(--lgmsg-radius-round);
     background: var(--lgmsg-text-main);
@@ -2097,21 +2097,21 @@ html.lg-scroll-locked #lgnewuiFloatingActions {
     transition: all 0.2s ease;
 }
 
-.lgnewui-message-reply-btn:hover {
+.withu-message-reply-btn:hover {
     background: #3a3a3c;
 }
 
-.lgnewui-message-reply-btn:active {
+.withu-message-reply-btn:active {
     background: #2c2c2e;
 }
 
-.lgnewui-message-reply-btn:disabled {
+.withu-message-reply-btn:disabled {
     opacity: 0.5;
     cursor: not-allowed;
 }
 
 /* ── Enter 发送开关 ── */
-.lgnewui-message-switch-wrap {
+.withu-message-switch-wrap {
     display: flex;
     align-items: center;
     gap: 8px;
@@ -2123,22 +2123,22 @@ html.lg-scroll-locked #lgnewuiFloatingActions {
     user-select: none;
 }
 
-.lgnewui-message-switch-wrap:hover {
+.withu-message-switch-wrap:hover {
     background: rgba(0, 0, 0, 0.04);
 }
 
-.lgnewui-message-switch-text {
+.withu-message-switch-text {
     font-size: 13px;
     color: var(--lgmsg-text-muted);
     font-weight: 500;
     transition: color 0.3s ease;
 }
 
-.lgnewui-message-switch-wrap.active .lgnewui-message-switch-text {
+.withu-message-switch-wrap.active .withu-message-switch-text {
     color: var(--lgmsg-text-main);
 }
 
-.lgnewui-message-switch {
+.withu-message-switch {
     width: 32px;
     height: 16px;
     border-radius: 16px;
@@ -2146,7 +2146,7 @@ html.lg-scroll-locked #lgnewuiFloatingActions {
     overflow: hidden;
 }
 
-.lgnewui-message-switch::after {
+.withu-message-switch::after {
     content: '';
     display: block;
     width: 100%;
@@ -2157,12 +2157,12 @@ html.lg-scroll-locked #lgnewuiFloatingActions {
     transition: transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
 }
 
-.lgnewui-message-switch-wrap.active .lgnewui-message-switch::after {
+.withu-message-switch-wrap.active .withu-message-switch::after {
     transform: scaleX(1);
 }
 
 /* ── 字数统计 ── */
-.lgnewui-message-char-counter {
+.withu-message-char-counter {
     font-size: 12px;
     color: var(--lgmsg-text-muted);
     font-weight: 500;
@@ -2173,18 +2173,18 @@ html.lg-scroll-locked #lgnewuiFloatingActions {
     padding: 0 4px;
 }
 
-.lgnewui-message-char-counter.warning {
+.withu-message-char-counter.warning {
     color: #ff9f0a;
     opacity: 1;
 }
 
-.lgnewui-message-char-counter.danger {
+.withu-message-char-counter.danger {
     color: #ff3b30;
     opacity: 1;
 }
 
 /* ── 表情面板（全局定位，抽屉和弹窗共用） ── */
-.lgnewui-message-emoji-panel {
+.withu-message-emoji-panel {
     position: fixed;
     z-index: 100010;
     width: 420px;
@@ -2206,13 +2206,13 @@ html.lg-scroll-locked #lgnewuiFloatingActions {
     -webkit-user-select: none;
 }
 
-.lgnewui-message-emoji-panel.show {
+.withu-message-emoji-panel.show {
     visibility: visible;
     pointer-events: auto;
     animation: epIn 0.38s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
 }
 
-.lgnewui-message-emoji-panel.hide {
+.withu-message-emoji-panel.hide {
     visibility: visible;
     pointer-events: none;
     animation: epOut 0.22s ease-out forwards;
@@ -2247,14 +2247,14 @@ html.lg-scroll-locked #lgnewuiFloatingActions {
     }
 }
 
-.lgnewui-message-emoji-tabs-wrap {
+.withu-message-emoji-tabs-wrap {
     display: flex;
     align-items: center;
     padding: 6px 10px 2px;
     gap: 2px;
 }
 
-.lgnewui-message-emoji-tabs {
+.withu-message-emoji-tabs {
     display: flex;
     overflow-x: auto;
     gap: 2px;
@@ -2262,11 +2262,11 @@ html.lg-scroll-locked #lgnewuiFloatingActions {
     flex: 1;
 }
 
-.lgnewui-message-emoji-tabs::-webkit-scrollbar {
+.withu-message-emoji-tabs::-webkit-scrollbar {
     display: none;
 }
 
-.lgnewui-message-e-tab {
+.withu-message-e-tab {
     display: flex;
     justify-content: center;
     align-items: center;
@@ -2282,24 +2282,24 @@ html.lg-scroll-locked #lgnewuiFloatingActions {
     outline: none;
 }
 
-.lgnewui-message-e-tab:hover {
+.withu-message-e-tab:hover {
     opacity: 0.65;
     background: rgba(0, 0, 0, 0.04);
 }
 
-.lgnewui-message-e-tab.active {
+.withu-message-e-tab.active {
     opacity: 1;
     background: rgba(0, 0, 0, 0.06);
 }
 
-.lgnewui-message-e-tab img {
+.withu-message-e-tab img {
     height: 28px;
     width: auto;
     object-fit: contain;
     pointer-events: none;
 }
 
-.lgnewui-message-emoji-cat-title {
+.withu-message-emoji-cat-title {
     font-size: 11px;
     font-weight: 600;
     color: rgba(0, 0, 0, 0.2);
@@ -2310,21 +2310,21 @@ html.lg-scroll-locked #lgnewuiFloatingActions {
     gap: 12px;
 }
 
-.lgnewui-message-emoji-cat-title::before {
+.withu-message-emoji-cat-title::before {
     content: '';
     flex: 1;
     height: 0.5px;
     background: linear-gradient(to right, transparent, rgba(0, 0, 0, 0.08));
 }
 
-.lgnewui-message-emoji-cat-title::after {
+.withu-message-emoji-cat-title::after {
     content: '';
     flex: 1;
     height: 0.5px;
     background: linear-gradient(to left, transparent, rgba(0, 0, 0, 0.08));
 }
 
-.lgnewui-message-emoji-list {
+.withu-message-emoji-list {
     padding: 6px 12px 14px;
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(42px, 1fr));
@@ -2336,11 +2336,11 @@ html.lg-scroll-locked #lgnewuiFloatingActions {
     contain: layout style;
 }
 
-.lgnewui-message-emoji-list::-webkit-scrollbar {
+.withu-message-emoji-list::-webkit-scrollbar {
     display: none;
 }
 
-.lgnewui-message-emoji-item {
+.withu-message-emoji-item {
     cursor: pointer;
     display: flex;
     justify-content: center;
@@ -2352,16 +2352,16 @@ html.lg-scroll-locked #lgnewuiFloatingActions {
     contain: layout style paint;
 }
 
-.lgnewui-message-emoji-item:hover {
+.withu-message-emoji-item:hover {
     background: rgba(0, 0, 0, 0.05);
     transform: scale(1.12);
 }
 
-.lgnewui-message-emoji-item:active {
+.withu-message-emoji-item:active {
     transform: scale(0.92);
 }
 
-.lgnewui-message-emoji-item img {
+.withu-message-emoji-item img {
     height: 28px;
     width: auto;
     max-width: 100%;
@@ -2370,7 +2370,7 @@ html.lg-scroll-locked #lgnewuiFloatingActions {
 }
 
 /* 表情预览气泡 */
-.lgnewui-message-emoji-preview {
+.withu-message-emoji-preview {
     position: fixed;
     background: rgba(255, 255, 255, 0.42);
     backdrop-filter: blur(30px) saturate(180%);
@@ -2392,20 +2392,20 @@ html.lg-scroll-locked #lgnewuiFloatingActions {
     user-select: none;
 }
 
-.lgnewui-message-emoji-preview.active {
+.withu-message-emoji-preview.active {
     opacity: 1;
     visibility: visible;
     transform: translate(-50%, 0) scale(1);
 }
 
-.lgnewui-message-emoji-preview img {
+.withu-message-emoji-preview img {
     height: 48px;
     width: auto;
     max-width: 120px;
     object-fit: contain;
 }
 
-.lgnewui-message-emoji-preview span {
+.withu-message-emoji-preview span {
     font-size: 13px;
     font-weight: 500;
     color: #555;
@@ -2427,7 +2427,7 @@ html.lg-scroll-locked #lgnewuiFloatingActions {
     }
 }
 
-.lgnewui-message-emoji-skeleton {
+.withu-message-emoji-skeleton {
     border-radius: 10px;
     background: linear-gradient(90deg, rgba(0, 0, 0, 0.012) 25%, rgba(0, 0, 0, 0.04) 50%, rgba(0, 0, 0, 0.012) 75%);
     background-size: 200% 100%;
@@ -2447,12 +2447,12 @@ html.lg-scroll-locked #lgnewuiFloatingActions {
     }
 }
 
-.lgnewui-message-emoji-list.fade-in {
+.withu-message-emoji-list.fade-in {
     animation: emojiListFadeIn 0.22s ease-out forwards;
 }
 
 /* ── 抽屉空状态 ── */
-.lgnewui-message-drawer-empty {
+.withu-message-drawer-empty {
     text-align: center;
     padding: 60px 20px;
     margin-top: 20px;
@@ -2462,7 +2462,7 @@ html.lg-scroll-locked #lgnewuiFloatingActions {
     font-weight: 300;
 }
 
-.lgnewui-message-drawer-empty svg {
+.withu-message-drawer-empty svg {
     width: 36px;
     height: 36px;
     margin-bottom: 10px;
@@ -2471,7 +2471,7 @@ html.lg-scroll-locked #lgnewuiFloatingActions {
 }
 
 /* ── 抽屉加载状态 ── */
-.lgnewui-message-drawer-loading {
+.withu-message-drawer-loading {
     display: flex;
     justify-content: center;
     align-items: center;
@@ -2481,13 +2481,13 @@ html.lg-scroll-locked #lgnewuiFloatingActions {
     gap: 10px;
 }
 
-.lgnewui-message-drawer-loading span {
+.withu-message-drawer-loading span {
     font-size: 14px;
     font-weight: 500;
 }
 
 /* ── 时间分隔（纯文字居中，无线条） ── */
-.lgnewui-message-time-divider {
+.withu-message-time-divider {
     text-align: center;
     font-size: 11px;
     color: #a1a1a6;
@@ -2497,7 +2497,7 @@ html.lg-scroll-locked #lgnewuiFloatingActions {
 }
 
 /* ── 身份认证弹窗 ── */
-.lgnewui-message-modal-overlay {
+.withu-message-modal-overlay {
     position: fixed;
     inset: 0;
     z-index: 100002;
@@ -2509,7 +2509,7 @@ html.lg-scroll-locked #lgnewuiFloatingActions {
     padding: 3vh 3vw;
 }
 
-.lgnewui-message-modal-overlay::before {
+.withu-message-modal-overlay::before {
     content: '';
     position: absolute;
     inset: 0;
@@ -2522,18 +2522,18 @@ html.lg-scroll-locked #lgnewuiFloatingActions {
     will-change: opacity;
 }
 
-.lgnewui-message-modal-overlay.active {
+.withu-message-modal-overlay.active {
     opacity: 1;
     pointer-events: auto;
 }
 
-.lgnewui-message-modal-overlay.closing {
+.withu-message-modal-overlay.closing {
     opacity: 0;
     pointer-events: none;
     transition: opacity 0.35s ease;
 }
 
-.lgnewui-message-modal-content {
+.withu-message-modal-content {
     background: rgb(255 255 255 / 35%);
     backdrop-filter: blur(40px);
     -webkit-backdrop-filter: blur(40px);
@@ -2552,25 +2552,25 @@ html.lg-scroll-locked #lgnewuiFloatingActions {
     will-change: transform, opacity;
 }
 
-.lgnewui-message-modal-overlay.active .lgnewui-message-modal-content {
+.withu-message-modal-overlay.active .withu-message-modal-content {
     transform: scale(1) translateY(0);
     opacity: 1;
 }
 
-.lgnewui-message-modal-overlay.closing .lgnewui-message-modal-content {
+.withu-message-modal-overlay.closing .withu-message-modal-content {
     transform: scale(0.88) translateY(24px);
     opacity: 0;
     transition: transform 0.4s cubic-bezier(0.4, 0, 0.6, 1), opacity 0.3s ease;
 }
 
-.lgnewui-message-close-wrapper {
+.withu-message-close-wrapper {
     position: absolute;
     top: 24px;
     right: 28px;
     z-index: 10;
 }
 
-.lgnewui-message-modal-body {
+.withu-message-modal-body {
     padding: 36px 44px;
     display: flex;
     flex-direction: column;
@@ -2579,16 +2579,16 @@ html.lg-scroll-locked #lgnewuiFloatingActions {
     scrollbar-width: none;
 }
 
-.lgnewui-message-modal-body::-webkit-scrollbar {
+.withu-message-modal-body::-webkit-scrollbar {
     display: none;
 }
 
 /* iOS Tab */
-.lgnewui-message-ios-tabs-wrap {
+.withu-message-ios-tabs-wrap {
     display: flex;
 }
 
-.lgnewui-message-ios-tabs {
+.withu-message-ios-tabs {
     position: relative;
     display: inline-flex;
     background: rgba(242, 242, 247, 0.38);
@@ -2596,7 +2596,7 @@ html.lg-scroll-locked #lgnewuiFloatingActions {
     border-radius: var(--lgmsg-radius-round);
 }
 
-.lgnewui-message-ios-tab {
+.withu-message-ios-tab {
     position: relative;
     z-index: 2;
     padding: 10px 28px;
@@ -2607,11 +2607,11 @@ html.lg-scroll-locked #lgnewuiFloatingActions {
     transition: color 0.3s;
 }
 
-.lgnewui-message-ios-tab.active {
+.withu-message-ios-tab.active {
     color: var(--lgmsg-text-main);
 }
 
-.lgnewui-message-ios-tab-slider {
+.withu-message-ios-tab-slider {
     position: absolute;
     top: 4px;
     bottom: 4px;
@@ -2625,18 +2625,18 @@ html.lg-scroll-locked #lgnewuiFloatingActions {
 }
 
 /* 输入框 */
-.lgnewui-message-input-row {
+.withu-message-input-row {
     display: flex;
     gap: 16px;
     transition: all 0.25s ease;
 }
 
-.lgnewui-message-input-wrapper {
+.withu-message-input-wrapper {
     position: relative;
     flex: 1;
 }
 
-.lgnewui-message-i-icon {
+.withu-message-i-icon {
     position: absolute;
     left: 14px;
     top: 50%;
@@ -2650,7 +2650,7 @@ html.lg-scroll-locked #lgnewuiFloatingActions {
     z-index: 2;
 }
 
-.lgnewui-message-input-wrapper input {
+.withu-message-input-wrapper input {
     width: 100%;
     padding: 16px 20px 16px 52px;
     border: 1px solid rgba(255, 255, 255, 0.4);
@@ -2663,17 +2663,17 @@ html.lg-scroll-locked #lgnewuiFloatingActions {
     font-weight: 500;
 }
 
-.lgnewui-message-input-wrapper input::placeholder {
+.withu-message-input-wrapper input::placeholder {
     color: #a1a1a6;
     font-weight: 400;
 }
 
-.lgnewui-message-input-wrapper input:focus {
+.withu-message-input-wrapper input:focus {
     background: rgba(229, 229, 234, 0.42);
     color: var(--lgmsg-text-main);
 }
 
-.lgnewui-message-i-icon .lgnewui-message-input-avatar {
+.withu-message-i-icon .withu-message-input-avatar {
     width: 28px;
     height: 28px;
     border-radius: 8px;
@@ -2681,7 +2681,7 @@ html.lg-scroll-locked #lgnewuiFloatingActions {
 }
 
 /* 提交按钮动画 */
-.lgnewui-message-submit-btn {
+.withu-message-submit-btn {
     background: var(--lgmsg-text-main);
     color: #fff;
     border: none;
@@ -2696,51 +2696,51 @@ html.lg-scroll-locked #lgnewuiFloatingActions {
     gap: 8px;
 }
 
-.lgnewui-message-submit-btn:hover {
+.withu-message-submit-btn:hover {
     background: #3a3a3c;
 }
 
-.lgnewui-message-submit-btn .lgnewui-message-submit-loader,
-.lgnewui-message-submit-btn .lgnewui-message-submit-check {
+.withu-message-submit-btn .withu-message-submit-loader,
+.withu-message-submit-btn .withu-message-submit-check {
     display: none;
 }
 
-.lgnewui-message-submit-btn.is-loading {
+.withu-message-submit-btn.is-loading {
     pointer-events: none;
     opacity: 0.85;
 }
 
-.lgnewui-message-submit-btn.is-loading .lgnewui-message-submit-icon {
+.withu-message-submit-btn.is-loading .withu-message-submit-icon {
     display: none;
 }
 
-.lgnewui-message-submit-btn.is-loading .lgnewui-message-submit-loader {
+.withu-message-submit-btn.is-loading .withu-message-submit-loader {
     display: inline-block;
 }
 
-.lgnewui-message-submit-btn.is-success {
+.withu-message-submit-btn.is-success {
     opacity: 0.75;
     pointer-events: none;
 }
 
-.lgnewui-message-submit-btn.is-success .lgnewui-message-submit-icon {
+.withu-message-submit-btn.is-success .withu-message-submit-icon {
     display: none;
 }
 
-.lgnewui-message-submit-btn.is-success .lgnewui-message-submit-loader {
+.withu-message-submit-btn.is-success .withu-message-submit-loader {
     display: none;
 }
 
-.lgnewui-message-submit-btn.is-success .lgnewui-message-submit-check {
+.withu-message-submit-btn.is-success .withu-message-submit-check {
     display: inline-block;
 }
 
-.lgnewui-message-lucide-loader {
+.withu-message-lucide-loader {
     animation: lgmsg-spin 1.2s linear infinite;
 }
 
 /* ── 上下文菜单（z-index 必须高于抽屉 100002） ── */
-.lgnewui-message-context-menu {
+.withu-message-context-menu {
     position: fixed;
     z-index: 100005;
     background: rgba(40, 40, 40, 0.88);
@@ -2761,14 +2761,14 @@ html.lg-scroll-locked #lgnewuiFloatingActions {
     pointer-events: none;
 }
 
-.lgnewui-message-context-menu.active {
+.withu-message-context-menu.active {
     opacity: 1;
     visibility: visible;
     transform: scale(1);
     pointer-events: auto;
 }
 
-.lgnewui-message-cm-item {
+.withu-message-cm-item {
     display: flex;
     align-items: center;
     justify-content: center;
@@ -2781,39 +2781,39 @@ html.lg-scroll-locked #lgnewuiFloatingActions {
     height: 38px;
 }
 
-.lgnewui-message-cm-item:hover,
-.lgnewui-message-cm-item:active {
+.withu-message-cm-item:hover,
+.withu-message-cm-item:active {
     background: rgba(255, 255, 255, 0.15);
 }
 
-.lgnewui-message-cm-item svg {
+.withu-message-cm-item svg {
     width: 20px;
     height: 20px;
     opacity: 0.9;
 }
 
 /* ── 弹窗内头部标题 ── */
-.lgnewui-message-head-titles .lgnewui-message-title {
+.withu-message-head-titles .withu-message-title {
     font-size: 26px;
     font-weight: 600;
     margin-bottom: 6px;
     letter-spacing: 0.2px;
 }
 
-.lgnewui-message-head-titles .lgnewui-message-subtitle {
+.withu-message-head-titles .withu-message-subtitle {
     font-size: 15px;
     color: var(--lgmsg-text-muted);
     font-weight: 400;
 }
 
 /* ── 弹窗内访客标签 ── */
-.lgnewui-message-visitor-tags {
+.withu-message-visitor-tags {
     display: flex;
     flex-wrap: wrap;
     gap: 10px;
 }
 
-.lgnewui-message-v-tag {
+.withu-message-v-tag {
     display: flex;
     align-items: center;
     gap: 6px;
@@ -2825,7 +2825,7 @@ html.lg-scroll-locked #lgnewuiFloatingActions {
     border-radius: var(--lgmsg-radius-round);
 }
 
-.lgnewui-message-v-tag-icon {
+.withu-message-v-tag-icon {
     width: 26px;
     height: 26px;
     border-radius: 50%;
@@ -2837,32 +2837,32 @@ html.lg-scroll-locked #lgnewuiFloatingActions {
     color: #8e8e93;
 }
 
-.lgnewui-message-v-tag-icon svg {
+.withu-message-v-tag-icon svg {
     width: 14px;
     height: 14px;
     flex-shrink: 0;
 }
 
-.lgnewui-message-v-tag-icon i[class*="qi-"] {
+.withu-message-v-tag-icon i[class*="qi-"] {
     font-size: 16px;
     line-height: 1;
 }
 
 /* ── 弹窗内输入行（demo input-wrapper 结构） ── */
-.lgnewui-message-input-row {
+.withu-message-input-row {
     display: flex;
     gap: 12px;
     transition: opacity 0.2s ease;
 }
 
-.lgnewui-message-input-wrapper {
+.withu-message-input-wrapper {
     position: relative;
     display: flex;
     align-items: center;
     flex: 1;
 }
 
-.lgnewui-message-i-icon {
+.withu-message-i-icon {
     position: absolute;
     left: 12px;
     top: 50%;
@@ -2878,12 +2878,12 @@ html.lg-scroll-locked #lgnewuiFloatingActions {
     overflow: hidden;
 }
 
-.lgnewui-message-i-icon svg {
+.withu-message-i-icon svg {
     width: 18px;
     height: 18px;
 }
 
-.lgnewui-message-input-avatar {
+.withu-message-input-avatar {
     width: 28px;
     height: 28px;
     border-radius: 8px;
@@ -2891,7 +2891,7 @@ html.lg-scroll-locked #lgnewuiFloatingActions {
     flex-shrink: 0;
 }
 
-.lgnewui-message-input-wrapper input {
+.withu-message-input-wrapper input {
     width: 100%;
     padding: 14px 16px 14px 50px;
     border: 1px solid rgba(255, 255, 255, 0.4);
@@ -2907,18 +2907,18 @@ html.lg-scroll-locked #lgnewuiFloatingActions {
     letter-spacing: 0.3px;
 }
 
-.lgnewui-message-input-wrapper input::placeholder {
+.withu-message-input-wrapper input::placeholder {
     color: #a1a1a6;
     font-weight: 400;
 }
 
-.lgnewui-message-input-wrapper input:focus {
+.withu-message-input-wrapper input:focus {
     background: rgba(229, 229, 234, 0.42);
     color: var(--lgmsg-text-main);
 }
 
 /* QQ 缓存快捷填入 hint（对齐 demo） */
-.lgnewui-message-qq-cache-hint {
+.withu-message-qq-cache-hint {
     position: absolute;
     right: 10px;
     top: 50%;
@@ -2938,34 +2938,34 @@ html.lg-scroll-locked #lgnewuiFloatingActions {
     transform-origin: right center;
 }
 
-.lgnewui-message-qq-cache-hint img {
+.withu-message-qq-cache-hint img {
     width: 22px;
     height: 22px;
     border-radius: 6px;
     object-fit: cover;
 }
 
-.lgnewui-message-qq-cache-hint span {
+.withu-message-qq-cache-hint span {
     font-weight: 500;
     white-space: nowrap;
 }
 
-.lgnewui-message-qq-cache-hint:hover {
+.withu-message-qq-cache-hint:hover {
     background: rgba(0, 0, 0, 0.08);
 }
 
-.lgnewui-message-qq-cache-hint:active {
+.withu-message-qq-cache-hint:active {
     transform: translateY(-50%) scale(0.96);
 }
 
-.lgnewui-message-qq-cache-hint.lgnewui-message-hint-hidden {
+.withu-message-qq-cache-hint.withu-message-hint-hidden {
     opacity: 0;
     transform: translateY(-50%) scale(0.5);
     pointer-events: none;
 }
 
 /* 抽屉身份栏 QQ 辅助文本（用 small 避免 span 选择器冲突） */
-.lgnewui-message-drawer-qq-sub {
+.withu-message-drawer-qq-sub {
     font-size: 10px;
     font-weight: 400;
     color: var(--lgmsg-text-muted);
@@ -2976,7 +2976,7 @@ html.lg-scroll-locked #lgnewuiFloatingActions {
 }
 
 /* ── 表情快捷气泡栏 ── */
-.lgnewui-message-emoji-bubbles {
+.withu-message-emoji-bubbles {
     display: flex;
     gap: 8px;
     padding: 0 16px 6px;
@@ -2985,11 +2985,11 @@ html.lg-scroll-locked #lgnewuiFloatingActions {
     flex-shrink: 0;
 }
 
-.lgnewui-message-emoji-bubbles::-webkit-scrollbar {
+.withu-message-emoji-bubbles::-webkit-scrollbar {
     display: none;
 }
 
-.lgnewui-message-emoji-bubble {
+.withu-message-emoji-bubble {
     display: flex;
     align-items: center;
     gap: 5px;
@@ -3008,27 +3008,27 @@ html.lg-scroll-locked #lgnewuiFloatingActions {
     -webkit-user-select: none;
 }
 
-.lgnewui-message-emoji-bubble:hover {
+.withu-message-emoji-bubble:hover {
     background: rgba(0, 0, 0, 0.07);
     color: var(--lgmsg-text-main);
 }
 
-.lgnewui-message-emoji-bubble:active {
+.withu-message-emoji-bubble:active {
     transform: scale(0.95);
 }
 
-.lgnewui-message-emoji-bubble img {
+.withu-message-emoji-bubble img {
     height: 22px;
     width: auto;
     pointer-events: none;
 }
 
-.lgnewui-message-emoji-bubble.lgnewui-message-bubble-out {
+.withu-message-emoji-bubble.withu-message-bubble-out {
     animation: bubbleOut 0.28s ease forwards;
     pointer-events: none;
 }
 
-.lgnewui-message-emoji-bubble.lgnewui-message-bubble-in {
+.withu-message-emoji-bubble.withu-message-bubble-in {
     animation: bubbleIn 0.35s var(--lgmsg-spring) forwards;
 }
 
@@ -3061,7 +3061,7 @@ html.lg-scroll-locked #lgnewuiFloatingActions {
 }
 
 /* ── 旧版输入框组兼容 ── */
-.lgnewui-message-input-group {
+.withu-message-input-group {
     position: relative;
     display: flex;
     align-items: center;
@@ -3069,7 +3069,7 @@ html.lg-scroll-locked #lgnewuiFloatingActions {
     margin-bottom: 0;
 }
 
-.lgnewui-message-input-icon {
+.withu-message-input-icon {
     position: absolute;
     left: 14px;
     top: 50%;
@@ -3083,12 +3083,12 @@ html.lg-scroll-locked #lgnewuiFloatingActions {
     z-index: 2;
 }
 
-.lgnewui-message-input-icon svg {
+.withu-message-input-icon svg {
     width: 18px;
     height: 18px;
 }
 
-.lgnewui-message-input {
+.withu-message-input {
     width: 100%;
     padding: 16px 20px 16px 52px;
     border: 1px solid rgba(255, 255, 255, 0.4);
@@ -3104,18 +3104,18 @@ html.lg-scroll-locked #lgnewuiFloatingActions {
     letter-spacing: 0.3px;
 }
 
-.lgnewui-message-input::placeholder {
+.withu-message-input::placeholder {
     color: #a1a1a6;
     font-weight: 400;
 }
 
-.lgnewui-message-input:focus {
+.withu-message-input:focus {
     background: rgba(229, 229, 234, 0.42);
     color: var(--lgmsg-text-main);
 }
 
 /* ── 隐私安全提示 ── */
-.lgnewui-message-privacy-hint {
+.withu-message-privacy-hint {
     display: none;
     padding: 2px 4px 6px;
     font-family: 'Inter', system-ui, sans-serif;
@@ -3127,7 +3127,7 @@ html.lg-scroll-locked #lgnewuiFloatingActions {
     opacity: .85;
 }
 
-.lgnewui-message-privacy-hint svg {
+.withu-message-privacy-hint svg {
     width: 13px;
     height: 13px;
     vertical-align: -2px;
@@ -3136,7 +3136,7 @@ html.lg-scroll-locked #lgnewuiFloatingActions {
 }
 
 /* ── 弹窗内编辑器区域 ── */
-.lgnewui-message-editor-wrap {
+.withu-message-editor-wrap {
     display: flex;
     flex-direction: column;
     border-radius: 16px;
@@ -3149,11 +3149,11 @@ html.lg-scroll-locked #lgnewuiFloatingActions {
     flex-shrink: 0;
 }
 
-.lgnewui-message-editor-wrap:focus-within {
+.withu-message-editor-wrap:focus-within {
     background: rgba(229, 229, 234, 0.42);
 }
 
-.lgnewui-message-editor-content {
+.withu-message-editor-content {
     flex: 1;
     padding: 16px 20px;
     font-size: 16px;
@@ -3168,17 +3168,17 @@ html.lg-scroll-locked #lgnewuiFloatingActions {
     max-height: 200px;
 }
 
-.lgnewui-message-editor-content::-webkit-scrollbar {
+.withu-message-editor-content::-webkit-scrollbar {
     display: none;
 }
 
-.lgnewui-message-editor-content[data-placeholder]:empty::before {
+.withu-message-editor-content[data-placeholder]:empty::before {
     content: attr(data-placeholder);
     color: #a1a1a6;
     pointer-events: none;
 }
 
-.lgnewui-message-editor-content img.emoji {
+.withu-message-editor-content img.emoji {
     vertical-align: bottom;
     height: 28px;
     width: auto;
@@ -3187,7 +3187,7 @@ html.lg-scroll-locked #lgnewuiFloatingActions {
     margin: -2px 2px 0;
 }
 
-.lgnewui-message-editor-toolbar {
+.withu-message-editor-toolbar {
     padding: 10px 16px;
     display: flex;
     align-items: center;
@@ -3195,7 +3195,7 @@ html.lg-scroll-locked #lgnewuiFloatingActions {
 }
 
 /* ── 抽屉消息气泡内 emoji 尺寸限制 ── */
-.lgnewui-message-msg-bubble img.emoji {
+.withu-message-msg-bubble img.emoji {
     vertical-align: bottom;
     height: 24px;
     width: auto;
@@ -3205,7 +3205,7 @@ html.lg-scroll-locked #lgnewuiFloatingActions {
 }
 
 /* ── 抽屉编辑器内 emoji 尺寸 ── */
-.lgnewui-message-drawer-editor img.emoji {
+.withu-message-drawer-editor img.emoji {
     vertical-align: bottom;
     height: 24px;
     width: auto;
@@ -3216,7 +3216,7 @@ html.lg-scroll-locked #lgnewuiFloatingActions {
  * 移动端适配
  * ============================================================ */
 @media (max-width: 768px) {
-    .lgnewui-message-drawer-content {
+    .withu-message-drawer-content {
         right: 0;
         left: 0;
         bottom: 0;
@@ -3226,17 +3226,17 @@ html.lg-scroll-locked #lgnewuiFloatingActions {
         transform: translateY(100%);
     }
 
-    .lgnewui-message-drawer-bg {
+    .withu-message-drawer-bg {
         border-radius: 24px 24px 0 0;
         border-left: none;
         border-top: 1px solid rgba(255, 255, 255, 0.4);
     }
 
-    .lgnewui-message-drawer-overlay.active .lgnewui-message-drawer-content {
+    .withu-message-drawer-overlay.active .withu-message-drawer-content {
         transform: translateY(0);
     }
 
-    .lgnewui-message-drawer-overlay.closing .lgnewui-message-drawer-content {
+    .withu-message-drawer-overlay.closing .withu-message-drawer-content {
         transform: translateY(100%);
     }
 
@@ -3305,47 +3305,47 @@ html.lg-scroll-locked #lgnewuiFloatingActions {
         height: 12px !important;
     }
 
-    .lgnewui-message-emoji-panel {
+    .withu-message-emoji-panel {
         width: calc(100vw - 24px) !important;
         left: 12px !important;
         right: 12px !important;
     }
 
-    .lgnewui-message-input-row {
+    .withu-message-input-row {
         flex-direction: column;
         gap: 12px;
     }
 
     /* 留言弹窗移动端 */
-    .lgnewui-message-modal-overlay {
+    .withu-message-modal-overlay {
         padding: 0;
     }
 
-    .lgnewui-message-modal-content {
+    .withu-message-modal-content {
         max-width: 100%;
         max-height: 100%;
         border-radius: 0;
         height: 100%;
     }
 
-    .lgnewui-message-modal-body {
+    .withu-message-modal-body {
         padding: 24px 16px;
     }
 
-    .lgnewui-message-editor-content {
+    .withu-message-editor-content {
         min-height: 80px;
         max-height: 160px;
         overflow-y: auto;
     }
 
     /* 发送留言按钮：紧凑 */
-    .lgnewui-message-editor-toolbar .lgnewui-message-submit-btn {
+    .withu-message-editor-toolbar .withu-message-submit-btn {
         padding: 10px 20px;
         font-size: 14px;
     }
 
     /* 身份设置弹窗：移动端不要全屏，加圆角和间距 */
-    #lgmsgAuthModal .lgnewui-message-modal-content {
+    #lgmsgAuthModal .withu-message-modal-content {
         max-width: calc(100% - 20px);
         max-height: unset;
         height: auto;
@@ -3353,54 +3353,54 @@ html.lg-scroll-locked #lgnewuiFloatingActions {
         border-radius: 20px;
     }
 
-    .lgnewui-message-head-titles .lgnewui-message-title {
+    .withu-message-head-titles .withu-message-title {
         font-size: 22px;
     }
 
     /* 弹窗编辑器工具栏：移动端两行布局 */
-    .lgnewui-message-editor-toolbar {
+    .withu-message-editor-toolbar {
         padding: 8px 12px;
         flex-wrap: wrap;
         gap: 6px;
     }
 
-    .lgnewui-message-editor-toolbar .lgnewui-message-tb-left {
+    .withu-message-editor-toolbar .withu-message-tb-left {
         width: 100%;
         align-items: center;
         gap: 2px;
     }
 
-    .lgnewui-message-editor-toolbar .lgnewui-message-tb-left .lgnewui-message-switch-wrap {
+    .withu-message-editor-toolbar .withu-message-tb-left .withu-message-switch-wrap {
         margin-left: auto;
     }
 
-    .lgnewui-message-editor-toolbar .lgnewui-message-char-counter {
+    .withu-message-editor-toolbar .withu-message-char-counter {
         order: 10;
     }
 
-    .lgnewui-message-editor-toolbar .lgnewui-message-submit-btn {
+    .withu-message-editor-toolbar .withu-message-submit-btn {
         order: 11;
         margin-left: auto;
     }
 
     /* Enter发送开关：不换行 */
-    .lgnewui-message-switch-wrap {
+    .withu-message-switch-wrap {
         white-space: nowrap;
     }
 
-    .lgnewui-message-switch-text {
+    .withu-message-switch-text {
         font-size: 11px;
     }
 
     /* 提交按钮：不换行，紧凑化 */
-    .lgnewui-message-submit-btn {
+    .withu-message-submit-btn {
         white-space: nowrap;
         padding: 10px 18px;
         font-size: 14px;
     }
 
     /* 弹窗 v-tags：移动端缩小+横向滚动 */
-    .lgnewui-message-visitor-tags {
+    .withu-message-visitor-tags {
         flex-wrap: nowrap;
         overflow-x: auto;
         -webkit-overflow-scrolling: touch;
@@ -3408,11 +3408,11 @@ html.lg-scroll-locked #lgnewuiFloatingActions {
         gap: 6px;
     }
 
-    .lgnewui-message-visitor-tags::-webkit-scrollbar {
+    .withu-message-visitor-tags::-webkit-scrollbar {
         display: none;
     }
 
-    .lgnewui-message-visitor-tags .lgnewui-message-v-tag {
+    .withu-message-visitor-tags .withu-message-v-tag {
         font-size: 11px;
         padding: 4px 10px 4px 4px;
         gap: 4px;
@@ -3420,39 +3420,39 @@ html.lg-scroll-locked #lgnewuiFloatingActions {
         flex-shrink: 0;
     }
 
-    .lgnewui-message-visitor-tags .lgnewui-message-v-tag-icon {
+    .withu-message-visitor-tags .withu-message-v-tag-icon {
         width: 20px;
         height: 20px;
     }
 
-    .lgnewui-message-visitor-tags .lgnewui-message-v-tag-icon svg {
+    .withu-message-visitor-tags .withu-message-v-tag-icon svg {
         width: 11px;
         height: 11px;
     }
 
-    .lgnewui-message-visitor-tags .lgnewui-message-v-tag-icon i[class*="qi-"] {
+    .withu-message-visitor-tags .withu-message-v-tag-icon i[class*="qi-"] {
         font-size: 12px;
     }
 
     /* 抽屉工具栏：移动端换行自适应 */
-    .lgnewui-message-drawer-toolbar {
+    .withu-message-drawer-toolbar {
         flex-wrap: wrap;
         gap: 6px;
         padding: 6px 8px 8px;
     }
 
-    .lgnewui-message-drawer-toolbar .lgnewui-message-tb-left {
+    .withu-message-drawer-toolbar .withu-message-tb-left {
         flex-wrap: wrap;
     }
 
-    .lgnewui-message-reply-btn {
+    .withu-message-reply-btn {
         white-space: nowrap;
         padding: 8px 16px;
         font-size: 13px;
     }
 
     /* 抽屉 v-tags：移动端缩小+横向滚动 */
-    .lgnewui-message-drawer-input-tags {
+    .withu-message-drawer-input-tags {
         flex-wrap: nowrap;
         overflow-x: auto;
         -webkit-overflow-scrolling: touch;
@@ -3460,11 +3460,11 @@ html.lg-scroll-locked #lgnewuiFloatingActions {
         gap: 6px;
     }
 
-    .lgnewui-message-drawer-input-tags::-webkit-scrollbar {
+    .withu-message-drawer-input-tags::-webkit-scrollbar {
         display: none;
     }
 
-    .lgnewui-message-drawer-input-tags .lgnewui-message-v-tag {
+    .withu-message-drawer-input-tags .withu-message-v-tag {
         white-space: nowrap;
         flex-shrink: 0;
     }
@@ -3620,7 +3620,7 @@ html.lg-scroll-locked #lgnewuiFloatingActions {
 /* ============================================================
  * 留言成功 —— 编辑器收缩 + 飞行纸条 + 纸飞机动画
  * ============================================================ */
-.lgnewui-message-editor-wrap.lgnewui-message-fly-shrink {
+.withu-message-editor-wrap.withu-message-fly-shrink {
     animation: lgmsg-contentShrink 0.6s ease forwards;
 }
 
@@ -3641,7 +3641,7 @@ html.lg-scroll-locked #lgnewuiFloatingActions {
     }
 }
 
-.lgnewui-message-flying-note {
+.withu-message-flying-note {
     position: fixed;
     z-index: 100001;
     pointer-events: none;
@@ -3695,7 +3695,7 @@ html.lg-scroll-locked #lgnewuiFloatingActions {
     }
 }
 
-.lgnewui-message-paper-plane-fly {
+.withu-message-paper-plane-fly {
     position: fixed;
     z-index: 100002;
     width: 36px;
@@ -3706,7 +3706,7 @@ html.lg-scroll-locked #lgnewuiFloatingActions {
     will-change: transform, opacity;
 }
 
-.lgnewui-message-paper-plane-fly svg {
+.withu-message-paper-plane-fly svg {
     width: 100%;
     height: 100%;
     fill: none;

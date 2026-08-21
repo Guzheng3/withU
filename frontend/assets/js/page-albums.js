@@ -1,5 +1,5 @@
 /**
- * LG_NewUI 相册页面模块
+ * withU 相册页面模块
  * @version 2.0.0
  * @description albums.php 和 album-detail.php 页面的 JS 逻辑
  * @note Masonry 瀑布流初始化已迁移到 pjax.js 的 MasonryManager.initLGGrid()
@@ -38,7 +38,7 @@
          */
         _bindEvents() {
             // 视频卡片点击
-            $(document).off('click.lgLoveImg', '.lg-photo-box.is-video').on('click.lgLoveImg', '.lg-photo-box.is-video', function(e) {
+            $(document).off('click.lgLoveImg', '.withu-photo-box.is-video').on('click.lgLoveImg', '.withu-photo-box.is-video', function(e) {
                 e.preventDefault();
                 e.stopPropagation();
 
@@ -70,14 +70,14 @@
     // ============================================
     $(function() {
         // 检测是否在相册页面
-        if ($('.lg-masonry-grid').length > 0) {
+        if ($('.withu-masonry-grid').length > 0) {
             LoveImgModule.init();
         }
     });
 
     // PJAX 完成后重新初始化
     $(document).on('pjax:end.lgLoveImg', function() {
-        if ($('.lg-masonry-grid').length > 0) {
+        if ($('.withu-masonry-grid').length > 0) {
             LoveImgModule.init();
         }
     });
