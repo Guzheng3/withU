@@ -1622,7 +1622,7 @@ include __DIR__ . '/header.php';
     </form>
 
     <!-- wangEditor 脚本（本地） -->
-    <script src="/assets/js/wangeditor.min.js"></script>
+    <script src="/admin-assets/js/wangeditor.min.js"></script>
 
     <script>
     // 若前台通用的 showToast 尚未定义，则在后台提供一个兼容版本，使用与前台一致的样式

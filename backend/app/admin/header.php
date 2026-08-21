@@ -59,11 +59,11 @@ foreach (($themeConfig['colors'] ?? []) as $themeName => $themeValue) {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>管理后台 - <?php echo e(SITE_NAME); ?></title>
-    <link rel="stylesheet" href="/assets/css/style.css?v=withu-logo-20260718">
-    <link rel="stylesheet" href="/assets/css/admin_v2.css?v=ui-polish-3">
-    <link rel="stylesheet" href="/assets/css/theme.css?v=withu-theme-20260724-1">
-    <link rel="stylesheet" href="/assets/css/admin_pages.css?v=ui-polish-2">
-    <link rel="stylesheet" href="/assets/css/admin_apple.css?v=ui-polish-2">
+    <link rel="stylesheet" href="/admin-assets/css/style.css?v=withu-logo-20260718">
+    <link rel="stylesheet" href="/admin-assets/css/admin_v2.css?v=ui-polish-3">
+    <link rel="stylesheet" href="/admin-assets/css/theme.css?v=withu-theme-20260724-1">
+    <link rel="stylesheet" href="/admin-assets/css/admin_pages.css?v=ui-polish-2">
+    <link rel="stylesheet" href="/admin-assets/css/admin_apple.css?v=ui-polish-2">
     <link rel="stylesheet"
           href="https://cdn.bootcdn.net/ajax/libs/font-awesome/6.4.0/css/all.min.css"
           onerror="this.onerror=null;this.href='https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css';">
@@ -166,7 +166,7 @@ foreach (($themeConfig['colors'] ?? []) as $themeName => $themeValue) {
                 <i class="fas fa-bars"></i>
             </button>
             <a href="/admin/index.php" class="admin-logo">
-                <img class="admin-logo-image" src="/assets/images/withu-logo.png" alt="<?php echo e(SITE_NAME); ?>">
+                <img class="admin-logo-image" src="/admin-assets/images/withu-logo.png" alt="<?php echo e(SITE_NAME); ?>">
             </a>
             <div class="admin-appbar-context">
                 <span class="admin-appbar-section"><?php echo e($activeAdminMeta['section']); ?></span>

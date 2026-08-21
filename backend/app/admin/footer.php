@@ -38,6 +38,6 @@
     </div>
 </div>
 
-<script src="/assets/js/admin_v2.js?v=withu-admin-20260720-3"></script>
+<script src="/admin-assets/js/admin_v2.js?v=withu-admin-20260720-3"></script>
 </body>
 </html>
