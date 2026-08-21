@@ -2,5 +2,27 @@
   "amapKey": "39b478526482ffb6c069eee6f78faf77",
   "securityMode": "proxy",
   "securityJsCode": "",
-  "mapStyle": "amap://styles/normal"
+  "mapStyle": "amap://styles/grey",
+  "lovers": [
+    {
+      "name": "Really",
+      "label": "甲子公园",
+      "role": "",
+      "coords": [
+        116.075335,
+        22.869156
+      ],
+      "avatar": "https://love-really.kikiw.cn/Lovefolder/20260411043046_69d95df639c33274072975.webp"
+    },
+    {
+      "name": "Ki.",
+      "label": "潘州公园",
+      "role": "",
+      "coords": [
+        110.856708,
+        21.915454
+      ],
+      "avatar": "https://love-really.kikiw.cn/Lovefolder/20260411043037_69d95ded97293201118237.webp"
+    }
+  ]
 }

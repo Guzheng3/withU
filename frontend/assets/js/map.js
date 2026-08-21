@@ -4300,7 +4300,7 @@ const AlbumPhotosManager = (() => {
 
     // 加载照片数据
     const fetchPhotos = async (code) => {
-        const url = getApiBase() + '&module=album_photos&code=' + encodeURIComponent(code);
+        const url = getApiBase() + '?module=album_photos&code=' + encodeURIComponent(code);
         const resp = await fetch(url, {
             headers: { 'X-Requested-With': 'XMLHttpRequest', 'Accept': 'application/json' }
         });
