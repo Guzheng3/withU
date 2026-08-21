@@ -68,7 +68,7 @@ Entries discovered by the Agent during task execution should follow this format:
   - lg-server(8901) 已实现全部 services 接口真实持久化，单端口预览即完整站点：静态页 + /services/*、/assets/map-api.php、/admin 后台、/_AMapService 高德代理、动态配置注入（amapKey/securityJsCode/服务模式）。
   - 数据文件集中在 backend/server/data/：map-config.json（高德 Key 与 securityMode=proxy，Key=39b478526482ffb6c069eee6f78faf77）、weather-config.json（后台手配城市1/2+ip）、chat-data.json、interactions.json、beacons.json；相册照片扫描 frontend/Lovefolder/，元数据在 backend/server/admin-data/photos-meta.json。
   - 高德采用「代理服务安全模式」（_AMapSecurityConfig={serviceHost:'/',serviceMode:'proxy'}），由服务端转发 /_AMapService/** 到 webapi.amap.com，无需 securityJsCode；10 个 HTML 页面的硬编码 amapKey/securityJsCode 由 server.js 正则替换注入。
-  - 后台登录：POST /admin/api/login（JSON body {adminName,pw}，pw 为明文由服务端 md5），cookie lg_admin；默认账号 admin/lovezz。
+  - 后台登录：POST /admin/api/login（JSON body {adminName,pw}，pw 为明文由服务端 md5），cookie withu_admin；默认账号 admin/lovezz。
   - 测试坑：store.js 的 load() 对 '@mapAll'/'@lgConfig' 特殊 key 必须经 ABS_MAP 映射到绝对路径，否则读到空数据；https.request headers 里 referer 不能设为 undefined（Node22 抛 ERR_HTTP_INVALID_HEADER_VALUE），应 delete。
 
 [Project Knowledge Summary]
@@ -88,7 +88,18 @@ Entries discovered by the Agent during task execution should follow this format:
 - Context: Discovered by Agent while 按用户要求将项目重组为标准目录结构（以 withU 为主体，去掉 lg 命名）
 - Category: Operations & Deployment
 - Instructions:
-  - 仓库标准结构（git mv 完成，commit 17be6ed）：frontend/（原 lg-site 前端，含 index.html、assets/、services/、_external/lgadmin/、Lovefolder/）；backend/server/（原 lg-server Node 服务，server.js/store.js/admin.js/reverse-proxy.js + data/ + admin-data/ + app-config.json）；backend/app/（withU PHP 主站：watch.php、api/、core/、config/、index.php 等 + .installed + uploads/ + runtime/）；backend/strm/（原 strm）。根目录保留 deploy/deploy-local/desktop/docs/scripts/。
+  - 仓库标准结构（git mv 完成，commit 17be6ed）：frontend/（原 lg-site 前端，含 index.html、assets/、services/、_external/withuadmin/、Lovefolder/）；backend/server/（原 lg-server Node 服务，server.js/store.js/admin.js/reverse-proxy.js + data/ + admin-data/ + app-config.json）；backend/app/（withU PHP 主站：watch.php、api/、core/、config/、index.php 等 + .installed + uploads/ + runtime/）；backend/strm/（原 strm）。根目录保留 deploy/deploy-local/desktop/docs/scripts/。
   - 站点配置文件名 lg-config.json → app-config.json（backend/server/）；server.js 路径常量 ROOT=path.join(__dirname,'..','..','frontend')、PHP_ROOT=path.join(__dirname,'..','app')；store.js ROOT 与 lgConfig 映射、admin.js ROOT/CONFIG_FILE 均已指向新路径。
   - .gitignore 已同步新路径：backend/app/config/{database.php,config.php,mihomo.json}、backend/app/uploads/*、backend/app/runtime/* 与 backend/runtime/* 忽略（php -S 8902 运行 PHP 主站时会在 backend/ 下生成 runtime/schema-version、schema-migration.lock）。
   - 运行命令（重组后）：8902 用 `php -S 127.0.0.1:8902 -t /workspace/withU/backend/app`；8901 用 `cd backend/server && PORT=8901 node server.js`；1314 用 `node backend/server/reverse-proxy.js`。重组后已验证：8901 首页/map-api/weather/qqavatar/admin、8902 login.php、8901 watch.php 登录代理、1314 反代首页与 map-api 全部 200。
+
+[Project Knowledge Summary]
+- Date: 2026-08-21
+- Context: Discovered by Agent while 按用户指令"不要写 lg 名称"彻底清理 withU 中全部 lg 标识（commit ff72ee7，承接 17be6ed 目录重组）
+- Category: Operations & Deployment
+- Instructions:
+  - 前端运行文件全部去 lg 命名：assets/js/ 与 Style/css/ 下 lg-*.js/css 去前缀（lg-app.js→app.js 等），lgnewui-private.js→withu-private.js、LGNewUiOwO.js→withu-owoui.js、lgnewui-*.css→withu-*.css；类名/id 前缀统一 lg-/lgnewui-/lgnew-/lg_ → withu-（含 lgnewuiHeaderActions→withuHeaderActions、lgnew-new-photo-*→withu-new-photo-* 等）；后台目录 _external/lgadmin→_external/withuadmin；后台 cookie lg_admin→withu_admin。
+  - 全局标识符改名：window.LG_CONFIG→WITHU_CONFIG、LG_AOS_CONFIG→WITHU_AOS_CONFIG、LG_COUNTUP_ENABLED→WITHU_COUNTUP_ENABLED、lg_love（音乐对象）→withu_love、lg_visitor_geo/lg_comment_*/lg_enter_to_send 等存储 key→withu_*、X-LG-Access-* 响应头→X-WithU-Access-*；app-config.json 顶层键 LG_CONFIG/LGApp_config→WITHU_CONFIG/WITHUApp_config（server.js 读 .WITHU_CONFIG，键名必须一致，否则配置注入失效）。
+  - PHP 主站（backend/app）：withu_lg_ui.js/css→withu-sakura.js/css（樱花，header/footer/travel 引用已同步）、withu-withu-hero 冗余类名→withu-hero。
+  - _external/ 下的 *.kikiw.cn（loveli/blog/wiki/www/auth-love）是外部参考站快照备份，**保留原始 lg 内容不动**；只有 _external/withuadmin（后台 UI）参与去 lg。
+  - 验证方式：`node --check backend/server/*.js`、`php -l`、重启 8901 后 curl 全页面与全部静态资源 200、8902 首页 withu-hero/withu-sakura 正常、watch.php 代理 200。
