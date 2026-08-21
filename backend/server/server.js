@@ -473,8 +473,11 @@ function serviceHandler(req, res, urlPath, reqUrl, body) {
 // 本代理转发到高德官方 API（仅 amap.com 域名），供 JS API 加载地图所需。
 function amapProxy(req, res, reqUrl, urlPath) {
   const mc = store.loadMapConfig();
-  const targetPath = urlPath.replace(/^\/_AMapService/, '') || '/';
-  let target = 'https://webapi.amap.com' + targetPath;
+  const rest = urlPath.replace(/^\/_AMapService\/?/, '') || '';
+  const firstSeg = rest.split('/')[0] || '';
+  let target = (firstSeg.indexOf('.') >= 0 || firstSeg === 'localhost')
+    ? 'https://' + rest
+    : 'https://webapi.amap.com/' + rest;
   const idx = reqUrl.indexOf('?');
   if (idx >= 0) {
     const qs = new URLSearchParams(reqUrl.slice(idx + 1));
@@ -537,7 +540,7 @@ function injectMapConfig(html, mc) {
   // 替换 _AMapSecurityConfig（高德安全模式）
   const sec = mc.securityMode === 'jsCode' && mc.securityJsCode
     ? { securityJsCode: mc.securityJsCode }
-    : { serviceHost: '/', serviceMode: 'proxy' };
+    : { serviceHost: '_AMapService', serviceMode: 'proxy' };
   html = html.replace(/window\._AMapSecurityConfig = \{[^;]*\};/, 'window._AMapSecurityConfig = ' + JSON.stringify(sec).replace(/</g, '\\u003c') + ';');
   // 替换 LGMAP_CONFIG 中的 amapKey / mapStyle / soloMode（保留其它字段）
   html = html.replace(/("amapKey":")[^"]*(")/, '$1' + (mc.amapKey || '') + '$2');
