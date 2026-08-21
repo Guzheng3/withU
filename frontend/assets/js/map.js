@@ -1238,8 +1238,23 @@ const initializeApp = async () => {
             viewMode: '3D',
             pitch: 0,
             features: ['bg', 'road', 'building', 'point'],
-            showBuildingBlock: true
+            showBuildingBlock: true,
+            dragEnable: true,
+            rotateEnable: false,
+            pitchEnable: false
         });
+
+        // 阻止地图区域触发浏览器/扩展的鼠标手势（右键拖拽、中键等），保证拖拽只作用于地图本身
+        const mapDom = document.getElementById('missing-pets-map');
+        if (mapDom) {
+            mapDom.addEventListener('contextmenu', (e) => {
+                e.preventDefault();
+                e.stopImmediatePropagation();
+            }, true);
+            mapDom.addEventListener('auxclick', (e) => {
+                if (e.button === 1) e.preventDefault();
+            }, true);
+        }
 
         // 绑定缩放按钮事件
         const zoomMapBtn = document.getElementById('map-zoom');

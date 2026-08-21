@@ -434,6 +434,13 @@
 
     function onRightClick(e) {
         if (isMobile()) return;
+        // 足迹地图全屏弹窗内禁用自定义右键菜单，避免与地图拖拽/手势冲突（地图自身已独立处理 contextmenu）
+        var t = e.target;
+        if (t && t.closest && t.closest('#withuMapOverlay')) {
+            e.preventDefault();
+            e.stopImmediatePropagation();
+            return;
+        }
         e.preventDefault();
         e.stopImmediatePropagation();
         _preFocus = doc.activeElement;

@@ -13,6 +13,8 @@
     align-items: center;
     justify-content: center;
     transition: background 0.4s ease;
+    touch-action: none;
+    overscroll-behavior: none;
 }
 
 .withu-map-overlay.withu-map-overlay-show {
@@ -59,6 +61,7 @@
 
 .withu-map-overlay #missing-pets-map {
     height: 100% !important;
+    touch-action: none;
 }
 
 /* ==========================================
