@@ -61,9 +61,9 @@
                 ctx.fillStyle = '#f60';
                 ctx.fillRect(0, 0, 100, 50);
                 ctx.fillStyle = '#069';
-                ctx.fillText('LGFingerprint', 2, 15);
+                ctx.fillText('WithUFingerprint', 2, 15);
                 ctx.fillStyle = 'rgba(102, 204, 0, 0.7)';
-                ctx.fillText('LGFingerprint', 4, 17);
+                ctx.fillText('WithUFingerprint', 4, 17);
                 components.push('cvs:' + canvas.toDataURL().slice(-50));
             }
         } catch (e) {

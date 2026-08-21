@@ -344,7 +344,7 @@
         _openMobileToc() {
             $('#mobile-toc-overlay').addClass('open');
             $('#mobile-toc-sheet').addClass('open');
-            if (window.lgScrollLock) lgScrollLock();
+            if (window.withuScrollLock) withuScrollLock();
         },
 
         /**
@@ -353,7 +353,7 @@
         _closeMobileToc() {
             $('#mobile-toc-overlay').removeClass('open');
             $('#mobile-toc-sheet').removeClass('open');
-            if (window.lgScrollUnlock) lgScrollUnlock();
+            if (window.withuScrollUnlock) withuScrollUnlock();
         }
     };
 
@@ -1007,8 +1007,8 @@
         },
 
         _copyLink() {
-            if (window.LGClipboard) {
-                LGClipboard.copy(window.location.href, { success: '链接已复制到剪贴板' });
+            if (window.WithUClipboard) {
+                WithUClipboard.copy(window.location.href, { success: '链接已复制到剪贴板' });
             } else if (navigator.clipboard) {
                 navigator.clipboard.writeText(window.location.href).then(() => {
                     if (typeof Toastify !== 'undefined' && Toastify.showScenario) {
@@ -1062,20 +1062,20 @@
     });
 
     // PJAX 完成后重新初始化
-    $(document).on('pjax:end.lgDetail', function() {
+    $(document).on('pjax:end.withuDetail', function() {
         PageDetailModule.refresh();
         // RailManager 独立刷新
         RailManager.init();
     });
 
     // ============================================
-    // 注册到 LGApp
+    // 注册到 WithUApp
     // ============================================
-    if (window.LGApp) {
-        window.LGApp.register('pageDetail', PageDetailModule);
+    if (window.WithUApp) {
+        window.WithUApp.register('pageDetail', PageDetailModule);
     }
 
     // 暴露到全局
-    window.LGPageDetailModule = PageDetailModule;
+    window.WithUPageDetailModule = PageDetailModule;
 
 })(window, jQuery);

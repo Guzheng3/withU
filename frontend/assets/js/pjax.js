@@ -2,7 +2,7 @@
  * withU PJAX 管理模块
  * @version 2.0.0
  * @description 统一管理 PJAX 配置、生命周期事件、页面组件初始化
- * @requires jQuery, jquery.pjax, LGApp
+ * @requires jQuery, jquery.pjax, WithUApp
  */
 
 ; (function (window, $) {
@@ -12,15 +12,15 @@
     // 依赖检查
     // ============================================
     if (typeof $ === 'undefined') {
-        console.error('[LGPjax] jQuery is required');
+        console.error('[WithUPjax] jQuery is required');
         return;
     }
 
-    // 获取 LGApp 模块引用
-    const LGApp = window.LGApp || {};
-    const LGConfig = window.WITHU_CONFIG || {};
-    const { TimerManager, LazyLoadManager, HeightManager, CommonFunctions, AOSManager, Toast } = LGApp;
-    const imageErrorFallback = LGConfig.imageErrorFallback || ((LGConfig.assetBase || '') + 'Style/img/file-placeholder.svg');
+    // 获取 WithUApp 模块引用
+    const WithUApp = window.WithUApp || {};
+    const WithUConfig = window.WITHU_CONFIG || {};
+    const { TimerManager, LazyLoadManager, HeightManager, CommonFunctions, AOSManager, Toast } = WithUApp;
+    const imageErrorFallback = WithUConfig.imageErrorFallback || ((WithUConfig.assetBase || '') + 'Style/img/file-placeholder.svg');
 
     // ============================================
     // Loading 指示器模块
@@ -145,7 +145,7 @@
             if (typeof $.fn.imagesLoaded === 'function') {
                 $grid.imagesLoaded(initMasonry);
             } else {
-                TimerManager.setTimeout('lgMasonry', initMasonry, 100);
+                TimerManager.setTimeout('withuMasonry', initMasonry, 100);
             }
         },
 
@@ -378,7 +378,7 @@
          * 初始化留言页极验（当极验未加载时直接提交，不影响留言功能）
          */
         initLeaving() {
-            const siteTitle = LGConfig.title || '';
+            const siteTitle = WithUConfig.title || '';
             const geetestAvailable = typeof GeetestHelper !== 'undefined';
 
             if (geetestAvailable) {
@@ -399,7 +399,7 @@
                 });
             }
 
-            $('#leavingPost').off('click.lgGeetest').on('click.lgGeetest', function () {
+            $('#leavingPost').off('click.withuGeetest').on('click.withuGeetest', function () {
                 const qq = $("input[name='qq']").val();
                 const name = $("input[name='name']").val();
                 const text = $("textarea[name='text']").val();
@@ -492,7 +492,7 @@
             ScrollRevealManager.revealNewElements();
 
             // 剪贴板声明式绑定
-            if (window.LGClipboard) LGClipboard.init();
+            if (window.WithUClipboard) WithUClipboard.init();
         }
     };
 
@@ -543,7 +543,7 @@
     // ============================================
     // PJAX 核心管理器
     // ============================================
-    const LGPjax = {
+    const WithUPjax = {
         // 版本号
         version: '2.0.0',
 
@@ -581,7 +581,7 @@
          * 绑定卡片跳转事件（全局委托，排除点赞按钮）
          */
         _bindCardNavigation() {
-            $(document).off('click.lgCardNav').on('click.lgCardNav', '[data-href]', function(e) {
+            $(document).off('click.withuCardNav').on('click.withuCardNav', '[data-href]', function(e) {
                 // 点赞按钮不触发跳转
                 if ($(e.target).closest('[data-like-target]').length) return;
 
@@ -606,13 +606,13 @@
          */
         _bindEvents() {
             // ========== pjax:start ==========
-            $(document).on('pjax:start.lgPjax', () => {
+            $(document).on('pjax:start.withuPjax', () => {
                 $('html').css('scroll-behavior', 'auto');
                 LoadingIndicator.show();
 
                 // ---- 统一清理：防止内存泄漏 ----
                 // 0. 强制释放滚动锁（弹窗打开时切页会导致 withu-scroll-locked 残留）
-                if (window.lgScrollReset) lgScrollReset();
+                if (window.withuScrollReset) withuScrollReset();
 
                 // 1. 销毁 Masonry 实例
                 MasonryManager.destroyAll();
@@ -627,38 +627,38 @@
                 VideoPlayerManager.destroy();
 
                 // 4. 销毁页面模块（首页倒计时/天气定时器、详情页 Observer 等）
-                if (window.LGIndexModule && typeof window.LGIndexModule.destroy === 'function') {
-                    window.LGIndexModule.destroy();
+                if (window.WithUIndexModule && typeof window.WithUIndexModule.destroy === 'function') {
+                    window.WithUIndexModule.destroy();
                 }
-                if (window.LGListModule && typeof window.LGListModule.destroy === 'function') {
-                    window.LGListModule.destroy();
+                if (window.WithUListModule && typeof window.WithUListModule.destroy === 'function') {
+                    window.WithUListModule.destroy();
                 }
-                if (window.LGPageDetailModule && typeof window.LGPageDetailModule.destroy === 'function') {
-                    window.LGPageDetailModule.destroy();
+                if (window.WithUPageDetailModule && typeof window.WithUPageDetailModule.destroy === 'function') {
+                    window.WithUPageDetailModule.destroy();
                 }
-                if (window.LGLeavingModule && typeof window.LGLeavingModule.destroy === 'function') {
-                    window.LGLeavingModule.destroy();
+                if (window.WithULeavingModule && typeof window.WithULeavingModule.destroy === 'function') {
+                    window.WithULeavingModule.destroy();
                 }
-                if (window.LGChatModule && typeof window.LGChatModule.destroy === 'function') {
-                    window.LGChatModule.destroy();
+                if (window.WithUChatModule && typeof window.WithUChatModule.destroy === 'function') {
+                    window.WithUChatModule.destroy();
                 }
-                if (window.LGMap) {
+                if (window.WithUMap) {
                     try {
-                        if (typeof window.LGMap.close === 'function') {
-                            window.LGMap.close();
+                        if (typeof window.WithUMap.close === 'function') {
+                            window.WithUMap.close();
                         }
-                        if (typeof window.LGMap.destroy === 'function') {
-                            window.LGMap.destroy();
+                        if (typeof window.WithUMap.destroy === 'function') {
+                            window.WithUMap.destroy();
                         }
                     } catch (e) { /* PJAX 切页时地图 DOM 可能处于销毁中 */ }
                 }
-                if (window.LGMiniMap) {
+                if (window.WithUMiniMap) {
                     try {
-                        if (typeof window.LGMiniMap.closeFullscreen === 'function') {
-                            window.LGMiniMap.closeFullscreen();
+                        if (typeof window.WithUMiniMap.closeFullscreen === 'function') {
+                            window.WithUMiniMap.closeFullscreen();
                         }
-                        if (typeof window.LGMiniMap.destroyAll === 'function') {
-                            window.LGMiniMap.destroyAll();
+                        if (typeof window.WithUMiniMap.destroyAll === 'function') {
+                            window.WithUMiniMap.destroyAll();
                         }
                     } catch (e) { /* 迷你地图实例可能已被移除 */ }
                 }
@@ -671,7 +671,7 @@
             });
 
             // ========== pjax:send ==========
-            $(document).on('pjax:send.lgPjax', () => {
+            $(document).on('pjax:send.withuPjax', () => {
                 if (typeof NProgress !== 'undefined') {
                     NProgress.start();
                 }
@@ -685,7 +685,7 @@
             });
 
             // ========== pjax:complete ==========
-            $(document).on('pjax:complete.lgPjax', () => {
+            $(document).on('pjax:complete.withuPjax', () => {
                 $('html').css('scroll-behavior', 'smooth');
 
                 // 如果是 lovelist.php#event-xxx 或 messages.php#comment_xxx 跳转，跳过通用滚动
@@ -712,13 +712,13 @@
                 }
 
                 // 重新初始化交互模块（点赞/浏览量）
-                if (typeof LGInteraction !== 'undefined') {
-                    LGInteraction.reinit();
+                if (typeof WithUInteraction !== 'undefined') {
+                    WithUInteraction.reinit();
                 }
 
                 // 动态加载留言页专用 CSS（PJAX 不会加载新页面 <head> 中的样式）
-                if ($('#lgmsgCardGrid').length > 0) {
-                    const cssId = 'lgmsg-dynamic-css';
+                if ($('#withumsgCardGrid').length > 0) {
+                    const cssId = 'withumsg-dynamic-css';
                     if (!document.getElementById(cssId)) {
                         const link = document.createElement('link');
                         link.id = cssId;
@@ -733,7 +733,7 @@
                     initPageHeaderAnimation();
                 }
 
-                // 触发 LGApp 的 CommonFunctions 初始化
+                // 触发 WithUApp 的 CommonFunctions 初始化
                 if (CommonFunctions && CommonFunctions.initPageHeader) {
                     CommonFunctions.initPageHeader();
                 }
@@ -798,7 +798,7 @@
 
                             // 平滑滚动完成后，强制刷新导航吸附状态
                             setTimeout(() => {
-                                const nav = window.LGComponents && window.LGComponents.Navigation;
+                                const nav = window.WithUComponents && window.WithUComponents.Navigation;
                                 if (nav) {
                                     nav._navOriginalTop = null;
                                     nav._isStuck = false;
@@ -820,14 +820,14 @@
                 }
 
                 // 初始化聊天模块（关于页）
-                if (document.getElementById('chatBox') && window.LGChatModule) {
-                    window.LGChatModule.init();
+                if (document.getElementById('chatBox') && window.WithUChatModule) {
+                    window.WithUChatModule.init();
                 }
 
                 // 初始化首页
-                if ($('#withu-day-counter-days').length > 0 && window.LGIndexModule) {
-                    window.LGIndexModule.destroy();
-                    window.LGIndexModule.init();
+                if ($('#withu-day-counter-days').length > 0 && window.WithUIndexModule) {
+                    window.WithUIndexModule.destroy();
+                    window.WithUIndexModule.init();
                     // 初始化 LoveDay 滑块位置
                     if (typeof window.initLoveDaySlider === 'function') {
                         window.initLoveDaySlider();
@@ -851,7 +851,7 @@
                 if (typeof GetEm === 'function') GetEm();
                 if (typeof getMusic === 'function') getMusic();
 
-                // 使用 LGApp 的公共函数（如果可用）
+                // 使用 WithUApp 的公共函数（如果可用）
                 if (CommonFunctions) {
                     CommonFunctions.handlePreviousPage();
                     CommonFunctions.setActiveTab();
@@ -893,7 +893,7 @@
                 }
 
                 // 图片错误处理
-                $('.photo_content img').off('error.lgPjax').on('error.lgPjax', function () {
+                $('.photo_content img').off('error.withuPjax').on('error.withuPjax', function () {
                     $(this).attr('src', imageErrorFallback);
                     $(this).addClass('loaded');
                 });
@@ -903,7 +903,7 @@
             });
 
             // ========== pjax:end ==========
-            $(document).on('pjax:end.lgPjax', () => {
+            $(document).on('pjax:end.withuPjax', () => {
                 // 确保隐藏 Loading
                 LoadingIndicator.hide();
 
@@ -938,7 +938,7 @@
             });
 
             // ========== pjax:popstate（浏览器后退/前进）==========
-            $(document).on('pjax:popstate.lgPjax', () => {
+            $(document).on('pjax:popstate.withuPjax', () => {
                 LoadingIndicator.hide();
 
                 // 刷新 AOS 动画
@@ -957,8 +957,8 @@
                 }
 
                 // 重新初始化交互模块（点赞/浏览量）
-                if (typeof LGInteraction !== 'undefined') {
-                    LGInteraction.reinit();
+                if (typeof WithUInteraction !== 'undefined') {
+                    WithUInteraction.reinit();
                 }
 
                 // 页面标题动画
@@ -999,7 +999,7 @@
             });
 
             // ========== 原生 popstate（兜底处理）==========
-            $(window).off('popstate.lgPjaxFallback').on('popstate.lgPjaxFallback', () => {
+            $(window).off('popstate.withuPjaxFallback').on('popstate.withuPjaxFallback', () => {
                 TimerManager.setTimeout('popstateFallback', () => {
                     // 刷新 AOS 动画
                     if (typeof AOS !== 'undefined') {
@@ -1011,7 +1011,7 @@
             });
 
             // ========== pjax:error / pjax:timeout ==========
-            $(document).on('pjax:error.lgPjax pjax:timeout.lgPjax', () => {
+            $(document).on('pjax:error.withuPjax pjax:timeout.withuPjax', () => {
                 LoadingIndicator.hide();
                 if (typeof NProgress !== 'undefined') {
                     NProgress.done();
@@ -1023,14 +1023,14 @@
          * 销毁 PJAX 事件绑定
          */
         destroy() {
-            $(document).off('.lgPjax');
+            $(document).off('.withuPjax');
         }
     };
 
     // ============================================
     // 暴露到全局
     // ============================================
-    window.LGPjax = LGPjax;
+    window.WithUPjax = WithUPjax;
 
     // 兼容旧代码
     window.initPageComponents = () => PageComponents.initAll();

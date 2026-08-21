@@ -221,8 +221,8 @@ window.ImglistApp = (function() {
             e.stopPropagation();
             const lng = parseFloat(locTag.dataset.lng);
             const lat = parseFloat(locTag.dataset.lat);
-            if (!isNaN(lng) && !isNaN(lat) && window.LGMap) {
-                LGMap.open({ mode: 'albums', coords: [lng, lat], zoom: 18, albumCode: CODE, albumName: ALBUM_NAME });
+            if (!isNaN(lng) && !isNaN(lat) && window.WithUMap) {
+                WithUMap.open({ mode: 'albums', coords: [lng, lat], zoom: 18, albumCode: CODE, albumName: ALBUM_NAME });
             }
             return;
         }

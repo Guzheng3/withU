@@ -10,8 +10,8 @@
     // ============================================
     // 全局配置对象（由 PHP 注入）
     // ============================================
-    const LGConfig = window.WITHU_CONFIG || {};
-    const imageErrorFallback = LGConfig.imageErrorFallback || ((LGConfig.assetBase || '') + 'Style/img/file-placeholder.svg');
+    const WithUConfig = window.WITHU_CONFIG || {};
+    const imageErrorFallback = WithUConfig.imageErrorFallback || ((WithUConfig.assetBase || '') + 'Style/img/file-placeholder.svg');
 
     // ============================================
     // 工具函数模块
@@ -182,7 +182,7 @@
         _initialized: false,
 
         init() {
-            if (this._initialized || !LGConfig.soloMode) {
+            if (this._initialized || !WithUConfig.soloMode) {
                 return;
             }
 
@@ -200,7 +200,7 @@
         },
 
         reapplyToDom() {
-            if (!LGConfig.soloMode) {
+            if (!WithUConfig.soloMode) {
                 return;
             }
 
@@ -212,8 +212,8 @@
         },
 
         _getCacheApi() {
-            if (window.LGVisitorGeoCache) {
-                return window.LGVisitorGeoCache;
+            if (window.WithUVisitorGeoCache) {
+                return window.WithUVisitorGeoCache;
             }
 
             return {
@@ -270,8 +270,8 @@
                 detail: Object.assign({ source: source }, normalized)
             }));
 
-            if (window.LGMapData && typeof window.LGMapData.fetchAll === 'function') {
-                window.LGMapData.fetchAll().catch((err) => {
+            if (window.WithUMapData && typeof window.WithUMapData.fetchAll === 'function') {
+                window.WithUMapData.fetchAll().catch((err) => {
                     console.error('[VisitorGeo] 地图数据刷新失败:', err);
                 });
             }
@@ -288,7 +288,7 @@
         },
 
         _buildDistanceResult(payload) {
-            const owner = LGConfig.soloOwnerGeo || {};
+            const owner = WithUConfig.soloOwnerGeo || {};
             const ownerLat = Number(owner.lat);
             const ownerLng = Number(owner.lng);
             const visitorLat = Number(payload.lat);
@@ -438,7 +438,7 @@
          */
         register(name, module) {
             if (this._modules.has(name)) {
-                console.warn(`[LGApp] Module "${name}" already registered, will be overwritten.`);
+                console.warn(`[WithUApp] Module "${name}" already registered, will be overwritten.`);
             }
             this._modules.set(name, module);
         },
@@ -450,7 +450,7 @@
         init(name) {
             const module = this._modules.get(name);
             if (!module) {
-                console.warn(`[LGApp] Module "${name}" not found.`);
+                console.warn(`[WithUApp] Module "${name}" not found.`);
                 return;
             }
 
@@ -464,7 +464,7 @@
                     module.init();
                     this._initialized.add(name);
                 } catch (e) {
-                    console.error(`[LGApp] Module "${name}" init error:`, e);
+                    console.error(`[WithUApp] Module "${name}" init error:`, e);
                 }
             }
         },
@@ -479,7 +479,7 @@
                 try {
                     module.destroy();
                 } catch (e) {
-                    console.error(`[LGApp] Module "${name}" destroy error:`, e);
+                    console.error(`[WithUApp] Module "${name}" destroy error:`, e);
                 }
             }
             this._initialized.delete(name);
@@ -813,9 +813,9 @@
          * 初始化 Tooltip
          */
         initTooltip() {
-            $(document).off('mouseenter.lgTooltip mouseleave.lgTooltip', '.left_info, .Message_Wrap .MessageCard .MsgFooter .InfoItem');
+            $(document).off('mouseenter.withuTooltip mouseleave.withuTooltip', '.left_info, .Message_Wrap .MessageCard .MsgFooter .InfoItem');
             
-            $(document).on('mouseenter.lgTooltip', '.left_info, .Message_Wrap .MessageCard .MsgFooter .InfoItem', function() {
+            $(document).on('mouseenter.withuTooltip', '.left_info, .Message_Wrap .MessageCard .MsgFooter .InfoItem', function() {
                 const title = $(this).data('title');
                 if (!title) return;
 
@@ -826,7 +826,7 @@
                 $tooltip.appendTo($(this)).fadeIn(130);
             });
 
-            $(document).on('mouseleave.lgTooltip', '.left_info, .Message_Wrap .MessageCard .MsgFooter .InfoItem', function() {
+            $(document).on('mouseleave.withuTooltip', '.left_info, .Message_Wrap .MessageCard .MsgFooter .InfoItem', function() {
                 $(this).find('.tooltip').fadeOut(80, function() {
                     $(this).remove();
                 });
@@ -837,8 +837,8 @@
          * 初始化图片错误处理
          */
         initImageErrorHandler() {
-            $(document).off('error.lgImg', '.photo_content img');
-            $(document).on('error.lgImg', '.photo_content img', function() {
+            $(document).off('error.withuImg', '.photo_content img');
+            $(document).on('error.withuImg', '.photo_content img', function() {
                 $(this).attr('src', imageErrorFallback);
                 $(this).addClass('loaded');
             });
@@ -936,7 +936,7 @@
          */
         init(config = null) {
             if (typeof AOS === 'undefined') {
-                console.warn('[LGApp] AOS library not loaded');
+                console.warn('[WithUApp] AOS library not loaded');
                 return;
             }
 
@@ -1005,8 +1005,8 @@
         init() {
             if (this._initialized) return;
 
-            this._panel = document.getElementById('lgHeaderMorePanel');
-            this._btn = document.getElementById('lgHeaderMoreBtn');
+            this._panel = document.getElementById('withuHeaderMorePanel');
+            this._btn = document.getElementById('withuHeaderMoreBtn');
 
             if (!this._panel || !this._btn) return;
 
@@ -1023,13 +1023,13 @@
                     const actionItem = el.closest('.withu-header-more-action-item');
                     if (actionItem) {
                         const id = actionItem.id;
-                        if (id === 'lgMorePanelWeather') {
+                        if (id === 'withuMorePanelWeather') {
                             // 触发天气弹窗
-                            const weatherBtn = document.getElementById('lgHeaderVisitorWeather');
+                            const weatherBtn = document.getElementById('withuHeaderVisitorWeather');
                             if (weatherBtn) weatherBtn.click();
-                        } else if (id === 'lgMorePanelMap') {
+                        } else if (id === 'withuMorePanelMap') {
                             // 触发地图弹窗
-                            const mapBtn = document.getElementById('lgMapOpenBtn');
+                            const mapBtn = document.getElementById('withuMapOpenBtn');
                             if (mapBtn) mapBtn.click();
                         }
                     }
@@ -1076,10 +1076,10 @@
          * 同步天气信息到面板
          */
         _syncWeatherInfo() {
-            const headerIcon = document.getElementById('lgHeaderVisitorWeatherIcon');
-            const headerText = document.getElementById('lgHeaderVisitorWeatherText');
-            const panelIcon = document.getElementById('lgMorePanelWeatherIcon');
-            const panelText = document.getElementById('lgMorePanelWeatherText');
+            const headerIcon = document.getElementById('withuHeaderVisitorWeatherIcon');
+            const headerText = document.getElementById('withuHeaderVisitorWeatherText');
+            const panelIcon = document.getElementById('withuMorePanelWeatherIcon');
+            const panelText = document.getElementById('withuMorePanelWeatherText');
 
             if (headerIcon && panelIcon) {
                 panelIcon.className = headerIcon.className;
@@ -1173,7 +1173,7 @@
          * 初始化 PJAX 监听
          */
         init() {
-            $(document).off('pjax:start.lgApp').on('pjax:start.lgApp', () => {
+            $(document).off('pjax:start.withuApp').on('pjax:start.withuApp', () => {
                 // 清理定时器
                 TimerManager.clearAll();
                 // 销毁所有模块
@@ -1184,7 +1184,7 @@
                 });
             });
 
-            $(document).off('pjax:complete.lgApp').on('pjax:complete.lgApp', () => {
+            $(document).off('pjax:complete.withuApp').on('pjax:complete.withuApp', () => {
                 // 重新初始化公共功能
                 this._initCommon();
                 // 根据页面初始化模块
@@ -1213,8 +1213,8 @@
             VisitorGeoManager.reapplyToDom();
 
             // Logo 首页图标交互
-            if (window.LGComponents && window.LGComponents.LogoHomeIcon) {
-                window.LGComponents.LogoHomeIcon.init();
+            if (window.WithUComponents && window.WithUComponents.LogoHomeIcon) {
+                window.WithUComponents.LogoHomeIcon.init();
             }
 
             // 刷新 AOS
@@ -1230,7 +1230,7 @@
     // ============================================
     // 主应用对象
     // ============================================
-    const LGApp = {
+    const WithUApp = {
         // 版本号
         version: '2.0.0',
 
@@ -1250,7 +1250,7 @@
         VisitorGeoManager,
 
         // 配置
-        config: LGConfig,
+        config: WithUConfig,
 
         /**
          * 设置配置
@@ -1297,8 +1297,8 @@
             HeightManager.adjustAll();
 
             // Logo 首页图标交互
-            if (window.LGComponents && window.LGComponents.LogoHomeIcon) {
-                window.LGComponents.LogoHomeIcon.init();
+            if (window.WithUComponents && window.WithUComponents.LogoHomeIcon) {
+                window.WithUComponents.LogoHomeIcon.init();
             }
 
             // 初始化 AOS 动画
@@ -1315,7 +1315,7 @@
                 HeightManager.adjustAll();
                 AOSManager.refresh();
             }, 100);
-            $(window).on('resize.lgApp', debouncedAdjust);
+            $(window).on('resize.withuApp', debouncedAdjust);
 
             // 启动倒计时
             CountdownTimer.start();
@@ -1364,7 +1364,7 @@
     // ============================================
     // 暴露到全局
     // ============================================
-    window.LGApp = LGApp;
+    window.WithUApp = WithUApp;
 
     // 兼容旧代码的全局函数
     window.adjustCarouselHeight = () => HeightManager.adjustCarouselHeight();

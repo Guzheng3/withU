@@ -86,7 +86,7 @@
 <script>
 (function(){
     var _count = 0;
-    window.lgScrollLock = function(){
+    window.withuScrollLock = function(){
         _count++;
         if (_count === 1) {
             var w = window.innerWidth - document.documentElement.clientWidth;
@@ -94,14 +94,14 @@
             document.documentElement.classList.add('withu-scroll-locked');
         }
     };
-    window.lgScrollUnlock = function(){
+    window.withuScrollUnlock = function(){
         _count = Math.max(0, _count - 1);
         if (_count === 0) {
             document.documentElement.classList.remove('withu-scroll-locked');
             document.documentElement.style.removeProperty('--withu-scrollbar-compensate');
         }
     };
-    window.lgScrollReset = function(){
+    window.withuScrollReset = function(){
         _count = 0;
         document.documentElement.classList.remove('withu-scroll-locked');
         document.documentElement.style.removeProperty('--withu-scrollbar-compensate');
@@ -130,7 +130,7 @@
     // AOS 动画配置（供 app.js 的 AOSManager 使用）
     window.WITHU_AOS_CONFIG = {"enabled":true,"animation":"fade-up","duration":800,"delay":0,"interval":50,"maxDelay":300,"easing":"ease-out-cubic","offset":50,"once":true,"mirror":true,"anchorPlacement":"top-bottom"};
 
-    window.LGVisitorGeoCache = window.LGVisitorGeoCache || (function () {
+    window.WithUVisitorGeoCache = window.WithUVisitorGeoCache || (function () {
         var storageKey = 'withu_visitor_geo_v1';
         var cookieKey = 'withu_visitor_geo';
         var maxAgeMs = 6 * 60 * 60 * 1000;
@@ -241,26 +241,26 @@
         };
     })();
 
-    window.LGVisitorGeoCache.syncCookieFromCache();
+    window.WithUVisitorGeoCache.syncCookieFromCache();
 </script>
 
 <!-- 足迹地图配置（懒加载，点击才初始化） -->
         <script>
         window._AMapSecurityConfig = {"securityJsCode":"d4fe1ef6bb455368bc92d5fb577b2f3b"};
-        window.LGMAP_CONFIG = {"amapKey":"7d245650b5ba899ce4f025961613dcc5","modeConfig":{"lovers":{"title":"情侣模式","desc":"无论相隔多远，心始终在一起"},"moments":{"title":"点点滴滴","desc":"记录我们的每一个美好瞬间"},"messages":{"title":"留言模式","desc":"来自世界各地的温暖祝福"},"albums":{"title":"相册模式","desc":"用照片定格我们的回忆"},"events":{"title":"事件清单","desc":"一起完成的每一个小目标"}},"lovers":[],"milestones":[],"events":[],"albums":[],"messages":[],"moments":[],"loveStartDate":"","hsla":"345deg,70%,55%","mapStyle":"amap://styles/grey","soloMode":false,"_apiBase":"/assets/map-api.php"};
-        window.LGMapData = window.LGMapData || {
+        window.WITHU_MAP_CONFIG = {"amapKey":"7d245650b5ba899ce4f025961613dcc5","modeConfig":{"lovers":{"title":"情侣模式","desc":"无论相隔多远，心始终在一起"},"moments":{"title":"点点滴滴","desc":"记录我们的每一个美好瞬间"},"messages":{"title":"留言模式","desc":"来自世界各地的温暖祝福"},"albums":{"title":"相册模式","desc":"用照片定格我们的回忆"},"events":{"title":"事件清单","desc":"一起完成的每一个小目标"}},"lovers":[],"milestones":[],"events":[],"albums":[],"messages":[],"moments":[],"loveStartDate":"","hsla":"345deg,70%,55%","mapStyle":"amap://styles/grey","soloMode":false,"_apiBase":"/assets/map-api.php"};
+        window.WithUMapData = window.WithUMapData || {
             assign: function (data) {
-                if (data.lovers) window.LGMAP_CONFIG.lovers = data.lovers;
-                if (typeof data.loveStartDate !== 'undefined') window.LGMAP_CONFIG.loveStartDate = data.loveStartDate;
-                if (data.milestones) window.LGMAP_CONFIG.milestones = data.milestones;
-                if (data.moments) window.LGMAP_CONFIG.moments = data.moments;
-                if (data.messages) window.LGMAP_CONFIG.messages = data.messages;
-                if (data.albums) window.LGMAP_CONFIG.albums = data.albums;
-                if (data.events) window.LGMAP_CONFIG.events = data.events;
+                if (data.lovers) window.WITHU_MAP_CONFIG.lovers = data.lovers;
+                if (typeof data.loveStartDate !== 'undefined') window.WITHU_MAP_CONFIG.loveStartDate = data.loveStartDate;
+                if (data.milestones) window.WITHU_MAP_CONFIG.milestones = data.milestones;
+                if (data.moments) window.WITHU_MAP_CONFIG.moments = data.moments;
+                if (data.messages) window.WITHU_MAP_CONFIG.messages = data.messages;
+                if (data.albums) window.WITHU_MAP_CONFIG.albums = data.albums;
+                if (data.events) window.WITHU_MAP_CONFIG.events = data.events;
                 return data;
             },
             fetchAll: function () {
-                var apiUrl = new URL(window.LGMAP_CONFIG._apiBase, window.location.origin);
+                var apiUrl = new URL(window.WITHU_MAP_CONFIG._apiBase, window.location.origin);
                 apiUrl.searchParams.set('module', 'all');
                 return fetch(apiUrl.toString(), {
                     headers: { 'X-Requested-With': 'XMLHttpRequest', 'Accept': 'application/json' }
@@ -270,7 +270,7 @@
             }
         };
 
-        window.LGMAP_DATA_READY = window.LGMapData.fetchAll()
+        window.WITHU_MAP_DATA_READY = window.WithUMapData.fetchAll()
             .catch(function (err) {
                 if (window.WITHU_CONFIG && window.WITHU_CONFIG.debugMap && window.console && typeof window.console.warn === 'function') {
                     window.console.warn('地图数据加载失败:', err);
@@ -282,7 +282,7 @@
 
 <!-- 礼花效果已迁移到 components.js 的 ConfettiEffect 模块 -->
 
-<script src="/assets/js/pjax.js"></script><script>if(window.LGPjax&typeof window.LGPjax.init==="function")window.LGPjax.init();</script>
+<script src="/assets/js/pjax.js"></script><script>if(window.WithUPjax&typeof window.WithUPjax.init==="function")window.WithUPjax.init();</script>
 <style>
     #loader-wrapper {
         position: fixed;
@@ -1811,7 +1811,7 @@
     .withu-header-weather-loading svg {
         width: 16px;
         height: 16px;
-        animation: lgHeaderWeatherSpin 0.9s linear infinite;
+        animation: withuHeaderWeatherSpin 0.9s linear infinite;
     }
 
     .withu-header-weather-text {
@@ -2094,7 +2094,7 @@
         color: rgba(104, 116, 134, 0.86);
     }
 
-    @keyframes lgHeaderWeatherSpin {
+    @keyframes withuHeaderWeatherSpin {
         from {
             transform: rotate(0deg);
         }
@@ -3056,17 +3056,17 @@
         </div>
         <!-- 吸顶时显示的右侧区域: 地图 + 情侣头像 -->
         <div class="withu-header-actions" id="withuHeaderActions">
-                            <div class="withu-header-weather is-loading" id="lgHeaderVisitorWeather" title="点击查看当前天气信息" role="button" tabindex="0" aria-expanded="false">
-                    <span class="withu-header-weather-loading" id="lgHeaderVisitorWeatherLoading" aria-label="天气加载中">
+                            <div class="withu-header-weather is-loading" id="withuHeaderVisitorWeather" title="点击查看当前天气信息" role="button" tabindex="0" aria-expanded="false">
+                    <span class="withu-header-weather-loading" id="withuHeaderVisitorWeatherLoading" aria-label="天气加载中">
                         <i data-lucide="loader-circle"></i>
                     </span>
                     <span class="withu-header-weather-icon-wrap">
-                        <i class="qi-999-fill withu-header-weather-icon" id="lgHeaderVisitorWeatherIcon"></i>
+                        <i class="qi-999-fill withu-header-weather-icon" id="withuHeaderVisitorWeatherIcon"></i>
                     </span>
-                    <span class="withu-header-weather-text" id="lgHeaderVisitorWeatherText"></span>
+                    <span class="withu-header-weather-text" id="withuHeaderVisitorWeatherText"></span>
                 </div>
             
-                            <a href="javascript:void(0);" class="withu-header-map" id="lgMapOpenBtn" title="足迹地图">
+                            <a href="javascript:void(0);" class="withu-header-map" id="withuMapOpenBtn" title="足迹地图">
                     <span class="withu-header-map-icon-wrap">
                         <i class="ph-fill ph-globe-hemisphere-west"></i>
                     </span>
@@ -3086,7 +3086,7 @@
                             </div>
 
             <!-- 移动端更多按钮 -->
-            <button type="button" class="withu-header-more-btn" id="lgHeaderMoreBtn" aria-label="更多信息">
+            <button type="button" class="withu-header-more-btn" id="withuHeaderMoreBtn" aria-label="更多信息">
                 <i data-lucide="ellipsis"></i>
             </button>
         </div>
@@ -3094,7 +3094,7 @@
 </div>
 
 <!-- 移动端更多面板（毛玻璃磨砂效果） -->
-<div class="withu-header-more-panel" id="lgHeaderMorePanel">
+<div class="withu-header-more-panel" id="withuHeaderMorePanel">
     <div class="withu-header-more-overlay" data-close-panel></div>
     <div class="withu-header-more-sheet">
         <button type="button" class="withu-header-more-close" data-close-panel aria-label="关闭">
@@ -3114,14 +3114,14 @@
 
         <!-- 功能入口：天气、地图 -->
         <div class="withu-header-more-actions">
-                        <a href="javascript:void(0);" class="withu-header-more-action-item" id="lgMorePanelWeather" data-close-panel>
+                        <a href="javascript:void(0);" class="withu-header-more-action-item" id="withuMorePanelWeather" data-close-panel>
                 <span class="withu-header-more-action-icon">
-                    <i class="qi-999-fill" id="lgMorePanelWeatherIcon"></i>
+                    <i class="qi-999-fill" id="withuMorePanelWeatherIcon"></i>
                 </span>
-                <span class="withu-header-more-action-label" id="lgMorePanelWeatherText">天气</span>
+                <span class="withu-header-more-action-label" id="withuMorePanelWeatherText">天气</span>
             </a>
             
-                        <a href="javascript:void(0);" class="withu-header-more-action-item" id="lgMorePanelMap" data-close-panel>
+                        <a href="javascript:void(0);" class="withu-header-more-action-item" id="withuMorePanelMap" data-close-panel>
                 <span class="withu-header-more-action-icon">
                     <i class="ph-fill ph-globe-hemisphere-west"></i>
                 </span>
@@ -3163,23 +3163,23 @@
         <div class="bg-img">
             <div class="middle Blurkg">
                 <div class="img-male">
-                    <div class="avatarArea lgewui-head-avatar-boy">
+                    <div class="avatarArea withu-head-avatar-boy">
                         <img draggable="false" class="avatarFrame lazy" data-src= 'https://s1.locimg.com/2024/10/18/db01c99842e69.png' style='transform: scale(1.6);top: 2px;left: 2px;' >
                         <img draggable="false" class="aiv_touxiang" data-src="/Lovefolder/20260411043037_69d95ded97293201118237.webp">
-                                                <div class="lgewui-head-avatar-mask">
-                            <div class="lgewui-head-avatar-top lgewui-head-avatar-anim-item">
-                                                                <div class="lgewui-head-avatar-gender-icon" data-gender="male"><i data-lucide="mars"></i></div>
+                                                <div class="withu-head-avatar-mask">
+                            <div class="withu-head-avatar-top withu-head-avatar-anim-item">
+                                                                <div class="withu-head-avatar-gender-icon" data-gender="male"><i data-lucide="mars"></i></div>
                                                             </div>
-                            <div class="lgewui-head-avatar-middle lgewui-head-avatar-anim-item">
+                            <div class="withu-head-avatar-middle withu-head-avatar-anim-item">
                                 <div
-                                    class="lgewui-head-avatar-status-text lgewui-head-avatar-status-away">
-                                                                            <i data-lucide="clock" class="lgewui-head-avatar-icon-away"></i>
+                                    class="withu-head-avatar-status-text withu-head-avatar-status-away">
+                                                                            <i data-lucide="clock" class="withu-head-avatar-icon-away"></i>
                                                                         <em>2小时前</em>
                                 </div>
-                                <div class="lgewui-head-avatar-divider"></div>
+                                <div class="withu-head-avatar-divider"></div>
                             </div>
-                            <div class="lgewui-head-avatar-bottom lgewui-head-avatar-anim-item">
-                                <div class="lgewui-head-avatar-location">
+                            <div class="withu-head-avatar-bottom withu-head-avatar-anim-item">
+                                <div class="withu-head-avatar-location">
                                     <i data-lucide="map-pin"></i>
                                     <em>潘州公园</em>
                                 </div>
@@ -3190,7 +3190,7 @@
                 </div>
                 <div class="love-icon">
                     <div class="love-info-wrapper">
-                        <div class="distance-bubble" onclick="if(window.LGMap)LGMap.open({mode:'lovers'})"
+                        <div class="distance-bubble" onclick="if(window.WithUMap)WithUMap.open({mode:'lovers'})"
                                                         style="cursor:pointer">
                             <div class="distance-icon-box">
                                 <i class="ph-fill ph-navigation-arrow"></i>
@@ -3205,23 +3205,23 @@
                     <img draggable="false" src="../Style/img/like.svg">
                 </div>
                                 <div class="img-female">
-                    <div class="avatarArea lgewui-head-avatar-girl">
+                    <div class="avatarArea withu-head-avatar-girl">
                         <img draggable="false" class="avatarFrame lazy" data-src= 'https://s1.locimg.com/2024/10/18/db01c99842e69.png' style='transform: scale(1.6);top: 2px;left: 2px;' >
                         <img draggable="false" class="aiv_touxiang" data-src="/Lovefolder/20260411043046_69d95df639c33274072975.webp">
-                                                <div class="lgewui-head-avatar-mask">
-                            <div class="lgewui-head-avatar-top lgewui-head-avatar-anim-item">
-                                                                <div class="lgewui-head-avatar-gender-icon" data-gender="female"><i data-lucide="venus"></i></div>
+                                                <div class="withu-head-avatar-mask">
+                            <div class="withu-head-avatar-top withu-head-avatar-anim-item">
+                                                                <div class="withu-head-avatar-gender-icon" data-gender="female"><i data-lucide="venus"></i></div>
                                                             </div>
-                            <div class="lgewui-head-avatar-middle lgewui-head-avatar-anim-item">
+                            <div class="withu-head-avatar-middle withu-head-avatar-anim-item">
                                 <div
-                                    class="lgewui-head-avatar-status-text lgewui-head-avatar-status-offline">
-                                                                            <i data-lucide="wifi-off" class="lgewui-head-avatar-icon-offline"></i>
+                                    class="withu-head-avatar-status-text withu-head-avatar-status-offline">
+                                                                            <i data-lucide="wifi-off" class="withu-head-avatar-icon-offline"></i>
                                                                         <em>离线</em>
                                 </div>
-                                <div class="lgewui-head-avatar-divider"></div>
+                                <div class="withu-head-avatar-divider"></div>
                             </div>
-                            <div class="lgewui-head-avatar-bottom lgewui-head-avatar-anim-item">
-                                <div class="lgewui-head-avatar-location">
+                            <div class="withu-head-avatar-bottom withu-head-avatar-anim-item">
+                                <div class="withu-head-avatar-location">
                                     <i data-lucide="map-pin"></i>
                                     <em>甲子公园</em>
                                 </div>
@@ -3496,7 +3496,7 @@
                                     <div class="withu-location-tag"
                                                                                     data-lng="114.71708800"
                                             data-lat="23.00520100"
-                                            onclick="LGMap.open({ mode: 'albums', coords: [114.71708800, 23.00520100], zoom: 20 })"
+                                            onclick="WithUMap.open({ mode: 'albums', coords: [114.71708800, 23.00520100], zoom: 20 })"
                                                                                 data-tooltip="惠州市">
                                         <i class="ph-fill ph-map-pin"></i>
                                         <span>惠州市</span>
@@ -3651,7 +3651,7 @@
                                     <div class="withu-location-tag"
                                                                                     data-lng="113.58827700"
                                             data-lat="22.26141700"
-                                            onclick="LGMap.open({ mode: 'albums', coords: [113.58827700, 22.26141700], zoom: 20 })"
+                                            onclick="WithUMap.open({ mode: 'albums', coords: [113.58827700, 22.26141700], zoom: 20 })"
                                                                                 data-tooltip="珠海渔女">
                                         <i class="ph-fill ph-map-pin"></i>
                                         <span>珠海渔女</span>
@@ -3806,7 +3806,7 @@
                                     <div class="withu-location-tag"
                                                                                     data-lng="113.75180000"
                                             data-lat="23.02070000"
-                                            onclick="LGMap.open({ mode: 'albums', coords: [113.75180000, 23.02070000], zoom: 20 })"
+                                            onclick="WithUMap.open({ mode: 'albums', coords: [113.75180000, 23.02070000], zoom: 20 })"
                                                                                 data-tooltip="广东·东莞">
                                         <i class="ph-fill ph-map-pin"></i>
                                         <span>广东·东莞</span>
@@ -4007,7 +4007,7 @@
                                     <div class="withu-location-tag"
                                                                                     data-lng="112.46510000"
                                             data-lat="23.04690000"
-                                            onclick="LGMap.open({ mode: 'albums', coords: [112.46510000, 23.04690000], zoom: 20 })"
+                                            onclick="WithUMap.open({ mode: 'albums', coords: [112.46510000, 23.04690000], zoom: 20 })"
                                                                                 data-tooltip="广东·肇庆">
                                         <i class="ph-fill ph-map-pin"></i>
                                         <span>广东·肇庆</span>
@@ -4163,7 +4163,7 @@
                                     <div class="withu-location-tag"
                                                                                     data-lng="113.26440000"
                                             data-lat="23.12910000"
-                                            onclick="LGMap.open({ mode: 'albums', coords: [113.26440000, 23.12910000], zoom: 20 })"
+                                            onclick="WithUMap.open({ mode: 'albums', coords: [113.26440000, 23.12910000], zoom: 20 })"
                                                                                 data-tooltip="广东·广州">
                                         <i class="ph-fill ph-map-pin"></i>
                                         <span>广东·广州</span>
@@ -4315,7 +4315,7 @@
                                     <div class="withu-location-tag"
                                                                                     data-lng="116.68230000"
                                             data-lat="23.35350000"
-                                            onclick="LGMap.open({ mode: 'albums', coords: [116.68230000, 23.35350000], zoom: 20 })"
+                                            onclick="WithUMap.open({ mode: 'albums', coords: [116.68230000, 23.35350000], zoom: 20 })"
                                                                                 data-tooltip="广东·汕头">
                                         <i class="ph-fill ph-map-pin"></i>
                                         <span>广东·汕头</span>
@@ -4413,7 +4413,7 @@
                                     <div class="withu-location-tag"
                                                                                     data-lng="113.39280000"
                                             data-lat="22.51760000"
-                                            onclick="LGMap.open({ mode: 'albums', coords: [113.39280000, 22.51760000], zoom: 20 })"
+                                            onclick="WithUMap.open({ mode: 'albums', coords: [113.39280000, 22.51760000], zoom: 20 })"
                                                                                 data-tooltip="广东·中山">
                                         <i class="ph-fill ph-map-pin"></i>
                                         <span>广东·中山</span>
@@ -4538,7 +4538,7 @@
                                     <div class="withu-location-tag"
                                                                                     data-lng="114.41680000"
                                             data-lat="23.11150000"
-                                            onclick="LGMap.open({ mode: 'albums', coords: [114.41680000, 23.11150000], zoom: 20 })"
+                                            onclick="WithUMap.open({ mode: 'albums', coords: [114.41680000, 23.11150000], zoom: 20 })"
                                                                                 data-tooltip="广东·惠州">
                                         <i class="ph-fill ph-map-pin"></i>
                                         <span>广东·惠州</span>
@@ -4661,7 +4661,7 @@
                                     <div class="withu-location-tag"
                                                                                     data-lng="113.75180000"
                                             data-lat="23.02070000"
-                                            onclick="LGMap.open({ mode: 'albums', coords: [113.75180000, 23.02070000], zoom: 20 })"
+                                            onclick="WithUMap.open({ mode: 'albums', coords: [113.75180000, 23.02070000], zoom: 20 })"
                                                                                 data-tooltip="广东·东莞">
                                         <i class="ph-fill ph-map-pin"></i>
                                         <span>广东·东莞</span>
@@ -4812,7 +4812,7 @@
                                     <div class="withu-location-tag"
                                                                                     data-lng="113.12140000"
                                             data-lat="23.02150000"
-                                            onclick="LGMap.open({ mode: 'albums', coords: [113.12140000, 23.02150000], zoom: 20 })"
+                                            onclick="WithUMap.open({ mode: 'albums', coords: [113.12140000, 23.02150000], zoom: 20 })"
                                                                                 data-tooltip="广东·佛山">
                                         <i class="ph-fill ph-map-pin"></i>
                                         <span>广东·佛山</span>
@@ -5013,7 +5013,7 @@
                                     <div class="withu-location-tag"
                                                                                     data-lng="113.31222700"
                                             data-lat="23.13955500"
-                                            onclick="LGMap.open({ mode: 'albums', coords: [113.31222700, 23.13955500], zoom: 20 })"
+                                            onclick="WithUMap.open({ mode: 'albums', coords: [113.31222700, 23.13955500], zoom: 20 })"
                                                                                 data-tooltip="广州市">
                                         <i class="ph-fill ph-map-pin"></i>
                                         <span>广州市</span>
@@ -5059,17 +5059,17 @@
 
 
     <!-- 表情面板（全局可用，弹窗 & 抽屉共用） -->
-    <div class="withu-message-emoji-panel" id="lgmsgEmojiPanel">
+    <div class="withu-message-emoji-panel" id="withumsgEmojiPanel">
         <div class="withu-message-emoji-tabs-wrap">
-            <div class="withu-message-emoji-tabs" id="lgmsgEmojiTabs"></div>
+            <div class="withu-message-emoji-tabs" id="withumsgEmojiTabs"></div>
         </div>
-        <div class="withu-message-emoji-cat-title" id="lgmsgEmojiCatTitle"></div>
-        <div class="withu-message-emoji-list" id="lgmsgEmojiGrid"></div>
+        <div class="withu-message-emoji-cat-title" id="withumsgEmojiCatTitle"></div>
+        <div class="withu-message-emoji-list" id="withumsgEmojiGrid"></div>
     </div>
 
-    <div class="withu-message-emoji-preview" id="lgmsgEmojiPreview">
-        <img src="" id="lgmsgPreviewImg">
-        <span id="lgmsgPreviewText"></span>
+    <div class="withu-message-emoji-preview" id="withumsgEmojiPreview">
+        <img src="" id="withumsgPreviewImg">
+        <span id="withumsgPreviewText"></span>
     </div>
 
     <!-- 留言触发按钮 -->
@@ -5080,33 +5080,33 @@
     </div>
 
     <!-- 随机一言确认弹窗（about.php 风格） -->
-    <div class="lgmsg-confirm-overlay" id="lgmsgConfirmOverlay">
-        <div class="lgmsg-confirm-panel">
+    <div class="withumsg-confirm-overlay" id="withumsgConfirmOverlay">
+        <div class="withumsg-confirm-panel">
             <!-- 关闭按钮 -->
-            <button class="lgmsg-confirm-close-btn" id="lgmsgConfirmClose" aria-label="关闭">
+            <button class="withumsg-confirm-close-btn" id="withumsgConfirmClose" aria-label="关闭">
                 <i class="ph ph-x"></i>
             </button>
             <!-- 图标 -->
-            <div class="lgmsg-confirm-icon-wrapper">
+            <div class="withumsg-confirm-icon-wrapper">
                 <svg viewBox="0 0 24 24" fill="currentColor"><path d="M9.937 15.5A2 2 0 0 0 8.5 14.063l-6.135-1.582a.5.5 0 0 1 0-.962L8.5 9.936A2 2 0 0 0 9.937 8.5l1.582-6.135a.5.5 0 0 1 .963 0L14.063 8.5A2 2 0 0 0 15.5 9.937l6.135 1.582a.5.5 0 0 1 0 .962L15.5 14.063a2 2 0 0 0-1.437 1.437l-1.582 6.135a.5.5 0 0 1-.963 0z"/><path d="M20 3v4"/><path d="M22 5h-4"/></svg>
             </div>
             <!-- 标题 -->
-            <h2 class="lgmsg-confirm-title">替换为随机一言？</h2>
+            <h2 class="withumsg-confirm-title">替换为随机一言？</h2>
             <!-- 描述 -->
-            <p class="lgmsg-confirm-desc">当前输入框已有内容，确认后将清空并替换为一条随机文案</p>
+            <p class="withumsg-confirm-desc">当前输入框已有内容，确认后将清空并替换为一条随机文案</p>
             <!-- 操作按钮 -->
-            <div class="lgmsg-confirm-actions">
-                <button class="lgmsg-confirm-btn lgmsg-confirm-btn-secondary" id="lgmsgConfirmCancel">取消</button>
-                <button class="lgmsg-confirm-btn lgmsg-confirm-btn-primary" id="lgmsgConfirmOk">确认替换</button>
+            <div class="withumsg-confirm-actions">
+                <button class="withumsg-confirm-btn withumsg-confirm-btn-secondary" id="withumsgConfirmCancel">取消</button>
+                <button class="withumsg-confirm-btn withumsg-confirm-btn-primary" id="withumsgConfirmOk">确认替换</button>
             </div>
         </div>
     </div>
 
     <!-- 留言弹窗（全局可用） -->
-    <div class="withu-message-modal-overlay" id="lgmsgCommentModal">
-        <div class="withu-message-modal-content" id="lgmsgModalContent">
+    <div class="withu-message-modal-overlay" id="withumsgCommentModal">
+        <div class="withu-message-modal-content" id="withumsgModalContent">
             <div class="withu-message-close-wrapper">
-                <button class="withu-message-close-btn" id="lgmsgModalCloseBtn">
+                <button class="withu-message-close-btn" id="withumsgModalCloseBtn">
                     <i data-lucide="x" style="width:20px;height:20px;"></i>
                 </button>
             </div>
@@ -5116,58 +5116,58 @@
                     <div class="withu-message-subtitle">在这里，留下属于你的印记</div>
                 </div>
                 <div class="withu-message-ios-tabs-wrap">
-                    <div class="withu-message-ios-tabs" id="lgmsgTabContainer">
-                        <div class="withu-message-ios-tab-slider" id="lgmsgTabSlider"></div>
+                    <div class="withu-message-ios-tabs" id="withumsgTabContainer">
+                        <div class="withu-message-ios-tab-slider" id="withumsgTabSlider"></div>
                         <div class="withu-message-ios-tab active" data-mode="qq">QQ留言</div>
                         <div class="withu-message-ios-tab" data-mode="anonymous">匿名留言</div>
                     </div>
                 </div>
-                <div class="withu-message-visitor-tags" id="lgmsgVisitorTags">
+                <div class="withu-message-visitor-tags" id="withumsgVisitorTags">
                     <div class="withu-message-v-tag">
                         <div class="withu-message-v-tag-icon withu-message-icon-os">
                             <i data-lucide="monitor"></i>
                         </div>
-                        <span id="lgmsgTagOS">--</span>
+                        <span id="withumsgTagOS">--</span>
                     </div>
                     <div class="withu-message-v-tag">
                         <div class="withu-message-v-tag-icon withu-message-icon-browser">
                             <i data-lucide="globe"></i>
                         </div>
-                        <span id="lgmsgTagBrowser">--</span>
+                        <span id="withumsgTagBrowser">--</span>
                     </div>
                     <div class="withu-message-v-tag">
                         <div class="withu-message-v-tag-icon withu-message-icon-location">
                             <i data-lucide="map-pin"></i>
                         </div>
-                        <span id="lgmsgTagLocation">--</span>
+                        <span id="withumsgTagLocation">--</span>
                     </div>
                     <div class="withu-message-v-tag">
                         <div class="withu-message-v-tag-icon withu-message-icon-weather">
-                            <i class="qi-100-fill" id="lgmsgWeatherIcon"></i>
+                            <i class="qi-100-fill" id="withumsgWeatherIcon"></i>
                         </div>
-                        <span id="lgmsgTagWeather">--</span>
+                        <span id="withumsgTagWeather">--</span>
                     </div>
                 </div>
-                <div class="withu-message-input-row" id="lgmsgInputRow"></div>
-                <div class="withu-message-privacy-hint" id="lgmsgPrivacyHint"><i data-lucide="lock"></i>QQ 信息经过加密脱敏处理，不会公开展示，请放心留言</div>
+                <div class="withu-message-input-row" id="withumsgInputRow"></div>
+                <div class="withu-message-privacy-hint" id="withumsgPrivacyHint"><i data-lucide="lock"></i>QQ 信息经过加密脱敏处理，不会公开展示，请放心留言</div>
                 <div class="withu-message-editor-wrap">
-                    <div class="withu-message-editor-content" id="lgmsgEditor" contenteditable="true" data-placeholder="想说点什么..."></div>
-                    <div class="withu-message-emoji-bubbles" id="lgmsgEmojiBubbles"></div>
+                    <div class="withu-message-editor-content" id="withumsgEditor" contenteditable="true" data-placeholder="想说点什么..."></div>
+                    <div class="withu-message-emoji-bubbles" id="withumsgEmojiBubbles"></div>
                     <div class="withu-message-editor-toolbar">
                         <div class="withu-message-tb-left">
-                            <button class="withu-message-tb-btn" id="lgmsgBtnEmoji" title="表情">
+                            <button class="withu-message-tb-btn" id="withumsgBtnEmoji" title="表情">
                                 <i data-lucide="smile"></i>
                             </button>
-                            <button class="withu-message-tb-btn" id="lgmsgBtnQuote" title="随机一言">
+                            <button class="withu-message-tb-btn" id="withumsgBtnQuote" title="随机一言">
                                 <i data-lucide="sparkles"></i>
                             </button>
-                            <div class="withu-message-switch-wrap" id="lgmsgEnterToSendWrap">
+                            <div class="withu-message-switch-wrap" id="withumsgEnterToSendWrap">
                                 <div class="withu-message-switch"></div>
                                 <span class="withu-message-switch-text">Enter 发送</span>
                             </div>
                         </div>
-                        <span class="withu-message-char-counter" id="lgmsgCharCounter">0/500</span>
-                        <button class="withu-message-submit-btn" id="lgmsgSubmitBtn">
+                        <span class="withu-message-char-counter" id="withumsgCharCounter">0/500</span>
+                        <button class="withu-message-submit-btn" id="withumsgSubmitBtn">
                             <span class="withu-message-submit-label">发送留言</span>
                             <i data-lucide="send" class="withu-message-submit-icon" style="width:18px;height:18px;"></i>
                             <i data-lucide="loader" class="withu-message-submit-loader withu-message-lucide-loader" style="width:18px;height:18px;"></i>
@@ -5208,7 +5208,7 @@
                 }
             });
 
-            $('#leavingPost').off('click.lgGeetest').on('click.lgGeetest', function() {
+            $('#leavingPost').off('click.withuGeetest').on('click.withuGeetest', function() {
                 var qq = $("input[name='qq']").val();
                 var name = $("input[name='name']").val();
                 var text = $("textarea[name='text']").val();
@@ -5227,7 +5227,7 @@
                 GeetestHelper.show();
             });
         } else {
-            $('#leavingPost').off('click.lgGeetest').on('click.lgGeetest', function() {
+            $('#leavingPost').off('click.withuGeetest').on('click.withuGeetest', function() {
                 var qq = $("input[name='qq']").val();
                 var name = $("input[name='name']").val();
                 var text = $("textarea[name='text']").val();
@@ -5472,7 +5472,7 @@
 
 <!-- 足迹地图弹窗 -->
 <!-- ============ 足迹地图弹窗 ============ -->
-<div class="withu-map-overlay" id="lgMapOverlay" style="display:none;">
+<div class="withu-map-overlay" id="withuMapOverlay" style="display:none;">
     <div class="withu-map-modal">
         <div class="withu-map">
             <section id="missing-pets-module">
@@ -5620,19 +5620,19 @@
 
     <script>
         // 滚动按钮和回到顶部功能已迁移到 components.js 的 ScrollButtons 模块
-        // 以下代码由 LGApp.init() 统一初始化，保留最小必要代码
+        // 以下代码由 WithUApp.init() 统一初始化，保留最小必要代码
 
         $(document).ready(function() {
             $('body').addClass('loaded');
 
-            // 初始化 LGApp 核心框架
-            if (window.LGApp && typeof window.LGApp.init === 'function') {
-                window.LGApp.setConfig(window.WITHU_CONFIG || {});
-                window.LGApp.init();
+            // 初始化 WithUApp 核心框架
+            if (window.WithUApp && typeof window.WithUApp.init === 'function') {
+                window.WithUApp.setConfig(window.WITHU_CONFIG || {});
+                window.WithUApp.init();
             }
 
             // 初始化组件（礼花、轮播、导航等）
-            if (window.LGApp && window.LGApp.Components) {
+            if (window.WithUApp && window.WithUApp.Components) {
                 const {
                     ConfettiEffect,
                     Carousel,
@@ -5640,7 +5640,7 @@
                     Navigation,
                     ScrollButtons,
                     HeaderVisitorWeather
-                } = window.LGApp.Components;
+                } = window.WithUApp.Components;
 
                 // 初始化礼花效果
                 if (ConfettiEffect) {
@@ -6014,8 +6014,8 @@
     <script>
         // 页面首次加载时初始化 Masonry
         $(function () {
-            if (window.LGPjax && window.LGPjax.MasonryManager) {
-                window.LGPjax.MasonryManager.initLGGrid();
+            if (window.WithUPjax && window.WithUPjax.MasonryManager) {
+                window.WithUPjax.MasonryManager.initLGGrid();
             }
         });
     </script>

@@ -9,9 +9,9 @@
  *   <button data-withu-copy-attr="data-url">复制同元素上指定属性的值</button>
  *
  * 使用方式二：JS 编程式
- *   LGClipboard.copy('要复制的文本')
- *   LGClipboard.copy('文本', { success: '已复制!', error: '复制失败' })
- *   LGClipboard.copy('文本', { silent: true })
+ *   WithUClipboard.copy('要复制的文本')
+ *   WithUClipboard.copy('文本', { success: '已复制!', error: '复制失败' })
+ *   WithUClipboard.copy('文本', { silent: true })
  */
 ;(function(window) {
     'use strict';
@@ -165,7 +165,7 @@
     }
 
     // 导出
-    window.LGClipboard = {
+    window.WithUClipboard = {
         copy: copy,
         init: init,
         destroy: destroy

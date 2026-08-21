@@ -87,7 +87,7 @@
             const self = this;
 
             // 使用事件委托，支持 PJAX 动态加载
-            $(document).off('click.lgLike', '.withu-article-like').on('click.lgLike', '.withu-article-like', function(e) {
+            $(document).off('click.withuLike', '.withu-article-like').on('click.withuLike', '.withu-article-like', function(e) {
                 e.preventDefault();
                 e.stopPropagation();
 
@@ -155,7 +155,7 @@
          * 销毁模块
          */
         destroy() {
-            $(document).off('.lgLike');
+            $(document).off('.withuLike');
             this._initialized = false;
         },
 
@@ -176,32 +176,32 @@
             LittleModule.init();
 
             // 初始化 Masonry 瀑布流
-            if (window.LGPjax && window.LGPjax.MasonryManager) {
-                window.LGPjax.MasonryManager.initArticleGrid();
+            if (window.WithUPjax && window.WithUPjax.MasonryManager) {
+                window.WithUPjax.MasonryManager.initArticleGrid();
             }
 
             // 初始化弥散光效果
-            if (window.LGPjax && window.LGPjax.AuroraEffect) {
-                window.LGPjax.AuroraEffect.init();
+            if (window.WithUPjax && window.WithUPjax.AuroraEffect) {
+                window.WithUPjax.AuroraEffect.init();
             }
         }
     });
 
     // PJAX 完成后重新初始化
-    $(document).on('pjax:end.lgLittle', function() {
+    $(document).on('pjax:end.withuLittle', function() {
         if ($('#withu-article-masonry').length > 0) {
             LittleModule.refresh();
         }
     });
 
     // ============================================
-    // 注册到 LGApp
+    // 注册到 WithUApp
     // ============================================
-    if (window.LGApp) {
-        window.LGApp.register('little', LittleModule);
+    if (window.WithUApp) {
+        window.WithUApp.register('little', LittleModule);
     }
 
     // 暴露到全局
-    window.LGLittleModule = LittleModule;
+    window.WithULittleModule = LittleModule;
 
 })(window, jQuery);

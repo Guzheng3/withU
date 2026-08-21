@@ -29,7 +29,7 @@
          * 销毁模块
          */
         destroy() {
-            $(document).off('.lgLoveImg');
+            $(document).off('.withuLoveImg');
             this._initialized = false;
         },
 
@@ -38,7 +38,7 @@
          */
         _bindEvents() {
             // 视频卡片点击
-            $(document).off('click.lgLoveImg', '.withu-photo-box.is-video').on('click.lgLoveImg', '.withu-photo-box.is-video', function(e) {
+            $(document).off('click.withuLoveImg', '.withu-photo-box.is-video').on('click.withuLoveImg', '.withu-photo-box.is-video', function(e) {
                 e.preventDefault();
                 e.stopPropagation();
 
@@ -56,8 +56,8 @@
          */
         refresh() {
             // 调用 pjax.js 的 MasonryManager
-            if (window.LGPjax && window.LGPjax.MasonryManager) {
-                window.LGPjax.MasonryManager.initLGGrid();
+            if (window.WithUPjax && window.WithUPjax.MasonryManager) {
+                window.WithUPjax.MasonryManager.initLGGrid();
             }
             if (window.lazyLoadInstance) {
                 window.lazyLoadInstance.update();
@@ -76,20 +76,20 @@
     });
 
     // PJAX 完成后重新初始化
-    $(document).on('pjax:end.lgLoveImg', function() {
+    $(document).on('pjax:end.withuLoveImg', function() {
         if ($('.withu-masonry-grid').length > 0) {
             LoveImgModule.init();
         }
     });
 
     // ============================================
-    // 注册到 LGApp
+    // 注册到 WithUApp
     // ============================================
-    if (window.LGApp) {
-        window.LGApp.register('loveImg', LoveImgModule);
+    if (window.WithUApp) {
+        window.WithUApp.register('loveImg', LoveImgModule);
     }
 
     // 暴露到全局
-    window.LGLoveImgModule = LoveImgModule;
+    window.WithULoveImgModule = LoveImgModule;
 
 })(window, jQuery);

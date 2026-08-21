@@ -7,7 +7,7 @@
 ;(function(window, $) {
     'use strict';
 
-    const { Utils, TimerManager } = window.LGApp || {};
+    const { Utils, TimerManager } = window.WithUApp || {};
     const config = window.WITHU_CONFIG || {};
 
     // ============================================
@@ -536,8 +536,8 @@
 
         _copyText() {
             if (!this._quoteEl) return;
-            if (window.LGClipboard) {
-                LGClipboard.copy(this._quoteEl.textContent, { success: '已复制到剪贴板' });
+            if (window.WithUClipboard) {
+                WithUClipboard.copy(this._quoteEl.textContent, { success: '已复制到剪贴板' });
             }
         },
 
@@ -945,14 +945,14 @@
     }
 
     // ============================================
-    // 注册到 LGApp
+    // 注册到 WithUApp
     // ============================================
-    if (window.LGApp) {
-        window.LGApp.register('index', IndexModule);
+    if (window.WithUApp) {
+        window.WithUApp.register('index', IndexModule);
     }
 
     // 暴露到全局
-    window.LGIndexModule = IndexModule;
+    window.WithUIndexModule = IndexModule;
 
     // 兼容旧代码的全局函数
     window.filterLoveDays = (type, btn) => {

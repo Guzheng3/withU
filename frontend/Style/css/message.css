@@ -6,11 +6,11 @@
  * ============================================================ */
 
 :root {
-    --lgmsg-primary: #007aff;
-    --lgmsg-text-main: #1d1d1f;
-    --lgmsg-text-muted: #98989d;
-    --lgmsg-radius-round: 100px;
-    --lgmsg-spring: cubic-bezier(0.32, 0.72, 0, 1);
+    --withumsg-primary: #007aff;
+    --withumsg-text-main: #1d1d1f;
+    --withumsg-text-muted: #98989d;
+    --withumsg-radius-round: 100px;
+    --withumsg-spring: cubic-bezier(0.32, 0.72, 0, 1);
 }
 
 /* 滚动锁定 + 滚动条宽度补偿（加在 html 上，与后台弹窗方案一致） */
@@ -38,7 +38,7 @@ html.withu-scroll-locked #withuFloatingActions {
 
 /* ── 留言页全局留言按钮样式覆盖（清新蓝色） ── */
 .leav .message_btn .mesly {
-    background: var(--lgmsg-primary, #007AFF);
+    background: var(--withumsg-primary, #007AFF);
     border-radius: 16px;
     padding: 0.7rem;
     box-shadow: 0 4px 16px rgba(0, 122, 255, 0.3);
@@ -50,15 +50,15 @@ html.withu-scroll-locked #withuFloatingActions {
 }
 
 .leav .message_btn .mesly:hover svg {
-    color: var(--lgmsg-primary, #007AFF);
-    fill: var(--lgmsg-primary, #007AFF) !important;
+    color: var(--withumsg-primary, #007AFF);
+    fill: var(--withumsg-primary, #007AFF) !important;
 }
 
 /* ── @提及标签（PHP parseMessageContent 输出的 withu-msg-at） ── */
 .withu-msg-at,
 .MsgContent p .withu-msg-at,
 .withu-message-msg-bubble .withu-msg-at {
-    color: var(--lgmsg-primary) !important;
+    color: var(--withumsg-primary) !important;
     font-weight: 500;
     cursor: pointer;
     padding: 1px 4px;
@@ -117,7 +117,7 @@ html.withu-scroll-locked #withuFloatingActions {
     max-width: 100%;
     overflow: hidden;
 }
-.Message_Wrap .MessageCard .UserName h1 > .lgmsg-card-name {
+.Message_Wrap .MessageCard .UserName h1 > .withumsg-card-name {
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
@@ -279,7 +279,7 @@ html.withu-scroll-locked #withuFloatingActions {
 /* ═══════════════════════════════════════════════
    开发者身份验证弹窗（复用后台安全码验证弹窗风格）
    ═══════════════════════════════════════════════ */
-.lgmsg-security-overlay {
+.withumsg-security-overlay {
     --withu-text-primary: #1D1D1F;
     --withu-text-secondary: #86868B;
     --withu-text-tertiary: #A1A1A6;
@@ -295,13 +295,13 @@ html.withu-scroll-locked #withuFloatingActions {
     --withu-duration-enter: 0.6s;
     --withu-duration-exit: 0.5s;
 }
-.lgmsg-security-overlay *,
-.lgmsg-security-overlay *::before,
-.lgmsg-security-overlay *::after {
+.withumsg-security-overlay *,
+.withumsg-security-overlay *::before,
+.withumsg-security-overlay *::after {
     box-sizing: border-box;
     -webkit-tap-highlight-color: transparent;
 }
-.lgmsg-security-overlay {
+.withumsg-security-overlay {
     position: fixed;
     inset: 0;
     z-index: 100010;
@@ -315,7 +315,7 @@ html.withu-scroll-locked #withuFloatingActions {
     pointer-events: none;
     transition: opacity var(--withu-duration-enter) var(--withu-ease-smooth);
 }
-.lgmsg-security-overlay::before {
+.withumsg-security-overlay::before {
     content: '';
     position: absolute;
     inset: 0;
@@ -323,13 +323,13 @@ html.withu-scroll-locked #withuFloatingActions {
     opacity: 0.6;
     pointer-events: none;
 }
-.lgmsg-security-overlay.lgmsg-security-is-open {
+.withumsg-security-overlay.withumsg-security-is-open {
     opacity: 1;
     pointer-events: auto;
 }
 
 /* 弹窗主体 */
-.lgmsg-security-base {
+.withumsg-security-base {
     position: relative;
     z-index: 1;
     transform: scale(0.92) translateY(20px);
@@ -344,15 +344,15 @@ html.withu-scroll-locked #withuFloatingActions {
     box-shadow: 0 20px 40px -10px rgba(0,0,0,0.06),
                 0 40px 80px -20px rgba(0,0,0,0.08);
 }
-.lgmsg-security-overlay.lgmsg-security-is-open .lgmsg-security-base {
+.withumsg-security-overlay.withumsg-security-is-open .withumsg-security-base {
     transform: scale(1) translateY(0);
     opacity: 1;
 }
-.lgmsg-security-overlay.lgmsg-security-is-closing {
+.withumsg-security-overlay.withumsg-security-is-closing {
     opacity: 0;
     transition-duration: var(--withu-duration-exit);
 }
-.lgmsg-security-overlay.lgmsg-security-is-closing .lgmsg-security-base {
+.withumsg-security-overlay.withumsg-security-is-closing .withumsg-security-base {
     transform: scale(0.94) translateY(-15px);
     opacity: 0;
     filter: blur(8px);
@@ -360,7 +360,7 @@ html.withu-scroll-locked #withuFloatingActions {
                 opacity var(--withu-duration-exit) var(--withu-ease-smooth),
                 filter var(--withu-duration-exit) var(--withu-ease-smooth);
 }
-.lgmsg-security-overlay.lgmsg-security-is-closing .lgmsg-security-base.lgmsg-security-is-success {
+.withumsg-security-overlay.withumsg-security-is-closing .withumsg-security-base.withumsg-security-is-success {
     transform: scale(0.96) translateY(0);
     filter: blur(0px);
     transition: transform 0.4s var(--withu-ease-smooth),
@@ -369,7 +369,7 @@ html.withu-scroll-locked #withuFloatingActions {
 }
 
 /* 表单内容层 */
-.lgmsg-security-form-content {
+.withumsg-security-form-content {
     position: relative;
     padding: 40px;
     width: 100%;
@@ -378,7 +378,7 @@ html.withu-scroll-locked #withuFloatingActions {
                 filter 0.6s var(--withu-ease-smooth);
     will-change: transform, opacity, filter;
 }
-.lgmsg-security-base.lgmsg-security-is-success .lgmsg-security-form-content {
+.withumsg-security-base.withumsg-security-is-success .withumsg-security-form-content {
     opacity: 0;
     transform: scale(0.92) translateY(10px);
     filter: blur(12px);
@@ -386,7 +386,7 @@ html.withu-scroll-locked #withuFloatingActions {
 }
 
 /* 关闭按钮 */
-.lgmsg-security-close {
+.withumsg-security-close {
     position: absolute;
     top: 20px;
     right: 20px;
@@ -402,21 +402,21 @@ html.withu-scroll-locked #withuFloatingActions {
     border-radius: 8px;
     font-size: 18px;
 }
-.lgmsg-security-close:hover {
+.withumsg-security-close:hover {
     color: var(--withu-text-primary);
     background: rgba(0,0,0,0.04);
     transform: scale(1.05);
 }
 
 /* 标题 & 描述 */
-.lgmsg-security-title {
+.withumsg-security-title {
     font-size: 24px;
     font-weight: 600;
     margin: 0 0 10px 0;
     color: var(--withu-text-primary);
     letter-spacing: -0.5px;
 }
-.lgmsg-security-desc {
+.withumsg-security-desc {
     font-size: 15px;
     color: var(--withu-text-secondary);
     line-height: 1.6;
@@ -424,7 +424,7 @@ html.withu-scroll-locked #withuFloatingActions {
 }
 
 /* 输入框标签 */
-.lgmsg-security-input-label {
+.withumsg-security-input-label {
     display: block;
     font-size: 13px;
     font-weight: 600;
@@ -433,10 +433,10 @@ html.withu-scroll-locked #withuFloatingActions {
 }
 
 /* 输入框组 */
-.lgmsg-security-input-group {
+.withumsg-security-input-group {
     position: relative;
 }
-.lgmsg-security-input-icon {
+.withumsg-security-input-icon {
     position: absolute;
     left: 16px;
     top: 50%;
@@ -448,15 +448,15 @@ html.withu-scroll-locked #withuFloatingActions {
     transition: color 0.3s;
     z-index: 2;
 }
-.lgmsg-security-input-group:focus-within .lgmsg-security-input-icon {
+.withumsg-security-input-group:focus-within .withumsg-security-input-icon {
     color: var(--withu-text-primary);
 }
-.lgmsg-security-input-group .lgmsg-security-pw-wrap {
+.withumsg-security-input-group .withumsg-security-pw-wrap {
     position: relative;
     display: flex;
     align-items: center;
 }
-.lgmsg-security-input-group .lgmsg-security-pw-input {
+.withumsg-security-input-group .withumsg-security-pw-input {
     width: 100%;
     box-sizing: border-box;
     height: 52px;
@@ -471,15 +471,15 @@ html.withu-scroll-locked #withuFloatingActions {
     letter-spacing: 2px;
     transition: background 0.3s;
 }
-.lgmsg-security-input-group .lgmsg-security-pw-input:focus {
+.withumsg-security-input-group .withumsg-security-pw-input:focus {
     background: #ECEDF0;
 }
-.lgmsg-security-input-group .lgmsg-security-pw-input::placeholder {
+.withumsg-security-input-group .withumsg-security-pw-input::placeholder {
     letter-spacing: 0;
     color: var(--withu-text-tertiary);
     font-size: 14px;
 }
-.lgmsg-security-pw-toggle {
+.withumsg-security-pw-toggle {
     position: absolute;
     right: 14px;
     width: 32px;
@@ -496,38 +496,38 @@ html.withu-scroll-locked #withuFloatingActions {
     transition: color 0.2s, background 0.2s, transform 0.15s ease;
     z-index: 2;
 }
-.lgmsg-security-pw-toggle:hover {
+.withumsg-security-pw-toggle:hover {
     color: var(--withu-text-primary);
     background: rgba(0, 0, 0, 0.05);
 }
-.lgmsg-security-pw-toggle:focus-visible {
+.withumsg-security-pw-toggle:focus-visible {
     background: rgba(0, 0, 0, 0.05);
 }
-.lgmsg-security-pw-toggle:active {
+.withumsg-security-pw-toggle:active {
     transform: scale(0.82);
 }
-.lgmsg-security-pw-toggle svg { width: 18px; height: 18px; }
+.withumsg-security-pw-toggle svg { width: 18px; height: 18px; }
 
 /* 错误提示 */
-.lgmsg-security-error {
+.withumsg-security-error {
     color: var(--withu-color-error);
     font-size: 13px;
     margin-top: 8px;
     display: none;
 }
-@keyframes lgmsgSecurityShake {
+@keyframes withumsgSecurityShake {
     0%, 100% { transform: translateX(0); }
     20% { transform: translateX(-4px); }
     40% { transform: translateX(4px); }
     60% { transform: translateX(-4px); }
     80% { transform: translateX(4px); }
 }
-.lgmsg-security-input-error-anim {
-    animation: lgmsgSecurityShake 0.4s cubic-bezier(0.36, 0.07, 0.19, 0.97) both;
+.withumsg-security-input-error-anim {
+    animation: withumsgSecurityShake 0.4s cubic-bezier(0.36, 0.07, 0.19, 0.97) both;
 }
 
 /* 提示信息区 */
-.lgmsg-security-hash-info {
+.withumsg-security-hash-info {
     margin-top: 24px;
     padding: 18px 20px;
     background: #F5F5F7;
@@ -536,14 +536,14 @@ html.withu-scroll-locked #withuFloatingActions {
     gap: 12px;
     align-items: flex-start;
 }
-.lgmsg-security-hash-icon {
+.withumsg-security-hash-icon {
     color: var(--withu-text-tertiary);
     margin-top: 2px;
     flex-shrink: 0;
     font-size: 16px;
     display: flex;
 }
-.lgmsg-security-hash-text {
+.withumsg-security-hash-text {
     font-size: 13.5px;
     color: var(--withu-text-secondary);
     line-height: 1.5;
@@ -551,12 +551,12 @@ html.withu-scroll-locked #withuFloatingActions {
 }
 
 /* 操作按钮 */
-.lgmsg-security-actions {
+.withumsg-security-actions {
     margin-top: 36px;
     display: flex;
     justify-content: center;
 }
-.lgmsg-security-btn {
+.withumsg-security-btn {
     width: 100%;
     height: 52px;
     border-radius: 999px;
@@ -577,23 +577,23 @@ html.withu-scroll-locked #withuFloatingActions {
     color: #FFF;
     box-shadow: 0 8px 24px -6px rgba(0,0,0,0.12);
 }
-.lgmsg-security-btn:hover {
+.withumsg-security-btn:hover {
     background: #000;
     transform: translateY(-1px);
     box-shadow: 0 12px 28px -8px rgba(0,0,0,0.15);
 }
-.lgmsg-security-btn:active {
+.withumsg-security-btn:active {
     transform: scale(0.97) translateY(0);
 }
-.lgmsg-security-btn-spinner {
+.withumsg-security-btn-spinner {
     font-size: 20px;
-    animation: lgmsgSecuritySpin 1s linear infinite;
+    animation: withumsgSecuritySpin 1s linear infinite;
     display: none;
 }
-.lgmsg-security-btn-icon {
+.withumsg-security-btn-icon {
     font-size: 18px;
 }
-.lgmsg-security-btn::before {
+.withumsg-security-btn::before {
     content: '';
     position: absolute;
     top: 0;
@@ -604,12 +604,12 @@ html.withu-scroll-locked #withuFloatingActions {
     transform: skewX(-20deg);
     pointer-events: none;
 }
-.lgmsg-security-btn.lgmsg-security-is-loading::before {
-    animation: lgmsgSecurityShimmer 1.5s infinite;
+.withumsg-security-btn.withumsg-security-is-loading::before {
+    animation: withumsgSecurityShimmer 1.5s infinite;
 }
-@keyframes lgmsgSecurityShimmer { 100% { left: 200%; } }
-@keyframes lgmsgSecuritySpin { 100% { transform: rotate(360deg); } }
-.lgmsg-security-btn.lgmsg-security-is-loading {
+@keyframes withumsgSecurityShimmer { 100% { left: 200%; } }
+@keyframes withumsgSecuritySpin { 100% { transform: rotate(360deg); } }
+.withumsg-security-btn.withumsg-security-is-loading {
     pointer-events: none;
     background: #333;
     box-shadow: 0 4px 12px -4px rgba(0,0,0,0.1);
@@ -617,7 +617,7 @@ html.withu-scroll-locked #withuFloatingActions {
 }
 
 /* 成功动画面板 */
-.lgmsg-security-success-panel {
+.withumsg-security-success-panel {
     position: absolute;
     inset: 0;
     display: flex;
@@ -629,7 +629,7 @@ html.withu-scroll-locked #withuFloatingActions {
     pointer-events: none;
     overflow: hidden;
 }
-.lgmsg-security-success-aura {
+.withumsg-security-success-aura {
     position: absolute;
     width: 140px;
     height: 140px;
@@ -642,53 +642,53 @@ html.withu-scroll-locked #withuFloatingActions {
                 opacity 0.8s var(--withu-ease-smooth);
     z-index: 1;
 }
-.lgmsg-security-base.lgmsg-security-is-success .lgmsg-security-success-aura {
+.withumsg-security-base.withumsg-security-is-success .withumsg-security-success-aura {
     opacity: 0.25;
     transform: scale(1.5);
-    animation: lgmsgSecurityAuraPulse 2s ease-in-out infinite alternate 0.8s;
+    animation: withumsgSecurityAuraPulse 2s ease-in-out infinite alternate 0.8s;
 }
-@keyframes lgmsgSecurityAuraPulse {
+@keyframes withumsgSecurityAuraPulse {
     0% { transform: scale(1.5); opacity: 0.25; }
     100% { transform: scale(1.6); opacity: 0.35; }
 }
-.lgmsg-security-success-content {
+.withumsg-security-success-content {
     position: relative;
     z-index: 2;
     display: flex;
     flex-direction: column;
     align-items: center;
 }
-.lgmsg-security-success-svg {
+.withumsg-security-success-svg {
     width: 76px;
     height: 76px;
     color: var(--withu-color-success);
     margin-bottom: 24px;
     filter: drop-shadow(0 8px 16px var(--withu-color-success-glow));
 }
-.lgmsg-security-success-circle {
+.withumsg-security-success-circle {
     stroke-dasharray: 151px;
     stroke-dashoffset: 151px;
     opacity: 0;
 }
-.lgmsg-security-success-check {
+.withumsg-security-success-check {
     stroke-dasharray: 36px;
     stroke-dashoffset: 36px;
     opacity: 0;
 }
-.lgmsg-security-base.lgmsg-security-is-success .lgmsg-security-success-circle {
+.withumsg-security-base.withumsg-security-is-success .withumsg-security-success-circle {
     opacity: 1;
-    animation: lgmsgSecurityDrawCircle 0.6s cubic-bezier(0.65, 0, 0.35, 1) forwards;
+    animation: withumsgSecurityDrawCircle 0.6s cubic-bezier(0.65, 0, 0.35, 1) forwards;
     animation-delay: 0.1s;
 }
-.lgmsg-security-base.lgmsg-security-is-success .lgmsg-security-success-check {
+.withumsg-security-base.withumsg-security-is-success .withumsg-security-success-check {
     opacity: 1;
-    animation: lgmsgSecurityDrawCheck 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+    animation: withumsgSecurityDrawCheck 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
     animation-delay: 0.45s;
 }
-@keyframes lgmsgSecurityDrawCircle { 100% { stroke-dashoffset: 0; } }
-@keyframes lgmsgSecurityDrawCheck { 100% { stroke-dashoffset: 0; } }
+@keyframes withumsgSecurityDrawCircle { 100% { stroke-dashoffset: 0; } }
+@keyframes withumsgSecurityDrawCheck { 100% { stroke-dashoffset: 0; } }
 
-.lgmsg-security-success-text {
+.withumsg-security-success-text {
     font-size: 22px;
     font-weight: 600;
     color: var(--withu-text-primary);
@@ -697,18 +697,18 @@ html.withu-scroll-locked #withuFloatingActions {
     transform: translateY(15px);
     transition: opacity 0.5s ease, transform 0.6s var(--withu-ease-smooth);
 }
-.lgmsg-security-base.lgmsg-security-is-success .lgmsg-security-success-text {
+.withumsg-security-base.withumsg-security-is-success .withumsg-security-success-text {
     opacity: 1;
     transform: translateY(0);
     transition-delay: 0.5s;
 }
-@keyframes lgmsgSecurityHapticBump {
+@keyframes withumsgSecurityHapticBump {
     0%   { transform: scale(1); }
     40%  { transform: scale(1.03); }
     100% { transform: scale(1); }
 }
-.lgmsg-security-trigger-bump {
-    animation: lgmsgSecurityHapticBump 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) !important;
+.withumsg-security-trigger-bump {
+    animation: withumsgSecurityHapticBump 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) !important;
 }
 
 /* ── 留言卡片 InfoItem 胶囊样式（单行不换行） ── */
@@ -742,7 +742,7 @@ html.withu-scroll-locked #withuFloatingActions {
     overflow: hidden;
 }
 
-.Message_Wrap .MessageCard .MsgFooter .InfoItem .lgmsg-info-text {
+.Message_Wrap .MessageCard .MsgFooter .InfoItem .withumsg-info-text {
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
@@ -751,28 +751,28 @@ html.withu-scroll-locked #withuFloatingActions {
 }
 
 /* 短文本（移动端回复数字）桌面端默认隐藏 */
-.Message_Wrap .MessageCard .MsgFooter .lgmsg-info-text-short {
+.Message_Wrap .MessageCard .MsgFooter .withumsg-info-text-short {
     display: none;
 }
 
 /* 有经纬度可打开地图的归属地：浅蓝色背景（卡片 + 抽屉通用） */
-.lgmsg-location-has-coords {
+.withumsg-location-has-coords {
     color: #3b82f6;
     cursor: pointer;
 }
 
-.Message_Wrap .MessageCard .MsgFooter .InfoItem.lgmsg-location-has-coords {
+.Message_Wrap .MessageCard .MsgFooter .InfoItem.withumsg-location-has-coords {
     background: rgba(59, 130, 246, 0.08);
     color: #3b82f6;
 }
 
-.Message_Wrap .MessageCard .MsgFooter .InfoItem.lgmsg-location-has-coords .lgmsg-ico {
+.Message_Wrap .MessageCard .MsgFooter .InfoItem.withumsg-location-has-coords .withumsg-ico {
     background: rgba(59, 130, 246, 0.12);
     color: #3b82f6;
 }
 
 /* 图标圆角背景容器 */
-.Message_Wrap .MessageCard .MsgFooter .InfoItem .lgmsg-ico {
+.Message_Wrap .MessageCard .MsgFooter .InfoItem .withumsg-ico {
     width: 10px !important;
     height: 10px !important;
     flex-shrink: 0;
@@ -788,7 +788,7 @@ html.withu-scroll-locked #withuFloatingActions {
     border-radius: 5px;
 }
 
-.Message_Wrap .MessageCard .MsgFooter .InfoItem i[class*="qi-"].lgmsg-ico {
+.Message_Wrap .MessageCard .MsgFooter .InfoItem i[class*="qi-"].withumsg-ico {
     width: auto !important;
     height: auto !important;
     font-size: 10px;
@@ -836,7 +836,7 @@ html.withu-scroll-locked #withuFloatingActions {
 }
 
 .Message_Wrap .MessageCard:hover .UserAvatar::after,
-.Message_Wrap .MessageCard .UserAvatar.lgmsg-avatar-tap::after {
+.Message_Wrap .MessageCard .UserAvatar.withumsg-avatar-tap::after {
     opacity: 1;
 }
 
@@ -845,24 +845,24 @@ html.withu-scroll-locked #withuFloatingActions {
 /* ============================================================
  * MessageCard 卡片回复徽章（附加到原始 leav.css 卡片上）
  * ============================================================ */
-.MessageCard .lgmsg-reply-badge {
-    color: var(--lgmsg-primary);
+.MessageCard .withumsg-reply-badge {
+    color: var(--withumsg-primary);
     background: rgba(0, 122, 255, 0.08);
     transition: background 0.2s;
     cursor: pointer;
 }
 
-.MessageCard:hover .lgmsg-reply-badge {
+.MessageCard:hover .withumsg-reply-badge {
     background: rgba(0, 122, 255, 0.14);
 }
 
-.MessageCard .lgmsg-reply-badge svg {
+.MessageCard .withumsg-reply-badge svg {
     width: 12px;
     height: 12px;
 }
 
 /* ── InfoItem SVG 图标尺寸 ── */
-.InfoItem .lgmsg-ico {
+.InfoItem .withumsg-ico {
     width: 14px !important;
     height: 14px !important;
     flex-shrink: 0;
@@ -876,7 +876,7 @@ html.withu-scroll-locked #withuFloatingActions {
 }
 
 /* ── 卡片插入动画 ── */
-@keyframes lgmsg-card-fadeIn {
+@keyframes withumsg-card-fadeIn {
     0% {
         opacity: 0;
         transform: translateY(20px) scale(0.96);
@@ -889,7 +889,7 @@ html.withu-scroll-locked #withuFloatingActions {
 }
 
 .MessageCard {
-    animation: lgmsg-card-fadeIn 0.5s var(--lgmsg-spring) both;
+    animation: withumsg-card-fadeIn 0.5s var(--withumsg-spring) both;
 }
 
 .MessageCard:nth-child(1) {
@@ -923,7 +923,7 @@ html.withu-scroll-locked #withuFloatingActions {
 /* ============================================================
  * 骨架屏（匹配 MessageCard 布局）
  * ============================================================ */
-@keyframes lgmsg-skeleton-pulse {
+@keyframes withumsg-skeleton-pulse {
 
     0%,
     100% {
@@ -935,68 +935,68 @@ html.withu-scroll-locked #withuFloatingActions {
     }
 }
 
-.lgmsg-skeleton {
+.withumsg-skeleton {
     margin-top: 2rem;
     padding: 0 0.8rem 1.2rem;
     position: relative;
 }
 
-.lgmsg-skeleton-line {
+.withumsg-skeleton-line {
     background: rgba(0, 0, 0, 0.04);
     border-radius: 8px;
-    animation: lgmsg-skeleton-pulse 1.5s ease-in-out infinite;
+    animation: withumsg-skeleton-pulse 1.5s ease-in-out infinite;
 }
 
-.lgmsg-skeleton .sk-avatar {
+.withumsg-skeleton .sk-avatar {
     width: 4rem;
     height: 4rem;
     border-radius: 50%;
     flex-shrink: 0;
 }
 
-.lgmsg-skeleton .sk-header {
+.withumsg-skeleton .sk-header {
     display: flex;
     align-items: center;
     gap: 10px;
     margin-bottom: 14px;
 }
 
-.lgmsg-skeleton .sk-name {
+.withumsg-skeleton .sk-name {
     width: 70px;
     height: 12px;
 }
 
-.lgmsg-skeleton .sk-time {
+.withumsg-skeleton .sk-time {
     width: 50px;
     height: 9px;
     margin-top: 5px;
 }
 
-.lgmsg-skeleton .sk-text1 {
+.withumsg-skeleton .sk-text1 {
     width: 90%;
     height: 10px;
     margin-bottom: 8px;
 }
 
-.lgmsg-skeleton .sk-text2 {
+.withumsg-skeleton .sk-text2 {
     width: 65%;
     height: 10px;
     margin-bottom: 8px;
 }
 
-.lgmsg-skeleton .sk-text3 {
+.withumsg-skeleton .sk-text3 {
     width: 40%;
     height: 10px;
     margin-bottom: 0;
 }
 
-.lgmsg-skeleton .sk-footer {
+.withumsg-skeleton .sk-footer {
     display: flex;
     gap: 8px;
     margin-top: 14px;
 }
 
-.lgmsg-skeleton .sk-pill {
+.withumsg-skeleton .sk-pill {
     width: 60px;
     height: 20px;
     border-radius: 100px;
@@ -1005,12 +1005,12 @@ html.withu-scroll-locked #withuFloatingActions {
 /* ============================================================
  * 加载更多按钮
  * ============================================================ */
-.lgmsg-load-more-wrap {
+.withumsg-load-more-wrap {
     text-align: center;
     padding: 2rem 0;
 }
 
-.lgmsg-load-more-btn {
+.withumsg-load-more-btn {
     display: inline-flex;
     align-items: center;
     gap: 8px;
@@ -1029,63 +1029,63 @@ html.withu-scroll-locked #withuFloatingActions {
     box-shadow: 0 2px 12px rgba(0, 0, 0, 0.15), inset 0 1px 0 rgba(255, 255, 255, 0.08);
 }
 
-.lgmsg-load-more-btn:hover {
+.withumsg-load-more-btn:hover {
     background: linear-gradient(135deg, #3a3a3a, #222);
     transform: translateY(-2px);
     box-shadow: 0 6px 20px rgba(0, 0, 0, 0.2), inset 0 1px 0 rgba(255, 255, 255, 0.1);
     color: #fff;
 }
 
-.lgmsg-load-more-btn:active {
+.withumsg-load-more-btn:active {
     transform: translateY(0) scale(0.97);
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
 }
 
-.lgmsg-load-more-btn:disabled {
+.withumsg-load-more-btn:disabled {
     opacity: 0.75;
     cursor: not-allowed;
     transform: none;
 }
 
-.lgmsg-load-more-btn .btn-text {
+.withumsg-load-more-btn .btn-text {
     display: inline-flex;
     align-items: center;
     gap: 6px;
 }
 
-.lgmsg-load-more-btn .btn-text i {
+.withumsg-load-more-btn .btn-text i {
     font-size: 14px;
     line-height: 1;
 }
 
-@keyframes lgmsg-spin {
+@keyframes withumsg-spin {
     from { transform: rotate(0deg); }
     to { transform: rotate(360deg); }
 }
 
-.lgmsg-load-more-btn .lgmsg-spinner {
+.withumsg-load-more-btn .withumsg-spinner {
     display: inline-block;
-    animation: lgmsg-spin 0.9s linear infinite;
+    animation: withumsg-spin 0.9s linear infinite;
 }
 
-.lgmsg-no-more {
+.withumsg-no-more {
     text-align: center;
     padding: 20px 0 40px;
-    color: var(--lgmsg-text-muted);
+    color: var(--withumsg-text-muted);
     font-size: 13px;
 }
 
 /* ============================================================
  * 卡片空状态
  * ============================================================ */
-.lgmsg-empty {
+.withumsg-empty {
     text-align: center;
     padding: 40px 20px;
-    color: var(--lgmsg-text-muted);
+    color: var(--withumsg-text-muted);
     font-size: 14px;
 }
 
-.lgmsg-empty svg {
+.withumsg-empty svg {
     width: 48px;
     height: 48px;
     margin-bottom: 12px;
@@ -1219,7 +1219,7 @@ html.withu-scroll-locked #withuFloatingActions {
     border-radius: 50%;
     border: none;
     background: rgba(0, 0, 0, 0.04);
-    color: var(--lgmsg-text-muted);
+    color: var(--withumsg-text-muted);
     display: flex;
     justify-content: center;
     align-items: center;
@@ -1229,7 +1229,7 @@ html.withu-scroll-locked #withuFloatingActions {
 
 .withu-message-close-btn:hover {
     background: rgba(0, 0, 0, 0.08);
-    color: var(--lgmsg-text-main);
+    color: var(--withumsg-text-main);
 }
 
 .withu-message-drawer-scroll {
@@ -1336,7 +1336,7 @@ html.withu-scroll-locked #withuFloatingActions {
 
 .withu-message-msg-info {
     font-size: 12px;
-    color: var(--lgmsg-text-muted);
+    color: var(--withumsg-text-muted);
     display: flex;
     gap: 8px;
     align-items: center;
@@ -1359,7 +1359,7 @@ html.withu-scroll-locked #withuFloatingActions {
 }
 
 .withu-message-msg-name:hover {
-    color: var(--lgmsg-text-main);
+    color: var(--withumsg-text-main);
 }
 
 .withu-message-msg-bubble {
@@ -1368,7 +1368,7 @@ html.withu-scroll-locked #withuFloatingActions {
     border-radius: 4px 16px 16px 16px;
     font-size: 14px;
     line-height: 1.6;
-    color: var(--lgmsg-text-main);
+    color: var(--withumsg-text-main);
     word-break: break-word;
     position: relative;
     cursor: pointer;
@@ -1407,7 +1407,7 @@ html.withu-scroll-locked #withuFloatingActions {
 
 /* ── @ 标签 ── */
 .withu-message-at-tag {
-    color: var(--lgmsg-text-main);
+    color: var(--withumsg-text-main);
     background: rgba(0, 0, 0, 0.05);
     padding: 1px 5px;
     border-radius: 6px;
@@ -1456,7 +1456,7 @@ html.withu-scroll-locked #withuFloatingActions {
 }
 
 /* ── 编辑器内引用条（带删除按钮） ── */
-.lgmsg-editor-quote {
+.withumsg-editor-quote {
     display: flex !important;
     align-items: center;
     gap: 4px;
@@ -1466,19 +1466,19 @@ html.withu-scroll-locked #withuFloatingActions {
     padding-right: 28px !important;
 }
 
-.lgmsg-editor-quote .emoji {
+.withumsg-editor-quote .emoji {
     height: 18px;
     width: 18px;
     vertical-align: text-bottom;
 }
 
-.lgmsg-editor-quote-label {
+.withumsg-editor-quote-label {
     font-weight: 600;
-    color: var(--lgmsg-primary, #007AFF);
+    color: var(--withumsg-primary, #007AFF);
     flex-shrink: 0;
 }
 
-.lgmsg-editor-quote-close {
+.withumsg-editor-quote-close {
     position: absolute;
     right: 6px;
     top: 50%;
@@ -1498,18 +1498,18 @@ html.withu-scroll-locked #withuFloatingActions {
     transition: background 0.15s ease;
 }
 
-.lgmsg-editor-quote-close:hover {
+.withumsg-editor-quote-close:hover {
     background: rgba(0, 0, 0, 0.15);
     color: #333;
 }
 
-.lgmsg-editor-input {
+.withumsg-editor-input {
     min-height: 1em;
     outline: none;
 }
 
 /* ── 引用回复（基于 reply_to_id） ── */
-.lgmsg-reply-quote {
+.withumsg-reply-quote {
     display: flex;
     flex-direction: column;
     gap: 2px;
@@ -1521,17 +1521,17 @@ html.withu-scroll-locked #withuFloatingActions {
     box-shadow: none;
 }
 
-.lgmsg-reply-quote-name {
+.withumsg-reply-quote-name {
     font-weight: 600;
     font-size: 12px;
-    color: var(--lgmsg-primary, #007AFF);
+    color: var(--withumsg-primary, #007AFF);
 }
 
-.lgmsg-reply-quote-name::after {
+.withumsg-reply-quote-name::after {
     content: '\FF1A';
 }
 
-.lgmsg-reply-quote-text {
+.withumsg-reply-quote-text {
     font-size: 12px;
     opacity: 0.7;
     overflow: hidden;
@@ -1541,7 +1541,7 @@ html.withu-scroll-locked #withuFloatingActions {
 }
 
 /* 引用摘要内的表情图片（懒加载 class="lazy"，用 img 选择器统一匹配） */
-.lgmsg-reply-quote-text img {
+.withumsg-reply-quote-text img {
     height: 16px;
     width: 16px;
     vertical-align: middle;
@@ -1549,11 +1549,11 @@ html.withu-scroll-locked #withuFloatingActions {
     display: inline;
 }
 
-.withu-message-msg-item.is-me .lgmsg-reply-quote-name {
+.withu-message-msg-item.is-me .withumsg-reply-quote-name {
     color: rgba(255, 255, 255, 0.95);
 }
 
-.withu-message-msg-item.is-me .lgmsg-reply-quote-text {
+.withu-message-msg-item.is-me .withumsg-reply-quote-text {
     color: rgba(255, 255, 255, 0.7);
 }
 
@@ -1656,7 +1656,7 @@ html.withu-scroll-locked #withuFloatingActions {
     white-space: nowrap;
 }
 
-.withu-message-msg-meta .lgmsg-ico-sm {
+.withu-message-msg-meta .withumsg-ico-sm {
     width: 10px !important;
     height: 10px !important;
     flex-shrink: 0;
@@ -1667,7 +1667,7 @@ html.withu-scroll-locked #withuFloatingActions {
     stroke-linejoin: round;
 }
 
-.withu-message-msg-meta i[class*="qi-"].lgmsg-ico-sm {
+.withu-message-msg-meta i[class*="qi-"].withumsg-ico-sm {
     width: auto !important;
     height: auto !important;
     font-size: 11px;
@@ -1781,7 +1781,7 @@ html.withu-scroll-locked #withuFloatingActions {
 }
 
 /* AuthModal 层级高于 CommentModal */
-#lgmsgAuthModal.withu-message-modal-overlay {
+#withumsgAuthModal.withu-message-modal-overlay {
     z-index: 100002;
 }
 
@@ -1911,7 +1911,7 @@ html.withu-scroll-locked #withuFloatingActions {
     /* border: 1px solid rgba(255, 255, 255, 0.4); */
     border-radius: 20px;
     padding: 10px 16px;
-    color: var(--lgmsg-text-muted);
+    color: var(--withumsg-text-muted);
     font-size: 14px;
     display: flex;
     align-items: center;
@@ -1956,7 +1956,7 @@ html.withu-scroll-locked #withuFloatingActions {
 .withu-message-drawer-identity span {
     font-size: 13px;
     font-weight: 500;
-    color: var(--lgmsg-text-main);
+    color: var(--withumsg-text-main);
     flex: 1;
     white-space: nowrap;
     overflow: hidden;
@@ -1964,7 +1964,7 @@ html.withu-scroll-locked #withuFloatingActions {
 }
 
 .withu-message-drawer-identity .edit-icon {
-    color: var(--lgmsg-text-muted);
+    color: var(--withumsg-text-muted);
     width: 14px;
     height: 14px;
     flex-shrink: 0;
@@ -1982,7 +1982,7 @@ html.withu-scroll-locked #withuFloatingActions {
     font-size: 11px;
     padding: 4px 10px 4px 4px;
     background: rgba(242, 242, 247, 0.38);
-    border-radius: var(--lgmsg-radius-round);
+    border-radius: var(--withumsg-radius-round);
 }
 
 .withu-message-drawer-input-tags .withu-message-v-tag-icon {
@@ -2058,7 +2058,7 @@ html.withu-scroll-locked #withuFloatingActions {
     background: transparent;
     border: none;
     outline: none;
-    color: var(--lgmsg-text-muted);
+    color: var(--withumsg-text-muted);
     width: 36px;
     height: 36px;
     border-radius: 10px;
@@ -2071,7 +2071,7 @@ html.withu-scroll-locked #withuFloatingActions {
 
 .withu-message-tb-btn:hover {
     background: rgba(0, 0, 0, 0.06);
-    color: var(--lgmsg-text-main);
+    color: var(--withumsg-text-main);
 }
 
 .withu-message-tb-btn svg {
@@ -2087,8 +2087,8 @@ html.withu-scroll-locked #withuFloatingActions {
 /* ── 发送按钮 ── */
 .withu-message-reply-btn {
     padding: 10px 20px;
-    border-radius: var(--lgmsg-radius-round);
-    background: var(--lgmsg-text-main);
+    border-radius: var(--withumsg-radius-round);
+    background: var(--withumsg-text-main);
     color: #fff;
     border: none;
     font-size: 14px;
@@ -2129,13 +2129,13 @@ html.withu-scroll-locked #withuFloatingActions {
 
 .withu-message-switch-text {
     font-size: 13px;
-    color: var(--lgmsg-text-muted);
+    color: var(--withumsg-text-muted);
     font-weight: 500;
     transition: color 0.3s ease;
 }
 
 .withu-message-switch-wrap.active .withu-message-switch-text {
-    color: var(--lgmsg-text-main);
+    color: var(--withumsg-text-main);
 }
 
 .withu-message-switch {
@@ -2151,7 +2151,7 @@ html.withu-scroll-locked #withuFloatingActions {
     display: block;
     width: 100%;
     height: 100%;
-    background: var(--lgmsg-text-main);
+    background: var(--withumsg-text-main);
     transform: scaleX(0);
     transform-origin: left;
     transition: transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
@@ -2164,7 +2164,7 @@ html.withu-scroll-locked #withuFloatingActions {
 /* ── 字数统计 ── */
 .withu-message-char-counter {
     font-size: 12px;
-    color: var(--lgmsg-text-muted);
+    color: var(--withumsg-text-muted);
     font-weight: 500;
     opacity: 0.5;
     transition: color 0.25s ease;
@@ -2456,7 +2456,7 @@ html.withu-scroll-locked #withuFloatingActions {
     text-align: center;
     padding: 60px 20px;
     margin-top: 20px;
-    color: var(--lgmsg-text-muted);
+    color: var(--withumsg-text-muted);
     font-size: 14px;
     letter-spacing: 0.5px;
     font-weight: 300;
@@ -2477,7 +2477,7 @@ html.withu-scroll-locked #withuFloatingActions {
     align-items: center;
     height: 100%;
     min-height: 200px;
-    color: var(--lgmsg-text-muted, #a1a1a6);
+    color: var(--withumsg-text-muted, #a1a1a6);
     gap: 10px;
 }
 
@@ -2593,7 +2593,7 @@ html.withu-scroll-locked #withuFloatingActions {
     display: inline-flex;
     background: rgba(242, 242, 247, 0.38);
     padding: 4px;
-    border-radius: var(--lgmsg-radius-round);
+    border-radius: var(--withumsg-radius-round);
 }
 
 .withu-message-ios-tab {
@@ -2602,13 +2602,13 @@ html.withu-scroll-locked #withuFloatingActions {
     padding: 10px 28px;
     font-size: 14px;
     font-weight: 500;
-    color: var(--lgmsg-text-muted);
+    color: var(--withumsg-text-muted);
     cursor: pointer;
     transition: color 0.3s;
 }
 
 .withu-message-ios-tab.active {
-    color: var(--lgmsg-text-main);
+    color: var(--withumsg-text-main);
 }
 
 .withu-message-ios-tab-slider {
@@ -2617,7 +2617,7 @@ html.withu-scroll-locked #withuFloatingActions {
     bottom: 4px;
     left: 0;
     background: rgba(255, 255, 255, 0.85);
-    border-radius: var(--lgmsg-radius-round);
+    border-radius: var(--withumsg-radius-round);
     transition: transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1), width 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
     z-index: 1;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08), 0 1px 2px rgba(0, 0, 0, 0.04);
@@ -2646,7 +2646,7 @@ html.withu-scroll-locked #withuFloatingActions {
     display: flex;
     justify-content: center;
     align-items: center;
-    color: var(--lgmsg-text-muted);
+    color: var(--withumsg-text-muted);
     z-index: 2;
 }
 
@@ -2670,7 +2670,7 @@ html.withu-scroll-locked #withuFloatingActions {
 
 .withu-message-input-wrapper input:focus {
     background: rgba(229, 229, 234, 0.42);
-    color: var(--lgmsg-text-main);
+    color: var(--withumsg-text-main);
 }
 
 .withu-message-i-icon .withu-message-input-avatar {
@@ -2682,11 +2682,11 @@ html.withu-scroll-locked #withuFloatingActions {
 
 /* 提交按钮动画 */
 .withu-message-submit-btn {
-    background: var(--lgmsg-text-main);
+    background: var(--withumsg-text-main);
     color: #fff;
     border: none;
     padding: 12px 28px;
-    border-radius: var(--lgmsg-radius-round);
+    border-radius: var(--withumsg-radius-round);
     font-size: 15px;
     font-weight: 500;
     cursor: pointer;
@@ -2736,7 +2736,7 @@ html.withu-scroll-locked #withuFloatingActions {
 }
 
 .withu-message-lucide-loader {
-    animation: lgmsg-spin 1.2s linear infinite;
+    animation: withumsg-spin 1.2s linear infinite;
 }
 
 /* ── 上下文菜单（z-index 必须高于抽屉 100002） ── */
@@ -2802,7 +2802,7 @@ html.withu-scroll-locked #withuFloatingActions {
 
 .withu-message-head-titles .withu-message-subtitle {
     font-size: 15px;
-    color: var(--lgmsg-text-muted);
+    color: var(--withumsg-text-muted);
     font-weight: 400;
 }
 
@@ -2822,7 +2822,7 @@ html.withu-scroll-locked #withuFloatingActions {
     color: #636366;
     background: rgba(242, 242, 247, 0.38);
     padding: 6px 14px 6px 6px;
-    border-radius: var(--lgmsg-radius-round);
+    border-radius: var(--withumsg-radius-round);
 }
 
 .withu-message-v-tag-icon {
@@ -2872,7 +2872,7 @@ html.withu-scroll-locked #withuFloatingActions {
     display: flex;
     justify-content: center;
     align-items: center;
-    color: var(--lgmsg-text-muted);
+    color: var(--withumsg-text-muted);
     z-index: 2;
     border-radius: 8px;
     overflow: hidden;
@@ -2900,7 +2900,7 @@ html.withu-scroll-locked #withuFloatingActions {
     backdrop-filter: blur(20px) saturate(180%);
     -webkit-backdrop-filter: blur(20px) saturate(180%);
     font-size: 15px;
-    color: var(--lgmsg-text-main);
+    color: var(--withumsg-text-main);
     outline: none;
     transition: background 0.2s ease, border-color 0.2s ease;
     font-weight: 500;
@@ -2914,7 +2914,7 @@ html.withu-scroll-locked #withuFloatingActions {
 
 .withu-message-input-wrapper input:focus {
     background: rgba(229, 229, 234, 0.42);
-    color: var(--lgmsg-text-main);
+    color: var(--withumsg-text-main);
 }
 
 /* QQ 缓存快捷填入 hint（对齐 demo） */
@@ -2927,12 +2927,12 @@ html.withu-scroll-locked #withuFloatingActions {
     align-items: center;
     gap: 6px;
     padding: 4px 10px 4px 5px;
-    border-radius: var(--lgmsg-radius-round);
+    border-radius: var(--withumsg-radius-round);
     background: rgba(0, 0, 0, 0.04);
     cursor: pointer;
     font-size: 12px;
-    color: var(--lgmsg-text-muted);
-    transition: transform 0.4s var(--lgmsg-spring, cubic-bezier(0.34, 1.56, 0.64, 1)), opacity 0.3s ease, background 0.2s ease;
+    color: var(--withumsg-text-muted);
+    transition: transform 0.4s var(--withumsg-spring, cubic-bezier(0.34, 1.56, 0.64, 1)), opacity 0.3s ease, background 0.2s ease;
     z-index: 2;
     -webkit-tap-highlight-color: transparent;
     transform-origin: right center;
@@ -2968,7 +2968,7 @@ html.withu-scroll-locked #withuFloatingActions {
 .withu-message-drawer-qq-sub {
     font-size: 10px;
     font-weight: 400;
-    color: var(--lgmsg-text-muted);
+    color: var(--withumsg-text-muted);
     opacity: 0.45;
     margin-left: 6px;
     letter-spacing: 0.5px;
@@ -2994,12 +2994,12 @@ html.withu-scroll-locked #withuFloatingActions {
     align-items: center;
     gap: 5px;
     padding: 5px 12px 5px 7px;
-    border-radius: var(--lgmsg-radius-round);
+    border-radius: var(--withumsg-radius-round);
     background: rgba(0, 0, 0, 0.035);
     cursor: pointer;
     white-space: nowrap;
     font-size: 13px;
-    color: var(--lgmsg-text-muted);
+    color: var(--withumsg-text-muted);
     font-weight: 500;
     transition: all 0.2s ease;
     flex-shrink: 0;
@@ -3010,7 +3010,7 @@ html.withu-scroll-locked #withuFloatingActions {
 
 .withu-message-emoji-bubble:hover {
     background: rgba(0, 0, 0, 0.07);
-    color: var(--lgmsg-text-main);
+    color: var(--withumsg-text-main);
 }
 
 .withu-message-emoji-bubble:active {
@@ -3029,7 +3029,7 @@ html.withu-scroll-locked #withuFloatingActions {
 }
 
 .withu-message-emoji-bubble.withu-message-bubble-in {
-    animation: bubbleIn 0.35s var(--lgmsg-spring) forwards;
+    animation: bubbleIn 0.35s var(--withumsg-spring) forwards;
 }
 
 @keyframes bubbleOut {
@@ -3079,7 +3079,7 @@ html.withu-scroll-locked #withuFloatingActions {
     display: flex;
     justify-content: center;
     align-items: center;
-    color: var(--lgmsg-text-muted);
+    color: var(--withumsg-text-muted);
     z-index: 2;
 }
 
@@ -3111,7 +3111,7 @@ html.withu-scroll-locked #withuFloatingActions {
 
 .withu-message-input:focus {
     background: rgba(229, 229, 234, 0.42);
-    color: var(--lgmsg-text-main);
+    color: var(--withumsg-text-main);
 }
 
 /* ── 隐私安全提示 ── */
@@ -3121,7 +3121,7 @@ html.withu-scroll-locked #withuFloatingActions {
     font-family: 'Inter', system-ui, sans-serif;
     font-weight: 400;
     font-size: 12px;
-    color: var(--lgmsg-text-muted, #8e8e93);
+    color: var(--withumsg-text-muted, #8e8e93);
     letter-spacing: 0.01em;
     line-height: 1.5;
     opacity: .85;
@@ -3158,7 +3158,7 @@ html.withu-scroll-locked #withuFloatingActions {
     padding: 16px 20px;
     font-size: 16px;
     line-height: 1.8;
-    color: var(--lgmsg-text-main);
+    color: var(--withumsg-text-main);
     outline: none;
     overflow-y: auto;
     scrollbar-width: none;
@@ -3266,11 +3266,11 @@ html.withu-scroll-locked #withuFloatingActions {
     }
 
     /* 移动端：设备/天气/时间仅显示图标，点击 tooltip 显示完整内容 */
-    .Message_Wrap .MessageCard .MsgFooter .InfoItem.lgmsg-info-hideable .lgmsg-info-text {
+    .Message_Wrap .MessageCard .MsgFooter .InfoItem.withumsg-info-hideable .withumsg-info-text {
         display: none;
     }
 
-    .Message_Wrap .MessageCard .MsgFooter .InfoItem.lgmsg-info-hideable {
+    .Message_Wrap .MessageCard .MsgFooter .InfoItem.withumsg-info-hideable {
         padding: 4px !important;
         gap: 0;
         min-width: 28px;
@@ -3279,22 +3279,22 @@ html.withu-scroll-locked #withuFloatingActions {
     }
 
     /* 移动端回复项：完整文本隐藏，仅显示短文本(数字) */
-    .Message_Wrap .MessageCard .MsgFooter .lgmsg-reply-badge .lgmsg-info-text-full {
+    .Message_Wrap .MessageCard .MsgFooter .withumsg-reply-badge .withumsg-info-text-full {
         display: none;
     }
 
-    .Message_Wrap .MessageCard .MsgFooter .lgmsg-reply-badge .lgmsg-info-text-short {
+    .Message_Wrap .MessageCard .MsgFooter .withumsg-reply-badge .withumsg-info-text-short {
         display: inline;
     }
 
-    .Message_Wrap .MessageCard .MsgFooter .InfoItem .lgmsg-ico {
+    .Message_Wrap .MessageCard .MsgFooter .InfoItem .withumsg-ico {
         width: 12px !important;
         height: 12px !important;
         padding: 3px;
         border-radius: 5px;
     }
 
-    .Message_Wrap .MessageCard .MsgFooter .InfoItem i[class*="qi-"].lgmsg-ico {
+    .Message_Wrap .MessageCard .MsgFooter .InfoItem i[class*="qi-"].withumsg-ico {
         font-size: 12px;
         padding: 3px;
         border-radius: 5px;
@@ -3345,7 +3345,7 @@ html.withu-scroll-locked #withuFloatingActions {
     }
 
     /* 身份设置弹窗：移动端不要全屏，加圆角和间距 */
-    #lgmsgAuthModal .withu-message-modal-content {
+    #withumsgAuthModal .withu-message-modal-content {
         max-width: calc(100% - 20px);
         max-height: unset;
         height: auto;
@@ -3471,7 +3471,7 @@ html.withu-scroll-locked #withuFloatingActions {
 }
 
 /* ── 确认弹窗（about.php 风格） ── */
-.lgmsg-confirm-overlay {
+.withumsg-confirm-overlay {
     position: fixed;
     inset: 0;
     z-index: 100010;
@@ -3486,12 +3486,12 @@ html.withu-scroll-locked #withuFloatingActions {
     transition: opacity 0.6s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-.lgmsg-confirm-overlay.active {
+.withumsg-confirm-overlay.active {
     opacity: 1;
     pointer-events: auto;
 }
 
-.lgmsg-confirm-panel {
+.withumsg-confirm-panel {
     width: min(340px, 88vw);
     background: #FFFFFF;
     border-radius: 24px;
@@ -3506,13 +3506,13 @@ html.withu-scroll-locked #withuFloatingActions {
     text-align: center;
 }
 
-.lgmsg-confirm-overlay.active .lgmsg-confirm-panel {
+.withumsg-confirm-overlay.active .withumsg-confirm-panel {
     transform: translateY(0) scale(1);
     opacity: 1;
 }
 
 /* 关闭按钮 */
-.lgmsg-confirm-close-btn {
+.withumsg-confirm-close-btn {
     position: absolute;
     top: 12px;
     right: 12px;
@@ -3529,17 +3529,17 @@ html.withu-scroll-locked #withuFloatingActions {
     color: #86868b;
 }
 
-.lgmsg-confirm-close-btn:hover {
+.withumsg-confirm-close-btn:hover {
     background: rgba(0, 0, 0, 0.08);
     color: #1d1d1f;
 }
 
-.lgmsg-confirm-close-btn i {
+.withumsg-confirm-close-btn i {
     font-size: 16px;
 }
 
 /* 图标 */
-.lgmsg-confirm-icon-wrapper {
+.withumsg-confirm-icon-wrapper {
     width: 56px;
     height: 56px;
     border-radius: 16px;
@@ -3551,14 +3551,14 @@ html.withu-scroll-locked #withuFloatingActions {
     box-shadow: 0 8px 24px rgba(255, 214, 10, 0.35);
 }
 
-.lgmsg-confirm-icon-wrapper svg {
+.withumsg-confirm-icon-wrapper svg {
     width: 28px;
     height: 28px;
     color: #fff;
 }
 
 /* 标题 */
-.lgmsg-confirm-title {
+.withumsg-confirm-title {
     font-size: 18px;
     font-weight: 700;
     color: #1d1d1f;
@@ -3567,7 +3567,7 @@ html.withu-scroll-locked #withuFloatingActions {
 }
 
 /* 描述 */
-.lgmsg-confirm-desc {
+.withumsg-confirm-desc {
     font-size: 14px;
     color: #86868b;
     line-height: 1.6;
@@ -3575,12 +3575,12 @@ html.withu-scroll-locked #withuFloatingActions {
 }
 
 /* 操作按钮 */
-.lgmsg-confirm-actions {
+.withumsg-confirm-actions {
     display: flex;
     gap: 12px;
 }
 
-.lgmsg-confirm-btn {
+.withumsg-confirm-btn {
     flex: 1;
     padding: 14px 0;
     border: none;
@@ -3592,27 +3592,27 @@ html.withu-scroll-locked #withuFloatingActions {
     letter-spacing: 0.2px;
 }
 
-.lgmsg-confirm-btn-secondary {
+.withumsg-confirm-btn-secondary {
     background: rgba(0, 0, 0, 0.05);
     color: #6e6e73;
 }
 
-.lgmsg-confirm-btn-secondary:hover {
+.withumsg-confirm-btn-secondary:hover {
     background: rgba(0, 0, 0, 0.08);
 }
 
-.lgmsg-confirm-btn-primary {
+.withumsg-confirm-btn-primary {
     background: linear-gradient(135deg, #FFD60A 0%, #FFCA28 100%);
     color: #1a1a1a;
     box-shadow: 0 4px 16px rgba(255, 214, 10, 0.35);
 }
 
-.lgmsg-confirm-btn-primary:hover {
+.withumsg-confirm-btn-primary:hover {
     transform: translateY(-2px);
     box-shadow: 0 6px 20px rgba(255, 214, 10, 0.45);
 }
 
-.lgmsg-confirm-btn-primary:active {
+.withumsg-confirm-btn-primary:active {
     transform: translateY(0);
     box-shadow: 0 2px 12px rgba(255, 214, 10, 0.3);
 }
@@ -3621,10 +3621,10 @@ html.withu-scroll-locked #withuFloatingActions {
  * 留言成功 —— 编辑器收缩 + 飞行纸条 + 纸飞机动画
  * ============================================================ */
 .withu-message-editor-wrap.withu-message-fly-shrink {
-    animation: lgmsg-contentShrink 0.6s ease forwards;
+    animation: withumsg-contentShrink 0.6s ease forwards;
 }
 
-@keyframes lgmsg-contentShrink {
+@keyframes withumsg-contentShrink {
     0% {
         opacity: 1;
         transform: scale(1);
@@ -3653,17 +3653,17 @@ html.withu-scroll-locked #withuFloatingActions {
     border: 1px solid rgba(255, 255, 255, 0.5);
     font-size: 12px;
     line-height: 1.5;
-    color: var(--lgmsg-text-muted);
+    color: var(--withumsg-text-muted);
     font-weight: 500;
     max-width: 140px;
     overflow: hidden;
     white-space: nowrap;
     text-overflow: ellipsis;
-    animation: lgmsg-notePack 0.9s cubic-bezier(0.22, 0.68, 0.35, 1) forwards;
+    animation: withumsg-notePack 0.9s cubic-bezier(0.22, 0.68, 0.35, 1) forwards;
     will-change: transform, opacity;
 }
 
-@keyframes lgmsg-notePack {
+@keyframes withumsg-notePack {
     0% {
         opacity: 0;
         transform: translate(-50%, -50%) scale(0.35);
@@ -3700,9 +3700,9 @@ html.withu-scroll-locked #withuFloatingActions {
     z-index: 100002;
     width: 36px;
     height: 36px;
-    color: var(--lgmsg-primary);
+    color: var(--withumsg-primary);
     pointer-events: none;
-    animation: lgmsg-planeArc 1.4s cubic-bezier(0.22, 0.68, 0.35, 1) forwards;
+    animation: withumsg-planeArc 1.4s cubic-bezier(0.22, 0.68, 0.35, 1) forwards;
     will-change: transform, opacity;
 }
 
@@ -3716,7 +3716,7 @@ html.withu-scroll-locked #withuFloatingActions {
     stroke-linejoin: round;
 }
 
-@keyframes lgmsg-planeArc {
+@keyframes withumsg-planeArc {
     0% {
         opacity: 0;
         transform: scale(0.4) rotate(-15deg);

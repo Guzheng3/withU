@@ -136,27 +136,27 @@ img.lazy.img_img.col-withu-4.col-md-4.col-sm-4.col-sm-x-4 {
   bottom: auto;
 }
 
-.avatarArea .lgewui-head-avatar-status-text {
+.avatarArea .withu-head-avatar-status-text {
   font-size: .95rem;
 }
-.avatarArea .lgewui-head-avatar-gender-icon {
+.avatarArea .withu-head-avatar-gender-icon {
   width: 32px;
   height: 32px;
   padding: 5px;
 }
-.avatarArea .lgewui-head-avatar-gender-icon .lucide {
+.avatarArea .withu-head-avatar-gender-icon .lucide {
   width: 18px;
   height: 18px;
 }
-.avatarArea .lgewui-head-avatar-location {
+.avatarArea .withu-head-avatar-location {
   font-size: 0.8rem;
   padding: 0.18rem 0.55rem;
 }
-.avatarArea .lgewui-head-avatar-location .lucide {
+.avatarArea .withu-head-avatar-location .lucide {
   width: 13px;
   height: 13px;
 }
-.avatarArea .lgewui-head-avatar-status-text .lucide {
+.avatarArea .withu-head-avatar-status-text .lucide {
   width: 16px;
   height: 16px;
 }

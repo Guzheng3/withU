@@ -99,7 +99,7 @@
         modal.style.display = 'block';
         _isOpen = true;
         _loadingStartTime = Date.now();
-        if (window.lgScrollLock) lgScrollLock();
+        if (window.withuScrollLock) withuScrollLock();
 
         requestAnimationFrame(function() {
             modal.classList.add('active');
@@ -145,7 +145,7 @@
         setTimeout(function() {
             modal.style.display = 'none';
             modal.classList.remove('closing');
-            if (window.lgScrollUnlock) lgScrollUnlock();
+            if (window.withuScrollUnlock) withuScrollUnlock();
             if (dp) {
                 try { dp.destroy(); } catch(e) {}
                 dp = null;

@@ -50,7 +50,7 @@
         var tHeight = tipEl.offsetHeight;
 
         // 检查是否指定了方向
-        var dir = target.dataset.lgTipDir || 'auto';
+        var dir = target.dataset.withuTipDir || 'auto';
 
         // 左侧方向
         if (dir === 'left') {
@@ -144,8 +144,8 @@
     }
 
     function _setContent(target) {
-        var tipContent = target.dataset.lgTip;
-        if (target.dataset.lgTipHtml === 'true') {
+        var tipContent = target.dataset.withuTip;
+        if (target.dataset.withuTipHtml === 'true') {
             tipText.innerHTML = tipContent;
         } else {
             tipText.textContent = tipContent;
@@ -157,8 +157,8 @@
         _ensureDOM();
 
         // 溢出检测：优先检查内部文本子元素（父容器overflow:hidden时自身不报溢出）
-        if (target.dataset.lgTipForce !== 'true') {
-            var textChild = target.querySelector('.lgmsg-info-text');
+        if (target.dataset.withuTipForce !== 'true') {
+            var textChild = target.querySelector('.withumsg-info-text');
             var checkEl = textChild || target;
             if (checkEl.scrollWidth <= checkEl.clientWidth) return;
         }
@@ -268,6 +268,6 @@
         init();
     }
 
-    window.LGTooltip = { init: init, show: showFor, hide: hide, hideNow: hideNow };
+    window.WithUTooltip = { init: init, show: showFor, hide: hide, hideNow: hideNow };
 
 })(window, document);

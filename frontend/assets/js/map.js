@@ -1,7 +1,7 @@
 // 地图卡片链接跳转辅助（关闭地图 + pjax 兼容跳转）
 window._mapCardNav = function (url, e) {
     if (e) { e.stopPropagation(); e.preventDefault(); }
-    if (window.LGMap) window.LGMap.close();
+    if (window.WithUMap) window.WithUMap.close();
     if (window.jQuery && window.jQuery.pjax) {
         window.jQuery.pjax({ url: url, container: '#pjax-container', fragment: '#pjax-container' });
     } else {
@@ -40,7 +40,7 @@ const safeLngLat = (lng, lat, defaultLng = 116.397428, defaultLat = 39.90923) =>
     const l = parseFloat(lng);
     const a = parseFloat(lat);
     if (isNaN(l) || isNaN(a)) {
-        mapDebugWarn(`🗺️ [LGMap Debug] 检测到非法经纬度 LngLat(${lng}, ${lat})，已回退至默认值(天安门)以免地图组件崩溃`);
+        mapDebugWarn(`🗺️ [WithUMap Debug] 检测到非法经纬度 LngLat(${lng}, ${lat})，已回退至默认值(天安门)以免地图组件崩溃`);
         return new window.AMap.LngLat(defaultLng, defaultLat);
     }
     return new window.AMap.LngLat(l, a);
@@ -89,7 +89,7 @@ const extractCoordinatePair = (positionLike, options = {}) => {
 const setMapCenterSafely = (map, positionLike) => {
     const coords = extractCoordinatePair(positionLike);
     if (!coords) {
-        mapDebugWarn('🗺️ [LGMap Debug] setCenter 收到非法坐标，已跳过:', positionLike);
+        mapDebugWarn('🗺️ [WithUMap Debug] setCenter 收到非法坐标，已跳过:', positionLike);
         return false;
     }
 
@@ -100,7 +100,7 @@ const setMapCenterSafely = (map, positionLike) => {
 const setMapZoomAndCenterSafely = (map, zoom, positionLike, immediately, duration) => {
     const coords = extractCoordinatePair(positionLike);
     if (!coords) {
-        mapDebugWarn('🗺️ [LGMap Debug] setZoomAndCenter 收到非法坐标，已跳过:', positionLike);
+        mapDebugWarn('🗺️ [WithUMap Debug] setZoomAndCenter 收到非法坐标，已跳过:', positionLike);
         return false;
     }
 
@@ -122,7 +122,7 @@ const mapDebugWarn = (...args) => {
 
 // 高德地图配置检测
 const validateAmapConfig = () => {
-    const config = window.LGMAP_CONFIG || {};
+    const config = window.WITHU_MAP_CONFIG || {};
     const securityConfig = window._AMapSecurityConfig || {};
 
     const errors = [];
@@ -182,8 +182,8 @@ const showConfigError = (errors) => {
     `;
 
     // 添加到 .withu-map 容器或 body
-    const lgMapContainer = document.querySelector('.withu-map');
-    (lgMapContainer || document.body).appendChild(overlay);
+    const withuMapContainer = document.querySelector('.withu-map');
+    (withuMapContainer || document.body).appendChild(overlay);
 };
 
 // 显示地图加载错误（API Key 或安全密钥无效）
@@ -236,8 +236,8 @@ const showMapLoadError = (errorInfo) => {
     `;
 
     // 添加到 .withu-map 容器或 body
-    const lgMapContainer = document.querySelector('.withu-map');
-    (lgMapContainer || document.body).appendChild(overlay);
+    const withuMapContainer = document.querySelector('.withu-map');
+    (withuMapContainer || document.body).appendChild(overlay);
 };
 
 // 验证高德地图 API Key（通过逆地理编码接口）
@@ -263,16 +263,16 @@ const validateAmapKey = () => {
 };
 
 // ============================================
-// 全局 API: window.LGMap
+// 全局 API: window.WithUMap
 // 用法:
-//   LGMap.open()                          — 打开地图（默认情侣模式）
-//   LGMap.open({ mode: 'messages' })      — 打开地图并切换到留言模式
-//   LGMap.open({ coords: [lng, lat], zoom: 15 }) — 打开并定位到指定坐标
-//   LGMap.open({ mode: 'moments', coords: [lng, lat] }) — 打开指定模式并定位
-//   LGMap.close()                         — 关闭地图
-//   LGMap.isOpen()                        — 是否已打开
+//   WithUMap.open()                          — 打开地图（默认情侣模式）
+//   WithUMap.open({ mode: 'messages' })      — 打开地图并切换到留言模式
+//   WithUMap.open({ coords: [lng, lat], zoom: 15 }) — 打开并定位到指定坐标
+//   WithUMap.open({ mode: 'moments', coords: [lng, lat] }) — 打开指定模式并定位
+//   WithUMap.close()                         — 关闭地图
+//   WithUMap.isOpen()                        — 是否已打开
 // ============================================
-window.LGMap = (function () {
+window.WithUMap = (function () {
     let _initialized = false;
     let _mapInstance = null;
     let _pendingOptions = null;
@@ -280,7 +280,7 @@ window.LGMap = (function () {
     let _sdkLoading = false;
     let _mapVisible = false;
 
-    const overlay = () => document.getElementById('lgMapOverlay');
+    const overlay = () => document.getElementById('withuMapOverlay');
     const mapContainer = () => document.getElementById('missing-pets-map');
 
     const waitForMapContainerReady = (timeoutMs = 1500) => {
@@ -298,7 +298,7 @@ window.LGMap = (function () {
                 }
 
                 if (Date.now() - startedAt >= timeoutMs) {
-                    mapDebugWarn('🗺️ [LGMap Debug] 地图容器在超时前仍未获得有效尺寸，继续后续流程。');
+                    mapDebugWarn('🗺️ [WithUMap Debug] 地图容器在超时前仍未获得有效尺寸，继续后续流程。');
                     resolve(false);
                     return;
                 }
@@ -407,10 +407,10 @@ window.LGMap = (function () {
         if (opts.coords && Array.isArray(opts.coords) && opts.coords.length === 2) {
             const coords = extractCoordinatePair(opts.coords);
 
-            mapDebugLog('🗺️ [LGMap Debug] 解析坐标结果:', coords, '(原始数据:', opts.coords, ')');
+            mapDebugLog('🗺️ [WithUMap Debug] 解析坐标结果:', coords, '(原始数据:', opts.coords, ')');
 
             if (!coords) {
-                mapDebugWarn('🗺️ [LGMap Debug] 坐标无效，终止定位操作，避免 LngLat(NaN, NaN) 崩溃。');
+                mapDebugWarn('🗺️ [WithUMap Debug] 坐标无效，终止定位操作，避免 LngLat(NaN, NaN) 崩溃。');
                 return;
             }
             const [lng, lat] = coords;
@@ -491,7 +491,7 @@ window.LGMap = (function () {
 
     // 打开地图弹窗
     const open = (options) => {
-        mapDebugLog('🗺️ [LGMap Debug] LGMap.open 被调用, 参数:', options);
+        mapDebugLog('🗺️ [WithUMap Debug] WithUMap.open 被调用, 参数:', options);
         const el = overlay();
         if (!el) return;
 
@@ -500,7 +500,7 @@ window.LGMap = (function () {
         requestAnimationFrame(() => {
             el.classList.add('withu-map-overlay-show');
         });
-        if (window.lgScrollLock) lgScrollLock();
+        if (window.withuScrollLock) withuScrollLock();
         _mapVisible = true;
 
         if (!_initialized) {
@@ -570,7 +570,7 @@ window.LGMap = (function () {
             destroy();
 
         }, 700);
-        if (window.lgScrollUnlock) lgScrollUnlock();
+        if (window.withuScrollUnlock) withuScrollUnlock();
     };
 
     // 销毁地图实例（pjax 切换时调用，下次打开重新初始化）
@@ -599,7 +599,7 @@ window.LGMap = (function () {
                 });
             el.querySelectorAll('.control-btn, .zoom-controls button').forEach(b => b.classList.remove('show'));
         }
-        if (window.lgScrollUnlock) lgScrollUnlock();
+        if (window.withuScrollUnlock) withuScrollUnlock();
 
         // 重置地图容器 DOM（清除高德地图残留的内部元素）
         const mapEl = document.getElementById('missing-pets-map');
@@ -625,7 +625,7 @@ window.LGMap = (function () {
         });
 
         // 绑定导航栏地图图标
-        const mapBtn = document.getElementById('lgMapOpenBtn');
+        const mapBtn = document.getElementById('withuMapOpenBtn');
         if (mapBtn) {
             mapBtn.addEventListener('click', (e) => {
                 e.preventDefault();
@@ -746,7 +746,7 @@ const moveToLocation = (map, position) => {
         // 增加防御检查
         const coords = extractCoordinatePair(position);
         if (!coords) {
-            mapDebugWarn('🗺️ [LGMap Debug] moveToLocation 传入坐标无效:', position);
+            mapDebugWarn('🗺️ [WithUMap Debug] moveToLocation 传入坐标无效:', position);
             resolve();
             return;
         }
@@ -932,7 +932,7 @@ const updateLoversPanelMode = (distance) => {
     const panel = document.getElementById('lovers-panel');
     const distanceIcon = document.getElementById('distance-icon');
     const distanceText = document.getElementById('love-distance-text');
-    const isSoloMode = !!(window.LGMAP_CONFIG && window.LGMAP_CONFIG.soloMode);
+    const isSoloMode = !!(window.WITHU_MAP_CONFIG && window.WITHU_MAP_CONFIG.soloMode);
 
     if (!panel || !distanceIcon || !distanceText) return;
 
@@ -1222,9 +1222,9 @@ const updateLayers = async (layerState, layers) => {
 const initializeApp = async () => {
     try {
         // 等待地图数据从 API 加载完成
-        if (window.LGMAP_DATA_READY) {
+        if (window.WITHU_MAP_DATA_READY) {
             try {
-                await window.LGMAP_DATA_READY;
+                await window.WITHU_MAP_DATA_READY;
             } catch (e) {
                 mapDebugWarn('地图数据预加载失败，使用默认空数据:', e);
             }
@@ -1234,7 +1234,7 @@ const initializeApp = async () => {
         const map = new AMap.Map('missing-pets-map', {
             zoom: 5,
             center: [104.0668, 30.5728],
-            mapStyle: window.LGMAP_CONFIG.mapStyle || 'amap://styles/normal',
+            mapStyle: window.WITHU_MAP_CONFIG.mapStyle || 'amap://styles/normal',
             viewMode: '3D',
             pitch: 0,
             features: ['bg', 'road', 'building', 'point'],
@@ -1266,8 +1266,8 @@ const initializeApp = async () => {
 
         // 全屏按钮 → 关闭弹窗
         fullscreenBtn.onclick = () => {
-            if (window.LGMap && typeof window.LGMap.close === 'function') {
-                window.LGMap.close();
+            if (window.WithUMap && typeof window.WithUMap.close === 'function') {
+                window.WithUMap.close();
             }
         };
 
@@ -1308,7 +1308,7 @@ const initializeApp = async () => {
         };
 
         // 当前模式
-        const _isSoloMode = !!(window.LGMAP_CONFIG && window.LGMAP_CONFIG.soloMode);
+        const _isSoloMode = !!(window.WITHU_MAP_CONFIG && window.WITHU_MAP_CONFIG.soloMode);
         let currentMode = 'lovers';
 
         // 切换防抖定时器
@@ -1326,12 +1326,12 @@ const initializeApp = async () => {
         };
         const modeFooterConfig = {
             ...defaultModeConfig,
-            ...(window.LGMAP_CONFIG?.modeConfig || {})
+            ...(window.WITHU_MAP_CONFIG?.modeConfig || {})
         };
 
         // 获取各模式的内容数量
         const getModeCount = (mode) => {
-            const config = window.LGMAP_CONFIG || {};
+            const config = window.WITHU_MAP_CONFIG || {};
             switch (mode) {
                 case 'lovers':
                     return (config.lovers || []).length;
@@ -1418,7 +1418,7 @@ const initializeApp = async () => {
         };
 
         // 添加情侣标记和连线
-        const lovers = window.LGMAP_CONFIG.lovers || [];
+        const lovers = window.WITHU_MAP_CONFIG.lovers || [];
         let loverMarkers = [];
         if (lovers.length >= 2) {
             modeData.lovers.elements = addLoversMarkers(map, lovers);
@@ -1501,22 +1501,22 @@ const initializeApp = async () => {
         }
 
         // 初始化情侣模式丰富内容
-        initLoversModePanels(window.LGMAP_CONFIG);
+        initLoversModePanels(window.WITHU_MAP_CONFIG);
 
         // 添加留言标记（带聚合）
-        const markersData = window.LGMAP_CONFIG.footprints || window.LGMAP_CONFIG.messages || [];
+        const markersData = window.WITHU_MAP_CONFIG.footprints || window.WITHU_MAP_CONFIG.messages || [];
         modeData.messages.elements = addFootprintMarkers(map, markersData);
 
         // 添加相册标记（带聚合）
-        const albumsData = window.LGMAP_CONFIG.albums || [];
+        const albumsData = window.WITHU_MAP_CONFIG.albums || [];
         modeData.albums.elements = addAlbumMarkers(map, albumsData);
 
         // 添加事件标记
-        const eventsData = window.LGMAP_CONFIG.events || [];
+        const eventsData = window.WITHU_MAP_CONFIG.events || [];
         modeData.events.elements = addEventMarkers(map, eventsData);
 
         // 初始化点点滴滴模式（地图标记+聚合）
-        const momentsData = window.LGMAP_CONFIG.moments || [];
+        const momentsData = window.WITHU_MAP_CONFIG.moments || [];
         modeData.moments.elements = addMomentsMarkers(map, momentsData);
 
         // 缩放倍数显示器
@@ -1540,7 +1540,7 @@ const initializeApp = async () => {
             }
             if (zoomTimer) clearTimeout(zoomTimer);
             zoomTimer = setTimeout(() => {
-                if (!window.LGMap.isVisible()) return; // 若地图不可见，跳过更新以免报错 Pixel(NaN,NaN)
+                if (!window.WithUMap.isVisible()) return; // 若地图不可见，跳过更新以免报错 Pixel(NaN,NaN)
                 if (currentMode === 'messages' && modeData.messages.elements && modeData.messages.elements.updateDisplay) {
                     modeData.messages.elements.updateDisplay();
                 } else if (currentMode === 'albums') {
@@ -1560,7 +1560,7 @@ const initializeApp = async () => {
         map.on('moveend', () => {
             if (zoomTimer) clearTimeout(zoomTimer);
             zoomTimer = setTimeout(() => {
-                if (!window.LGMap.isVisible()) return; // 若地图不可见，跳过更新以免报错 Pixel(NaN,NaN)
+                if (!window.WithUMap.isVisible()) return; // 若地图不可见，跳过更新以免报错 Pixel(NaN,NaN)
                 if (currentMode === 'messages' && modeData.messages.elements && modeData.messages.elements.updateDisplay) {
                     modeData.messages.elements.updateDisplay();
                 } else if (currentMode === 'albums') {
@@ -1669,7 +1669,7 @@ const initializeApp = async () => {
 
                 // 延迟更新聚合（可被下次点击取消）
                 switchTimer = setTimeout(() => {
-                    if (!window.LGMap.isVisible()) return; // 若地图不可见，跳过更新以免报错 Pixel(NaN,NaN)
+                    if (!window.WithUMap.isVisible()) return; // 若地图不可见，跳过更新以免报错 Pixel(NaN,NaN)
                     if (modeData[newMode].elements && modeData[newMode].elements.updateDisplay) {
                         modeData[newMode].elements.updateDisplay();
                     }
@@ -1707,7 +1707,7 @@ const addLoversMarkers = (map, lovers) => {
     const lover1Located = lover1.located !== false && !!lover1Coords;
     const lover2Located = lover2.located !== false && !!lover2Coords;
     const bothLocated = lover1Located && lover2Located;
-    const loveStartDate = window.LGMAP_CONFIG.loveStartDate;
+    const loveStartDate = window.WITHU_MAP_CONFIG.loveStartDate;
 
     // 检测是否在同一位置
     const isSameLocation =
@@ -1839,7 +1839,7 @@ const addLoversMarkers = (map, lovers) => {
     });
 
     if (!bothLocated) {
-        mapDebugWarn('🗺️ [LGMap Debug] 情侣模式存在无效坐标，已回退到单点展示，避免轨迹计算出现 NaN。', {
+        mapDebugWarn('🗺️ [WithUMap Debug] 情侣模式存在无效坐标，已回退到单点展示，避免轨迹计算出现 NaN。', {
             lover1: lover1.coords,
             lover2: lover2.coords
         });
@@ -1877,7 +1877,7 @@ const addLoversMarkers = (map, lovers) => {
 
     // 同一位置时，创建合并的双人标记
     if (isSameLocation) {
-        const isSoloMode = !!(window.LGMAP_CONFIG && window.LGMAP_CONFIG.soloMode);
+        const isSoloMode = !!(window.WITHU_MAP_CONFIG && window.WITHU_MAP_CONFIG.soloMode);
         const togetherEl = document.createElement('div');
         togetherEl.className = 'lovers-together-marker' + (isSoloMode ? ' is-solo' : '');
         togetherEl.innerHTML = `
@@ -1939,7 +1939,7 @@ const addLoversMarkers = (map, lovers) => {
 
 // 创建浪漫爱心轨迹 - 散落光点版
 const createLoveTrail = (map, coords1, coords2) => {
-    const isSoloMode = !!(window.LGMAP_CONFIG && window.LGMAP_CONFIG.soloMode);
+    const isSoloMode = !!(window.WITHU_MAP_CONFIG && window.WITHU_MAP_CONFIG.soloMode);
     const trailColor = isSoloMode ? '#7aa2ff' : '#ff4081';
     // 计算贝塞尔曲线控制点
     const midLng = (coords1[0] + coords2[0]) / 2;
@@ -2123,7 +2123,7 @@ const createLoveTrail = (map, coords1, coords2) => {
         if (_animationStopped) return;
 
         // 地图容器不可见时暂停动画帧，等 start() 重新启动
-        const overlay = document.getElementById('lgMapOverlay');
+        const overlay = document.getElementById('withuMapOverlay');
         if (!overlay || overlay.style.display === 'none' || overlay.classList.contains('withu-map-overlay-closing')) {
             _animationStopped = true;
             return;
@@ -3755,8 +3755,8 @@ const createAnniversaryPanel = (anniversary) => {
     `;
 
     // 添加到 .withu-map 容器或 body
-    const lgMapContainer = document.querySelector('.withu-map');
-    (lgMapContainer || document.body).appendChild(container);
+    const withuMapContainer = document.querySelector('.withu-map');
+    (withuMapContainer || document.body).appendChild(container);
     return container;
 };
 
@@ -4284,17 +4284,17 @@ const AlbumPhotosManager = (() => {
 
     // 获取 API 基础路径
     const getApiBase = () => {
-        const config = window.LGMAP_CONFIG || {};
+        const config = window.WITHU_MAP_CONFIG || {};
         if (config._apiBase) {
             return config._apiBase;
         }
 
-        const lgConfig = window.WITHU_CONFIG || {};
-        if (lgConfig.endpoints && lgConfig.endpoints.mapApi) {
-            return lgConfig.endpoints.mapApi;
+        const withuConfig = window.WITHU_CONFIG || {};
+        if (withuConfig.endpoints && withuConfig.endpoints.mapApi) {
+            return withuConfig.endpoints.mapApi;
         }
 
-        const siteBase = lgConfig.siteBase || '';
+        const siteBase = withuConfig.siteBase || '';
         return 'assets/map-api.php';
     };
 
@@ -4331,7 +4331,7 @@ const AlbumPhotosManager = (() => {
         const modeData = window._lgMapModeData;
         if (!modeData || !modeData.albums) { _loading = false; return; }
 
-        _map = (window.LGMap && window.LGMap.getMap) ? window.LGMap.getMap() : null;
+        _map = (window.WithUMap && window.WithUMap.getMap) ? window.WithUMap.getMap() : null;
         if (!_map && modeData.albums.elements && modeData.albums.elements.markers && modeData.albums.elements.markers.length > 0) {
             _map = modeData.albums.elements.markers[0].getMap();
         }
@@ -4908,8 +4908,8 @@ const AlbumPhotosManager = (() => {
     // 显示返回按钮
     const _showBackButton = () => {
         if (_backBtn) return;
-        const lgMap = document.querySelector('.withu-map');
-        if (!lgMap) return;
+        const withuMap = document.querySelector('.withu-map');
+        if (!withuMap) return;
 
         _backBtn = document.createElement('button');
         _backBtn.className = 'album-back-btn';
@@ -4920,7 +4920,7 @@ const AlbumPhotosManager = (() => {
             <span>返回相册</span>
         `;
         _backBtn.onclick = () => collapse(false);
-        lgMap.appendChild(_backBtn);
+        withuMap.appendChild(_backBtn);
         requestAnimationFrame(() => {
             if (_backBtn) _backBtn.classList.add('show');
         });

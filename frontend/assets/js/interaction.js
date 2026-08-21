@@ -6,7 +6,7 @@
  *   2. 点赞按钮添加属性：data-like-target="article" data-like-id="123"
  *   3. 浏览量容器添加属性：data-view-count="article:123"
  *   4. 点赞计数容器添加属性：data-like-count="article:123"
- *   5. 页面加载后调用 LGInteraction.init() 或自动初始化
+ *   5. 页面加载后调用 WithUInteraction.init() 或自动初始化
  *
  * 自动行为：
  *   - 页面加载时自动记录浏览量（需要 <body data-view-target="article" data-view-id="123">）
@@ -23,7 +23,7 @@
     var _initialized = false;
     var _pendingViews = [];
 
-    var LGInteraction = {
+    var WithUInteraction = {
 
         /**
          * 初始化：查询状态 + 注册浏览
@@ -49,15 +49,15 @@
         // 点赞按钮绑定（事件委托，只绑一次）
         // ============================================
         _bindLikeButtons: function () {
-            if (LGInteraction._delegated) return;
-            LGInteraction._delegated = true;
+            if (WithUInteraction._delegated) return;
+            WithUInteraction._delegated = true;
 
             document.addEventListener('click', function (e) {
                 var btn = e.target.closest('[data-like-target]');
                 if (!btn) return;
                 e.preventDefault();
                 e.stopPropagation();
-                LGInteraction._handleLikeClick(btn);
+                WithUInteraction._handleLikeClick(btn);
             });
         },
 
@@ -100,7 +100,7 @@
                     self._showFeedback(btn, res.msg || '操作失败');
                 }
             }, function (err) {
-                console.error('[LGInteraction] like failed', err);
+                console.error('[WithUInteraction] like failed', err);
                 btn.classList.remove('withu-interaction-loading');
                 self._showFeedback(btn, '网络错误');
             });
@@ -272,7 +272,7 @@
                 target_id: vid
             }, function (res) {
                 if (res.code === 200 && res.data) {
-                    LGInteraction._updateCountDisplays('view', vt + ':' + vid, res.data.view_count);
+                    WithUInteraction._updateCountDisplays('view', vt + ':' + vid, res.data.view_count);
                 }
             });
         },
@@ -343,16 +343,16 @@
                         var res = JSON.parse(xhr.responseText);
                         if (onSuccess) onSuccess(res);
                     } catch (e) {
-                        console.error('[LGInteraction] POST parse error', e);
+                        console.error('[WithUInteraction] POST parse error', e);
                         if (onError) onError(e);
                     }
                 } else {
-                    console.error('[LGInteraction] POST HTTP error', xhr.status);
+                    console.error('[WithUInteraction] POST HTTP error', xhr.status);
                     if (onError) onError(new Error('HTTP ' + xhr.status));
                 }
             };
-            xhr.onerror = function () { console.error('[LGInteraction] POST onerror', url); if (onError) onError(new Error('Network error')); };
-            xhr.ontimeout = function () { console.error('[LGInteraction] POST timeout', url); if (onError) onError(new Error('Timeout')); };
+            xhr.onerror = function () { console.error('[WithUInteraction] POST onerror', url); if (onError) onError(new Error('Network error')); };
+            xhr.ontimeout = function () { console.error('[WithUInteraction] POST timeout', url); if (onError) onError(new Error('Timeout')); };
             xhr.send(body);
         },
 
@@ -375,27 +375,27 @@
                         var res = JSON.parse(xhr.responseText);
                         if (onSuccess) onSuccess(res);
                     } catch (e) {
-                        console.error('[LGInteraction] GET parse error', e, xhr.responseText.substring(0, 200));
+                        console.error('[WithUInteraction] GET parse error', e, xhr.responseText.substring(0, 200));
                         if (onError) onError(e);
                     }
                 } else {
-                    console.error('[LGInteraction] GET HTTP error', xhr.status);
+                    console.error('[WithUInteraction] GET HTTP error', xhr.status);
                     if (onError) onError(new Error('HTTP ' + xhr.status));
                 }
             };
-            xhr.onerror = function () { console.error('[LGInteraction] GET onerror'); if (onError) onError(new Error('Network error')); };
-            xhr.ontimeout = function () { console.error('[LGInteraction] GET timeout'); if (onError) onError(new Error('Timeout')); };
+            xhr.onerror = function () { console.error('[WithUInteraction] GET onerror'); if (onError) onError(new Error('Network error')); };
+            xhr.ontimeout = function () { console.error('[WithUInteraction] GET timeout'); if (onError) onError(new Error('Timeout')); };
             xhr.send();
         }
     };
 
     // 挂载到全局
-    window.LGInteraction = LGInteraction;
+    window.WithUInteraction = WithUInteraction;
 
     // 自动初始化
     if (document.readyState === 'loading') {
-        document.addEventListener('DOMContentLoaded', function () { LGInteraction.init(); });
+        document.addEventListener('DOMContentLoaded', function () { WithUInteraction.init(); });
     } else {
-        LGInteraction.init();
+        WithUInteraction.init();
     }
 })();

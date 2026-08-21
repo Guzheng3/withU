@@ -125,16 +125,16 @@ div#ConventionPhoto {
   bottom: auto;
 }
 
-.avatarArea .lgewui-head-avatar-status-text {
+.avatarArea .withu-head-avatar-status-text {
   font-size: .8rem;
 }
-.avatarArea .lgewui-head-avatar-gender-icon {
+.avatarArea .withu-head-avatar-gender-icon {
   width: 24px;
   height: 24px;
 }
-.avatarArea .lgewui-head-avatar-mask {
+.avatarArea .withu-head-avatar-mask {
   padding: 0.8rem 0;
 }
-.avatarArea .lgewui-head-avatar-divider {
+.avatarArea .withu-head-avatar-divider {
   width: 3rem;
 }

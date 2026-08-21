@@ -245,9 +245,9 @@
          * 绑定卡片展开/收起
          */
         _bindCardToggle() {
-            $(document).off('click.lgListCard', '.card-header');
+            $(document).off('click.withuListCard', '.card-header');
             
-            $(document).on('click.lgListCard', '.card-header', function(e) {
+            $(document).on('click.withuListCard', '.card-header', function(e) {
                 e.preventDefault();
                 e.stopPropagation();
                 
@@ -307,7 +307,7 @@
         _clearCardsSkeleton() {
             this._skeletonTimers.forEach((timerId) => clearTimeout(timerId));
             this._skeletonTimers = [];
-            $('#lgListSkeleton').removeClass('is-active');
+            $('#withuListSkeleton').removeClass('is-active');
         },
 
         _freezeContainerHeight() {
@@ -322,7 +322,7 @@
 
         _expandContainerHeightForSkeleton() {
             const container = document.getElementById('list_container');
-            const skeleton = document.getElementById('lgListSkeleton');
+            const skeleton = document.getElementById('withuListSkeleton');
             if (!container || !skeleton) return;
 
             const currentMinHeight = parseInt(container.style.minHeight || '0', 10) || 0;
@@ -377,7 +377,7 @@
             this._freezeContainerHeight();
             // 直接隐藏原始数据
             $('#list_data, .query_data').hide();
-            $('#lgListSkeleton').addClass('is-active');
+            $('#withuListSkeleton').addClass('is-active');
             // 扩展到骨架屏高度
             this._expandContainerHeightForSkeleton();
         },
@@ -435,8 +435,8 @@
         _bindTabSwitch() {
             const self = this;
 
-            $(document).off('click.lgListTab', '.LgLoveList-tab');
-            $(document).on('click.lgListTab', '.LgLoveList-tab', function() {
+            $(document).off('click.withuListTab', '.LgLoveList-tab');
+            $(document).on('click.withuListTab', '.LgLoveList-tab', function() {
                 const screenCode = $(this).data('id');
                 
                 // 更新 Tab 状态
@@ -471,8 +471,8 @@
          * 绑定搜索范围胶囊
          */
         _bindScopeTag() {
-            $(document).off('click.lgListScope', '#scopeTag');
-            $(document).on('click.lgListScope', '#scopeTag', function() {
+            $(document).off('click.withuListScope', '#scopeTag');
+            $(document).on('click.withuListScope', '#scopeTag', function() {
                 const currentScope = $(this).data('scope');
                 const currentTab = $('.LgLoveList-tab-active').data('id');
 
@@ -499,8 +499,8 @@
         _bindSearch() {
             const self = this;
 
-            $(document).off('click.lgListSearch', '#search_btn');
-            $(document).on('click.lgListSearch', '#search_btn', function() {
+            $(document).off('click.withuListSearch', '#search_btn');
+            $(document).on('click.withuListSearch', '#search_btn', function() {
                 const searchInfo = $("input[name='search']").val();
                 
                 if (!searchInfo) {
@@ -522,8 +522,8 @@
             });
 
             // 回车搜索
-            $(document).off('keypress.lgListSearch', "input[name='search']");
-            $(document).on('keypress.lgListSearch', "input[name='search']", function(e) {
+            $(document).off('keypress.withuListSearch', "input[name='search']");
+            $(document).on('keypress.withuListSearch', "input[name='search']", function(e) {
                 if (e.which === 13) {
                     $('#search_btn').trigger('click');
                 }
@@ -666,7 +666,7 @@
                 const hasImg = item.imgurl && item.imgurl.length > 0 && item.imgurl[0] !== '0';
                 let placeHtml;
                 if (hasCoords && item.icon) {
-                    placeHtml = `<span class="info-value lovelist-location-link has-coords" onclick="event.stopPropagation(); if(window.LGMap) LGMap.open({ mode:'events', coords:[${item.lng},${item.lat}], zoom:15 });" data-tooltip="${this._escapeHtml(place)}"><i class="ph-fill ph-map-pin"></i><span>${this._escapeHtml(place)}</span></span>`;
+                    placeHtml = `<span class="info-value lovelist-location-link has-coords" onclick="event.stopPropagation(); if(window.WithUMap) WithUMap.open({ mode:'events', coords:[${item.lng},${item.lat}], zoom:15 });" data-tooltip="${this._escapeHtml(place)}"><i class="ph-fill ph-map-pin"></i><span>${this._escapeHtml(place)}</span></span>`;
                 } else {
                     placeHtml = `<span class="info-value">${this._escapeHtml(place)}</span>`;
                 }
@@ -760,7 +760,7 @@
     // ============================================
     // 暴露到全局
     // ============================================
-    window.LGListModule = ListModule;
+    window.WithUListModule = ListModule;
     window.initListPage = () => ListModule.init();
 
     // ============================================

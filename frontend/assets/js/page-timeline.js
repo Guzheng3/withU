@@ -336,7 +336,7 @@
             if (item.location) {
                 const hasValidCoords = item.map_lat && item.map_lng && isFinite(item.map_lat) && isFinite(item.map_lng) && !(item.map_lat === 0 && item.map_lng === 0);
                 if (hasValidCoords) {
-                    metaItems.push(`<div class="withu-time-line-meta-item withu-tl-meta-location-link" onclick="event.stopPropagation(); if(typeof LGMiniMap!=='undefined') LGMiniMap.openFullscreen(${item.map_lat}, ${item.map_lng})" data-tooltip="${item.location}"><i class="ph-fill ph-map-pin"></i><span>${item.location}</span></div>`);
+                    metaItems.push(`<div class="withu-time-line-meta-item withu-tl-meta-location-link" onclick="event.stopPropagation(); if(typeof WithUMiniMap!=='undefined') WithUMiniMap.openFullscreen(${item.map_lat}, ${item.map_lng})" data-tooltip="${item.location}"><i class="ph-fill ph-map-pin"></i><span>${item.location}</span></div>`);
                 } else {
                     metaItems.push(`<div class="withu-time-line-meta-item" data-tooltip="${item.location}"><i class="ph-fill ph-map-pin"></i><span>${item.location}</span></div>`);
                 }
@@ -1131,15 +1131,15 @@
             AudioManager.initAll();
 
             // 加载点赞状态
-            if (typeof LGInteraction !== 'undefined') LGInteraction.reinit();
+            if (typeof WithUInteraction !== 'undefined') WithUInteraction.reinit();
 
             // 初始化地图卡片中的迷你地图
-            if (typeof LGMiniMap !== 'undefined') {
+            if (typeof WithUMiniMap !== 'undefined') {
                 container.querySelectorAll('.withu-tl-map-preview').forEach(el => {
                     const lat = parseFloat(el.dataset.lat);
                     const lng = parseFloat(el.dataset.lng);
                     if (isFinite(lat) && isFinite(lng)) {
-                        LGMiniMap.render({ el, lat, lng, zoom: 15 });
+                        WithUMiniMap.render({ el, lat, lng, zoom: 15 });
                     }
                 });
             }
@@ -1294,7 +1294,7 @@
     });
 
     // PJAX 完成后重新初始化
-    $(document).on('pjax:end.lgTimeline', function () {
+    $(document).on('pjax:end.withuTimeline', function () {
         if ($('#timeline-container').length > 0) {
             TimelineModule.loadFromServer();
         }
@@ -1304,11 +1304,11 @@
     // 暴露到全局
     // ============================================
     window.toggleTimelineAudio = (id) => AudioManager.toggle(id);
-    window.LGTimelineModule = TimelineModule;
+    window.WithUTimelineModule = TimelineModule;
 
-    // 注册到 LGApp
-    if (window.LGApp) {
-        window.LGApp.register('timeline', TimelineModule);
+    // 注册到 WithUApp
+    if (window.WithUApp) {
+        window.WithUApp.register('timeline', TimelineModule);
     }
 
 })(window, jQuery);

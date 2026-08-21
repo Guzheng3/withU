@@ -286,31 +286,31 @@ div#homePage[data-Fullscreen] .bg-wrap.central.limg {
   right: 1.5rem;
 }
 
-.avatarArea .lgewui-head-avatar-status-text {
+.avatarArea .withu-head-avatar-status-text {
   font-size: 1.1rem;
 }
-.avatarArea .lgewui-head-avatar-divider {
+.avatarArea .withu-head-avatar-divider {
   width: 4.5rem;
 }
-.avatarArea .lgewui-head-avatar-gender-icon {
+.avatarArea .withu-head-avatar-gender-icon {
   width: 36px;
   height: 36px;
   padding: 6px;
 }
-.avatarArea .lgewui-head-avatar-gender-icon .lucide {
+.avatarArea .withu-head-avatar-gender-icon .lucide {
   width: 20px;
   height: 20px;
 }
-.avatarArea .lgewui-head-avatar-location {
+.avatarArea .withu-head-avatar-location {
   font-size: 0.85rem;
   padding: 0.35rem 0.6rem;
   gap: 0.3rem;
 }
-.avatarArea .lgewui-head-avatar-location .lucide {
+.avatarArea .withu-head-avatar-location .lucide {
   width: 14px;
   height: 14px;
 }
-.avatarArea .lgewui-head-avatar-status-text .lucide {
+.avatarArea .withu-head-avatar-status-text .lucide {
   width: 18px;
   height: 18px;
 }

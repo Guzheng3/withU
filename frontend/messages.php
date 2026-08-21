@@ -86,7 +86,7 @@
 <script>
 (function(){
     var _count = 0;
-    window.lgScrollLock = function(){
+    window.withuScrollLock = function(){
         _count++;
         if (_count === 1) {
             var w = window.innerWidth - document.documentElement.clientWidth;
@@ -94,14 +94,14 @@
             document.documentElement.classList.add('withu-scroll-locked');
         }
     };
-    window.lgScrollUnlock = function(){
+    window.withuScrollUnlock = function(){
         _count = Math.max(0, _count - 1);
         if (_count === 0) {
             document.documentElement.classList.remove('withu-scroll-locked');
             document.documentElement.style.removeProperty('--withu-scrollbar-compensate');
         }
     };
-    window.lgScrollReset = function(){
+    window.withuScrollReset = function(){
         _count = 0;
         document.documentElement.classList.remove('withu-scroll-locked');
         document.documentElement.style.removeProperty('--withu-scrollbar-compensate');
@@ -130,7 +130,7 @@
     // AOS 动画配置（供 app.js 的 AOSManager 使用）
     window.WITHU_AOS_CONFIG = {"enabled":true,"animation":"fade-up","duration":800,"delay":0,"interval":50,"maxDelay":300,"easing":"ease-out-cubic","offset":50,"once":true,"mirror":true,"anchorPlacement":"top-bottom"};
 
-    window.LGVisitorGeoCache = window.LGVisitorGeoCache || (function () {
+    window.WithUVisitorGeoCache = window.WithUVisitorGeoCache || (function () {
         var storageKey = 'withu_visitor_geo_v1';
         var cookieKey = 'withu_visitor_geo';
         var maxAgeMs = 6 * 60 * 60 * 1000;
@@ -241,26 +241,26 @@
         };
     })();
 
-    window.LGVisitorGeoCache.syncCookieFromCache();
+    window.WithUVisitorGeoCache.syncCookieFromCache();
 </script>
 
 <!-- 足迹地图配置（懒加载，点击才初始化） -->
         <script>
         window._AMapSecurityConfig = {"securityJsCode":"d4fe1ef6bb455368bc92d5fb577b2f3b"};
-        window.LGMAP_CONFIG = {"amapKey":"7d245650b5ba899ce4f025961613dcc5","modeConfig":{"lovers":{"title":"情侣模式","desc":"无论相隔多远，心始终在一起"},"moments":{"title":"点点滴滴","desc":"记录我们的每一个美好瞬间"},"messages":{"title":"留言模式","desc":"来自世界各地的温暖祝福"},"albums":{"title":"相册模式","desc":"用照片定格我们的回忆"},"events":{"title":"事件清单","desc":"一起完成的每一个小目标"}},"lovers":[],"milestones":[],"events":[],"albums":[],"messages":[],"moments":[],"loveStartDate":"","hsla":"345deg,70%,55%","mapStyle":"amap://styles/grey","soloMode":false,"_apiBase":"/assets/map-api.php"};
-        window.LGMapData = window.LGMapData || {
+        window.WITHU_MAP_CONFIG = {"amapKey":"7d245650b5ba899ce4f025961613dcc5","modeConfig":{"lovers":{"title":"情侣模式","desc":"无论相隔多远，心始终在一起"},"moments":{"title":"点点滴滴","desc":"记录我们的每一个美好瞬间"},"messages":{"title":"留言模式","desc":"来自世界各地的温暖祝福"},"albums":{"title":"相册模式","desc":"用照片定格我们的回忆"},"events":{"title":"事件清单","desc":"一起完成的每一个小目标"}},"lovers":[],"milestones":[],"events":[],"albums":[],"messages":[],"moments":[],"loveStartDate":"","hsla":"345deg,70%,55%","mapStyle":"amap://styles/grey","soloMode":false,"_apiBase":"/assets/map-api.php"};
+        window.WithUMapData = window.WithUMapData || {
             assign: function (data) {
-                if (data.lovers) window.LGMAP_CONFIG.lovers = data.lovers;
-                if (typeof data.loveStartDate !== 'undefined') window.LGMAP_CONFIG.loveStartDate = data.loveStartDate;
-                if (data.milestones) window.LGMAP_CONFIG.milestones = data.milestones;
-                if (data.moments) window.LGMAP_CONFIG.moments = data.moments;
-                if (data.messages) window.LGMAP_CONFIG.messages = data.messages;
-                if (data.albums) window.LGMAP_CONFIG.albums = data.albums;
-                if (data.events) window.LGMAP_CONFIG.events = data.events;
+                if (data.lovers) window.WITHU_MAP_CONFIG.lovers = data.lovers;
+                if (typeof data.loveStartDate !== 'undefined') window.WITHU_MAP_CONFIG.loveStartDate = data.loveStartDate;
+                if (data.milestones) window.WITHU_MAP_CONFIG.milestones = data.milestones;
+                if (data.moments) window.WITHU_MAP_CONFIG.moments = data.moments;
+                if (data.messages) window.WITHU_MAP_CONFIG.messages = data.messages;
+                if (data.albums) window.WITHU_MAP_CONFIG.albums = data.albums;
+                if (data.events) window.WITHU_MAP_CONFIG.events = data.events;
                 return data;
             },
             fetchAll: function () {
-                var apiUrl = new URL(window.LGMAP_CONFIG._apiBase, window.location.origin);
+                var apiUrl = new URL(window.WITHU_MAP_CONFIG._apiBase, window.location.origin);
                 apiUrl.searchParams.set('module', 'all');
                 return fetch(apiUrl.toString(), {
                     headers: { 'X-Requested-With': 'XMLHttpRequest', 'Accept': 'application/json' }
@@ -270,7 +270,7 @@
             }
         };
 
-        window.LGMAP_DATA_READY = window.LGMapData.fetchAll()
+        window.WITHU_MAP_DATA_READY = window.WithUMapData.fetchAll()
             .catch(function (err) {
                 if (window.WITHU_CONFIG && window.WITHU_CONFIG.debugMap && window.console && typeof window.console.warn === 'function') {
                     window.console.warn('地图数据加载失败:', err);
@@ -282,7 +282,7 @@
 
 <!-- 礼花效果已迁移到 components.js 的 ConfettiEffect 模块 -->
 
-<script src="/assets/js/pjax.js"></script><script>if(window.LGPjax&typeof window.LGPjax.init==="function")window.LGPjax.init();</script>
+<script src="/assets/js/pjax.js"></script><script>if(window.WithUPjax&typeof window.WithUPjax.init==="function")window.WithUPjax.init();</script>
 <style>
     #loader-wrapper {
         position: fixed;
@@ -1811,7 +1811,7 @@
     .withu-header-weather-loading svg {
         width: 16px;
         height: 16px;
-        animation: lgHeaderWeatherSpin 0.9s linear infinite;
+        animation: withuHeaderWeatherSpin 0.9s linear infinite;
     }
 
     .withu-header-weather-text {
@@ -2094,7 +2094,7 @@
         color: rgba(104, 116, 134, 0.86);
     }
 
-    @keyframes lgHeaderWeatherSpin {
+    @keyframes withuHeaderWeatherSpin {
         from {
             transform: rotate(0deg);
         }
@@ -3056,17 +3056,17 @@
         </div>
         <!-- 吸顶时显示的右侧区域: 地图 + 情侣头像 -->
         <div class="withu-header-actions" id="withuHeaderActions">
-                            <div class="withu-header-weather is-loading" id="lgHeaderVisitorWeather" title="点击查看当前天气信息" role="button" tabindex="0" aria-expanded="false">
-                    <span class="withu-header-weather-loading" id="lgHeaderVisitorWeatherLoading" aria-label="天气加载中">
+                            <div class="withu-header-weather is-loading" id="withuHeaderVisitorWeather" title="点击查看当前天气信息" role="button" tabindex="0" aria-expanded="false">
+                    <span class="withu-header-weather-loading" id="withuHeaderVisitorWeatherLoading" aria-label="天气加载中">
                         <i data-lucide="loader-circle"></i>
                     </span>
                     <span class="withu-header-weather-icon-wrap">
-                        <i class="qi-999-fill withu-header-weather-icon" id="lgHeaderVisitorWeatherIcon"></i>
+                        <i class="qi-999-fill withu-header-weather-icon" id="withuHeaderVisitorWeatherIcon"></i>
                     </span>
-                    <span class="withu-header-weather-text" id="lgHeaderVisitorWeatherText"></span>
+                    <span class="withu-header-weather-text" id="withuHeaderVisitorWeatherText"></span>
                 </div>
             
-                            <a href="javascript:void(0);" class="withu-header-map" id="lgMapOpenBtn" title="足迹地图">
+                            <a href="javascript:void(0);" class="withu-header-map" id="withuMapOpenBtn" title="足迹地图">
                     <span class="withu-header-map-icon-wrap">
                         <i class="ph-fill ph-globe-hemisphere-west"></i>
                     </span>
@@ -3086,7 +3086,7 @@
                             </div>
 
             <!-- 移动端更多按钮 -->
-            <button type="button" class="withu-header-more-btn" id="lgHeaderMoreBtn" aria-label="更多信息">
+            <button type="button" class="withu-header-more-btn" id="withuHeaderMoreBtn" aria-label="更多信息">
                 <i data-lucide="ellipsis"></i>
             </button>
         </div>
@@ -3094,7 +3094,7 @@
 </div>
 
 <!-- 移动端更多面板（毛玻璃磨砂效果） -->
-<div class="withu-header-more-panel" id="lgHeaderMorePanel">
+<div class="withu-header-more-panel" id="withuHeaderMorePanel">
     <div class="withu-header-more-overlay" data-close-panel></div>
     <div class="withu-header-more-sheet">
         <button type="button" class="withu-header-more-close" data-close-panel aria-label="关闭">
@@ -3114,14 +3114,14 @@
 
         <!-- 功能入口：天气、地图 -->
         <div class="withu-header-more-actions">
-                        <a href="javascript:void(0);" class="withu-header-more-action-item" id="lgMorePanelWeather" data-close-panel>
+                        <a href="javascript:void(0);" class="withu-header-more-action-item" id="withuMorePanelWeather" data-close-panel>
                 <span class="withu-header-more-action-icon">
-                    <i class="qi-999-fill" id="lgMorePanelWeatherIcon"></i>
+                    <i class="qi-999-fill" id="withuMorePanelWeatherIcon"></i>
                 </span>
-                <span class="withu-header-more-action-label" id="lgMorePanelWeatherText">天气</span>
+                <span class="withu-header-more-action-label" id="withuMorePanelWeatherText">天气</span>
             </a>
             
-                        <a href="javascript:void(0);" class="withu-header-more-action-item" id="lgMorePanelMap" data-close-panel>
+                        <a href="javascript:void(0);" class="withu-header-more-action-item" id="withuMorePanelMap" data-close-panel>
                 <span class="withu-header-more-action-icon">
                     <i class="ph-fill ph-globe-hemisphere-west"></i>
                 </span>
@@ -3163,23 +3163,23 @@
         <div class="bg-img">
             <div class="middle Blurkg">
                 <div class="img-male">
-                    <div class="avatarArea lgewui-head-avatar-boy">
+                    <div class="avatarArea withu-head-avatar-boy">
                         <img draggable="false" class="avatarFrame lazy" data-src= 'https://s1.locimg.com/2024/10/18/db01c99842e69.png' style='transform: scale(1.6);top: 2px;left: 2px;' >
                         <img draggable="false" class="aiv_touxiang" data-src="/Lovefolder/20260411043037_69d95ded97293201118237.webp">
-                                                <div class="lgewui-head-avatar-mask">
-                            <div class="lgewui-head-avatar-top lgewui-head-avatar-anim-item">
-                                                                <div class="lgewui-head-avatar-gender-icon" data-gender="male"><i data-lucide="mars"></i></div>
+                                                <div class="withu-head-avatar-mask">
+                            <div class="withu-head-avatar-top withu-head-avatar-anim-item">
+                                                                <div class="withu-head-avatar-gender-icon" data-gender="male"><i data-lucide="mars"></i></div>
                                                             </div>
-                            <div class="lgewui-head-avatar-middle lgewui-head-avatar-anim-item">
+                            <div class="withu-head-avatar-middle withu-head-avatar-anim-item">
                                 <div
-                                    class="lgewui-head-avatar-status-text lgewui-head-avatar-status-away">
-                                                                            <i data-lucide="clock" class="lgewui-head-avatar-icon-away"></i>
+                                    class="withu-head-avatar-status-text withu-head-avatar-status-away">
+                                                                            <i data-lucide="clock" class="withu-head-avatar-icon-away"></i>
                                                                         <em>2小时前</em>
                                 </div>
-                                <div class="lgewui-head-avatar-divider"></div>
+                                <div class="withu-head-avatar-divider"></div>
                             </div>
-                            <div class="lgewui-head-avatar-bottom lgewui-head-avatar-anim-item">
-                                <div class="lgewui-head-avatar-location">
+                            <div class="withu-head-avatar-bottom withu-head-avatar-anim-item">
+                                <div class="withu-head-avatar-location">
                                     <i data-lucide="map-pin"></i>
                                     <em>潘州公园</em>
                                 </div>
@@ -3190,7 +3190,7 @@
                 </div>
                 <div class="love-icon">
                     <div class="love-info-wrapper">
-                        <div class="distance-bubble" onclick="if(window.LGMap)LGMap.open({mode:'lovers'})"
+                        <div class="distance-bubble" onclick="if(window.WithUMap)WithUMap.open({mode:'lovers'})"
                                                         style="cursor:pointer">
                             <div class="distance-icon-box">
                                 <i class="ph-fill ph-navigation-arrow"></i>
@@ -3205,23 +3205,23 @@
                     <img draggable="false" src="../Style/img/like.svg">
                 </div>
                                 <div class="img-female">
-                    <div class="avatarArea lgewui-head-avatar-girl">
+                    <div class="avatarArea withu-head-avatar-girl">
                         <img draggable="false" class="avatarFrame lazy" data-src= 'https://s1.locimg.com/2024/10/18/db01c99842e69.png' style='transform: scale(1.6);top: 2px;left: 2px;' >
                         <img draggable="false" class="aiv_touxiang" data-src="/Lovefolder/20260411043046_69d95df639c33274072975.webp">
-                                                <div class="lgewui-head-avatar-mask">
-                            <div class="lgewui-head-avatar-top lgewui-head-avatar-anim-item">
-                                                                <div class="lgewui-head-avatar-gender-icon" data-gender="female"><i data-lucide="venus"></i></div>
+                                                <div class="withu-head-avatar-mask">
+                            <div class="withu-head-avatar-top withu-head-avatar-anim-item">
+                                                                <div class="withu-head-avatar-gender-icon" data-gender="female"><i data-lucide="venus"></i></div>
                                                             </div>
-                            <div class="lgewui-head-avatar-middle lgewui-head-avatar-anim-item">
+                            <div class="withu-head-avatar-middle withu-head-avatar-anim-item">
                                 <div
-                                    class="lgewui-head-avatar-status-text lgewui-head-avatar-status-offline">
-                                                                            <i data-lucide="wifi-off" class="lgewui-head-avatar-icon-offline"></i>
+                                    class="withu-head-avatar-status-text withu-head-avatar-status-offline">
+                                                                            <i data-lucide="wifi-off" class="withu-head-avatar-icon-offline"></i>
                                                                         <em>离线</em>
                                 </div>
-                                <div class="lgewui-head-avatar-divider"></div>
+                                <div class="withu-head-avatar-divider"></div>
                             </div>
-                            <div class="lgewui-head-avatar-bottom lgewui-head-avatar-anim-item">
-                                <div class="lgewui-head-avatar-location">
+                            <div class="withu-head-avatar-bottom withu-head-avatar-anim-item">
+                                <div class="withu-head-avatar-location">
                                     <i data-lucide="map-pin"></i>
                                     <em>甲子公园</em>
                                 </div>
@@ -3360,69 +3360,69 @@
 
             <!-- 留言卡片容器（由 JS 渲染） -->
             <div class="Message_Wrap">
-                <div class="row Message_Main" id="lgmsgCardGrid">
+                <div class="row Message_Main" id="withumsgCardGrid">
                     <!-- 初始骨架屏 -->
-                                        <div class="col-withu-6 col-md-6 col-sm-12 col-sm-x-12 lgmsg-skeleton-wrap">
-                        <div class="lgmsg-skeleton" style="animation-delay:0ms">
+                                        <div class="col-withu-6 col-md-6 col-sm-12 col-sm-x-12 withumsg-skeleton-wrap">
+                        <div class="withumsg-skeleton" style="animation-delay:0ms">
                             <div class="sk-header">
-                                <div class="lgmsg-skeleton-line sk-avatar"></div>
-                                <div><div class="lgmsg-skeleton-line sk-name"></div><div class="lgmsg-skeleton-line sk-time"></div></div>
+                                <div class="withumsg-skeleton-line sk-avatar"></div>
+                                <div><div class="withumsg-skeleton-line sk-name"></div><div class="withumsg-skeleton-line sk-time"></div></div>
                             </div>
-                            <div class="lgmsg-skeleton-line sk-text1"></div>
-                            <div class="lgmsg-skeleton-line sk-text2"></div>
-                            <div class="lgmsg-skeleton-line sk-text3"></div>
+                            <div class="withumsg-skeleton-line sk-text1"></div>
+                            <div class="withumsg-skeleton-line sk-text2"></div>
+                            <div class="withumsg-skeleton-line sk-text3"></div>
                             <div class="sk-footer">
-                                <div class="lgmsg-skeleton-line sk-pill"></div>
-                                <div class="lgmsg-skeleton-line sk-pill" style="width:50px"></div>
-                                <div class="lgmsg-skeleton-line sk-pill" style="width:45px"></div>
+                                <div class="withumsg-skeleton-line sk-pill"></div>
+                                <div class="withumsg-skeleton-line sk-pill" style="width:50px"></div>
+                                <div class="withumsg-skeleton-line sk-pill" style="width:45px"></div>
                             </div>
                         </div>
                     </div>
-                                        <div class="col-withu-6 col-md-6 col-sm-12 col-sm-x-12 lgmsg-skeleton-wrap">
-                        <div class="lgmsg-skeleton" style="animation-delay:80ms">
+                                        <div class="col-withu-6 col-md-6 col-sm-12 col-sm-x-12 withumsg-skeleton-wrap">
+                        <div class="withumsg-skeleton" style="animation-delay:80ms">
                             <div class="sk-header">
-                                <div class="lgmsg-skeleton-line sk-avatar"></div>
-                                <div><div class="lgmsg-skeleton-line sk-name"></div><div class="lgmsg-skeleton-line sk-time"></div></div>
+                                <div class="withumsg-skeleton-line sk-avatar"></div>
+                                <div><div class="withumsg-skeleton-line sk-name"></div><div class="withumsg-skeleton-line sk-time"></div></div>
                             </div>
-                            <div class="lgmsg-skeleton-line sk-text1"></div>
-                            <div class="lgmsg-skeleton-line sk-text2"></div>
-                            <div class="lgmsg-skeleton-line sk-text3"></div>
+                            <div class="withumsg-skeleton-line sk-text1"></div>
+                            <div class="withumsg-skeleton-line sk-text2"></div>
+                            <div class="withumsg-skeleton-line sk-text3"></div>
                             <div class="sk-footer">
-                                <div class="lgmsg-skeleton-line sk-pill"></div>
-                                <div class="lgmsg-skeleton-line sk-pill" style="width:50px"></div>
-                                <div class="lgmsg-skeleton-line sk-pill" style="width:45px"></div>
+                                <div class="withumsg-skeleton-line sk-pill"></div>
+                                <div class="withumsg-skeleton-line sk-pill" style="width:50px"></div>
+                                <div class="withumsg-skeleton-line sk-pill" style="width:45px"></div>
                             </div>
                         </div>
                     </div>
-                                        <div class="col-withu-6 col-md-6 col-sm-12 col-sm-x-12 lgmsg-skeleton-wrap">
-                        <div class="lgmsg-skeleton" style="animation-delay:160ms">
+                                        <div class="col-withu-6 col-md-6 col-sm-12 col-sm-x-12 withumsg-skeleton-wrap">
+                        <div class="withumsg-skeleton" style="animation-delay:160ms">
                             <div class="sk-header">
-                                <div class="lgmsg-skeleton-line sk-avatar"></div>
-                                <div><div class="lgmsg-skeleton-line sk-name"></div><div class="lgmsg-skeleton-line sk-time"></div></div>
+                                <div class="withumsg-skeleton-line sk-avatar"></div>
+                                <div><div class="withumsg-skeleton-line sk-name"></div><div class="withumsg-skeleton-line sk-time"></div></div>
                             </div>
-                            <div class="lgmsg-skeleton-line sk-text1"></div>
-                            <div class="lgmsg-skeleton-line sk-text2"></div>
-                            <div class="lgmsg-skeleton-line sk-text3"></div>
+                            <div class="withumsg-skeleton-line sk-text1"></div>
+                            <div class="withumsg-skeleton-line sk-text2"></div>
+                            <div class="withumsg-skeleton-line sk-text3"></div>
                             <div class="sk-footer">
-                                <div class="lgmsg-skeleton-line sk-pill"></div>
-                                <div class="lgmsg-skeleton-line sk-pill" style="width:50px"></div>
-                                <div class="lgmsg-skeleton-line sk-pill" style="width:45px"></div>
+                                <div class="withumsg-skeleton-line sk-pill"></div>
+                                <div class="withumsg-skeleton-line sk-pill" style="width:50px"></div>
+                                <div class="withumsg-skeleton-line sk-pill" style="width:45px"></div>
                             </div>
                         </div>
                     </div>
-                                        <div class="col-withu-6 col-md-6 col-sm-12 col-sm-x-12 lgmsg-skeleton-wrap">
-                        <div class="lgmsg-skeleton" style="animation-delay:240ms">
+                                        <div class="col-withu-6 col-md-6 col-sm-12 col-sm-x-12 withumsg-skeleton-wrap">
+                        <div class="withumsg-skeleton" style="animation-delay:240ms">
                             <div class="sk-header">
-                                <div class="lgmsg-skeleton-line sk-avatar"></div>
-                                <div><div class="lgmsg-skeleton-line sk-name"></div><div class="lgmsg-skeleton-line sk-time"></div></div>
+                                <div class="withumsg-skeleton-line sk-avatar"></div>
+                                <div><div class="withumsg-skeleton-line sk-name"></div><div class="withumsg-skeleton-line sk-time"></div></div>
                             </div>
-                            <div class="lgmsg-skeleton-line sk-text1"></div>
-                            <div class="lgmsg-skeleton-line sk-text2"></div>
-                            <div class="lgmsg-skeleton-line sk-text3"></div>
+                            <div class="withumsg-skeleton-line sk-text1"></div>
+                            <div class="withumsg-skeleton-line sk-text2"></div>
+                            <div class="withumsg-skeleton-line sk-text3"></div>
                             <div class="sk-footer">
-                                <div class="lgmsg-skeleton-line sk-pill"></div>
-                                <div class="lgmsg-skeleton-line sk-pill" style="width:50px"></div>
-                                <div class="lgmsg-skeleton-line sk-pill" style="width:45px"></div>
+                                <div class="withumsg-skeleton-line sk-pill"></div>
+                                <div class="withumsg-skeleton-line sk-pill" style="width:50px"></div>
+                                <div class="withumsg-skeleton-line sk-pill" style="width:45px"></div>
                             </div>
                         </div>
                     </div>
@@ -3430,16 +3430,16 @@
             </div>
 
             <!-- 加载更多 / 无更多 -->
-            <div id="lgmsgLoadMoreWrap" class="lgmsg-load-more-wrap" style="display:none;">
-                <button class="lgmsg-load-more-btn" id="lgmsgLoadMoreBtn">
+            <div id="withumsgLoadMoreWrap" class="withumsg-load-more-wrap" style="display:none;">
+                <button class="withumsg-load-more-btn" id="withumsgLoadMoreBtn">
                     <span class="btn-text"><i class="ph ph-arrow-down"></i> 加载更多</span>
                 </button>
             </div>
-            <div id="lgmsgNoMore" class="lgmsg-no-more" style="display:none;">— 已经到底了 —</div>
+            <div id="withumsgNoMore" class="withumsg-no-more" style="display:none;">— 已经到底了 —</div>
 
             <!-- 侧边抽屉（1:1 from fullscreen-message-v2.html demo） -->
-            <div class="withu-message-drawer-overlay" id="lgmsgDrawer">
-                <div class="withu-message-drawer-content" id="lgmsgDrawerContent">
+            <div class="withu-message-drawer-overlay" id="withumsgDrawer">
+                <div class="withu-message-drawer-content" id="withumsgDrawerContent">
                     <div class="withu-message-drawer-bg"></div>
                     <div class="withu-message-drawer-header">
                         <div class="withu-message-drawer-title-wrap">
@@ -3448,21 +3448,21 @@
                             </div>
                             <div>
                                 <div class="withu-message-drawer-title">留言详情</div>
-                                <div class="withu-message-drawer-subtitle" id="lgmsgDrawerSubtitle">0 条回复</div>
+                                <div class="withu-message-drawer-subtitle" id="withumsgDrawerSubtitle">0 条回复</div>
                             </div>
                         </div>
-                        <button class="withu-message-close-btn" id="lgmsgDrawerClose">
+                        <button class="withu-message-close-btn" id="withumsgDrawerClose">
                             <i data-lucide="x" style="width:20px;height:20px;"></i>
                         </button>
                     </div>
-                    <div class="withu-message-drawer-scroll" id="lgmsgDrawerScroll">
-                        <div class="withu-message-drawer-body" id="lgmsgDrawerBody">
+                    <div class="withu-message-drawer-scroll" id="withumsgDrawerScroll">
+                        <div class="withu-message-drawer-body" id="withumsgDrawerBody">
                             <!-- 由 JS 动态渲染：父留言 + 回复列表 -->
                         </div>
-                        <div class="withu-message-drawer-footer" id="lgmsgDrawerFooter">
-                            <div class="withu-message-drawer-footer-inner" id="lgmsgDrawerFooterInner">
+                        <div class="withu-message-drawer-footer" id="withumsgDrawerFooter">
+                            <div class="withu-message-drawer-footer-inner" id="withumsgDrawerFooterInner">
                                 <div class="withu-message-drawer-collapsed-wrap">
-                                    <div class="withu-message-drawer-collapsed" id="lgmsgDrawerCollapsed">
+                                    <div class="withu-message-drawer-collapsed" id="withumsgDrawerCollapsed">
                                         <div class="withu-message-dc-input">
                                             <i data-lucide="message-square"></i>
                                             留下一条友善的评论...
@@ -3470,35 +3470,35 @@
                                     </div>
                                 </div>
                                 <div class="withu-message-drawer-expanded-wrap">
-                                    <div class="withu-message-drawer-expanded" id="lgmsgDrawerExpanded">
-                                        <div class="withu-message-drawer-identity" id="lgmsgDrawerIdentityBar">
-                                            <div id="lgmsgDrawerIdentityClickArea" style="display:flex; align-items:center; gap:10px; flex:1; overflow:hidden;">
-                                                <img src="data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 24 24%22 fill=%22%23c7c7cc%22%3E%3Ccircle cx=%2212%22 cy=%228%22 r=%224%22/%3E%3Cpath d=%22M20 21a8 8 0 1 0-16 0%22/%3E%3C/svg%3E" id="lgmsgDrawerIdentityAvatar">
-                                                <span id="lgmsgDrawerIdentityName">未认证，点击设置身份</span>
+                                    <div class="withu-message-drawer-expanded" id="withumsgDrawerExpanded">
+                                        <div class="withu-message-drawer-identity" id="withumsgDrawerIdentityBar">
+                                            <div id="withumsgDrawerIdentityClickArea" style="display:flex; align-items:center; gap:10px; flex:1; overflow:hidden;">
+                                                <img src="data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 24 24%22 fill=%22%23c7c7cc%22%3E%3Ccircle cx=%2212%22 cy=%228%22 r=%224%22/%3E%3Cpath d=%22M20 21a8 8 0 1 0-16 0%22/%3E%3C/svg%3E" id="withumsgDrawerIdentityAvatar">
+                                                <span id="withumsgDrawerIdentityName">未认证，点击设置身份</span>
                                                 <i data-lucide="square-pen" class="edit-icon"></i>
                                             </div>
-                                            <div id="lgmsgDrawerCollapseBtn" style="padding:4px; margin-right:-4px; cursor:pointer; color:var(--lgmsg-text-muted);" title="收起面板">
+                                            <div id="withumsgDrawerCollapseBtn" style="padding:4px; margin-right:-4px; cursor:pointer; color:var(--withumsg-text-muted);" title="收起面板">
                                                 <i data-lucide="chevron-down" style="width:20px;height:20px;"></i>
                                             </div>
                                         </div>
-                                        <div class="withu-message-drawer-input-tags" id="lgmsgDrawerVisitorTags"></div>
+                                        <div class="withu-message-drawer-input-tags" id="withumsgDrawerVisitorTags"></div>
                                         <div class="withu-message-drawer-editor-wrap">
-                                            <div class="withu-message-drawer-editor" id="lgmsgDrawerEditor" contenteditable="true" data-placeholder="友善的留言是交流的起点..."></div>
+                                            <div class="withu-message-drawer-editor" id="withumsgDrawerEditor" contenteditable="true" data-placeholder="友善的留言是交流的起点..."></div>
                                             <div class="withu-message-drawer-toolbar">
                                                 <div class="withu-message-tb-left" style="gap: 2px;">
-                                                    <button class="withu-message-tb-btn" id="lgmsgBtnDrawerEmoji" title="表情" style="width:32px;height:32px;">
+                                                    <button class="withu-message-tb-btn" id="withumsgBtnDrawerEmoji" title="表情" style="width:32px;height:32px;">
                                                         <i data-lucide="smile"></i>
                                                     </button>
-                                                    <button class="withu-message-tb-btn" id="lgmsgBtnDrawerQuote" title="随机一言" style="width:32px;height:32px;">
+                                                    <button class="withu-message-tb-btn" id="withumsgBtnDrawerQuote" title="随机一言" style="width:32px;height:32px;">
                                                         <i data-lucide="sparkles"></i>
                                                     </button>
-                                                    <div class="withu-message-switch-wrap" id="lgmsgDrawerEnterSwitch">
+                                                    <div class="withu-message-switch-wrap" id="withumsgDrawerEnterSwitch">
                                                         <div class="withu-message-switch"></div>
                                                         <span class="withu-message-switch-text">Enter 发送</span>
                                                     </div>
                                                 </div>
-                                                <span class="withu-message-char-counter" id="lgmsgDrawerCharCounter" style="margin-right: 12px; margin-left: auto;">0/500</span>
-                                                <button class="withu-message-reply-btn" id="lgmsgReplySendBtn"><i data-lucide="send" style="width:16px;height:16px;"></i></button>
+                                                <span class="withu-message-char-counter" id="withumsgDrawerCharCounter" style="margin-right: 12px; margin-left: auto;">0/500</span>
+                                                <button class="withu-message-reply-btn" id="withumsgReplySendBtn"><i data-lucide="send" style="width:16px;height:16px;"></i></button>
                                             </div>
                                         </div>
                                     </div>
@@ -3510,7 +3510,7 @@
             </div>
 
             <!-- 消息操作菜单（1:1 from demo） -->
-            <div class="withu-message-context-menu" id="lgmsgContextMenu">
+            <div class="withu-message-context-menu" id="withumsgContextMenu">
                 <div class="withu-message-cm-item" data-action="like" title="点赞">
                     <i data-lucide="heart"></i>
                 </div>
@@ -3528,25 +3528,25 @@
             <!-- 表情面板、留言弹窗、确认弹窗均已迁移到 footer.php（全局可用） -->
 
             <!-- 身份认证弹窗（1:1 from demo） -->
-            <div class="withu-message-modal-overlay" id="lgmsgAuthModal">
+            <div class="withu-message-modal-overlay" id="withumsgAuthModal">
                 <div class="withu-message-modal-content" style="max-width: 400px; max-height: unset; border-radius: 20px;">
                     <div class="withu-message-close-wrapper" style="top: 16px; right: 16px;">
-                        <button class="withu-message-close-btn" id="lgmsgAuthCloseBtn" style="width: 28px; height: 28px;">
+                        <button class="withu-message-close-btn" id="withumsgAuthCloseBtn" style="width: 28px; height: 28px;">
                             <i data-lucide="x" style="width:16px;height:16px;"></i>
                         </button>
                     </div>
                     <div class="withu-message-modal-body" style="padding: 24px;">
                         <div class="withu-message-drawer-title" style="text-align: center; margin-bottom: 20px;">身份设置</div>
                         <div class="withu-message-ios-tabs-wrap" style="justify-content: center; margin-bottom: 24px;">
-                            <div class="withu-message-ios-tabs" id="lgmsgAuthTabContainer">
-                                <div class="withu-message-ios-tab-slider" id="lgmsgAuthTabSlider"></div>
+                            <div class="withu-message-ios-tabs" id="withumsgAuthTabContainer">
+                                <div class="withu-message-ios-tab-slider" id="withumsgAuthTabSlider"></div>
                                 <div class="withu-message-ios-tab active" data-mode="qq">QQ身份</div>
                                 <div class="withu-message-ios-tab" data-mode="anonymous">匿名身份</div>
                             </div>
                         </div>
-                        <div class="withu-message-input-row" id="lgmsgAuthInputRow" style="flex-direction: column;"></div>
-                        <div class="withu-message-privacy-hint" id="lgmsgAuthPrivacyHint"><i data-lucide="lock"></i>QQ 信息经过加密脱敏处理，不会公开展示，请放心留言</div>
-                        <button class="withu-message-submit-btn" id="lgmsgAuthSaveBtn" style="width: 100%; justify-content: center; margin-top: 24px;">
+                        <div class="withu-message-input-row" id="withumsgAuthInputRow" style="flex-direction: column;"></div>
+                        <div class="withu-message-privacy-hint" id="withumsgAuthPrivacyHint"><i data-lucide="lock"></i>QQ 信息经过加密脱敏处理，不会公开展示，请放心留言</div>
+                        <button class="withu-message-submit-btn" id="withumsgAuthSaveBtn" style="width: 100%; justify-content: center; margin-top: 24px;">
                             <span class="withu-message-submit-label">保存身份</span>
                             <i data-lucide="save" class="withu-message-submit-icon" style="width:18px;height:18px;"></i>
                             <i data-lucide="loader" class="withu-message-submit-loader withu-message-lucide-loader" style="width:18px;height:18px;"></i>
@@ -3589,17 +3589,17 @@
 
 
     <!-- 表情面板（全局可用，弹窗 & 抽屉共用） -->
-    <div class="withu-message-emoji-panel" id="lgmsgEmojiPanel">
+    <div class="withu-message-emoji-panel" id="withumsgEmojiPanel">
         <div class="withu-message-emoji-tabs-wrap">
-            <div class="withu-message-emoji-tabs" id="lgmsgEmojiTabs"></div>
+            <div class="withu-message-emoji-tabs" id="withumsgEmojiTabs"></div>
         </div>
-        <div class="withu-message-emoji-cat-title" id="lgmsgEmojiCatTitle"></div>
-        <div class="withu-message-emoji-list" id="lgmsgEmojiGrid"></div>
+        <div class="withu-message-emoji-cat-title" id="withumsgEmojiCatTitle"></div>
+        <div class="withu-message-emoji-list" id="withumsgEmojiGrid"></div>
     </div>
 
-    <div class="withu-message-emoji-preview" id="lgmsgEmojiPreview">
-        <img src="" id="lgmsgPreviewImg">
-        <span id="lgmsgPreviewText"></span>
+    <div class="withu-message-emoji-preview" id="withumsgEmojiPreview">
+        <img src="" id="withumsgPreviewImg">
+        <span id="withumsgPreviewText"></span>
     </div>
 
     <!-- 留言触发按钮 -->
@@ -3610,33 +3610,33 @@
     </div>
 
     <!-- 随机一言确认弹窗（about.php 风格） -->
-    <div class="lgmsg-confirm-overlay" id="lgmsgConfirmOverlay">
-        <div class="lgmsg-confirm-panel">
+    <div class="withumsg-confirm-overlay" id="withumsgConfirmOverlay">
+        <div class="withumsg-confirm-panel">
             <!-- 关闭按钮 -->
-            <button class="lgmsg-confirm-close-btn" id="lgmsgConfirmClose" aria-label="关闭">
+            <button class="withumsg-confirm-close-btn" id="withumsgConfirmClose" aria-label="关闭">
                 <i class="ph ph-x"></i>
             </button>
             <!-- 图标 -->
-            <div class="lgmsg-confirm-icon-wrapper">
+            <div class="withumsg-confirm-icon-wrapper">
                 <svg viewBox="0 0 24 24" fill="currentColor"><path d="M9.937 15.5A2 2 0 0 0 8.5 14.063l-6.135-1.582a.5.5 0 0 1 0-.962L8.5 9.936A2 2 0 0 0 9.937 8.5l1.582-6.135a.5.5 0 0 1 .963 0L14.063 8.5A2 2 0 0 0 15.5 9.937l6.135 1.582a.5.5 0 0 1 0 .962L15.5 14.063a2 2 0 0 0-1.437 1.437l-1.582 6.135a.5.5 0 0 1-.963 0z"/><path d="M20 3v4"/><path d="M22 5h-4"/></svg>
             </div>
             <!-- 标题 -->
-            <h2 class="lgmsg-confirm-title">替换为随机一言？</h2>
+            <h2 class="withumsg-confirm-title">替换为随机一言？</h2>
             <!-- 描述 -->
-            <p class="lgmsg-confirm-desc">当前输入框已有内容，确认后将清空并替换为一条随机文案</p>
+            <p class="withumsg-confirm-desc">当前输入框已有内容，确认后将清空并替换为一条随机文案</p>
             <!-- 操作按钮 -->
-            <div class="lgmsg-confirm-actions">
-                <button class="lgmsg-confirm-btn lgmsg-confirm-btn-secondary" id="lgmsgConfirmCancel">取消</button>
-                <button class="lgmsg-confirm-btn lgmsg-confirm-btn-primary" id="lgmsgConfirmOk">确认替换</button>
+            <div class="withumsg-confirm-actions">
+                <button class="withumsg-confirm-btn withumsg-confirm-btn-secondary" id="withumsgConfirmCancel">取消</button>
+                <button class="withumsg-confirm-btn withumsg-confirm-btn-primary" id="withumsgConfirmOk">确认替换</button>
             </div>
         </div>
     </div>
 
     <!-- 留言弹窗（全局可用） -->
-    <div class="withu-message-modal-overlay" id="lgmsgCommentModal">
-        <div class="withu-message-modal-content" id="lgmsgModalContent">
+    <div class="withu-message-modal-overlay" id="withumsgCommentModal">
+        <div class="withu-message-modal-content" id="withumsgModalContent">
             <div class="withu-message-close-wrapper">
-                <button class="withu-message-close-btn" id="lgmsgModalCloseBtn">
+                <button class="withu-message-close-btn" id="withumsgModalCloseBtn">
                     <i data-lucide="x" style="width:20px;height:20px;"></i>
                 </button>
             </div>
@@ -3646,58 +3646,58 @@
                     <div class="withu-message-subtitle">在这里，留下属于你的印记</div>
                 </div>
                 <div class="withu-message-ios-tabs-wrap">
-                    <div class="withu-message-ios-tabs" id="lgmsgTabContainer">
-                        <div class="withu-message-ios-tab-slider" id="lgmsgTabSlider"></div>
+                    <div class="withu-message-ios-tabs" id="withumsgTabContainer">
+                        <div class="withu-message-ios-tab-slider" id="withumsgTabSlider"></div>
                         <div class="withu-message-ios-tab active" data-mode="qq">QQ留言</div>
                         <div class="withu-message-ios-tab" data-mode="anonymous">匿名留言</div>
                     </div>
                 </div>
-                <div class="withu-message-visitor-tags" id="lgmsgVisitorTags">
+                <div class="withu-message-visitor-tags" id="withumsgVisitorTags">
                     <div class="withu-message-v-tag">
                         <div class="withu-message-v-tag-icon withu-message-icon-os">
                             <i data-lucide="monitor"></i>
                         </div>
-                        <span id="lgmsgTagOS">--</span>
+                        <span id="withumsgTagOS">--</span>
                     </div>
                     <div class="withu-message-v-tag">
                         <div class="withu-message-v-tag-icon withu-message-icon-browser">
                             <i data-lucide="globe"></i>
                         </div>
-                        <span id="lgmsgTagBrowser">--</span>
+                        <span id="withumsgTagBrowser">--</span>
                     </div>
                     <div class="withu-message-v-tag">
                         <div class="withu-message-v-tag-icon withu-message-icon-location">
                             <i data-lucide="map-pin"></i>
                         </div>
-                        <span id="lgmsgTagLocation">--</span>
+                        <span id="withumsgTagLocation">--</span>
                     </div>
                     <div class="withu-message-v-tag">
                         <div class="withu-message-v-tag-icon withu-message-icon-weather">
-                            <i class="qi-100-fill" id="lgmsgWeatherIcon"></i>
+                            <i class="qi-100-fill" id="withumsgWeatherIcon"></i>
                         </div>
-                        <span id="lgmsgTagWeather">--</span>
+                        <span id="withumsgTagWeather">--</span>
                     </div>
                 </div>
-                <div class="withu-message-input-row" id="lgmsgInputRow"></div>
-                <div class="withu-message-privacy-hint" id="lgmsgPrivacyHint"><i data-lucide="lock"></i>QQ 信息经过加密脱敏处理，不会公开展示，请放心留言</div>
+                <div class="withu-message-input-row" id="withumsgInputRow"></div>
+                <div class="withu-message-privacy-hint" id="withumsgPrivacyHint"><i data-lucide="lock"></i>QQ 信息经过加密脱敏处理，不会公开展示，请放心留言</div>
                 <div class="withu-message-editor-wrap">
-                    <div class="withu-message-editor-content" id="lgmsgEditor" contenteditable="true" data-placeholder="想说点什么..."></div>
-                    <div class="withu-message-emoji-bubbles" id="lgmsgEmojiBubbles"></div>
+                    <div class="withu-message-editor-content" id="withumsgEditor" contenteditable="true" data-placeholder="想说点什么..."></div>
+                    <div class="withu-message-emoji-bubbles" id="withumsgEmojiBubbles"></div>
                     <div class="withu-message-editor-toolbar">
                         <div class="withu-message-tb-left">
-                            <button class="withu-message-tb-btn" id="lgmsgBtnEmoji" title="表情">
+                            <button class="withu-message-tb-btn" id="withumsgBtnEmoji" title="表情">
                                 <i data-lucide="smile"></i>
                             </button>
-                            <button class="withu-message-tb-btn" id="lgmsgBtnQuote" title="随机一言">
+                            <button class="withu-message-tb-btn" id="withumsgBtnQuote" title="随机一言">
                                 <i data-lucide="sparkles"></i>
                             </button>
-                            <div class="withu-message-switch-wrap" id="lgmsgEnterToSendWrap">
+                            <div class="withu-message-switch-wrap" id="withumsgEnterToSendWrap">
                                 <div class="withu-message-switch"></div>
                                 <span class="withu-message-switch-text">Enter 发送</span>
                             </div>
                         </div>
-                        <span class="withu-message-char-counter" id="lgmsgCharCounter">0/500</span>
-                        <button class="withu-message-submit-btn" id="lgmsgSubmitBtn">
+                        <span class="withu-message-char-counter" id="withumsgCharCounter">0/500</span>
+                        <button class="withu-message-submit-btn" id="withumsgSubmitBtn">
                             <span class="withu-message-submit-label">发送留言</span>
                             <i data-lucide="send" class="withu-message-submit-icon" style="width:18px;height:18px;"></i>
                             <i data-lucide="loader" class="withu-message-submit-loader withu-message-lucide-loader" style="width:18px;height:18px;"></i>
@@ -3738,7 +3738,7 @@
                 }
             });
 
-            $('#leavingPost').off('click.lgGeetest').on('click.lgGeetest', function() {
+            $('#leavingPost').off('click.withuGeetest').on('click.withuGeetest', function() {
                 var qq = $("input[name='qq']").val();
                 var name = $("input[name='name']").val();
                 var text = $("textarea[name='text']").val();
@@ -3757,7 +3757,7 @@
                 GeetestHelper.show();
             });
         } else {
-            $('#leavingPost').off('click.lgGeetest').on('click.lgGeetest', function() {
+            $('#leavingPost').off('click.withuGeetest').on('click.withuGeetest', function() {
                 var qq = $("input[name='qq']").val();
                 var name = $("input[name='name']").val();
                 var text = $("textarea[name='text']").val();
@@ -4002,7 +4002,7 @@
 
 <!-- 足迹地图弹窗 -->
 <!-- ============ 足迹地图弹窗 ============ -->
-<div class="withu-map-overlay" id="lgMapOverlay" style="display:none;">
+<div class="withu-map-overlay" id="withuMapOverlay" style="display:none;">
     <div class="withu-map-modal">
         <div class="withu-map">
             <section id="missing-pets-module">
@@ -4150,19 +4150,19 @@
 
     <script>
         // 滚动按钮和回到顶部功能已迁移到 components.js 的 ScrollButtons 模块
-        // 以下代码由 LGApp.init() 统一初始化，保留最小必要代码
+        // 以下代码由 WithUApp.init() 统一初始化，保留最小必要代码
 
         $(document).ready(function() {
             $('body').addClass('loaded');
 
-            // 初始化 LGApp 核心框架
-            if (window.LGApp && typeof window.LGApp.init === 'function') {
-                window.LGApp.setConfig(window.WITHU_CONFIG || {});
-                window.LGApp.init();
+            // 初始化 WithUApp 核心框架
+            if (window.WithUApp && typeof window.WithUApp.init === 'function') {
+                window.WithUApp.setConfig(window.WITHU_CONFIG || {});
+                window.WithUApp.init();
             }
 
             // 初始化组件（礼花、轮播、导航等）
-            if (window.LGApp && window.LGApp.Components) {
+            if (window.WithUApp && window.WithUApp.Components) {
                 const {
                     ConfettiEffect,
                     Carousel,
@@ -4170,7 +4170,7 @@
                     Navigation,
                     ScrollButtons,
                     HeaderVisitorWeather
-                } = window.LGApp.Components;
+                } = window.WithUApp.Components;
 
                 // 初始化礼花效果
                 if (ConfettiEffect) {

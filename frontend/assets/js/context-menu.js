@@ -1,5 +1,5 @@
 /**
- * LGContextMenu — withU 自定义右键菜单
+ * WithUContextMenu — withU 自定义右键菜单
  * 支持多级嵌套、智能边缘定位、上下文感知分组、Toastify 反馈、音乐联动
  */
 (function(win, doc) {
@@ -145,12 +145,12 @@
     function ensurePanel() {
         if (_panel && doc.body.contains(_panel)) return;
         _panel = doc.createElement('div');
-        _panel.className = 'lgcm-overlay';
+        _panel.className = 'withucm-overlay';
         doc.body.appendChild(_panel);
     }
 
     function purgeNests() {
-        var nests = doc.querySelectorAll('.lgcm-nest');
+        var nests = doc.querySelectorAll('.withucm-nest');
         for (var i = 0; i < nests.length; i++) nests[i].parentNode.removeChild(nests[i]);
     }
 
@@ -168,19 +168,19 @@
 
             if (item.separator) {
                 var hr = doc.createElement('div');
-                hr.className = 'lgcm-divider';
+                hr.className = 'withucm-divider';
                 box.appendChild(hr);
                 continue;
             }
 
             var row = doc.createElement('div');
-            row.className = 'lgcm-row';
+            row.className = 'withucm-row';
             row.setAttribute('data-rid', item.id);
 
             var iconVal = typeof item.icon === 'function' ? item.icon() : item.icon;
             if (iconVal) {
                 var glyph = doc.createElement('span');
-                glyph.className = 'lgcm-glyph';
+                glyph.className = 'withucm-glyph';
                 var ic = doc.createElement('i');
                 ic.className = iconVal;
                 glyph.appendChild(ic);
@@ -211,7 +211,7 @@
 
     function attachNest(row, item, parentBox, ctx) {
         var arrow = doc.createElement('span');
-        arrow.className = 'lgcm-arrow';
+        arrow.className = 'withucm-arrow';
         var ai = doc.createElement('i');
         ai.className = 'ri-arrow-right-s-line';
         arrow.appendChild(ai);
@@ -222,21 +222,21 @@
 
         row.addEventListener('mouseenter', function() {
             if (nestTimer) { clearTimeout(nestTimer); nestTimer = null; }
-            row.classList.add('lgcm-held');
+            row.classList.add('withucm-held');
 
-            var siblings = parentBox.querySelectorAll('.lgcm-row');
+            var siblings = parentBox.querySelectorAll('.withucm-row');
             for (var i = 0; i < siblings.length; i++) {
                 var sib = siblings[i];
                 if (sib !== row) {
-                    sib.classList.remove('lgcm-held');
-                    var old = doc.querySelector('.lgcm-nest[data-owner="' + sib.getAttribute('data-rid') + '"]');
+                    sib.classList.remove('withucm-held');
+                    var old = doc.querySelector('.withucm-nest[data-owner="' + sib.getAttribute('data-rid') + '"]');
                     if (old) old.parentNode.removeChild(old);
                 }
             }
 
             if (!nestEl || !doc.body.contains(nestEl)) {
                 nestEl = doc.createElement('div');
-                nestEl.className = 'lgcm-nest';
+                nestEl.className = 'withucm-nest';
                 nestEl.setAttribute('data-owner', item.id);
                 doc.body.appendChild(nestEl);
 
@@ -252,16 +252,16 @@
 
                 nestEl.addEventListener('mouseenter', function() {
                     if (nestTimer) { clearTimeout(nestTimer); nestTimer = null; }
-                    nestEl.classList.add('lgcm-pop');
-                    row.classList.add('lgcm-held');
+                    nestEl.classList.add('withucm-pop');
+                    row.classList.add('withucm-held');
                 });
 
                 nestEl.addEventListener('mouseleave', function(ev) {
                     if (ev.relatedTarget === row || row.contains(ev.relatedTarget)) return;
-                    row.classList.remove('lgcm-held');
-                    nestEl.classList.remove('lgcm-pop');
+                    row.classList.remove('withucm-held');
+                    nestEl.classList.remove('withucm-pop');
                     nestTimer = setTimeout(function() {
-                        if (nestEl && !nestEl.classList.contains('lgcm-pop')) {
+                        if (nestEl && !nestEl.classList.contains('withucm-pop')) {
                             nestEl.parentNode.removeChild(nestEl);
                             nestEl = null;
                         }
@@ -270,16 +270,16 @@
             }
 
             nestEl.style.visibility = 'visible';
-            nestEl.classList.add('lgcm-pop');
+            nestEl.classList.add('withucm-pop');
         });
 
         row.addEventListener('mouseleave', function(ev) {
             if (nestEl && (nestEl === ev.relatedTarget || nestEl.contains(ev.relatedTarget))) return;
-            row.classList.remove('lgcm-held');
+            row.classList.remove('withucm-held');
             if (nestEl) {
-                nestEl.classList.remove('lgcm-pop');
+                nestEl.classList.remove('withucm-pop');
                 nestTimer = setTimeout(function() {
-                    if (nestEl && !nestEl.classList.contains('lgcm-pop')) {
+                    if (nestEl && !nestEl.classList.contains('withucm-pop')) {
                         nestEl.parentNode.removeChild(nestEl);
                         nestEl = null;
                     }
@@ -342,12 +342,12 @@
         for (var v = 0; v < visible.length; v++) {
             if (v > 0) {
                 var sep = doc.createElement('div');
-                sep.className = 'lgcm-divider';
+                sep.className = 'withucm-divider';
                 _panel.appendChild(sep);
             }
             if (visible[v].name) {
                 var hd = doc.createElement('div');
-                hd.className = 'lgcm-heading';
+                hd.className = 'withucm-heading';
                 hd.textContent = visible[v].name;
                 _panel.appendChild(hd);
             }
@@ -382,10 +382,10 @@
         _panel.style.transformOrigin = ox + ' ' + oy;
         _panel.style.left = left + 'px';
         _panel.style.top = top + 'px';
-        _panel.classList.remove('lgcm-out');
+        _panel.classList.remove('withucm-out');
 
         requestAnimationFrame(function() {
-            _panel.classList.add('lgcm-in');
+            _panel.classList.add('withucm-in');
             setTimeout(function() {
                 _busy = false;
                 _popping = false;
@@ -417,13 +417,13 @@
         _popping = false;
 
         purgeNests();
-        _panel.classList.remove('lgcm-in');
-        _panel.classList.add('lgcm-out');
+        _panel.classList.remove('withucm-in');
+        _panel.classList.add('withucm-out');
 
         _fadeId = setTimeout(function() {
             if (!_panel) return;
             _panel.style.display = 'none';
-            _panel.classList.remove('lgcm-out');
+            _panel.classList.remove('withucm-out');
             _busy = false;
             _shown = false;
             _fadeId = null;
@@ -483,7 +483,7 @@
         if (!_shown) return;
         var path = e.composedPath ? e.composedPath() : [];
         if (path.indexOf(_panel) !== -1) return;
-        var nests = doc.querySelectorAll('.lgcm-nest');
+        var nests = doc.querySelectorAll('.withucm-nest');
         for (var i = 0; i < nests.length; i++) {
             if (path.indexOf(nests[i]) !== -1) return;
         }
@@ -600,7 +600,7 @@
     navTrack();
     // PJAX 导航时追踪
     if (typeof $ !== 'undefined') {
-        $(doc).on('pjax:complete.lgcm', navTrack);
+        $(doc).on('pjax:complete.withucm', navTrack);
     }
 
 
@@ -831,7 +831,7 @@
 
     /* ═══════════════════ 公共 API ═══════════════════ */
 
-    win.LGContextMenu = {
+    win.WithUContextMenu = {
         init: function() {
             if (_active) return;
             loadDefaults();
@@ -853,9 +853,9 @@
     /* ═══════════════════ 自动初始化 ═══════════════════ */
 
     if (doc.readyState === 'loading') {
-        doc.addEventListener('DOMContentLoaded', function() { win.LGContextMenu.init(); });
+        doc.addEventListener('DOMContentLoaded', function() { win.WithUContextMenu.init(); });
     } else {
-        win.LGContextMenu.init();
+        win.WithUContextMenu.init();
     }
 
 })(window, document);

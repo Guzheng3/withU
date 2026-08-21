@@ -1195,7 +1195,7 @@ div#homePage[data-Fullscreen] .list .item {
 }
 
 /* 遮罩层 */
-.lgewui-head-avatar-mask {
+.withu-head-avatar-mask {
     position: absolute;
     top: 0;
     right: 0;
@@ -1214,28 +1214,28 @@ div#homePage[data-Fullscreen] .list .item {
     overflow: hidden;
 }
 
-.avatarArea:hover .lgewui-head-avatar-mask {
+.avatarArea:hover .withu-head-avatar-mask {
     opacity: 1;
     background-color: rgba(15, 23, 42, 0.7);
 }
 
 /* 动画基础 */
-.lgewui-head-avatar-anim-item {
+.withu-head-avatar-anim-item {
     transition: transform 0.5s cubic-bezier(0.34, 1.56, 0.64, 1), opacity 0.5s ease;
 }
 
 /* 顶部：性别图标 */
-.lgewui-head-avatar-top {
+.withu-head-avatar-top {
     transform: translateY(-8px);
     opacity: 0;
     transition-delay: 75ms;
 }
-.avatarArea:hover .lgewui-head-avatar-top {
+.avatarArea:hover .withu-head-avatar-top {
     transform: translateY(0);
     opacity: 1;
 }
 
-.lgewui-head-avatar-gender-icon {
+.withu-head-avatar-gender-icon {
     padding: 4px;
     width: 28px;
     height: 28px;
@@ -1249,14 +1249,14 @@ div#homePage[data-Fullscreen] .list .item {
     justify-content: center;
 }
 
-.lgewui-head-avatar-boy .lgewui-head-avatar-gender-icon { color: #60a5fa; }
-.lgewui-head-avatar-girl .lgewui-head-avatar-gender-icon { color: #f472b6; }
-.lgewui-head-avatar-gender-icon[data-gender="male"] { color: #60a5fa !important; }
-.lgewui-head-avatar-gender-icon[data-gender="female"] { color: #f472b6 !important; }
-.lgewui-head-avatar-gender-placeholder { color: rgba(255,255,255,0.4); }
+.withu-head-avatar-boy .withu-head-avatar-gender-icon { color: #60a5fa; }
+.withu-head-avatar-girl .withu-head-avatar-gender-icon { color: #f472b6; }
+.withu-head-avatar-gender-icon[data-gender="male"] { color: #60a5fa !important; }
+.withu-head-avatar-gender-icon[data-gender="female"] { color: #f472b6 !important; }
+.withu-head-avatar-gender-placeholder { color: rgba(255,255,255,0.4); }
 
 /* 中部：在线状态 */
-.lgewui-head-avatar-middle {
+.withu-head-avatar-middle {
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -1264,12 +1264,12 @@ div#homePage[data-Fullscreen] .list .item {
     opacity: 0;
     transition-delay: 100ms;
 }
-.avatarArea:hover .lgewui-head-avatar-middle {
+.avatarArea:hover .withu-head-avatar-middle {
     transform: scale(1);
     opacity: 1;
 }
 
-.lgewui-head-avatar-status-text {
+.withu-head-avatar-status-text {
     display: flex;
     align-items: center;
     gap: 0.3rem;
@@ -1281,15 +1281,15 @@ div#homePage[data-Fullscreen] .list .item {
     /* font-family: 'Noto Serif SC', serif; */
 }
 
-.lgewui-head-avatar-status-online { color: #f0fdf4; }
-.lgewui-head-avatar-status-away { color: #fefce8; }
-.lgewui-head-avatar-status-offline { color: #cbd5e1; }
+.withu-head-avatar-status-online { color: #f0fdf4; }
+.withu-head-avatar-status-away { color: #fefce8; }
+.withu-head-avatar-status-offline { color: #cbd5e1; }
 
-.lgewui-head-avatar-icon-online { color: #4ade80; }
-.lgewui-head-avatar-icon-away { color: #facc15; }
-.lgewui-head-avatar-icon-offline { color: #94a3b8; }
+.withu-head-avatar-icon-online { color: #4ade80; }
+.withu-head-avatar-icon-away { color: #facc15; }
+.withu-head-avatar-icon-offline { color: #94a3b8; }
 
-.lgewui-head-avatar-divider {
+.withu-head-avatar-divider {
     width: 3.5rem;
     height: 1px;
     margin-top: 0.4rem;
@@ -1298,17 +1298,17 @@ div#homePage[data-Fullscreen] .list .item {
 }
 
 /* 底部：位置 */
-.lgewui-head-avatar-bottom {
+.withu-head-avatar-bottom {
     transform: translateY(8px);
     opacity: 0;
     transition-delay: 150ms;
 }
-.avatarArea:hover .lgewui-head-avatar-bottom {
+.avatarArea:hover .withu-head-avatar-bottom {
     transform: translateY(0);
     opacity: 1;
 }
 
-.lgewui-head-avatar-location {
+.withu-head-avatar-location {
     display: flex;
     align-items: center;
     gap: 0.2rem;
@@ -1323,17 +1323,17 @@ div#homePage[data-Fullscreen] .list .item {
 }
 
 /* Lucide 图标尺寸 */
-.lgewui-head-avatar-gender-icon .lucide {
+.withu-head-avatar-gender-icon .lucide {
     width: 16px;
     height: 16px;
     stroke-width: 2.5px;
 }
-.lgewui-head-avatar-status-text .lucide {
+.withu-head-avatar-status-text .lucide {
     width: 14px;
     height: 14px;
     stroke-width: 2.5px;
 }
-.lgewui-head-avatar-location .lucide {
+.withu-head-avatar-location .lucide {
     width: 12px;
     height: 12px;
     stroke-width: 2.5px;

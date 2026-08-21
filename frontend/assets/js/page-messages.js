@@ -12,9 +12,9 @@
 ;(function(window, $) {
     'use strict';
 
-    var LGConfig = window.WITHU_CONFIG || {};
-    var siteTitle = LGConfig.title || 'withU';
-    var endpoints = LGConfig.endpoints || {};
+    var WithUConfig = window.WITHU_CONFIG || {};
+    var siteTitle = WithUConfig.title || 'withU';
+    var endpoints = WithUConfig.endpoints || {};
 
     // ============================================
     // 工具函数
@@ -32,7 +32,7 @@
      * @return {boolean} true=包含违禁内容
      */
     function containsBannedChar(text) {
-        var banned = (LGConfig.bannedChars || '').trim();
+        var banned = (WithUConfig.bannedChars || '').trim();
         if (!banned) return false;
         var clean = text.replace(/([:@]{1,2})\(.*?\)/g, '');
         for (var i = 0; i < banned.length; i++) {
@@ -53,15 +53,15 @@
 
     function getAvatarUrl(qq) {
         if (qq === 'anon') {
-            var list = LGConfig.anonAvatars || [];
+            var list = WithUConfig.anonAvatars || [];
             return list.length ? list[Math.floor(Math.random() * list.length)] : _defaultAvatar;
         }
         return '/_qqavatar?qq=' + qq + '&s=100';
     }
 
-    // 滚动锁定（复用 head.php 中定义的全局 lgScrollLock/lgScrollUnlock）
-    function lockBodyScroll() { if (window.lgScrollLock) lgScrollLock(); }
-    function unlockBodyScroll() { if (window.lgScrollUnlock) lgScrollUnlock(); }
+    // 滚动锁定（复用 head.php 中定义的全局 withuScrollLock/withuScrollUnlock）
+    function lockBodyScroll() { if (window.withuScrollLock) withuScrollLock(); }
+    function unlockBodyScroll() { if (window.withuScrollUnlock) withuScrollUnlock(); }
 
     function updateLazyLoad() {
         if (window.lazyLoadInstance) window.lazyLoadInstance.update();
@@ -125,7 +125,7 @@
      * 在一级卡片列表顶部插入一个待审核临时卡片
      */
     function _insertPendingCard(qq, name, contentHtml) {
-        var grid = document.getElementById('lgmsgCardGrid');
+        var grid = document.getElementById('withumsgCardGrid');
         if (!grid) return;
         var avatarUrl = localStorage.getItem('withu_comment_avatar') || getAvatarUrl(qq);
         var now = new Date();
@@ -141,18 +141,18 @@
             '<div class="UserAvatar">' +
                 '<img src="' + escapeHtml(avatarUrl) + '" alt="' + escapeHtml(name) + '" draggable="false">' +
             '</div>' +
-            '<div class="UserName"><h1><span class="lgmsg-card-name">' + escapeHtml(name) + '</span>' + renderPendingBadge() + '</h1></div>' +
+            '<div class="UserName"><h1><span class="withumsg-card-name">' + escapeHtml(name) + '</span>' + renderPendingBadge() + '</h1></div>' +
             '<div class="HeightCalc">' +
                 '<div class="MsgContent"><p>' + contentHtml + '</p></div>' +
                 '<div class="MsgFooter">' +
                     '<div class="UserInfo">' +
-                        '<span class="InfoItem"><i data-lucide="clock" class="lgmsg-ico"></i><span class="lgmsg-info-text">刚刚</span></span>' +
+                        '<span class="InfoItem"><i data-lucide="clock" class="withumsg-ico"></i><span class="withumsg-info-text">刚刚</span></span>' +
                     '</div>' +
                 '</div>' +
             '</div>';
 
         // 移除"还没有留言"的空提示
-        var emptyEl = grid.querySelector('.lgmsg-empty');
+        var emptyEl = grid.querySelector('.withumsg-empty');
         if (emptyEl) emptyEl.remove();
 
         grid.insertBefore(wrap, grid.firstChild);
@@ -165,71 +165,71 @@
      * @param {function} onConfirm  回调 (password, showSuccess, showError)
      */
     function _promptDevPassword(onConfirm) {
-        var old = document.getElementById('lgmsgSecurityOverlay');
+        var old = document.getElementById('withumsgSecurityOverlay');
         if (old) old.remove();
 
         var overlay = document.createElement('div');
-        overlay.id = 'lgmsgSecurityOverlay';
-        overlay.className = 'lgmsg-security-overlay';
+        overlay.id = 'withumsgSecurityOverlay';
+        overlay.className = 'withumsg-security-overlay';
 
         overlay.innerHTML =
-            '<div class="lgmsg-security-base" id="lgmsgSecurityBase">' +
+            '<div class="withumsg-security-base" id="withumsgSecurityBase">' +
 
                 // 表单内容层（验证成功时景深退场）
-                '<div class="lgmsg-security-form-content">' +
-                    '<button class="lgmsg-security-close" id="lgmsgSecurityClose" aria-label="关闭"><i class="ph-bold ph-x"></i></button>' +
-                    '<h3 class="lgmsg-security-title">身份验证</h3>' +
-                    '<p class="lgmsg-security-desc">该 QQ 号为开发者专属号码，请输入开发者密码以继续操作。</p>' +
-                    '<label class="lgmsg-security-input-label">开发者密码</label>' +
-                    '<div class="lgmsg-security-input-group" id="lgmsgSecurityWrap">' +
-                        '<span class="lgmsg-security-input-icon"><i class="ph-bold ph-lock-key"></i></span>' +
-                        '<div class="lgmsg-security-pw-wrap">' +
-                            '<input type="password" class="lgmsg-security-pw-input" id="lgmsgSecurityInput" placeholder="输入开发者密码" autocomplete="off" maxlength="64" readonly>' +
-                            '<button type="button" class="lgmsg-security-pw-toggle" id="lgmsgSecurityToggle"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/></svg></button>' +
+                '<div class="withumsg-security-form-content">' +
+                    '<button class="withumsg-security-close" id="withumsgSecurityClose" aria-label="关闭"><i class="ph-bold ph-x"></i></button>' +
+                    '<h3 class="withumsg-security-title">身份验证</h3>' +
+                    '<p class="withumsg-security-desc">该 QQ 号为开发者专属号码，请输入开发者密码以继续操作。</p>' +
+                    '<label class="withumsg-security-input-label">开发者密码</label>' +
+                    '<div class="withumsg-security-input-group" id="withumsgSecurityWrap">' +
+                        '<span class="withumsg-security-input-icon"><i class="ph-bold ph-lock-key"></i></span>' +
+                        '<div class="withumsg-security-pw-wrap">' +
+                            '<input type="password" class="withumsg-security-pw-input" id="withumsgSecurityInput" placeholder="输入开发者密码" autocomplete="off" maxlength="64" readonly>' +
+                            '<button type="button" class="withumsg-security-pw-toggle" id="withumsgSecurityToggle"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/></svg></button>' +
                         '</div>' +
                     '</div>' +
-                    '<div class="lgmsg-security-error" id="lgmsgSecurityError">密码错误，请重新输入</div>' +
-                    '<div class="lgmsg-security-hash-info">' +
-                        '<div class="lgmsg-security-hash-icon"><i class="ph-fill ph-info"></i></div>' +
-                        '<p class="lgmsg-security-hash-text">开发者密码用于验证开发者身份。如果你不是开发者，请更换 QQ 号码后重新留言。</p>' +
+                    '<div class="withumsg-security-error" id="withumsgSecurityError">密码错误，请重新输入</div>' +
+                    '<div class="withumsg-security-hash-info">' +
+                        '<div class="withumsg-security-hash-icon"><i class="ph-fill ph-info"></i></div>' +
+                        '<p class="withumsg-security-hash-text">开发者密码用于验证开发者身份。如果你不是开发者，请更换 QQ 号码后重新留言。</p>' +
                     '</div>' +
-                    '<div class="lgmsg-security-actions">' +
-                        '<button class="lgmsg-security-btn" id="lgmsgSecurityConfirm">' +
-                            '<i class="ph-bold ph-spinner-gap lgmsg-security-btn-spinner" id="lgmsgSecuritySpinner"></i>' +
-                            '<span class="lgmsg-security-btn-text" id="lgmsgSecurityBtnText">验证身份</span>' +
-                            '<i class="ph-bold ph-arrow-right lgmsg-security-btn-icon" id="lgmsgSecurityBtnIcon"></i>' +
+                    '<div class="withumsg-security-actions">' +
+                        '<button class="withumsg-security-btn" id="withumsgSecurityConfirm">' +
+                            '<i class="ph-bold ph-spinner-gap withumsg-security-btn-spinner" id="withumsgSecuritySpinner"></i>' +
+                            '<span class="withumsg-security-btn-text" id="withumsgSecurityBtnText">验证身份</span>' +
+                            '<i class="ph-bold ph-arrow-right withumsg-security-btn-icon" id="withumsgSecurityBtnIcon"></i>' +
                         '</button>' +
                     '</div>' +
                 '</div>' +
 
                 // 成功动画面板
-                '<div class="lgmsg-security-success-panel">' +
-                    '<div class="lgmsg-security-success-aura"></div>' +
-                    '<div class="lgmsg-security-success-content">' +
-                        '<svg class="lgmsg-security-success-svg" viewBox="0 0 60 60">' +
-                            '<circle class="lgmsg-security-success-circle" cx="30" cy="30" r="24" fill="none" stroke="currentColor" stroke-width="4.5" stroke-linecap="round"/>' +
-                            '<path class="lgmsg-security-success-check" fill="none" stroke="currentColor" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round" d="M18 31.5 l 8.5 8.5 l 17.5 -17.5" />' +
+                '<div class="withumsg-security-success-panel">' +
+                    '<div class="withumsg-security-success-aura"></div>' +
+                    '<div class="withumsg-security-success-content">' +
+                        '<svg class="withumsg-security-success-svg" viewBox="0 0 60 60">' +
+                            '<circle class="withumsg-security-success-circle" cx="30" cy="30" r="24" fill="none" stroke="currentColor" stroke-width="4.5" stroke-linecap="round"/>' +
+                            '<path class="withumsg-security-success-check" fill="none" stroke="currentColor" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round" d="M18 31.5 l 8.5 8.5 l 17.5 -17.5" />' +
                         '</svg>' +
-                        '<div class="lgmsg-security-success-text">身份验证成功</div>' +
+                        '<div class="withumsg-security-success-text">身份验证成功</div>' +
                     '</div>' +
                 '</div>' +
 
             '</div>';
         document.body.appendChild(overlay);
 
-        var _base = document.getElementById('lgmsgSecurityBase');
-        var _input = document.getElementById('lgmsgSecurityInput');
-        var _wrap = document.getElementById('lgmsgSecurityWrap');
-        var _errorMsg = document.getElementById('lgmsgSecurityError');
-        var _btn = document.getElementById('lgmsgSecurityConfirm');
-        var _btnText = document.getElementById('lgmsgSecurityBtnText');
-        var _btnSpinner = document.getElementById('lgmsgSecuritySpinner');
-        var _btnIcon = document.getElementById('lgmsgSecurityBtnIcon');
+        var _base = document.getElementById('withumsgSecurityBase');
+        var _input = document.getElementById('withumsgSecurityInput');
+        var _wrap = document.getElementById('withumsgSecurityWrap');
+        var _errorMsg = document.getElementById('withumsgSecurityError');
+        var _btn = document.getElementById('withumsgSecurityConfirm');
+        var _btnText = document.getElementById('withumsgSecurityBtnText');
+        var _btnSpinner = document.getElementById('withumsgSecuritySpinner');
+        var _btnIcon = document.getElementById('withumsgSecurityBtnIcon');
         var _closeTimer = null;
         var _isActive = false;
 
         // 密码明文切换
-        var _toggle = document.getElementById('lgmsgSecurityToggle');
+        var _toggle = document.getElementById('withumsgSecurityToggle');
         if (_toggle) {
             _toggle.addEventListener('click', function() {
                 if (!_input) return;
@@ -244,7 +244,7 @@
         // 打开弹窗
         void overlay.offsetWidth;
         if (_base) void _base.offsetWidth;
-        overlay.classList.add('lgmsg-security-is-open');
+        overlay.classList.add('withumsg-security-is-open');
         _isActive = true;
         lockBodyScroll();
 
@@ -254,13 +254,13 @@
         }, 400);
 
         function _closeModal(cb) {
-            overlay.classList.remove('lgmsg-security-is-open');
-            overlay.classList.add('lgmsg-security-is-closing');
+            overlay.classList.remove('withumsg-security-is-open');
+            overlay.classList.add('withumsg-security-is-closing');
             _isActive = false;
             unlockBodyScroll();
             if (_closeTimer) clearTimeout(_closeTimer);
             _closeTimer = setTimeout(function() {
-                overlay.classList.remove('lgmsg-security-is-closing');
+                overlay.classList.remove('withumsg-security-is-closing');
                 if (overlay.parentNode) overlay.remove();
                 if (cb) cb();
             }, 500);
@@ -269,9 +269,9 @@
         function _triggerError(msg) {
             if (_wrap) {
                 void _wrap.offsetWidth;
-                _wrap.classList.remove('lgmsg-security-input-error-anim');
+                _wrap.classList.remove('withumsg-security-input-error-anim');
                 void _wrap.offsetWidth;
-                _wrap.classList.add('lgmsg-security-input-error-anim');
+                _wrap.classList.add('withumsg-security-input-error-anim');
             }
             if (_errorMsg) {
                 if (msg) _errorMsg.textContent = msg;
@@ -280,7 +280,7 @@
         }
 
         function _resetLoading() {
-            if (_btn) _btn.classList.remove('lgmsg-security-is-loading');
+            if (_btn) _btn.classList.remove('withumsg-security-is-loading');
             if (_btnSpinner) _btnSpinner.style.display = 'none';
             if (_btnIcon) _btnIcon.style.display = '';
             if (_btnText) _btnText.textContent = '验证身份';
@@ -289,9 +289,9 @@
         // 成功动画 → 延迟关闭
         function showSuccess(cb) {
             if (_base) {
-                _base.classList.add('lgmsg-security-is-success');
+                _base.classList.add('withumsg-security-is-success');
                 setTimeout(function() {
-                    _base.classList.add('lgmsg-security-trigger-bump');
+                    _base.classList.add('withumsg-security-trigger-bump');
                 }, 500);
             }
             setTimeout(function() { _closeModal(cb); }, 2200);
@@ -310,7 +310,7 @@
 
         function _doConfirm() {
             var pw = (_input ? _input.value : '').trim();
-            if (_wrap) _wrap.classList.remove('lgmsg-security-input-error-anim');
+            if (_wrap) _wrap.classList.remove('withumsg-security-input-error-anim');
             if (_errorMsg) _errorMsg.style.display = 'none';
 
             if (pw === '') {
@@ -319,7 +319,7 @@
             }
 
             // loading 状态
-            if (_btn) _btn.classList.add('lgmsg-security-is-loading');
+            if (_btn) _btn.classList.add('withumsg-security-is-loading');
             if (_btnSpinner) _btnSpinner.style.display = 'inline-block';
             if (_btnIcon) _btnIcon.style.display = 'none';
             if (_btnText) _btnText.textContent = '正在验证...';
@@ -329,9 +329,9 @@
         }
 
         // 事件绑定
-        document.getElementById('lgmsgSecurityClose').onclick = function() { _closeModal(); };
+        document.getElementById('withumsgSecurityClose').onclick = function() { _closeModal(); };
         overlay.addEventListener('click', function(e) {
-            if (e.target === overlay && _base && !_base.classList.contains('lgmsg-security-is-success')) {
+            if (e.target === overlay && _base && !_base.classList.contains('withumsg-security-is-success')) {
                 _closeModal();
             }
         });
@@ -341,7 +341,7 @@
             if (e.key === 'Enter') { e.preventDefault(); _doConfirm(); }
         });
         document.addEventListener('keydown', function _escHandler(e) {
-            if (e.key === 'Escape' && _isActive && _base && !_base.classList.contains('lgmsg-security-is-success')) {
+            if (e.key === 'Escape' && _isActive && _base && !_base.classList.contains('withumsg-security-is-success')) {
                 _closeModal();
                 document.removeEventListener('keydown', _escHandler);
             }
@@ -425,12 +425,12 @@
         },
 
         destroy: function() {
-            $('#lgmsgLoadMoreBtn').off('click.lgmsg');
+            $('#withumsgLoadMoreBtn').off('click.withumsg');
         },
 
         _bindEvents: function() {
             var self = this;
-            $('#lgmsgLoadMoreBtn').off('click.lgmsg').on('click.lgmsg', function() {
+            $('#withumsgLoadMoreBtn').off('click.withumsg').on('click.withumsg', function() {
                 if (!self._loading && self._hasMore) self.load();
             });
         },
@@ -442,8 +442,8 @@
             var limit = this._firstLoad ? this._limit : this._loadMoreLimit;
             var isFirstLoad = this._firstLoad;
 
-            var $btn = $('#lgmsgLoadMoreBtn');
-            $btn.prop('disabled', true).html('<span class="btn-text"><i class="ph ph-spinner-gap lgmsg-spinner"></i> 加载中...</span>');
+            var $btn = $('#withumsgLoadMoreBtn');
+            $btn.prop('disabled', true).html('<span class="btn-text"><i class="ph ph-spinner-gap withumsg-spinner"></i> 加载中...</span>');
             var loadStart = Date.now();
 
             $.ajax({
@@ -462,43 +462,43 @@
 
                         setTimeout(function() {
                             if (isFirstLoad) {
-                                $('#lgmsgCardGrid .lgmsg-skeleton-wrap').remove();
+                                $('#withumsgCardGrid .withumsg-skeleton-wrap').remove();
                                 self._firstLoad = false;
                             }
 
                             // 记录渲染前的最后一个卡片，用于滚动定位
-                            var $existingCards = $('#lgmsgCardGrid .MessageCard');
+                            var $existingCards = $('#withumsgCardGrid .MessageCard');
                             var scrollTarget = !isFirstLoad && $existingCards.length > 0 ? $existingCards.last() : null;
 
                             self._renderCards(items);
-                            if (typeof LGInteraction !== 'undefined') LGInteraction.reinit();
+                            if (typeof WithUInteraction !== 'undefined') WithUInteraction.reinit();
                             self._hasMore = !!pagination.has_more;
                             self._offset += items.length;
 
                             if (self._hasMore) {
-                                $('#lgmsgLoadMoreWrap').show();
-                                $('#lgmsgNoMore').hide();
+                                $('#withumsgLoadMoreWrap').show();
+                                $('#withumsgNoMore').hide();
                             } else {
-                                $('#lgmsgLoadMoreWrap').hide();
-                                if (items.length > 0 || $('#lgmsgCardGrid .MessageCard').length > 0) {
-                                    $('#lgmsgNoMore').show();
+                                $('#withumsgLoadMoreWrap').hide();
+                                if (items.length > 0 || $('#withumsgCardGrid .MessageCard').length > 0) {
+                                    $('#withumsgNoMore').show();
                                 }
                             }
 
-                            if ($('#lgmsgCardGrid .MessageCard').length === 0) {
+                            if ($('#withumsgCardGrid .MessageCard').length === 0) {
                                 var _ab = (window.WITHU_CONFIG && window.WITHU_CONFIG.assetBase) || '';
                                 var _sb = (window.WITHU_CONFIG && window.WITHU_CONFIG.siteBase) || '';
-                                $('#lgmsgCardGrid').html(
+                                $('#withumsgCardGrid').html(
                                     '<div style="grid-column:1/-1;">' +
                                     '<div class="withu-no-data withu-no-data--pink">' +
                                     '<div class="withu-no-data-wrap"><div class="withu-no-data-content">' +
                                     '<div class="withu-no-data-icon withu-no-data-icon--pink"><svg viewBox="0 0 24 24" fill="none" stroke="#ec4899" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></div>' +
                                     '<h3 class="withu-no-data-title">\u8fd8\u6ca1\u6709\u4eba\u7559\u4e0b\u75d5\u8ff9</h3>' +
                                     '<p class="withu-no-data-desc">\u8fd9\u91cc\u5f88\u5b89\u9759\uff0c\u6210\u4e3a\u7b2c\u4e00\u4e2a\u7559\u8a00\u7684\u4eba\u5427\u3002</p>' +
-                                    '<div class="withu-no-data-actions"><a class="withu-no-data-btn withu-no-data-btn-primary" href="javascript:;" id="lgmsgEmptyWriteBtn"><i class="ph ph-pencil-simple"></i> \u7559\u4e0b\u75d5\u8ff9</a></div>' +
+                                    '<div class="withu-no-data-actions"><a class="withu-no-data-btn withu-no-data-btn-primary" href="javascript:;" id="withumsgEmptyWriteBtn"><i class="ph ph-pencil-simple"></i> \u7559\u4e0b\u75d5\u8ff9</a></div>' +
                                     '</div></div></div></div>'
                                 );
-                                $('#lgmsgEmptyWriteBtn').on('click', function(e) {
+                                $('#withumsgEmptyWriteBtn').on('click', function(e) {
                                     e.preventDefault();
                                     if (typeof CommentModal !== 'undefined') CommentModal.open();
                                 });
@@ -605,7 +605,7 @@
                         Drawer._renderDrawerContent = origRender;
                         origRender.call(Drawer, parent, replies);
                         setTimeout(function() {
-                            var replyEl = document.getElementById('lgmsg-' + replyId);
+                            var replyEl = document.getElementById('withumsg-' + replyId);
                             if (!replyEl) return;
                             replyEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
                             var $bubble = $(replyEl).find('.withu-message-msg-bubble').first();
@@ -628,7 +628,7 @@
         },
 
         _renderCards: function(items) {
-            var grid = document.getElementById('lgmsgCardGrid');
+            var grid = document.getElementById('withumsgCardGrid');
             if (!grid) return;
             var fragment = document.createDocumentFragment();
 
@@ -657,26 +657,26 @@
 
                 var infoItemsHtml = '';
                 // ① 回复（文字始终可见）
-                infoItemsHtml += '<span class="InfoItem lgmsg-reply-badge" data-msg-id="' + msg.id + '"><i data-lucide="message-square" class="lgmsg-ico"></i><span class="lgmsg-info-text lgmsg-info-text-full">' + replyTextFull + '</span><span class="lgmsg-info-text lgmsg-info-text-short">' + replyTextShort + '</span></span>';
+                infoItemsHtml += '<span class="InfoItem withumsg-reply-badge" data-msg-id="' + msg.id + '"><i data-lucide="message-square" class="withumsg-ico"></i><span class="withumsg-info-text withumsg-info-text-full">' + replyTextFull + '</span><span class="withumsg-info-text withumsg-info-text-short">' + replyTextShort + '</span></span>';
                 // ② 归属地（文字始终可见，溢出才显示 tooltip）
                 if (cityDisplay) {
                     var hasCoords = msg.lng && msg.lat && isFinite(msg.lng) && isFinite(msg.lat);
                     if (hasCoords) {
-                        infoItemsHtml += '<span class="InfoItem lgmsg-location-link lgmsg-location-has-coords" data-lng="' + msg.lng + '" data-lat="' + msg.lat + '" data-marker-id="' + msg.id + '" data-withu-tip="' + cityDisplay + '"><i data-lucide="map-pin" class="lgmsg-ico"></i><span class="lgmsg-info-text">' + cityDisplay + '</span></span>';
+                        infoItemsHtml += '<span class="InfoItem withumsg-location-link withumsg-location-has-coords" data-lng="' + msg.lng + '" data-lat="' + msg.lat + '" data-marker-id="' + msg.id + '" data-withu-tip="' + cityDisplay + '"><i data-lucide="map-pin" class="withumsg-ico"></i><span class="withumsg-info-text">' + cityDisplay + '</span></span>';
                     } else {
-                        infoItemsHtml += '<span class="InfoItem" data-withu-tip="' + cityDisplay + '"><i data-lucide="map-pin" class="lgmsg-ico"></i><span class="lgmsg-info-text">' + cityDisplay + '</span></span>';
+                        infoItemsHtml += '<span class="InfoItem" data-withu-tip="' + cityDisplay + '"><i data-lucide="map-pin" class="withumsg-ico"></i><span class="withumsg-info-text">' + cityDisplay + '</span></span>';
                     }
                 }
                 // ③ 相对时间（移动端仅图标，点击 tooltip 显示）
                 if (timeAgo) {
-                    infoItemsHtml += '<span class="InfoItem lgmsg-info-hideable" data-withu-tip="' + escapeHtml(timeAgo) + '" data-withu-tip-force="true"><i data-lucide="clock" class="lgmsg-ico"></i><span class="lgmsg-info-text">' + escapeHtml(timeAgo) + '</span></span>';
+                    infoItemsHtml += '<span class="InfoItem withumsg-info-hideable" data-withu-tip="' + escapeHtml(timeAgo) + '" data-withu-tip-force="true"><i data-lucide="clock" class="withumsg-ico"></i><span class="withumsg-info-text">' + escapeHtml(timeAgo) + '</span></span>';
                 }
                 // ④ 天气（移动端仅图标，点击 tooltip 显示）
                 var weatherDisplay = msg.weather ? escapeHtml(msg.weather) : '';
                 if (weatherDisplay) {
                     var wiCode = msg.weather_icon || '';
                     var wiClass = wiCode ? 'qi-' + wiCode + '-fill' : 'qi-999-fill';
-                    infoItemsHtml += '<span class="InfoItem lgmsg-info-weather lgmsg-info-hideable" data-withu-tip="' + weatherDisplay + '" data-withu-tip-force="true"><i class="' + wiClass + ' lgmsg-ico"></i><span class="lgmsg-info-text">' + weatherDisplay + '</span></span>';
+                    infoItemsHtml += '<span class="InfoItem withumsg-info-weather withumsg-info-hideable" data-withu-tip="' + weatherDisplay + '" data-withu-tip-force="true"><i class="' + wiClass + ' withumsg-ico"></i><span class="withumsg-info-text">' + weatherDisplay + '</span></span>';
                 }
                 // ⑤ 设备 + 浏览器（移动端仅图标，点击 tooltip 显示）
                 var deviceParts = [];
@@ -684,19 +684,19 @@
                 if (browserDisplay) deviceParts.push(browserDisplay);
                 if (deviceParts.length) {
                     var deviceFull = deviceParts.join(' · ');
-                    infoItemsHtml += '<span class="InfoItem lgmsg-info-device lgmsg-info-hideable" data-withu-tip="' + deviceFull + '" data-withu-tip-force="true"><i data-lucide="monitor" class="lgmsg-ico"></i><span class="lgmsg-info-text">' + deviceFull + '</span></span>';
+                    infoItemsHtml += '<span class="InfoItem withumsg-info-device withumsg-info-hideable" data-withu-tip="' + deviceFull + '" data-withu-tip-force="true"><i data-lucide="monitor" class="withumsg-ico"></i><span class="withumsg-info-text">' + deviceFull + '</span></span>';
                 }
 
                 // ⑥ 点赞按钮
                 var likeCount = parseInt(msg.like_count) || 0;
-                infoItemsHtml += '<span class="InfoItem withu-interaction-inline-btn" data-like-target="message" data-like-id="' + msg.id + '"><i data-lucide="heart" class="lgmsg-ico"></i><span class="lgmsg-info-text withu-interaction-like-num">' + likeCount + '</span></span>';
+                infoItemsHtml += '<span class="InfoItem withu-interaction-inline-btn" data-like-target="message" data-like-id="' + msg.id + '"><i data-lucide="heart" class="withumsg-ico"></i><span class="withumsg-info-text withu-interaction-like-num">' + likeCount + '</span></span>';
 
                 wrap.innerHTML =
                     '<div class="MsgTime"><span>' + escapeHtml(msg.timeStr) + '</span></div>' +
                     '<div class="UserAvatar">' +
                         '<img class="lazy" data-src="' + escapeHtml(avatarUrl) + '" alt="' + escapeHtml(msg.name) + '" draggable="false">' +
                     '</div>' +
-                    '<div class="UserName"><h1><span class="lgmsg-card-name">' + escapeHtml(msg.name) + '</span>' + renderBadge(msg.badge) + '</h1></div>' +
+                    '<div class="UserName"><h1><span class="withumsg-card-name">' + escapeHtml(msg.name) + '</span>' + renderBadge(msg.badge) + '</h1></div>' +
                     '<div class="HeightCalc">' +
                         '<div class="MsgContent"><p>' + (msg.textHtml || escapeHtml(msg.text)) + '</p></div>' +
                         '<div class="MsgFooter">' +
@@ -735,13 +735,13 @@
         },
 
         destroy: function() {
-            $(document).off('click.lgmsgCard');
-            $('#lgmsgDrawerClose').off('click.lgmsg');
-            $('#lgmsgDrawer').off('click.lgmsg');
-            $('#lgmsgReplySendBtn').off('click.lgmsg');
-            $('#lgmsgDrawerCollapsed').off('click.lgmsg');
-            $('#lgmsgDrawerCollapseBtn').off('click.lgmsg');
-            $('#lgmsgDrawerIdentityClickArea').off('click.lgmsg');
+            $(document).off('click.withumsgCard');
+            $('#withumsgDrawerClose').off('click.withumsg');
+            $('#withumsgDrawer').off('click.withumsg');
+            $('#withumsgReplySendBtn').off('click.withumsg');
+            $('#withumsgDrawerCollapsed').off('click.withumsg');
+            $('#withumsgDrawerCollapseBtn').off('click.withumsg');
+            $('#withumsgDrawerIdentityClickArea').off('click.withumsg');
             this.close();
         },
 
@@ -749,26 +749,26 @@
             var self = this;
 
             // 点击卡片打开抽屉（整张卡片可点）
-            $(document).off('click.lgmsgCard').on('click.lgmsgCard', '.MessageCard', function(e) {
+            $(document).off('click.withumsgCard').on('click.withumsgCard', '.MessageCard', function(e) {
                 // 不拦截链接、按钮、地图定位、信息胶囊等可交互元素的点击
-                if ($(e.target).closest('a, button, input, textarea, .lgmsg-location-link, .lgmsg-info-hideable, [data-like-target]').length) return;
+                if ($(e.target).closest('a, button, input, textarea, .withumsg-location-link, .withumsg-info-hideable, [data-like-target]').length) return;
                 var $card = $(this);
                 var msgId = $card.data('msg-id');
                 if (!msgId) return;
 
                 // 头像 @ 效果
                 var $avatar = $card.find('.UserAvatar');
-                $avatar.addClass('lgmsg-avatar-tap');
-                setTimeout(function() { $avatar.removeClass('lgmsg-avatar-tap'); }, 600);
+                $avatar.addClass('withumsg-avatar-tap');
+                setTimeout(function() { $avatar.removeClass('withumsg-avatar-tap'); }, 600);
 
                 self.open(msgId);
             });
             // 点击归属地定位打开地图（mousedown + click 双重拦截）
-            $(document).off('mousedown.lgmsgLocation').on('mousedown.lgmsgLocation', '.lgmsg-location-link', function(e) {
+            $(document).off('mousedown.withumsgLocation').on('mousedown.withumsgLocation', '.withumsg-location-link', function(e) {
                 e.stopImmediatePropagation();
                 e.stopPropagation();
             });
-            $(document).off('click.lgmsgLocation').on('click.lgmsgLocation', '.lgmsg-location-link', function(e) {
+            $(document).off('click.withumsgLocation').on('click.withumsgLocation', '.withumsg-location-link', function(e) {
                 e.stopImmediatePropagation();
                 e.stopPropagation();
                 e.preventDefault();
@@ -776,69 +776,69 @@
                 var lng = parseFloat($el.attr('data-lng'));
                 var lat = parseFloat($el.attr('data-lat'));
                 var markerId = parseInt($el.attr('data-marker-id'), 10);
-                if (window.LGMap && !isNaN(lng) && !isNaN(lat) && lng !== 0 && lat !== 0) {
-                    LGMap.open({ mode: 'messages', coords: [lng, lat], zoom: 15, markerId: markerId });
+                if (window.WithUMap && !isNaN(lng) && !isNaN(lat) && lng !== 0 && lat !== 0) {
+                    WithUMap.open({ mode: 'messages', coords: [lng, lat], zoom: 15, markerId: markerId });
                 }
             });
 
             // 点击回复徽章也打开抽屉
-            $(document).off('click.lgmsgReplyBadge').on('click.lgmsgReplyBadge', '.lgmsg-reply-badge', function(e) {
+            $(document).off('click.withumsgReplyBadge').on('click.withumsgReplyBadge', '.withumsg-reply-badge', function(e) {
                 e.stopPropagation();
                 var msgId = $(this).data('msg-id');
                 if (msgId) Drawer.open(msgId);
             });
 
-            // 点赞按钮（抽屉内二级评论）- 复用 LGInteraction
-            $(document).off('click.lgmsgLikeBtn').on('click.lgmsgLikeBtn', '.withu-message-like-btn', function(e) {
+            // 点赞按钮（抽屉内二级评论）- 复用 WithUInteraction
+            $(document).off('click.withumsgLikeBtn').on('click.withumsgLikeBtn', '.withu-message-like-btn', function(e) {
                 e.stopPropagation();
-                // 直接调用 LGInteraction 的处理逻辑
-                if (typeof LGInteraction !== 'undefined' && LGInteraction._handleLikeClick) {
-                    LGInteraction._handleLikeClick(this);
+                // 直接调用 WithUInteraction 的处理逻辑
+                if (typeof WithUInteraction !== 'undefined' && WithUInteraction._handleLikeClick) {
+                    WithUInteraction._handleLikeClick(this);
                 }
             });
 
             // 关闭抽屉
-            $('#lgmsgDrawerClose').off('click.lgmsg').on('click.lgmsg', function() { self.close(); });
-            $('#lgmsgDrawer').off('click.lgmsg').on('click.lgmsg', function(e) {
+            $('#withumsgDrawerClose').off('click.withumsg').on('click.withumsg', function() { self.close(); });
+            $('#withumsgDrawer').off('click.withumsg').on('click.withumsg', function(e) {
                 if (e.target === this || $(e.target).hasClass('withu-message-drawer-overlay')) self.close();
             });
 
             // 展开/收起底部输入区
-            $('#lgmsgDrawerCollapsed').off('click.lgmsg').on('click.lgmsg', function() { self._expandFooter(); });
-            $('#lgmsgDrawerCollapseBtn').off('click.lgmsg').on('click.lgmsg', function() { self._collapseFooter(true); });
+            $('#withumsgDrawerCollapsed').off('click.withumsg').on('click.withumsg', function() { self._expandFooter(); });
+            $('#withumsgDrawerCollapseBtn').off('click.withumsg').on('click.withumsg', function() { self._collapseFooter(true); });
 
             // 点击消息区域（非底部输入区）时收起输入面板
-            $('#lgmsgDrawerBody').off('click.lgmsgCollapse').on('click.lgmsgCollapse', function(e) {
-                if (!$(e.target).closest('.withu-message-msg-bubble, .withu-message-avatar-wrap, .withu-message-at-tag, blockquote, .withu-message-context-menu, .lgmsg-location-link').length) {
+            $('#withumsgDrawerBody').off('click.withumsgCollapse').on('click.withumsgCollapse', function(e) {
+                if (!$(e.target).closest('.withu-message-msg-bubble, .withu-message-avatar-wrap, .withu-message-at-tag, blockquote, .withu-message-context-menu, .withumsg-location-link').length) {
                     self._collapseFooter();
                 }
             });
 
             // 身份栏点击 → 打开身份认证弹窗
-            $('#lgmsgDrawerIdentityClickArea').off('click.lgmsg').on('click.lgmsg', function() {
+            $('#withumsgDrawerIdentityClickArea').off('click.withumsg').on('click.withumsg', function() {
                 AuthModal.open();
             });
 
             // 发送回复
-            $('#lgmsgReplySendBtn').off('click.lgmsg').on('click.lgmsg', function() { self._handleSendReply(); });
+            $('#withumsgReplySendBtn').off('click.withumsg').on('click.withumsg', function() { self._handleSendReply(); });
 
             // 点击回复消息的名字 → @回复（与头像点击逻辑一致）
-            $(document).off('click.lgmsgReplyName', '.withu-message-msg-name').on('click.lgmsgReplyName', '.withu-message-msg-name', function(e) {
+            $(document).off('click.withumsgReplyName', '.withu-message-msg-name').on('click.withumsgReplyName', '.withu-message-msg-name', function(e) {
                 e.stopPropagation();
                 var $item = $(this).closest('.withu-message-msg-item');
                 if ($item.hasClass('is-me')) return;
                 var name = $(this).text();
-                var id = $item.attr('id') ? $item.attr('id').replace('lgmsg-', '') : '';
+                var id = $item.attr('id') ? $item.attr('id').replace('withumsg-', '') : '';
                 if (!name) return;
                 self._expandFooter();
-                var editor = document.getElementById('lgmsgDrawerEditor');
+                var editor = document.getElementById('withumsgDrawerEditor');
                 if (!editor) return;
                 if (id && editor.querySelector('.withu-message-at-tag[data-target="' + id + '"]')) {
                     editor.focus();
                     return;
                 }
                 // 插入目标：优先 inputDiv，否则 editor
-                var target = editor.querySelector('.lgmsg-editor-input') || editor;
+                var target = editor.querySelector('.withumsg-editor-input') || editor;
                 // 清理空占位
                 if (target.innerHTML === '<br>' || target.innerHTML === '<div><br></div>') target.innerHTML = '';
                 target.focus();
@@ -859,10 +859,10 @@
             });
 
             // 点击 @标签 或 blockquote[data-target] → 滚动到对应消息并高亮
-            $(document).off('click.lgmsgScrollTarget').on('click.lgmsgScrollTarget', '.withu-message-at-tag[data-target], blockquote[data-target], .withu-msg-at[data-id]', function() {
+            $(document).off('click.withumsgScrollTarget').on('click.withumsgScrollTarget', '.withu-message-at-tag[data-target], blockquote[data-target], .withu-msg-at[data-id]', function() {
                 var targetId = $(this).attr('data-target') || $(this).attr('data-id');
                 if (!targetId) return;
-                var $msgEl = $('#lgmsg-' + targetId);
+                var $msgEl = $('#withumsg-' + targetId);
                 if ($msgEl.length) {
                     $msgEl[0].scrollIntoView({ behavior: 'smooth', block: 'center' });
                     var $bubble = $msgEl.find('.withu-message-msg-bubble').first();
@@ -875,15 +875,15 @@
             });
 
             // 头像点击 → @回复（匹配demo的atUser：插入span.withu-message-at-tag到编辑器）
-            $(document).off('click.lgmsgAvatarAt', '.withu-message-avatar-wrap').on('click.lgmsgAvatarAt', '.withu-message-avatar-wrap', function(e) {
+            $(document).off('click.withumsgAvatarAt', '.withu-message-avatar-wrap').on('click.withumsgAvatarAt', '.withu-message-avatar-wrap', function(e) {
                 e.stopPropagation();
                 var $item = $(this).closest('.withu-message-msg-item');
                 if ($item.hasClass('is-me')) return;
                 var name = $item.find('.withu-message-msg-name').first().text() || '';
-                var id = $item.attr('id') ? $item.attr('id').replace('lgmsg-', '') : '';
+                var id = $item.attr('id') ? $item.attr('id').replace('withumsg-', '') : '';
                 if (!name) return;
                 self._expandFooter();
-                var editor = document.getElementById('lgmsgDrawerEditor');
+                var editor = document.getElementById('withumsgDrawerEditor');
                 if (!editor) return;
                 // 防重复
                 if (id && editor.querySelector('.withu-message-at-tag[data-target="' + id + '"]')) {
@@ -891,7 +891,7 @@
                     return;
                 }
                 // 插入目标：优先 inputDiv，否则 editor
-                var target = editor.querySelector('.lgmsg-editor-input') || editor;
+                var target = editor.querySelector('.withumsg-editor-input') || editor;
                 // 清理空占位
                 if (target.innerHTML === '<br>' || target.innerHTML === '<div><br></div>') target.innerHTML = '';
                 target.focus();
@@ -912,14 +912,14 @@
             });
 
             // 消息气泡点击 → 显示上下文菜单
-            $(document).off('click.lgmsgBubbleCtx', '.withu-message-msg-bubble').on('click.lgmsgBubbleCtx', '.withu-message-msg-bubble', function(e) {
+            $(document).off('click.withumsgBubbleCtx', '.withu-message-msg-bubble').on('click.withumsgBubbleCtx', '.withu-message-msg-bubble', function(e) {
                 e.stopPropagation();
                 var $bubble = $(this);
                 var $item = $bubble.closest('.withu-message-msg-item');
                 self._activeCtxItem = $item;
                 self._activeCtxBubble = $bubble;
                 var rect = this.getBoundingClientRect();
-                var $menu = $('#lgmsgContextMenu');
+                var $menu = $('#withumsgContextMenu');
                 // 回复类型消息（含blockquote）隐藏+1按钮
                 var hasBq = !!$bubble[0].querySelector('blockquote');
                 $menu.find('[data-action="plusone"]').toggle(!hasBq);
@@ -934,36 +934,36 @@
             });
 
             // 上下文菜单动作
-            $(document).off('click.lgmsgCtxAction', '.withu-message-cm-item').on('click.lgmsgCtxAction', '.withu-message-cm-item', function() {
+            $(document).off('click.withumsgCtxAction', '.withu-message-cm-item').on('click.withumsgCtxAction', '.withu-message-cm-item', function() {
                 var action = $(this).data('action');
                 self._handleContextAction(action);
             });
 
             // 点击其他区域关闭上下文菜单
-            $(document).off('click.lgmsgCtxClose').on('click.lgmsgCtxClose', function(e) {
-                var $menu = $('#lgmsgContextMenu');
+            $(document).off('click.withumsgCtxClose').on('click.withumsgCtxClose', function(e) {
+                var $menu = $('#withumsgContextMenu');
                 if ($menu.hasClass('active') && !$menu[0].contains(e.target) && !$(e.target).closest('.withu-message-msg-bubble').length) {
                     $menu.removeClass('active');
                 }
             });
 
             // ESC 关闭
-            $(document).off('keydown.lgmsgDrawer').on('keydown.lgmsgDrawer', function(e) {
+            $(document).off('keydown.withumsgDrawer').on('keydown.withumsgDrawer', function(e) {
                 if (e.key === 'Escape') {
-                    var $menu = $('#lgmsgContextMenu');
+                    var $menu = $('#withumsgContextMenu');
                     if ($menu.hasClass('active')) { $menu.removeClass('active'); return; }
                     if (self._isOpen) self.close();
                 }
             });
 
             // 滚动时关闭上下文菜单（带动画）— 绑定到真正的滚动容器
-            $('#lgmsgDrawerScroll').off('scroll.lgmsgCtx').on('scroll.lgmsgCtx', function() {
-                var $menu = $('#lgmsgContextMenu');
+            $('#withumsgDrawerScroll').off('scroll.withumsgCtx').on('scroll.withumsgCtx', function() {
+                var $menu = $('#withumsgContextMenu');
                 if ($menu.hasClass('active')) $menu.removeClass('active');
             });
 
             // contenteditable 编辑器粘贴（自动解析表情 shortcode）
-            $('#lgmsgDrawerEditor').off('paste.lgmsg').on('paste.lgmsg', function(e) {
+            $('#withumsgDrawerEditor').off('paste.withumsg').on('paste.withumsg', function(e) {
                 e.preventDefault();
                 var text = (e.originalEvent || e).clipboardData.getData('text/plain');
                 EmojiPanel.pasteWithEmoji(this, text);
@@ -971,13 +971,13 @@
             });
 
             // 字数统计
-            $('#lgmsgDrawerEditor').off('input.lgmsg').on('input.lgmsg', function() {
+            $('#withumsgDrawerEditor').off('input.withumsg').on('input.withumsg', function() {
                 self._updateCharCounter();
             });
 
             // 随机一言按钮（复用公共 _showQuoteConfirm + _doFetchQuote）
-            $('#lgmsgBtnDrawerQuote').off('click.lgmsg').on('click.lgmsg', function() {
-                var editor = document.getElementById('lgmsgDrawerEditor');
+            $('#withumsgBtnDrawerQuote').off('click.withumsg').on('click.withumsg', function() {
+                var editor = document.getElementById('withumsgDrawerEditor');
                 if (!editor) return;
                 var $btn = $(this);
                 if ($btn.data('quoteLoading')) return;
@@ -993,8 +993,8 @@
 
             // Enter 发送开关
             var enterToSend = localStorage.getItem('withu_enter_to_send') === 'true';
-            if (enterToSend) $('#lgmsgDrawerEnterSwitch').addClass('active');
-            $('#lgmsgDrawerEnterSwitch').off('click.lgmsg').on('click.lgmsg', function() {
+            if (enterToSend) $('#withumsgDrawerEnterSwitch').addClass('active');
+            $('#withumsgDrawerEnterSwitch').off('click.withumsg').on('click.withumsg', function() {
                 enterToSend = !enterToSend;
                 localStorage.setItem('withu_enter_to_send', enterToSend);
                 $(this).toggleClass('active', enterToSend);
@@ -1006,7 +1006,7 @@
             });
 
             // Enter 快捷发送
-            $('#lgmsgDrawerEditor').off('keydown.lgmsgEnter').on('keydown.lgmsgEnter', function(e) {
+            $('#withumsgDrawerEditor').off('keydown.withumsgEnter').on('keydown.withumsgEnter', function(e) {
                 var ets = localStorage.getItem('withu_enter_to_send') === 'true';
                 if (ets && e.key === 'Enter' && !e.shiftKey && !e.ctrlKey && !e.metaKey) {
                     e.preventDefault();
@@ -1024,31 +1024,31 @@
             var confirmed = !!localStorage.getItem('withu_comment_auth_confirmed');
 
             // 清理旧元素
-            $('#lgmsgDrawerQQHint').remove();
-            $('#lgmsgDrawerQQSub').remove();
+            $('#withumsgDrawerQQHint').remove();
+            $('#withumsgDrawerQQSub').remove();
 
             if (confirmed) {
                 // 已确认身份 → 填充完整身份信息
                 if (cachedQQ && cachedQQ.length >= 5 && cachedName) {
                     var avatarUrl = localStorage.getItem('withu_comment_avatar') || _defaultAvatar;
                     var maskedQQ = cachedQQ.slice(0, 3) + '**' + cachedQQ.slice(-2);
-                    $('#lgmsgDrawerIdentityAvatar').attr('src', avatarUrl);
-                    $('#lgmsgDrawerIdentityName').text(cachedName).css('color', 'var(--lgmsg-text-main)');
-                    var $qqSub = $('<small id="lgmsgDrawerQQSub" class="withu-message-drawer-qq-sub"></small>');
-                    $('#lgmsgDrawerIdentityName').after($qqSub);
+                    $('#withumsgDrawerIdentityAvatar').attr('src', avatarUrl);
+                    $('#withumsgDrawerIdentityName').text(cachedName).css('color', 'var(--withumsg-text-main)');
+                    var $qqSub = $('<small id="withumsgDrawerQQSub" class="withu-message-drawer-qq-sub"></small>');
+                    $('#withumsgDrawerIdentityName').after($qqSub);
                     $qqSub.text(maskedQQ).show();
                 } else if (cachedName) {
-                    $('#lgmsgDrawerIdentityName').text(cachedName).css('color', 'var(--lgmsg-text-main)');
+                    $('#withumsgDrawerIdentityName').text(cachedName).css('color', 'var(--withumsg-text-main)');
                 }
             } else if (cachedQQ && cachedQQ.length >= 5) {
                 // 未确认但有缓存 QQ（来自一级留言弹窗）→ 显示可点击的快捷身份徽章
                 var hintAvatar = localStorage.getItem('withu_comment_avatar') || _defaultAvatar;
                 var hintMasked = cachedQQ.slice(0, 3) + '**' + cachedQQ.slice(-2);
-                var $hint = $('<div id="lgmsgDrawerQQHint" style="display:flex;align-items:center;gap:4px;padding:3px 8px 3px 3px;border-radius:16px;background:var(--lgmsg-bg-secondary,#f2f2f7);cursor:pointer;flex-shrink:0;font-size:12px;color:var(--lgmsg-text-muted,#8e8e93);white-space:nowrap;transition:opacity .3s;">' +
+                var $hint = $('<div id="withumsgDrawerQQHint" style="display:flex;align-items:center;gap:4px;padding:3px 8px 3px 3px;border-radius:16px;background:var(--withumsg-bg-secondary,#f2f2f7);cursor:pointer;flex-shrink:0;font-size:12px;color:var(--withumsg-text-muted,#8e8e93);white-space:nowrap;transition:opacity .3s;">' +
                     '<img src="' + escapeHtml(hintAvatar) + '" style="width:20px;height:20px;border-radius:50%;object-fit:cover;flex-shrink:0;" onerror="this.src=\'' + escapeHtml(_defaultAvatar) + '\'">' +
                     '<span>' + escapeHtml(hintMasked) + '</span>' +
                 '</div>');
-                $('#lgmsgDrawerCollapseBtn').before($hint);
+                $('#withumsgDrawerCollapseBtn').before($hint);
                 $hint.on('click', function(e) {
                     e.stopPropagation();
                     if (cachedName) {
@@ -1065,20 +1065,20 @@
         },
 
         _expandFooter: function() {
-            var $footer = $('#lgmsgDrawerFooter');
+            var $footer = $('#withumsgDrawerFooter');
             if ($footer.hasClass('is-expanded')) return;
             $footer.addClass('is-expanded');
             setTimeout(function() {
-                var editor = document.getElementById('lgmsgDrawerEditor');
+                var editor = document.getElementById('withumsgDrawerEditor');
                 if (editor) editor.focus();
-                var scroller = document.getElementById('lgmsgDrawerScroll');
+                var scroller = document.getElementById('withumsgDrawerScroll');
                 if (scroller) scroller.scrollTo({ top: scroller.scrollHeight, behavior: 'smooth' });
             }, 50);
         },
 
         _collapseFooter: function(force) {
-            var editor = document.getElementById('lgmsgDrawerEditor');
-            var $footer = $('#lgmsgDrawerFooter');
+            var editor = document.getElementById('withumsgDrawerEditor');
+            var $footer = $('#withumsgDrawerFooter');
             if (force || (editor && !editor.textContent.trim() && !editor.querySelector('img.emoji') && !editor.querySelector('blockquote'))) {
                 $footer.removeClass('is-expanded');
                 EmojiPanel.hide();
@@ -1086,8 +1086,8 @@
         },
 
         _updateCharCounter: function() {
-            var editor = document.getElementById('lgmsgDrawerEditor');
-            var $counter = $('#lgmsgDrawerCharCounter');
+            var editor = document.getElementById('withumsgDrawerEditor');
+            var $counter = $('#withumsgDrawerCharCounter');
             if (!editor || !$counter.length) return;
             var len = (editor.textContent || '').length + (editor.querySelectorAll('img.emoji') || []).length;
             var max = 500;
@@ -1102,12 +1102,12 @@
             this._clearReplyTo();
             this._isOpen = true;
 
-            var $overlay = $('#lgmsgDrawer');
+            var $overlay = $('#withumsgDrawer');
             $overlay.removeClass('closing').addClass('active');
             lockBodyScroll();
 
             // 副标题重置为骨架屏 loading
-            var subtitle = document.getElementById('lgmsgDrawerSubtitle');
+            var subtitle = document.getElementById('withumsgDrawerSubtitle');
             if (subtitle) {
                 subtitle.style.opacity = '1';
                 subtitle.innerHTML = '<span style="display:inline-block;width:120px;height:12px;border-radius:6px;background:linear-gradient(90deg,#d1d1d6 25%,#e5e5ea 50%,#d1d1d6 75%);background-size:200% 100%;animation:shimmer 1.2s ease-in-out infinite;vertical-align:middle;"></span>';
@@ -1123,7 +1123,7 @@
         close: function() {
             if (!this._isOpen) return;
             this._isOpen = false;
-            var $overlay = $('#lgmsgDrawer');
+            var $overlay = $('#withumsgDrawer');
             $overlay.addClass('closing');
 
             setTimeout(function() {
@@ -1135,7 +1135,7 @@
         },
 
         _populateVisitorTags: function() {
-            var $tags = $('#lgmsgDrawerVisitorTags');
+            var $tags = $('#withumsgDrawerVisitorTags');
             if (!$tags.length) return;
             VisitorDetect.detect();
             var os = VisitorDetect.os || '--';
@@ -1145,19 +1145,19 @@
             $tags.html(
                 '<div class="withu-message-v-tag">' +
                     '<div class="withu-message-v-tag-icon"><i data-lucide="monitor"></i></div>' +
-                    '<span id="lgmsgTagOS">' + escapeHtml(os) + '</span>' +
+                    '<span id="withumsgTagOS">' + escapeHtml(os) + '</span>' +
                 '</div>' +
                 '<div class="withu-message-v-tag">' +
                     '<div class="withu-message-v-tag-icon"><i data-lucide="globe"></i></div>' +
-                    '<span id="lgmsgTagBrowser">' + escapeHtml(browser) + '</span>' +
+                    '<span id="withumsgTagBrowser">' + escapeHtml(browser) + '</span>' +
                 '</div>' +
                 '<div class="withu-message-v-tag">' +
                     '<div class="withu-message-v-tag-icon"><i data-lucide="map-pin"></i></div>' +
-                    '<span id="lgmsgTagLocation">' + escapeHtml(loc) + '</span>' +
+                    '<span id="withumsgTagLocation">' + escapeHtml(loc) + '</span>' +
                 '</div>' +
                 '<div class="withu-message-v-tag">' +
-                    '<div class="withu-message-v-tag-icon withu-message-icon-weather"><i class="qi-100-fill" id="lgmsgWeatherIcon"></i></div>' +
-                    '<span id="lgmsgTagWeather">--</span>' +
+                    '<div class="withu-message-v-tag-icon withu-message-icon-weather"><i class="qi-100-fill" id="withumsgWeatherIcon"></i></div>' +
+                    '<span id="withumsgTagWeather">--</span>' +
                 '</div>'
             );
             if (typeof lucide !== 'undefined') lucide.createIcons();
@@ -1166,7 +1166,7 @@
         },
 
         _loadReplies: function(parentId) {
-            var body = document.getElementById('lgmsgDrawerBody');
+            var body = document.getElementById('withumsgDrawerBody');
             if (!body) return;
 
             // 居中 spinner + 文案（与 demo 一致）
@@ -1216,21 +1216,21 @@
             // OS
             var os = msg.os || '';
             if (os) {
-                metaHtml += '<span><i data-lucide="monitor" class="lgmsg-ico-sm"></i>' + escapeHtml(os) + '</span>';
+                metaHtml += '<span><i data-lucide="monitor" class="withumsg-ico-sm"></i>' + escapeHtml(os) + '</span>';
             }
             // 浏览器
             var browser = msg.browser || '';
             if (browser) {
-                metaHtml += '<span><i data-lucide="globe" class="lgmsg-ico-sm"></i>' + escapeHtml(browser) + '</span>';
+                metaHtml += '<span><i data-lucide="globe" class="withumsg-ico-sm"></i>' + escapeHtml(browser) + '</span>';
             }
             // 城市（有坐标时可点击打开地图）
             var city = msg.city || '';
             if (city) {
                 var hasCoords = msg.lng && msg.lat && isFinite(msg.lng) && isFinite(msg.lat);
                 if (hasCoords) {
-                    metaHtml += '<span class="lgmsg-location-link lgmsg-location-has-coords" data-lng="' + msg.lng + '" data-lat="' + msg.lat + '" data-marker-id="' + msg.id + '"><i data-lucide="map-pin" class="lgmsg-ico-sm"></i>' + escapeHtml(city) + '</span>';
+                    metaHtml += '<span class="withumsg-location-link withumsg-location-has-coords" data-lng="' + msg.lng + '" data-lat="' + msg.lat + '" data-marker-id="' + msg.id + '"><i data-lucide="map-pin" class="withumsg-ico-sm"></i>' + escapeHtml(city) + '</span>';
                 } else {
-                    metaHtml += '<span><i data-lucide="map-pin" class="lgmsg-ico-sm"></i>' + escapeHtml(city) + '</span>';
+                    metaHtml += '<span><i data-lucide="map-pin" class="withumsg-ico-sm"></i>' + escapeHtml(city) + '</span>';
                 }
             }
             // 天气
@@ -1238,7 +1238,7 @@
             if (weather) {
                 var wiCode = msg.weather_icon || '';
                 var wiClass = wiCode ? 'qi-' + wiCode + '-fill' : 'qi-999-fill';
-                metaHtml += '<span><i class="' + wiClass + ' lgmsg-ico-sm"></i>' + escapeHtml(weather) + '</span>';
+                metaHtml += '<span><i class="' + wiClass + ' withumsg-ico-sm"></i>' + escapeHtml(weather) + '</span>';
             }
             return metaHtml;
         },
@@ -1271,7 +1271,7 @@
                 '<i class="ph-fill ph-heart"></i>' +
             '</button><span class="withu-message-like-count">' + likeCount + '</span>';
 
-            return '<div class="' + cls + '" id="lgmsg-' + msg.id + '" data-reply-id="' + msg.id + '"' + styleAttr + '>' +
+            return '<div class="' + cls + '" id="withumsg-' + msg.id + '" data-reply-id="' + msg.id + '"' + styleAttr + '>' +
                 '<div class="withu-message-avatar-wrap"' + avatarCursor + '>' +
                     '<img class="withu-message-msg-avatar" src="' + escapeHtml(avatarUrl) + '" alt="' + escapeHtml(msgDisplayName) + '" loading="lazy" decoding="async">' +
                     overlayHtml +
@@ -1295,21 +1295,21 @@
             if (!msg.reply_to_id || !msg.replyToName) return '';
             // 优先使用带表情的 replyToHtml，回退到纯文本
             var snippet = msg.replyToHtml || (msg.replyToText ? escapeHtml(msg.replyToText) : '');
-            return '<blockquote class="lgmsg-reply-quote" data-target="' + msg.reply_to_id + '">' +
-                '<span class="lgmsg-reply-quote-name">回复 @' + escapeHtml(msg.replyToName) + '</span>' +
-                (snippet ? '<span class="lgmsg-reply-quote-text">' + snippet + '</span>' : '') +
+            return '<blockquote class="withumsg-reply-quote" data-target="' + msg.reply_to_id + '">' +
+                '<span class="withumsg-reply-quote-name">回复 @' + escapeHtml(msg.replyToName) + '</span>' +
+                (snippet ? '<span class="withumsg-reply-quote-text">' + snippet + '</span>' : '') +
             '</blockquote>';
         },
 
         _renderDrawerContent: function(parent, replies) {
-            var body = document.getElementById('lgmsgDrawerBody');
+            var body = document.getElementById('withumsgDrawerBody');
             if (!body) return;
             var self = this;
             var html = '';
             var myQQHash = localStorage.getItem('withu_comment_qq_hash') || '';
 
             // 更新副标题回复数（骨架屏 → 渐显文字）
-            var subtitle = document.getElementById('lgmsgDrawerSubtitle');
+            var subtitle = document.getElementById('withumsgDrawerSubtitle');
             if (subtitle) {
                 subtitle.style.transition = 'opacity 0.3s ease';
                 subtitle.style.opacity = '0';
@@ -1352,12 +1352,12 @@
             if (typeof lucide !== 'undefined') lucide.createIcons();
 
             // 查询点赞状态（高亮已点赞的）
-            if (typeof LGInteraction !== 'undefined' && LGInteraction._loadStatuses) {
-                LGInteraction._loadStatuses();
+            if (typeof WithUInteraction !== 'undefined' && WithUInteraction._loadStatuses) {
+                WithUInteraction._loadStatuses();
             }
 
             // 滚动到顶部
-            var scroll = document.getElementById('lgmsgDrawerScroll');
+            var scroll = document.getElementById('withumsgDrawerScroll');
             if (scroll) {
                 setTimeout(function() { scroll.scrollTop = 0; }, 50);
             }
@@ -1367,7 +1367,7 @@
             this._replyToId = id;
             this._replyToName = name;
             // 在编辑器里插入 @ 标签
-            var editor = document.getElementById('lgmsgDrawerEditor');
+            var editor = document.getElementById('withumsgDrawerEditor');
             if (editor) {
                 editor.focus();
                 var placeholder = editor.getAttribute('data-placeholder');
@@ -1377,7 +1377,7 @@
         },
 
         _handleContextAction: function(action) {
-            var $menu = $('#lgmsgContextMenu');
+            var $menu = $('#withumsgContextMenu');
             $menu.removeClass('active');
 
             var $item = this._activeCtxItem;
@@ -1385,14 +1385,14 @@
             if (!$item || !$bubble) return;
 
             var self = this;
-            var msgId = $item.attr('id') ? $item.attr('id').replace('lgmsg-', '') : '';
+            var msgId = $item.attr('id') ? $item.attr('id').replace('withumsg-', '') : '';
             var replyName = $item.find('.withu-message-msg-name').first().text() || '匿名';
 
             if (action === 'like') {
                 // 点赞功能 - 触发消息气泡旁的点赞按钮
                 var likeBtn = $item.find('.withu-message-like-btn')[0];
-                if (likeBtn && typeof LGInteraction !== 'undefined') {
-                    LGInteraction._handleLikeClick(likeBtn);
+                if (likeBtn && typeof WithUInteraction !== 'undefined') {
+                    WithUInteraction._handleLikeClick(likeBtn);
                 }
             } else if (action === 'copy') {
                 // 提取纯文本（emoji → [表情]，@标签保留文字）
@@ -1431,7 +1431,7 @@
                 self._replyToName = replyName;
 
                 self._expandFooter();
-                var editor = document.getElementById('lgmsgDrawerEditor');
+                var editor = document.getElementById('withumsgDrawerEditor');
                 if (editor) {
                     // 提取引用富文本（递归保留表情图片）
                     var clone2 = $bubble[0].cloneNode(true);
@@ -1465,9 +1465,9 @@
                     var bq = document.createElement('blockquote');
                     bq.contentEditable = 'false';
                     bq.setAttribute('data-target', msgId);
-                    bq.className = 'lgmsg-editor-quote';
-                    bq.innerHTML = '<span class="lgmsg-editor-quote-label">回复 @' + escapeHtml(replyName) + ':</span> ' + quoteHtml +
-                        '<span class="lgmsg-editor-quote-close" onclick="(function(el){var d=el.closest(\'.lgmsg-editor-quote\');if(d)d.remove();var D=window._LGDrawerRef;if(D){D._replyToId=null;D._replyToName=null;}})( this)">&times;</span>';
+                    bq.className = 'withumsg-editor-quote';
+                    bq.innerHTML = '<span class="withumsg-editor-quote-label">回复 @' + escapeHtml(replyName) + ':</span> ' + quoteHtml +
+                        '<span class="withumsg-editor-quote-close" onclick="(function(el){var d=el.closest(\'.withumsg-editor-quote\');if(d)d.remove();var D=window._LGDrawerRef;if(D){D._replyToId=null;D._replyToName=null;}})( this)">&times;</span>';
 
                     // 重建编辑器内容：blockquote + 输入区
                     // 保留已有的非blockquote内容
@@ -1483,7 +1483,7 @@
 
                     // 创建输入div隔离blockquote
                     var inputDiv = document.createElement('div');
-                    inputDiv.className = 'lgmsg-editor-input';
+                    inputDiv.className = 'withumsg-editor-input';
                     if (oldNodes.length > 0) {
                         oldNodes.forEach(function(n) { inputDiv.appendChild(n); });
                     } else {
@@ -1503,9 +1503,9 @@
             } else if (action === 'plusone') {
                 // +1：将气泡富文本内容（emoji + @标签）填充到编辑器
                 self._expandFooter();
-                var editor = document.getElementById('lgmsgDrawerEditor');
+                var editor = document.getElementById('withumsgDrawerEditor');
                 if (!editor) return;
-                var target = editor.querySelector('.lgmsg-editor-input') || editor;
+                var target = editor.querySelector('.withumsg-editor-input') || editor;
                 if (target.innerHTML === '<br>' || target.innerHTML === '<div><br></div>') target.innerHTML = '';
                 target.focus();
 
@@ -1588,17 +1588,17 @@
         _clearReplyTo: function() {
             this._replyToId = null;
             this._replyToName = null;
-            var editor = document.getElementById('lgmsgDrawerEditor');
+            var editor = document.getElementById('withumsgDrawerEditor');
             if (editor) {
                 editor.setAttribute('data-placeholder', '友善的留言是交流的起点...');
                 // 移除编辑器内的引用 blockquote
-                var bq = editor.querySelector('.lgmsg-editor-quote');
+                var bq = editor.querySelector('.withumsg-editor-quote');
                 if (bq) bq.remove();
             }
         },
 
         _getEditorText: function() {
-            var editor = document.getElementById('lgmsgDrawerEditor');
+            var editor = document.getElementById('withumsgDrawerEditor');
             if (!editor) return '';
 
             function extractNodes(parent) {
@@ -1633,7 +1633,7 @@
         },
 
         _clearEditor: function() {
-            var editor = document.getElementById('lgmsgDrawerEditor');
+            var editor = document.getElementById('withumsgDrawerEditor');
             if (editor) editor.innerHTML = '';
             this._updateCharCounter();
         },
@@ -1662,7 +1662,7 @@
             var geetestAvailable = typeof GeetestHelper !== 'undefined' && GeetestHelper.ready();
 
             if (geetestAvailable) {
-                var $sendBtn = $('#lgmsgReplySendBtn');
+                var $sendBtn = $('#withumsgReplySendBtn');
                 $sendBtn.prop('disabled', true).html('<i data-lucide="loader" class="withu-message-lucide-loader" style="width:16px;height:16px;"></i>');
                 if (typeof lucide !== 'undefined') lucide.createIcons({ nodes: [$sendBtn[0]] });
                 // 存储待提交数据，供 submitMessage 全局回调使用
@@ -1688,7 +1688,7 @@
 
         _submitReply: function(text, parentId, geetestResult) {
             var self = this;
-            var $btn = $('#lgmsgReplySendBtn');
+            var $btn = $('#withumsgReplySendBtn');
             $btn.prop('disabled', true).html('<i data-lucide="loader" class="withu-message-lucide-loader" style="width:16px;height:16px;"></i>');
             if (typeof lucide !== 'undefined') lucide.createIcons({ nodes: [$btn[0]] });
 
@@ -1723,8 +1723,8 @@
                         if (typeof Toastify !== 'undefined') Toastify.showScenario('success', { text: res.message || '回复成功' });
 
                         // 即时插入回复到 drawer（含待审核标识）
-                        var body = document.getElementById('lgmsgDrawerBody');
-                        var drawerEditor = document.getElementById('lgmsgDrawerEditor');
+                        var body = document.getElementById('withumsgDrawerBody');
+                        var drawerEditor = document.getElementById('withumsgDrawerEditor');
                         if (body) {
                             // 移除空状态提示
                             var emptyEl = body.querySelector('.withu-message-drawer-empty');
@@ -1747,7 +1747,7 @@
                             var quoteHtml = '';
                             if (self._replyToId && self._replyToName) {
                                 // 查找被引用消息的内容（带表情HTML）
-                                var refBubble = document.querySelector('#lgmsg-' + self._replyToId + ' .withu-message-msg-bubble');
+                                var refBubble = document.querySelector('#withumsg-' + self._replyToId + ' .withu-message-msg-bubble');
                                 var refHtml = '';
                                 if (refBubble) {
                                     var refClone = refBubble.cloneNode(true);
@@ -1777,7 +1777,7 @@
                             var isPendingReply = !!res.pending;
                             var item = document.createElement('div');
                             item.className = 'withu-message-msg-item is-me withu-message-msg-pop-in' + (isPendingReply ? ' is-pending' : '');
-                            item.id = 'lgmsg-' + newMsgId;
+                            item.id = 'withumsg-' + newMsgId;
                             item.innerHTML =
                                 '<div class="withu-message-avatar-wrap">' +
                                     '<img class="withu-message-msg-avatar" src="' + escapeHtml(myAvatar) + '" loading="lazy" decoding="async">' +
@@ -1794,7 +1794,7 @@
                             if (typeof lucide !== 'undefined') lucide.createIcons();
 
                             // 滚动到底部
-                            var scroller = document.getElementById('lgmsgDrawerScroll');
+                            var scroller = document.getElementById('withumsgDrawerScroll');
                             if (scroller) setTimeout(function() { scroller.scrollTop = scroller.scrollHeight; }, 50);
 
                             // 小礼花（匹配demo）
@@ -1809,9 +1809,9 @@
 
                         // 更新主列表中卡片的回复数
                         var $card = $('.MessageCard[data-msg-id="' + parentId + '"]');
-                        var $badge = $card.find('.lgmsg-reply-badge');
+                        var $badge = $card.find('.withumsg-reply-badge');
                         var oldCount = parseInt($badge.text()) || 0;
-                        $badge.html('<i data-lucide="message-square" class="lgmsg-ico"></i>' + (oldCount + 1) + ' 条回复');
+                        $badge.html('<i data-lucide="message-square" class="withumsg-ico"></i>' + (oldCount + 1) + ' 条回复');
                         if (typeof lucide !== 'undefined') lucide.createIcons();
                     } else if (res.need_dev_password) {
                         $btn.prop('disabled', false).html('<i data-lucide="send" style="width:16px;height:16px;"></i>');
@@ -1820,7 +1820,7 @@
                             delete postData.lot_number; delete postData.captcha_output; delete postData.pass_token; delete postData.gen_time;
                             postData.dev_password = pw;
                             // 在弹窗关闭前保存编辑器内容，用于插入气泡
-                            var drawerEditorDev = document.getElementById('lgmsgDrawerEditor');
+                            var drawerEditorDev = document.getElementById('withumsgDrawerEditor');
                             var devContentStr = drawerEditorDev ? drawerEditorDev.innerHTML : '';
                             var devReplyToId = self._replyToId;
                             var devReplyToName = self._replyToName;
@@ -1832,7 +1832,7 @@
                                         showSuccess(function() {
                                             if (typeof Toastify !== 'undefined') Toastify.showScenario('success', { text: r2.message || '回复成功' });
                                             // 插入气泡到抽屉
-                                            var body = document.getElementById('lgmsgDrawerBody');
+                                            var body = document.getElementById('withumsgDrawerBody');
                                             if (body) {
                                                 var emptyEl = body.querySelector('.withu-message-drawer-empty');
                                                 if (emptyEl) emptyEl.remove();
@@ -1841,7 +1841,7 @@
                                                 var myAvatar = localStorage.getItem('withu_comment_avatar') || getAvatarUrl(myQQ);
                                                 var quoteHtml2 = '';
                                                 if (devReplyToId && devReplyToName) {
-                                                    var refB = document.querySelector('#lgmsg-' + devReplyToId + ' .withu-message-msg-bubble');
+                                                    var refB = document.querySelector('#withumsg-' + devReplyToId + ' .withu-message-msg-bubble');
                                                     var refH = refB ? refB.cloneNode(true).innerHTML.substring(0, 200) : '';
                                                     quoteHtml2 = self._buildReplyQuote({ reply_to_id: devReplyToId, replyToName: devReplyToName, replyToHtml: refH });
                                                 }
@@ -1849,14 +1849,14 @@
                                                 var devPending = !!r2.pending;
                                                 var devItem = document.createElement('div');
                                                 devItem.className = 'withu-message-msg-item is-me withu-message-msg-pop-in' + (devPending ? ' is-pending' : '');
-                                                devItem.id = 'lgmsg-local-' + Date.now();
+                                                devItem.id = 'withumsg-local-' + Date.now();
                                                 devItem.innerHTML =
                                                     '<div class="withu-message-avatar-wrap"><img class="withu-message-msg-avatar" src="' + escapeHtml(myAvatar) + '" loading="lazy" decoding="async"></div>' +
                                                     '<div class="withu-message-msg-main"><div class="withu-message-msg-info"><span class="withu-message-msg-name">' + escapeHtml(myName) + '</span>' + (devPending ? renderPendingBadge() : '') + '</div>' +
                                                     '<div class="withu-message-msg-bubble">' + finalContent + '</div></div>';
                                                 body.appendChild(devItem);
                                                 if (typeof lucide !== 'undefined') lucide.createIcons();
-                                                var scroller = document.getElementById('lgmsgDrawerScroll');
+                                                var scroller = document.getElementById('withumsgDrawerScroll');
                                                 if (scroller) setTimeout(function() { scroller.scrollTop = scroller.scrollHeight; }, 50);
                                             }
                                             self._clearEditor(); self._clearReplyTo(); EmojiPanel.hide();
@@ -1903,7 +1903,7 @@
         _activeCategory: 0,
         _visible: false,
         _savedRange: null,
-        _targetEditor: 'lgmsgDrawerEditor',
+        _targetEditor: 'withumsgDrawerEditor',
         _shortcodeMap: null,
 
         init: function() {
@@ -1913,18 +1913,18 @@
         },
 
         destroy: function() {
-            $('#lgmsgBtnDrawerEmoji').off('click.lgmsg');
-            $('#lgmsgBtnEmoji').off('click.lgmsg');
-            $(document).off('click.lgmsgEmojiOutside');
+            $('#withumsgBtnDrawerEmoji').off('click.withumsg');
+            $('#withumsgBtnEmoji').off('click.withumsg');
+            $(document).off('click.withumsgEmojiOutside');
         },
 
         _bindEvents: function() {
             var self = this;
 
             // 抽屉内表情按钮
-            $('#lgmsgBtnDrawerEmoji').off('click.lgmsg').on('click.lgmsg', function(e) {
+            $('#withumsgBtnDrawerEmoji').off('click.withumsg').on('click.withumsg', function(e) {
                 e.stopPropagation();
-                self._targetEditor = 'lgmsgDrawerEditor';
+                self._targetEditor = 'withumsgDrawerEditor';
                 if (self._visible) {
                     self.hide();
                 } else {
@@ -1933,12 +1933,12 @@
             });
 
             // 点击外部关闭
-            $(document).off('click.lgmsgEmojiOutside').on('click.lgmsgEmojiOutside', function(e) {
+            $(document).off('click.withumsgEmojiOutside').on('click.withumsgEmojiOutside', function(e) {
                 if (!self._visible) return;
-                var $panel = $('#lgmsgEmojiPanel');
+                var $panel = $('#withumsgEmojiPanel');
                 if (!$panel.length || !$panel[0]) return;
-                var $btnDrawer = $('#lgmsgBtnDrawerEmoji');
-                var $btnModal = $('#lgmsgBtnEmoji');
+                var $btnDrawer = $('#withumsgBtnDrawerEmoji');
+                var $btnModal = $('#withumsgBtnEmoji');
                 var isInsidePanel = $panel[0].contains(e.target);
                 var isInsideBtn = ($btnDrawer.length && $btnDrawer[0].contains(e.target)) ||
                                   ($btnModal.length && $btnModal[0].contains(e.target));
@@ -1948,7 +1948,7 @@
             });
 
             // 编辑器光标追踪（抽屉 + 弹窗）— 含 blur 保存
-            $('#lgmsgDrawerEditor, #lgmsgEditor').off('keyup.lgmsgCursor mouseup.lgmsgCursor blur.lgmsgCursor').on('keyup.lgmsgCursor mouseup.lgmsgCursor blur.lgmsgCursor', function() {
+            $('#withumsgDrawerEditor, #withumsgEditor').off('keyup.withumsgCursor mouseup.withumsgCursor blur.withumsgCursor').on('keyup.withumsgCursor mouseup.withumsgCursor blur.withumsgCursor', function() {
                 var sel = window.getSelection();
                 if (sel.rangeCount > 0) {
                     self._savedRange = sel.getRangeAt(0).cloneRange();
@@ -1957,7 +1957,7 @@
 
             // 表情面板内 mousedown 阻止默认行为，防止编辑器失焦
             // 仅对鼠标事件生效，触摸事件不阻止（否则移动端首次点击无法触发 click）
-            $('#lgmsgEmojiPanel').off('mousedown.lgmsgPreventBlur').on('mousedown.lgmsgPreventBlur', function(e) {
+            $('#withumsgEmojiPanel').off('mousedown.withumsgPreventBlur').on('mousedown.withumsgPreventBlur', function(e) {
                 if (e.originalEvent && e.originalEvent.sourceCapabilities && e.originalEvent.sourceCapabilities.firesTouchEvents) return;
                 if (window.TouchEvent && e.originalEvent instanceof TouchEvent) return;
                 e.preventDefault();
@@ -1969,7 +1969,7 @@
                 this._loadData();
             }
 
-            var $panel = $('#lgmsgEmojiPanel');
+            var $panel = $('#withumsgEmojiPanel');
 
             // 定位到按钮上方
             if (triggerBtn) {
@@ -1987,7 +1987,7 @@
         },
 
         hide: function() {
-            var $panel = $('#lgmsgEmojiPanel');
+            var $panel = $('#withumsgEmojiPanel');
             if (!$panel.hasClass('show') && !this._visible) return;
             $panel.removeClass('show').addClass('hide');
             this._visible = false;
@@ -2063,10 +2063,10 @@
 
         _loadData: function() {
             var self = this;
-            var owoBase = (LGConfig.owoBase || 'OwO');
+            var owoBase = (WithUConfig.owoBase || 'OwO');
 
             // 显示骨架屏
-            var $grid = $('#lgmsgEmojiGrid');
+            var $grid = $('#withumsgEmojiGrid');
             var skeletonHtml = '';
             for (var s = 0; s < 20; s++) {
                 skeletonHtml += '<div class="withu-message-emoji-skeleton"></div>';
@@ -2083,7 +2083,7 @@
                     self._keys = Object.keys(data).reverse();
                     self._loaded = true;
                     // 构建 shortcode → icon URL 映射表（用于粘贴时自动解析）
-                    var owoImg = (LGConfig.owoBase || 'OwO') + '/images';
+                    var owoImg = (WithUConfig.owoBase || 'OwO') + '/images';
                     var map = {};
                     var keys = Object.keys(data);
                     for (var k = 0; k < keys.length; k++) {
@@ -2107,8 +2107,8 @@
 
         _renderTabs: function() {
             if (!this._data || !this._keys) return;
-            var owoBase = (LGConfig.owoBase || 'OwO') + '/images';
-            var $tabs = $('#lgmsgEmojiTabs');
+            var owoBase = (WithUConfig.owoBase || 'OwO') + '/images';
+            var $tabs = $('#withumsgEmojiTabs');
             var html = '';
             for (var i = 0; i < this._keys.length; i++) {
                 var catKey = this._keys[i];
@@ -2123,7 +2123,7 @@
             updateLazyLoad();
 
             var self = this;
-            $tabs.off('click.lgmsg', '.withu-message-e-tab').on('click.lgmsg', '.withu-message-e-tab', function() {
+            $tabs.off('click.withumsg', '.withu-message-e-tab').on('click.withumsg', '.withu-message-e-tab', function() {
                 var idx = parseInt($(this).data('cat-index'), 10);
                 $tabs.find('.withu-message-e-tab').removeClass('active');
                 $(this).addClass('active');
@@ -2138,10 +2138,10 @@
             var catKey = this._keys[catIndex];
             var cat = this._data[catKey];
             if (!cat) return;
-            var owoBase = (LGConfig.owoBase || 'OwO') + '/images';
+            var owoBase = (WithUConfig.owoBase || 'OwO') + '/images';
             var items = cat.container || [];
-            var $grid = $('#lgmsgEmojiGrid');
-            var $catTitle = $('#lgmsgEmojiCatTitle');
+            var $grid = $('#withumsgEmojiGrid');
+            var $catTitle = $('#withumsgEmojiCatTitle');
 
             if (!$grid.length || !$grid[0]) return;
 
@@ -2206,8 +2206,8 @@
             }
 
             // 点击表情 → 插入到当前目标 contenteditable 编辑器
-            $grid.off('click.lgmsg', '.withu-message-emoji-item').on('click.lgmsg', '.withu-message-emoji-item', function(e) {
-                // 触发来源为 touchend 手动 trigger('click.lgmsg') 时 e.originalEvent 为空，正常执行
+            $grid.off('click.withumsg', '.withu-message-emoji-item').on('click.withumsg', '.withu-message-emoji-item', function(e) {
+                // 触发来源为 touchend 手动 trigger('click.withumsg') 时 e.originalEvent 为空，正常执行
                 // 来源为浏览器合成 click 时 e.originalEvent 存在且该 item 已被标记 → 拦截
                 if (e && e.originalEvent && recentlyTouchedSet && recentlyTouchedSet.has(this)) {
                     return;
@@ -2216,7 +2216,7 @@
                 var emojiIcon = $(this).data('emoji-icon');
                 if (!emojiData) return;
 
-                var editor = document.getElementById(self._targetEditor || 'lgmsgDrawerEditor');
+                var editor = document.getElementById(self._targetEditor || 'withumsgDrawerEditor');
                 if (!editor) return;
 
                 editor.focus();
@@ -2262,10 +2262,10 @@
             function showEmojiPreview(item) {
                 var icon = $(item).data('emoji-icon');
                 var textName = $(item).data('emoji-text') || $(item).data('emoji-data');
-                var preview = document.getElementById('lgmsgEmojiPreview');
+                var preview = document.getElementById('withumsgEmojiPreview');
                 if (!preview) return;
-                document.getElementById('lgmsgPreviewImg').src = icon;
-                document.getElementById('lgmsgPreviewText').innerText = textName;
+                document.getElementById('withumsgPreviewImg').src = icon;
+                document.getElementById('withumsgPreviewText').innerText = textName;
                 var rect = item.getBoundingClientRect();
                 var previewHeight = 90;
                 var left = rect.left + (rect.width / 2);
@@ -2276,16 +2276,16 @@
                 preview.classList.add('active');
             }
             function hideEmojiPreview() {
-                var p = document.getElementById('lgmsgEmojiPreview');
+                var p = document.getElementById('withumsgEmojiPreview');
                 if (p) p.classList.remove('active');
             }
 
-            $grid.off('mouseenter.lgmsgPreview mouseleave.lgmsgPreview', '.withu-message-emoji-item')
-                .on('mouseenter.lgmsgPreview', '.withu-message-emoji-item', function() {
+            $grid.off('mouseenter.withumsgPreview mouseleave.withumsgPreview', '.withu-message-emoji-item')
+                .on('mouseenter.withumsgPreview', '.withu-message-emoji-item', function() {
                     clearTimeout(previewHoverTimer);
                     showEmojiPreview(this);
                 })
-                .on('mouseleave.lgmsgPreview', '.withu-message-emoji-item', function() {
+                .on('mouseleave.withumsgPreview', '.withu-message-emoji-item', function() {
                     previewHoverTimer = setTimeout(hideEmojiPreview, 30);
                 });
 
@@ -2300,8 +2300,8 @@
             var touchStartX = 0, touchStartY = 0;
             var TOUCH_MOVE_THRESHOLD = 10; // px
 
-            $grid.off('touchstart.lgmsgTouch touchmove.lgmsgTouch touchend.lgmsgTouch touchcancel.lgmsgTouch', '.withu-message-emoji-item')
-                .on('touchstart.lgmsgTouch', '.withu-message-emoji-item', function(e) {
+            $grid.off('touchstart.withumsgTouch touchmove.withumsgTouch touchend.withumsgTouch touchcancel.withumsgTouch', '.withu-message-emoji-item')
+                .on('touchstart.withumsgTouch', '.withu-message-emoji-item', function(e) {
                     var item = this;
                     touchIsLong = false;
                     touchMoved = false;
@@ -2315,7 +2315,7 @@
                         showEmojiPreview(item);
                     }, 400);
                 })
-                .on('touchmove.lgmsgTouch', '.withu-message-emoji-item', function(e) {
+                .on('touchmove.withumsgTouch', '.withu-message-emoji-item', function(e) {
                     var t = e.originalEvent && e.originalEvent.touches && e.originalEvent.touches[0];
                     if (!t) return;
                     var dx = Math.abs(t.clientX - touchStartX);
@@ -2330,7 +2330,7 @@
                         }
                     }
                 })
-                .on('touchend.lgmsgTouch', '.withu-message-emoji-item', function(e) {
+                .on('touchend.withumsgTouch', '.withu-message-emoji-item', function(e) {
                     clearTimeout(touchLongTimer);
                     touchLongTimer = null;
                     if (touchMoved) {
@@ -2349,9 +2349,9 @@
                     // 若合成 click 仍漏过来，会被上方 recentlyTouched 拦截，避免双插入
                     e.preventDefault();
                     markRecentlyTouched(this);
-                    $(this).trigger('click.lgmsg');
+                    $(this).trigger('click.withumsg');
                 })
-                .on('touchcancel.lgmsgTouch', '.withu-message-emoji-item', function() {
+                .on('touchcancel.withumsgTouch', '.withu-message-emoji-item', function() {
                     clearTimeout(touchLongTimer);
                     touchLongTimer = null;
                     if (touchIsLong) hideEmojiPreview();
@@ -2363,9 +2363,9 @@
 
         _renderBubbles: function() {
             if (!this._data || !this._keys) return;
-            var $container = $('#lgmsgEmojiBubbles');
+            var $container = $('#withumsgEmojiBubbles');
             if (!$container.length) return;
-            var owoBase = (LGConfig.owoBase || 'OwO') + '/images';
+            var owoBase = (WithUConfig.owoBase || 'OwO') + '/images';
             var keys = this._keys.slice().reverse();
             var self = this;
             var frag = document.createDocumentFragment();
@@ -2387,7 +2387,7 @@
             updateLazyLoad();
 
             // 点击气泡 → 插入3个表情 + 动画替换
-            $container.off('click.lgmsgBubble').on('click.lgmsgBubble', '.withu-message-emoji-bubble', function() {
+            $container.off('click.withumsgBubble').on('click.withumsgBubble', '.withu-message-emoji-bubble', function() {
                 var $bubble = $(this);
                 var $img = $bubble.find('img');
                 var imgSrc = $img.attr('src') || $img.attr('data-src');
@@ -2396,7 +2396,7 @@
                 if (!imgSrc || !dataVal) return;
 
                 // 插入3个表情到编辑器
-                var editor = document.getElementById('lgmsgEditor');
+                var editor = document.getElementById('withumsgEditor');
                 if (editor) {
                     editor.focus();
                     for (var j = 0; j < 3; j++) {
@@ -2490,18 +2490,18 @@
 
         _fetchLocation: function() {
             var self = this;
-            // 优先复用 LGVisitorGeoCache（head.php 中缓存的 IP 定位）
-            if (window.LGVisitorGeoCache) {
-                var cached = window.LGVisitorGeoCache.getCached();
+            // 优先复用 WithUVisitorGeoCache（head.php 中缓存的 IP 定位）
+            if (window.WithUVisitorGeoCache) {
+                var cached = window.WithUVisitorGeoCache.getCached();
                 if (cached && cached.city) {
                     self.location = cached.city;
                     self.lat = cached.lat || null;
                     self.lng = cached.lng || null;
-                    $('#lgmsgTagLocation').text(self.location);
+                    $('#withumsgTagLocation').text(self.location);
                     return;
                 }
             }
-            $('#lgmsgTagLocation').text('定位中...');
+            $('#withumsgTagLocation').text('定位中...');
             $.ajax({
                 url: endpoints.infoService || 'services/info-service.php',
                 type: 'POST',
@@ -2513,18 +2513,18 @@
                     self.location = city || '未知';
                     self.lat = data.lat || null;
                     self.lng = data.lng || null;
-                    $('#lgmsgTagLocation').text(self.location);
+                    $('#withumsgTagLocation').text(self.location);
                 },
                 error: function() {
                     self.location = '未知';
-                    $('#lgmsgTagLocation').text('未知');
+                    $('#withumsgTagLocation').text('未知');
                 }
             });
         },
 
         _fetchWeather: function() {
             if (window.WITHU_CONFIG && window.WITHU_CONFIG.weatherEnabled === false) {
-                $('#lgmsgTagWeather').parent('.withu-message-v-tag').hide();
+                $('#withumsgTagWeather').parent('.withu-message-v-tag').hide();
                 return;
             }
             // 优先复用 header 天气组件的全局缓存（60秒内有效），避免重复请求
@@ -2533,7 +2533,7 @@
                 this._applyWeatherData(cached.data);
                 return;
             }
-            $('#lgmsgTagWeather').text('获取中...');
+            $('#withumsgTagWeather').text('获取中...');
             var self = this;
             var _siteBase = (window.WITHU_CONFIG && window.WITHU_CONFIG.siteBase) || '';
             var weatherUrl = (endpoints.weatherApi || (_siteBase + 'services/weather.php')) + '&mode=ip';
@@ -2550,20 +2550,20 @@
                         var desc = res.data.desc || '';
                         self.weather = (temp !== '--' ? temp + '°C' : '') + (desc ? ' ' + desc : '');
                         self.weatherIcon = res.data.icon || '';
-                        $('#lgmsgTagWeather').text(self.weather || '暂无');
+                        $('#withumsgTagWeather').text(self.weather || '暂无');
                         // 更新 QWeather 图标
                         var iconCode = String(res.data.icon || '999').replace(/[^\d]/g, '') || '999';
-                        $('#lgmsgWeatherIcon').attr('class', 'qi-' + iconCode + '-fill');
+                        $('#withumsgWeatherIcon').attr('class', 'qi-' + iconCode + '-fill');
                     } else {
                         self.weather = '';
                         self.weatherIcon = '';
-                        $('#lgmsgTagWeather').parent('.withu-message-v-tag').hide();
+                        $('#withumsgTagWeather').parent('.withu-message-v-tag').hide();
                     }
                 },
                 error: function() {
                     self.weather = '';
                     self.weatherIcon = '';
-                    $('#lgmsgTagWeather').parent('.withu-message-v-tag').hide();
+                    $('#withumsgTagWeather').parent('.withu-message-v-tag').hide();
                 }
             });
         },
@@ -2573,14 +2573,14 @@
             var desc = data.desc || '';
             this.weather = (temp !== '--' ? temp + '°C' : '') + (desc ? ' ' + desc : '');
             this.weatherIcon = data.icon || '';
-            $('#lgmsgTagWeather').text(this.weather || '暂无');
+            $('#withumsgTagWeather').text(this.weather || '暂无');
             var iconCode = String(data.icon || '999').replace(/[^\d]/g, '') || '999';
-            $('#lgmsgWeatherIcon').attr('class', 'qi-' + iconCode + '-fill');
+            $('#withumsgWeatherIcon').attr('class', 'qi-' + iconCode + '-fill');
         },
 
         _updateTags: function() {
-            $('#lgmsgTagOS').text(this.os);
-            $('#lgmsgTagBrowser').text(this.browser);
+            $('#withumsgTagOS').text(this.os);
+            $('#withumsgTagBrowser').text(this.browser);
         }
     };
 
@@ -2625,32 +2625,32 @@
 
     function _showQuoteConfirm(onConfirm) {
         _quoteConfirmCallback = onConfirm;
-        var $overlay = $('#lgmsgConfirmOverlay');
+        var $overlay = $('#withumsgConfirmOverlay');
         if (!$overlay.length) { onConfirm(); return; }
         lockBodyScroll();
         requestAnimationFrame(function() { $overlay.addClass('active'); });
     }
 
     function _hideQuoteConfirm() {
-        var $overlay = $('#lgmsgConfirmOverlay');
+        var $overlay = $('#withumsgConfirmOverlay');
         $overlay.removeClass('active');
         _quoteConfirmCallback = null;
         unlockBodyScroll();
     }
 
-    $(document).off('click.lgmsgConfirmOk').on('click.lgmsgConfirmOk', '#lgmsgConfirmOk', function() {
+    $(document).off('click.withumsgConfirmOk').on('click.withumsgConfirmOk', '#withumsgConfirmOk', function() {
         var cb = _quoteConfirmCallback;
         _hideQuoteConfirm();
         _markQuoteConfirmShown(); // 确认后标记
         if (typeof cb === 'function') cb();
     });
-    $(document).off('click.lgmsgConfirmCancel').on('click.lgmsgConfirmCancel', '#lgmsgConfirmCancel', function() {
+    $(document).off('click.withumsgConfirmCancel').on('click.withumsgConfirmCancel', '#withumsgConfirmCancel', function() {
         _hideQuoteConfirm();
     });
-    $(document).off('click.lgmsgConfirmClose').on('click.lgmsgConfirmClose', '#lgmsgConfirmClose', function() {
+    $(document).off('click.withumsgConfirmClose').on('click.withumsgConfirmClose', '#withumsgConfirmClose', function() {
         _hideQuoteConfirm();
     });
-    $(document).off('click.lgmsgConfirmBg').on('click.lgmsgConfirmBg', '#lgmsgConfirmOverlay', function(e) {
+    $(document).off('click.withumsgConfirmBg').on('click.withumsgConfirmBg', '#withumsgConfirmOverlay', function(e) {
         if (e.target === this) _hideQuoteConfirm();
     });
 
@@ -2720,9 +2720,9 @@
             var os = VisitorDetect.os || '--';
             var browser = VisitorDetect.browser || '--';
             var loc = VisitorDetect.location || '--';
-            $('#lgmsgTagOS').text(os);
-            $('#lgmsgTagBrowser').text(browser);
-            $('#lgmsgTagLocation').text(loc);
+            $('#withumsgTagOS').text(os);
+            $('#withumsgTagBrowser').text(browser);
+            $('#withumsgTagLocation').text(loc);
             // 天气延迟到弹窗打开时获取，避免与 header 天气组件重复请求
         },
 
@@ -2730,7 +2730,7 @@
             var self = this;
 
             // 写留言按钮打开新弹窗（全局 message_btn #mes + 旧入口 #click_leav）
-            $('#mes, #click_leav').off('click.lgmsg').on('click.lgmsg', function(e) {
+            $('#mes, #click_leav').off('click.withumsg').on('click.withumsg', function(e) {
                 e.preventDefault();
                 e.stopPropagation();
                 self.open();
@@ -2738,13 +2738,13 @@
             });
 
             // 关闭弹窗
-            $('#lgmsgModalCloseBtn').off('click.lgmsg').on('click.lgmsg', function() { self.close(); });
-            $('#lgmsgCommentModal').off('click.lgmsg').on('click.lgmsg', function(e) {
+            $('#withumsgModalCloseBtn').off('click.withumsg').on('click.withumsg', function() { self.close(); });
+            $('#withumsgCommentModal').off('click.withumsg').on('click.withumsg', function(e) {
                 if (e.target === this) self.close();
             });
 
             // Tab 切换
-            $('#lgmsgTabContainer').off('click.lgmsg', '.withu-message-ios-tab').on('click.lgmsg', '.withu-message-ios-tab', function() {
+            $('#withumsgTabContainer').off('click.withumsg', '.withu-message-ios-tab').on('click.withumsg', '.withu-message-ios-tab', function() {
                 var mode = $(this).data('mode');
                 if (mode && mode !== self._currentMode) {
                     self._currentMode = mode;
@@ -2755,32 +2755,32 @@
             });
 
             // 随机一言
-            $('#lgmsgBtnQuote').off('click.lgmsg').on('click.lgmsg', function() { self._insertRandomQuote(this); });
+            $('#withumsgBtnQuote').off('click.withumsg').on('click.withumsg', function() { self._insertRandomQuote(this); });
 
             // Enter 发送切换
-            $('#lgmsgEnterToSendWrap').off('click.lgmsg').on('click.lgmsg', function() {
+            $('#withumsgEnterToSendWrap').off('click.withumsg').on('click.withumsg', function() {
                 self._enterToSend = !self._enterToSend;
                 localStorage.setItem('withu_enter_to_send', self._enterToSend);
                 self._updateEnterToSendUI();
             });
 
             // 主编辑器事件（粘贴自动解析表情 shortcode）
-            var $editor = $('#lgmsgEditor');
-            $editor.off('paste.lgmsg').on('paste.lgmsg', function(e) {
+            var $editor = $('#withumsgEditor');
+            $editor.off('paste.withumsg').on('paste.withumsg', function(e) {
                 e.preventDefault();
                 var text = (e.originalEvent || e).clipboardData.getData('text/plain');
                 EmojiPanel.pasteWithEmoji(this, text);
                 this.dispatchEvent(new Event('input', { bubbles: true }));
             });
-            $editor.off('input.lgmsg').on('input.lgmsg', function() { self._updateCharCounter(); });
-            $editor.off('keyup.lgmsgModalCursor mouseup.lgmsgModalCursor blur.lgmsgModalCursor').on('keyup.lgmsgModalCursor mouseup.lgmsgModalCursor blur.lgmsgModalCursor', function() {
+            $editor.off('input.withumsg').on('input.withumsg', function() { self._updateCharCounter(); });
+            $editor.off('keyup.withumsgModalCursor mouseup.withumsgModalCursor blur.withumsgModalCursor').on('keyup.withumsgModalCursor mouseup.withumsgModalCursor blur.withumsgModalCursor', function() {
                 var sel = window.getSelection();
                 if (sel.rangeCount > 0) {
                     self._savedRange = sel.getRangeAt(0).cloneRange();
                     EmojiPanel._savedRange = self._savedRange;
                 }
             });
-            $editor.off('keydown.lgmsg').on('keydown.lgmsg', function(e) {
+            $editor.off('keydown.withumsg').on('keydown.withumsg', function(e) {
                 if (self._enterToSend && e.key === 'Enter' && !e.shiftKey && !e.ctrlKey && !e.metaKey) {
                     e.preventDefault();
                     self._handleSubmit();
@@ -2791,10 +2791,10 @@
             });
 
             // 主表情按钮（弹窗内）
-            $('#lgmsgBtnEmoji').off('click.lgmsg').on('click.lgmsg', function(e) {
+            $('#withumsgBtnEmoji').off('click.withumsg').on('click.withumsg', function(e) {
                 e.stopPropagation();
                 // 切换表情面板为弹窗编辑器模式
-                EmojiPanel._targetEditor = 'lgmsgEditor';
+                EmojiPanel._targetEditor = 'withumsgEditor';
                 if (EmojiPanel._visible) {
                     EmojiPanel.hide();
                 } else {
@@ -2803,21 +2803,21 @@
             });
 
             // 提交按钮
-            $('#lgmsgSubmitBtn').off('click.lgmsg').on('click.lgmsg', function() { self._handleSubmit(); });
+            $('#withumsgSubmitBtn').off('click.withumsg').on('click.withumsg', function() { self._handleSubmit(); });
 
             // ESC 关闭
-            $(document).off('keydown.lgmsgModal').on('keydown.lgmsgModal', function(e) {
+            $(document).off('keydown.withumsgModal').on('keydown.withumsgModal', function(e) {
                 if (e.key === 'Escape' && self._isOpen) self.close();
             });
         },
 
         _initSlider: function() {
-            var $active = $('#lgmsgTabContainer .withu-message-ios-tab.active');
+            var $active = $('#withumsgTabContainer .withu-message-ios-tab.active');
             if ($active.length) this._moveSlider($active[0]);
         },
 
         _moveSlider: function(tab) {
-            var $slider = $('#lgmsgTabSlider');
+            var $slider = $('#withumsgTabSlider');
             if (!$slider.length || !tab) return;
             var container = $(tab).closest('.withu-message-ios-tabs')[0];
             if (!container) return;
@@ -2830,43 +2830,43 @@
         },
 
         _renderInputs: function() {
-            var $row = $('#lgmsgInputRow');
+            var $row = $('#withumsgInputRow');
             if (!$row.length) return;
             var self = this;
             var svgUser = '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>';
             var svgLoader = '<svg class="withu-message-lucide-loader" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="2" x2="12" y2="6"/><line x1="12" y1="18" x2="12" y2="22"/><line x1="4.93" y1="4.93" x2="7.76" y2="7.76"/><line x1="16.24" y1="16.24" x2="19.07" y2="19.07"/><line x1="2" y1="12" x2="6" y2="12"/><line x1="18" y1="12" x2="22" y2="12"/><line x1="4.93" y1="19.07" x2="7.76" y2="16.24"/><line x1="16.24" y1="7.76" x2="19.07" y2="4.93"/></svg>';
 
             $row.css('opacity', '0');
-            var $privacyHint = $('#lgmsgPrivacyHint');
+            var $privacyHint = $('#withumsgPrivacyHint');
             setTimeout(function() {
                 if (self._currentMode === 'qq') {
                     $privacyHint.slideDown(200, function() { if (typeof lucide !== 'undefined') lucide.createIcons({ nodes: [$privacyHint[0]] }); });
                     var cachedQQ = localStorage.getItem('withu_comment_qq') || '';
                     var cacheHint = '';
                     if (cachedQQ.length >= 5) {
-                        cacheHint = '<div class="withu-message-qq-cache-hint" id="lgmsgQQCacheHint">' +
+                        cacheHint = '<div class="withu-message-qq-cache-hint" id="withumsgQQCacheHint">' +
                             '<img src="' + escapeHtml(localStorage.getItem('withu_comment_avatar') || _defaultAvatar) + '" onerror="this.style.display=\'none\'">' +
                             '<span>QQ ' + escapeHtml(cachedQQ.slice(0, 3)) + '**' + escapeHtml(cachedQQ.slice(-2)) + '</span></div>';
                     }
                     $row.html(
                         '<div class="withu-message-input-wrapper">' +
-                            '<div class="withu-message-i-icon" id="lgmsgQQIcon"><img class="withu-message-input-avatar" src="' + _defaultAvatar + '"></div>' +
-                            '<input type="text" id="lgmsgQQInput" inputmode="numeric" placeholder="输入 QQ 号"' + (cacheHint ? ' style="padding-right:150px"' : '') + '>' +
+                            '<div class="withu-message-i-icon" id="withumsgQQIcon"><img class="withu-message-input-avatar" src="' + _defaultAvatar + '"></div>' +
+                            '<input type="text" id="withumsgQQInput" inputmode="numeric" placeholder="输入 QQ 号"' + (cacheHint ? ' style="padding-right:150px"' : '') + '>' +
                             cacheHint +
                         '</div>' +
                         '<div class="withu-message-input-wrapper">' +
                             '<div class="withu-message-i-icon">' + svgUser + '</div>' +
-                            '<input type="text" id="lgmsgNicknameInput" placeholder="昵称 (必填)">' +
+                            '<input type="text" id="withumsgNicknameInput" placeholder="昵称 (必填)">' +
                         '</div>'
                     );
                     // QQ 输入监听（防抖 + 过期响应校验）
                     var qqTimer, _qqSeq = 0;
-                    $('#lgmsgQQInput').off('input.lgmsg').on('input.lgmsg', function() {
+                    $('#withumsgQQInput').off('input.withumsg').on('input.withumsg', function() {
                         clearTimeout(qqTimer);
                         var val = $(this).val().trim();
-                        var $icon = $('#lgmsgQQIcon');
-                        var $nick = $('#lgmsgNicknameInput');
-                        var $hint = $('#lgmsgQQCacheHint');
+                        var $icon = $('#withumsgQQIcon');
+                        var $nick = $('#withumsgNicknameInput');
+                        var $hint = $('#withumsgQQCacheHint');
                         if ($hint.length) {
                             if (val.length > 0) { $hint.addClass('withu-message-hint-hidden'); $(this).css('padding-right', ''); }
                             else { $hint.removeClass('withu-message-hint-hidden'); $(this).css('padding-right', '150px'); }
@@ -2913,9 +2913,9 @@
                         }
                     });
                     // QQ 缓存快捷填入（点击hint badge才填入）
-                    $(document).off('click.lgmsgCacheHint').on('click.lgmsgCacheHint', '#lgmsgQQCacheHint', function() {
+                    $(document).off('click.withumsgCacheHint').on('click.withumsgCacheHint', '#withumsgQQCacheHint', function() {
                         var qq = cachedQQ;
-                        $('#lgmsgQQInput').val(qq).css('padding-right', '').trigger('input');
+                        $('#withumsgQQInput').val(qq).css('padding-right', '').trigger('input');
                         $(this).css({ opacity: 0, transform: 'translateY(-50%) scale(0.9)' });
                         var hint = this;
                         setTimeout(function() { $(hint).remove(); }, 300);
@@ -2925,7 +2925,7 @@
                     $row.html(
                         '<div class="withu-message-input-wrapper">' +
                             '<div class="withu-message-i-icon">' + svgUser + '</div>' +
-                            '<input type="text" id="lgmsgNicknameInput" placeholder="昵称 (必填)">' +
+                            '<input type="text" id="withumsgNicknameInput" placeholder="昵称 (必填)">' +
                         '</div>'
                     );
                 }
@@ -2934,7 +2934,7 @@
         },
 
         _updateEnterToSendUI: function() {
-            var $wrap = $('#lgmsgEnterToSendWrap');
+            var $wrap = $('#withumsgEnterToSendWrap');
             if (this._enterToSend) $wrap.addClass('active');
             else $wrap.removeClass('active');
             // 同步到抽屉的 switch
@@ -2945,8 +2945,8 @@
         },
 
         _updateCharCounter: function() {
-            var editor = document.getElementById('lgmsgEditor');
-            var $counter = $('#lgmsgCharCounter');
+            var editor = document.getElementById('withumsgEditor');
+            var $counter = $('#withumsgCharCounter');
             if (!editor || !$counter.length) return;
             var len = (editor.textContent || '').length + (editor.querySelectorAll('img.emoji') || []).length;
             var max = 500;
@@ -2959,7 +2959,7 @@
         _insertRandomQuote: function(btn) {
             var $btn = $(btn);
             if ($btn.data('quoteLoading')) return;
-            var editor = document.getElementById('lgmsgEditor');
+            var editor = document.getElementById('withumsgEditor');
             if (!editor) return;
             var hasContent = (editor.textContent || '').trim().length > 0 || editor.querySelector('img.emoji');
 
@@ -2977,7 +2977,7 @@
         open: function() {
             this._isOpen = true;
             var self = this;
-            var $modal = $('#lgmsgCommentModal');
+            var $modal = $('#withumsgCommentModal');
             requestAnimationFrame(function() {
                 requestAnimationFrame(function() {
                     $modal.addClass('active');
@@ -2993,7 +2993,7 @@
             setTimeout(function() {
                 self._initSlider();
                 if (window.innerWidth > 768) {
-                    var editor = document.getElementById('lgmsgEditor');
+                    var editor = document.getElementById('withumsgEditor');
                     if (editor) editor.focus();
                 }
             }, 300);
@@ -3004,7 +3004,7 @@
         close: function() {
             if (!this._isOpen) return;
             this._isOpen = false;
-            var $modal = $('#lgmsgCommentModal');
+            var $modal = $('#withumsgCommentModal');
             $modal.addClass('closing');
             EmojiPanel.hide();
             setTimeout(function() {
@@ -3014,7 +3014,7 @@
         },
 
         _getEditorText: function() {
-            var editor = document.getElementById('lgmsgEditor');
+            var editor = document.getElementById('withumsgEditor');
             if (!editor) return '';
 
             function extractNodes(parent) {
@@ -3049,7 +3049,7 @@
         },
 
         _clearEditor: function() {
-            var editor = document.getElementById('lgmsgEditor');
+            var editor = document.getElementById('withumsgEditor');
             if (editor) editor.innerHTML = '';
             this._updateCharCounter();
         },
@@ -3063,19 +3063,19 @@
 
             var qq, name;
             if (this._currentMode === 'qq') {
-                qq = ($('#lgmsgQQInput').val() || '').trim();
+                qq = ($('#withumsgQQInput').val() || '').trim();
                 if (!qq || qq.length < 5) {
                     if (typeof Toastify !== 'undefined') Toastify.showScenario('warning', { text: '请输入有效的QQ号' });
                     return;
                 }
-                name = ($('#lgmsgNicknameInput').val() || '').trim();
+                name = ($('#withumsgNicknameInput').val() || '').trim();
                 if (!name) {
                     if (typeof Toastify !== 'undefined') Toastify.showScenario('warning', { text: '请输入昵称' });
                     return;
                 }
             } else {
                 qq = 'anon';
-                name = ($('#lgmsgNicknameInput').val() || '').trim();
+                name = ($('#withumsgNicknameInput').val() || '').trim();
                 if (!name) {
                     if (typeof Toastify !== 'undefined') Toastify.showScenario('warning', { text: '请输入昵称' });
                     return;
@@ -3091,7 +3091,7 @@
             var geetestAvailable = typeof GeetestHelper !== 'undefined' && GeetestHelper.ready();
 
             if (geetestAvailable) {
-                var $btn = $('#lgmsgSubmitBtn');
+                var $btn = $('#withumsgSubmitBtn');
                 $btn.addClass('is-loading');
                 // 存储待提交数据，供 submitMessage 全局回调使用
                 self._pendingSubmit = { qq: qq, name: name, text: text };
@@ -3114,7 +3114,7 @@
 
         _doSubmit: function(qq, name, text, geetestResult) {
             var self = this;
-            var $btn = $('#lgmsgSubmitBtn');
+            var $btn = $('#withumsgSubmitBtn');
             $btn.addClass('is-loading');
 
             var postData = { qq: qq, name: name, text: text };
@@ -3154,7 +3154,7 @@
                             $btn.find('.withu-message-submit-label').text('发送留言');
                             $editorWrap.removeClass('withu-message-fly-shrink');
                             self.close();
-                            if ($('#lgmsgCardGrid').length > 0) {
+                            if ($('#withumsgCardGrid').length > 0) {
                                 if (isPending) {
                                     // 待审核：在顶部插入本地临时卡片（不重新加载，因为 switch=0 不会出现在列表中）
                                     _insertPendingCard(qq, name, res.MsgHtml || text);
@@ -3162,7 +3162,7 @@
                                 } else {
                                     // 已通过：重新加载列表
                                     $('html, body').animate({ scrollTop: 0 }, 800);
-                                    $('#lgmsgCardGrid').empty();
+                                    $('#withumsgCardGrid').empty();
                                     MessageList._page = 1;
                                     MessageList._firstLoad = true;
                                     MessageList._hasMore = true;
@@ -3196,13 +3196,13 @@
                                                 $btn.find('.withu-message-submit-label').text('发送留言');
                                                 $editorWrap.removeClass('withu-message-fly-shrink');
                                                 self.close();
-                                                if ($('#lgmsgCardGrid').length > 0) {
+                                                if ($('#withumsgCardGrid').length > 0) {
                                                     if (r2Pending) {
                                                         _insertPendingCard(qq, name, r2.MsgHtml || text);
                                                         $('html, body').animate({ scrollTop: 0 }, 800);
                                                     } else {
                                                         $('html, body').animate({ scrollTop: 0 }, 800);
-                                                        $('#lgmsgCardGrid').empty();
+                                                        $('#withumsgCardGrid').empty();
                                                         MessageList._page = 1; MessageList._firstLoad = true; MessageList._hasMore = true;
                                                         MessageList.load();
                                                     }
@@ -3250,13 +3250,13 @@
             var self = this;
 
             // 关闭
-            $('#lgmsgAuthCloseBtn').off('click.lgmsg').on('click.lgmsg', function() { self.close(); });
-            $('#lgmsgAuthModal').off('click.lgmsg').on('click.lgmsg', function(e) {
+            $('#withumsgAuthCloseBtn').off('click.withumsg').on('click.withumsg', function() { self.close(); });
+            $('#withumsgAuthModal').off('click.withumsg').on('click.withumsg', function(e) {
                 if (e.target === this) self.close();
             });
 
             // Tab 切换
-            $('#lgmsgAuthTabContainer').off('click.lgmsg', '.withu-message-ios-tab').on('click.lgmsg', '.withu-message-ios-tab', function() {
+            $('#withumsgAuthTabContainer').off('click.withumsg', '.withu-message-ios-tab').on('click.withumsg', '.withu-message-ios-tab', function() {
                 var mode = $(this).data('mode');
                 if (mode && mode !== self._currentMode) {
                     self._currentMode = mode;
@@ -3267,16 +3267,16 @@
             });
 
             // 保存
-            $('#lgmsgAuthSaveBtn').off('click.lgmsg').on('click.lgmsg', function() { self._save(); });
+            $('#withumsgAuthSaveBtn').off('click.withumsg').on('click.withumsg', function() { self._save(); });
         },
 
         _initSlider: function() {
-            var $active = $('#lgmsgAuthTabContainer .withu-message-ios-tab.active');
+            var $active = $('#withumsgAuthTabContainer .withu-message-ios-tab.active');
             if ($active.length) this._moveSlider($active[0]);
         },
 
         _moveSlider: function(tab) {
-            var $slider = $('#lgmsgAuthTabSlider');
+            var $slider = $('#withumsgAuthTabSlider');
             if (!$slider.length || !tab) return;
             var $tab = $(tab);
             $slider.css({
@@ -3286,34 +3286,34 @@
         },
 
         _renderInputs: function() {
-            var $row = $('#lgmsgAuthInputRow');
+            var $row = $('#withumsgAuthInputRow');
             if (!$row.length) return;
             var svgUser = '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>';
             var svgLoader = '<svg class="withu-message-lucide-loader" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="2" x2="12" y2="6"/><line x1="12" y1="18" x2="12" y2="22"/><line x1="4.93" y1="4.93" x2="7.76" y2="7.76"/><line x1="16.24" y1="16.24" x2="19.07" y2="19.07"/><line x1="2" y1="12" x2="6" y2="12"/><line x1="18" y1="12" x2="22" y2="12"/><line x1="4.93" y1="19.07" x2="7.76" y2="16.24"/><line x1="16.24" y1="7.76" x2="19.07" y2="4.93"/></svg>';
             var self = this;
 
             $row.css('opacity', '0');
-            var $authPrivacyHint = $('#lgmsgAuthPrivacyHint');
+            var $authPrivacyHint = $('#withumsgAuthPrivacyHint');
             setTimeout(function() {
                 if (self._currentMode === 'qq') {
                     $authPrivacyHint.slideDown(200, function() { if (typeof lucide !== 'undefined') lucide.createIcons({ nodes: [$authPrivacyHint[0]] }); });
                     var cachedQQ = localStorage.getItem('withu_comment_qq') || '';
                     $row.html(
                         '<div class="withu-message-input-wrapper">' +
-                            '<div class="withu-message-i-icon" id="lgmsgAuthQQIcon"><img class="withu-message-input-avatar" src="' + _defaultAvatar + '"></div>' +
-                            '<input type="text" id="lgmsgAuthQQInput" inputmode="numeric" placeholder="输入 QQ 号">' +
+                            '<div class="withu-message-i-icon" id="withumsgAuthQQIcon"><img class="withu-message-input-avatar" src="' + _defaultAvatar + '"></div>' +
+                            '<input type="text" id="withumsgAuthQQInput" inputmode="numeric" placeholder="输入 QQ 号">' +
                         '</div>' +
                         '<div class="withu-message-input-wrapper">' +
                             '<div class="withu-message-i-icon">' + svgUser + '</div>' +
-                            '<input type="text" id="lgmsgAuthNicknameInput" placeholder="昵称 (必填)">' +
+                            '<input type="text" id="withumsgAuthNicknameInput" placeholder="昵称 (必填)">' +
                         '</div>'
                     );
                     var qqTimer, _authQQSeq = 0;
-                    $('#lgmsgAuthQQInput').off('input.lgmsg').on('input.lgmsg', function() {
+                    $('#withumsgAuthQQInput').off('input.withumsg').on('input.withumsg', function() {
                         clearTimeout(qqTimer);
                         var val = $(this).val().trim();
-                        var $icon = $('#lgmsgAuthQQIcon');
-                        var $nick = $('#lgmsgAuthNicknameInput');
+                        var $icon = $('#withumsgAuthQQIcon');
+                        var $nick = $('#withumsgAuthNicknameInput');
                         if (val.length >= 5) {
                             $icon.html(svgLoader);
                             var seq = ++_authQQSeq;
@@ -3356,14 +3356,14 @@
                         }
                     });
                     if (cachedQQ.length >= 5) {
-                        $('#lgmsgAuthQQInput').val(cachedQQ).trigger('input');
+                        $('#withumsgAuthQQInput').val(cachedQQ).trigger('input');
                     }
                 } else {
                     $authPrivacyHint.slideUp(200);
                     $row.html(
                         '<div class="withu-message-input-wrapper">' +
                             '<div class="withu-message-i-icon">' + svgUser + '</div>' +
-                            '<input type="text" id="lgmsgAuthNicknameInput" placeholder="昵称 (必填)">' +
+                            '<input type="text" id="withumsgAuthNicknameInput" placeholder="昵称 (必填)">' +
                         '</div>'
                     );
                 }
@@ -3373,15 +3373,15 @@
 
         open: function() {
             var self = this;
-            var $modal = $('#lgmsgAuthModal');
+            var $modal = $('#withumsgAuthModal');
             lockBodyScroll();
             requestAnimationFrame(function() {
                 requestAnimationFrame(function() {
                     $modal.addClass('active');
                     // 初始化 slider
-                    var $activeTab = $('#lgmsgAuthTabContainer .withu-message-ios-tab.active');
+                    var $activeTab = $('#withumsgAuthTabContainer .withu-message-ios-tab.active');
                     if ($activeTab.length) {
-                        var $slider = $('#lgmsgAuthTabSlider');
+                        var $slider = $('#withumsgAuthTabSlider');
                         $slider.css({
                             width: $activeTab.outerWidth() + 'px',
                             transform: 'translateX(' + ($activeTab.position().left) + 'px)',
@@ -3394,7 +3394,7 @@
         },
 
         close: function() {
-            var $modal = $('#lgmsgAuthModal');
+            var $modal = $('#withumsgAuthModal');
             $modal.addClass('closing');
             setTimeout(function() {
                 $modal.removeClass('active closing');
@@ -3404,7 +3404,7 @@
 
         _save: function() {
             var self = this;
-            var nickInput = $('#lgmsgAuthNicknameInput');
+            var nickInput = $('#withumsgAuthNicknameInput');
             var nickname = (nickInput.val() || '').trim();
 
             if (!nickname) {
@@ -3414,7 +3414,7 @@
             }
 
             if (this._currentMode === 'qq') {
-                var qq = ($('#lgmsgAuthQQInput').val() || '').trim();
+                var qq = ($('#withumsgAuthQQInput').val() || '').trim();
                 if (!qq || qq.length < 5) {
                     if (typeof Toastify !== 'undefined') Toastify.showScenario('warning', { text: '请输入有效的QQ号' });
                     return;
@@ -3422,15 +3422,15 @@
                 localStorage.setItem('withu_comment_qq', qq);
                 localStorage.setItem('withu_comment_anon_name', nickname);
                 var avatarUrl = localStorage.getItem('withu_comment_avatar') || _defaultAvatar;
-                $('#lgmsgDrawerIdentityAvatar').attr('src', avatarUrl);
-                $('#lgmsgDrawerIdentityName').text(nickname).css('color', 'var(--lgmsg-text-main)');
+                $('#withumsgDrawerIdentityAvatar').attr('src', avatarUrl);
+                $('#withumsgDrawerIdentityName').text(nickname).css('color', 'var(--withumsg-text-main)');
                 window.currentUserAuth = { mode: 'qq', qq: qq, name: nickname, avatar: avatarUrl };
             } else {
                 localStorage.setItem('withu_comment_anon_name', nickname);
                 var anonList = (window.WITHU_CONFIG && window.WITHU_CONFIG.anonAvatars) || [];
                 var anonAvatar = anonList.length ? anonList[Math.floor(Math.random() * anonList.length)] : _defaultAvatar;
-                $('#lgmsgDrawerIdentityAvatar').attr('src', anonAvatar);
-                $('#lgmsgDrawerIdentityName').text(nickname).css('color', 'var(--lgmsg-text-main)');
+                $('#withumsgDrawerIdentityAvatar').attr('src', anonAvatar);
+                $('#withumsgDrawerIdentityName').text(nickname).css('color', 'var(--withumsg-text-main)');
                 window.currentUserAuth = { mode: 'anonymous', qq: 'anon', name: nickname, avatar: anonAvatar };
             }
             localStorage.setItem('withu_comment_auth_confirmed', '1');
@@ -3454,7 +3454,7 @@
             CommentModal.init();
 
             // 仅在留言页初始化列表+抽屉+身份认证弹窗
-            if ($('#lgmsgCardGrid').length > 0) {
+            if ($('#withumsgCardGrid').length > 0) {
                 MessageList.init();
                 Drawer.init();
                 window._LGDrawerRef = Drawer;
@@ -3465,8 +3465,8 @@
         },
 
         destroy: function() {
-            $(document).off('.lgmsgCard .lgmsgReplyName .lgmsgDrawer .lgmsgModal');
-            $('#mes, #click_leav').off('.lgmsg');
+            $(document).off('.withumsgCard .withumsgReplyName .withumsgDrawer .withumsgModal');
+            $('#mes, #click_leav').off('.withumsg');
             MessageList.destroy();
             Drawer.destroy();
             EmojiPanel.destroy();
@@ -3482,7 +3482,7 @@
     });
 
     // PJAX 完成后重新初始化
-    $(document).on('pjax:end.lgLeaving', function() {
+    $(document).on('pjax:end.withuLeaving', function() {
         LeavingModule._initialized = false;
         LeavingModule.init();
     });
@@ -3496,7 +3496,7 @@
         if (CommentModal._isOpen && CommentModal._pendingSubmit) {
             var p = CommentModal._pendingSubmit;
             CommentModal._pendingSubmit = null;
-            $('#lgmsgSubmitBtn').removeClass('is-loading');
+            $('#withumsgSubmitBtn').removeClass('is-loading');
             CommentModal._doSubmit(p.qq, p.name, p.text, result || {});
         } else if (Drawer._isOpen && Drawer._pendingReply) {
             var r = Drawer._pendingReply;
@@ -3516,7 +3516,7 @@
         var cx = rect.left + rect.width / 2;
         var cy = rect.top + rect.height / 2;
 
-        var editor = document.getElementById('lgmsgEditor');
+        var editor = document.getElementById('withumsgEditor');
         var previewText = (editor ? (editor.innerText || '') : '').trim().slice(0, 18) || '留言';
 
         // Phase 1: 小纸条出现
@@ -3562,10 +3562,10 @@
         }, 550);
     }
 
-    if (window.LGApp) {
-        window.LGApp.register('leaving', LeavingModule);
+    if (window.WithUApp) {
+        window.WithUApp.register('leaving', LeavingModule);
     }
 
-    window.LGLeavingModule = LeavingModule;
+    window.WithULeavingModule = LeavingModule;
 
 })(window, jQuery);

@@ -46,5 +46,5 @@
   } else {
     init();
   }
-  document.addEventListener('pjax:end.lgPjax', mount);
+  document.addEventListener('pjax:end.withuPjax', mount);
 })();

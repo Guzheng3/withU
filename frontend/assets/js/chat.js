@@ -96,7 +96,7 @@
         requestAnimationFrame(function() {
             document.body.classList.add('withu-chat-is-exporting');
         });
-        if (window.lgScrollLock) lgScrollLock();
+        if (window.withuScrollLock) withuScrollLock();
 
         // 启动文案序列动画
         var step = 0;
@@ -192,7 +192,7 @@
 
     function _closeExport() {
         document.body.classList.remove('withu-chat-is-exporting');
-        if (window.lgScrollUnlock) lgScrollUnlock();
+        if (window.withuScrollUnlock) withuScrollUnlock();
         // 过渡结束后隐藏overlay，防止pjax闪烁
         var overlay = document.getElementById('exportOverlay');
         if (overlay) setTimeout(function() { overlay.style.display = 'none'; }, 700);
@@ -889,8 +889,8 @@
     // ============================================================
     //  暴露全局
     //  生命周期由 pjax.js 统一管理：
-    //  - pjax:beforeReplace → LGChatModule.destroy()
-    //  - pjax:complete      → LGChatModule.init()
+    //  - pjax:beforeReplace → WithUChatModule.destroy()
+    //  - pjax:complete      → WithUChatModule.init()
     // ============================================================
     window.switchTheme = switchTheme;
     window.toggleMute = toggleMute;
@@ -901,7 +901,7 @@
     window.chatOpenVideo = chatOpenVideo;
     window.playVoice = playVoice;
 
-    window.LGChatModule = { init: init, destroy: destroy };
+    window.WithUChatModule = { init: init, destroy: destroy };
 
     // 直接加载 about.php 时（非 PJAX），footer 中脚本执行时 DOM 已就绪
     if (document.getElementById('chatBox')) {

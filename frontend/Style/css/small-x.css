@@ -495,25 +495,25 @@ div#homePage[data-Fullscreen] .bg-wrap.central.limg {
   width: 16px;
 }
 
-.avatarArea .lgewui-head-avatar-status-text {
+.avatarArea .withu-head-avatar-status-text {
   font-size: .75rem;
 }
-.avatarArea .lgewui-head-avatar-gender-icon {
+.avatarArea .withu-head-avatar-gender-icon {
   width: 22px;
   height: 22px;
 }
-.avatarArea .lgewui-head-avatar-gender-icon .lucide {
+.avatarArea .withu-head-avatar-gender-icon .lucide {
   width: 13px;
   height: 13px;
 }
-.avatarArea .lgewui-head-avatar-location {
+.avatarArea .withu-head-avatar-location {
   font-size: .6rem;
   padding: 0.1rem 0.4rem;
 }
-.avatarArea .lgewui-head-avatar-mask {
+.avatarArea .withu-head-avatar-mask {
   padding: 0.6rem 0;
 }
-.avatarArea .lgewui-head-avatar-divider {
+.avatarArea .withu-head-avatar-divider {
   width: 2.5rem;
   margin-top: 0.25rem;
 }

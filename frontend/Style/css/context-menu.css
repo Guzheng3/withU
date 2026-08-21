@@ -1,6 +1,6 @@
-/* LGContextMenu — 自定义右键菜单样式 */
+/* WithUContextMenu — 自定义右键菜单样式 */
 
-.lgcm-overlay {
+.withucm-overlay {
     position: fixed;
     z-index: 100080;
     min-width: 200px;
@@ -29,19 +29,19 @@
     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
 }
 
-.lgcm-overlay.lgcm-in {
+.withucm-overlay.withucm-in {
     opacity: 1;
     transform: scale(1) translateY(0) translateZ(0);
 }
 
-.lgcm-overlay.lgcm-out {
+.withucm-overlay.withucm-out {
     opacity: 0;
     transform: scale(0.92) translateY(4px) translateZ(0);
     transition-duration: 0.1s;
 }
 
 /* 子菜单面板 */
-.lgcm-nest {
+.withucm-nest {
     position: fixed;
     z-index: 100081;
     min-width: 184px;
@@ -72,7 +72,7 @@
     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
 }
 
-.lgcm-nest.lgcm-pop {
+.withucm-nest.withucm-pop {
     opacity: 1;
     visibility: visible;
     transform: scale(1) translateY(0) translateZ(0);
@@ -80,7 +80,7 @@
 }
 
 /* 菜单条目 */
-.lgcm-row {
+.withucm-row {
     display: flex;
     align-items: center;
     padding: 9px 12px;
@@ -94,7 +94,7 @@
     gap: 10px;
 }
 
-.lgcm-row::before {
+.withucm-row::before {
     content: '';
     position: absolute;
     inset: 0;
@@ -105,23 +105,23 @@
     transition: opacity 0.15s ease;
 }
 
-.lgcm-row:hover,
-.lgcm-row.lgcm-held {
+.withucm-row:hover,
+.withucm-row.withucm-held {
     color: #1a1d24;
 }
 
-.lgcm-row:hover::before,
-.lgcm-row.lgcm-held::before {
+.withucm-row:hover::before,
+.withucm-row.withucm-held::before {
     opacity: 1;
 }
 
-.lgcm-row:active::before {
+.withucm-row:active::before {
     opacity: 1;
     background: rgba(0, 0, 0, 0.07);
 }
 
 /* 分组标题 */
-.lgcm-heading {
+.withucm-heading {
     padding: 6px 12px 2px;
     font-size: 11px;
     color: #9ca3af;
@@ -131,14 +131,14 @@
 }
 
 /* 分隔线 */
-.lgcm-divider {
+.withucm-divider {
     border: 0;
     border-top: 1px solid rgba(0, 0, 0, 0.06);
     margin: 4px 8px;
 }
 
 /* 图标容器 */
-.lgcm-glyph {
+.withucm-glyph {
     width: 18px;
     display: flex;
     align-items: center;
@@ -149,13 +149,13 @@
     transition: color 0.15s ease;
 }
 
-.lgcm-row:hover .lgcm-glyph,
-.lgcm-row.lgcm-held .lgcm-glyph {
+.withucm-row:hover .withucm-glyph,
+.withucm-row.withucm-held .withucm-glyph {
     color: #3d4451;
 }
 
 /* 子菜单展开箭头 */
-.lgcm-arrow {
+.withucm-arrow {
     margin-left: auto;
     font-size: 14px;
     opacity: 0.35;
@@ -165,14 +165,14 @@
     transition: opacity 0.15s ease;
 }
 
-.lgcm-row:hover .lgcm-arrow {
+.withucm-row:hover .withucm-arrow {
     opacity: 0.6;
 }
 
 /* 暗色适配 */
 @media (prefers-color-scheme: dark) {
-    .lgcm-overlay,
-    .lgcm-nest {
+    .withucm-overlay,
+    .withucm-nest {
         background: linear-gradient(135deg, rgba(36,38,46,0.94), rgba(28,30,36,0.92));
         border-color: rgba(255, 255, 255, 0.08);
         box-shadow:
@@ -181,12 +181,12 @@
             inset 0 1px 0 rgba(255,255,255,0.06);
         color: #c9cdd4;
     }
-    .lgcm-row { color: #b0b5bf; }
-    .lgcm-row:hover, .lgcm-row.lgcm-held { color: #e4e6ea; }
-    .lgcm-row::before { background: rgba(255, 255, 255, 0.06); }
-    .lgcm-row:active::before { background: rgba(255, 255, 255, 0.1); }
-    .lgcm-heading { color: #6b7280; }
-    .lgcm-divider { border-color: rgba(255, 255, 255, 0.07); }
-    .lgcm-glyph { color: #8b92a0; }
-    .lgcm-row:hover .lgcm-glyph { color: #c9cdd4; }
+    .withucm-row { color: #b0b5bf; }
+    .withucm-row:hover, .withucm-row.withucm-held { color: #e4e6ea; }
+    .withucm-row::before { background: rgba(255, 255, 255, 0.06); }
+    .withucm-row:active::before { background: rgba(255, 255, 255, 0.1); }
+    .withucm-heading { color: #6b7280; }
+    .withucm-divider { border-color: rgba(255, 255, 255, 0.07); }
+    .withucm-glyph { color: #8b92a0; }
+    .withucm-row:hover .withucm-glyph { color: #c9cdd4; }
 }

@@ -7,7 +7,7 @@
 ; (function (window, $) {
     'use strict';
 
-    const { Utils, TimerManager } = window.LGApp || {};
+    const { Utils, TimerManager } = window.WithUApp || {};
 
     // ============================================
     // 礼花效果模块
@@ -232,11 +232,11 @@
 
         _startTimer() {
             this._stopTimer();
-            TimerManager.setInterval('lgCarouselAutoPlay', () => this._goRight(), this._interval);
+            TimerManager.setInterval('withuCarouselAutoPlay', () => this._goRight(), this._interval);
         },
 
         _stopTimer() {
-            TimerManager.clearInterval('lgCarouselAutoPlay');
+            TimerManager.clearInterval('withuCarouselAutoPlay');
         },
 
         _resetTimer() {
@@ -246,16 +246,16 @@
 
         _bindEvents() {
             // 点击指示点
-            this._$points.off('click.lgCarousel').on('click.lgCarousel', (e) => {
+            this._$points.off('click.withuCarousel').on('click.withuCarousel', (e) => {
                 this._index = $(e.currentTarget).data('index');
                 this._updateView();
                 this._resetTimer();
             });
 
             // 鼠标悬停暂停
-            this._$wrap.off('mousemove.lgCarousel mouseleave.lgCarousel')
-                .on('mousemove.lgCarousel', () => this._stopTimer())
-                .on('mouseleave.lgCarousel', () => this._startTimer());
+            this._$wrap.off('mousemove.withuCarousel mouseleave.withuCarousel')
+                .on('mousemove.withuCarousel', () => this._stopTimer())
+                .on('mouseleave.withuCarousel', () => this._startTimer());
 
             // 页面可见性
             document.removeEventListener('visibilitychange', this._visibilityHandler);
@@ -269,13 +269,13 @@
             document.addEventListener('visibilitychange', this._visibilityHandler);
 
             // 触摸滑动
-            this._$wrap.off('touchstart.lgCarousel mousedown.lgCarousel touchend.lgCarousel mouseup.lgCarousel')
-                .on('touchstart.lgCarousel mousedown.lgCarousel', (e) => {
+            this._$wrap.off('touchstart.withuCarousel mousedown.withuCarousel touchend.withuCarousel mouseup.withuCarousel')
+                .on('touchstart.withuCarousel mousedown.withuCarousel', (e) => {
                     this._startX = e.type === 'touchstart'
                         ? e.originalEvent.touches[0].clientX
                         : e.clientX;
                 })
-                .on('touchend.lgCarousel mouseup.lgCarousel', (e) => {
+                .on('touchend.withuCarousel mouseup.withuCarousel', (e) => {
                     const endX = e.type === 'touchend'
                         ? e.originalEvent.changedTouches[0].clientX
                         : e.clientX;
@@ -293,9 +293,9 @@
          * 销毁轮播图
          */
         destroy() {
-            TimerManager.clearInterval('lgCarouselAutoPlay');
-            if (this._$points) this._$points.off('.lgCarousel');
-            if (this._$wrap) this._$wrap.off('.lgCarousel');
+            TimerManager.clearInterval('withuCarouselAutoPlay');
+            if (this._$points) this._$points.off('.withuCarousel');
+            if (this._$wrap) this._$wrap.off('.withuCarousel');
             document.removeEventListener('visibilitychange', this._visibilityHandler);
             this._initialized = false;
         }
@@ -648,8 +648,8 @@
             const actionsEl = this._actionsEl || (this._actionsEl = document.querySelector('.withu-header-actions'));
             const leftAvatarEl = this._leftAvatarEl || (this._leftAvatarEl = document.querySelector('.withu-header-left-avatar'));
             // 缓存天气足迹元素
-            const weatherEl = this._weatherEl || (this._weatherEl = document.getElementById('lgHeaderVisitorWeather'));
-            const mapBtnEl = this._mapBtnEl || (this._mapBtnEl = document.getElementById('lgMapOpenBtn'));
+            const weatherEl = this._weatherEl || (this._weatherEl = document.getElementById('withuHeaderVisitorWeather'));
+            const mapBtnEl = this._mapBtnEl || (this._mapBtnEl = document.getElementById('withuMapOpenBtn'));
 
             // 缓存header-wrap元素
             const headerWrap = this._headerWrap || (this._headerWrap = document.querySelector('.header-wrap'));
@@ -867,7 +867,7 @@
             });
 
             // PJAX 完成后重新初始化
-            $(document).off('pjax:complete.lgNav').on('pjax:complete.lgNav', () => {
+            $(document).off('pjax:complete.withuNav').on('pjax:complete.withuNav', () => {
                 // 重新获取 DOM 引用（确保引用有效）
                 this._heroTitle = document.getElementById('withuHeroTitle');
                 this._metaTag = document.getElementById('withuMetaTag');
@@ -948,7 +948,7 @@
                 window.removeEventListener('resize', this._onResize);
                 this._onResize = null;
             }
-            $(document).off('pjax:complete.lgNav');
+            $(document).off('pjax:complete.withuNav');
             this._isStuck = false;
             this._initialized = false;
             this._backBtnState = null;
@@ -974,7 +974,7 @@
             this._$scrollTopBtn.removeClass('withu-fab-visible');
 
             // 滚动显示/隐藏 - 使用 RAF 节流
-            $(window).off('scroll.lgScrollBtn').on('scroll.lgScrollBtn', () => {
+            $(window).off('scroll.withuScrollBtn').on('scroll.withuScrollBtn', () => {
                 if (this._scrollTicking) return;
                 this._scrollTicking = true;
                 requestAnimationFrame(() => {
@@ -988,7 +988,7 @@
             });
 
             // 回到顶部
-            this._$scrollTopBtn.off('click.lgScrollBtn').on('click.lgScrollBtn', () => {
+            this._$scrollTopBtn.off('click.withuScrollBtn').on('click.withuScrollBtn', () => {
                 window.scrollTo({ top: 0, behavior: 'smooth' });
             });
 
@@ -996,8 +996,8 @@
         },
 
         destroy() {
-            $(window).off('scroll.lgScrollBtn');
-            if (this._$scrollTopBtn) this._$scrollTopBtn.off('click.lgScrollBtn');
+            $(window).off('scroll.withuScrollBtn');
+            if (this._$scrollTopBtn) this._$scrollTopBtn.off('click.withuScrollBtn');
             this._initialized = false;
         }
     };
@@ -1023,14 +1023,14 @@
 
         init() {
             if (window.WITHU_CONFIG && window.WITHU_CONFIG.weatherEnabled === false) {
-                var _wRoot = document.getElementById('lgHeaderVisitorWeather');
+                var _wRoot = document.getElementById('withuHeaderVisitorWeather');
                 if (_wRoot) _wRoot.style.display = 'none';
                 return;
             }
 
-            this._rootEl = document.getElementById('lgHeaderVisitorWeather');
-            this._iconEl = document.getElementById('lgHeaderVisitorWeatherIcon');
-            this._textEl = document.getElementById('lgHeaderVisitorWeatherText');
+            this._rootEl = document.getElementById('withuHeaderVisitorWeather');
+            this._iconEl = document.getElementById('withuHeaderVisitorWeatherIcon');
+            this._textEl = document.getElementById('withuHeaderVisitorWeatherText');
             this._panelEl = this._createPanel();
             if (!this._rootEl || !this._iconEl || !this._textEl || !this._panelEl || this._initialized) {
                 return;
@@ -1313,13 +1313,13 @@
         },
 
         _createPanel() {
-            let panel = document.getElementById('lgHeaderVisitorWeatherPanel');
+            let panel = document.getElementById('withuHeaderVisitorWeatherPanel');
             if (panel) {
                 return panel;
             }
 
             panel = document.createElement('div');
-            panel.id = 'lgHeaderVisitorWeatherPanel';
+            panel.id = 'withuHeaderVisitorWeatherPanel';
             panel.className = 'withu-header-weather-panel';
             panel.setAttribute('aria-hidden', 'true');
             document.body.appendChild(panel);
@@ -1348,10 +1348,10 @@
     };
 
     // ============================================
-    // 暴露组件到 LGApp
+    // 暴露组件到 WithUApp
     // ============================================
-    if (window.LGApp) {
-        window.LGApp.Components = {
+    if (window.WithUApp) {
+        window.WithUApp.Components = {
             ConfettiEffect,
             Carousel,
                 AvatarInteraction,
@@ -1408,7 +1408,7 @@
     };
 
     // 暴露到全局（兼容）
-    window.LGComponents = {
+    window.WithUComponents = {
         ConfettiEffect,
         Carousel,
         AvatarInteraction,
