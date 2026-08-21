@@ -34,7 +34,7 @@
 <link rel="stylesheet" href="/Style/vendor/fontawesome/css/all.min.css?wm=4c668768&v=1.0.74">
 <link rel="stylesheet" href="/Style/css/leaving.css?wm=4c668768&v=1.0.74">
 <link rel="stylesheet" href="/Style/css/leav.css?wm=4c668768&v=1.0.74">
-<link rel="stylesheet" href="/Style/css/lg-message.css?wm=4c668768&v=1.0.74">
+<link rel="stylesheet" href="/Style/css/message.css?wm=4c668768&v=1.0.74">
 <link rel="stylesheet" href="/Style/css/index.css?wm=4c668768&v=1.0.74">
 <link rel="stylesheet" href="/Style/css/little.css?wm=4c668768&v=1.0.74">
 <link rel="stylesheet" href="/Style/css/loveImg.css?wm=4c668768&v=1.0.74">
@@ -58,16 +58,16 @@
 <link href="/Style/css/nprogress.css?wm=4c668768&v=1.0.74" rel="stylesheet" type="text/css">
 <!-- Remix Icon 本地化 -->
 <link rel="stylesheet" href="/Style/vendor/remixicon/remixicon.css?wm=4c668768&v=1.0.74">
-<link rel="stylesheet" href="/Style/css/lg-tooltip.css?wm=4c668768&v=1.0.74">
-<link rel="stylesheet" href="/Style/css/lg-interaction.css?wm=4c668768&v=1.0.74">
+<link rel="stylesheet" href="/Style/css/tooltip.css?wm=4c668768&v=1.0.74">
+<link rel="stylesheet" href="/Style/css/interaction.css?wm=4c668768&v=1.0.74">
 <link rel="stylesheet" href="/Style/css/lgnewui-home-style.css?wm=4c668768&v=1.0.74">
 <link rel="stylesheet" href="/Style/css/lgnewui-detail.css?wm=4c668768&v=1.0.74">
-<link rel="stylesheet" href="/Style/css/lg-mobile-nav.css?wm=4c668768&v=1.0.74">
-<link rel="stylesheet" href="/Style/css/lg-header.css?wm=4c668768&v=1.0.74">
+<link rel="stylesheet" href="/Style/css/mobile-nav.css?wm=4c668768&v=1.0.74">
+<link rel="stylesheet" href="/Style/css/header.css?wm=4c668768&v=1.0.74">
 <!-- 自定义右键菜单 -->
-<link rel="stylesheet" href="/Style/css/lg-context-menu.css?wm=4c668768&v=1.0.74">
+<link rel="stylesheet" href="/Style/css/context-menu.css?wm=4c668768&v=1.0.74">
 <!-- 足迹地图样式 -->
-    <link rel="stylesheet" href="/Style/css/lg-map.css?wm=4c668768&v=1.0.74">
+    <link rel="stylesheet" href="/Style/css/map.css?wm=4c668768&v=1.0.74">
 
 <script src="/Style/jquery/jquery.min.js?wm=4c668768&v=1.0.74"></script>
 <script src="/Style/Font/font_leav/iconfont.js?wm=4c668768&v=1.0.74"></script>
@@ -127,7 +127,7 @@
 <script>
     window.LG_CONFIG = Object.assign(window.LG_CONFIG || {}, {"title":"withU","boy":"Ki.","girl":"Really","startTime":"2023-07-19 00:00:00","version":"2.2.5","pcCarouselHeight":"80vh","mobileCarouselHeight":"50vh","pcPhotoCoverHeight":"80vh","mobilePhotoCoverHeight":"60vh","pcImgMaxHeight":"450px","mobileImgMaxHeight":"260px","maleName":"Ki.","maleAvatar":"https://love-really.kikiw.cn/Lovefolder/20260411043037_69d95ded97293201118237.webp","femaleName":"Really","femaleAvatar":"https://love-really.kikiw.cn/Lovefolder/20260411043046_69d95df639c33274072975.webp","siteBase":"","assetBase":"","imageErrorFallback":"/Style/img/file-placeholder.svg?wm=4c668768","owoBase":"/OwO","soloMode":false,"weatherEnabled":true,"weatherToken":"340ab755e51d7635128e17c5c0b0367b0788075645856ed01852ed495f41098a","soloOwnerGeo":{"lat":21.915454,"lng":110.856708},"bannedChars":"操屌","endpoints":{"mapApi":"assets/map-api.php","weatherNow":"services/weather.php","interaction":"services/interaction.php","accessBeacon":"services/access-beacon.php","messageList":"services/message-list.php","messageSubmit":"services/message.php","infoService":"services/info-service.php","weatherApi":"services/weather.php"}});
 
-    // AOS 动画配置（供 lg-app.js 的 AOSManager 使用）
+    // AOS 动画配置（供 app.js 的 AOSManager 使用）
     window.LG_AOS_CONFIG = {"enabled":true,"animation":"fade-up","duration":800,"delay":0,"interval":50,"maxDelay":300,"easing":"ease-out-cubic","offset":50,"once":true,"mirror":true,"anchorPlacement":"top-bottom"};
 
     window.LGVisitorGeoCache = window.LGVisitorGeoCache || (function () {
@@ -277,12 +277,12 @@
                 }
             });
     </script>
-<script src="/assets/js/lg-app.js?wm=4c668768&v=1.0.74"></script>
-<script src="/assets/js/lg-components.js?wm=4c668768&v=1.0.74"></script>
+<script src="/assets/js/app.js?wm=4c668768&v=1.0.74"></script>
+<script src="/assets/js/components.js?wm=4c668768&v=1.0.74"></script>
 
-<!-- 礼花效果已迁移到 lg-components.js 的 ConfettiEffect 模块 -->
+<!-- 礼花效果已迁移到 components.js 的 ConfettiEffect 模块 -->
 
-<script src="/assets/js/lg-pjax.js?wm=4c668768&v=1.0.74"></script><script>if(window.LGPjax&&typeof window.LGPjax.init==="function")window.LGPjax.init();</script>
+<script src="/assets/js/pjax.js?wm=4c668768&v=1.0.74"></script><script>if(window.LGPjax&&typeof window.LGPjax.init==="function")window.LGPjax.init();</script>
 <style>
     #loader-wrapper {
         position: fixed;
@@ -3042,7 +3042,7 @@
 </style>
 
 <script>
-    // 倒计时、高度调整、轮播图、导航栏等功能已迁移到 lg-app.js 和 lg-components.js
+    // 倒计时、高度调整、轮播图、导航栏等功能已迁移到 app.js 和 components.js
     // 保留必要的全局变量供旧代码兼容
     var pcCarouselHeight = "80vh";
     var mobileCarouselHeight = "50vh";
@@ -3410,7 +3410,7 @@
     </div>
 </div>
 <audio id="music"></audio>
-<!-- 情侣头像点击效果已迁移到 lg-components.js 的 AvatarInteraction 模块 -->
+<!-- 情侣头像点击效果已迁移到 components.js 的 AvatarInteraction 模块 -->
 
 <div id="pjax-container">
 <title>LG-NewUi Demo</title>
@@ -3731,8 +3731,8 @@ if (typeof window.initPrivatePage === 'function') window.initPrivatePage();
 <script src="/Style/toastify/toastify.js?wm=4c668768&v=1.0.74"></script>
 <script>if(typeof lucide!=='undefined')lucide.createIcons();</script>
 <script src="/Style/js/clipboard.min.js?wm=4c668768&v=1.0.74"></script>
-<script src="/assets/js/lg-clipboard.js?wm=4c668768&v=1.0.74"></script>
-<script src="/assets/js/lg-tooltip.js?wm=4c668768&v=1.0.74"></script>
+<script src="/assets/js/clipboard.js?wm=4c668768&v=1.0.74"></script>
+<script src="/assets/js/tooltip.js?wm=4c668768&v=1.0.74"></script>
 <script src="/Style/js/view-image.min.js?wm=4c668768&v=1.0.74"></script>
 <script src="/Style/js/mian.js?wm=4c668768&v=1.0.74"></script>
 <script src="/Style/LoveListStyle/carousel.umd.js?wm=4c668768&v=1.0.74"></script>
@@ -3743,11 +3743,11 @@ if (typeof window.initPrivatePage === 'function') window.initPrivatePage();
 <script src="/assets/js/page-detail.js?wm=4c668768&v=1.0.74"></script>
 <script src="/assets/js/page-album-detail.js?wm=4c668768&v=1.0.74"></script>
 <script src="/assets/js/html2canvas.min.js?wm=4c668768&v=1.0.74"></script>
-<script src="/assets/js/lg-chat.js?wm=4c668768&v=1.0.74"></script>
+<script src="/assets/js/chat.js?wm=4c668768&v=1.0.74"></script>
 
-<script src="/assets/js/lg-visitor-hash.js?wm=4c668768&v=1.0.74"></script>
-<script src="/assets/js/lg-interaction.js?wm=4c668768&v=1.0.74"></script>
-<script src="/assets/js/lg-context-menu.js?wm=4c668768&v=1.0.74"></script>
+<script src="/assets/js/visitor-hash.js?wm=4c668768&v=1.0.74"></script>
+<script src="/assets/js/interaction.js?wm=4c668768&v=1.0.74"></script>
+<script src="/assets/js/context-menu.js?wm=4c668768&v=1.0.74"></script>
 
 <!-- 足迹地图弹窗 -->
 <!-- ============ 足迹地图弹窗 ============ -->
@@ -3867,7 +3867,7 @@ if (typeof window.initPrivatePage === 'function') window.initPrivatePage();
     </div>
 </div>
 <!-- ============ /足迹地图弹窗 ============ -->
-<script src="/assets/js/lg-map.js?wm=4c668768&v=1.0.74"></script>
+<script src="/assets/js/map.js?wm=4c668768&v=1.0.74"></script>
 
 <div id="pjax-container">
 
@@ -3898,7 +3898,7 @@ if (typeof window.initPrivatePage === 'function') window.initPrivatePage();
     </script>
 
     <script>
-        // 滚动按钮和回到顶部功能已迁移到 lg-components.js 的 ScrollButtons 模块
+        // 滚动按钮和回到顶部功能已迁移到 components.js 的 ScrollButtons 模块
         // 以下代码由 LGApp.init() 统一初始化，保留最小必要代码
 
         $(document).ready(function() {
@@ -4198,7 +4198,7 @@ if (typeof window.initPrivatePage === 'function') window.initPrivatePage();
 
 </div>
 
-<script src="/assets/js/lg-mobile-nav.js?wm=4c668768&v=1.0.74"></script>
+<script src="/assets/js/mobile-nav.js?wm=4c668768&v=1.0.74"></script>
 
 <script>
     (function () {
@@ -4284,6 +4284,6 @@ if (typeof window.initPrivatePage === 'function') window.initPrivatePage();
     })();
 </script>
 
-<script src="assets/js/lg-auth-status.js"></script>
+<script src="assets/js/auth-status.js"></script>
 </body>
 </html>

@@ -52,7 +52,7 @@ var LGMiniMap = (function() {
         if (_sdkLoading) return;
         _sdkLoading = true;
         var s = document.createElement('script');
-        s.src = ((window.LG_CONFIG && window.LG_CONFIG.assetBase) || '') + 'assets/js/lg-map-sdk.js';
+        s.src = ((window.LG_CONFIG && window.LG_CONFIG.assetBase) || '') + 'assets/js/map-sdk.js';
         s.onload = function() {
             _sdkReady = true;
             _sdkLoading = false;

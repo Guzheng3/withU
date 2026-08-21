@@ -331,7 +331,7 @@ window.LGMap = (function () {
             }
             _sdkLoading = true;
             const script = document.createElement('script');
-            script.src = ((window.LG_CONFIG && window.LG_CONFIG.assetBase) || '') + 'assets/js/lg-map-sdk.js';
+            script.src = ((window.LG_CONFIG && window.LG_CONFIG.assetBase) || '') + 'assets/js/map-sdk.js';
             script.onload = () => {
                 _sdkLoaded = true;
                 _sdkLoading = false;

@@ -1,5 +1,5 @@
 /**
- * LGNewUi Mobile Navigation - lg-mobile-nav.js
+ * LGNewUi Mobile Navigation - mobile-nav.js
  * 移动端底部 Tab 栏交互逻辑（6套方案）
  * 根据页面中存在的 DOM 结构自动初始化，支持 pjax 重新初始化
  */

@@ -723,7 +723,7 @@
                         const link = document.createElement('link');
                         link.id = cssId;
                         link.rel = 'stylesheet';
-                        link.href = ((window.LG_CONFIG && window.LG_CONFIG.assetBase) || '') + 'Style/css/lg-message.css';
+                        link.href = ((window.LG_CONFIG && window.LG_CONFIG.assetBase) || '') + 'Style/css/message.css';
                         document.head.appendChild(link);
                     }
                 }

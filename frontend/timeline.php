@@ -36,7 +36,7 @@
 <link rel="stylesheet" href="/Style/vendor/fontawesome/css/all.min.css">
 <link rel="stylesheet" href="/Style/css/leaving.css">
 <link rel="stylesheet" href="/Style/css/leav.css">
-<link rel="stylesheet" href="/Style/css/lg-message.css">
+<link rel="stylesheet" href="/Style/css/message.css">
 <link rel="stylesheet" href="/Style/css/index.css">
 <link rel="stylesheet" href="/Style/css/little.css">
 <link rel="stylesheet" href="/Style/css/loveImg.css">
@@ -61,16 +61,16 @@
 <link href="/Style/css/nprogress.css" rel="stylesheet" type="text/css">
 <!-- Remix Icon 本地化 -->
 <link rel="stylesheet" href="/Style/vendor/remixicon/remixicon.css">
-<link rel="stylesheet" href="/Style/css/lg-tooltip.css">
-<link rel="stylesheet" href="/Style/css/lg-interaction.css">
+<link rel="stylesheet" href="/Style/css/tooltip.css">
+<link rel="stylesheet" href="/Style/css/interaction.css">
 <link rel="stylesheet" href="/Style/css/lgnewui-home-style.css">
 <link rel="stylesheet" href="/Style/css/lgnewui-detail.css">
-<link rel="stylesheet" href="/Style/css/lg-mobile-nav.css">
-<link rel="stylesheet" href="/Style/css/lg-header.css">
+<link rel="stylesheet" href="/Style/css/mobile-nav.css">
+<link rel="stylesheet" href="/Style/css/header.css">
 <!-- 自定义右键菜单 -->
-<link rel="stylesheet" href="/Style/css/lg-context-menu.css">
+<link rel="stylesheet" href="/Style/css/context-menu.css">
 <!-- 足迹地图样式 -->
-    <link rel="stylesheet" href="/Style/css/lg-map.css">
+    <link rel="stylesheet" href="/Style/css/map.css">
 
 
 <script src="/Style/jquery/jquery.min.js"></script>
@@ -131,7 +131,7 @@
 <script>
     window.LG_CONFIG = Object.assign(window.LG_CONFIG || {}, {"title":"LG-NewUi Demo","boy":"Ki.","girl":"Really","startTime":"2023-07-19 00:00:00","version":"2.2.5","pcCarouselHeight":"80vh","mobileCarouselHeight":"50vh","pcPhotoCoverHeight":"80vh","mobilePhotoCoverHeight":"60vh","pcImgMaxHeight":"450px","mobileImgMaxHeight":"260px","maleName":"Ki.","maleAvatar":"/Lovefolder/20260411043037_69d95ded97293201118237.webp","femaleName":"Really","femaleAvatar":"/Lovefolder/20260411043046_69d95df639c33274072975.webp","siteBase":"","assetBase":"","imageErrorFallback":"/Style/img/file-placeholder.svg","owoBase":"/OwO","soloMode":false,"weatherEnabled":true,"weatherToken":"d4210665334edba618aecc1829a5e734701e2b824c5aebd4ff8859d7a2536721","soloOwnerGeo":{"lat":21.915454,"lng":110.856708},"bannedChars":"操屌","endpoints":{"mapApi":"/assets/map-api.php","weatherNow":"/services/weather.php","interaction":"/services/interaction.php"}});
 
-    // AOS 动画配置（供 lg-app.js 的 AOSManager 使用）
+    // AOS 动画配置（供 app.js 的 AOSManager 使用）
     window.LG_AOS_CONFIG = {"enabled":true,"animation":"fade-up","duration":800,"delay":0,"interval":50,"maxDelay":300,"easing":"ease-out-cubic","offset":50,"once":true,"mirror":true,"anchorPlacement":"top-bottom"};
 
     window.LGVisitorGeoCache = window.LGVisitorGeoCache || (function () {
@@ -281,12 +281,12 @@
                 }
             });
     </script>
-<script src="/assets/js/lg-app.js"></script>
-<script src="/assets/js/lg-components.js"></script>
+<script src="/assets/js/app.js"></script>
+<script src="/assets/js/components.js"></script>
 
-<!-- 礼花效果已迁移到 lg-components.js 的 ConfettiEffect 模块 -->
+<!-- 礼花效果已迁移到 components.js 的 ConfettiEffect 模块 -->
 
-<script src="/assets/js/lg-pjax.js"></script><script>if(window.LGPjax&typeof window.LGPjax.init==="function")window.LGPjax.init();</script>
+<script src="/assets/js/pjax.js"></script><script>if(window.LGPjax&typeof window.LGPjax.init==="function")window.LGPjax.init();</script>
 <style>
     #loader-wrapper {
         position: fixed;
@@ -3014,7 +3014,7 @@
 </style>
 
 <script>
-    // 倒计时、高度调整、轮播图、导航栏等功能已迁移到 lg-app.js 和 lg-components.js
+    // 倒计时、高度调整、轮播图、导航栏等功能已迁移到 app.js 和 components.js
     // 保留必要的全局变量供旧代码兼容
     var pcCarouselHeight = "80vh";
     var mobileCarouselHeight = "50vh";
@@ -3346,7 +3346,7 @@
     </div>
 </div>
 <audio id="music"></audio>
-<!-- 情侣头像点击效果已迁移到 lg-components.js 的 AvatarInteraction 模块 -->
+<!-- 情侣头像点击效果已迁移到 components.js 的 AvatarInteraction 模块 -->
 
     <meta charset="utf-8" />
     <meta name="viewport"
@@ -3359,8 +3359,8 @@
         <!-- 时间轴专用样式 -->
         <link rel="stylesheet" href="/Style/css/timeline.css">
         <!-- 迷你地图组件（地点卡片） -->
-        <link rel="stylesheet" href="/assets/css/lg-mini-map.css">
-        <script src="/assets/js/lg-mini-map.js"></script>
+        <link rel="stylesheet" href="/assets/css/mini-map.css">
+        <script src="/assets/js/mini-map.js"></script>
 
         <!-- 滚动提示 -->
         <div class="lgnewui-scroll-hint" id="timelineScrollHint">
@@ -3774,8 +3774,8 @@ window.TIMELINE_AUTHORS['female'] = window.TIMELINE_AUTHORS[2];
 <script src="/Style/toastify/toastify.js"></script>
 <script>if(typeof lucide!=='undefined')lucide.createIcons();</script>
 <script src="/Style/js/clipboard.min.js"></script>
-<script src="/assets/js/lg-clipboard.js"></script>
-<script src="/assets/js/lg-tooltip.js"></script>
+<script src="/assets/js/clipboard.js"></script>
+<script src="/assets/js/tooltip.js"></script>
 <script src="/Style/js/view-image.min.js"></script>
 <script src="/Style/js/mian.js"></script>
 <script src="/Style/LoveListStyle/carousel.umd.js"></script>
@@ -3786,11 +3786,11 @@ window.TIMELINE_AUTHORS['female'] = window.TIMELINE_AUTHORS[2];
 <script src="/assets/js/page-detail.js"></script>
 <script src="/assets/js/page-album-detail.js"></script>
 <script src="/assets/js/html2canvas.min.js"></script>
-<script src="/assets/js/lg-chat.js"></script>
+<script src="/assets/js/chat.js"></script>
 
-<script src="/assets/js/lg-visitor-hash.js"></script>
-<script src="/assets/js/lg-interaction.js"></script>
-<script src="/assets/js/lg-context-menu.js"></script>
+<script src="/assets/js/visitor-hash.js"></script>
+<script src="/assets/js/interaction.js"></script>
+<script src="/assets/js/context-menu.js"></script>
 
 <!-- ============ 音乐播放器 (pjax 外，不随页面刷新) ============ -->
 <script src="/Style/js/APlayer.min.js"></script>
@@ -4103,7 +4103,7 @@ window.TIMELINE_AUTHORS['female'] = window.TIMELINE_AUTHORS[2];
     </div>
 </div>
 <!-- ============ /足迹地图弹窗 ============ -->
-<script src="/assets/js/lg-map.js"></script>
+<script src="/assets/js/map.js"></script>
 
 <div id="pjax-container">
 
@@ -4134,7 +4134,7 @@ window.TIMELINE_AUTHORS['female'] = window.TIMELINE_AUTHORS[2];
     </script>
 
     <script>
-        // 滚动按钮和回到顶部功能已迁移到 lg-components.js 的 ScrollButtons 模块
+        // 滚动按钮和回到顶部功能已迁移到 components.js 的 ScrollButtons 模块
         // 以下代码由 LGApp.init() 统一初始化，保留最小必要代码
 
         $(document).ready(function() {
@@ -4437,7 +4437,7 @@ window.TIMELINE_AUTHORS['female'] = window.TIMELINE_AUTHORS[2];
 
 </div>
 
-<script src="/assets/js/lg-mobile-nav.js"></script>
+<script src="/assets/js/mobile-nav.js"></script>
 
 
 

@@ -774,7 +774,7 @@
         }
     });
 
-    // 注意：PJAX 场景由 lg-pjax.js 调用 window.initListPage() 处理
+    // 注意：PJAX 场景由 pjax.js 调用 window.initListPage() 处理
     // 不要在这里重复监听 pjax:complete，否则会导致重复初始化
 
 })(window, jQuery);

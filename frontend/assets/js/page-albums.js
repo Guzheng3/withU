@@ -2,7 +2,7 @@
  * LG_NewUI 相册页面模块
  * @version 2.0.0
  * @description albums.php 和 album-detail.php 页面的 JS 逻辑
- * @note Masonry 瀑布流初始化已迁移到 lg-pjax.js 的 MasonryManager.initLGGrid()
+ * @note Masonry 瀑布流初始化已迁移到 pjax.js 的 MasonryManager.initLGGrid()
  */
 
 ;(function(window, $) {
@@ -55,7 +55,7 @@
          * 刷新布局
          */
         refresh() {
-            // 调用 lg-pjax.js 的 MasonryManager
+            // 调用 pjax.js 的 MasonryManager
             if (window.LGPjax && window.LGPjax.MasonryManager) {
                 window.LGPjax.MasonryManager.initLGGrid();
             }

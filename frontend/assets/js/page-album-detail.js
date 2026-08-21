@@ -1,6 +1,6 @@
 /**
  * imglist 瀑布流模块 — 支持 pjax 重新初始化
- * 懒加载由全局 LazyLoadManager (lg-app.js) 统一管理
+ * 懒加载由全局 LazyLoadManager (app.js) 统一管理
  * callback_loaded 中自动添加 loaded class + 调用 relayout()
  */
 window.ImglistApp = (function() {

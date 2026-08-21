@@ -2,7 +2,7 @@
  * LG_NewUI 点点滴滴页面模块
  * @version 2.0.0
  * @description articles.php 页面的 JS 逻辑（点赞系统）
- * @note 瀑布流和弥散光效果已迁移到 lg-pjax.js 的 MasonryManager 和 AuroraEffect
+ * @note 瀑布流和弥散光效果已迁移到 pjax.js 的 MasonryManager 和 AuroraEffect
  */
 
 ;(function(window, $) {

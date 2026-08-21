@@ -39,7 +39,7 @@ Entries discovered by the Agent during task execution should follow this format:
   - 需要先对比前后端能力：共有的部分做链接，只有一边有的先列出，不强行对接。
 
 [User Instruction Summary]
-- Date: 2026-08-18
+- Date: 2026-08-18（已废弃：后续用户改以 withU 为主体、引入 lg 前端后反向代理与观影代理均已启用，见 2026-08-21 条目）
 - Context: 用户纠正方向：明确"别管后端适配，把前端替换成 LG 前端"
 - Instructions:
   - 不做 withU 后端/数据库适配：lg-site 不接入 withU 的 api/lg.php 网关，不用 withU 数据库当数据源。
@@ -66,7 +66,7 @@ Entries discovered by the Agent during task execution should follow this format:
 - Category: Operations & Deployment
 - Instructions:
   - lg-server(8901) 已实现全部 services 接口真实持久化，单端口预览即完整站点：静态页 + /services/*、/assets/map-api.php、/admin 后台、/_AMapService 高德代理、动态配置注入（amapKey/securityJsCode/服务模式）。
-  - 数据文件集中在 lg-server/data/：map-config.json（高德 Key 与 securityMode=proxy，Key=39b478526482ffb6c069eee6f78faf77）、weather-config.json（后台手配城市1/2+ip）、chat-data.json、interactions.json、beacons.json；相册照片扫描 lg-site/Lovefolder/，元数据在 lg-server/admin-data/photos-meta.json。
+  - 数据文件集中在 backend/server/data/：map-config.json（高德 Key 与 securityMode=proxy，Key=39b478526482ffb6c069eee6f78faf77）、weather-config.json（后台手配城市1/2+ip）、chat-data.json、interactions.json、beacons.json；相册照片扫描 frontend/Lovefolder/，元数据在 backend/server/admin-data/photos-meta.json。
   - 高德采用「代理服务安全模式」（_AMapSecurityConfig={serviceHost:'/',serviceMode:'proxy'}），由服务端转发 /_AMapService/** 到 webapi.amap.com，无需 securityJsCode；10 个 HTML 页面的硬编码 amapKey/securityJsCode 由 server.js 正则替换注入。
   - 后台登录：POST /admin/api/login（JSON body {adminName,pw}，pw 为明文由服务端 md5），cookie lg_admin；默认账号 admin/lovezz。
   - 测试坑：store.js 的 load() 对 '@mapAll'/'@lgConfig' 特殊 key 必须经 ABS_MAP 映射到绝对路径，否则读到空数据；https.request headers 里 referer 不能设为 undefined（Node22 抛 ERR_HTTP_INVALID_HEADER_VALUE），应 delete。
@@ -76,9 +76,19 @@ Entries discovered by the Agent during task execution should follow this format:
 - Context: Discovered by Agent while 实现首页观影按钮跳转 watch.php
 - Category: Environment Configuration
 - Instructions:
-  - withU 观影/影视后端在项目根（PHP 主站，跑在 1314，数据库 couple_website，含 media_library/watch_history/watch_rooms 等表）：watch.php（影视库页）、watch_play.php（播放页）、watch_history.php、api/watch.php（房间）、api/strm.php、api/media_cover.php。lg-site(8901) 不包含这些 PHP，lg-server 静态根是 lg-site/。
-  - lg-server/server.js 增加 PHP 主站代理 proxyToPhp()：lg-site 静态 404 且路径以 .php 结尾或 /api/ 开头时，转发到 http://127.0.0.1:1314（保留 method/query/body/cookie，删除响应 transfer-encoding/connection 头）。首页「观影」悬浮按钮 href="watch.php" 即经此代理可达。
-  - 代理 POST 关键坑：lg-server 的 createServer 在 req.on('end') 内统一处理，body 已收集进 body 变量，此时 req 流已结束，proxyToPhp 必须用收集的 body（preq.end(body) + 按字节重设 content-length），不能用 req.pipe(preq)——否则 PHP 收到 Content-Length 声明但 body 空，一直等 body 直到超时挂起。
+  - withU 观影/影视后端在 backend/app（PHP 主站，跑 127.0.0.1:8902，数据库 couple_website，含 media_library/watch_history/watch_rooms 等表）：watch.php（影视库页）、watch_play.php（播放页）、watch_history.php、api/watch.php（房间）、api/strm.php、api/media_cover.php。backend/server(8901) 不包含这些 PHP，backend/server 静态根是 frontend/。
+  - backend/server/server.js 增加 PHP 主站代理 proxyToPhp()：frontend 静态 404 且路径以 .php 结尾或 /api/ 开头时，转发到 http://127.0.0.1:8902（保留 method/query/body/cookie，删除响应 transfer-encoding/connection 头）。首页「观影」悬浮按钮 href="watch.php" 即经此代理可达。
+  - 代理 POST 关键坑：backend/server 的 createServer 在 req.on('end') 内统一处理，body 已收集进 body 变量，此时 req 流已结束，proxyToPhp 必须用收集的 body（preq.end(body) + 按字节重设 content-length），不能用 req.pipe(preq)——否则 PHP 收到 Content-Length 声明但 body 空，一直等 body 直到超时挂起。
   - PHP 主站 login.php 登录需 CSRF：先 GET 取表单 name="_token" 值（存 PHPSESSID），POST 时带 _token。登录成功 302 /；未登录访问 watch.php 302 /login.php。
   - 验证用测试账号 withu_test/123456 已写入 couple_website.users（role=user1）；真实账号 withu1/WithU@1314。
-  - 1314 端口前端已彻底移除：1314 现为反向代理（lg-server/reverse-proxy.js）→ 8901 lg-server，1314 域名直接显示 lg-site 完整前端（lg-site/index.html），首页即情侣空间入口；withU PHP 主站服务移到 127.0.0.1:8902（仅本机，外部不可直接访问），lg-server server.js 的 PHP_BACKEND=8902，lg-site 观影按钮（8901/watch.php 或 1314/watch.php）经代理→8902 PHP 保持可用。
+  - 1314 端口前端已彻底移除：1314 现为反向代理（backend/server/reverse-proxy.js）→ 8901 backend/server，1314 域名直接显示 frontend 完整前端（frontend/index.html），首页即情侣空间入口；withU PHP 主站服务移到 127.0.0.1:8902（仅本机，外部不可直接访问），backend/server server.js 的 PHP_BACKEND=8902，frontend 观影按钮（8901/watch.php 或 1314/watch.php）经代理→8902 PHP 保持可用。
+
+[Project Knowledge Summary]
+- Date: 2026-08-21
+- Context: Discovered by Agent while 按用户要求将项目重组为标准目录结构（以 withU 为主体，去掉 lg 命名）
+- Category: Operations & Deployment
+- Instructions:
+  - 仓库标准结构（git mv 完成，commit 17be6ed）：frontend/（原 lg-site 前端，含 index.html、assets/、services/、_external/lgadmin/、Lovefolder/）；backend/server/（原 lg-server Node 服务，server.js/store.js/admin.js/reverse-proxy.js + data/ + admin-data/ + app-config.json）；backend/app/（withU PHP 主站：watch.php、api/、core/、config/、index.php 等 + .installed + uploads/ + runtime/）；backend/strm/（原 strm）。根目录保留 deploy/deploy-local/desktop/docs/scripts/。
+  - 站点配置文件名 lg-config.json → app-config.json（backend/server/）；server.js 路径常量 ROOT=path.join(__dirname,'..','..','frontend')、PHP_ROOT=path.join(__dirname,'..','app')；store.js ROOT 与 lgConfig 映射、admin.js ROOT/CONFIG_FILE 均已指向新路径。
+  - .gitignore 已同步新路径：backend/app/config/{database.php,config.php,mihomo.json}、backend/app/uploads/*、backend/app/runtime/* 与 backend/runtime/* 忽略（php -S 8902 运行 PHP 主站时会在 backend/ 下生成 runtime/schema-version、schema-migration.lock）。
+  - 运行命令（重组后）：8902 用 `php -S 127.0.0.1:8902 -t /workspace/withU/backend/app`；8901 用 `cd backend/server && PORT=8901 node server.js`；1314 用 `node backend/server/reverse-proxy.js`。重组后已验证：8901 首页/map-api/weather/qqavatar/admin、8902 login.php、8901 watch.php 登录代理、1314 反代首页与 map-api 全部 200。
