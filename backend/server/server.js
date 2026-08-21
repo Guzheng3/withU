@@ -475,9 +475,16 @@ function amapProxy(req, res, reqUrl, urlPath) {
   const mc = store.loadMapConfig();
   const rest = urlPath.replace(/^\/_AMapService\/?/, '') || '';
   const firstSeg = rest.split('/')[0] || '';
-  let target = (firstSeg.indexOf('.') >= 0 || firstSeg === 'localhost')
-    ? 'https://' + rest
-    : 'https://webapi.amap.com/' + rest;
+  let target;
+  if (firstSeg.indexOf('.') >= 0 || firstSeg === 'localhost') {
+    target = 'https://' + rest;
+  } else {
+    const p = '/' + rest;
+    const host = (p.indexOf('/log/') >= 0 || p.startsWith('/v3/staticmap') || p.startsWith('/v3/style') || p.startsWith('/v3/config'))
+      ? 'webapi.amap.com'
+      : 'restapi.amap.com';
+    target = 'https://' + host + p;
+  }
   const idx = reqUrl.indexOf('?');
   if (idx >= 0) {
     const qs = new URLSearchParams(reqUrl.slice(idx + 1));
