@@ -116,9 +116,17 @@ pre.raw{background:#f8f9fc;border-radius:10px;padding:14px;font-size:12px;max-he
         <div class="grp">内容管理</div>
         <a href="javascript:;" data-v="messages"><i class="mdi mdi-message-text"></i><span>留言管理</span></a>
         <a href="javascript:;" data-v="albums"><i class="mdi mdi-image-multiple"></i><span>相册管理</span></a>
+        <a href="javascript:;" data-v="photos"><i class="mdi mdi-image-filter"></i><span>照片管理</span></a>
         <a href="javascript:;" data-v="moments"><i class="mdi mdi-clock-outline"></i><span>时光碎片</span></a>
         <a href="javascript:;" data-v="timeline"><i class="mdi mdi-timeline"></i><span>时间线</span></a>
         <a href="javascript:;" data-v="lovelist"><i class="mdi mdi-format-list-checks"></i><span>愿望清单</span></a>
+        <a href="javascript:;" data-v="chat"><i class="mdi mdi-chat-processing"></i><span>聊天记录</span></a>
+        <div class="grp">地图与天气</div>
+        <a href="javascript:;" data-v="mapconfig"><i class="mdi mdi-map-marker-radius"></i><span>高德地图</span></a>
+        <a href="javascript:;" data-v="weather"><i class="mdi mdi-weather-partly-cloudy"></i><span>天气设置</span></a>
+        <div class="grp">数据统计</div>
+        <a href="javascript:;" data-v="interactions"><i class="mdi mdi-heart"></i><span>互动数据</span></a>
+        <a href="javascript:;" data-v="beacons"><i class="mdi mdi-chart-bar"></i><span>访问统计</span></a>
         <div class="grp">系统</div>
         <a href="javascript:;" data-v="config"><i class="mdi mdi-cog"></i><span>站点设置</span></a>
         <a href="javascript:;" data-v="account"><i class="mdi mdi-account-key"></i><span>账号管理</span></a>
@@ -553,14 +561,297 @@ async function renderLogs() {
   } catch (e) { box.innerHTML = '<div class="empty">' + esc(e.message) + '</div>'; }
 }
 
+// ============ 高德地图设置 ============
+async function renderMapConfig() {
+  const box = $('#viewBox');
+  box.innerHTML = '<div class="empty">加载中…</div>';
+  try {
+    const d = await api('/admin/api/map-config');
+    const c = d.config;
+    const loverForm = (l, i) => `
+      <div class="card">
+        <h3 class="card-title">情侣位置 ${i + 1}</h3>
+        <div class="form-row">
+          <div class="fg"><label>名字</label><input id="mcL${i}Name" value="${esc(l.name)}"></div>
+          <div class="fg"><label>位置标签</label><input id="mcL${i}Label" value="${esc(l.label)}"></div>
+          <div class="fg"><label>经度 lng</label><input id="mcL${i}Lng" value="${esc(l.coords && l.coords[0])}"></div>
+          <div class="fg"><label>纬度 lat</label><input id="mcL${i}Lat" value="${esc(l.coords && l.coords[1])}"></div>
+        </div>
+        <div class="form-row"><div class="fg"><label>头像 URL</label><input id="mcL${i}Avatar" value="${esc(l.avatar)}"></div></div>
+      </div>`;
+    box.innerHTML = `<div class="card"><h3 class="card-title">高德地图接入（JS API）</h3>
+      <div class="form-row">
+        <div class="fg"><label>Web 端 API Key *</label><input id="mcKey" value="${esc(c.amapKey)}" placeholder="高德控制台 → 应用 → Web服务 Key"></div>
+        <div class="fg"><label>安全模式</label>
+          <select id="mcMode"><option value="proxy"${c.securityMode === 'proxy' ? ' selected' : ''}>代理服务（/_AMapService）</option><option value="jsCode"${c.securityMode === 'jsCode' ? ' selected' : ''}>安全密钥 securityJsCode</option></select>
+        </div>
+        <div class="fg"><label>securityJsCode（jsCode 模式）</label><input id="mcSec" value="${esc(c.securityJsCode)}" placeholder="控制台 → 设置安全密钥"></div>
+      </div>
+      <div class="form-row"><div class="fg"><label>地图样式</label>
+        <select id="mcStyle">
+          <option value="amap://styles/normal"${c.mapStyle === 'amap://styles/normal' ? ' selected' : ''}>标准 normal</option>
+          <option value="amap://styles/grey"${c.mapStyle === 'amap://styles/grey' ? ' selected' : ''}>清新 grey</option>
+          <option value="amap://styles/dark"${c.mapStyle === 'amap://styles/dark' ? ' selected' : ''}>暗色 dark</option>
+          <option value="amap://styles/fresh"${c.mapStyle === 'amap://styles/fresh' ? ' selected' : ''}>草色 fresh</option>
+          <option value="amap://styles/whitesmoke"${c.mapStyle === 'amap://styles/whitesmoke' ? ' selected' : ''}>极夜 whitesmoke</option>
+        </select>
+      </div></div>
+      <div style="margin-top:12px"><button class="btn btn-p" onclick="saveMapConfig()">保存地图设置</button></div>
+    </div>` + loverForm(c.lovers[0] || { name: '', label: '', coords: [0, 0], avatar: '' }, 0) + loverForm(c.lovers[1] || { name: '', label: '', coords: [0, 0], avatar: '' }, 1) + `
+    <div class="card"><h3 class="card-title">说明</h3>
+      <p style="font-size:13px;color:#666;line-height:1.9;margin:0">
+        前端已内置高德 JS API SDK（lg-map-sdk.js）。填入 Web 端 Key 后即可在地图页显示情侣位置与足迹。<br>
+        默认使用「代理服务」安全模式：地图请求由本服务端转发到 webapi.amap.com，无需安全密钥。<br>
+        若你已在控制台配置了安全密钥，可切换为 jsCode 模式并填入 securityJsCode。<br>
+        Key 申请地址：<code>https://console.amap.com/</code>
+      </p>
+    </div>`;
+  } catch (e) { box.innerHTML = '<div class="empty">' + esc(e.message) + '</div>'; }
+}
+async function saveMapConfig() {
+  const lover = i => ({
+    name: $('#mcL' + i + 'Name').value.trim(), label: $('#mcL' + i + 'Label').value.trim(),
+    coords: [parseFloat($('#mcL' + i + 'Lng').value) || 0, parseFloat($('#mcL' + i + 'Lat').value) || 0],
+    avatar: $('#mcL' + i + 'Avatar').value.trim()
+  });
+  try {
+    await api('/admin/api/map-config/save', { method: 'POST', body: JSON.stringify({
+      amapKey: $('#mcKey').value.trim(), securityMode: $('#mcMode').value, securityJsCode: $('#mcSec').value.trim(),
+      mapStyle: $('#mcStyle').value, lovers: [lover(0), lover(1)]
+    }) });
+    toast('地图设置已保存');
+  } catch (e) { toast(e.message, false); }
+}
+
+// ============ 天气设置 ============
+const W_FIELDS = [['temp', '温度'], ['desc', '天气描述'], ['icon', '图标码'], ['humidity', '湿度%'], ['vis', '能见度km'], ['feelsLike', '体感温度'], ['windDir', '风向'], ['windScale', '风力']];
+function weatherCityForm(c, id, label) {
+  return `<div class="card"><h3 class="card-title">${label}</h3>
+    <div class="form-row">
+      <div class="fg"><label>城市名</label><input id="w${id}City" value="${esc(c.city || c.name || '')}"></div>
+      ${W_FIELDS.map(([k, l]) => `<div class="fg"><label>${l}</label><input id="w${id}_${k}" value="${esc(c[k] || '')}"></div>`).join('')}
+    </div>
+  </div>`;
+}
+async function renderWeather() {
+  const box = $('#viewBox');
+  box.innerHTML = '<div class="empty">加载中…</div>';
+  try {
+    const d = await api('/admin/api/weather-config');
+    const w = d.config;
+    box.innerHTML = weatherCityForm(w.cities['1'] || {}, '1', '首页天气卡 · 卡槽1（男方城市）') +
+      weatherCityForm(w.cities['2'] || {}, '2', '首页天气卡 · 卡槽2（女方城市）') +
+      weatherCityForm(w.ip || {}, 'ip', '访客城市（页头/留言页 mode=ip）') +
+      `<div class="card"><div style="margin-top:4px"><button class="btn btn-p" onclick="saveWeatherConfig()">保存天气设置</button></div></div>
+      <div class="card"><h3 class="card-title">说明</h3>
+        <p style="font-size:13px;color:#666;line-height:1.9;margin:0">
+          图标码使用和风天气风格：晴=100/101、多云=101/103、阴=104、小雨=300/305、中雨=306、大雨=307、雷阵雨=302、小雪=400、雾=500 等。<br>
+          保存后前台天气卡片 / 页头胶囊 / 留言页天气标签立即生效（页面刷新后）。
+        </p>
+      </div>`;
+  } catch (e) { box.innerHTML = '<div class="empty">' + esc(e.message) + '</div>'; }
+}
+function collectWeather(id) {
+  const o = {};
+  W_FIELDS.forEach(([k]) => o[k] = $('#w' + id + '_' + k).value.trim());
+  o.city = $('#w' + id + 'City').value.trim();
+  return o;
+}
+async function saveWeatherConfig() {
+  try {
+    await api('/admin/api/weather-config/save', { method: 'POST', body: JSON.stringify({
+      city1: collectWeather('1'), city2: collectWeather('2'), ip: collectWeather('ip')
+    }) });
+    toast('天气设置已保存，刷新前台生效');
+  } catch (e) { toast(e.message, false); }
+}
+
+// ============ 聊天记录管理 ============
+async function renderChat() {
+  const box = $('#viewBox');
+  box.innerHTML = '<div class="empty">加载中…</div>';
+  try {
+    const d = await api('/admin/api/chat-data');
+    const c = d.data || { settings: {}, dialogues: [] };
+    const st = c.settings || {};
+    const av = st.avatars || {}, co = st.colors || {};
+    const cm = co.male || { bg: '#007aff', text: '#ffffff' }, cf = co.female || { bg: '#ffffff', text: '#1d1d1f' };
+    const rows = (c.dialogues || []).map((dg, i) => `<tr>
+      <td>${i}</td>
+      <td><span class="badge" style="background:${dg.role === 'male' ? '#e8f0ff' : dg.role === 'female' ? '#ffe8ef' : '#eee'}">${esc(dg.role || 'notice')}</span></td>
+      <td><span class="badge badge-lv">${esc(dg.type || 'text')}</span></td>
+      <td style="max-width:320px">${esc((dg.content || '').slice(0, 60))}</td>
+      <td style="white-space:nowrap">
+        <button class="btn btn-g btn-sm" onclick="editChat(${i})">编辑</button>
+        <button class="btn btn-r btn-sm" onclick="delChat(${i})">删除</button>
+      </td></tr>`).join('');
+    box.innerHTML = `<div class="card"><h3 class="card-title">对话设置</h3>
+      <div class="form-row">
+        <div class="fg"><label>对话名称</label><input id="chName" value="${esc(st.dialogueName || '')}"></div>
+        <div class="fg"><label>结尾语</label><input id="chEnd" value="${esc(st.endingText || '')}"></div>
+        <div class="fg"><label>男方头像</label><input id="chAvM" value="${esc(av.male || '')}"></div>
+        <div class="fg"><label>女方头像</label><input id="chAvF" value="${esc(av.female || '')}"></div>
+      </div>
+      <div class="form-row">
+        <div class="fg"><label>男方气泡色</label><input id="chBgM" value="${esc(cm.bg || '#007aff')}"></div>
+        <div class="fg"><label>男方文字色</label><input id="chTxtM" value="${esc(cm.text || '#ffffff')}"></div>
+        <div class="fg"><label>女方气泡色</label><input id="chBgF" value="${esc(cf.bg || '#ffffff')}"></div>
+        <div class="fg"><label>女方文字色</label><input id="chTxtF" value="${esc(cf.text || '#1d1d1f')}"></div>
+      </div>
+      <label style="font-size:13px;color:#555"><input type="checkbox" id="chSwap" ${st.swapViewpoint ? 'checked' : ''}> 交换视角</label>
+      <div style="margin-top:12px"><button class="btn btn-p" onclick="saveChatSettings()">保存设置</button></div>
+    </div>
+    <div class="card"><h3 class="card-title">对话列表（${(c.dialogues || []).length} 条）</h3>
+      <div id="chList">${rows ? `<table class="tbl"><tr><th>#</th><th>角色</th><th>类型</th><th>内容</th><th style="width:120px">操作</th></tr>${rows}</table>` : '<div class="empty">暂无对话，前端将显示演示对话</div>'}</div>
+      <div class="form-row" style="margin-top:14px">
+        <div class="fg"><label>新增内容</label><input id="chNewContent" placeholder="对话内容"></div>
+        <div class="fg" style="max-width:130px"><label>角色</label><select id="chNewRole"><option value="male">男方</option><option value="female">女方</option><option value="notice">系统通知</option></select></div>
+        <div class="fg" style="max-width:130px"><label>类型</label><select id="chNewType"><option value="text">文本</option><option value="image">图片</option><option value="video">视频</option><option value="audio">语音</option></select></div>
+        <div class="fg"><button class="btn btn-p" style="margin-top:22px" onclick="addChat()">追加</button></div>
+      </div>
+    </div>`;
+  } catch (e) { box.innerHTML = '<div class="empty">' + esc(e.message) + '</div>'; }
+}
+async function saveChatSettings() {
+  try {
+    await api('/admin/api/chat-data/save', { method: 'POST', body: JSON.stringify({ settings: {
+      dialogueName: $('#chName').value.trim(), endingText: $('#chEnd').value.trim(), swapViewpoint: $('#chSwap').checked,
+      avatars: { male: $('#chAvM').value.trim(), female: $('#chAvF').value.trim() },
+      colors: { male: { bg: $('#chBgM').value, text: $('#chTxtM').value }, female: { bg: $('#chBgF').value, text: $('#chTxtF').value } }
+    } }) });
+    toast('设置已保存');
+  } catch (e) { toast(e.message, false); }
+}
+async function addChat() {
+  const content = $('#chNewContent').value.trim();
+  if (!content) { toast('内容不能为空', false); return; }
+  try {
+    await api('/admin/api/chat-data/save', { method: 'POST', body: JSON.stringify({ action: 'add', dialogue: { role: $('#chNewRole').value, type: $('#chNewType').value, content } }) });
+    toast('已追加'); renderChat();
+  } catch (e) { toast(e.message, false); }
+}
+async function delChat(i) {
+  if (!confirm('删除第 ' + i + ' 条对话？')) return;
+  try { await api('/admin/api/chat-data/save', { method: 'POST', body: JSON.stringify({ action: 'delete', index: i }) }); toast('已删除'); renderChat(); }
+  catch (e) { toast(e.message, false); }
+}
+function editChat(i) {
+  const v = $('#viewBox');
+  const c = prompt('编辑对话内容与角色\n格式：角色:类型:内容\n(角色 male/female/notice，类型 text/image/video/audio)', '');
+  if (c === null) return;
+  const parts = c.split(':');
+  const dialogue = { role: parts[0] || 'male', type: (parts[1] || 'text').trim() || 'text', content: (parts.slice(2).join(':') || parts[0]).trim() };
+  api('/admin/api/chat-data/save', { method: 'POST', body: JSON.stringify({ action: 'update', index: i, dialogue }) })
+    .then(() => { toast('已更新'); renderChat(); })
+    .catch(e => toast(e.message, false));
+}
+
+// ============ 照片管理 ============
+async function renderPhotos() {
+  const box = $('#viewBox');
+  box.innerHTML = '<div class="empty">加载中…</div>';
+  try {
+    const d = await api('/admin/api/photos');
+    const rows = (d.data || []).map(p => `<tr data-url="${esc(p.photo_url)}" onclick="pickPhoto(this)" style="cursor:pointer">
+      <td><img src="${esc(p.photo_thumb)}" style="width:44px;height:44px;object-fit:cover;border-radius:8px" onerror="this.style.visibility='hidden'"></td>
+      <td style="font-size:12px">${esc(p.photo_url)}</td>
+      <td style="font-size:12px">${esc(p.photo_date || '')}</td>
+      <td>${esc(p.photo_text || '')}</td>
+      <td>${esc(p.photo_byname || '')}</td>
+      <td>${esc(p.photo_location || '')}</td>
+      <td>${p.photo_type ? '🎬' : '🖼'}</td>
+    </tr>`).join('');
+    box.innerHTML = `<div class="card"><h3 class="card-title">照片编辑</h3>
+      <div class="form-row">
+        <div class="fg"><label>照片地址</label><input id="phUrl" readonly placeholder="点击下方照片自动填充"></div>
+        <div class="fg"><label>标题</label><input id="phText"></div>
+        <div class="fg"><label>作者昵称</label><input id="phBy"></div>
+        <div class="fg"><label>性别</label><select id="phGender"><option value="female">女</option><option value="male">男</option></select></div>
+      </div>
+      <div class="form-row">
+        <div class="fg"><label>位置名称</label><input id="phLoc"></div>
+        <div class="fg"><label>经度 lng</label><input id="phLng" placeholder="0=未定位"></div>
+        <div class="fg"><label>纬度 lat</label><input id="phLat" placeholder="0=未定位"></div>
+        <div class="fg"><label>头像 URL</label><input id="phAv"></div>
+      </div>
+      <label style="font-size:13px;color:#555"><input type="checkbox" id="phVideo"> 标记为视频</label>
+      <div style="margin-top:12px"><button class="btn btn-p" onclick="savePhoto()">保存照片信息</button></div>
+    </div>
+    <div class="card"><h3 class="card-title">照片列表（${d.total} 张）</h3><div style="max-height:460px;overflow:auto">${rows ? `<table class="tbl"><tr><th></th><th>文件</th><th>日期</th><th>标题</th><th>作者</th><th>位置</th><th>类型</th></tr>${rows}</table>` : '<div class="empty">Lovefolder 目录为空</div>'}</div></div>`;
+  } catch (e) { box.innerHTML = '<div class="empty">' + esc(e.message) + '</div>'; }
+}
+function pickPhoto(tr) {
+  const url = tr.getAttribute('data-url');
+  $('#phUrl').value = url;
+}
+async function savePhoto() {
+  const url = $('#phUrl').value.trim();
+  if (!url) { toast('请先点击选择一张照片', false); return; }
+  try {
+    await api('/admin/api/photo/save', { method: 'POST', body: JSON.stringify({
+      url, photo_text: $('#phText').value.trim(), photo_byname: $('#phBy').value.trim(),
+      photo_location: $('#phLoc').value.trim(), photo_lng: $('#phLng').value, photo_lat: $('#phLat').value,
+      up_avatar: $('#phAv').value.trim(), up_gender: $('#phGender').value, photo_type: $('#phVideo').checked ? 1 : 0
+    }) });
+    toast('已保存'); renderPhotos();
+  } catch (e) { toast(e.message, false); }
+}
+
+// ============ 互动统计 ============
+async function renderInteractions() {
+  const box = $('#viewBox');
+  box.innerHTML = '<div class="empty">加载中…</div>';
+  try {
+    const d = await api('/admin/api/interactions');
+    const rows = (d.data || []).map(x => `<tr><td>${esc(x.key)}</td><td>${x.like_count}</td><td>${x.view_count}</td><td>${x.likers}</td></tr>`).join('');
+    box.innerHTML = `<div class="card"><h3 class="card-title">互动数据（点赞 / 浏览 / 访客）</h3>
+      ${rows ? `<table class="tbl"><tr><th>目标 target_type:target_id</th><th>点赞数</th><th>浏览量</th><th>点赞访客</th></tr>${rows}</table>` : '<div class="empty">暂无互动数据</div>'}
+      <p style="font-size:12.5px;color:#999;margin:12px 0 0">留言/文章/相册的点赞与浏览量在此持久化记录。</p>
+    </div>`;
+  } catch (e) { box.innerHTML = '<div class="empty">' + esc(e.message) + '</div>'; }
+}
+
+// ============ 访问统计 ============
+async function renderBeacons() {
+  const box = $('#viewBox');
+  box.innerHTML = '<div class="empty">加载中…</div>';
+  try {
+    const d = await api('/admin/api/beacons');
+    const pageHtml = Object.entries(d.byPage || {}).map(([p, n]) => `<div class="stat"><div class="num">${n}</div><div class="lbl">${esc(p)}</div></div>`).join('');
+    const dayHtml = Object.entries(d.byDay || {}).sort().map(([p, n]) => `<div class="stat"><div class="num">${n}</div><div class="lbl">${esc(p)}</div></div>`).join('');
+    const recRows = (d.records || []).map(r => `<tr><td style="font-size:12px">${esc(r.t || '')}</td><td>${esc(r.page || '/')}</td><td>${r.stay_seconds}s</td><td style="font-size:12px">${esc(r.ip || '')}</td></tr>`).join('');
+    box.innerHTML = `<div class="stats">
+        <div class="stat"><div class="num">${d.total}</div><div class="lbl">访问信标总数</div></div>
+        <div class="stat"><div class="num">${Object.keys(d.byDay || {}).length}</div><div class="lbl">活跃天数</div></div>
+      </div>
+      <div class="card" style="margin-top:18px"><h3 class="card-title">按页面</h3><div class="stats">${pageHtml || '<div class="empty">暂无数据</div>'}</div></div>
+      <div class="card"><h3 class="card-title">按日期</h3><div class="stats">${dayHtml || '<div class="empty">暂无数据</div>'}</div></div>
+      <div class="card"><h3 class="card-title">最近记录</h3>
+        ${recRows ? `<table class="tbl"><tr><th>时间</th><th>页面</th><th>停留</th><th>IP</th></tr>${recRows}</table>` : '<div class="empty">暂无记录</div>'}
+        <div style="margin-top:14px"><button class="btn btn-r" onclick="clearBeacons()">清空统计</button></div>
+      </div>`;
+  } catch (e) { box.innerHTML = '<div class="empty">' + esc(e.message) + '</div>'; }
+}
+async function clearBeacons() {
+  if (!confirm('确定清空全部访问统计？')) return;
+  try { await api('/admin/api/beacons/clear', { method: 'POST' }); toast('已清空'); renderBeacons(); }
+  catch (e) { toast(e.message, false); }
+}
+
 // ============ 视图注册（必须在所有渲染函数定义之后） ============
 const VIEWS = {
   dashboard: ['仪表盘', renderDashboard],
   messages: ['留言管理', renderMessages],
   albums: ['相册管理', renderAlbums],
+  photos: ['照片管理', renderPhotos],
   moments: ['时光碎片', renderMoments],
   timeline: ['时间线', renderTimeline],
   lovelist: ['愿望清单', renderLovelist],
+  chat: ['聊天记录', renderChat],
+  mapconfig: ['高德地图', renderMapConfig],
+  weather: ['天气设置', renderWeather],
+  interactions: ['互动数据', renderInteractions],
+  beacons: ['访问统计', renderBeacons],
   config: ['站点设置', renderConfig],
   account: ['账号管理', renderAccount],
   logs: ['操作日志', renderLogs]

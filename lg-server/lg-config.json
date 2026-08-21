@@ -28,10 +28,14 @@
     },
     "bannedChars": "操屌",
     "endpoints": {
-      "mapApi": "/assets/map-api.php",
-      "weatherNow": "/services/weather.php",
-      "interaction": "/services/interaction.php",
-      "accessBeacon": "/services/access-beacon.php"
+      "mapApi": "assets/map-api.php",
+      "weatherNow": "services/weather.php",
+      "interaction": "services/interaction.php",
+      "accessBeacon": "services/access-beacon.php",
+      "weatherApi": "services/weather.php",
+      "messageList": "services/message-list.php",
+      "messageSubmit": "services/message.php",
+      "infoService": "services/info-service.php"
     },
     "userCity": "湖北 · 武汉",
     "anonymousAvatar": "https://love-really.kikiw.cn/Lovefolder/20250310095445_67ce466598093.webp"
@@ -65,10 +69,14 @@
     },
     "bannedChars": "操屌",
     "endpoints": {
-      "mapApi": "/assets/map-api.php",
-      "weatherNow": "/services/weather.php",
-      "interaction": "/services/interaction.php",
-      "accessBeacon": "/services/access-beacon.php"
+      "mapApi": "assets/map-api.php",
+      "weatherNow": "services/weather.php",
+      "interaction": "services/interaction.php",
+      "accessBeacon": "services/access-beacon.php",
+      "weatherApi": "services/weather.php",
+      "messageList": "services/message-list.php",
+      "messageSubmit": "services/message.php",
+      "infoService": "services/info-service.php"
     },
     "userCity": "湖北 · 武汉",
     "anonymousAvatar": "https://love-really.kikiw.cn/Lovefolder/20250310095445_67ce466598093.webp"

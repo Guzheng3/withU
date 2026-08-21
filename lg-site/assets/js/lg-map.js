@@ -132,8 +132,10 @@ const validateAmapConfig = () => {
         errors.push({ type: 'key_empty', message: 'API Key 未配置' });
     }
 
-    // 检测安全密钥
-    if (!securityConfig.securityJsCode || securityConfig.securityJsCode.trim() === '') {
+    // 检测安全配置：securityJsCode（安全密钥）或 serviceHost（代理服务模式）任一即可
+    const hasSecurity = !!(securityConfig.securityJsCode && securityConfig.securityJsCode.trim() !== '') ||
+        !!securityConfig.serviceHost;
+    if (!hasSecurity) {
         errors.push({ type: 'security_empty', message: '安全密钥未配置' });
     }
 

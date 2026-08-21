@@ -1,0 +1,7 @@
+{
+  "cities": {
+    "1": { "name": "男方城市", "city": "湖北 · 武汉", "temp": "28", "desc": "多云", "icon": "101", "humidity": "60", "vis": "20", "feelsLike": "29", "windDir": "东南风", "windScale": "2" },
+    "2": { "name": "女方城市", "city": "广东 · 茂名", "temp": "30", "desc": "晴", "icon": "100", "humidity": "72", "vis": "25", "feelsLike": "33", "windDir": "东南风", "windScale": "3" }
+  },
+  "ip": { "name": "访客", "city": "湖北 · 武汉", "temp": "28", "desc": "多云", "icon": "101", "humidity": "60", "vis": "20", "feelsLike": "29", "windDir": "东南风", "windScale": "2", "geo": { "city": "湖北 · 武汉", "lat": 30.514, "lng": 114.413, "adcode": 420100 } }
+}

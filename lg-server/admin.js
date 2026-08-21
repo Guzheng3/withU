@@ -9,30 +9,25 @@ const crypto = require('crypto');
 const fs = require('fs');
 const path = require('path');
 
+const store = require('./store.js');
+
 const ROOT = path.join(__dirname, '..', 'lg-site');
 const DATA_DIR = path.join(__dirname, 'admin-data');
 const MAP_FILE = path.join(ROOT, 'services', 'map-all.json');
 const CONFIG_FILE = path.join(__dirname, 'lg-config.json');
 const USERS_FILE = path.join(DATA_DIR, 'users.json');
-const LOVELIST_FILE = path.join(DATA_DIR, 'lovelist.json');
 const OPLOG_FILE = path.join(DATA_DIR, 'oplog.jsonl');
 
 const SECRET = 'lg-local-admin-2026-secret';
 const md5 = s => crypto.createHash('md5').update(String(s)).digest('hex');
 const now = () => new Date().toLocaleString('zh-CN', { hour12: false });
 
-// ---------- 数据层 ----------
-function loadMap() {
-  try { return JSON.parse(fs.readFileSync(MAP_FILE, 'utf8')); }
-  catch (e) { return { lovers: [], loveStartDate: '2023-07-19 00:00:00', milestones: [], moments: [], messages: [], albums: [], events: [] }; }
-}
-function saveMap(m) { fs.mkdirSync(path.dirname(MAP_FILE), { recursive: true }); fs.writeFileSync(MAP_FILE, JSON.stringify(m, null, 2), 'utf8'); }
+// ---------- 数据层（统一走 store.js） ----------
+function loadMap() { return store.loadMapAll(); }
+function saveMap(m) { return store.saveMapAll(m); }
 
-function loadConfig() {
-  try { return JSON.parse(fs.readFileSync(CONFIG_FILE, 'utf8')); }
-  catch (e) { return {}; }
-}
-function saveConfig(c) { fs.writeFileSync(CONFIG_FILE, JSON.stringify(c, null, 2), 'utf8'); }
+function loadConfig() { return store.loadLgConfig(); }
+function saveConfig(c) { return store.saveLgConfig(c); }
 
 function loadUsers() {
   try { return JSON.parse(fs.readFileSync(USERS_FILE, 'utf8')); }
@@ -40,20 +35,12 @@ function loadUsers() {
 }
 function saveUsers(u) { fs.mkdirSync(DATA_DIR, { recursive: true }); fs.writeFileSync(USERS_FILE, JSON.stringify(u, null, 2), 'utf8'); }
 
-function loadLovelist() {
-  try { return JSON.parse(fs.readFileSync(LOVELIST_FILE, 'utf8')); }
-  catch (e) {
-    return [
-      { id: 6, icon: 1, title: '一起看海边的日落', finish_date: '2024-10-03', city: '广东 · 深圳', remark: '橘子汽水味的傍晚', lng: 114.541, lat: 22.542, imgurl: [] },
-      { id: 5, icon: 1, title: '吃遍大学城小吃街', finish_date: '2024-08-21', city: '湖北 · 武汉', remark: '三鲜豆皮最好吃', lng: 114.413, lat: 30.514, imgurl: [] },
-      { id: 4, icon: 1, title: '一起过第一个新年', finish_date: '2024-02-10', city: '广东 · 珠海', remark: '烟花和你都在', lng: 113.576, lat: 22.270, imgurl: [] },
-      { id: 3, icon: 0, title: '去冰岛看极光', finish_date: '', city: '冰岛 · 雷克雅未克', remark: '攒钱计划进行中', lng: -21.942, lat: 64.146, imgurl: [] },
-      { id: 2, icon: 0, title: '养一只叫奶糖的猫', finish_date: '', city: '我们的家', remark: '', lng: 0, lat: 0, imgurl: [] },
-      { id: 1, icon: 0, title: '拍一套复古婚纱照', finish_date: '', city: '待定', remark: '胶片感', lng: 0, lat: 0, imgurl: [] }
-    ];
-  }
-}
-function saveLovelist(list) { fs.mkdirSync(DATA_DIR, { recursive: true }); fs.writeFileSync(LOVELIST_FILE, JSON.stringify(list, null, 2), 'utf8'); }
+function loadLovelist() { return store.loadLovelist(); }
+function saveLovelist(list) { return store.saveLovelist(list); }
+
+function listPhotos() { return store.listPhotos(); }
+function loadPhotosMeta() { return store.loadPhotosMeta(); }
+function savePhotosMeta(m) { return store.savePhotosMeta(m); }
 
 function logOp(user, action, detail) {
   fs.mkdirSync(DATA_DIR, { recursive: true });
@@ -135,6 +122,10 @@ function apiRouter(req, res, body, urlPath, q) {
   // ---- 仪表盘 ----
   if (urlPath === '/admin/api/dashboard' && req.method === 'GET') {
     const m = loadMap();
+    const ints = store.loadInteractions();
+    const bc = store.loadBeacons();
+    const cd = store.loadChatData();
+    const mc = store.loadMapConfig();
     return json(res, 200, {
       ok: true,
       stats: {
@@ -145,7 +136,12 @@ function apiRouter(req, res, body, urlPath, q) {
         articles: (m.events || []).length,
         events: (m.events || []).length,
         milestones: (m.milestones || []).length,
-        lovelist: loadLovelist().length
+        lovelist: loadLovelist().length,
+        chat: (cd && cd.dialogues) ? cd.dialogues.length : 0,
+        likes: Object.values(ints.stats || {}).reduce((s, x) => s + (x.like_count || 0), 0),
+        views: Object.values(ints.stats || {}).reduce((s, x) => s + (x.view_count || 0), 0),
+        beacons: (bc.records || []).length,
+        amapKey: !!(mc.amapKey)
       },
       config: { title: (loadConfig().LG_CONFIG || {}).title || '', version: (loadConfig().LG_CONFIG || {}).version || '' },
       ops: readOps(12)
@@ -338,6 +334,139 @@ function apiRouter(req, res, body, urlPath, q) {
     if (p.soloMode !== undefined) c.soloMode = !!p.soloMode;
     saveConfig(full);
     logOp(user.user, '修改站点设置', 'title=' + (p.title || ''));
+    return json(res, 200, { ok: true });
+  }
+
+  // ---- 地图设置（高德 Key / 安全模式 / 情侣位置） ----
+  if (urlPath === '/admin/api/map-config' && req.method === 'GET') {
+    const mc = store.loadMapConfig();
+    const m = loadMap();
+    return json(res, 200, { ok: true, config: {
+      amapKey: mc.amapKey || '',
+      securityMode: mc.securityMode || 'proxy',
+      securityJsCode: mc.securityJsCode || '',
+      mapStyle: mc.mapStyle || 'amap://styles/normal',
+      lovers: (mc.lovers && mc.lovers.length >= 2) ? mc.lovers : (m.lovers || [])
+    } });
+  }
+  if (urlPath === '/admin/api/map-config/save' && req.method === 'POST') {
+    let p = {}; try { p = JSON.parse(body || '{}'); } catch (e) { return json(res, 400, { ok: false, msg: '参数错误' }); }
+    const mc = store.loadMapConfig();
+    ['amapKey', 'securityMode', 'securityJsCode', 'mapStyle'].forEach(k => { if (p[k] !== undefined) mc[k] = p[k]; });
+    if (Array.isArray(p.lovers) && p.lovers.length >= 2) {
+      mc.lovers = p.lovers.slice(0, 2).map(l => ({
+        name: l.name || '', label: l.label || '', role: l.role || '',
+        coords: (Array.isArray(l.coords) && l.coords.length === 2) ? l.coords.map(Number) : [0, 0],
+        avatar: l.avatar || ''
+      }));
+    }
+    store.saveMapConfig(mc);
+    logOp(user.user, '修改地图设置', 'amapKey=' + (mc.amapKey ? mc.amapKey.slice(0, 8) + '…' : ''));
+    return json(res, 200, { ok: true });
+  }
+
+  // ---- 天气设置 ----
+  if (urlPath === '/admin/api/weather-config' && req.method === 'GET') {
+    const wc = store.loadWeatherConfig();
+    return json(res, 200, { ok: true, config: wc });
+  }
+  if (urlPath === '/admin/api/weather-config/save' && req.method === 'POST') {
+    let p = {}; try { p = JSON.parse(body || '{}'); } catch (e) { return json(res, 400, { ok: false, msg: '参数错误' }); }
+    const wc = store.loadWeatherConfig();
+    wc.cities = wc.cities || {};
+    wc.ip = wc.ip || {};
+    const pick = (src, def) => {
+      const out = Object.assign({}, def);
+      ['temp', 'desc', 'icon', 'humidity', 'vis', 'feelsLike', 'windDir', 'windScale'].forEach(k => { if (src[k] !== undefined) out[k] = String(src[k]); });
+      if (src.name !== undefined) out.name = String(src.name);
+      if (src.city !== undefined) out.city = String(src.city);
+      return out;
+    };
+    const def = { name: '', city: '', temp: '--', desc: '暂无数据', icon: '999', humidity: '--', vis: '--', feelsLike: '--', windDir: '', windScale: '' };
+    wc.cities['1'] = pick(p.city1 || {}, Object.assign({}, def, { name: 'Ta 的城市', city: '湖北 · 武汉' }));
+    wc.cities['2'] = pick(p.city2 || {}, Object.assign({}, def, { name: '我的城市', city: '广东 · 茂名' }));
+    wc.ip = pick(p.ip || {}, Object.assign({}, def, { name: '访客', city: '湖北 · 武汉' }));
+    if (p.ip && p.ip.geo) wc.ip.geo = p.ip.geo;
+    store.saveWeatherConfig(wc);
+    logOp(user.user, '修改天气设置', '');
+    return json(res, 200, { ok: true });
+  }
+
+  // ---- 聊天数据 ----
+  if (urlPath === '/admin/api/chat-data' && req.method === 'GET') {
+    const cd = store.loadChatData();
+    return json(res, 200, { ok: true, data: cd || { settings: {}, dialogues: [] } });
+  }
+  if (urlPath === '/admin/api/chat-data/save' && req.method === 'POST') {
+    let p = {}; try { p = JSON.parse(body || '{}'); } catch (e) { return json(res, 400, { ok: false, msg: '参数错误' }); }
+    const cd = store.loadChatData() || { settings: {}, dialogues: [] };
+    if (p.settings) {
+      cd.settings = Object.assign(cd.settings || {}, p.settings);
+      if (p.settings.avatars) cd.settings.avatars = Object.assign({}, cd.settings.avatars, p.settings.avatars);
+      if (p.settings.colors) cd.settings.colors = Object.assign({}, cd.settings.colors, p.settings.colors);
+    }
+    if (Array.isArray(p.dialogues)) cd.dialogues = p.dialogues;
+    if (p.action === 'add' && p.dialogue) {
+      cd.dialogues.push(p.dialogue);
+    } else if (p.action === 'update' && p.index !== undefined) {
+      if (cd.dialogues[p.index]) cd.dialogues[p.index] = Object.assign({}, cd.dialogues[p.index], p.dialogue);
+    } else if (p.action === 'delete' && p.index !== undefined) {
+      cd.dialogues.splice(p.index, 1);
+    }
+    store.saveChatData(cd);
+    logOp(user.user, '修改聊天数据', 'dialogues=' + (cd.dialogues || []).length);
+    return json(res, 200, { ok: true });
+  }
+
+  // ---- 照片管理 ----
+  if (urlPath === '/admin/api/photos' && req.method === 'GET') {
+    const photos = listPhotos();
+    const meta = loadPhotosMeta();
+    const out = photos.map(ph => Object.assign({}, ph, meta[ph.photo_url] || {}));
+    return json(res, 200, { ok: true, data: out, total: out.length });
+  }
+  if (urlPath === '/admin/api/photo/save' && req.method === 'POST') {
+    let p = {}; try { p = JSON.parse(body || '{}'); } catch (e) { return json(res, 400, { ok: false, msg: '参数错误' }); }
+    if (!p.url) return json(res, 400, { ok: false, msg: '缺少照片地址' });
+    const meta = loadPhotosMeta();
+    meta[p.url] = {
+      photo_text: p.photo_text || '', photo_byname: p.photo_byname || '',
+      photo_location: p.photo_location || '', photo_lng: p.photo_lng ? Number(p.photo_lng) : 0, photo_lat: p.photo_lat ? Number(p.photo_lat) : 0,
+      up_avatar: p.up_avatar || '', up_gender: p.up_gender || 'female',
+      photo_type: p.photo_type ? 1 : 0, video_url: p.video_url || ''
+    };
+    savePhotosMeta(meta);
+    logOp(user.user, '编辑照片', p.url);
+    return json(res, 200, { ok: true });
+  }
+
+  // ---- 互动统计（点赞/浏览量） ----
+  if (urlPath === '/admin/api/interactions' && req.method === 'GET') {
+    const ints = store.loadInteractions();
+    const rows = Object.keys(ints.stats || {}).map(k => {
+      const i = k.lastIndexOf(':');
+      return { target_type: k.slice(0, i), target_id: k.slice(i + 1), key: k, like_count: ints.stats[k].like_count || 0, view_count: ints.stats[k].view_count || 0, likers: (ints.likers[k] || []).length };
+    }).sort((a, b) => (b.like_count + b.view_count) - (a.like_count + a.view_count));
+    return json(res, 200, { ok: true, data: rows, total: rows.length });
+  }
+
+  // ---- 访问信标统计 ----
+  if (urlPath === '/admin/api/beacons' && req.method === 'GET') {
+    const bc = store.loadBeacons();
+    const recs = bc.records || [];
+    const byPage = {};
+    const byDay = {};
+    recs.forEach(r => {
+      const pg = r.page || '/';
+      byPage[pg] = (byPage[pg] || 0) + 1;
+      const day = String(r.t || '').slice(0, 10);
+      if (day) byDay[day] = (byDay[day] || 0) + 1;
+    });
+    return json(res, 200, { ok: true, total: recs.length, records: recs.slice(-200).reverse(), byPage, byDay });
+  }
+  if (urlPath === '/admin/api/beacons/clear' && req.method === 'POST') {
+    store.saveBeacons({ records: [] });
+    logOp(user.user, '清空访问统计', '');
     return json(res, 200, { ok: true });
   }
 

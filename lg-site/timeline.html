@@ -43,9 +43,6 @@
 <link rel="stylesheet" href="Style/css/list.css">
 <link rel="stylesheet" href="Style/Font/font_list/iconfont.css">
 <link rel="stylesheet" href="Style/toastify/toastify.min.css">
-<!-- APlayer 音乐播放器样式 -->
-<link rel="stylesheet" href="Style/css/APlayer.min.css">
-<link rel="stylesheet" href="Style/css/aplayer.css">
 <link rel="stylesheet" href="Style/css/loadinglike.css">
 <!-- AOS 本地化 -->
 <link rel="stylesheet" href="Style/vendor/aos/aos.css">
@@ -1674,7 +1671,6 @@
         to { opacity: 1; transform: translateY(0); }
     }
 
-
     /* 吸附时显示 - 通过JS添加类控制 - 灵动岛弹出效果 */
     .lgnewui-header-left-avatar.lgnewui-avatar-visible,
     .lgnewui-header-actions.lgnewui-actions-visible {
@@ -3185,7 +3181,6 @@
                 <span class="lg-header-more-action-label">足迹地图</span>
             </a>
 
-
                         <a href="https://1314-671f8e88838cb484.monkeycode-ai.online/login.php" class="lg-header-more-action-item">
                 <span class="lg-header-more-action-icon">
                     <i class="ph-fill ph-user"></i>
@@ -3857,197 +3852,7 @@ window.TIMELINE_AUTHORS['female'] = window.TIMELINE_AUTHORS[2];
 <script src="assets/js/lg-interaction.js"></script>
 <script src="assets/js/lg-context-menu.js"></script>
 
-<!-- ============ 音乐播放器 (pjax 外，不随页面刷新) ============ -->
-<script src="Style/js/APlayer.min.js"></script>
-<script src="Style/js/color-thief.min.js"></script>
-<script src="Style/js/meting.js"></script>
-
-<div id="nav-music">
-    <div id="nav-music-hoverTips" onclick="lg_love.musicToggle()">
-        <svg viewBox="0 0 1024 1024" class="lgnewui-nav-music-play-icon" aria-hidden="true">
-            <path d="M324.085 95.787l500.422 300.664c82.373 50.453 79.284 136.946-1.03 186.37v0l-506.6 304.784c-41.187 23.683-87.522 37.068-131.798 9.267-36.037-22.653-46.335-58.691-46.335-97.819v-616.774c0-39.127 13.386-75.166 48.395-97.819 45.305-27.801 94.731-14.416 136.946 11.327v0z" fill="#ffffff" />
-        </svg>
-    </div>
-
-        <!-- 本地音乐模式 -->
-    <meting-js api="services/music-player-data.json" server="local" type="song" id="0"
-        mutex="true" preload="none" data-lrctype="3"
-        volume="1" order="list"
-        loop="all" data-expand="true">
-    </meting-js>
-    
-    <div id="nav-music-progress">
-        <div class="lgnewui-nav-music-progress-loaded"></div>
-        <div class="lgnewui-nav-music-progress-played"></div>
-        <div class="lgnewui-nav-music-progress-thumb"></div>
-        <div class="lgnewui-nav-music-progress-loading">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <circle cx="12" cy="12" r="10" stroke-dasharray="31.4" stroke-dashoffset="10" />
-            </svg>
-        </div>
-    </div>
-
-    <div class="lgnewui-nav-music-controls">
-        <button class="lgnewui-nav-music-btn lgnewui-nav-music-btn-back" type="button" onclick="lg_love.musicSkipBack()" aria-label="上一首">
-            <svg viewBox="0 0 24 24" class="lgnewui-nav-music-icon" aria-hidden="true"><path d="M6 5v14" /><path d="M18 5L10 12l8 7" /></svg>
-        </button>
-        <button class="lgnewui-nav-music-btn lgnewui-nav-music-btn-toggle" type="button" onclick="lg_love.musicToggle()" aria-label="播放或暂停">
-            <svg viewBox="0 0 24 24" class="lgnewui-nav-music-icon lgnewui-nav-music-icon-play" aria-hidden="true"><path d="M8 5v14l9-7z" /></svg>
-            <svg viewBox="0 0 24 24" class="lgnewui-nav-music-icon lgnewui-nav-music-icon-pause" aria-hidden="true"><path d="M9 6v12" /><path d="M15 6v12" /></svg>
-        </button>
-        <button class="lgnewui-nav-music-btn lgnewui-nav-music-btn-forward" type="button" onclick="lg_love.musicSkipForward()" aria-label="下一首">
-            <svg viewBox="0 0 24 24" class="lgnewui-nav-music-icon" aria-hidden="true"><path d="M18 5v14" /><path d="M6 5l8 7-8 7" /></svg>
-        </button>
-    </div>
-</div>
-
-<!-- 音乐列表面板 -->
-<div class="lgnewui-music-playlist-panel" id="musicPlaylist">
-    <div class="lgnewui-music-playlist-header">
-        <div class="lgnewui-music-playlist-title">
-            <svg viewBox="0 0 24 24" width="16" height="16" xmlns="http://www.w3.org/2000/svg">
-                <circle cx="12" cy="12" r="10" fill="currentColor" opacity="0.2" />
-                <circle cx="12" cy="12" r="4" fill="currentColor" />
-                <circle cx="12" cy="12" r="1" fill="rgba(255,255,255,0.8)" />
-            </svg>
-            <span>播放列表</span>
-            <span class="lgnewui-music-playlist-count" id="playlistCount"></span>
-        </div>
-        <div class="lgnewui-music-playlist-header-right">
-            <div class="lgnewui-music-playlist-mode" id="playlistMode" title="播放模式">
-                <svg class="mode-icon mode-random" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 3h5v5M4 20L21 3M21 16v5h-5M15 15l6 6M4 4l5 5" /></svg>
-                <svg class="mode-icon mode-loop" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display:none"><path d="M17 2l4 4-4 4M3 11V9a4 4 0 014-4h14M7 22l-4-4 4-4M21 13v2a4 4 0 01-4 4H3" /></svg>
-                <svg class="mode-icon mode-single" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:none"><path d="M17 2l4 4-4 4" /><path d="M3 11V9a4 4 0 014-4h14" /><path d="M7 22l-4-4 4-4" /><path d="M21 13v2a4 4 0 01-4 4H3" /><path d="M12 10v4" /></svg>
-            </div>
-            <button class="lgnewui-music-playlist-close" id="playlistLocate" aria-label="定位当前" title="定位当前播放" style="margin-left:8px;">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="16"></line><line x1="8" y1="12" x2="16" y2="12"></line></svg>
-            </button>
-            <button class="lgnewui-music-playlist-close" id="playlistReset" aria-label="重置列表" title="重置播放列表" style="margin-left:4px;">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M3 12a9 9 0 0 1 9-9 9.75 9.75 0 0 1 6.74 2.74L21 8"></path><path d="M21 3v5h-5"></path><path d="M21 12a9 9 0 0 1-9 9 9.75 9.75 0 0 1-6.74-2.74L3 16"></path><path d="M8 16H3v5"></path></svg>
-            </button>
-        </div>
-    </div>
-    <div class="lgnewui-music-playlist-content" id="playlistContent">
-        <div class="lgnewui-music-playlist-empty">
-            <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 3v10.55c-.59-.34-1.27-.55-2-.55-2.21 0-4 1.79-4 4s1.79 4 4 4 4-1.79 4-4V7h4V3h-6z" /></svg>
-            <div>暂无音乐</div>
-        </div>
-    </div>
-    <div class="lgnewui-music-playlist-volume">
-        <div class="lgnewui-music-volume-value" id="volumeValue">50%</div>
-        <div class="lgnewui-music-volume-segment-track" id="volumeTrack"></div>
-        <button class="lgnewui-music-volume-icon-wrap" id="volumeBtn">
-            <svg class="lgnewui-music-volume-icon-svg" viewBox="0 0 24 24">
-                <g class="lgnewui-music-volume-icon-path lgnewui-path-mute"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon><line x1="23" y1="9" x2="17" y2="15"></line><line x1="17" y1="9" x2="23" y2="15"></line></g>
-                <g class="lgnewui-music-volume-icon-path lgnewui-path-low"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon></g>
-                <g class="lgnewui-music-volume-icon-path lgnewui-path-med"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon><path d="M15.54 8.46a5 5 0 0 1 0 7.07"></path></g>
-                <g class="lgnewui-music-volume-icon-path lgnewui-path-high"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon><path d="M15.54 8.46a5 5 0 0 1 0 7.07"></path><path d="M19.07 4.93a10 10 0 0 1 0 14.14"></path></g>
-            </svg>
-        </button>
-    </div>
-</div>
-
-<script src="assets/js/music-player.js"></script>
-
-<!-- 音乐播放确认弹窗 -->
-<div class="music-modal-overlay" id="musicModal">
-    <div class="music-modal">
-        <div class="music-modal-content">
-            <div class="music-modal-wave-box">
-                <div class="music-modal-wave-bar"></div>
-                <div class="music-modal-wave-bar"></div>
-                <div class="music-modal-wave-bar"></div>
-                <div class="music-modal-wave-bar"></div>
-                <div class="music-modal-wave-bar"></div>
-            </div>
-            <h3 class="music-modal-title">沉浸体验</h3>
-            <p class="music-modal-desc">为了获得最佳沉浸式体验，建议您开启背景音乐。您随时可以在设置中关闭。</p>
-            <div class="music-modal-hints">
-                <div class="music-hint-item">
-                    <div class="music-hint-icon-box">
-                        <svg class="music-hint-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="1"></circle><circle cx="12" cy="5" r="1"></circle><circle cx="12" cy="19" r="1"></circle><circle cx="5" cy="12" r="1"></circle><circle cx="19" cy="12" r="1"></circle><path d="M5 9l-3 3 3 3M9 5l3-3 3 3M19 9l3 3-3 3M9 19l3 3 3-3" /></svg>
-                    </div>
-                    <span class="music-hint-text">长按拖动</span>
-                </div>
-                <div class="music-hint-item">
-                    <div class="music-hint-icon-box">
-                        <svg class="music-hint-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v18" /><path d="M16 17l-4 4-4-4" /><path d="M16 7l-4-4-4 4" /></svg>
-                    </div>
-                    <span class="music-hint-text">歌名伸缩</span>
-                </div>
-                <div class="music-hint-item">
-                    <div class="music-hint-icon-box">
-                        <svg class="music-hint-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><line x1="9" y1="6" x2="20" y2="6"></line><line x1="9" y1="12" x2="20" y2="12"></line><line x1="9" y1="18" x2="20" y2="18"></line><circle cx="5" cy="6" r="1"></circle><circle cx="5" cy="12" r="1"></circle><circle cx="5" cy="18" r="1"></circle></svg>
-                    </div>
-                    <span class="music-hint-text">封面列表</span>
-                </div>
-            </div>
-            <div class="music-modal-dismiss-row">
-                <button type="button" id="musicModalDismiss" class="music-modal-dismiss-btn">
-                    <i class="ph ph-bell-slash" style="width:13px;height:13px;font-size:13px"></i>
-                    <span>下次不再提醒</span>
-                    <span class="music-modal-dismiss-tick">
-                        <i class="ph-bold ph-check" style="width:10px;height:10px;font-size:10px"></i>
-                    </span>
-                </button>
-            </div>
-            <div class="music-modal-buttons">
-                <button class="music-modal-btn music-modal-btn-cancel" id="musicModalCancel">暂不需要</button>
-                <button class="music-modal-btn music-modal-btn-confirm" id="musicModalConfirm">
-                    <svg viewBox="0 0 24 24" width="18" height="18" xmlns="http://www.w3.org/2000/svg"><path d="M7 4.5c0-1.2 1.3-1.9 2.3-1.2l9.5 6.5c.9.6.9 1.8 0 2.4l-9.5 6.5c-1 .7-2.3 0-2.3-1.2V4.5z" fill="currentColor" /></svg>
-                    立即播放
-                </button>
-            </div>
-        </div>
-    </div>
-</div>
 <script>
-// 音乐播放确认弹窗逻辑
-(function () {
-    var modal = document.getElementById('musicModal');
-    var confirmBtn = document.getElementById('musicModalConfirm');
-    var cancelBtn = document.getElementById('musicModalCancel');
-    var dismissBtn = document.getElementById('musicModalDismiss');
-    if (!modal || !confirmBtn || !cancelBtn) return;
-
-    // 如果用户之前开启了"不再提醒"，直接跳过
-    if (getMusicSetting('modalDismissed', false)) return;
-
-    var dismissed = false;
-    if (dismissBtn) {
-        dismissBtn.addEventListener('click', function () {
-            dismissed = !dismissed;
-            dismissBtn.classList.toggle('is-active', dismissed);
-        });
-    }
-
-    function showModalWhenReady() {
-        var meting = document.querySelector('#nav-music meting-js');
-        var ap = meting && meting.aplayer ? meting.aplayer : null;
-        if (!ap || !ap.list || !ap.list.audios || ap.list.audios.length === 0) {
-            setTimeout(showModalWhenReady, 500);
-            return;
-        }
-        setTimeout(function () { modal.classList.add('show'); }, 300);
-    }
-    showModalWhenReady();
-
-    confirmBtn.addEventListener('click', function () {
-        if (dismissed) saveMusicSetting('modalDismissed', true);
-        modal.classList.remove('show');
-        setTimeout(function () {
-            if (window.lg_love && typeof lg_love.musicToggle === 'function') {
-                lg_love.musicToggle();
-            }
-        }, 300);
-    });
-    cancelBtn.addEventListener('click', function () {
-        if (dismissed) saveMusicSetting('modalDismissed', true);
-        modal.classList.remove('show');
-    });
-})();
-</script>
-<!-- ============ /音乐播放器 ============ -->
 
 <!-- 足迹地图弹窗 -->
 <!-- ============ 足迹地图弹窗 ============ -->

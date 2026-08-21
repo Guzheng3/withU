@@ -59,3 +59,26 @@ Entries discovered by the Agent during task execution should follow this format:
   - withU 登录态依赖 withu_device 设备凭证 + PHPSESSID 两者（Auth::restoreTrustedDevice），单独 PHPSESSID 无效。
   - 登录态查询接口：withU /api/auth-status.php（GET，返回 {logged_in, user}，CORS 允许 *.monkeycode-ai.online 与回环，凭据透传）；lg-site 前端 assets/js/lg-auth-status.js 页面加载时 fetch 并按状态切换 #lgnewuiHeaderActions 内 a[data-entry="login"]（未登录显示）与 a[data-entry="admin"]（登录后显示）。
 
+
+[Project Knowledge Summary]
+- Date: 2026-08-20
+- Context: Discovered by Agent while 实现 lg-site 全部后端接口、后台管理、高德地图接入
+- Category: Operations & Deployment
+- Instructions:
+  - lg-server(8901) 已实现全部 services 接口真实持久化，单端口预览即完整站点：静态页 + /services/*、/assets/map-api.php、/admin 后台、/_AMapService 高德代理、动态配置注入（amapKey/securityJsCode/服务模式）。
+  - 数据文件集中在 lg-server/data/：map-config.json（高德 Key 与 securityMode=proxy，Key=39b478526482ffb6c069eee6f78faf77）、weather-config.json（后台手配城市1/2+ip）、chat-data.json、interactions.json、beacons.json；相册照片扫描 lg-site/Lovefolder/，元数据在 lg-server/admin-data/photos-meta.json。
+  - 高德采用「代理服务安全模式」（_AMapSecurityConfig={serviceHost:'/',serviceMode:'proxy'}），由服务端转发 /_AMapService/** 到 webapi.amap.com，无需 securityJsCode；10 个 HTML 页面的硬编码 amapKey/securityJsCode 由 server.js 正则替换注入。
+  - 后台登录：POST /admin/api/login（JSON body {adminName,pw}，pw 为明文由服务端 md5），cookie lg_admin；默认账号 admin/lovezz。
+  - 测试坑：store.js 的 load() 对 '@mapAll'/'@lgConfig' 特殊 key 必须经 ABS_MAP 映射到绝对路径，否则读到空数据；https.request headers 里 referer 不能设为 undefined（Node22 抛 ERR_HTTP_INVALID_HEADER_VALUE），应 delete。
+
+[Project Knowledge Summary]
+- Date: 2026-08-21
+- Context: Discovered by Agent while 实现首页观影按钮跳转 watch.php
+- Category: Environment Configuration
+- Instructions:
+  - withU 观影/影视后端在项目根（PHP 主站，跑在 1314，数据库 couple_website，含 media_library/watch_history/watch_rooms 等表）：watch.php（影视库页）、watch_play.php（播放页）、watch_history.php、api/watch.php（房间）、api/strm.php、api/media_cover.php。lg-site(8901) 不包含这些 PHP，lg-server 静态根是 lg-site/。
+  - lg-server/server.js 增加 PHP 主站代理 proxyToPhp()：lg-site 静态 404 且路径以 .php 结尾或 /api/ 开头时，转发到 http://127.0.0.1:1314（保留 method/query/body/cookie，删除响应 transfer-encoding/connection 头）。首页「观影」悬浮按钮 href="watch.php" 即经此代理可达。
+  - 代理 POST 关键坑：lg-server 的 createServer 在 req.on('end') 内统一处理，body 已收集进 body 变量，此时 req 流已结束，proxyToPhp 必须用收集的 body（preq.end(body) + 按字节重设 content-length），不能用 req.pipe(preq)——否则 PHP 收到 Content-Length 声明但 body 空，一直等 body 直到超时挂起。
+  - PHP 主站 login.php 登录需 CSRF：先 GET 取表单 name="_token" 值（存 PHPSESSID），POST 时带 _token。登录成功 302 /；未登录访问 watch.php 302 /login.php。
+  - 验证用测试账号 withu_test/123456 已写入 couple_website.users（role=user1）；真实账号 withu1/WithU@1314。
+  - 1314 端口前端已彻底移除：1314 现为反向代理（lg-server/reverse-proxy.js）→ 8901 lg-server，1314 域名直接显示 lg-site 完整前端（lg-site/index.html），首页即情侣空间入口；withU PHP 主站服务移到 127.0.0.1:8902（仅本机，外部不可直接访问），lg-server server.js 的 PHP_BACKEND=8902，lg-site 观影按钮（8901/watch.php 或 1314/watch.php）经代理→8902 PHP 保持可用。
