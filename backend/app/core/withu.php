@@ -68,123 +68,6 @@ if (!function_exists('withu_hash_token')) {
     function withu_hash_token(string $token): string { return hash('sha256', $token); }
 }
 
-if (!function_exists('withu_media_url')) {
-    function withu_media_url(array $media): string {
-        $direct = trim((string)($media['direct_url'] ?? ''));
-        if ($direct !== '') return $direct;
-        return trim((string)($media['source_url'] ?? ''));
-    }
-}
-
-if (!function_exists('withu_media_stream_url')) {
-    function withu_media_stream_url(array $media): string {
-        $source = (string)($media['source_url'] ?? '');
-        $webdav = rtrim((string)get_setting('openlist_webdav_url', ''), '/');
-        $mediaId = (int)($media['media_id'] ?? $media['id'] ?? 0);
-        $sourceHost = (string)(parse_url($source, PHP_URL_HOST) ?: '');
-        $openlistHost = (string)(parse_url($webdav, PHP_URL_HOST) ?: '');
-        $isOpenListSource = $webdav !== '' && (strpos($source, $webdav) === 0 || ($sourceHost !== '' && $sourceHost === $openlistHost));
-        return $isOpenListSource ? '/api/media_stream.php?id=' . $mediaId : '';
-    }
-}
-
-if (!function_exists('withu_media_is_openlist_source')) {
-    function withu_media_is_openlist_source(array $media): bool {
-        $source = trim((string)($media['source_url'] ?? ''));
-        $webdav = rtrim((string)get_setting('openlist_webdav_url', ''), '/');
-        if ($source === '' || $webdav === '') return false;
-        $sourceHost = (string)(parse_url($source, PHP_URL_HOST) ?: '');
-        $openlistHost = (string)(parse_url($webdav, PHP_URL_HOST) ?: '');
-        return strpos($source, $webdav) === 0 || ($sourceHost !== '' && $sourceHost === $openlistHost);
-    }
-}
-
-if (!function_exists('withu_media_player_mode')) {
-    function withu_media_player_mode(array $media): string {
-        return 'direct';
-    }
-}
-
-if (!function_exists('withu_media_player_code')) {
-    function withu_media_player_code(array $media): string {
-        return 'webdav';
-    }
-}
-
-if (!function_exists('withu_media_stream_type')) {
-    function withu_media_stream_type(string $url, string $mime = ''): string {
-        $mime = strtolower(trim($mime));
-        if (str_contains($mime, 'mpegurl') || preg_match('/\.m3u8(?:[?#]|$)/i', $url)) return 'm3u8';
-        if (str_contains($mime, 'webm') || preg_match('/\.webm(?:[?#]|$)/i', $url)) return 'webm';
-        return 'mp4';
-    }
-}
-
-if (!function_exists('withu_media_resolve_url')) {
-    function withu_media_resolve_url(array $media): string {
-        $mediaId = (int)($media['media_id'] ?? $media['id'] ?? 0);
-        if ($mediaId <= 0) return withu_media_url($media);
-        $url = '/api/media_resolve.php?id=' . $mediaId;
-        $sourceId = (int)($media['source_id'] ?? 0);
-        if ($sourceId > 0) $url .= '&source_id=' . $sourceId;
-        return $url;
-    }
-}
-
-if (!function_exists('withu_resolution_tier')) {
-    function withu_resolution_tier($resolution): ?array {
-        $text = strtoupper(trim((string)$resolution));
-        if ($text === '') return null;
-        if (preg_match('/\b(4K|UHD|2160P)\b/u', $text)) return ['label' => '4K', 'class' => 'is-4k'];
-        if (preg_match('/\b(2K|QHD|1440P)\b/u', $text)) return ['label' => '2K', 'class' => 'is-2k'];
-        if (preg_match('/蓝光|BLU[\s-]?RAY|BDMV/u', $text)) return ['label' => '蓝光', 'class' => 'is-bluray'];
-        if (preg_match('/(\d{3,5})\s*[x×]\s*(\d{3,5})/u', $text, $match)) {
-            $height = (int)$match[2];
-        } elseif (preg_match('/(\d{3,5})\s*P?\b/u', $text, $match)) {
-            $height = (int)$match[1];
-        } else {
-            return null;
-        }
-        if ($height >= 2000) return ['label' => '4K', 'class' => 'is-4k'];
-        if ($height >= 1300) return ['label' => '2K', 'class' => 'is-2k'];
-        return null;
-    }
-}
-
-if (!function_exists('withu_resolution_badge_html')) {
-    function withu_resolution_badge_html($resolution, string $extraClass = ''): string {
-        $tier = withu_resolution_tier($resolution);
-        if (!$tier) return '';
-        $class = trim('resolution-badge ' . $tier['class'] . ' ' . $extraClass);
-        if ($tier['label'] === '4K') {
-            return '<span class="' . htmlspecialchars($class, ENT_QUOTES, 'UTF-8') . '"><img src="/assets/images/4k-badge.png" alt="4K"></span>';
-        }
-        return '<span class="' . htmlspecialchars($class, ENT_QUOTES, 'UTF-8') . '">' . htmlspecialchars($tier['label'], ENT_QUOTES, 'UTF-8') . '</span>';
-    }
-}
-
-if (!function_exists('withu_media_quality_text')) {
-    function withu_media_quality_text(array $media): string {
-        $parts = [];
-        $resolution = trim((string)($media['resolution'] ?? ''));
-        if ($resolution !== '') $parts[] = $resolution;
-        $metadata = json_decode((string)($media['metadata_json'] ?? '{}'), true);
-        if (is_array($metadata)) {
-            $releaseSource = trim((string)($metadata['release_source'] ?? ''));
-            if ($releaseSource !== '') $parts[] = $releaseSource;
-        }
-        $source = trim((string)($media['source_key'] ?? $media['file_name'] ?? ''));
-        if ($source !== '') $parts[] = $source;
-        return implode(' ', $parts);
-    }
-}
-
-if (!function_exists('withu_media_quality_badge_html')) {
-    function withu_media_quality_badge_html(array $media, string $extraClass = ''): string {
-        return withu_resolution_badge_html(withu_media_quality_text($media), $extraClass);
-    }
-}
-
 if (!function_exists('withu_watch_history_min_ms')) {
     function withu_watch_history_min_ms(): int {
         $seconds = (int)get_setting('watch_history_min_sec', '15');
@@ -205,5 +88,147 @@ if (!function_exists('withu_private_location')) {
             return ['name' => $row['location_name'] ?? '', 'latitude' => round((float)$lat, 2), 'longitude' => round((float)$lng, 2), 'precision' => 'approximate'];
         }
         return ['name' => $row['location_name'] ?? '', 'latitude' => null, 'longitude' => null, 'precision' => 'hidden'];
+    }
+}
+
+// ---------- STRM 媒体库（withUstrm）公共辅助 ----------
+// withUstrm 后端仅存 SQLite（openlist2strm.db），不依赖 MySQL。
+// 本组函数把内部 /api/media-library/**（JWT 鉴权）封装为 PHP 可直接复用的调用，
+// 供 index.php / watch.php / watch_history.php / api/watch.php / api/desktop.php 使用。
+
+if (!function_exists('withu_strm_backend_base')) {
+    function withu_strm_backend_base(): string
+    {
+        return rtrim((string)getenv('STRM_BACKEND_URL') ?: 'http://127.0.0.1:8081', '/');
+    }
+}
+
+if (!function_exists('withu_strm_jwt_path')) {
+    function withu_strm_jwt_path(): string
+    {
+        $p = dirname(__DIR__, 2) . '/runtime/strm/jwt.txt';
+        if (is_file($p)) return $p;
+        $alt = dirname(__DIR__, 2) . '/strm/runtime/jwt.txt';
+        return is_file($alt) ? $alt : $p;
+    }
+}
+
+if (!function_exists('withu_strm_internal_token')) {
+    function withu_strm_internal_token(): string
+    {
+        $path = withu_strm_jwt_path();
+        if (!is_file($path)) return '';
+        $secret = trim((string)file_get_contents($path));
+        if ($secret === '') return '';
+        $b64u = function (string $s): string {
+            return rtrim(strtr(base64_encode($s), '+/', '-_'), '=');
+        };
+        $header = $b64u(json_encode(['alg' => 'HS256', 'typ' => 'JWT']));
+        $now = time();
+        $payload = $b64u(json_encode(['sub' => 'withu_admin', 'iat' => $now, 'exp' => $now + 20160 * 60]));
+        $sig = $b64u(hash_hmac('sha256', $header . '.' . $payload, $secret, true));
+        return $header . '.' . $payload . '.' . $sig;
+    }
+}
+
+if (!function_exists('withu_strm_curl')) {
+    function withu_strm_curl(string $url, array $headers = [], string $method = 'GET', ?string $body = null): array
+    {
+        $ch = curl_init($url);
+        $h = array_merge(['Authorization: Bearer ' . withu_strm_internal_token()], $headers);
+        curl_setopt_array($ch, [
+            CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_FOLLOWLOCATION => false,
+            CURLOPT_HTTPHEADER => $h,
+            CURLOPT_CONNECTTIMEOUT => 3,
+            CURLOPT_TIMEOUT => 15,
+            CURLOPT_SSL_VERIFYPEER => false,
+            CURLOPT_SSL_VERIFYHOST => false,
+            CURLOPT_USERAGENT => 'withu-strm-bridge/1.0',
+        ]);
+        if ($method === 'POST' && $body !== null) {
+            curl_setopt($ch, CURLOPT_POST, true);
+            curl_setopt($ch, CURLOPT_POSTFIELDS, $body);
+        }
+        $raw = curl_exec($ch);
+        $err = curl_error($ch);
+        $code = (int)curl_getinfo($ch, CURLINFO_RESPONSE_CODE);
+        curl_close($ch);
+        return ['code' => $code, 'error' => $err, 'body' => (string)$raw];
+    }
+}
+
+if (!function_exists('withu_strm_internal')) {
+    // 调用 strm 内部媒体库接口，返回 ['success'=>bool,'message'=>?,'data'=>?]
+    function withu_strm_internal(string $path): array
+    {
+        $url = withu_strm_backend_base() . '/api/media-library' . $path;
+        $r = withu_strm_curl($url);
+        if ($r['code'] !== 200) {
+            return ['success' => false, 'message' => $r['error'] !== '' ? $r['error'] : 'HTTP ' . $r['code']];
+        }
+        $data = json_decode($r['body'], true);
+        if (!is_array($data)) return ['success' => false, 'message' => 'strm 接口返回异常'];
+        if (($data['code'] ?? 0) !== 200) return ['success' => false, 'message' => (string)($data['message'] ?? 'strm 接口错误')];
+        return ['success' => true, 'data' => $data['data']];
+    }
+}
+
+if (!function_exists('withu_strm_media_fetch')) {
+    function withu_strm_media_fetch(int $id): ?array
+    {
+        if ($id <= 0) return null;
+        $r = withu_strm_internal('/' . $id);
+        return $r['success'] ? $r['data'] : null;
+    }
+}
+
+if (!function_exists('withu_strm_merge_room')) {
+    // 用 strm 元数据补齐房间的可播放/展示字段
+    function withu_strm_merge_room(array $room): array
+    {
+        $meta = withu_strm_media_fetch((int)($room['media_id'] ?? 0));
+        if (!$meta) return $room;
+        $title = (string)($meta['title'] ?? 'strm 媒体');
+        $episodeId = (int)($room['source_episode'] ?? 0);
+        $ep = null;
+        foreach ((array)($meta['episodes'] ?? []) as $e) {
+            if ((int)($e['id'] ?? 0) === $episodeId) { $ep = $e; break; }
+        }
+        if ($episodeId > 0 && !$ep && !empty($meta['episodes'])) $ep = $meta['episodes'][0];
+        $epNo = $ep ? (int)($ep['episodeNo'] ?? 0) : 0;
+        $merged = [
+            'file_name' => $ep ? (string)($ep['sourceFileName'] ?? ('第 ' . $epNo . ' 集')) : $title,
+            'series_name' => $title,
+            'summary' => (string)($meta['overview'] ?? ''),
+            'cover_url' => (string)($meta['posterUrl'] ?? ''),
+            'resolution' => '',
+            'duration_ms' => 0,
+            'rating' => '',
+            'cast_names' => '',
+            'tags' => '',
+            'douban_id' => '',
+            'season_number' => 1,
+            'episode_number' => $epNo,
+            'episode_title' => $ep ? (string)($ep['title'] ?? '') : '',
+            'player_mode' => 'direct',
+            'player_code' => 'strm',
+            'source' => 'strm',
+        ];
+        foreach ($merged as $k => $v) {
+            if (!array_key_exists($k, $room)) $room[$k] = $v;
+        }
+        return $room;
+    }
+}
+
+if (!function_exists('withu_strm_room_url')) {
+    // 一起看房间的 strm 解析接口 URL（前端 fetch 后拿真实代理直链）
+    function withu_strm_room_url(array $room): string
+    {
+        $url = '/api/strm.php?action=resolve&id=' . (int)($room['media_id'] ?? 0);
+        $ep = (int)($room['source_episode'] ?? 0);
+        if ($ep > 0) $url .= '&episode=' . $ep;
+        return $url;
     }
 }

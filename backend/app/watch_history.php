@@ -5,9 +5,6 @@ require_once __DIR__ . '/core/Database.php';
 require_once __DIR__ . '/core/Auth.php';
 require_once __DIR__ . '/core/helpers.php';
 require_once __DIR__ . '/core/withu.php';
-require_once __DIR__ . '/core/MediaDatabase.php';
-require_once __DIR__ . '/core/MediaSchema.php';
-require_once __DIR__ . '/core/MediaRepository.php';
 
 migrate_schema_if_needed();
 $auth = new Auth();
@@ -22,42 +19,11 @@ $historyRows = $db->fetchAll(
      ORDER BY wh.updated_at DESC, wh.id DESC LIMIT 200",
     ['min_ms' => $historyMinMs]
 );
-$libraryRows = array_filter($historyRows, static function (array $row): bool {
-    return (string)($row['history_source'] ?? 'library') !== 'strm';
-});
-$mediaMap = withu_media_fetch_many(array_map(static function ($row) {
-    return (int)$row['media_id'];
-}, $libraryRows));
-$strmMap = [];
-$strmFetch = static function (int $id) use (&$strmMap): array {
-    if (isset($strmMap[$id])) return $strmMap[$id];
-    $jwtPath = dirname(__DIR__) . '/runtime/strm/jwt.txt';
-    $secret = is_file($jwtPath) ? trim((string)file_get_contents($jwtPath)) : '';
-    if ($id <= 0 || $secret === '') return $strmMap[$id] = [];
-    $b64u = static function (string $value): string {
-        return rtrim(strtr(base64_encode($value), '+/', '-_'), '=');
-    };
-    $now = time();
-    $header = $b64u(json_encode(['alg' => 'HS256', 'typ' => 'JWT']));
-    $payload = $b64u(json_encode(['sub' => 'withu_admin', 'iat' => $now, 'exp' => $now + 600]));
-    $signature = $b64u(hash_hmac('sha256', $header . '.' . $payload, $secret, true));
-        $ch = curl_init('http://127.0.0.1:8081/api/media-library/' . $id);
-    curl_setopt_array($ch, [
-        CURLOPT_RETURNTRANSFER => true,
-        CURLOPT_HTTPHEADER => ['Authorization: Bearer ' . $header . '.' . $payload . '.' . $signature],
-        CURLOPT_CONNECTTIMEOUT => 3,
-        CURLOPT_TIMEOUT => 10,
-    ]);
-    $body = curl_exec($ch);
-    $status = (int)curl_getinfo($ch, CURLINFO_RESPONSE_CODE);
-    curl_close($ch);
-    $response = $status === 200 ? json_decode((string)$body, true) : null;
-    return $strmMap[$id] = (($response['code'] ?? 0) === 200 && is_array($response['data'] ?? null)) ? $response['data'] : [];
-};
-$mediaForRow = static function (array $row) use (&$mediaMap, $strmFetch): array {
+$mediaForRow = static function (array $row): array {
     $mediaId = (int)$row['media_id'];
-    if ((string)($row['history_source'] ?? 'library') !== 'strm') return $mediaMap[$mediaId] ?? [];
-    $meta = $strmFetch($mediaId);
+    if ((string)($row['history_source'] ?? 'library') !== 'strm') return [];
+    $meta = withu_strm_media_fetch($mediaId);
+    if (!$meta) return [];
     $episodeId = (int)($row['history_source_episode'] ?? 0);
     $episode = null;
     foreach ((array)($meta['episodes'] ?? []) as $candidate) {
@@ -100,9 +66,9 @@ $formatDate = static function (string $date): string {
 $byMedia = [];
 foreach ($historyRows as $row) {
     $mediaId = (int)$row['media_id'];
-    $source = (string)($row['history_source'] ?? 'library');
-    $episode = $source === 'strm' ? (int)($row['history_source_episode'] ?? 0) : 0;
-    $key = $mediaId . ':' . $source . ':' . $episode;
+    if ((string)($row['history_source'] ?? 'library') !== 'strm') continue;
+    $episode = (int)($row['history_source_episode'] ?? 0);
+    $key = $mediaId . ':strm:' . $episode;
     if (!isset($byMedia[$key]) || (string)($row['updated_at'] ?? '') > (string)($byMedia[$key]['updated_at'] ?? '')) {
         $byMedia[$key] = $row;
     }
@@ -138,17 +104,12 @@ foreach ($standalone as $entry) {
     $row = $entry['row'];
     $media = $entry['media'];
     $mediaId = (int)$row['media_id'];
-    $isStrm = (string)($row['history_source'] ?? 'library') === 'strm';
-    $episodeId = (int)($row['history_source_episode'] ?? 0);
-    $playUrl = $isStrm
-        ? '/watch_play.php?source=strm&id=' . $mediaId . ($episodeId > 0 ? '&episode=' . $episodeId : '')
-        : '/watch_play.php?media_id=' . $mediaId;
     $items[] = [
         'media_id' => $mediaId,
         'title' => (string)($media['series_name'] ?: $media['file_name'] ?: ('影片 #' . $mediaId)),
         'subtitle' => !empty($media['episode_number']) ? ('第 ' . (int)$media['episode_number'] . ' 集') : '',
-        'cover_url' => (string)($media['cover_url'] ?? '') ?: ($isStrm ? '/api/strm.php?action=img&id=' . $mediaId : '/api/media_cover.php?id=' . $mediaId),
-        'play_url' => $playUrl,
+        'cover_url' => (string)($media['cover_url'] ?? '') ?: ('/api/strm.php?action=img&id=' . $mediaId),
+        'play_url' => '/watch_play.php?source=strm&id=' . $mediaId . ($episodeId > 0 ? '&episode=' . $episodeId : ''),
         'has_media' => !empty($media),
         'started_at' => $formatDate((string)($row['started_at'] ?? '')),
         'watch_ms' => (int)($row['watch_duration_ms'] ?? 0),
@@ -168,39 +129,33 @@ foreach ($bySeries as $series) {
     if ($latest === null) continue;
     $mediaId = (int)$latest['media_id'];
     $media = $mediaForRow($latest);
-    $isStrm = (string)($latest['history_source'] ?? 'library') === 'strm';
     $episodeId = (int)($latest['history_source_episode'] ?? 0);
-    $playUrl = $isStrm
-        ? '/watch_play.php?source=strm&id=' . $mediaId . ($episodeId > 0 ? '&episode=' . $episodeId : '')
-        : '/watch_play.php?media_id=' . $mediaId;
     sort($series['episodes']);
     $episodeOptions = [];
-    if ($isStrm) {
-        $watchedRows = $series['rows'];
-        usort($watchedRows, static function (array $a, array $b): int {
-            return [(string)($b['updated_at'] ?? ''), (int)($b['id'] ?? 0)] <=> [(string)($a['updated_at'] ?? ''), (int)($a['id'] ?? 0)];
-        });
-        $seenEpisodeIds = [];
-        foreach ($watchedRows as $watchedRow) {
-            $candidateId = (int)($watchedRow['history_source_episode'] ?? 0);
-            if ($candidateId <= 0) continue;
-            if (isset($seenEpisodeIds[$candidateId])) continue;
-            $seenEpisodeIds[$candidateId] = true;
-            $candidateMedia = $mediaForRow($watchedRow);
-            $candidateNo = (int)($candidateMedia['episode_number'] ?? 0);
-            $candidateLabel = $candidateNo > 0
-                ? '第 ' . $candidateNo . ' 集'
-                : (string)($candidateMedia['file_name'] ?? ('分集 #' . $candidateId));
-            $watchRank = count($episodeOptions) === 0 ? '上次观看' : '上上次观看';
-            $episodeOptions[] = [
-                'id' => $candidateId,
-                'label' => $candidateLabel,
-                'url' => '/watch_play.php?source=strm&id=' . $mediaId . '&episode=' . $candidateId,
-                'is_last' => $candidateId === $episodeId,
-                'rank_label' => $watchRank,
-            ];
-            if (count($episodeOptions) >= 2) break;
-        }
+    $watchedRows = $series['rows'];
+    usort($watchedRows, static function (array $a, array $b): int {
+        return [(string)($b['updated_at'] ?? ''), (int)($b['id'] ?? 0)] <=> [(string)($a['updated_at'] ?? ''), (int)($a['id'] ?? 0)];
+    });
+    $seenEpisodeIds = [];
+    foreach ($watchedRows as $watchedRow) {
+        $candidateId = (int)($watchedRow['history_source_episode'] ?? 0);
+        if ($candidateId <= 0) continue;
+        if (isset($seenEpisodeIds[$candidateId])) continue;
+        $seenEpisodeIds[$candidateId] = true;
+        $candidateMedia = $mediaForRow($watchedRow);
+        $candidateNo = (int)($candidateMedia['episode_number'] ?? 0);
+        $candidateLabel = $candidateNo > 0
+            ? '第 ' . $candidateNo . ' 集'
+            : (string)($candidateMedia['file_name'] ?? ('分集 #' . $candidateId));
+        $watchRank = count($episodeOptions) === 0 ? '上次观看' : '上上次观看';
+        $episodeOptions[] = [
+            'id' => $candidateId,
+            'label' => $candidateLabel,
+            'url' => '/watch_play.php?source=strm&id=' . $mediaId . '&episode=' . $candidateId,
+            'is_last' => $candidateId === $episodeId,
+            'rank_label' => $watchRank,
+        ];
+        if (count($episodeOptions) >= 2) break;
     }
     $epText = '';
     $lastEpisodeNo = (int)($media['episode_number'] ?? 0);
@@ -213,8 +168,8 @@ foreach ($bySeries as $series) {
         'media_id' => $mediaId,
         'title' => (string)($series['title'] ?: $media['series_name'] ?: ('影片 #' . $mediaId)),
         'subtitle' => $epText,
-        'cover_url' => (string)($media['cover_url'] ?? '') ?: ($isStrm ? '/api/strm.php?action=img&id=' . $mediaId : '/api/media_cover.php?id=' . $mediaId),
-        'play_url' => $playUrl,
+        'cover_url' => (string)($media['cover_url'] ?? '') ?: ('/api/strm.php?action=img&id=' . $mediaId),
+        'play_url' => '/watch_play.php?source=strm&id=' . $mediaId . ($episodeId > 0 ? '&episode=' . $episodeId : ''),
         'has_media' => !empty($media),
         'started_at' => $formatDate((string)($series['started_at'] ?: $latest['started_at'] ?? '')),
         'watch_ms' => (int)($latest['watch_duration_ms'] ?? 0),
@@ -421,12 +376,12 @@ body.watch-history-page a{color:inherit}
          options.map(function(option){return '<option value="'+esc(option.url)+'" '+(option.is_last?'selected':'')+'>'+esc(option.rank_label||'最近观看')+' · '+esc(option.label)+'</option>';}).join('')+
          '</select></div>';
      }
-     return '<div class="watch-history-item" data-play-url="'+esc(item.play_url||('/watch_play.php?media_id='+item.media_id))+'">'+
+     return '<div class="watch-history-item" data-play-url="'+esc(item.play_url||('/watch_play.php?source=strm&id='+item.media_id))+'">'+
        '<div class="watch-history-cover">'+
          '<img loading="lazy" src="'+esc(item.cover_url)+'" data-initial="'+esc(title)+'" alt="'+title+'" onerror="coverFallback(this)">'+
        '</div>'+
        '<div class="watch-history-content">'+
-         '<div><a class="watch-history-primary" href="'+esc(item.play_url||('/watch_play.php?media_id='+item.media_id))+'"><div class="watch-history-title">'+title+'</div></a>'+
+         '<div><a class="watch-history-primary" href="'+esc(item.play_url||('/watch_play.php?source=strm&id='+item.media_id))+'"><div class="watch-history-title">'+title+'</div></a>'+
          (subtitle?'<div class="watch-history-subtitle">'+subtitle+' · '+esc(item.started_at)+'</div>':'<div class="watch-history-subtitle">'+esc(item.started_at)+'</div>')+'</div>'+
          '<div><div class="watch-history-meta">'+meta+'</div>'+episodePicker+progress+'</div>'+
        '</div></div>';

@@ -5,10 +5,6 @@ require_once __DIR__ . '/core/Database.php';
 require_once __DIR__ . '/core/Auth.php';
 require_once __DIR__ . '/core/helpers.php';
 require_once __DIR__ . '/core/withu.php';
-require_once __DIR__ . '/core/MediaDatabase.php';
-require_once __DIR__ . '/core/MediaSchema.php';
-require_once __DIR__ . '/core/MediaRepository.php';
-require_once __DIR__ . '/core/MediaRecognition.php';
 
 migrate_schema_if_needed();
 $auth = new Auth();
@@ -24,66 +20,35 @@ $historyRows = $db->fetchAll(
      ORDER BY wh.updated_at DESC, wh.id DESC LIMIT 24",
     ['min_ms' => $historyMinMs]
 );
-$libraryRows = array_filter($historyRows, static function (array $row): bool {
-    return (string)($row['history_source'] ?? 'library') !== 'strm';
-});
-$historyMedia = withu_media_fetch_many(array_map(static function ($row) { return (int)$row['media_id']; }, $libraryRows));
-$strmHistory = [];
-$strmFetch = static function (int $id) use (&$strmHistory): array {
-    if (isset($strmHistory[$id])) return $strmHistory[$id];
-    $jwtPath = dirname(__DIR__) . '/runtime/strm/jwt.txt';
-    $secret = is_file($jwtPath) ? trim((string)file_get_contents($jwtPath)) : '';
-    if ($id <= 0 || $secret === '') return $strmHistory[$id] = [];
-    $b64u = static function (string $value): string {
-        return rtrim(strtr(base64_encode($value), '+/', '-_'), '=');
-    };
-    $now = time();
-    $header = $b64u(json_encode(['alg' => 'HS256', 'typ' => 'JWT']));
-    $payload = $b64u(json_encode(['sub' => 'withu_admin', 'iat' => $now, 'exp' => $now + 600]));
-    $signature = $b64u(hash_hmac('sha256', $header . '.' . $payload, $secret, true));
-        $ch = curl_init('http://127.0.0.1:8081/api/media-library/' . $id);
-    curl_setopt_array($ch, [
-        CURLOPT_RETURNTRANSFER => true,
-        CURLOPT_HTTPHEADER => ['Authorization: Bearer ' . $header . '.' . $payload . '.' . $signature],
-        CURLOPT_CONNECTTIMEOUT => 3,
-        CURLOPT_TIMEOUT => 10,
-    ]);
-    $body = curl_exec($ch);
-    $status = (int)curl_getinfo($ch, CURLINFO_RESPONSE_CODE);
-    curl_close($ch);
-    $response = $status === 200 ? json_decode((string)$body, true) : null;
-    return $strmHistory[$id] = (($response['code'] ?? 0) === 200 && is_array($response['data'] ?? null)) ? $response['data'] : [];
-};
 $recentRows = [];
 foreach ($historyRows as $historyRow) {
     $mediaId = (int)$historyRow['media_id'];
-    if ((string)($historyRow['history_source'] ?? 'library') === 'strm') {
-        $meta = $strmFetch($mediaId);
-        $episodeId = (int)($historyRow['history_source_episode'] ?? 0);
-        $episode = null;
-        foreach ((array)($meta['episodes'] ?? []) as $candidate) {
-            if ((int)($candidate['id'] ?? 0) === $episodeId) { $episode = $candidate; break; }
-        }
-        $mediaRow = $meta ? [
-            'id' => $mediaId,
-            'file_name' => (string)($episode['sourceFileName'] ?? ($meta['title'] ?? '')),
-            'series_name' => (string)($meta['title'] ?? 'strm 媒体'),
-             'series_key' => 'strm-title-' . preg_replace('/\s+/u', '', mb_strtolower((string)($meta['title'] ?? 'strm 媒体'), 'UTF-8')),
-            'episode_number' => (int)($episode['episodeNo'] ?? 0),
-            'duration_ms' => 0,
-            'cover_url' => (string)($meta['posterUrl'] ?? ''),
-            'source' => 'strm',
-        ] : null;
-    } else {
-        $mediaRow = $historyMedia[$mediaId] ?? null;
+    if ((string)($historyRow['history_source'] ?? 'library') !== 'strm') continue;
+    $meta = withu_strm_media_fetch($mediaId);
+    if (!$meta) continue;
+    $episodeId = (int)($historyRow['history_source_episode'] ?? 0);
+    $episode = null;
+    foreach ((array)($meta['episodes'] ?? []) as $candidate) {
+        if ((int)($candidate['id'] ?? 0) === $episodeId) { $episode = $candidate; break; }
     }
-    if ($mediaRow) $recentRows[] = array_merge($mediaRow, $historyRow);
+    $mediaRow = [
+        'id' => $mediaId,
+        'file_name' => (string)($episode['sourceFileName'] ?? ($meta['title'] ?? '')),
+        'series_name' => (string)($meta['title'] ?? 'strm 媒体'),
+        'series_key' => 'strm-title-' . preg_replace('/\s+/u', '', mb_strtolower((string)($meta['title'] ?? 'strm 媒体'), 'UTF-8')),
+        'episode_number' => (int)($episode['episodeNo'] ?? 0),
+        'duration_ms' => 0,
+        'cover_url' => (string)($meta['posterUrl'] ?? ''),
+        'resolution' => '',
+        'source' => 'strm',
+    ];
+    $recentRows[] = array_merge($mediaRow, $historyRow);
 }
 $recentSeries = [];
 foreach ($recentRows as $row) {
-    $item = withu_media_display_row($row);
-    $key = (string)($item['history_source'] ?? 'library') . ':' . (string)($item['series_key'] ?: $item['id']);
+    $key = (string)($row['history_source'] ?? 'library') . ':' . (string)($row['series_key'] ?: $row['id']);
     if (!isset($recentSeries[$key])) {
+        $item = $row;
         $item['latest_watch_at'] = (string)($row['updated_at'] ?? '');
         $recentSeries[$key] = $item;
     }
@@ -269,7 +234,7 @@ body.watch-page a{color:inherit}
       <div class="rail-wrap">
         <button class="rail-arrow prev" type="button" aria-label="向左">‹</button>
         <div class="rail" id="recentRail">
-          <?php foreach ($recentGroups as $item): $duration = max(0, (int)($item['duration_ms'] ?? 0)); $position = max(0, (int)($item['last_position_ms'] ?? 0)); $progress = $duration > 0 ? min(100, round($position / $duration * 100)) : 0; $isStrm = (string)($item['history_source'] ?? 'library') === 'strm'; $playUrl = $isStrm ? '/watch_play.php?source=strm&id=' . (int)$item['id'] : '/watch_play.php?media_id=' . (int)$item['id']; $coverUrl = (string)($item['cover_url'] ?? '') ?: ($isStrm ? '/api/strm.php?action=img&id=' . (int)$item['id'] : '/api/media_cover.php?id=' . (int)$item['id']); ?>
+          <?php foreach ($recentGroups as $item): $duration = max(0, (int)($item['duration_ms'] ?? 0)); $position = max(0, (int)($item['last_position_ms'] ?? 0)); $progress = $duration > 0 ? min(100, round($position / $duration * 100)) : 0; $playUrl = '/watch_play.php?source=strm&id=' . (int)$item['id']; $coverUrl = (string)($item['cover_url'] ?? '') ?: ('/api/strm.php?action=img&id=' . (int)$item['id']); ?>
           <a class="card" href="<?php echo e($playUrl); ?>" data-watch-title="<?php echo e(($item['series_name'] ?? '') . ' ' . $item['file_name']); ?>">
             <img class="poster" loading="lazy" src="<?php echo e($coverUrl); ?>" alt="">
              <span class="name"><?php echo e($item['series_name']); ?></span>

@@ -67,15 +67,12 @@ pre code{background:none;color:inherit;padding:0}
     <a href="#travel">3.8 旅行 / 天气</a>
     <a href="#travel-map">3.9 足迹地图</a>
     <a href="#qq">3.10 QQ 昵称</a>
-    <a href="#douban">3.11-3.12 豆瓣</a>
+    <a href="#douban">3.11 豆瓣榜单</a>
     <a href="#watch" class="top">4. 共同观影 API</a>
     <a href="#watch-room">4.1 共看房间</a>
-    <a href="#media">4.2 媒体库</a>
-    <a href="#play">4.3-4.4 播放</a>
-    <a href="#cover">4.5 封面 / 背景</a>
-    <a href="#strm">4.6 withUstrm 网关</a>
-    <a href="#watch-flow">4.7 观影流程</a>
-    <a href="#strm-api" class="top">5. 媒体库直连（8080）</a>
+    <a href="#strm">4.2 withUstrm 媒体库</a>
+    <a href="#watch-flow">4.3 观影流程</a>
+    <a href="#strm-api" class="top">5. withUstrm 直连服务（8081）</a>
     <a href="#flow" class="top">6. 常见流程示例</a>
     <a href="#security" class="top">7. 安全与限流</a>
     <a href="#errors" class="top">8. 错误码速查</a>
@@ -83,7 +80,7 @@ pre code{background:none;color:inherit;padding:0}
 </aside>
 <main class="main">
 <h1>WithU 安卓端对接 API 文档</h1>
-<div class="meta">覆盖「情侣空间」与「共同观影」全部接口 · 面向安卓端 App 开发者<br>主服务 withU（PHP）· 媒体库 withUstrm（Java 8080）</div>
+<div class="meta">覆盖「情侣空间」与「共同观影」全部接口 · 面向安卓端 App 开发者<br>主服务 withU（PHP）· 媒体库 withUstrm（Java 8081）</div>
 
 <h2 id="overview">1. 基础信息</h2>
 <h3 id="base-url">1.1 Base URL</h3>
@@ -93,7 +90,7 @@ pre code{background:none;color:inherit;padding:0}
 <p>所有接口路径以 <code>/api/</code> 开头：</p>
 <pre><code>GET  http://&lt;主机IP&gt;:8088/api/home.php
 POST http://&lt;主机IP&gt;:8088/api/desktop.php?action=login</code></pre>
-<p>媒体库直连服务（可选，高级用法）：<code>http://&lt;主机IP&gt;:8080/api</code></p>
+<p>媒体库直连服务（可选，高级用法）：<code>http://&lt;主机IP&gt;:8081/api</code></p>
 </div>
 
 <h3 id="response">1.2 通用响应格式</h3>
@@ -104,7 +101,7 @@ POST http://&lt;主机IP&gt;:8088/api/desktop.php?action=login</code></pre>
 
 // 失败
 {"success": false, "message": "评论内容不能为空"}</code></pre>
-<p>旧接口（<code>home/albums/messages/comment/upload_*</code>）与新型接口（<code>travel*/media*/watch/desktop/strm/douban*/cz/like</code>）均以 <code>success</code> 判断，结构一致。</p>
+<p>旧接口（<code>home/albums/messages/comment/upload_*</code>）与新型接口（<code>travel*/watch/desktop/strm/douban_chart/cz/like</code>）均以 <code>success</code> 判断，结构一致。</p>
 <table>
 <tr><th>状态码</th><th>含义</th></tr>
 <tr><td>200</td><td>成功</td></tr>
@@ -143,7 +140,7 @@ POST http://&lt;主机IP&gt;:8088/api/desktop.php?action=login</code></pre>
 <tr><td class="url">/api/desktop.php?action=login</td><td><span class="method m-post">POST</span></td><td>无</td><td>登录，返回 csrf_token / user / partner / watch 快照</td></tr>
 <tr><td class="url">/api/desktop.php?action=bootstrap</td><td><span class="method m-get">GET</span></td><td>可选</td><td>启动引导：登录态、CSRF、主题、共看配置与当前房间</td></tr>
 <tr><td class="url">/api/desktop.php?action=logout</td><td><span class="method m-post">POST</span></td><td>需登录</td><td>登出，需 CSRF</td></tr>
-<tr><td class="url">/api/desktop.php?action=library</td><td><span class="method m-get">GET</span></td><td>情侣账号</td><td>媒体库列表（剧集分组，含 play_url），参数 q/type_id/page/per_page</td></tr>
+<tr><td class="url">/api/desktop.php?action=library</td><td><span class="method m-get">GET</span></td><td>情侣账号</td><td>媒体库列表（withUstrm 剧集分组，含 play_url），参数 q/type_id(1-4)/page/per_page</td></tr>
 <tr><td class="url">/api/desktop.php?action=history</td><td><span class="method m-get">GET</span></td><td>情侣账号</td><td>观影历史（最多 120 条）</td></tr>
 <tr><td class="url">/api/desktop.php?action=article&amp;id={id}</td><td><span class="method m-get">GET</span></td><td>情侣账号</td><td>文章详情</td></tr>
 <tr><td class="url">/api/desktop.php?action=album&amp;id={id}</td><td><span class="method m-get">GET</span></td><td>情侣账号</td><td>相册详情（≤120 图）</td></tr>
@@ -260,11 +257,10 @@ POST http://&lt;主机IP&gt;:8088/api/desktop.php?action=login</code></pre>
 <p>无需登录（IP 每小时 60 次）。响应：<code>{"success", "avatar_url", "nickname"}</code></p>
 </div>
 
-<h3 id="douban">3.11-3.12 豆瓣</h3>
+<h3 id="douban">3.11 豆瓣榜单 <span class="url">GET /api/douban_chart.php</span></h3>
 <table>
 <tr><th>端点</th><th>方法</th><th>认证</th><th>说明</th></tr>
 <tr><td class="url">/api/douban_chart.php?type=movie|tv&amp;limit=12</td><td><span class="method m-get">GET</span></td><td>无</td><td>榜单；limit 1-30；响应 <code>{success, type, list:[{title,url,cover,id,rate,episodes_info,source}], cached, fetched_at}</code></td></tr>
-<tr><td class="url">/api/douban.php?action=detail&amp;id={id}</td><td><span class="method m-get">GET</span></td><td>情侣账号</td><td>详情；id/douban_id（4-12 位数字）；响应含 <code>poster_url</code></td></tr>
 </table>
 
 <h2 id="watch">4. 共同观影 API</h2>
@@ -273,7 +269,7 @@ POST http://&lt;主机IP&gt;:8088/api/desktop.php?action=login</code></pre>
 <p>需情侣账号。action 从 GET/POST/body 读取；房间号从 <code>room</code>/<code>room_code</code> 读取。POST 写操作需 JSON + CSRF。</p>
 <table>
 <tr><th>action</th><th>方法</th><th>参数</th><th>响应 / 行为</th></tr>
-<tr><td>list</td><td>GET</td><td>无</td><td><code>{success, items:[...]}</code> 已识别媒体前 200</td></tr>
+<tr><td>list</td><td>GET</td><td>无</td><td><code>{success, items:[...]}</code> withUstrm 媒体列表（分页首屏）</td></tr>
 <tr><td>create</td><td>POST</td><td>media_id(必填)</td><td><code>{success, room_code, room_id, history_id}</code></td></tr>
 <tr><td>default</td><td>POST</td><td>media_id(可选)</td><td>加入/创建固定房 "WithU Watch"；另一半在线请求换片时返回 <code>{choice_required:true, ...}</code></td></tr>
 <tr><td>choose</td><td>POST</td><td>choice(together/solo)、media_id</td><td>together→join 默认房；solo→创建独立房</td></tr>
@@ -306,39 +302,9 @@ POST http://&lt;主机IP&gt;:8088/api/desktop.php?action=login</code></pre>
 <p class="note">同步建议：每 <code>poll_interval_ms</code>(500ms) 调 poll；偏差超 <code>sync_threshold_ms</code>(1000ms) 对齐；每 <code>heartbeat_interval_ms</code>(2500ms) 心跳。</p>
 </div>
 
-<h3 id="media">4.2 媒体库 <span class="url">GET|POST /api/media.php</span></h3>
+<h3 id="strm">4.2 withUstrm 媒体库 <span class="url">GET /api/strm.php</span></h3>
 <div class="card">
-<p>需情侣账号。action 默认 <code>list</code>。</p>
-<table>
-<tr><th>action</th><th>方法</th><th>参数</th><th>响应要点</th></tr>
-<tr><td>list</td><td>GET</td><td>q、current_id</td><td>items/groups；item 含 id, file_name, series_name, season_number, episode_number, episode_title, resolution, rating, tags, cast_names, cover_url, backdrop_url, file_size, url, player_mode, player_code, quality_text, cover_api, backdrop_api, sources[], source_count</td></tr>
-<tr><td>library</td><td>GET</td><td>q、type_id(1-4)、page、limit(≤60 默认24)</td><td>按剧集分组</td></tr>
-<tr><td>scan</td><td>POST</td><td>JSON+CSRF 无参数</td><td><code>{success, message, added, updated}</code></td></tr>
-<tr><td>add</td><td>POST</td><td>source_url(http/https 必填)、file_name、source_key</td><td><code>{success, message}</code></td></tr>
-<tr><td>resolve</td><td>POST</td><td>id(必填)</td><td><code>{success, url, message}</code></td></tr>
-<tr><td>recognize</td><td>POST</td><td>id(必填)、force</td><td>识别结果</td></tr>
-</table>
-</div>
-
-<h3 id="play">4.3-4.4 播放解析 / 流式</h3>
-<div class="card">
-<table>
-<tr><th>端点</th><th>说明</th></tr>
-<tr><td class="url">GET /api/media_resolve.php?id={id}&amp;source_id={sid}</td><td>直链解析（仅 WebDAV 来源）。响应 <code>{success, url, type:"m3u8"|"webm"|"mp4", cached, parsed, player_mode:"direct", player_code:"webdav", source_id, source_label:"WebDAV"}</code></td></tr>
-<tr><td class="url">GET /api/media_stream.php?id={id}&amp;mode=direct</td><td>流式入口；WebDAV 302 到签名直链（头 <code>X-WithU-Playback: openlist-direct</code>），其他 302 到 withu_media_url()</td></tr>
-</table>
-</div>
-
-<h3 id="cover">4.5 封面 / 背景图</h3>
-<table>
-<tr><th>端点</th><th>说明</th></tr>
-<tr><td class="url">GET /api/media_cover.php?id={id}</td><td>封面图 image/jpeg，需登录，无封面 404</td></tr>
-<tr><td class="url">GET /api/media_backdrop.php?id={id}</td><td>背景图，需登录，回退 cover 再回退默认图</td></tr>
-</table>
-
-<h3 id="strm">4.6 withUstrm 媒体库网关 <span class="url">GET /api/strm.php</span></h3>
-<div class="card">
-<p>需情侣账号（未登录 401）。action 默认 <code>info</code>。内部自动代理 8080 端口媒体库接口，安卓端无需关心内部凭证。</p>
+<p>需情侣账号（未登录 401）。action 默认 <code>info</code>。内部自动代理 8081 端口媒体库接口，安卓端无需关心内部凭证。</p>
 <table>
 <tr><th>action</th><th>参数</th><th>响应</th></tr>
 <tr><td>info</td><td>无</td><td><code>{success, data:{serverName, version, baseUrl, authEnabled, supportedMediaTypes}}</code></td></tr>
@@ -354,23 +320,23 @@ POST http://&lt;主机IP&gt;:8088/api/desktop.php?action=login</code></pre>
 </table>
 </div>
 
-<h3 id="watch-flow">4.7 共同观影播放流程（推荐链路）</h3>
+<h3 id="watch-flow">4.3 共同观影播放流程（推荐链路）</h3>
 <div class="card">
 <pre><code>1. 登录 → 取 csrf_token + Cookie
-2. GET /api/desktop.php?action=library （或 /api/media.php?action=list）获取媒体列表
+2. GET /api/desktop.php?action=library 获取媒体列表（items[].id 即 strm 媒体 id）
 3. POST /api/watch.php?action=default {"media_id": N} 加入共看房间
 4. 轮询 /api/watch.php?action=poll&since=X 同步播放状态
 5. POST /api/watch.php?action=event 上报 play/pause/seek/speed
-6. 播放地址：GET /api/media_stream.php?id=N（302 直链）或 /api/media_resolve.php?id=N 拿 {url,type}</code></pre>
+6. 播放地址：GET /api/strm.php?action=resolve&id=N（可带 &episode=M）拿 {url,type}</code></pre>
 </div>
 
-<h2 id="strm-api">5. 媒体库直连服务 API（可选，端口 8080）</h2>
+<h2 id="strm-api">5. withUstrm 直连服务 API（可选，端口 8081）</h2>
 <div class="card">
 <p>仅当需要绕过 PHP 网关直连 withUstrm 后端时使用；普通安卓端推荐走 <code>/api/strm.php</code> 网关。</p>
 <ul>
 <li>统一响应 <code>ApiResponse&lt;T&gt;</code> = <code>{"code":200,"message":"...","data":...}</code>，<code>code===200</code> 成功</li>
 <li>认证：除标注公开外均需 <code>Authorization: Bearer &lt;JWT&gt;</code>；播放推荐用 <code>X-API-Key</code> 头</li>
-<li>Swagger：<code>http://host:8080/swagger-ui.html</code></li>
+<li>Swagger：<code>http://host:8081/swagger-ui.html</code></li>
 </ul>
 <h3>5.1 认证（JWT）</h3>
 <table>

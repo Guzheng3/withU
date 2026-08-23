@@ -4,8 +4,8 @@
 
 - 版本：v1.0
 - 更新日期：2026-08-16
-- 主服务：withU（PHP，默认端口 8088）
-- 媒体库服务：withUstrm（Java，端口 8080，可由主服务网关 `/api/strm.php` 代理访问）
+- 主服务：withU（PHP，默认端口 8902）
+- 媒体库服务：withUstrm（Java，端口 8081，可由主服务网关 `/api/strm.php` 代理访问）
 
 ---
 
@@ -16,20 +16,20 @@
 安卓端一般只对接主服务，统一使用主服务地址：
 
 ```
-http://<主机IP>:8088
+http://<主机IP>:8902
 ```
 
 所有接口路径以 `/api/` 开头：
 
 ```
-GET  http://<主机IP>:8088/api/home.php
-POST http://<主机IP>:8088/api/desktop.php?action=login
+GET  http://<主机IP>:8902/api/home.php
+POST http://<主机IP>:8902/api/desktop.php?action=login
 ```
 
 媒体库直连服务（可选，高级用法）：
 
 ```
-http://<主机IP>:8080/api
+http://<主机IP>:8081/api
 ```
 
 ### 1.2 通用响应格式
@@ -45,7 +45,7 @@ http://<主机IP>:8080/api
 ```
 
 旧接口（`home` / `albums` / `messages` / `comment` / `upload_*`）使用 `jsonResponse()` 输出；
-新接口（`travel*` / `media*` / `watch` / `desktop` / `strm` / `douban*` / `cz` / `like`）使用 `withu_json_response()` 输出。
+新接口（`travel*` / `watch` / `desktop` / `strm` / `douban_chart` / `cz` / `like`）使用 `withu_json_response()` 输出。
 两者结构一致，均以 `success` 判断。
 
 HTTP 状态码约定：
@@ -107,7 +107,7 @@ HTTP 状态码约定：
   "theme": {"preset": "pastel-couple", "mode": "auto", "custom": false, "colors": {}},
   "watch_config": {"poll_interval_ms": 500, "sync_threshold_ms": 1000, "heartbeat_interval_ms": 2500, "autoplay_enabled": true},
   "summary": {"media_count": 20, "recognized_media_count": 8, "watch_room_count": 1},
-  "watch": {"room_code": "WithU Watch", "media_id": 1, "file_name": "xxx", "playback_state": "paused", "position_ms": 0, "speed": 1, "url": "/api/media_stream.php?id=1"}
+  "watch": {"room_code": "WithU Watch", "media_id": 1, "file_name": "xxx", "playback_state": "paused", "position_ms": 0, "speed": 1, "url": "/api/strm.php?action=resolve&id=1"}
 }
 ```
 
@@ -293,12 +293,6 @@ HTTP 状态码约定：
 
 响应：`{success, type, list:[{title,url,cover,id,rate,episodes_info,source:"cz"}], cached, fetched_at}`。
 
-### 3.12 豆瓣详情 `GET /api/douban.php?action=detail`
-
-需情侣账号。参数：`id` 或 `douban_id`（4~12 位数字，必填）。
-
-响应：`{success, data:{...豆瓣元数据..., poster_url}}`。
-
 ---
 
 ## 4. 共同观影 API
@@ -352,41 +346,9 @@ HTTP 状态码约定：
 - 收到 `play` / `pause` / `seek` / `speed` 事件后，若与本地位置偏差超过 `sync_threshold_ms`（默认 1000ms），将本地播放器对齐到事件 `position_ms`；
 - 每 `heartbeat_interval_ms`（默认 2500ms）上报一次心跳。
 
-### 4.2 媒体库 `GET|POST /api/media.php`
+### 4.2 withUstrm 媒体库网关 `GET /api/strm.php`
 
-需情侣账号。`action`（默认 `list`）：
-
-| action | 方法 | 参数 | 响应要点 |
-|---|---|---|---|
-| list | GET | `q`（可选）、`current_id`（可选） | `{success, items, groups, current_id, total_returned}`，item 含 `id, file_name, series_name, season_number, episode_number, episode_title, resolution, rating, tags, cast_names, cover_url, backdrop_url, file_size, url, player_mode, player_code, quality_text, cover_api, backdrop_api, sources[], source_count` |
-| library | GET | `q`、`type_id`（1-4）、`page`、`limit`（≤60，默认 24） | `{success, items, page, limit, has_more}` 按剧集分组 |
-| scan | POST | JSON+CSRF，无参数 | `{success, message, added, updated}` |
-| add | POST | JSON+CSRF：`source_url`（http/https 必填）、`file_name`、`source_key` | `{success, message}` |
-| resolve | POST | JSON+CSRF：`id`（必填） | `{success, url, message}` |
-| recognize | POST | JSON+CSRF：`id`（必填）、`force` | 识别结果 |
-
-### 4.3 播放直链解析 `GET /api/media_resolve.php`
-
-需情侣账号。参数：`id`（必填）、`source_id`（可选）。仅允许 WebDAV/OpenList 来源。
-
-响应：`{success, url, type:"m3u8"|"webm"|"mp4", cached, parsed, player_mode:"direct", player_code:"webdav", source_id, source_label:"WebDAV"}`。
-
-### 4.4 流式播放 `GET /api/media_stream.php`
-
-需情侣账号。参数：`id`（必填）、`mode`（默认 `direct`）。
-
-WebDAV 来源：302 重定向到签名直链（响应头 `X-WithU-Playback: openlist-direct`）；其他来源：302 到 `withu_media_url()`。
-
-### 4.5 封面 / 背景图
-
-| 端点 | 说明 |
-|---|---|
-| `GET /api/media_cover.php?id={id}` | 封面图，`image/jpeg`，需登录，无封面 404 |
-| `GET /api/media_backdrop.php?id={id}` | 背景图，需登录，回退 cover 再回退默认图 |
-
-### 4.6 withUstrm 媒体库网关 `GET /api/strm.php`
-
-需情侣账号（未登录 401）。`action`（默认 `info`）。内部通过 HS256 JWT（`sub=withu_admin`，14 天）代理 `http://127.0.0.1:8080/api/media-library/**`，安卓端无需关心内部凭证。
+需情侣账号（未登录 401）。`action`（默认 `info`）。内部通过 HS256 JWT（`sub=withu_admin`）代理 `http://127.0.0.1:8081/api/media-library/**`，安卓端无需关心内部凭证。
 
 | action | 方法 | 参数 | 响应 |
 |---|---|---|---|
@@ -401,26 +363,26 @@ WebDAV 来源：302 重定向到签名直链（响应头 `X-WithU-Playback: open
 | proxy_m3u8 | GET | `url`（m3u8 必填） | m3u8 改写为 proxy_seg |
 | proxy_seg | GET | `url`（分片必填） | 转发 TS 分片（缓存 1h） |
 
-### 4.7 共同观影播放流程（推荐链路）
+### 4.3 共同观影播放流程（推荐链路）
 
 ```
 1. 登录 → 取 csrf_token + Cookie
-2. GET /api/desktop.php?action=library（或 /api/media.php?action=list）获取媒体列表
+2. GET /api/desktop.php?action=library 获取媒体列表（items[].id 即 strm 媒体 id）
 3. POST /api/watch.php?action=default {"media_id": N} 加入共看房间
 4. 轮询 /api/watch.php?action=poll&since=X 同步播放状态
 5. POST /api/watch.php?action=event 上报 play/pause/seek/speed
-6. 播放地址：GET /api/media_stream.php?id=N（302 到直链）或 /api/media_resolve.php?id=N 拿 {url, type}
+6. 播放地址：GET /api/strm.php?action=resolve&id=N（可带 &episode=M）拿 {url, type}
 ```
 
 ---
 
-## 5. 媒体库直连服务 API（可选，端口 8080）
+## 5. withUstrm 直连服务 API（可选，端口 8081）
 
 > 仅当需要绕过 PHP 网关直连 withUstrm 后端时使用。普通安卓端推荐走上述 `/api/strm.php` 网关。
 
 - 统一响应：`ApiResponse<T>` = `{"code":200,"message":"...","data":...}`，`code===200` 成功。
 - 认证：除标注公开外，均需 `Authorization: Bearer <JWT>`；播放推荐用 `X-API-Key` 头（见下）。
-- Swagger：`http://host:8080/swagger-ui.html`
+- Swagger：`http://host:8081/swagger-ui.html`
 
 ### 5.1 认证（JWT）
 

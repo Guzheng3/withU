@@ -56,9 +56,9 @@ bash deploy-local/start-linux.sh
 
 脚本幂等，会自动：
 1. 启动 MariaDB（systemctl 或手动 mariadbd）
-2. 建 `couple_website` / `withu_media` 库并导入 schema、生成 `config/config.php` / `config/database.php`
+2. 建 `couple_website` 库并导入 schema、生成 `config/config.php` / `config/database.php`
 3. 下载 mihomo 二进制（**优先复用系统已有 mihomo**，没有则下载对应 Linux 架构）→ 生成配置 → 启动 → 自动选节点
-4. 构建 withUstrm 后端（gradlew bootJar）+ 前端（nuxt generate）→ 启动 8080/3111
+4. 构建 withUstrm 后端（gradlew bootJar）+ 前端（nuxt generate）→ 启动 8081/3112
 5. 启动 withU PHP 服务 8088
 
 ## 5. 对外暴露（仅 withU 后台）

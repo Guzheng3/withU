@@ -76,7 +76,7 @@ Entries discovered by the Agent during task execution should follow this format:
 - Context: Discovered by Agent while 实现首页观影按钮跳转 watch.php
 - Category: Environment Configuration
 - Instructions:
-  - withU 观影/影视后端在 backend/app（PHP 主站，跑 127.0.0.1:8902，数据库 couple_website，含 media_library/watch_history/watch_rooms 等表）：watch.php（影视库页）、watch_play.php（播放页）、watch_history.php、api/watch.php（房间）、api/strm.php、api/media_cover.php。backend/server(8901) 不包含这些 PHP，backend/server 静态根是 frontend/。
+  - withU 观影/影视后端在 backend/app（PHP 主站，跑 127.0.0.1:8902，数据库 couple_website，含 watch_history/watch_rooms 等表）：watch.php（影视库页）、watch_play.php（播放页）、watch_history.php、api/watch.php（房间）、api/strm.php。影视数据源是 withUstrm（backend/strm，SQLite openlist2strm.db，运行目录 /workspace/runtime/strm/）；MySQL 媒体库（withu_media）与本地媒体库代码（MediaRepository/MediaDatabase 等）已全部移除，影视列表/详情/播放统一经 api/strm.php 或内部 JWT 接口（api/strm.php 之外还可直接调 backend/strm 的 127.0.0.1:8081/api/media-library）。
   - backend/server/server.js 增加 PHP 主站代理 proxyToPhp()：frontend 静态 404 且路径以 .php 结尾或 /api/ 开头时，转发到 http://127.0.0.1:8902（保留 method/query/body/cookie，删除响应 transfer-encoding/connection 头）。首页「观影」悬浮按钮 href="watch.php" 即经此代理可达。
   - 代理 POST 关键坑：backend/server 的 createServer 在 req.on('end') 内统一处理，body 已收集进 body 变量，此时 req 流已结束，proxyToPhp 必须用收集的 body（preq.end(body) + 按字节重设 content-length），不能用 req.pipe(preq)——否则 PHP 收到 Content-Length 声明但 body 空，一直等 body 直到超时挂起。
   - PHP 主站 login.php 登录需 CSRF：先 GET 取表单 name="_token" 值（存 PHPSESSID），POST 时带 _token。登录成功 302 /；未登录访问 watch.php 302 /login.php。
@@ -103,3 +103,15 @@ Entries discovered by the Agent during task execution should follow this format:
   - PHP 主站（backend/app）：withu_lg_ui.js/css→withu-sakura.js/css（樱花，header/footer/travel 引用已同步）、withu-withu-hero 冗余类名→withu-hero。
   - _external/ 下的 *.kikiw.cn（loveli/blog/wiki/www/auth-love）是外部参考站快照备份，**保留原始 lg 内容不动**；只有 _external/withuadmin（后台 UI）参与去 lg。
   - 验证方式：`node --check backend/server/*.js`、`php -l`、重启 8901 后 curl 全页面与全部静态资源 200、8902 首页 withu-hero/withu-sakura 正常、watch.php 代理 200。
+
+[Project Knowledge Summary]
+- Date: 2026-08-22
+- Context: Discovered by Agent while 在 devbox 中配置完整开发环境（补齐 MariaDB/PHP/JDK/withUstrm）
+- Category: Environment Configuration
+- Instructions:
+  - MariaDB root 默认走 unix_socket 认证，TCP(127.0.0.1) 登录被拒（1698）：PHP 主站须用专用账号 `withu`/`withu_dev`（已授权 couple_website 库），database.php 用 withu 而非 root。
+  - JDK 21 安装在 /opt/jdk/current（Temurin 21.0.12.1），不在 apt 源；strm 构建/启动用 `JAVA_HOME=/opt/jdk/current`。磁盘 20G/16G 空闲、内存 7.8G 可用仅 ~200M，构建 gradle/nuxt 必须在后台终端并设 memory_percent。
+  - withUstrm(strm) 组件：后端 jar=`backend/strm/backend/build/libs/openlisttostrm.jar`（gradlew bootJar -x test），前端=`frontend/.output/public`（npm ci + NUXT_APP_BASE_URL=/admin/strm.php/ npx nuxt generate）。运行目录 `/workspace/runtime/strm/`（含 jwt.txt/bridge-secret.txt），后端 127.0.0.1:8081（java -Xmx512m），bridge 127.0.0.1:3112。
+  - PHP 网关 admin/strm.php 读取密钥路径是 `/workspace/backend/runtime/strm/{bridge-secret.txt,jwt.txt}`（dirname(__DIR__,2).'/runtime/strm/'），bridge.js 则读 `/workspace/runtime/strm/`——两处必须保持一致，否则网关转发 403。
+  - 后台终端 timeout 默认 120s，长期驻留服务（node/php/java/bridge）创建时须设 timeout=0，否则进程会被自动终止（曾导致 strm 后端与 bridge 先后超时退出）。
+  - 登录验证链路：GET login.php 取 name="_token" 表单值(存 PHPSESSID) → POST `_token=&username=withu_test&password=123456` → 302 /；影视数据统一由 withUstrm（SQLite）提供，MySQL 侧无媒体库迁移逻辑。
