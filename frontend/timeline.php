@@ -1544,12 +1544,12 @@
         position: absolute;
         right: 6%;
         top: 50%;
-        transform: translateY(-50%) translateX(20px) scale(0.9);
+        transform: translateY(-50%) translateX(0) scale(1);
         display: flex;
         align-items: center;
         gap: 24px;
-        opacity: 0;
-        pointer-events: none;
+        opacity: 1;
+        pointer-events: auto;
         z-index: 10;
         /* 只过渡 GPU 可加速属性 */
         transition:
@@ -1636,6 +1636,40 @@
         width: 1px;
         height: 18px;
         background: rgba(0, 0, 0, 0.1);
+    }
+    /* 诗句 - 一行居中 (未滚动显示；吸顶后自动隐藏，让位给天气足迹) */
+    .withu-header-poem {
+        opacity: 1;
+        pointer-events: none;
+    }
+    .withu-header-poem-line {
+        font-size: 15px;
+        line-height: 1;
+        letter-spacing: 1px;
+        color: #000;
+        font-family: 'KaiTi', 'STKaiti', 'Kaiti SC', 'Kaiti', serif;
+        white-space: nowrap;
+        user-select: none;
+    }
+    .withu-header-actions.withu-actions-visible .withu-header-poem {
+        display: none;
+    }
+
+    /* 天气足迹 - 吸顶时与 stuck-logo、导航岛一起出现 */
+    .withu-header-actions .withu-header-weather:not(.withu-weather-visible),
+    .withu-header-actions #withuMapOpenBtn:not(.withu-weather-visible) {
+        display: none !important;
+        pointer-events: none;
+    }
+    .withu-header-actions .withu-header-weather.withu-weather-visible,
+    .withu-header-actions #withuMapOpenBtn.withu-weather-visible {
+        display: inline-flex !important;
+        pointer-events: auto;
+        animation: withu-weather-in 0.3s ease;
+    }
+    @keyframes withu-weather-in {
+        from { opacity: 0; transform: translateY(4px); }
+        to { opacity: 1; transform: translateY(0); }
     }
 
     /* 吸附时显示 - 通过JS添加类控制 - 灵动岛弹出效果 */
@@ -2948,11 +2982,11 @@
                     <span class="withu-header-map-text">登录</span>
                 </a>
                 <?php endif; ?>
-                <a href="/admin/" class="withu-header-map" data-entry="admin" title="管理后台" style="display:none">
+                <a href="/admin/" class="withu-header-map" data-entry="admin" title="后台">
                     <span class="withu-header-map-icon-wrap">
-                        <i class="ph-fill ph-gear"></i>
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
                     </span>
-                    <span class="withu-header-map-text">管理</span>
+                    <span class="withu-header-map-text">后台</span>
                 </a>
 
             <!-- 移动端更多按钮 -->
@@ -2976,11 +3010,11 @@
             </a>
                 <?php endif; ?>
 
-                        <a href="/admin/" class="withu-header-more-action-item" style="display:none">
+                        <a href="/admin/" class="withu-header-more-action-item">
                 <span class="withu-header-more-action-icon">
-                    <i class="ph-fill ph-gear"></i>
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
                 </span>
-                <span class="withu-header-more-action-label">管理后台</span>
+                <span class="withu-header-more-action-label">后台</span>
             </a>
 </div>
     </div>
