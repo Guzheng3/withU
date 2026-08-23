@@ -124,6 +124,8 @@ if (strpos($path, '/ext/') === 0) {
 $frontStaticDirs = ['/Style/', '/services/', '/Lovefolder/', '/OwO/', '/assets/', '/favicon.png', '/favicon.ico'];
 foreach ($frontStaticDirs as $dir) {
     if (strpos($path, $dir) === 0) {
+        // 先尝试 PHP 执行
+        if (strpos($path, '.php') !== false && requirePhp($frontRoot . $path)) return true;
         if (serveStatic($frontRoot . $path, $mimeTypes)) return true;
     }
 }

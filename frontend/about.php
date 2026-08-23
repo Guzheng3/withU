@@ -2874,7 +2874,6 @@
 </script>
 
 
-
 <div id="loader-wrapper">
     <div id="loader"></div>
     <div class="loader-section"></div>
@@ -2883,20 +2882,7 @@
 <div class="header-wrap">
     <div class="header">
         <!-- 吸顶 Logo（模板渲染：根据 $stuckLogoStyle 只输出选中的一套） -->
-                <div class="withu-header-left-avatar">
-                                <div class="stuck-logo stuck-logo--en-v7">
-                        <span class="stuck-logo__name" data-withu-tip="Ki.">Ki.</span>
-                        <span class="stuck-logo__redline-l"></span>
-                        <span class="stuck-logo__heart"><svg width="20" height="20" viewBox="0 0 256 256" fill="currentColor">
-                                <path
-                                    d="M240,94c0,70-103.79,126.66-108.21,129a8,8,0,0,1-7.58,0C119.79,220.66,16,164,16,94A62.07,62.07,0,0,1,78,32c20.65,0,38.73,8.88,50,23.89C139.27,40.88,157.35,32,178,32A62.07,62.07,0,0,1,240,94Z" />
-                            </svg></span>
-                        <span class="stuck-logo__redline-r"></span>
-                        <span class="stuck-logo__name" data-withu-tip="Really">Really</span>
-                    </div>
-                            </div>
-
-        <div class="withu-capsule-back">
+                <div class="withu-capsule-back">
             <a href="javascript:void(0);" class="withu-capsule-back__btn withu-capsule-back__prev" title="返回">
                 <i data-lucide="chevron-left"></i>
             </a>
@@ -2904,12 +2890,16 @@
                 <i data-lucide="house"></i>
             </a>
         </div>
-        <div class="logo">
-                        <h1><a class="alogo" href="index.php" style="font-family:'Niconne', cursive">withU<span class="alogo-home-icon"><i class="ph-fill ph-house"></i></span></a></h1>
+        <div class="logo" style="margin-right:auto;margin-left:3%">
+                        <h1><a class="alogo" href="index.php" title="withU" style="display:inline-flex;align-items:center;gap:4px"><img src="assets/images/withu-logo.png" alt="withU" style="height:2.2rem;width:auto;object-fit:contain;vertical-align:middle"></a></h1>
         </div>
         <!-- 吸顶时显示的右侧区域: 地图 + 情侣头像 -->
         <div class="withu-header-actions" id="withuHeaderActions">
-                            <div class="withu-header-weather is-loading" id="withuHeaderVisitorWeather" title="点击查看当前天气信息" role="button" tabindex="0" aria-expanded="false">
+                            
+            <div class="withu-header-poem" id="withuHeaderPoem" aria-hidden="true">
+                        <span class="withu-header-poem-line">树是梧桐树，城是南京城，一句梧桐美，种满南京城</span>
+                    </div>
+<div class="withu-header-weather is-loading" id="withuHeaderVisitorWeather" title="点击查看当前天气信息" role="button" tabindex="0" aria-expanded="false">
                     <span class="withu-header-weather-loading" id="withuHeaderVisitorWeatherLoading" aria-label="天气加载中">
                         <i data-lucide="loader-circle"></i>
                     </span>
@@ -2936,13 +2926,59 @@
                         class="avatar-female" alt="He">
                                     </div>
                                 <span class="withu-right-heart"></span>
-                            </div>
+                            
+</div>
+
+                            <?php if ($loggedIn): ?>
+                <a href="/watch.php" class="withu-header-map" data-entry="media" title="观影">
+                    <span class="withu-header-map-icon-wrap">
+                        <i class="ph-fill ph-film-slate"></i>
+                    </span>
+                    <span class="withu-header-map-text">观影</span>
+                </a>
+                <?php else: ?>
+                <a href="/login.php" class="withu-header-map" data-entry="login" title="登录">
+                    <span class="withu-header-map-icon-wrap">
+                        <i class="ph-fill ph-user"></i>
+                    </span>
+                    <span class="withu-header-map-text">登录</span>
+                </a>
+                <?php endif; ?>
+                <a href="/admin/" class="withu-header-map" data-entry="admin" title="管理后台" style="display:none">
+                    <span class="withu-header-map-icon-wrap">
+                        <i class="ph-fill ph-gear"></i>
+                    </span>
+                    <span class="withu-header-map-text">管理</span>
+                </a>
 
             <!-- 移动端更多按钮 -->
             <button type="button" class="withu-header-more-btn" id="withuHeaderMoreBtn" aria-label="更多信息">
                 <i data-lucide="ellipsis"></i>
             </button>
-        </div>
+        
+                        <?php if ($loggedIn): ?>
+                        <a href="/watch.php" class="withu-header-more-action-item">
+                <span class="withu-header-more-action-icon">
+                    <i class="ph-fill ph-film-slate"></i>
+                </span>
+                <span class="withu-header-more-action-label">观影</span>
+            </a>
+                <?php else: ?>
+                        <a href="/login.php" class="withu-header-more-action-item">
+                <span class="withu-header-more-action-icon">
+                    <i class="ph-fill ph-user"></i>
+                </span>
+                <span class="withu-header-more-action-label">登录</span>
+            </a>
+                <?php endif; ?>
+
+                        <a href="/admin/" class="withu-header-more-action-item" style="display:none">
+                <span class="withu-header-more-action-icon">
+                    <i class="ph-fill ph-gear"></i>
+                </span>
+                <span class="withu-header-more-action-label">管理后台</span>
+            </a>
+</div>
     </div>
 </div>
 
@@ -3333,7 +3369,6 @@
     </div><!-- /#pjax-container -->
 
     
-
     <!-- 留言弹窗遮罩层 -->
     <div class="mask" id="mask">
         <div class="close">
@@ -3566,3 +3601,545 @@
 <script src="/assets/js/context-menu.js"></script>
 
 
+<!-- 足迹地图弹窗 -->
+<!-- ============ 足迹地图弹窗 ============ -->
+<div class="withu-map-overlay" id="withuMapOverlay" style="display:none;">
+    <div class="withu-map-modal">
+        <div class="withu-map">
+            <section id="missing-pets-module">
+                <div class="missing-pets-wrap">
+                    <div id="missing-pets-map"></div>
+
+                    <div class="ui-footer-container" id="ui-footer">
+                        <div class="ui-footer-left">
+                            <div class="ui-footer-title" id="footer-title">情侣模式</div>
+                            <div class="ui-footer-sub" id="footer-sub">
+                                <span class="status-dot"></span>
+                                <span id="footer-desc">无论相隔多远，心始终在一起</span>
+                            </div>
+                        </div>
+                        <div class="ui-footer-right">
+                            <div class="withu-badge">
+                                <div class="withu-icon-circle">withU</div>
+                                <div class="withu-text-thin">withU</div>
+                            </div>
+                            <div class="ui-footer-copy">
+                                Powered by <span class="footer-amap-logo">
+                                    <svg t="1767096719086" class="icon" viewBox="0 0 1024 1024" version="1.1"
+                                        xmlns="http://www.w3.org/2000/svg" p-id="1907" width="256" height="256">
+                                        <path d="M658.285714 621.714286h365.714286v256a146.285714 146.285714 0 0 1-146.285714 146.285714h-219.428572V621.714286z" fill="#B2D8FF" p-id="1908"></path>
+                                        <path d="M1024 364.397714V218.624H0v145.773714z" fill="#FFFFFF" p-id="1909"></path>
+                                        <path d="M649.142857 1024h145.773714V0H649.142857z" fill="#FFFFFF" p-id="1910"></path>
+                                        <path d="M1024 729.417143v-145.773714H0v145.773714z" fill="#FFCF68" p-id="1911"></path>
+                                        <path d="M0 218.624h649.179429V0H146.285714a146.285714 146.285714 0 0 0-146.285714 146.285714v72.338286z" fill="#AFE881" p-id="1912"></path>
+                                        <path d="M195.803429 1024H341.577143V0H195.803429z" fill="#FFCF68" p-id="1913"></path>
+                                        <path d="M103.862857 543.670857L349.622857 618.057143l302.628572-256.950857-234.569143 276.772571 262.765714 81.188572 135.314286-520.192z" fill="#0093FD" p-id="1914"></path>
+                                        <path d="M652.251429 361.142857L349.586286 618.057143l68.096 19.821714z" fill="#0066BD" p-id="1915"></path>
+                                        <path d="M349.622857 618.093714v143.908572l97.938286-114.834286-97.974857-29.074286z" fill="#0064BB" p-id="1916"></path>
+                                    </svg>
+                                    高德地图</span><br>
+                                © 2025 Ki All Rights Reserved.
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="full-screen-function">
+                        <button id="map-zoom" type="button" class="control-icon-button" aria-label="重置缩放">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="control-icon">
+                                <path fill-rule="evenodd" d="M15.312 11.424a5.5 5.5 0 0 1-9.201 2.466l-.312-.311h2.433a.75.75 0 0 0 0-1.5H3.989a.75.75 0 0 0-.75.75v4.242a.75.75 0 0 0 1.5 0v-2.43l.31.31a7 7 0 0 0 11.712-3.138.75.75 0 0 0-1.449-.39Zm1.23-3.723a.75.75 0 0 0 .219-.53V2.929a.75.75 0 0 0-1.5 0V5.36l-.31-.31A7 7 0 0 0 3.239 8.188a.75.75 0 1 0 1.448.389A5.5 5.5 0 0 1 13.89 6.11l.311.31h-2.432a.75.75 0 0 0 0 1.5h4.243a.75.75 0 0 0 .53-.219Z" clip-rule="evenodd" />
+                            </svg>
+                        </button>
+                        <button id="full-screen-button" type="button" class="control-icon-button" aria-label="全屏切换">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="control-icon">
+                                <path d="m13.28 7.78 3.22-3.22v2.69a.75.75 0 0 0 1.5 0v-4.5a.75.75 0 0 0-.75-.75h-4.5a.75.75 0 0 0 0 1.5h2.69l-3.22 3.22a.75.75 0 0 0 1.06 1.06ZM2 17.25v-4.5a.75.75 0 0 1 1.5 0v2.69l3.22-3.22a.75.75 0 0 1 1.06 1.06L4.56 16.5h2.69a.75.75 0 0 1 0 1.5h-4.5a.747.747 0 0 1-.75-.75ZM12.22 13.28l3.22 3.22h-2.69a.75.75 0 0 0 0 1.5h4.5a.747.747 0 0 0 .75-.75v-4.5a.75.75 0 0 0-1.5 0v2.69l-3.22-3.22a.75.75 0 1 0-1.06 1.06ZM3.5 4.56l3.22 3.22a.75.75 0 0 0 1.06-1.06L4.56 3.5h2.69a.75.75 0 0 0 0-1.5h-4.5a.75.75 0 0 0-.75.75v4.5a.75.75 0 0 0 1.5 0V4.56Z" />
+                            </svg>
+                        </button>
+                    </div>
+
+                    <!-- 缩放倍数显示器 -->
+                    <div class="zoom-indicator" id="zoom-indicator">
+                        <span class="zoom-current" id="zoom-current">5</span>
+                        <span class="zoom-range">/ 2-20</span>
+                    </div>
+
+                    <!-- 模式切换器 -->
+                    <div class="mode-switcher" id="mode-switcher">
+                        <button class="mode-btn active" data-mode="lovers" title="情侣模式">
+                                                        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" /></svg>
+                                                    </button>
+                        <button class="mode-btn" data-mode="moments" title="点点滴滴">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path></svg>
+                        </button>
+                        <button class="mode-btn" data-mode="messages" title="留言模式">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg>
+                        </button>
+                        <button class="mode-btn" data-mode="albums" title="相册模式">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><circle cx="8.5" cy="8.5" r="1.5"></circle><polyline points="21 15 16 10 5 21"></polyline></svg>
+                        </button>
+                        <button class="mode-btn" data-mode="events" title="事件清单">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 11l3 3L22 4"></path><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"></path></svg>
+                        </button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 情侣信息面板 -->
+            <div class="lovers-panel" id="lovers-panel">
+                <div class="lover-card lover-left" id="lover-left">
+                    <div class="avatar-box"><img src="" alt="我" id="lover-left-avatar" class="avatar-img"></div>
+                    <div class="lover-info">
+                        <div class="lover-name" id="lover-left-name">我</div>
+                        <div class="lover-meta" id="lover-left-meta">
+                            <i class="ri-loader-4-line" id="lover-left-weather-icon"></i>
+                            <span id="lover-left-location">加载中...</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="love-distance-center">
+                    <i class="ri-map-pin-fill distance-icon" id="distance-icon"></i>
+                    <div class="distance-val" id="love-distance-text">计算中...</div>
+                </div>
+                <div class="lover-card lover-right" id="lover-right">
+                    <div class="lover-info">
+                        <div class="lover-name" id="lover-right-name">TA</div>
+                        <div class="lover-meta" id="lover-right-meta">
+                            <i class="ri-loader-4-line" id="lover-right-weather-icon"></i>
+                            <span id="lover-right-location">加载中...</span>
+                        </div>
+                    </div>
+                    <div class="avatar-box"><img src="" alt="TA" id="lover-right-avatar" class="avatar-img"></div>
+                </div>
+            </div>
+
+            <div class="love-distance-panel" id="love-distance-panel">
+                <div class="panel-title">我们之间的距离</div>
+                <div class="panel-body" id="love-distance-text-panel">加载中...</div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- ============ /足迹地图弹窗 ============ -->
+<script src="/assets/js/map.js"></script>
+
+<div id="pjax-container">
+
+    
+    <div id="withuFloatingActions">
+        
+        
+        <a href="javascript:void(0)" id="scrollTopBtn" title="回到顶部">
+            <i class="ph-fill ph-arrow-circle-up"></i>
+        </a>
+    </div>
+
+    <script>
+    // 加密免验提示点击
+    (function () {
+        var btn = document.getElementById('withuEncryptHint');
+        if (!btn) return;
+        btn.addEventListener('click', function () {
+            var label = this.getAttribute('data-encrypt-label') || '加密';
+            var msg = '当前处于「' + label + '」保护中，因管理员已登录自动免验通过';
+            if (typeof Toastify !== 'undefined' && Toastify.showScenario) {
+                Toastify.showScenario('info', { text: msg });
+            } else {
+                alert(msg);
+            }
+        });
+    })();
+    </script>
+
+    <script>
+        // 滚动按钮和回到顶部功能已迁移到 components.js 的 ScrollButtons 模块
+        // 以下代码由 WithUApp.init() 统一初始化，保留最小必要代码
+
+        $(document).ready(function() {
+            $('body').addClass('loaded');
+
+            // 初始化 WithUApp 核心框架
+            if (window.WithUApp && typeof window.WithUApp.init === 'function') {
+                window.WithUApp.setConfig(window.WITHU_CONFIG || {});
+                window.WithUApp.init();
+            }
+
+            // 初始化组件（礼花、轮播、导航等）
+            if (window.WithUApp && window.WithUApp.Components) {
+                const {
+                    ConfettiEffect,
+                    Carousel,
+                    AvatarInteraction,
+                    Navigation,
+                    ScrollButtons,
+                    HeaderVisitorWeather
+                } = window.WithUApp.Components;
+
+                // 初始化礼花效果
+                if (ConfettiEffect) {
+                    ConfettiEffect.init();
+                    // 页面加载完成后延迟触发如影随形效果
+                    setTimeout(() => {
+                        ConfettiEffect.loveWingEffect();
+                    }, 800);
+                }
+
+                // 初始化轮播图
+                if (Carousel) Carousel.init();
+
+                // 初始化头像交互
+                if (AvatarInteraction) AvatarInteraction.init();
+
+                // 初始化导航栏
+                if (Navigation) Navigation.init();
+
+                // 初始化滚动按钮
+                if (ScrollButtons) ScrollButtons.init();
+
+                // 初始化吸顶栏访客天气
+                if (HeaderVisitorWeather) HeaderVisitorWeather.init();
+            }
+
+            // GetEm 函数调用（如果存在）
+            if (typeof GetEm === 'function') GetEm();
+        });
+    </script>
+
+    <style>
+        .NotAbout {
+            display: none;
+        }
+
+        .about_y {
+            font-size: 2rem;
+            background: #ffffff;
+            padding: 0.8rem;
+            margin-left: 1rem;
+            border-radius: 1rem;
+            color: #03A9F4;
+            position: fixed;
+            right: 1rem;
+            bottom: 7.5rem;
+            z-index: 100;
+            box-shadow: 0 3px 10px #bdb7b78c;
+            border: 1px solid #fff;
+            transition: 0.1s all;
+        }
+
+        .about_y:hover {
+            background: #03A9F4;
+            color: #ffffff;
+        }
+
+        .icon {
+            width: 1.5em;
+            height: 1.5em;
+            vertical-align: -0.3em;
+            fill: currentColor;
+            overflow: hidden;
+        }
+
+        li.cike {
+            border-bottom: 1px solid #ddd;
+        }
+
+        li {
+            list-style-type: none;
+        }
+
+        .cike:hover {
+            cursor: pointer;
+            cursor: url(/Style/cur/hover.cur), pointer;
+        }
+
+        button:disabled {
+            background: #888;
+            opacity: 0.6;
+        }
+
+        .avatar {
+            width: 2.5em;
+            height: 2.5em;
+            border-radius: 50%;
+            box-shadow: 0 2px 8px #a9a9a98c;
+            border: 2px solid #fff;
+            margin-right: 0.8rem;
+        }
+
+        .footer-warp {
+            background: #ffffff;
+            margin-top: 0;
+            border-top: 1px solid #efefef;
+            padding: 2rem 0;
+        }
+
+        .footer-warp .footer {
+            padding-bottom: 0;
+        }
+
+        .footer-warp .footer p {
+            line-height: 1.2rem;
+            margin: 0.5rem auto 0;
+        }
+
+
+        .github-badge {
+            display: inline-block;
+            border-radius: 4px;
+            text-shadow: none;
+            font-size: 12px;
+            color: #fff;
+            line-height: 15px;
+            background-color: #5d5d5d;
+            margin-bottom: 5px;
+            white-space: nowrap;
+
+        }
+
+        .footer .github-badge .badge-subject img {
+            width: 12px;
+            vertical-align: bottom;
+            margin: 0 .3rem;
+        }
+
+
+        .github-badge:hover {
+            color: #fafafa;
+        }
+
+        .github-badge .badge-subject {
+            display: inline-block;
+            background-color: #4d4d4d;
+            padding: 4px 4px 4px 6px;
+            border-top-left-radius: 4px;
+            border-bottom-left-radius: 4px;
+        }
+
+        .github-badge .badge-value {
+            display: inline-block;
+            padding: 4px 6px 4px 4px;
+            border-top-right-radius: 4px;
+            border-bottom-right-radius: 4px;
+        }
+
+        .github-badge .bg-pink {
+            /* background-image: linear-gradient(to right, #a4b7ff 0%, #ff7eb3 100%); */
+            background-image: linear-gradient(to right, #747474 0%, #ff7eb3 100%);
+        }
+
+        .github-badge .bg-DIY {
+            /* background-image: linear-gradient(to right, #00decf 0%, #e46cff 100%); */
+            background-image: linear-gradient(to right, #747474 0%, #ff7575 100%)
+        }
+
+        .github-badge .bg-DIY1 {
+            background-color: #7f7f7f;
+        }
+
+        .github-badge .bg-blue {
+            /* background-image: linear-gradient(120deg, #02f0ff 0%, #66a6ff 100%); */
+            background-image: linear-gradient(120deg, #747474 0%, #66a6ff 100%);
+        }
+
+
+        #footer-animal {
+            position: relative;
+            user-select: none;
+        }
+
+        #footer-animal:before {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            width: 100%;
+            height: 36px;
+            background: url(/Style/img/animalBg.jpg) repeat center / auto 100%;
+            box-shadow: 0 4px 7px rgba(0, 0, 0, .15);
+        }
+
+        .animal {
+            position: relative;
+            max-width: min(974px, 100vw);
+            margin: 0 auto;
+            display: block;
+        }
+
+        @media (max-width: 768px) {
+            .animal {
+                bottom: 15px;
+            }
+        }
+    </style>
+</div>
+
+<div id="footer-animal">
+    <img class="animal" src="/Style/img/animals.png" draggable="false" alt="动物">
+</div>
+
+<div class="div_marb_7rem-none">
+    <div class="footer-warp">
+        <div class="footer">
+
+                            <p><a class="github-badge" href="https://icp.gov.moe/?keyword=20248288" target="_blank">
+                        <span class="badge-subject"><img src="/Style/img/icp/moeICP.png"></span>
+                        <span class="badge-value bg-pink">
+                            萌ICP备20248288号                        </span>
+                    </a></p>
+                                        <p><a class="github-badge" href="https://beian.miit.gov.cn/#/Integrated/index" target="_blank">
+                        <span class="badge-subject"><img src="/Style/img/icp/ICP.svg"></span>
+                        <span class="badge-value bg-blue">
+                            粤ICP备2021037776号                        </span>
+                    </a></p>
+                                        <p><a class="github-badge"
+                        href="http://www.beian.gov.cn/portal/registerSystemInfo?recordcode=1112223334455"
+                        target="_blank">
+                        <span class="badge-subject"><img src="/Style/img/icp/policeICP.svg"></span>
+                        <span class="badge-value bg-DIY">
+                            粤公网安备 1112223334455号                        </span>
+                    </a></p>
+                                        <p>
+                    <a href="javascript:void(0);" class="github-badge">
+                        <span class="badge-subject">Copyright</span>
+                        <span class="badge-value bg-DIY1">
+                            ©
+                            2026 withU Web All Rights Reserved.
+                        </span>
+                    </a>
+                </p>
+                    </div>
+    </div>
+</div>
+
+
+<div class="withu-mobile-nav-root">
+
+    <!-- 方案5: 极简包裹点阵 -->
+    <div class="withu-tab-template-v5-container withu-glass-panel" id="withu-mobile-nav-v5">
+        <div class="withu-tab-template-v5-indicator"></div>
+                                <a class="withu-base-nav-item js-withu-v5-item"
+               href="articles.php">
+                <i class="ph-fill ph-notebook"></i>
+                <span>点滴</span>
+            </a>
+                                <a class="withu-base-nav-item js-withu-v5-item"
+               href="messages.php">
+                <i class="ph-fill ph-chat-teardrop-dots"></i>
+                <span>留言</span>
+            </a>
+                                <a class="withu-base-nav-item js-withu-v5-item"
+               href="timeline.php">
+                <i class="ph-fill ph-clock-countdown"></i>
+                <span>轨迹</span>
+            </a>
+                                <a class="withu-base-nav-item js-withu-v5-item"
+               href="index.php">
+                <i class="ph-fill ph-house"></i>
+                <span>首页</span>
+            </a>
+                                <a class="withu-base-nav-item js-withu-v5-item"
+               href="albums.php">
+                <i class="ph-fill ph-camera"></i>
+                <span>相册</span>
+            </a>
+                                <a class="withu-base-nav-item js-withu-v5-item"
+               href="lovelist.php">
+                <i class="ph-fill ph-list-checks"></i>
+                <span>清单</span>
+            </a>
+                                <a class="withu-base-nav-item js-withu-v5-item active"
+               href="about.php">
+                <i class="ph-fill ph-book-open-text"></i>
+                <span>关于</span>
+            </a>
+            </div>
+
+</div>
+
+<script src="/assets/js/mobile-nav.js"></script>
+
+
+<script>
+    (function () {
+        var requestId = "2400f1b17671b69ee8dac988bf9b28cc";
+        var token = "99b448d59c5e0278637e38aaa7971ee1160de69c36dc71e1167a5ebcefb76766";
+        window.WITHU_CONFIG = Object.assign(window.WITHU_CONFIG || {}, {
+            endpoints: Object.assign({}, (window.WITHU_CONFIG && window.WITHU_CONFIG.endpoints) || {}, {
+                accessBeacon: "/services/access-beacon.php"            })
+        });
+
+        var endpoint = (window.WITHU_CONFIG && window.WITHU_CONFIG.endpoints && window.WITHU_CONFIG.endpoints.accessBeacon) || '';
+        if (!endpoint || !navigator.sendBeacon) {
+            return;
+        }
+
+        var current = {
+            requestId: '',
+            token: ''
+        };
+        var startAt = Date.now();
+        var reported = false;
+
+        function isValidHex(value, len) {
+            return new RegExp('^[a-f0-9]{' + len + '}$').test(String(value || ''));
+        }
+
+        function setContext(nextRequestId, nextToken) {
+            var rid = String(nextRequestId || '').trim().toLowerCase();
+            var t = String(nextToken || '').trim().toLowerCase();
+            if (!isValidHex(rid, 32) || !isValidHex(t, 64)) {
+                return false;
+            }
+            current.requestId = rid;
+            current.token = t;
+            startAt = Date.now();
+            reported = false;
+            return true;
+        }
+
+        function reportStay() {
+            if (reported) {
+                return;
+            }
+            if (!isValidHex(current.requestId, 32) || !isValidHex(current.token, 64)) {
+                return;
+            }
+            reported = true;
+
+            var staySeconds = Math.max(0, Math.round((Date.now() - startAt) / 1000));
+            if (staySeconds > 86400) {
+                staySeconds = 86400;
+            }
+
+            var formData = new FormData();
+            formData.append('request_id', current.requestId);
+            formData.append('stay_seconds', String(staySeconds));
+            formData.append('token', current.token);
+            navigator.sendBeacon(endpoint, formData);
+        }
+
+        setContext(requestId, token);
+
+        window.addEventListener('pagehide', reportStay, { once: true });
+        document.addEventListener('visibilitychange', function () {
+            if (document.visibilityState === 'hidden') {
+                reportStay();
+            }
+        }, { passive: true });
+
+        if (window.jQuery && typeof window.jQuery.fn === 'object') {
+            window.jQuery(document).on('pjax:send', function () {
+                reportStay();
+            });
+            window.jQuery(document).on('pjax:complete', function (event, xhr) {
+                if (!xhr || typeof xhr.getResponseHeader !== 'function') {
+                    return;
+                }
+                var nextRequestId = xhr.getResponseHeader('X-WithU-Access-Request-Id') || '';
+                var nextToken = xhr.getResponseHeader('X-WithU-Access-Beacon-Token') || '';
+                setContext(nextRequestId, nextToken);
+            });
+        }
+    })();
+</script>
+
+</body>
+
+</html>
