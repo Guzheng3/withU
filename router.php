@@ -128,6 +128,18 @@ foreach ($frontStaticDirs as $dir) {
     }
 }
 
+// ── 前台 .html → .php 301 永久跳转 ────────
+$frontPages = ['about', 'albums', 'articles', 'lovelist', 'messages', 'page', 'timeline', 'album-detail', 'album-detail-private', 'imglist'];
+foreach ($frontPages as $page) {
+    $htmlPath = '/' . $page . '.html';
+    if (strpos($path, $htmlPath) === 0) {
+        $qs = $_SERVER['QUERY_STRING'] ?? '';
+        $dest = '/' . $page . '.php' . ($qs !== '' ? '?' . $qs : '');
+        header('Location: ' . $dest, true, 301);
+        return true;
+    }
+}
+
 // ── 前台 PHP 页面 ────────────────────────
 $frontFile = $frontRoot . $path;
 if (strpos($path, '.php') !== false) {

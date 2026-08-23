@@ -99,6 +99,34 @@ C:\WithU\tools\php82\php.exe -c C:\WithU\dev\php.ini -l watch_play.php
 powershell -ExecutionPolicy Bypass -File C:\WithU\dev\stop-withu.ps1
 ```
 
+### CodeGraph 代码图谱
+
+[CodeGraph](https://github.com/colbymchenry/codegraph) 为本项目提供代码索引与知识图谱，支持符号搜索、调用链查询和代码结构浏览。索引数据存放在 `.codegraph/`，已在 `.gitignore` 中忽略。
+
+安装（独立二进制，无需 Node）：
+
+```bash
+curl -fsSL https://raw.githubusercontent.com/colbymchenry/codegraph/main/install.sh | sh
+```
+
+初始化/增量同步：
+
+```bash
+scripts/codegraph-sync.sh          # init 或 sync
+scripts/codegraph-sync.sh -q       # 静默模式(适合 git hooks)
+```
+
+常用查询：
+
+```bash
+codegraph status                  # 索引状态统计
+codegraph query <符号>            # 搜索符号
+codegraph callers <符号>          # 谁调用了它
+codegraph callees <符号>          # 它调用了谁
+codegraph node <文件或符号>       # 源码 + 调用链
+codegraph files                   # 文件结构
+```
+
 ## Windows 桌面客户端
 
 桌面客户端需要 Qt 6.8.3 MinGW、CMake、Ninja 和本地 libmpv/WebView2 依赖。构建 Release：

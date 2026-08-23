@@ -546,12 +546,12 @@
 
         // 子页面到父页面的映射
         PAGE_MAPPING: {
-            'page.html': 'articles.html',
-            'album-detail.html': 'albums.html'
+            'page.php': 'articles.php',
+            'album-detail.php': 'albums.php'
         },
 
         // 隐藏描述区域的页面列表（详情页等）
-        HIDE_HEADER_PAGES: ['page.html', 'album-detail.html'],
+        HIDE_HEADER_PAGES: ['page.php', 'album-detail.php'],
 
         /**
          * 初始化导航栏
@@ -586,7 +586,7 @@
          */
         _updateHeaderVisibility() {
             const currentPath = window.location.pathname;
-            const currentPage = currentPath.split('/').pop() || 'index.html';
+            const currentPage = currentPath.split('/').pop() || 'index.php';
             const shouldHide = this.HIDE_HEADER_PAGES.includes(currentPage);
 
             if (this._pageHeader) {
@@ -599,7 +599,7 @@
 
         _setActiveByPath() {
             const currentPath = window.location.pathname;
-            const currentPage = currentPath.split('/').pop() || 'index.html';
+            const currentPage = currentPath.split('/').pop() || 'index.php';
             const targetPage = this.PAGE_MAPPING[currentPage] || currentPage;
 
             this._items.forEach(item => {
@@ -608,7 +608,7 @@
 
                 if (href === targetPage ||
                     currentPage === href ||
-                    (href === 'index.html' && (currentPath === '/' || currentPath.endsWith('/') || currentPath.endsWith('index.html')))) {
+                    (href === 'index.php' && (currentPath === '/' || currentPath.endsWith('/') || currentPath.endsWith('index.php')))) {
                     item.classList.add('active');
                 }
             });

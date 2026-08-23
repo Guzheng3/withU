@@ -375,7 +375,7 @@
             }
             // 更新相册链接
             if (this.elAlbumLink && item.img_code) {
-                this.elAlbumLink.href = 'album-detail.html?code=' + item.img_code;
+                this.elAlbumLink.href = 'album-detail.php?code=' + item.img_code;
             }
 
             const animElements = [this.elTitle, this.elDate, this.elDesc];
@@ -530,7 +530,7 @@
             if (mesBtn) {
                 mesBtn.click();
             } else {
-                this._pjaxNavigate((window.WITHU_CONFIG && window.WITHU_CONFIG.siteBase || '') + 'messages.html');
+                this._pjaxNavigate((window.WITHU_CONFIG && window.WITHU_CONFIG.siteBase || '') + 'messages.php');
             }
         },
 
@@ -547,14 +547,14 @@
                 const res = await fetch(base + 'services/random_album.php');
                 const data = await res.json();
                 if (data && data.code === 200 && data.img_code) {
-                    this._pjaxNavigate(base + 'album-detail.html?code=' + encodeURIComponent(data.img_code));
+                    this._pjaxNavigate(base + 'album-detail.php?code=' + encodeURIComponent(data.img_code));
                 } else {
                     if (typeof Toastify !== 'undefined') {
                         Toastify.showScenario('info', { text: data.msg || '暂无可用相册' });
                     }
                 }
             } catch (e) {
-                this._pjaxNavigate((window.WITHU_CONFIG && window.WITHU_CONFIG.siteBase || '') + 'albums.html');
+                this._pjaxNavigate((window.WITHU_CONFIG && window.WITHU_CONFIG.siteBase || '') + 'albums.php');
             }
         },
 
@@ -573,14 +573,14 @@
                 const res = await fetch(base + 'services/random_article.php');
                 const data = await res.json();
                 if (data && data.code === 200 && data.id) {
-                    this._pjaxNavigate(base + 'page.html?id=' + data.id);
+                    this._pjaxNavigate(base + 'page.php?id=' + data.id);
                 } else {
                     if (typeof Toastify !== 'undefined') {
                         Toastify.showScenario('info', { text: data.msg || '暂无可用文章' });
                     }
                 }
             } catch (e) {
-                this._pjaxNavigate((window.WITHU_CONFIG && window.WITHU_CONFIG.siteBase || '') + 'articles.html');
+                this._pjaxNavigate((window.WITHU_CONFIG && window.WITHU_CONFIG.siteBase || '') + 'articles.php');
             }
         }
     };

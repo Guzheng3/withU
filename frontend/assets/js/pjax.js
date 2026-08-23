@@ -678,7 +678,7 @@
                 // 导航前保存当前页面的真实滚动位置
                 // 仅在非子页面时保存，防止从子页面返回时覆盖父页面信息
                 const curPage = window.location.pathname.split('/').pop() || '';
-                if (curPage !== 'page.html' && curPage !== 'album-detail.html') {
+                if (curPage !== 'page.php' && curPage !== 'album-detail.php') {
                     sessionStorage.setItem('previousPage', window.location.href);
                     sessionStorage.setItem('previousScroll', String(window.scrollY));
                 }

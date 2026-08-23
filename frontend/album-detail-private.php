@@ -1,18 +1,18 @@
 <meta name="x-withu-license-instance" content="858ee1d099b9">
 
-<link rel="icon" href="favicon.png" />
+<link rel="icon" href="/favicon.png?wm=4c668768" />
 <meta name="viewport" content="width=device-width,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no">
 <meta name="description" content="withU 是一个适合记录恋爱日常与纪念时刻的情侣小站，支持相册、时间轴、点滴文章、留言互动和邀请页面，让每一段关系都能拥有自己的专属回忆空间。">
 <meta name="keywords" content="情侣网站,恋爱记录,祝福留言,情侣相册,恋爱清单,爱情纪念,情侣头像框,祝福语句,情侣互动,爱情相册,情侣事件记录,情侣留言,爱情故事,情感交流,用户互动,祝福卡片,音乐分享,甜蜜瞬间,情侣活动,爱情动态,withU">
 <meta name="robots" content="index, follow">
-<link rel="canonical" href="page.html?id=6">
+<link rel="canonical" href="https://love-really.kikiw.cn/album-detail.php?code=20240430110842">
 
 <!-- Open Graph (Facebook/微信/QQ) -->
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="withU">
 <meta property="og:title" content="withU">
 <meta property="og:description" content="withU 是一个适合记录恋爱日常与纪念时刻的情侣小站，支持相册、时间轴、点滴文章、留言互动和邀请页面，让每一段关系都能拥有自己的专属回忆空间。">
-<meta property="og:url" content="/page.php?id=6">
+<meta property="og:url" content="https://love-really.kikiw.cn/album-detail.php?code=20240430110842">
 <meta property="og:image" content="withU">
 
 <!-- Twitter Card -->
@@ -24,60 +24,64 @@
     <!-- Google Fonts CDN 版本 -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link rel="stylesheet" href="Style/vendor/google-fonts/google-fonts.css">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Pacifico&family=Inter:wght@200;300;400;500;600;700&family=Noto+Serif+SC:wght@400;600;700&family=Noto+Sans+SC:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@1,500&family=Oswald:wght@400;600;700&family=Dancing+Script:wght@400;700&family=Crimson+Pro:wght@300;400;500;600;700&family=Libre+Baskerville:wght@400;700&family=Montserrat:wght@400&family=Niconne&family=Ma+Shan+Zheng&family=Liu+Jian+Mao+Cao&display=swap"
+        rel="stylesheet">
     <!-- 非 Google Fonts 字体（HarmonyOS Sans、汉仪粗仿宋）本地补充 -->
-    <link rel="stylesheet" href="Style/vendor/google-fonts/fonts-non-google.css">
+    <link rel="stylesheet" href="/Style/vendor/google-fonts/fonts-non-google.css?wm=4c668768&v=1.0.74">
 
 <!-- Font Awesome 本地化 -->
-<link rel="stylesheet" href="Style/vendor/fontawesome/css/all.min.css">
-<link rel="stylesheet" href="Style/css/leaving.css">
-<link rel="stylesheet" href="Style/css/leav.css">
-<link rel="stylesheet" href="Style/css/message.css">
-<link rel="stylesheet" href="Style/css/index.css">
-<link rel="stylesheet" href="Style/css/little.css">
-<link rel="stylesheet" href="Style/css/loveImg.css">
-<link rel="stylesheet" href="Style/css/list.css">
-<link rel="stylesheet" href="Style/Font/font_list/iconfont.css">
-<link rel="stylesheet" href="Style/toastify/toastify.min.css">
-<link rel="stylesheet" href="Style/css/loadinglike.css">
+<link rel="stylesheet" href="/Style/vendor/fontawesome/css/all.min.css?wm=4c668768&v=1.0.74">
+<link rel="stylesheet" href="/Style/css/leaving.css?wm=4c668768&v=1.0.74">
+<link rel="stylesheet" href="/Style/css/leav.css?wm=4c668768&v=1.0.74">
+<link rel="stylesheet" href="/Style/css/message.css?wm=4c668768&v=1.0.74">
+<link rel="stylesheet" href="/Style/css/index.css?wm=4c668768&v=1.0.74">
+<link rel="stylesheet" href="/Style/css/little.css?wm=4c668768&v=1.0.74">
+<link rel="stylesheet" href="/Style/css/loveImg.css?wm=4c668768&v=1.0.74">
+<link rel="stylesheet" href="/Style/css/list.css?wm=4c668768&v=1.0.74">
+<link rel="stylesheet" href="/Style/Font/font_list/iconfont.css?wm=4c668768&v=1.0.74">
+<link rel="stylesheet" href="/Style/toastify/toastify.min.css?wm=4c668768&v=1.0.74">
+<link rel="stylesheet" href="/Style/css/APlayer.min.css?wm=4c668768&v=1.0.74">
+<link rel="stylesheet" href="/Style/css/aplayer.css?wm=4c668768&v=1.0.74">
+<link rel="stylesheet" href="/Style/css/loadinglike.css?wm=4c668768&v=1.0.74">
 <!-- AOS 本地化 -->
-<link rel="stylesheet" href="Style/vendor/aos/aos.css">
+<link rel="stylesheet" href="/Style/vendor/aos/aos.css?wm=4c668768&v=1.0.74">
 
-<link rel="stylesheet" href="Style/css/plyr.css">
-<link rel="stylesheet" href="Style/css/kicode.css">
-<link rel="stylesheet" href="Style/css/phosphor-regular.css">
-<link rel="stylesheet" href="Style/css/phosphor-icons.css">
-<link rel="stylesheet" href="Style/css/phosphor-fill.css">
-<link rel="stylesheet" href="Style/css/phosphor-duotone.css">
+<link rel="stylesheet" href="/Style/css/plyr.css?wm=4c668768&v=1.0.74">
+<link rel="stylesheet" href="/Style/css/kicode.css?wm=4c668768&v=1.0.74">
+<link rel="stylesheet" href="/Style/css/phosphor-regular.css?wm=4c668768&v=1.0.74">
+<link rel="stylesheet" href="/Style/css/phosphor-icons.css?wm=4c668768&v=1.0.74">
+<link rel="stylesheet" href="/Style/css/phosphor-fill.css?wm=4c668768&v=1.0.74">
+<link rel="stylesheet" href="/Style/css/phosphor-duotone.css?wm=4c668768&v=1.0.74">
 <!-- QWeather Icons 本地化 -->
-<link rel="stylesheet" href="Style/vendor/qweather-icons/qweather-icons.css">
-<link href="Style/css/nprogress.css" rel="stylesheet" type="text/css">
+<link rel="stylesheet" href="/Style/vendor/qweather-icons/qweather-icons.css?wm=4c668768&v=1.0.74">
+<link href="/Style/css/nprogress.css?wm=4c668768&v=1.0.74" rel="stylesheet" type="text/css">
 <!-- Remix Icon 本地化 -->
-<link rel="stylesheet" href="Style/vendor/remixicon/remixicon.css">
-<link rel="stylesheet" href="Style/css/tooltip.css">
-<link rel="stylesheet" href="Style/css/interaction.css">
-<link rel="stylesheet" href="Style/css/withu-home-style.css">
-<link rel="stylesheet" href="Style/css/withu-detail.css">
-<link rel="stylesheet" href="Style/css/mobile-nav.css">
-<link rel="stylesheet" href="Style/css/header.css">
+<link rel="stylesheet" href="/Style/vendor/remixicon/remixicon.css?wm=4c668768&v=1.0.74">
+<link rel="stylesheet" href="/Style/css/tooltip.css?wm=4c668768&v=1.0.74">
+<link rel="stylesheet" href="/Style/css/interaction.css?wm=4c668768&v=1.0.74">
+<link rel="stylesheet" href="/Style/css/withu-home-style.css?wm=4c668768&v=1.0.74">
+<link rel="stylesheet" href="/Style/css/withu-detail.css?wm=4c668768&v=1.0.74">
+<link rel="stylesheet" href="/Style/css/mobile-nav.css?wm=4c668768&v=1.0.74">
+<link rel="stylesheet" href="/Style/css/header.css?wm=4c668768&v=1.0.74">
 <!-- 自定义右键菜单 -->
-<link rel="stylesheet" href="Style/css/context-menu.css">
+<link rel="stylesheet" href="/Style/css/context-menu.css?wm=4c668768&v=1.0.74">
 <!-- 足迹地图样式 -->
-    <link rel="stylesheet" href="Style/css/map.css">
+    <link rel="stylesheet" href="/Style/css/map.css?wm=4c668768&v=1.0.74">
 
-<script src="Style/jquery/jquery.min.js"></script>
-<script src="Style/Font/font_leav/iconfont.js"></script>
-<script src="Style/js/jquery.pjax.js" type="text/javascript"></script>
-<script src="Style/js/plyr.js"></script>
+<script src="/Style/jquery/jquery.min.js?wm=4c668768&v=1.0.74"></script>
+<script src="/Style/Font/font_leav/iconfont.js?wm=4c668768&v=1.0.74"></script>
+<script src="/Style/js/jquery.pjax.js?wm=4c668768&v=1.0.74" type="text/javascript"></script>
+<script src="/Style/js/plyr.js?wm=4c668768&v=1.0.74"></script>
 <!-- AOS.js 本地化 -->
-<script src="Style/vendor/aos/aos.js"></script>
+<script src="/Style/vendor/aos/aos.js?wm=4c668768&v=1.0.74"></script>
 
-<script src="Style/js/highlight.min.js"></script>
-<script src="Style/js/lazyload.min.js"></script>
-<script src="Style/js/masonry.pkgd.min.js"></script>
-<script src="Style/js/imagesloaded.pkgd.min.js"></script>
-<script src="Style/js/loading.js"></script>
-<script src="Style/js/withu-owoui.js"></script>
+<script src="/Style/js/highlight.min.js?wm=4c668768&v=1.0.74"></script>
+<script src="/Style/js/lazyload.min.js?wm=4c668768&v=1.0.74"></script>
+<script src="/Style/js/masonry.pkgd.min.js?wm=4c668768&v=1.0.74"></script>
+<script src="/Style/js/imagesloaded.pkgd.min.js?wm=4c668768&v=1.0.74"></script>
+<script src="/Style/js/loading.js?wm=4c668768&v=1.0.74"></script>
+<script src="/Style/js/withu-owoui.js?wm=4c668768&v=1.0.74"></script>
 <!-- 全局滚动锁工具（所有弹窗共用，防止滚动条消失时布局跳动） -->
 <script>
 (function(){
@@ -104,24 +108,24 @@
     };
 })();
 </script>
-<link rel="stylesheet" href="Style/dplayer/DPlayer.min.css">
-<link rel="stylesheet" href="Style/css/video-modal.css">
-<script src="Style/dplayer/DPlayer.min.js"></script>
-<script src="Style/js/video-modal.js"></script>
+<link rel="stylesheet" href="/Style/dplayer/DPlayer.min.css?wm=4c668768&v=1.0.74">
+<link rel="stylesheet" href="/Style/css/video-modal.css?wm=4c668768&v=1.0.74">
+<script src="/Style/dplayer/DPlayer.min.js?wm=4c668768&v=1.0.74"></script>
+<script src="/Style/js/video-modal.js?wm=4c668768&v=1.0.74"></script>
     <script src="https://static.geetest.com/v4/gt4.js"></script>
-    <script src="Style/js/geetest-helper.js"></script>
+    <script src="/Style/js/geetest-helper.js?wm=4c668768&v=1.0.74"></script>
     <script>if (typeof GeetestHelper !== 'undefined') GeetestHelper.setCaptchaId("8342edf0a8b10d336e5d0d2d6ede60d4");</script>
-<script src="Style/js/nprogress.js"></script>
+<script src="/Style/js/nprogress.js?wm=4c668768&v=1.0.74"></script>
 <!-- Canvas Confetti 本地化 -->
-<script src="Style/vendor/confetti/confetti.browser.min.js"></script>
+<script src="/Style/vendor/confetti/confetti.browser.min.js?wm=4c668768&v=1.0.74"></script>
 <!-- QRCode JS -->
-<script src="Style/vendor/qrcode/qrcode.min.js"></script>
+<script src="/Style/vendor/qrcode/qrcode.min.js?wm=4c668768&v=1.0.74"></script>
 <!-- QR Code Styling (美化二维码) -->
-<script src="Style/vendor/qr-code-styling/qr-code-styling.min.js"></script>
+<script src="/Style/vendor/qr-code-styling/qr-code-styling.min.js?wm=4c668768&v=1.0.74"></script>
 
 <!-- withU 核心框架 -->
 <script>
-    window.WITHU_CONFIG = Object.assign(window.WITHU_CONFIG || {}, {"title":"withU","boy":"Ki.","girl":"Really","startTime":"2023-07-19 00:00:00","version":"2.2.5","pcCarouselHeight":"80vh","mobileCarouselHeight":"50vh","pcPhotoCoverHeight":"80vh","mobilePhotoCoverHeight":"60vh","pcImgMaxHeight":"450px","mobileImgMaxHeight":"260px","maleName":"Ki.","maleAvatar":"Lovefolder/20260411043037_69d95ded97293201118237.webp","femaleName":"Really","femaleAvatar":"Lovefolder/20260411043046_69d95df639c33274072975.webp","siteBase":"","assetBase":"","imageErrorFallback":"Style/img/file-placeholder.svg","owoBase":"OwO","soloMode":false,"weatherEnabled":true,"weatherToken":"00732a2ee2110d6953116ec247dcc910e035864d7a041b3b4ce192cf5e0cf9f0","soloOwnerGeo":{"lat":21.915454,"lng":110.856708},"bannedChars":"操屌","endpoints":{"mapApi":"assets/map-api.php","weatherNow":"services/weather.php","interaction":"services/interaction.php","accessBeacon":"services/access-beacon.php","messageList":"services/message-list.php","messageSubmit":"services/message.php","infoService":"services/info-service.php","weatherApi":"services/weather.php"}});
+    window.WITHU_CONFIG = Object.assign(window.WITHU_CONFIG || {}, {"title":"withU","boy":"Ki.","girl":"Really","startTime":"2023-07-19 00:00:00","version":"2.2.5","pcCarouselHeight":"80vh","mobileCarouselHeight":"50vh","pcPhotoCoverHeight":"80vh","mobilePhotoCoverHeight":"60vh","pcImgMaxHeight":"450px","mobileImgMaxHeight":"260px","maleName":"Ki.","maleAvatar":"https://love-really.kikiw.cn/Lovefolder/20260411043037_69d95ded97293201118237.webp","femaleName":"Really","femaleAvatar":"https://love-really.kikiw.cn/Lovefolder/20260411043046_69d95df639c33274072975.webp","siteBase":"","assetBase":"","imageErrorFallback":"/Style/img/file-placeholder.svg?wm=4c668768","owoBase":"/OwO","soloMode":false,"weatherEnabled":true,"weatherToken":"340ab755e51d7635128e17c5c0b0367b0788075645856ed01852ed495f41098a","soloOwnerGeo":{"lat":21.915454,"lng":110.856708},"bannedChars":"操屌","endpoints":{"mapApi":"assets/map-api.php","weatherNow":"services/weather.php","interaction":"services/interaction.php","accessBeacon":"services/access-beacon.php","messageList":"services/message-list.php","messageSubmit":"services/message.php","infoService":"services/info-service.php","weatherApi":"services/weather.php"}});
 
     // AOS 动画配置（供 app.js 的 AOSManager 使用）
     window.WITHU_AOS_CONFIG = {"enabled":true,"animation":"fade-up","duration":800,"delay":0,"interval":50,"maxDelay":300,"easing":"ease-out-cubic","offset":50,"once":true,"mirror":true,"anchorPlacement":"top-bottom"};
@@ -273,12 +277,12 @@
                 }
             });
     </script>
-<script src="assets/js/app.js"></script>
-<script src="assets/js/components.js"></script>
+<script src="/assets/js/app.js?wm=4c668768&v=1.0.74"></script>
+<script src="/assets/js/components.js?wm=4c668768&v=1.0.74"></script>
 
 <!-- 礼花效果已迁移到 components.js 的 ConfettiEffect 模块 -->
 
-<script src="assets/js/pjax.js"></script><script>if(window.WithUPjax&typeof window.WithUPjax.init==="function")window.WithUPjax.init();</script>
+<script src="/assets/js/pjax.js?wm=4c668768&v=1.0.74"></script><script>if(window.WithUPjax&&typeof window.WithUPjax.init==="function")window.WithUPjax.init();</script>
 <style>
     #loader-wrapper {
         position: fixed;
@@ -2426,11 +2430,11 @@
     }
 
     .music_info .music_info_btn .music_info_btn_play {
-        background-image: url(Style/img/pause2.svg");
+        background-image: url("/Style/img/pause2.svg?wm=4c668768");
     }
 
     .music_info .music_info_btn .music_info_btn_close {
-        background-image: url(Style/img/close.svg");
+        background-image: url("/Style/img/close.svg?wm=4c668768");
     }
 
     img.photo_style,
@@ -3057,13 +3061,13 @@
     <div class="header">
         <!-- 吸顶 Logo（模板渲染：根据 $stuckLogoStyle 只输出选中的一套） -->
                                                 <div class="logo" style="margin-right:auto;margin-left:3%">
-                        <h1><a class="alogo" href="index.html" title="withU" style="display:inline-flex;align-items:center;gap:4px"><img src="assets/images/withu-logo.png" alt="withU" style="height:2.2rem;width:auto;object-fit:contain;vertical-align:middle"></a></h1>
+                        <h1><a class="alogo" href="index.php" title="withU" style="display:inline-flex;align-items:center;gap:4px"><img src="assets/images/withu-logo.png" alt="withU" style="height:2.2rem;width:auto;object-fit:contain;vertical-align:middle"></a></h1>
         </div>
         <div class="withu-capsule-back">
             <a href="javascript:void(0);" class="withu-capsule-back__btn withu-capsule-back__prev" title="返回">
                 <i data-lucide="chevron-left"></i>
             </a>
-            <a href="index.html" class="withu-capsule-back__btn withu-capsule-back__home" title="首页">
+            <a href="/index.php" class="withu-capsule-back__btn withu-capsule-back__home" title="首页">
                 <i data-lucide="house"></i>
             </a>
         </div>
@@ -3099,9 +3103,9 @@
             
             <div class="withu-couple-avatars-right">
                 <div class="withu-avatar-group">
-                    <img src="Lovefolder/20260411043046_69d95df639c33274072975.webp"
+                    <img src="https://love-really.kikiw.cn/Lovefolder/20260411043046_69d95df639c33274072975.webp"
                         class="avatar-male" alt="She">
-                                        <img src="Lovefolder/20260411043037_69d95ded97293201118237.webp"
+                                        <img src="https://love-really.kikiw.cn/Lovefolder/20260411043037_69d95ded97293201118237.webp"
                         class="avatar-female" alt="He">
                                     </div>
                                 <span class="withu-right-heart"></span>
@@ -3198,28 +3202,28 @@
 <div id="homePage" class="wrap" data-Fullscreen>
     <ul class="list mask_black">
                     <li class="item active">
-                <img class="lazy CarouselImage" data-src="Lovefolder/20260408044247_69d56c47870ec497937320.webp" draggable="false">
+                <img class="lazy CarouselImage" data-src="https://love-really.kikiw.cn/Lovefolder/20260408044247_69d56c47870ec497937320.webp" draggable="false">
             </li>
                     <li class="item">
-                <img class="lazy CarouselImage" data-src="Lovefolder/20260408044246_69d56c468eddf735445232.webp" draggable="false">
+                <img class="lazy CarouselImage" data-src="https://love-really.kikiw.cn/Lovefolder/20260408044246_69d56c468eddf735445232.webp" draggable="false">
             </li>
                     <li class="item">
-                <img class="lazy CarouselImage" data-src="Lovefolder/20260408044242_69d56c4212ab5344890628.webp" draggable="false">
+                <img class="lazy CarouselImage" data-src="https://love-really.kikiw.cn/Lovefolder/20260408044242_69d56c4212ab5344890628.webp" draggable="false">
             </li>
                     <li class="item">
-                <img class="lazy CarouselImage" data-src="Lovefolder/20260408044237_69d56c3dcde96349173286.webp" draggable="false">
+                <img class="lazy CarouselImage" data-src="https://love-really.kikiw.cn/Lovefolder/20260408044237_69d56c3dcde96349173286.webp" draggable="false">
             </li>
                     <li class="item">
-                <img class="lazy CarouselImage" data-src="Lovefolder/20260408044237_69d56c3d97f46162328378.webp" draggable="false">
+                <img class="lazy CarouselImage" data-src="https://love-really.kikiw.cn/Lovefolder/20260408044237_69d56c3d97f46162328378.webp" draggable="false">
             </li>
                     <li class="item">
-                <img class="lazy CarouselImage" data-src="Lovefolder/20260408044229_69d56c35d59a9841528398.webp" draggable="false">
+                <img class="lazy CarouselImage" data-src="https://love-really.kikiw.cn/Lovefolder/20260408044229_69d56c35d59a9841528398.webp" draggable="false">
             </li>
                     <li class="item">
-                <img class="lazy CarouselImage" data-src="Lovefolder/20260408044228_69d56c34b1c8f984679558.webp" draggable="false">
+                <img class="lazy CarouselImage" data-src="https://love-really.kikiw.cn/Lovefolder/20260408044228_69d56c34b1c8f984679558.webp" draggable="false">
             </li>
                     <li class="item">
-                <img class="lazy CarouselImage" data-src="Lovefolder/20260408044228_69d56c34421f3439264035.webp" draggable="false">
+                <img class="lazy CarouselImage" data-src="https://love-really.kikiw.cn/Lovefolder/20260408044228_69d56c34421f3439264035.webp" draggable="false">
             </li>
             </ul>
 
@@ -3229,7 +3233,7 @@
                 <div class="img-male">
                     <div class="avatarArea withu-head-avatar-boy">
                         <img draggable="false" class="avatarFrame lazy" data-src= 'https://s1.locimg.com/2024/10/18/db01c99842e69.png' style='transform: scale(1.6);top: 2px;left: 2px;' >
-                        <img draggable="false" class="aiv_touxiang" data-src="Lovefolder/20260411043037_69d95ded97293201118237.webp">
+                        <img draggable="false" class="aiv_touxiang" data-src="https://love-really.kikiw.cn/Lovefolder/20260411043037_69d95ded97293201118237.webp">
                                                 <div class="withu-head-avatar-mask">
                             <div class="withu-head-avatar-top withu-head-avatar-anim-item">
                                                                 <div class="withu-head-avatar-gender-icon" data-gender="male"><i data-lucide="mars"></i></div>
@@ -3238,7 +3242,7 @@
                                 <div
                                     class="withu-head-avatar-status-text withu-head-avatar-status-away">
                                                                             <i data-lucide="clock" class="withu-head-avatar-icon-away"></i>
-                                                                        <em>2小时前</em>
+                                                                        <em>3小时前</em>
                                 </div>
                                 <div class="withu-head-avatar-divider"></div>
                             </div>
@@ -3271,7 +3275,7 @@
                                 <div class="img-female">
                     <div class="avatarArea withu-head-avatar-girl">
                         <img draggable="false" class="avatarFrame lazy" data-src= 'https://s1.locimg.com/2024/10/18/db01c99842e69.png' style='transform: scale(1.6);top: 2px;left: 2px;' >
-                        <img draggable="false" class="aiv_touxiang" data-src="Lovefolder/20260411043046_69d95df639c33274072975.webp">
+                        <img draggable="false" class="aiv_touxiang" data-src="https://love-really.kikiw.cn/Lovefolder/20260411043046_69d95df639c33274072975.webp">
                                                 <div class="withu-head-avatar-mask">
                             <div class="withu-head-avatar-top withu-head-avatar-anim-item">
                                                                 <div class="withu-head-avatar-gender-icon" data-gender="female"><i data-lucide="venus"></i></div>
@@ -3332,49 +3336,49 @@
     <nav class="withu-nav-island-container" id="withuNavIsland">
         <div class="withu-nav-indicator" id="withuNavIndicator"></div>
 
-                <a href="articles.html"
+                <a href="articles.php"
            class="withu-nav-island-item  "
            draggable="false"
            data-desc="写下日常、心情与想念"
            data-meta="Memory Notes">
             <i class="ph-fill ph-notebook"></i>
             <span>点滴</span>        </a>
-                <a href="messages.html"
+                <a href="messages.php"
            class="withu-nav-island-item  "
            draggable="false"
            data-desc="留下想说的话与温柔回应"
            data-meta="Kind Messages">
             <i class="ph-fill ph-chat-teardrop-dots"></i>
             <span>留言</span>        </a>
-                <a href="timeline.html"
+                <a href="timeline.php"
            class="withu-nav-island-item  "
            draggable="false"
            data-desc="回看我们一路走来的轨迹"
            data-meta="Steps of Us">
             <i class="ph-fill ph-clock-countdown"></i>
             <span>轨迹</span>        </a>
-                <a href="index.html"
+                <a href="index.php"
            class="withu-nav-island-item  nav-home"
            draggable="false"
            data-desc="收好我们的日常与心动"
            data-meta="Our Cozy Place">
             <i class="ph-fill ph-house"></i>
                     </a>
-                <a href="albums.html"
+                <a href="albums.php"
            class="withu-nav-island-item  "
            draggable="false"
            data-desc="收藏见面与出游的闪亮瞬间"
            data-meta="Photo Keepsakes">
             <i class="ph-fill ph-camera"></i>
             <span>相册</span>        </a>
-                <a href="lovelist.html"
+                <a href="lovelist.php"
            class="withu-nav-island-item  "
            draggable="false"
            data-desc="记下想一起完成的心愿"
            data-meta="Plans Together">
             <i class="ph-fill ph-list-checks"></i>
             <span>清单</span>        </a>
-                <a href="about.html"
+                <a href="about.php"
            class="withu-nav-island-item  "
            draggable="false"
            data-desc="用对话回放我们的故事"
@@ -3408,358 +3412,112 @@
 <audio id="music"></audio>
 <!-- 情侣头像点击效果已迁移到 components.js 的 AvatarInteraction 模块 -->
 
-<!DOCTYPE html>
-<html lang="zh-CN">
+<div id="pjax-container">
+<title>withU Demo</title>
+<link rel="stylesheet" href="/Style/css/withu-private.css?wm=4c668768&v=1.0.74">
+<style>
+/* 关键内联样式：防止 PJAX 切换时 CSS 未加载导致的无样式闪烁 */
+.withu-private-wrapper{position:fixed;top:0;left:0;width:100%;height:100vh;display:flex;align-items:center;justify-content:center;overflow:hidden;z-index:9999;background:#0f172a}
+.withu-private-wrapper .withu-private-main-card{position:relative;z-index:10;width:100%;max-width:360px;padding:2.5rem;border-radius:1.5rem;background:rgba(255,255,255,.55);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border:1px solid rgba(255,255,255,.5);box-shadow:0 20px 40px -10px rgba(0,0,0,.1);opacity:0;transform:translateY(30px)}
+.withu-private-wrapper .withu-private-bg{position:absolute;top:0;right:0;bottom:0;left:0;z-index:0}
+.withu-private-wrapper .withu-private-bg-img{width:100%;height:100%;object-fit:cover;opacity:.85;filter:blur(3px)}
+.withu-private-wrapper .withu-private-bg-overlay{position:absolute;top:0;right:0;bottom:0;left:0;background:linear-gradient(to bottom,rgba(0,0,0,.1),rgba(0,0,0,.05),rgba(0,0,0,.3))}
+html.withu-private-mode body{overflow:hidden}
+html.withu-private-mode .row.central.nav_k,html.withu-private-mode #homePage,html.withu-private-mode .footer-warp,html.withu-private-mode #footer-animal,html.withu-private-mode .div_marb_7rem-none,html.withu-private-mode .withu-mobile-nav-root,html.withu-private-mode #NavBtnList,html.withu-private-mode #isAdminIcon,html.withu-private-mode #withuFloatingActions,html.withu-private-mode .message_btn,html.withu-private-mode #scrollTopBtn,html.withu-private-mode .bg-wrap,html.withu-private-mode #loader-wrapper,html.withu-private-mode .Width_limit_10re{display:none!important}
+</style>
+<script>document.documentElement.classList.add("withu-private-mode");</script>
+<div class="withu-private-wrapper" id="withuPrivateWrapper">
 
-<head>
-    <title>withU Demo</title>
-    <meta name="author" content="Ki">
-    <meta name="love-theme" content="withU-情侣小站">
-    <meta name="copyright" content="2024 withU Web All Rights Reserved">
-    <meta name="theme-color" content="#ffffff">
-</head>
-
-<body class="bg-pdot-vignette">
-    <div id="pjax-container" data-view-target="article" data-view-id="6">
-        <!-- PJAX 浏览量元数据 -->
-        <div id="withu-view-meta" data-view-target="article" data-view-id="6" style="display:none;"></div>
-
-        <!-- Toast -->
-        <div id="toast" class="withu-detail-toast">
-            <i class="ph-fill ph-check-circle"></i>
-            <span id="toast-msg">Success</span>
-        </div>
-
-        <!-- Right Vertical Rail (Operations) -->
-        <aside class="withu-detail-vertical-rail">
-            <button class="withu-detail-rail-btn" id="rail-like-btn" data-like-target="article" data-like-id="6" data-withu-tip="<span data-like-count='article:6'>0</span> 人喜欢" data-withu-tip-html="true" data-withu-tip-force="true" data-withu-tip-dir="left">
-                <i class="ph ph-heart"></i>
-            </button>
-            <button class="withu-detail-rail-btn withu-detail-rail-mobile-only" id="mobile-toc-btn" data-withu-tip="目录" data-withu-tip-force="true" data-withu-tip-dir="left">
-                <i class="ph ph-list-bullets"></i>
-            </button>
-            <button class="withu-detail-rail-btn withu-detail-rail-desktop-only" id="rail-qr-btn" data-withu-tip="<div id='qrcode-rail' style='width:100px;height:100px;margin:8px auto 0;display:flex;align-items:center;justify-content:center;'><i class='ph ph-spinner-gap' style='font-size:24px;color:rgba(255,255,255,0.5);animation:spin 1s linear infinite;'></i></div><p style='margin:10px 0 0;font-size:12px;color:rgba(255,255,255,0.7);text-align:center;'>扫码分享给好友</p>" data-withu-tip-html="true" data-withu-tip-force="true" data-withu-tip-dir="left">
-                <i class="ph ph-qr-code"></i>
-            </button>
-            <button class="withu-detail-rail-btn" id="rail-copy-btn" data-withu-tip="复制链接" data-withu-tip-force="true" data-withu-tip-dir="left">
-                <i class="ph ph-link"></i>
-            </button>
-        </aside>
-
-        <!-- Mobile TOC Overlay -->
-        <div id="mobile-toc-overlay" class="withu-detail-sheet-overlay"></div>
-        <div id="mobile-toc-sheet" class="withu-detail-mobile-sheet">
-            <div class="withu-detail-mobile-sheet-header">
-                <h3 class="withu-detail-mobile-sheet-title withu-font-serif">目录</h3>
-                <button id="mobile-toc-close" class="withu-detail-mobile-sheet-close">
-                    <i class="ph-bold ph-x"></i>
-                </button>
-            </div>
-            <div class="withu-toc-switcher-bar">
-                <div class="withu-toc-switcher-mini">
-                    <button class="withu-toc-tab-mini active" data-mode="none" onclick="switchTocMode('none')">
-                        <i class="ph ph-minus"></i>
-                        <span>默认</span>
-                    </button>
-                    <button class="withu-toc-tab-mini" data-mode="number" onclick="switchTocMode('number')">
-                        <i class="ph ph-hash"></i>
-                        <span>序号</span>
-                    </button>
-                    <button class="withu-toc-tab-mini" data-mode="tag" onclick="switchTocMode('tag')">
-                        <i class="ph ph-tag"></i>
-                        <span>标签</span>
-                    </button>
-                    <div class="withu-toc-tab-indicator-mini"></div>
-                </div>
-            </div>
-            <nav id="toc-mobile" class="withu-detail-mobile-sheet-nav"></nav>
-        </div>
-
-        <!-- Main Grid -->
-        <div class="withu-detail-main-grid">
-
-            <aside class="withu-detail-sidebar">
-                <div class="withu-detail-sidebar-sticky">
-                    <!-- Weather Widget -->
-                    
-                    <!-- Sidebar TOC -->
-                    <div class="withu-detail-card withu-detail-sidebar-toc">
-                        <div class="withu-toc-switcher-bar">
-                            <div class="withu-toc-switcher-mini">
-                                <button class="withu-toc-tab-mini active" data-mode="none" onclick="switchTocMode('none')">
-                                    <i class="ph ph-minus"></i>
-                                    <span>默认</span>
-                                </button>
-                                <button class="withu-toc-tab-mini" data-mode="number" onclick="switchTocMode('number')">
-                                    <i class="ph ph-hash"></i>
-                                    <span>序号</span>
-                                </button>
-                                <button class="withu-toc-tab-mini" data-mode="tag" onclick="switchTocMode('tag')">
-                                    <i class="ph ph-tag"></i>
-                                    <span>标签</span>
-                                </button>
-                                <div class="withu-toc-tab-indicator-mini"></div>
-                            </div>
-                        </div>
-                        <nav id="toc-desktop" class="withu-detail-toc-list"></nav>
-                    </div>
-                </div>
-            </aside>
-
-            <!-- Main Content -->
-            <main class="withu-detail-main-content">
-
-                <!-- Header Card -->
-                <section class="withu-detail-card withu-detail-header-card">
-                    <div class="withu-detail-header-bg"></div>
-                    <div class="withu-detail-header-blob-container">
-                        <div class="withu-detail-header-blob withu-detail-blob-left"></div>
-                        <div class="withu-detail-header-blob withu-detail-blob-right"></div>
-                    </div>
-                    <div class="withu-detail-header-watermark">
-                        <i class="ph-duotone ph-book-open withu-detail-watermark-icon"></i>
-                        <span class="withu-detail-watermark-text">Story</span>
-                    </div>
-                    <div class="withu-detail-header-content withu-detail-card-p-md">
-                        <!-- Date Capsule -->
-                        <div class="withu-detail-category-wrapper">
-                            <div class="withu-detail-date-capsule">
-                                <div class="withu-detail-date-text-wrapper">
-                                    <i class="ph-fill ph-sparkle withu-detail-date-icon-sparkle"></i>
-                                    <span>2024</span>
-                                    <div class="withu-detail-date-gradient-divider"></div>
-                                    <span>07</span>
-                                </div>
-                                <div class="withu-detail-date-circle">
-                                    <span class="withu-detail-date-day-number">31</span>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Title -->
-                        <h1 class="withu-detail-article-title">点点滴滴语法书写参考</h1>
-
-                        <!-- Author Section -->
-                        <div class="withu-detail-author-section">
-                            <div class="withu-detail-author-row">
-                                <div class="withu-detail-author-info">
-                                    <div class="withu-detail-author-avatar-wrapper">
-                                        <div class="withu-detail-author-avatar-blur"></div>
-                                        <img src="Lovefolder/20260411043037_69d95ded97293201118237.webp" class="withu-detail-author-avatar">
-                                        <div class="withu-detail-author-badge">
-                                            <i class="ph-fill ph-seal-check"></i>
-                                        </div>
-                                    </div>
-                                    <div class="withu-detail-author-text">
-                                        <h3 class="withu-detail-author-name">Ki.</h3>
-                                        <p class="withu-detail-author-desc">
-                                            <span>16:51于<a href="javascript:void(0)" style="color:inherit;" onclick="if(window.WithUMap) WithUMap.open({ mode:'moments', coords:[114.4168,23.1115], zoom:15 })">广东·惠州</a>，记录当下的瞬间。</span>
-                                        </p>
-                                    </div>
-                                </div>
-
-                                <!-- Day Stamp -->
-                                <div class="withu-detail-day-stamp">
-                                    <span class="withu-detail-day-label">WITH YOU</span>
-                                    <div class="withu-detail-day-value">
-                                        <i class="ph-fill ph-heart"></i>
-                                        <span>DAY 379</span>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <!-- Metadata Row -->
-                            <div class="withu-detail-metadata-row">
-                                <!-- Views -->
-                                <div class="withu-detail-meta-badge">
-                                    <div class="withu-detail-meta-icon-wrapper">
-                                        <i class="ph-fill ph-eye"></i>
-                                    </div>
-                                    <span class="withu-detail-meta-text"><span data-view-count="article:6">0</span> 次阅读</span>
-                                </div>
-                                <!-- Likes -->
-                                <div class="withu-detail-meta-badge" data-like-target="article" data-like-id="6" style="cursor:pointer;">
-                                    <div class="withu-detail-meta-icon-wrapper">
-                                        <i class="ph-fill ph-heart"></i>
-                                    </div>
-                                    <span class="withu-detail-meta-text"><span class="withu-interaction-like-num" data-like-count="article:6">0</span> 喜欢</span>
-                                </div>
-                                <!-- Time -->
-                                <div class="withu-detail-meta-badge">
-                                    <div class="withu-detail-meta-icon-wrapper">
-                                        <i class="ph-fill ph-clock"></i>
-                                    </div>
-                                    <span class="withu-detail-meta-text">16:51</span>
-                                </div>
-                                <!-- Location -->
-                                <div class="withu-detail-meta-badge" style="cursor:pointer" onclick="if(window.WithUMap) WithUMap.open({ mode:'moments', coords:[114.4168,23.1115], zoom:15 })">
-                                    <div class="withu-detail-meta-icon-wrapper">
-                                        <i class="ph-fill ph-map-pin"></i>
-                                    </div>
-                                    <span class="withu-detail-meta-text">广东·惠州</span>
-                                </div>
-
-                                                                <!-- Words -->
-                                <div class="withu-detail-meta-badge">
-                                    <div class="withu-detail-meta-icon-wrapper">
-                                        <i class="ph-fill ph-text-aa"></i>
-                                    </div>
-                                    <span class="withu-detail-meta-text">869 字</span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </section>
-
-                <!-- Main Content Card -->
-                <article class="withu-detail-card withu-detail-article-card withu-detail-card-p-md">
-
-                    
-                    <div class="withu-article-body withu-main" id="article-content">
-
-                        <div class="withu-detail-quote-icon">
-                            <i class="ph-fill ph-quotes"></i>
-                        </div>
-
-                        <!-- Font Switcher Bar -->
-                        <div class="withu-detail-font-switcher-bar">
-                            <div class="withu-detail-font-switcher-bar-inner">
-                                <div class="withu-font-switcher-mini">
-                                    <button class="withu-font-tab-mini active" data-font="default" onclick="switchFont('default')">
-                                        <i class="ph ph-text-aa"></i>
-                                        <span>默认</span>
-                                    </button>
-                                    <button class="withu-font-tab-mini" data-font="noto" onclick="switchFont('noto')">
-                                        <i class="ph ph-text-t"></i>
-                                        <span>宋体</span>
-                                    </button>
-                                    <button class="withu-font-tab-mini" data-font="harmony" onclick="switchFont('harmony')">
-                                        <i class="ph ph-translate"></i>
-                                        <span>鸿蒙</span>
-                                    </button>
-                                    <div class="withu-font-tab-indicator-mini"></div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Reading Guide -->
-                        <div class="withu-detail-reading-guide">
-                            <div class="withu-detail-reading-guide-inner">
-                                <div class="withu-detail-reading-guide-left">
-                                    <div class="withu-detail-reading-guide-icon">
-                                        <i class="ph-fill ph-eyeglasses"></i>
-                                    </div>
-                                    <span class="withu-detail-reading-guide-title">阅读指引</span>
-                                </div>
-                                <div class="withu-detail-reading-guide-spacer"></div>
-                                <div class="withu-detail-reading-guide-right">
-                                    <div class="withu-detail-reading-guide-time">
-                                        <span class="withu-detail-reading-guide-time-value">3</span>
-                                        <span class="withu-detail-reading-guide-time-label">分钟</span>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Article Content -->
-                        <div id="withu-detail-content" class="withu-detail-text">
-                            <desc>在时光的长河中，青春如同一颗璀璨而又转瞬即逝的流星，划过我们生命的夜空。它是一个短暂的美梦，当我们从梦中醒来，却发现它早已消失得无影无踪。那么，正在读这篇文章的你，是正在经历着如梦似幻的青春岁月，还是那一段段青春往事早已沉淀为心中难以言说的遗憾呢？你的青春，又有着怎样独特的模样？是藏着一场刻骨铭心的暗恋，还是有一个对你影响深远的少年？亦或是，你觉得陪你走过那段日子的人们仅仅只是你生命中的过客？让我们一同走进青春的回忆与思索之中。</desc>
-
-<quote>“你觉得青春是什么？”</quote>
-
-<center><i>青春是一个短暂的美梦，当你醒来时，它早已消失无踪。</i></center>
-
-<img alt="" src="https://loveli.kikiw.cn/uploads/20240516120344_1.jpeg">
-
-<hr>
-
-<center>
-<a href=" https://www.bilibili.com/" target="_blank">前往 bilibili </a>
-
-<a href="imglist.html?code=20240507224441">查看我们的相册</a>
-</center>
-
-<audio id="music" src data-id="0046EF1a1yhW8E" data-type="tencent"></audio>
-
-<audio id="music" src data-id="1475319299" data-type="netease"></audio>
-
-<audio id="music" src data-id="233921" data-type="netease" data-url="https://blog.kikiw.cn/mp4/nizaibuzai.m4a"></audio>
-
-<p>正在读这篇文章的你是正在经历着<code>青春岁月</code>，还是那一段段<b>青春往事</b>早已沉淀为遗憾是那样难以言说?你的青春于你而言是怎样一副模样呢?是有那样一场毕生难忘的暗恋?还是有一个对你影响深远的少年?抑或是，你觉得陪你走过那段日子的人们仅仅只是你<s>生命中的过客</s>？</p>
-
-<h2>人的一生是万里山河，来往无数过客。</h2>
-
-<p>有人给山河添色，有人使日月无光，有人改他江流，有人塑他骨梁。我的青春里，便有那样一个女孩，悄悄改变了从前那个胆小怯懦的少年。这一生漫长崎岖，总会有一些人消失在生活里却刻骨铭心的住在心里。那个女孩 是在偶然的一天， 悄然走进我的视线，慢慢填满了我的心间。就是那样的一天，那个看似遥不可及的女孩，让我一点点为她做出改变。也就这样，女孩在我的一生里原本注定是个过客，却偏偏变成了记忆中的常客。
-</p>
-
-<h4>人生天地间，忽如远行客，世间的一切无非是十里长亭一杯酒，折下柳枝，依依挥手。</h4>
-<p>曾看到一句话“命运就像是齿轮，在一无所知的时候把我们的人生轨迹重叠到一起，却又在紧密相连时把我们硬生生拆开。”人生天地间，忽如远行客，世间的一切无非是十里长亭一杯酒，折下柳枝，依依挥手。人总是很难在青春时认识青春，只有走过了青春，才能认识青春。所以，无论你现在是正在经历着，亦或是已经经历过，都不必为了去寻找那个答案而变得小心翼翼。</p>
-
-<video id="withUPlayerVideo"  controls><source src="https://classpic.kikiw.cn/video/fengjing.mp4" type="video/mp4"/></video>
-
-<h5>在这秋意渐浓黄昏下的落日余晖中，抬起头看看天边的落日与云彩吧，他都为我们而脸红。</h5>
-
-<quote>B 站视频插入</quote>
-
-<center><iframe id="spkj" src="https://player.bilibili.com/player.html?isOutside=true&aid=112799380408343&bvid=BV1YpbzeaEHE&cid=500001617799426&p=1" scrolling="no" border="0" frameborder="no" framespacing="0" allowfullscreen="true" width=100%> </iframe></center>
-
-<center>
-<h6>2024-05-16 14:57:24 星期四</h6>
-</center>                        </div>
-
-                    </div>
-                                            <div class="withu-detail-bottom-nav">
-                            <div class="withu-detail-bottom-nav-grid">
-                                                                    <!-- Previous Article -->
-                                    <a href="page.html?id=5" class="withu-detail-nav-card">
-                                        <div class="withu-detail-nav-header">
-                                            <i class="ph-bold ph-arrow-left"></i>
-                                            <span>上一篇</span>
-                                        </div>
-                                        <div class="withu-detail-nav-title">小本本</div>
-                                        <div class="withu-detail-nav-footer">
-                                            <img src="Lovefolder/20260411043046_69d95df639c33274072975.webp" alt="Really">
-                                            <span>Really</span>
-                                            <span>·</span>
-                                            <span>03月12日</span>
-                                        </div>
-                                    </a>
-                                
-                                                                    <!-- Next Article -->
-                                    <a href="page.html?id=7" class="withu-detail-nav-card withu-detail-nav-card-right">
-                                        <div class="withu-detail-nav-header">
-                                            <span>下一篇</span>
-                                            <i class="ph-bold ph-arrow-right"></i>
-                                        </div>
-                                        <div class="withu-detail-nav-title">标签书写演示🎄🍰🐍</div>
-                                        <div class="withu-detail-nav-footer">
-                                            <img src="Lovefolder/20260411043037_69d95ded97293201118237.webp" alt="Ki.">
-                                            <span>Ki.</span>
-                                            <span>·</span>
-                                            <span>12月24日</span>
-                                        </div>
-                                    </a>
-                                                            </div>
-                        </div>
-                                    </article>
-
-            </main>
-
-        </div>
-
+    <!-- 背景区域 -->
+    <div class="withu-private-bg">
+                <img id="privateBgImage"
+            src="https://love-really.kikiw.cn/Lovefolder/20250310100354_67ce488abed5b.webp"
+            class="withu-private-bg-img" draggable="false" alt="Background">
+                <div id="privateBgOverlay" class="withu-private-bg-overlay"></div>
     </div>
 
-    <script>
-        // 隐藏首页 Tab 导航
-        document.addEventListener('DOMContentLoaded', function() {
-            var tabWrap = document.querySelector('.withu-mobile-nav-root');
-            if (tabWrap) tabWrap.style.display = 'none';
-        });
+    <!-- 微信小程序风格浮动按钮 -->
+    <div class="withu-private-capsule" id="privateCapsule">
+                <a href="index.php" class="withu-private-capsule-btn" title="返回" data-pjax>
+            <i data-lucide="chevron-left"></i>
+        </a>
+        <span class="withu-private-capsule-divider"></span>
+        <a href="index.php" class="withu-private-capsule-btn" title="首页" data-pjax>
+            <i data-lucide="home"></i>
+        </a>
+    </div>
 
-    </script>
+    <!-- 主卡片区域 -->
+    <div id="privateMainCard" class="withu-private-main-card fade-in-up">
 
-    <script src="assets/js/page-articles.js"></script>
-    
+        <!-- 头部信息 -->
+        <div class="withu-private-header">
+            <div class="withu-private-icon-box">
+                <i data-lucide="lock"></i>
+            </div>
+            <div class="withu-private-badge-container">
+                <span class="withu-private-badge">恋爱相册</span>
+            </div>
+            <h1 class="withu-private-title">withU</h1>
+            <p class="withu-private-subtitle">
+                <span class="withu-private-divider-left"></span>
+                <span>相伴的第<span class="withu-private-highlight">1,115</span>天</span>
+                <span class="withu-private-divider-right"></span>
+            </p>
+        </div>
+
+        <!-- 密码表单 -->
+        <form id="privateAccessForm" class="withu-private-form" autocomplete="off" onsubmit="return false">
+            <div class="withu-private-input-wrapper">
+                <i data-lucide="key" class="withu-private-input-icon"></i>
+                <input type="password" id="privateAccessCode" name="pagepwd" placeholder="输入暗号"
+                    class="withu-private-input" autocomplete="off" data-1p-ignore="true" data-lpignore="true" data-form-type="other" required>
+                <button type="button" class="withu-private-eye-btn" id="privateTogglePassword">
+                    <i data-lucide="eye" class="withu-private-eye-icon"></i>
+                </button>
+            </div>
+
+            <button type="submit" id="privateSubmitBtn" class="withu-private-btn">
+                <span class="withu-private-btn-text">解锁时光</span>
+                <i data-lucide="chevron-right" class="withu-private-btn-icon"></i>
+                <div class="withu-private-btn-shimmer"></div>
+            </button>
+        </form>
+
+        <!-- 底部头像区域 -->
+                <div class="withu-private-avatars">
+                        <div class="withu-private-avatar-item" title="Ki.">
+                <div class="withu-private-avatar-img-box">
+                    <img src="https://love-really.kikiw.cn/Lovefolder/20260411043037_69d95ded97293201118237.webp"
+                        draggable="false" alt="Ki.">
+                </div>
+            </div>
+            
+            <div class="withu-private-heart">
+                <span class="withu-private-glow-dot"></span>
+            </div>
+
+                        <div class="withu-private-avatar-item" title="Really">
+                <div class="withu-private-avatar-img-box">
+                    <img src="https://love-really.kikiw.cn/Lovefolder/20260411043046_69d95df639c33274072975.webp"
+                        draggable="false" alt="Really">
+                </div>
+            </div>
+                    </div>
+        
+    </div>
+
+    <!-- PJAX 跳转锚点 -->
+    <a href="album-detail.php?code=20240430110842" id="privateRedirectLink" style="display:none;" data-pjax></a>
+</div>
+<script src="/assets/js/withu-private.js?wm=4c668768&v=1.0.74"></script>
+<script>
+// PJAX 场景：依赖已加载，立即渲染图标
+if (typeof lucide !== 'undefined') lucide.createIcons();
+// PJAX 重复导航时，外部 script 不会重新执行，需手动重新初始化
+if (typeof window.initPrivatePage === 'function') window.initPrivatePage();
+</script>
+</div><!-- /#pjax-container -->
 
     <!-- 留言弹窗遮罩层 -->
     <div class="mask" id="mask">
@@ -3898,7 +3656,7 @@
     <script>
         window.WITHU_CONFIG = window.WITHU_CONFIG || {};
         window.WITHU_CONFIG.userCity = "湖北 · 武汉";
-        window.WITHU_CONFIG.anonymousAvatar = "Lovefolder/20250310095445_67ce46659778a.gif";
+        window.WITHU_CONFIG.anonymousAvatar = "https://love-really.kikiw.cn/Lovefolder/20250310095445_67ce466597a45.webp";
     </script>
 
     <!-- 极验验证与留言提交绑定 -->
@@ -3965,31 +3723,31 @@
     });
     </script>
 
-<link rel="stylesheet" href="Style/Font/font_footer/iconfont.css">
+<link rel="stylesheet" href="/Style/Font/font_footer/iconfont.css?wm=4c668768&v=1.0.74">
 
-<script src="Style/vendor/confetti/confetti.browser.min.js"></script>
-<script src="assets/js/page-messages.js"></script>
-<script src="Style/toastify/lucide.min.js"></script>
-<script src="Style/toastify/toastify.js"></script>
+<script src="/Style/vendor/confetti/confetti.browser.min.js?wm=4c668768&v=1.0.74"></script>
+<script src="/assets/js/page-messages.js?wm=4c668768&v=1.0.74"></script>
+<script src="/Style/toastify/lucide.min.js?wm=4c668768&v=1.0.74"></script>
+<script src="/Style/toastify/toastify.js?wm=4c668768&v=1.0.74"></script>
 <script>if(typeof lucide!=='undefined')lucide.createIcons();</script>
-<script src="Style/js/clipboard.min.js"></script>
-<script src="assets/js/clipboard.js"></script>
-<script src="assets/js/tooltip.js"></script>
-<script src="Style/js/view-image.min.js"></script>
-<script src="Style/js/mian.js"></script>
-<script src="Style/LoveListStyle/carousel.umd.js"></script>
-<script src="Style/LoveListStyle/carousel.thumbs.umd.js"></script>
-<script src="Style/LoveListStyle/fancybox.umd.js"></script>
-<script src="assets/js/page-lovelist.js"></script>
-<script src="assets/js/page-index.js"></script>
-<script src="assets/js/page-detail.js"></script>
-<script src="assets/js/page-album-detail.js"></script>
-<script src="assets/js/html2canvas.min.js"></script>
-<script src="assets/js/chat.js"></script>
+<script src="/Style/js/clipboard.min.js?wm=4c668768&v=1.0.74"></script>
+<script src="/assets/js/clipboard.js?wm=4c668768&v=1.0.74"></script>
+<script src="/assets/js/tooltip.js?wm=4c668768&v=1.0.74"></script>
+<script src="/Style/js/view-image.min.js?wm=4c668768&v=1.0.74"></script>
+<script src="/Style/js/mian.js?wm=4c668768&v=1.0.74"></script>
+<script src="/Style/LoveListStyle/carousel.umd.js?wm=4c668768&v=1.0.74"></script>
+<script src="/Style/LoveListStyle/carousel.thumbs.umd.js?wm=4c668768&v=1.0.74"></script>
+<script src="/Style/LoveListStyle/fancybox.umd.js?wm=4c668768&v=1.0.74"></script>
+<script src="/assets/js/page-lovelist.js?wm=4c668768&v=1.0.74"></script>
+<script src="/assets/js/page-index.js?wm=4c668768&v=1.0.74"></script>
+<script src="/assets/js/page-detail.js?wm=4c668768&v=1.0.74"></script>
+<script src="/assets/js/page-album-detail.js?wm=4c668768&v=1.0.74"></script>
+<script src="/assets/js/html2canvas.min.js?wm=4c668768&v=1.0.74"></script>
+<script src="/assets/js/chat.js?wm=4c668768&v=1.0.74"></script>
 
-<script src="assets/js/visitor-hash.js"></script>
-<script src="assets/js/interaction.js"></script>
-<script src="assets/js/context-menu.js"></script>
+<script src="/assets/js/visitor-hash.js?wm=4c668768&v=1.0.74"></script>
+<script src="/assets/js/interaction.js?wm=4c668768&v=1.0.74"></script>
+<script src="/assets/js/context-menu.js?wm=4c668768&v=1.0.74"></script>
 
 <!-- 足迹地图弹窗 -->
 <!-- ============ 足迹地图弹窗 ============ -->
@@ -4109,7 +3867,7 @@
     </div>
 </div>
 <!-- ============ /足迹地图弹窗 ============ -->
-<script src="assets/js/map.js"></script>
+<script src="/assets/js/map.js?wm=4c668768&v=1.0.74"></script>
 
 <div id="pjax-container">
 
@@ -4238,7 +3996,7 @@
 
         .cike:hover {
             cursor: pointer;
-            cursor: url(Style/cur/hover.cur), pointer;
+            cursor: url(/Style/cur/hover.cur?wm=4c668768), pointer;
         }
 
         button:disabled {
@@ -4339,7 +4097,7 @@
             bottom: 0;
             width: 100%;
             height: 36px;
-            background: url(Style/img/animalBg.jpg) repeat center / auto 100%;
+            background: url(/Style/img/animalBg.jpg?wm=4c668768) repeat center / auto 100%;
             box-shadow: 0 4px 7px rgba(0, 0, 0, .15);
         }
 
@@ -4359,7 +4117,7 @@
 </div>
 
 <div id="footer-animal">
-    <img class="animal" src="Style/img/animals.png" draggable="false" alt="动物">
+    <img class="animal" src="/Style/img/animals.png?wm=4c668768&v=1.0.74" draggable="false" alt="动物">
 </div>
 
 <div class="div_marb_7rem-none">
@@ -4367,19 +4125,19 @@
         <div class="footer">
 
                             <p><a class="github-badge" href="https://icp.gov.moe/?keyword=20248288" target="_blank">
-                        <span class="badge-subject"><img src="Style/img/icp/moeICP.png"></span>
+                        <span class="badge-subject"><img src="/Style/img/icp/moeICP.png?wm=4c668768&v=1.0.74"></span>
                         <span class="badge-value bg-pink">
                             萌ICP备20248288号                        </span>
                     </a></p>
                                         <p><a class="github-badge" href="https://beian.miit.gov.cn/#/Integrated/index" target="_blank">
-                        <span class="badge-subject"><img src="Style/img/icp/ICP.svg"></span>
+                        <span class="badge-subject"><img src="/Style/img/icp/ICP.svg?wm=4c668768&v=1.0.74"></span>
                         <span class="badge-value bg-blue">
                             粤ICP备2021037776号                        </span>
                     </a></p>
                                         <p><a class="github-badge"
                         href="http://www.beian.gov.cn/portal/registerSystemInfo?recordcode=1112223334455"
                         target="_blank">
-                        <span class="badge-subject"><img src="Style/img/icp/policeICP.svg"></span>
+                        <span class="badge-subject"><img src="/Style/img/icp/policeICP.svg?wm=4c668768&v=1.0.74"></span>
                         <span class="badge-value bg-DIY">
                             粤公网安备 1112223334455号                        </span>
                     </a></p>
@@ -4402,37 +4160,37 @@
     <div class="withu-tab-template-v5-container withu-glass-panel" id="withu-mobile-nav-v5">
         <div class="withu-tab-template-v5-indicator"></div>
                                 <a class="withu-base-nav-item js-withu-v5-item"
-               href="articles.html">
+               href="articles.php">
                 <i class="ph-fill ph-notebook"></i>
                 <span>点滴</span>
             </a>
                                 <a class="withu-base-nav-item js-withu-v5-item"
-               href="messages.html">
+               href="messages.php">
                 <i class="ph-fill ph-chat-teardrop-dots"></i>
                 <span>留言</span>
             </a>
                                 <a class="withu-base-nav-item js-withu-v5-item"
-               href="timeline.html">
+               href="timeline.php">
                 <i class="ph-fill ph-clock-countdown"></i>
                 <span>轨迹</span>
             </a>
                                 <a class="withu-base-nav-item js-withu-v5-item"
-               href="index.html">
+               href="index.php">
                 <i class="ph-fill ph-house"></i>
                 <span>首页</span>
             </a>
                                 <a class="withu-base-nav-item js-withu-v5-item"
-               href="albums.html">
+               href="albums.php">
                 <i class="ph-fill ph-camera"></i>
                 <span>相册</span>
             </a>
                                 <a class="withu-base-nav-item js-withu-v5-item"
-               href="lovelist.html">
+               href="lovelist.php">
                 <i class="ph-fill ph-list-checks"></i>
                 <span>清单</span>
             </a>
                                 <a class="withu-base-nav-item js-withu-v5-item"
-               href="about.html">
+               href="about.php">
                 <i class="ph-fill ph-book-open-text"></i>
                 <span>关于</span>
             </a>
@@ -4440,12 +4198,12 @@
 
 </div>
 
-<script src="assets/js/mobile-nav.js"></script>
+<script src="/assets/js/mobile-nav.js?wm=4c668768&v=1.0.74"></script>
 
 <script>
     (function () {
-        var requestId = "eeeb45256a201984b7651f9b69c5340d";
-        var token = "1cc021ec8bc140afe8ba78bd2b93f8190660138e6869096184751027ed5e7c21";
+        var requestId = "eeb93a4af9c10b3216a41c00bc813c4e";
+        var token = "156fbdab2af4fb85f26b3345684aef1ec279918d67230d7fbfbe4778af3fdf21";
         window.WITHU_CONFIG = Object.assign(window.WITHU_CONFIG || {}, {
             endpoints: Object.assign({}, (window.WITHU_CONFIG && window.WITHU_CONFIG.endpoints) || {}, {
                 accessBeacon: "services/access-beacon.php"            })
@@ -4528,5 +4286,4 @@
 
 <script src="assets/js/auth-status.js"></script>
 </body>
-
 </html>

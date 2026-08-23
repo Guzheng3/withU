@@ -498,7 +498,7 @@
          */
         initByPage() {
             const path = window.location.pathname;
-            const page = path.split('/').pop() || 'index.html';
+            const page = path.split('/').pop() || 'index.php';
             const pageName = page.replace(/\.(php|html)$/, '');
 
             // 页面与模块的映射
@@ -753,10 +753,10 @@
             const $capsule = $('.withu-capsule-back');
 
             const pageName = currentURL.split('/').pop() || '';
-            if (pageName === 'page.html' || pageName === 'album-detail.html') {
+            if (pageName === 'page.php' || pageName === 'album-detail.php') {
                 // 子页面：激活胶囊，设置返回链接
                 $capsule.addClass('subpage-back-ready');
-                const homeUrl = (window.WITHU_CONFIG && window.WITHU_CONFIG.siteBase || '') + 'index.html';
+                const homeUrl = (window.WITHU_CONFIG && window.WITHU_CONFIG.siteBase || '') + 'index.php';
                 $capsule.find('.withu-capsule-back__prev').attr('href', previousPage || homeUrl);
 
                 $capsule.find('.withu-capsule-back__prev').off('click.lg').on('click.lg', function() {

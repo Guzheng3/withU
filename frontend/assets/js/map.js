@@ -2874,7 +2874,7 @@ const createAlbumMarker = (album) => {
 // 创建相册信息窗口 - 堆叠照片风格
 const createAlbumInfoWindow = (album) => {
     const locationShort = album.city ? (album.city.split('·')[1] || album.city).trim() : '';
-    const detailUrl = album.code ? `album-detail.html?code=${album.code}` : '';
+    const detailUrl = album.code ? `album-detail.php?code=${album.code}` : '';
     const coverImg = album.thumb || album.image;
     const geoCount = album.photoCount || 0;
 
@@ -3827,7 +3827,7 @@ const createMomentMarker = (moment) => {
 // 创建点点滴滴信息窗口 - 胶囊横向布局
 const createMomentInfoWindow = (moment) => {
     const isEncrypted = moment.encryptionSwitch === 1;
-    const detailUrl = isEncrypted ? '' : `page.html?id=${moment.id}`;
+    const detailUrl = isEncrypted ? '' : `page.php?id=${moment.id}`;
 
     // 格式化时间
     const formatMomentTime = (timeStr) => {
@@ -4254,7 +4254,7 @@ const createPhotoMarker = (photo) => {
 // 创建照片信息窗口 - 暗黑主题卡片，可点击跳转详情
 const createPhotoInfoWindow = (photo, albumName) => {
     const locationShort = photo.location || '';
-    const detailUrl = photo.albumCode ? `album-detail.html?code=${photo.albumCode}` : '';
+    const detailUrl = photo.albumCode ? `album-detail.php?code=${photo.albumCode}` : '';
     const cardContent = `
         <div class="photo-detail-card">
             <div class="phd-preview" style="background-image: url('${photo.thumb || photo.url}')">

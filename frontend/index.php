@@ -71,7 +71,7 @@ try {
 <meta name="description" content="withU 是一个适合记录恋爱日常与纪念时刻的情侣小站，支持相册、时间轴、点滴文章、留言互动和邀请页面，让每一段关系都能拥有自己的专属回忆空间。">
 <meta name="keywords" content="情侣网站,恋爱记录,祝福留言,情侣相册,恋爱清单,爱情纪念,情侣头像框,祝福语句,情侣互动,爱情相册,情侣事件记录,情侣留言,爱情故事,情感交流,用户互动,祝福卡片,音乐分享,甜蜜瞬间,情侣活动,爱情动态,withU">
 <meta name="robots" content="index, follow">
-<link rel="canonical" href="index.html">
+<link rel="canonical" href="index.php">
 
 <!-- Open Graph (Facebook/微信/QQ) -->
 <meta property="og:type" content="website">
@@ -3123,13 +3123,13 @@ try {
     <div class="header">
         <!-- 吸顶 Logo（模板渲染：根据 $stuckLogoStyle 只输出选中的一套） -->
                                 <div class="logo" style="margin-right:auto;margin-left:3%">
-                        <h1><a class="alogo" href="index.html" title="withU" style="display:inline-flex;align-items:center;gap:4px"><img src="assets/images/withu-logo.png" alt="withU" style="height:2.2rem;width:auto;object-fit:contain;vertical-align:middle"></a></h1>
+                        <h1><a class="alogo" href="index.php" title="withU" style="display:inline-flex;align-items:center;gap:4px"><img src="assets/images/withu-logo.png" alt="withU" style="height:2.2rem;width:auto;object-fit:contain;vertical-align:middle"></a></h1>
         </div>
         <div class="withu-capsule-back">
             <a href="javascript:void(0);" class="withu-capsule-back__btn withu-capsule-back__prev" title="返回">
                 <i data-lucide="chevron-left"></i>
             </a>
-            <a href="index.html" class="withu-capsule-back__btn withu-capsule-back__home" title="首页">
+            <a href="index.php" class="withu-capsule-back__btn withu-capsule-back__home" title="首页">
                 <i data-lucide="house"></i>
             </a>
         </div>
@@ -3416,49 +3416,49 @@ try {
     <nav class="withu-nav-island-container" id="withuNavIsland">
         <div class="withu-nav-indicator" id="withuNavIndicator"></div>
 
-                <a href="articles.html"
+                <a href="articles.php"
            class="withu-nav-island-item  "
            draggable="false"
            data-desc="写下日常、心情与想念"
            data-meta="Memory Notes">
             <i class="ph-fill ph-notebook"></i>
             <span>点滴</span>        </a>
-                <a href="messages.html"
+                <a href="messages.php"
            class="withu-nav-island-item  "
            draggable="false"
            data-desc="留下想说的话与温柔回应"
            data-meta="Kind Messages">
             <i class="ph-fill ph-chat-teardrop-dots"></i>
             <span>留言</span>        </a>
-                <a href="timeline.html"
+                <a href="timeline.php"
            class="withu-nav-island-item  "
            draggable="false"
            data-desc="回看我们一路走来的轨迹"
            data-meta="Steps of Us">
             <i class="ph-fill ph-clock-countdown"></i>
             <span>轨迹</span>        </a>
-                <a href="index.html"
+                <a href="index.php"
            class="withu-nav-island-item active nav-home"
            draggable="false"
            data-desc="收好我们的日常与心动"
            data-meta="Our Cozy Place">
             <i class="ph-fill ph-house"></i>
                     </a>
-                <a href="albums.html"
+                <a href="albums.php"
            class="withu-nav-island-item  "
            draggable="false"
            data-desc="收藏见面与出游的闪亮瞬间"
            data-meta="Photo Keepsakes">
             <i class="ph-fill ph-camera"></i>
             <span>相册</span>        </a>
-                <a href="lovelist.html"
+                <a href="lovelist.php"
            class="withu-nav-island-item  "
            draggable="false"
            data-desc="记下想一起完成的心愿"
            data-meta="Plans Together">
             <i class="ph-fill ph-list-checks"></i>
             <span>清单</span>        </a>
-                <a href="about.html"
+                <a href="about.php"
            class="withu-nav-island-item  "
            draggable="false"
            data-desc="用对话回放我们的故事"
@@ -3583,7 +3583,7 @@ try {
                                 </div>
                             </div>
                             <!-- 相册入口链接 -->
-                            <a href="albums.html" class="withu-smart-card__album-link">
+                            <a href="albums.php" class="withu-smart-card__album-link">
                                 <span>进入相册</span>
                                 <i class="ph-bold ph-arrow-right"></i>
                             </a>
@@ -3930,7 +3930,7 @@ try {
                         </h2>
                     </div>
                     <div class="withu-section-header__right">
-                        <a href="lovelist.html" class="withu-link-more">
+                        <a href="lovelist.php" class="withu-link-more">
                             <i class="ph-bold ph-arrow-right"></i>
                         </a>
                     </div>
@@ -3938,7 +3938,7 @@ try {
                 <div class="withu-events-grid">
                     
                                                     <!-- 有图片样式 -->
-                            <div data-aos="fade-up" data-aos-delay="0">                            <a href="lovelist.html#event-36"
+                            <div data-aos="fade-up" data-aos-delay="0">                            <a href="lovelist.php#event-36"
                                 class="withu-event-card withu-event-card--has-img withu-event-card--link">
                                 <img class="withu-event-bg-img lazy" data-src="Lovefolder/20260411053515_69d96d13af174939872800.webp"
                                     alt="一起去吃淘蛙">
@@ -3969,7 +3969,7 @@ try {
                         
                     
                                                     <!-- 有图片样式 -->
-                            <div data-aos="fade-up" data-aos-delay="50">                            <a href="lovelist.html#event-35"
+                            <div data-aos="fade-up" data-aos-delay="50">                            <a href="lovelist.php#event-35"
                                 class="withu-event-card withu-event-card--has-img withu-event-card--link">
                                 <img class="withu-event-bg-img lazy" data-src="Lovefolder/20260409211730_69d7a6eaecf46322029252.webp"
                                     alt="测试修改问题 2.0.7">
@@ -4000,7 +4000,7 @@ try {
                         
                     
                                                     <!-- 未完成/锁定样式 -->
-                            <div data-aos="fade-up" data-aos-delay="100">                            <a href="lovelist.html#event-34"
+                            <div data-aos="fade-up" data-aos-delay="100">                            <a href="lovelist.php#event-34"
                                 class="withu-event-card withu-event-card--locked withu-event-card--link">
                                 <div class="withu-event-content">
                                     <div class="withu-flex-between-start">
@@ -4026,7 +4026,7 @@ try {
                             </div>                        
                     
                                                     <!-- 有图片样式 -->
-                            <div data-aos="fade-up" data-aos-delay="150">                            <a href="lovelist.html#event-33"
+                            <div data-aos="fade-up" data-aos-delay="150">                            <a href="lovelist.php#event-33"
                                 class="withu-event-card withu-event-card--has-img withu-event-card--link">
                                 <img class="withu-event-bg-img lazy" data-src="Lovefolder/20260411053340_69d96cb4ec19c441742336.webp"
                                     alt="一起去吃海底捞">
@@ -4553,13 +4553,13 @@ try {
                         </h2>
                     </div>
                     <div class="withu-section-header__right">
-                        <a href="articles.html" class="withu-link-more">
+                        <a href="articles.php" class="withu-link-more">
                             <i class="ph-bold ph-arrow-right"></i>
                         </a>
                     </div>
                 </div>
                 <div class="withu-journal-grid">
-                                                    <div data-aos="fade-up" data-aos-delay="0">                            <a href="page.html?id=12"
+                                                    <div data-aos="fade-up" data-aos-delay="0">                            <a href="page.php?id=12"
                                 class="withu-journal-card withu-journal-card--link">
                                 <div class="withu-watermark">DAY 1002</div>
 
@@ -4595,7 +4595,7 @@ try {
                                     </div>
                                 </div>
                             </a>
-                            </div>                                                    <div data-aos="fade-up" data-aos-delay="50">                            <a href="page.html?id=11"
+                            </div>                                                    <div data-aos="fade-up" data-aos-delay="50">                            <a href="page.php?id=11"
                                 class="withu-journal-card withu-journal-card--link">
                                 <div class="withu-watermark">DAY 997</div>
 
@@ -4631,7 +4631,7 @@ try {
                                     </div>
                                 </div>
                             </a>
-                            </div>                                                    <div data-aos="fade-up" data-aos-delay="100">                            <a href="page.html?id=10"
+                            </div>                                                    <div data-aos="fade-up" data-aos-delay="100">                            <a href="page.php?id=10"
                                 class="withu-journal-card withu-journal-card--link">
                                 <div class="withu-watermark">DAY 997</div>
 
@@ -4667,7 +4667,7 @@ try {
                                     </div>
                                 </div>
                             </a>
-                            </div>                                                    <div data-aos="fade-up" data-aos-delay="150">                            <a href="page.html?id=9"
+                            </div>                                                    <div data-aos="fade-up" data-aos-delay="150">                            <a href="page.php?id=9"
                                 class="withu-journal-card withu-journal-card--link">
                                 <div class="withu-watermark">DAY 996</div>
 
@@ -4703,7 +4703,7 @@ try {
                                     </div>
                                 </div>
                             </a>
-                            </div>                                                    <div data-aos="fade-up" data-aos-delay="200">                            <a href="page.html?id=8"
+                            </div>                                                    <div data-aos="fade-up" data-aos-delay="200">                            <a href="page.php?id=8"
                                 class="withu-journal-card withu-journal-card--link">
                                 <div class="withu-watermark">DAY 996</div>
 
@@ -4739,7 +4739,7 @@ try {
                                     </div>
                                 </div>
                             </a>
-                            </div>                                                    <div data-aos="fade-up" data-aos-delay="250">                            <a href="page.html?id=1"
+                            </div>                                                    <div data-aos="fade-up" data-aos-delay="250">                            <a href="page.php?id=1"
                                 class="withu-journal-card withu-journal-card--link">
                                 <div class="withu-watermark">DAY 554</div>
 
@@ -4787,13 +4787,13 @@ try {
                         </h2>
                     </div>
                     <div class="withu-section-header__right">
-                        <a href="albums.html" class="withu-link-more">
+                        <a href="albums.php" class="withu-link-more">
                             <i class="ph-bold ph-arrow-right"></i>
                         </a>
                     </div>
                 </div>
                                 <div class="withu-mosaic-grid withu-mosaic-count-3">
-                                            <div data-aos="fade-up" data-aos-delay="0">                        <a href="album-detail.html?code=1776318513866" class="withu-mosaic-item">
+                                            <div data-aos="fade-up" data-aos-delay="0">                        <a href="album-detail.php?code=1776318513866" class="withu-mosaic-item">
                             <img data-src="Lovefolder/20260409200702_69d79666f3e2b024272479.webp" class="withu-mosaic-img lazy">
 
                             <div class="withu-mosaic-pos-tr">
@@ -4818,7 +4818,7 @@ try {
                                 </div>
                             </div>
                         </a>
-                        </div>                                            <div data-aos="fade-up" data-aos-delay="50">                        <a href="album-detail.html?code=20250811124452" class="withu-mosaic-item">
+                        </div>                                            <div data-aos="fade-up" data-aos-delay="50">                        <a href="album-detail.php?code=20250811124452" class="withu-mosaic-item">
                             <img data-src="Lovefolder/20250811124741_689975ed5796a_thumb.webp" class="withu-mosaic-img lazy">
 
                             <div class="withu-mosaic-pos-tr">
@@ -4843,7 +4843,7 @@ try {
                                 </div>
                             </div>
                         </a>
-                        </div>                                            <div data-aos="fade-up" data-aos-delay="100">                        <a href="album-detail.html?code=20241225163641" class="withu-mosaic-item">
+                        </div>                                            <div data-aos="fade-up" data-aos-delay="100">                        <a href="album-detail.php?code=20241225163641" class="withu-mosaic-item">
                             <img data-src="Lovefolder/20250310100354_67ce488abed5b_thumb.webp" class="withu-mosaic-img lazy">
 
                             <div class="withu-mosaic-pos-tr">
@@ -4884,7 +4884,7 @@ try {
                         </h2>
                     </div>
                     <div class="withu-section-header__right">
-                        <a href="messages.html" class="withu-link-more">
+                        <a href="messages.php" class="withu-link-more">
                             <i class="ph-bold ph-arrow-right"></i>
                         </a>
                     </div>
@@ -4892,7 +4892,7 @@ try {
 
                 <div class="withu-home-message-container" id="messageCarousel">
                     <div class="withu-home-message-track">
-                                                                    <a href="messages.html#comment_544" class="withu-home-message-card">
+                                                                    <a href="messages.php#comment_544" class="withu-home-message-card">
                             <div class="withu-home-message-header">
                                 <img class="withu-home-message-avatar" src="https://weavatar.com/avatar/4e11c40a0e83de42c9c91974b48630bf05a2f75a79827dd01491dd99a09a57e0?s=100&amp;d=mm&amp;r=g" alt="南城">
                                 <div class="withu-home-message-user-info">
@@ -4910,7 +4910,7 @@ try {
                                                                                                 <span class="withu-chip withu-chip--light withu-chip--no-transform"><i class="ph-bold ph-globe"></i> Chrome</span>
                                                             </div>
                         </a>
-                                                                    <a href="messages.html#comment_543" class="withu-home-message-card">
+                                                                    <a href="messages.php#comment_543" class="withu-home-message-card">
                             <div class="withu-home-message-header">
                                 <img class="withu-home-message-avatar" src="https://weavatar.com/avatar/4e11c40a0e83de42c9c91974b48630bf05a2f75a79827dd01491dd99a09a57e0?s=100&amp;d=mm&amp;r=g" alt="南城">
                                 <div class="withu-home-message-user-info">
@@ -4928,7 +4928,7 @@ try {
                                                                                                 <span class="withu-chip withu-chip--light withu-chip--no-transform"><i class="ph-bold ph-globe"></i> Chrome</span>
                                                             </div>
                         </a>
-                                                                    <a href="messages.html#comment_540" class="withu-home-message-card">
+                                                                    <a href="messages.php#comment_540" class="withu-home-message-card">
                             <div class="withu-home-message-header">
                                 <img class="withu-home-message-avatar" src="Lovefolder/20250310095643_67ce46dbe283d.webp" alt="深卦">
                                 <div class="withu-home-message-user-info">
@@ -4946,7 +4946,7 @@ try {
                                                                                                 <span class="withu-chip withu-chip--light withu-chip--no-transform"><i class="ph-bold ph-globe"></i> Chrome</span>
                                                             </div>
                         </a>
-                                                                    <a href="messages.html#reply_516_536" class="withu-home-message-card">
+                                                                    <a href="messages.php#reply_516_536" class="withu-home-message-card">
                             <div class="withu-home-message-header">
                                 <img class="withu-home-message-avatar" src="https://weavatar.com/avatar/e9f098f09a2ee8095e5bf8b2f862be96fb873ba805901d76f293162a53d69dee?s=100&amp;d=mm&amp;r=g" alt="独木舟">
                                 <div class="withu-home-message-user-info">
@@ -4964,7 +4964,7 @@ try {
                                                                                                 <span class="withu-chip withu-chip--light withu-chip--no-transform"><i class="ph-bold ph-globe"></i> Chrome</span>
                                                             </div>
                         </a>
-                                                                    <a href="messages.html#reply_533_535" class="withu-home-message-card">
+                                                                    <a href="messages.php#reply_533_535" class="withu-home-message-card">
                             <div class="withu-home-message-header">
                                 <img class="withu-home-message-avatar" src="https://weavatar.com/avatar/43c37253c302e96e98489ba43c055b5463e18bca05d4f70eaa544dfe834a6c71?s=100&amp;d=mm&amp;r=g" alt="Qing.Ruo(奶龙版)">
                                 <div class="withu-home-message-user-info">
@@ -4982,7 +4982,7 @@ try {
                                                                                                 <span class="withu-chip withu-chip--light withu-chip--no-transform"><i class="ph-bold ph-globe"></i> Chrome</span>
                                                             </div>
                         </a>
-                                                                    <a href="messages.html#comment_533" class="withu-home-message-card">
+                                                                    <a href="messages.php#comment_533" class="withu-home-message-card">
                             <div class="withu-home-message-header">
                                 <img class="withu-home-message-avatar" src="https://weavatar.com/avatar/43c37253c302e96e98489ba43c055b5463e18bca05d4f70eaa544dfe834a6c71?s=100&amp;d=mm&amp;r=g" alt="Qing.Ruo(奶龙版)">
                                 <div class="withu-home-message-user-info">
@@ -5000,7 +5000,7 @@ try {
                                                                                                 <span class="withu-chip withu-chip--light withu-chip--no-transform"><i class="ph-bold ph-globe"></i> Chrome</span>
                                                             </div>
                         </a>
-                                                                    <a href="messages.html#comment_526" class="withu-home-message-card">
+                                                                    <a href="messages.php#comment_526" class="withu-home-message-card">
                             <div class="withu-home-message-header">
                                 <img class="withu-home-message-avatar" src="https://weavatar.com/avatar/9a4eeef886a23c8a579df9a93d74651bb41e5de8ed539d355d7c21db80c1e8da?s=100&amp;d=mm&amp;r=g" alt="听雨">
                                 <div class="withu-home-message-user-info">
@@ -5018,7 +5018,7 @@ try {
                                                                                                 <span class="withu-chip withu-chip--light withu-chip--no-transform"><i class="ph-bold ph-globe"></i> Chrome</span>
                                                             </div>
                         </a>
-                                                                    <a href="messages.html#comment_527" class="withu-home-message-card">
+                                                                    <a href="messages.php#comment_527" class="withu-home-message-card">
                             <div class="withu-home-message-header">
                                 <img class="withu-home-message-avatar" src="https://weavatar.com/avatar/a122f65031fefddae290ee10ef645e0457987386325d501444c5204eb84b6cf0?s=100&amp;d=mm&amp;r=g" alt="Ki.">
                                 <div class="withu-home-message-user-info">
@@ -5035,7 +5035,7 @@ try {
                                                                                                                                 <span class="withu-chip withu-chip--light withu-chip--no-transform"><i class="ph-bold ph-globe"></i> Safari</span>
                                                             </div>
                         </a>
-                                                                    <a href="messages.html#comment_523" class="withu-home-message-card">
+                                                                    <a href="messages.php#comment_523" class="withu-home-message-card">
                             <div class="withu-home-message-header">
                                 <img class="withu-home-message-avatar" src="https://weavatar.com/avatar/f06b376a446f6b7a0526c79699a09af4d8f67e4f230174bb3f7915128962ffcb?s=100&amp;d=mm&amp;r=g" alt="一清化剑.">
                                 <div class="withu-home-message-user-info">
@@ -5053,7 +5053,7 @@ try {
                                                                                                 <span class="withu-chip withu-chip--light withu-chip--no-transform"><i class="ph-bold ph-globe"></i> Chrome</span>
                                                             </div>
                         </a>
-                                                                    <a href="messages.html#reply_521_522" class="withu-home-message-card">
+                                                                    <a href="messages.php#reply_521_522" class="withu-home-message-card">
                             <div class="withu-home-message-header">
                                 <img class="withu-home-message-avatar" src="https://weavatar.com/avatar/a122f65031fefddae290ee10ef645e0457987386325d501444c5204eb84b6cf0?s=100&amp;d=mm&amp;r=g" alt="Ki.">
                                 <div class="withu-home-message-user-info">
@@ -5071,7 +5071,7 @@ try {
                                                                                                 <span class="withu-chip withu-chip--light withu-chip--no-transform"><i class="ph-bold ph-globe"></i> Chrome</span>
                                                             </div>
                         </a>
-                                                                    <a href="messages.html#comment_521" class="withu-home-message-card">
+                                                                    <a href="messages.php#comment_521" class="withu-home-message-card">
                             <div class="withu-home-message-header">
                                 <img class="withu-home-message-avatar" src="https://weavatar.com/avatar/7ef891bf3c0bbd177ca5765a93b12f145f957dff9d862ddfc2d34ced7c4f2c4d?s=100&amp;d=mm&amp;r=g" alt="Ki.">
                                 <div class="withu-home-message-user-info">
@@ -5089,7 +5089,7 @@ try {
                                                                                                 <span class="withu-chip withu-chip--light withu-chip--no-transform"><i class="ph-bold ph-globe"></i> Chrome</span>
                                                             </div>
                         </a>
-                                                                    <a href="messages.html#comment_520" class="withu-home-message-card">
+                                                                    <a href="messages.php#comment_520" class="withu-home-message-card">
                             <div class="withu-home-message-header">
                                 <img class="withu-home-message-avatar" src="https://weavatar.com/avatar/b79d5dc704f398313e2dd108021a399c2bd0adfd568b794ccc9499c621ac61d4?s=100&amp;d=mm&amp;r=g" alt="江奕浩">
                                 <div class="withu-home-message-user-info">
@@ -5107,7 +5107,7 @@ try {
                                                                                                 <span class="withu-chip withu-chip--light withu-chip--no-transform"><i class="ph-bold ph-globe"></i> Chrome</span>
                                                             </div>
                         </a>
-                                                                    <a href="messages.html#comment_519" class="withu-home-message-card">
+                                                                    <a href="messages.php#comment_519" class="withu-home-message-card">
                             <div class="withu-home-message-header">
                                 <img class="withu-home-message-avatar" src="https://weavatar.com/avatar/6e4f1f21dce85d7fc7e9edf34d6e7796d5db3be2d5eda25de4c95ae8d345241b?s=100&amp;d=mm&amp;r=g" alt="轩">
                                 <div class="withu-home-message-user-info">
@@ -5125,7 +5125,7 @@ try {
                                                                                                 <span class="withu-chip withu-chip--light withu-chip--no-transform"><i class="ph-bold ph-globe"></i> Chrome</span>
                                                             </div>
                         </a>
-                                                                    <a href="messages.html#comment_518" class="withu-home-message-card">
+                                                                    <a href="messages.php#comment_518" class="withu-home-message-card">
                             <div class="withu-home-message-header">
                                 <img class="withu-home-message-avatar" src="https://weavatar.com/avatar/7a92b8dc2bdc586c5b761c7bb3ded431a0edb6def62c8fad50f97e0a3496c4f8?s=100&amp;d=mm&amp;r=g" alt="小嘿">
                                 <div class="withu-home-message-user-info">
@@ -5143,7 +5143,7 @@ try {
                                                                                                 <span class="withu-chip withu-chip--light withu-chip--no-transform"><i class="ph-bold ph-globe"></i> Chrome</span>
                                                             </div>
                         </a>
-                                                                    <a href="messages.html#reply_516_517" class="withu-home-message-card">
+                                                                    <a href="messages.php#reply_516_517" class="withu-home-message-card">
                             <div class="withu-home-message-header">
                                 <img class="withu-home-message-avatar" src="https://weavatar.com/avatar/86587ba68b4fea9e6f44e77d9860f9341b210610c323bdcb6ca3db88b233a809?s=100&amp;d=mm&amp;r=g" alt=".">
                                 <div class="withu-home-message-user-info">
@@ -5161,7 +5161,7 @@ try {
                                                                                                 <span class="withu-chip withu-chip--light withu-chip--no-transform"><i class="ph-bold ph-globe"></i> Chrome</span>
                                                             </div>
                         </a>
-                                                                    <a href="messages.html#comment_516" class="withu-home-message-card">
+                                                                    <a href="messages.php#comment_516" class="withu-home-message-card">
                             <div class="withu-home-message-header">
                                 <img class="withu-home-message-avatar" src="https://weavatar.com/avatar/7ef891bf3c0bbd177ca5765a93b12f145f957dff9d862ddfc2d34ced7c4f2c4d?s=100&amp;d=mm&amp;r=g" alt="Ki.">
                                 <div class="withu-home-message-user-info">
@@ -5179,7 +5179,7 @@ try {
                                                                                                 <span class="withu-chip withu-chip--light withu-chip--no-transform"><i class="ph-bold ph-globe"></i> Chrome</span>
                                                             </div>
                         </a>
-                                                                    <a href="messages.html#comment_514" class="withu-home-message-card">
+                                                                    <a href="messages.php#comment_514" class="withu-home-message-card">
                             <div class="withu-home-message-header">
                                 <img class="withu-home-message-avatar" src="https://weavatar.com/avatar/43e538b0ccbd0e491d47baefe8d4816f77a1fdd58f5ed8663fb1283b377cfae6?s=100&amp;d=mm&amp;r=g" alt="泽北饱饱想吃糖">
                                 <div class="withu-home-message-user-info">
@@ -5197,7 +5197,7 @@ try {
                                                                                                 <span class="withu-chip withu-chip--light withu-chip--no-transform"><i class="ph-bold ph-globe"></i> Chrome</span>
                                                             </div>
                         </a>
-                                                                    <a href="messages.html#comment_512" class="withu-home-message-card">
+                                                                    <a href="messages.php#comment_512" class="withu-home-message-card">
                             <div class="withu-home-message-header">
                                 <img class="withu-home-message-avatar" src="https://weavatar.com/avatar/a9b68c9c93d54c0670271c778cb349230a33d24b2f34473970532ca513d0baa1?s=100&amp;d=mm&amp;r=g" alt="小晴挽星河✨✨">
                                 <div class="withu-home-message-user-info">
@@ -5215,7 +5215,7 @@ try {
                                                                                                 <span class="withu-chip withu-chip--light withu-chip--no-transform"><i class="ph-bold ph-globe"></i> Chrome</span>
                                                             </div>
                         </a>
-                                                                    <a href="messages.html#reply_508_511" class="withu-home-message-card">
+                                                                    <a href="messages.php#reply_508_511" class="withu-home-message-card">
                             <div class="withu-home-message-header">
                                 <img class="withu-home-message-avatar" src="https://weavatar.com/avatar/86587ba68b4fea9e6f44e77d9860f9341b210610c323bdcb6ca3db88b233a809?s=100&amp;d=mm&amp;r=g" alt=".">
                                 <div class="withu-home-message-user-info">
@@ -5233,7 +5233,7 @@ try {
                                                                                                 <span class="withu-chip withu-chip--light withu-chip--no-transform"><i class="ph-bold ph-globe"></i> Chrome</span>
                                                             </div>
                         </a>
-                                                                    <a href="messages.html#comment_508" class="withu-home-message-card">
+                                                                    <a href="messages.php#comment_508" class="withu-home-message-card">
                             <div class="withu-home-message-header">
                                 <img class="withu-home-message-avatar" src="https://weavatar.com/avatar/7ef891bf3c0bbd177ca5765a93b12f145f957dff9d862ddfc2d34ced7c4f2c4d?s=100&amp;d=mm&amp;r=g" alt="Ki.">
                                 <div class="withu-home-message-user-info">
@@ -5251,7 +5251,7 @@ try {
                                                                                                 <span class="withu-chip withu-chip--light withu-chip--no-transform"><i class="ph-bold ph-globe"></i> Chrome</span>
                                                             </div>
                         </a>
-                                                                    <a href="messages.html#comment_507" class="withu-home-message-card">
+                                                                    <a href="messages.php#comment_507" class="withu-home-message-card">
                             <div class="withu-home-message-header">
                                 <img class="withu-home-message-avatar" src="https://weavatar.com/avatar/86587ba68b4fea9e6f44e77d9860f9341b210610c323bdcb6ca3db88b233a809?s=100&amp;d=mm&amp;r=g" alt=".">
                                 <div class="withu-home-message-user-info">
@@ -5269,7 +5269,7 @@ try {
                                                                                                 <span class="withu-chip withu-chip--light withu-chip--no-transform"><i class="ph-bold ph-globe"></i> Chrome</span>
                                                             </div>
                         </a>
-                                                                    <a href="messages.html#reply_501_506" class="withu-home-message-card">
+                                                                    <a href="messages.php#reply_501_506" class="withu-home-message-card">
                             <div class="withu-home-message-header">
                                 <img class="withu-home-message-avatar" src="Lovefolder/20250310095445_67ce466597870.gif" alt="匿名">
                                 <div class="withu-home-message-user-info">
@@ -5287,7 +5287,7 @@ try {
                                                                                                 <span class="withu-chip withu-chip--light withu-chip--no-transform"><i class="ph-bold ph-globe"></i> Chrome</span>
                                                             </div>
                         </a>
-                                                                    <a href="messages.html#comment_504" class="withu-home-message-card">
+                                                                    <a href="messages.php#comment_504" class="withu-home-message-card">
                             <div class="withu-home-message-header">
                                 <img class="withu-home-message-avatar" src="https://weavatar.com/avatar/87146fa766ead530e2fbe7ba1000ee30beab30e96c23d54c326db0864a18e441?s=100&amp;d=mm&amp;r=g" alt="Ki.">
                                 <div class="withu-home-message-user-info">
@@ -5305,7 +5305,7 @@ try {
                                                                                                 <span class="withu-chip withu-chip--light withu-chip--no-transform"><i class="ph-bold ph-globe"></i> Chrome</span>
                                                             </div>
                         </a>
-                                                                    <a href="messages.html#comment_503" class="withu-home-message-card">
+                                                                    <a href="messages.php#comment_503" class="withu-home-message-card">
                             <div class="withu-home-message-header">
                                 <img class="withu-home-message-avatar" src="https://weavatar.com/avatar/73e1eb095f75a569e42275bde8ae9fd38e71a471b680d85dbc4450834a4eaf55?s=100&amp;d=mm&amp;r=g" alt="𝘈𝘱𝘰𝘭𝘰𝘨𝘪𝘻𝘦">
                                 <div class="withu-home-message-user-info">
@@ -5323,7 +5323,7 @@ try {
                                                                                                 <span class="withu-chip withu-chip--light withu-chip--no-transform"><i class="ph-bold ph-globe"></i> Chrome</span>
                                                             </div>
                         </a>
-                                                                    <a href="messages.html#comment_502" class="withu-home-message-card">
+                                                                    <a href="messages.php#comment_502" class="withu-home-message-card">
                             <div class="withu-home-message-header">
                                 <img class="withu-home-message-avatar" src="https://weavatar.com/avatar/87146fa766ead530e2fbe7ba1000ee30beab30e96c23d54c326db0864a18e441?s=100&amp;d=mm&amp;r=g" alt="袁小K">
                                 <div class="withu-home-message-user-info">
@@ -5341,7 +5341,7 @@ try {
                                                                                                 <span class="withu-chip withu-chip--light withu-chip--no-transform"><i class="ph-bold ph-globe"></i> Chrome</span>
                                                             </div>
                         </a>
-                                                                    <a href="messages.html#comment_501" class="withu-home-message-card">
+                                                                    <a href="messages.php#comment_501" class="withu-home-message-card">
                             <div class="withu-home-message-header">
                                 <img class="withu-home-message-avatar" src="https://weavatar.com/avatar/afe9b79a36417da3cf1149214441f97cd427ba11c30a731d9086a6d4672baedf?s=100&amp;d=mm&amp;r=g" alt="Mental derangement">
                                 <div class="withu-home-message-user-info">
@@ -5358,7 +5358,7 @@ try {
                                                                                                                                 <span class="withu-chip withu-chip--light withu-chip--no-transform"><i class="ph-bold ph-globe"></i> Chrome</span>
                                                             </div>
                         </a>
-                                                                    <a href="messages.html#comment_500" class="withu-home-message-card">
+                                                                    <a href="messages.php#comment_500" class="withu-home-message-card">
                             <div class="withu-home-message-header">
                                 <img class="withu-home-message-avatar" src="https://weavatar.com/avatar/a583b0a809b5cbfa2ce8c534e63d2cf8762c0345f049227453a4220bcd295d15?s=100&amp;d=mm&amp;r=g" alt="宇柯">
                                 <div class="withu-home-message-user-info">
@@ -5375,7 +5375,7 @@ try {
                                                                                                                                 <span class="withu-chip withu-chip--light withu-chip--no-transform"><i class="ph-bold ph-globe"></i> Chrome</span>
                                                             </div>
                         </a>
-                                                                    <a href="messages.html#comment_496" class="withu-home-message-card">
+                                                                    <a href="messages.php#comment_496" class="withu-home-message-card">
                             <div class="withu-home-message-header">
                                 <img class="withu-home-message-avatar" src="https://weavatar.com/avatar/a122f65031fefddae290ee10ef645e0457987386325d501444c5204eb84b6cf0?s=100&amp;d=mm&amp;r=g" alt="Ki.">
                                 <div class="withu-home-message-user-info">
@@ -5392,7 +5392,7 @@ try {
                                                                                                                                 <span class="withu-chip withu-chip--light withu-chip--no-transform"><i class="ph-bold ph-globe"></i> Safari</span>
                                                             </div>
                         </a>
-                                                                    <a href="messages.html#comment_495" class="withu-home-message-card">
+                                                                    <a href="messages.php#comment_495" class="withu-home-message-card">
                             <div class="withu-home-message-header">
                                 <img class="withu-home-message-avatar" src="https://weavatar.com/avatar/e9ea60a17075cc4a050bcefbd4f114afc9be98b8e5f938d3b63e01935ec563f2?s=100&amp;d=mm&amp;r=g" alt="星期六">
                                 <div class="withu-home-message-user-info">
@@ -5410,7 +5410,7 @@ try {
                                                                                                 <span class="withu-chip withu-chip--light withu-chip--no-transform"><i class="ph-bold ph-globe"></i> Chrome</span>
                                                             </div>
                         </a>
-                                                                    <a href="messages.html#comment_494" class="withu-home-message-card">
+                                                                    <a href="messages.php#comment_494" class="withu-home-message-card">
                             <div class="withu-home-message-header">
                                 <img class="withu-home-message-avatar" src="https://weavatar.com/avatar/e9ea60a17075cc4a050bcefbd4f114afc9be98b8e5f938d3b63e01935ec563f2?s=100&amp;d=mm&amp;r=g" alt="星期六">
                                 <div class="withu-home-message-user-info">
@@ -6143,37 +6143,37 @@ try {
     <div class="withu-tab-template-v5-container withu-glass-panel" id="withu-mobile-nav-v5">
         <div class="withu-tab-template-v5-indicator"></div>
                                 <a class="withu-base-nav-item js-withu-v5-item"
-               href="articles.html">
+               href="articles.php">
                 <i class="ph-fill ph-notebook"></i>
                 <span>点滴</span>
             </a>
                                 <a class="withu-base-nav-item js-withu-v5-item"
-               href="messages.html">
+               href="messages.php">
                 <i class="ph-fill ph-chat-teardrop-dots"></i>
                 <span>留言</span>
             </a>
                                 <a class="withu-base-nav-item js-withu-v5-item"
-               href="timeline.html">
+               href="timeline.php">
                 <i class="ph-fill ph-clock-countdown"></i>
                 <span>轨迹</span>
             </a>
                                 <a class="withu-base-nav-item js-withu-v5-item active"
-               href="index.html">
+               href="index.php">
                 <i class="ph-fill ph-house"></i>
                 <span>首页</span>
             </a>
                                 <a class="withu-base-nav-item js-withu-v5-item"
-               href="albums.html">
+               href="albums.php">
                 <i class="ph-fill ph-camera"></i>
                 <span>相册</span>
             </a>
                                 <a class="withu-base-nav-item js-withu-v5-item"
-               href="lovelist.html">
+               href="lovelist.php">
                 <i class="ph-fill ph-list-checks"></i>
                 <span>清单</span>
             </a>
                                 <a class="withu-base-nav-item js-withu-v5-item"
-               href="about.html">
+               href="about.php">
                 <i class="ph-fill ph-book-open-text"></i>
                 <span>关于</span>
             </a>

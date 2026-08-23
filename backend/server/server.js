@@ -64,13 +64,13 @@ function listPhotos() {
   return store.listPhotos().map(ph => Object.assign({}, ph, meta[ph.photo_url] || {}));
 }
 
-// 文章 id 列表（从 articles.html 链接提取）
+// 文章 id 列表（从 articles.php 链接提取）
 function listArticleIds() {
-  const f = path.join(ROOT, 'articles.html');
+  const f = path.join(ROOT, 'articles.php');
   if (!fs.existsSync(f)) return [];
   const html = fs.readFileSync(f, 'utf8');
   const ids = new Set();
-  for (const m of html.matchAll(/page\.html\?id=(\d+)/g)) ids.add(parseInt(m[1], 10));
+  for (const m of html.matchAll(/page\.php\?id=(\d+)/g)) ids.add(parseInt(m[1], 10));
   return [...ids];
 }
 
@@ -572,7 +572,7 @@ const server = http.createServer((req, res) => {
   req.on('data', d => { body += d; if (body.length > 2e6) req.destroy(); });
   req.on('end', () => {
     let urlPath = decodeURIComponent(req.url.split('?')[0].split('#')[0]);
-    if (urlPath === '/') urlPath = '/index.html';
+    if (urlPath === '/') urlPath = '/index.php';
 
     // 高德代理（优先于 admin，因为不在 /admin 前缀下）
     if (urlPath.startsWith('/_AMapService')) {
@@ -600,8 +600,8 @@ const server = http.createServer((req, res) => {
       } else {
         filePath = path.join(ROOT, urlPath);
       }
-      if (!fs.existsSync(filePath) && filePath.endsWith('.php')) {
-        const alt = filePath.slice(0, -4) + '.html';
+      if (!fs.existsSync(filePath) && filePath.endsWith('.html')) {
+        const alt = filePath.slice(0, -5) + '.php';
         if (fs.existsSync(alt)) filePath = alt;
       }
       // ---- PHP 主站代理：withu-site 静态/回退均不存在时，转发到 1314 PHP 服务 ----
@@ -633,7 +633,7 @@ const server = http.createServer((req, res) => {
         const code = q.searchParams.get('code') || '';
         const map = readMapAll();
         const album = map && map.albums ? map.albums.find(a => String(a.code) === String(code)) : null;
-        const privateShell = path.join(ROOT, 'album-detail-private.html');
+        const privateShell = path.join(ROOT, 'album-detail-private.php');
         if (album) {
           let html = data.toString('utf8');
           html = html.replace(/data-code="[^"]*"/, 'data-code="' + code + '"');
