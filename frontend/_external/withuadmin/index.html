@@ -1,0 +1,880 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>withU 后台管理</title>
+<link href="/ext/withuadmin/assets/css/icons.min.css" rel="stylesheet"/>
+<link href="/ext/withuadmin/assets/css/app.min.css" rel="stylesheet"/>
+<style>
+:root{--brand:#e75480;--brand-dark:#c23b64;}
+body{background:#f4f6fb;font-family:"Nunito","Microsoft YaHei",sans-serif;margin:0;}
+/* 登录页 */
+#loginView{min-height:100vh;display:flex;align-items:center;justify-content:center;
+  background:linear-gradient(135deg,#ffeef5 0%,#f4f6fb 60%,#eef2ff 100%);}
+.login-card{width:400px;max-width:92vw;background:#fff;border-radius:18px;box-shadow:0 18px 50px rgba(180,60,110,.15);overflow:hidden;}
+.login-head{background:linear-gradient(135deg,#e75480,#c23b64);color:#fff;padding:30px 30px 24px;text-align:center;}
+.login-head h3{margin:0 0 4px;font-weight:800;letter-spacing:.5px;}
+.login-head p{margin:0;opacity:.85;font-size:13px;}
+.login-body{padding:28px 30px 30px;}
+.login-body .form-group{margin-bottom:16px;}
+.login-body label{font-size:13px;color:#555;font-weight:600;margin-bottom:6px;display:block;}
+.login-body input{width:100%;box-sizing:border-box;padding:11px 14px;border:1.5px solid #e3e6f0;border-radius:10px;font-size:14px;outline:none;transition:.2s;}
+.login-body input:focus{border-color:var(--brand);box-shadow:0 0 0 3px rgba(231,84,128,.12);}
+.login-body .btn{width:100%;padding:12px;border:none;border-radius:10px;background:linear-gradient(135deg,#e75480,#c23b64);color:#fff;font-size:15px;font-weight:700;cursor:pointer;transition:.2s;}
+.login-body .btn:hover{filter:brightness(1.08);}
+.login-tip{margin-top:14px;font-size:12px;color:#999;text-align:center;line-height:1.7;}
+.login-err{background:#fff1f1;color:#c0392b;border:1px solid #ffd6d6;padding:9px 12px;border-radius:8px;font-size:13px;margin-bottom:14px;display:none;}
+/* 后台框架 */
+#appView{display:none;}
+.layout{display:flex;min-height:100vh;}
+.side{width:232px;background:linear-gradient(180deg,#2b2b3a,#1f1f2b);color:#cdd3e6;flex-shrink:0;position:fixed;top:0;bottom:0;left:0;overflow-y:auto;z-index:50;}
+.side .brand{padding:22px 20px 16px;border-bottom:1px solid rgba(255,255,255,.06);}
+.side .brand b{color:#fff;font-size:17px;letter-spacing:.5px;}
+.side .brand small{display:block;color:#8b90a8;font-size:12px;margin-top:2px;}
+.side .menu{padding:12px 10px;}
+.side .menu .grp{font-size:11px;color:#6f7390;padding:10px 12px 4px;letter-spacing:1px;}
+.side .menu a{display:flex;align-items:center;gap:10px;color:#b9bfd8;text-decoration:none;padding:10px 12px;border-radius:9px;font-size:14px;margin-bottom:2px;transition:.15s;}
+.side .menu a:hover{background:rgba(255,255,255,.06);color:#fff;}
+.side .menu a.active{background:linear-gradient(135deg,#e75480,#c23b64);color:#fff;box-shadow:0 4px 14px rgba(231,84,128,.35);}
+.side .menu a i{width:20px;text-align:center;font-size:16px;}
+.main{flex:1;margin-left:232px;padding:26px 30px;min-width:0;}
+.topbar{display:flex;justify-content:space-between;align-items:center;margin-bottom:22px;}
+.topbar h2{margin:0;font-size:20px;font-weight:800;color:#2b2b3a;}
+.topbar .who{font-size:13px;color:#777;}
+.topbar .who b{color:var(--brand);}
+.card{background:#fff;border-radius:14px;box-shadow:0 2px 12px rgba(31,31,43,.05);padding:20px;margin-bottom:18px;}
+.card .card-title{font-size:15px;font-weight:700;color:#2b2b3a;margin:0 0 14px;}
+.stats{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:14px;}
+.stat{background:linear-gradient(135deg,#fff,#fff8fb);border:1px solid #ffe3ee;border-radius:12px;padding:16px;}
+.stat .num{font-size:26px;font-weight:800;color:var(--brand);}
+.stat .lbl{font-size:12px;color:#888;margin-top:3px;}
+table.tbl{width:100%;border-collapse:collapse;font-size:13.5px;}
+table.tbl th{text-align:left;color:#777;font-size:12px;padding:9px 10px;border-bottom:2px solid #f0f1f7;font-weight:700;}
+table.tbl td{padding:9px 10px;border-bottom:1px solid #f4f5fa;color:#333;vertical-align:top;}
+table.tbl tr:hover td{background:#fdf6f9;}
+.badge{display:inline-block;padding:3px 10px;border-radius:20px;font-size:11.5px;font-weight:600;}
+.badge-admin{background:#fff3cd;color:#b45309;}
+.badge-dev{background:#d1fae5;color:#065f46;}
+.badge-lv{background:#e8ecf8;color:#4a5bb8;}
+.badge-pub{background:#d1fae5;color:#065f46;}
+.badge-pri{background:#fde8e8;color:#b91c1c;}
+.btn{display:inline-block;border:none;border-radius:8px;padding:7px 14px;font-size:13px;font-weight:600;cursor:pointer;transition:.15s;}
+.btn-p{background:linear-gradient(135deg,#e75480,#c23b64);color:#fff;}
+.btn-p:hover{filter:brightness(1.08);}
+.btn-g{background:#f1f2f8;color:#444;}
+.btn-g:hover{background:#e5e7f0;}
+.btn-r{background:#fdecec;color:#c0392b;}
+.btn-r:hover{background:#fbdcdc;}
+.btn-sm{padding:4px 10px;font-size:12px;border-radius:6px;}
+.form-row{display:flex;gap:12px;flex-wrap:wrap;margin-bottom:12px;}
+.form-row .fg{flex:1;min-width:160px;}
+.fg label{display:block;font-size:12.5px;color:#666;font-weight:600;margin-bottom:5px;}
+.fg input,.fg select,.fg textarea{width:100%;box-sizing:border-box;padding:9px 12px;border:1.5px solid #e3e6f0;border-radius:9px;font-size:13.5px;outline:none;background:#fff;font-family:inherit;}
+.fg input:focus,.fg textarea:focus,.fg select:focus{border-color:var(--brand);box-shadow:0 0 0 3px rgba(231,84,128,.1);}
+.fg textarea{resize:vertical;min-height:70px;}
+.ops-log{font-size:12.5px;color:#555;line-height:2;}
+.ops-log .t{color:#aaa;margin-right:8px;}
+.toast{position:fixed;top:22px;right:22px;padding:12px 20px;border-radius:10px;color:#fff;font-size:13.5px;box-shadow:0 6px 20px rgba(0,0,0,.18);z-index:999;opacity:0;transform:translateY(-8px);transition:.25s;}
+.toast.show{opacity:1;transform:none;}
+.toast.ok{background:#16a34a;} .toast.err{background:#dc2626;}
+.empty{padding:26px;text-align:center;color:#aaa;font-size:13.5px;}
+.pager{margin-top:12px;font-size:12.5px;color:#888;text-align:right;}
+pre.raw{background:#f8f9fc;border-radius:10px;padding:14px;font-size:12px;max-height:420px;overflow:auto;white-space:pre-wrap;word-break:break-all;color:#444;}
+.kv{display:grid;grid-template-columns:auto 1fr;gap:8px 16px;font-size:13.5px;}
+.kv dt{color:#888;font-weight:600;} .kv dd{margin:0;color:#333;}
+@media(max-width:860px){.side{width:64px}.side .brand b,.side .brand small,.side .menu .grp,.side .menu a span{display:none}.side .menu a{justify-content:center}.main{margin-left:64px;padding:18px}}
+</style>
+</head>
+<body>
+
+<!-- ============ 登录 ============ -->
+<div id="loginView">
+  <div class="login-card">
+    <div class="login-head">
+      <h3>💗 withU 后台管理</h3>
+      <p>小手一牵 · 岁岁年年</p>
+    </div>
+    <div class="login-body">
+      <div class="login-err" id="loginErr"></div>
+      <div class="form-group"><label>管理员账号</label><input id="lgUser" placeholder="请输入账号" autocomplete="username"/></div>
+      <div class="form-group"><label>密码</label><input id="lgPw" type="password" placeholder="请输入密码" autocomplete="current-password"/></div>
+      <button class="btn" id="lgBtn" onclick="doLogin()">登 录</button>
+      <div class="login-tip">默认账号 admin · 密码 lovezz（与原版 LikeGirl 一致）<br/>安全码 Love（修改密码时二次验证）</div>
+    </div>
+  </div>
+</div>
+
+<!-- ============ 后台框架 ============ -->
+<div id="appView">
+  <div class="layout">
+    <aside class="side">
+      <div class="brand"><b>withU</b><small>管理后台 · v2.2.5</small></div>
+      <nav class="menu" id="sideMenu">
+        <div class="grp">概览</div>
+        <a href="javascript:;" data-v="dashboard" class="active"><i class="mdi mdi-view-dashboard"></i><span>仪表盘</span></a>
+        <div class="grp">内容管理</div>
+        <a href="javascript:;" data-v="messages"><i class="mdi mdi-message-text"></i><span>留言管理</span></a>
+        <a href="javascript:;" data-v="albums"><i class="mdi mdi-image-multiple"></i><span>相册管理</span></a>
+        <a href="javascript:;" data-v="photos"><i class="mdi mdi-image-filter"></i><span>照片管理</span></a>
+        <a href="javascript:;" data-v="moments"><i class="mdi mdi-clock-outline"></i><span>时光碎片</span></a>
+        <a href="javascript:;" data-v="timeline"><i class="mdi mdi-timeline"></i><span>时间线</span></a>
+        <a href="javascript:;" data-v="lovelist"><i class="mdi mdi-format-list-checks"></i><span>愿望清单</span></a>
+        <a href="javascript:;" data-v="chat"><i class="mdi mdi-chat-processing"></i><span>聊天记录</span></a>
+        <div class="grp">地图与天气</div>
+        <a href="javascript:;" data-v="mapconfig"><i class="mdi mdi-map-marker-radius"></i><span>高德地图</span></a>
+        <a href="javascript:;" data-v="weather"><i class="mdi mdi-weather-partly-cloudy"></i><span>天气设置</span></a>
+        <div class="grp">数据统计</div>
+        <a href="javascript:;" data-v="interactions"><i class="mdi mdi-heart"></i><span>互动数据</span></a>
+        <a href="javascript:;" data-v="beacons"><i class="mdi mdi-chart-bar"></i><span>访问统计</span></a>
+        <div class="grp">系统</div>
+        <a href="javascript:;" data-v="config"><i class="mdi mdi-cog"></i><span>站点设置</span></a>
+        <a href="javascript:;" data-v="account"><i class="mdi mdi-account-key"></i><span>账号管理</span></a>
+        <a href="javascript:;" data-v="logs"><i class="mdi mdi-file-document"></i><span>操作日志</span></a>
+        <div class="grp"></div>
+        <a href="javascript:;" onclick="doLogout()"><i class="mdi mdi-logout"></i><span>退出登录</span></a>
+      </nav>
+    </aside>
+    <main class="main">
+      <div class="topbar">
+        <h2 id="pageTitle">仪表盘</h2>
+        <div class="who">👋 你好，<b id="whoName"></b></div>
+      </div>
+      <div id="viewBox"></div>
+    </main>
+  </div>
+</div>
+<div class="toast" id="toast"></div>
+
+<script>
+const BOOT_USER = __BOOT_USER__;
+const $ = sel => document.querySelector(sel);
+const esc = s => String(s == null ? '' : s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+function toast(msg, ok) { const t = $('#toast'); t.textContent = msg; t.className = 'toast show ' + (ok ? 'ok' : 'err'); setTimeout(() => t.className = 'toast', 2600); }
+async function api(u, opt) {
+  const r = await fetch(u, Object.assign({ headers: { 'Content-Type': 'application/json' } }, opt || {}));
+  let j = null; try { j = await r.json(); } catch (e) {}
+  if (r.status === 401) { location.reload(); throw new Error('未登录'); }
+  if (!j || j.ok === false) throw new Error((j && j.msg) || ('HTTP ' + r.status));
+  return j;
+}
+</script>
+<script>
+// ============ 登录 ============
+async function doLogin() {
+  const err = $('#loginErr');
+  err.style.display = 'none';
+  try {
+    await api('/admin/api/login', { method: 'POST', body: JSON.stringify({ adminName: $('#lgUser').value.trim(), pw: $('#lgPw').value }) });
+    location.reload();
+  } catch (e) { err.textContent = e.message; err.style.display = 'block'; }
+}
+$('#lgPw').addEventListener('keydown', e => { if (e.key === 'Enter') doLogin(); });
+
+// ============ 框架 ============
+
+let currentView = 'dashboard';
+
+function switchView(v) {
+  if (!VIEWS[v]) v = 'dashboard';
+  currentView = v;
+  document.querySelectorAll('#sideMenu a').forEach(a => a.classList.toggle('active', a.dataset.v === v));
+  $('#pageTitle').textContent = VIEWS[v][0];
+  VIEWS[v][1]();
+}
+
+// ============ 仪表盘 ============
+async function renderDashboard() {
+  const box = $('#viewBox');
+  box.innerHTML = '<div class="empty">加载中…</div>';
+  try {
+    const d = await api('/admin/api/dashboard');
+    const s = d.stats;
+    box.innerHTML = `
+      <div class="stats">
+        <div class="stat"><div class="num">${s.messages}</div><div class="lbl">💬 留言总数</div></div>
+        <div class="stat"><div class="num">${s.albums}</div><div class="lbl">📸 相册</div></div>
+        <div class="stat"><div class="num">${s.photos}</div><div class="lbl">🖼 照片文件</div></div>
+        <div class="stat"><div class="num">${s.moments}</div><div class="lbl">⏳ 时光碎片</div></div>
+        <div class="stat"><div class="num">${s.events}</div><div class="lbl">📅 时间线事件</div></div>
+        <div class="stat"><div class="num">${s.milestones}</div><div class="lbl">🎂 纪念日</div></div>
+        <div class="stat"><div class="num">${s.lovelist}</div><div class="lbl">✅ 愿望清单</div></div>
+      </div>
+      <div class="card" style="margin-top:18px">
+        <h3 class="card-title">站点信息</h3>
+        <dl class="kv">
+          <dt>站点标题</dt><dd>${esc(d.config.title)}</dd>
+          <dt>版本</dt><dd>${esc(d.config.version)}</dd>
+          <dt>当前登录</dt><dd>${esc(BOOT_USER.name)}（${esc(BOOT_USER.user)}）</dd>
+          <dt>数据存储</dt><dd>本地 JSON（services/map-all.json + admin-data/）</dd>
+        </dl>
+      </div>
+      <div class="card">
+        <h3 class="card-title">最近操作</h3>
+        <div class="ops-log">${(d.ops || []).map(o => `<div><span class="t">${esc(o.t)}</span>${esc(o.user)} ${esc(o.action)}${o.detail ? ' — ' + esc(o.detail) : ''}</div>`).join('') || '<div class="empty">暂无操作记录</div>'}</div>
+      </div>`;
+  } catch (e) { box.innerHTML = '<div class="empty">加载失败：' + esc(e.message) + '</div>'; }
+}
+
+// ============ 留言管理 ============
+async function renderMessages() {
+  const box = $('#viewBox');
+  box.innerHTML = `<div class="card">
+    <div style="display:flex;gap:10px;align-items:center;margin-bottom:14px">
+      <h3 class="card-title" style="margin:0">留言列表</h3>
+      <input id="msgKw" placeholder="搜索名字/内容" style="flex:1;max-width:260px;padding:8px 12px;border:1.5px solid #e3e6f0;border-radius:8px;font-size:13px">
+      <button class="btn btn-g" onclick="loadMessages()">搜索</button>
+    </div>
+    <div id="msgList"><div class="empty">加载中…</div></div>
+  </div>`;
+  $('#msgKw').addEventListener('keydown', e => { if (e.key === 'Enter') loadMessages(); });
+  loadMessages();
+}
+async function loadMessages() {
+  const kw = encodeURIComponent($('#msgKw').value.trim());
+  try {
+    const d = await api('/admin/api/messages?kw=' + kw);
+    const list = d.data;
+    const box = $('#msgList');
+    if (!list.length) { box.innerHTML = '<div class="empty">没有留言</div>'; return; }
+    box.innerHTML = `<table class="tbl"><tr><th>ID</th><th>昵称</th><th>内容</th><th>时间</th><th>徽章</th><th style="width:150px">操作</th></tr>` +
+      list.map(m => {
+        const badge = m.type === 'admin' ? '<span class="badge badge-admin">管理员</span>' : (m.type === 'dev' ? '<span class="badge badge-dev">开发者</span>' : (m.type ? '<span class="badge badge-lv">' + esc(m.type) + '</span>' : ''));
+        return `<tr><td>${m.id}</td><td><b>${esc(m.name)}</b>${m.parentId ? '<br><small style="color:#aaa">回复 #' + esc(m.parentId) + '</small>' : ''}</td>
+        <td>${esc((m.text || '').slice(0, 60))}${(m.text || '').length > 60 ? '…' : ''}</td>
+        <td style="white-space:nowrap;font-size:12px">${esc(m.time || '')}</td>
+        <td>${badge}</td>
+        <td>
+          <button class="btn btn-g btn-sm" onclick="toggleMsgAdmin(${m.id}, this)">${m.type === 'admin' ? '取消管理员' : '设为管理员'}</button>
+          <button class="btn btn-r btn-sm" onclick="delMsg(${m.id})">删除</button>
+        </td></tr>`;
+      }).join('') + `</table><div class="pager">共 ${d.total} 条（显示前 200）</div>`;
+  } catch (e) { $('#msgList').innerHTML = '<div class="empty">' + esc(e.message) + '</div>'; }
+}
+async function toggleMsgAdmin(id, btn) {
+  try { await api('/admin/api/message/toggle-admin', { method: 'POST', body: JSON.stringify({ id }) }); toast('已更新'); loadMessages(); }
+  catch (e) { toast(e.message, false); }
+}
+async function delMsg(id) {
+  if (!confirm('确定删除留言 #' + id + ' 吗？')) return;
+  try { await api('/admin/api/message/delete', { method: 'POST', body: JSON.stringify({ id }) }); toast('已删除'); loadMessages(); }
+  catch (e) { toast(e.message, false); }
+}
+
+// ============ 相册管理 ============
+async function renderAlbums() {
+  const box = $('#viewBox');
+  box.innerHTML = `<div class="card">
+    <h3 class="card-title">相册列表</h3>
+    <div id="albumList"><div class="empty">加载中…</div></div>
+  </div>
+  <div class="card"><h3 class="card-title">新增相册</h3>
+    <div class="form-row">
+      <div class="fg"><label>相册名称 *</label><input id="alName"></div>
+      <div class="fg"><label>城市</label><input id="alCity"></div>
+      <div class="fg"><label>日期</label><input id="alDate" type="date"></div>
+      <div class="fg"><label>封面图(Lovefolder/xxx.webp)</label><input id="alImg"></div>
+    </div>
+    <div class="form-row"><div class="fg"><label>描述</label><textarea id="alDesc"></textarea></div></div>
+    <label style="font-size:13px;color:#555"><input type="checkbox" id="alPri"> 私密相册（需暗号解锁）</label>
+    <div style="margin-top:12px"><button class="btn btn-p" onclick="saveAlbum()">保存相册</button></div>
+  </div>`;
+  loadAlbums();
+}
+async function loadAlbums() {
+  try {
+    const d = await api('/admin/api/albums');
+    $('#albumList').innerHTML = `<table class="tbl"><tr><th>Code</th><th>名称</th><th>城市</th><th>日期</th><th>照片</th><th>状态</th><th style="width:170px">操作</th></tr>` +
+      (d.data || []).map(a => `<tr>
+        <td style="font-size:12px">${esc(a.code)}</td>
+        <td><b>${esc(a.name)}</b></td>
+        <td>${esc(a.city || '')}</td>
+        <td style="font-size:12px">${esc(a.date || '')}</td>
+        <td>${a.photoCount || a.count || 0}</td>
+        <td>${a.private ? '<span class="badge badge-pri">私密</span>' : '<span class="badge badge-pub">公开</span>'}</td>
+        <td><a class="btn btn-g btn-sm" target="_blank" href="/album-detail.html?code=${esc(a.code)}">预览</a>
+        <button class="btn btn-r btn-sm" onclick="delAlbum('${esc(a.code)}')">删除</button></td>
+      </tr>`).join('') + `</table>`;
+  } catch (e) { $('#albumList').innerHTML = '<div class="empty">' + esc(e.message) + '</div>'; }
+}
+async function saveAlbum() {
+  try {
+    await api('/admin/api/album/save', { method: 'POST', body: JSON.stringify({
+      name: $('#alName').value.trim(), city: $('#alCity').value.trim(), date: $('#alDate').value,
+      image: $('#alImg').value.trim(), desc: $('#alDesc').value.trim(), private: $('#alPri').checked
+    }) });
+    toast('相册已创建'); $('#alName').value = ''; $('#alDesc').value = ''; loadAlbums();
+  } catch (e) { toast(e.message, false); }
+}
+async function delAlbum(code) {
+  if (!confirm('确定删除相册 ' + code + ' 吗？')) return;
+  try { await api('/admin/api/album/delete', { method: 'POST', body: JSON.stringify({ code }) }); toast('已删除'); loadAlbums(); }
+  catch (e) { toast(e.message, false); }
+}
+</script>
+<script>
+// ============ 时光碎片 ============
+async function renderMoments() {
+  const box = $('#viewBox');
+  box.innerHTML = `<div class="card">
+    <h3 class="card-title">时光碎片列表</h3><div id="momList"><div class="empty">加载中…</div></div>
+  </div>
+  <div class="card"><h3 class="card-title">新增时光碎片</h3>
+    <div class="form-row">
+      <div class="fg"><label>标题 *</label><input id="moTitle"></div>
+      <div class="fg"><label>发布人</label><input id="moName"></div>
+      <div class="fg"><label>日期</label><input id="moTime" type="date"></div>
+      <div class="fg"><label>城市</label><input id="moCity"></div>
+    </div>
+    <button class="btn btn-p" onclick="saveMoment()">发布</button>
+  </div>`;
+  loadMoments();
+}
+async function loadMoments() {
+  try {
+    const d = await api('/admin/api/moments');
+    $('#momList').innerHTML = `<table class="tbl"><tr><th>ID</th><th>标题</th><th>发布人</th><th>时间</th><th>城市</th><th style="width:80px">操作</th></tr>` +
+      (d.data || []).map(m => `<tr><td>${m.id}</td><td><b>${esc(m.articletitle)}</b></td>
+        <td>${esc(m.articlename || '')}</td><td style="font-size:12px">${esc(m.articletime || '')}</td>
+        <td>${esc(m.ipcity || '')}</td>
+        <td><button class="btn btn-r btn-sm" onclick="delMoment(${m.id})">删除</button></td></tr>`).join('') + `</table>`;
+  } catch (e) { $('#momList').innerHTML = '<div class="empty">' + esc(e.message) + '</div>'; }
+}
+async function saveMoment() {
+  try {
+    await api('/admin/api/moment/save', { method: 'POST', body: JSON.stringify({
+      articletitle: $('#moTitle').value.trim(), articlename: $('#moName').value.trim(),
+      articletime: $('#moTime').value, ipcity: $('#moCity').value.trim()
+    }) });
+    toast('已发布'); $('#moTitle').value = ''; $('#moCity').value = ''; loadMoments();
+  } catch (e) { toast(e.message, false); }
+}
+async function delMoment(id) {
+  if (!confirm('删除时光碎片 #' + id + '？')) return;
+  try { await api('/admin/api/moment/delete', { method: 'POST', body: JSON.stringify({ id }) }); toast('已删除'); loadMoments(); }
+  catch (e) { toast(e.message, false); }
+}
+
+// ============ 时间线 ============
+async function renderTimeline() {
+  const box = $('#viewBox');
+  box.innerHTML = `<div class="card"><h3 class="card-title">纪念日（milestones）</h3><div id="msList"><div class="empty">加载中…</div></div></div>
+  <div class="card"><h3 class="card-title">时间线事件（events）</h3><div id="evList"><div class="empty">加载中…</div></div></div>
+  <div class="card"><h3 class="card-title">新增纪念日</h3>
+    <div class="form-row">
+      <div class="fg"><label>日期 *</label><input id="msDate" type="date"></div>
+      <div class="fg"><label>标题 *</label><input id="msTitle"></div>
+      <div class="fg"><label>描述</label><input id="msDesc"></div>
+    </div>
+    <button class="btn btn-p" onclick="saveMilestone()">保存</button>
+  </div>
+  <div class="card"><h3 class="card-title">新增事件</h3>
+    <div class="form-row">
+      <div class="fg"><label>日期 *</label><input id="evDate" type="date"></div>
+      <div class="fg"><label>名称 *</label><input id="evName"></div>
+      <div class="fg"><label>城市</label><input id="evCity"></div>
+      <div class="fg"><label>图片(Lovefolder/xxx.webp)</label><input id="evImg"></div>
+    </div>
+    <label style="font-size:13px;color:#555"><input type="checkbox" id="evDone"> 已完成</label>
+    <div style="margin-top:12px"><button class="btn btn-p" onclick="saveEvent()">保存</button></div>
+  </div>`;
+  loadTimeline();
+}
+async function loadTimeline() {
+  try {
+    const d = await api('/admin/api/timeline');
+    $('#msList').innerHTML = `<table class="tbl"><tr><th>日期</th><th>标题</th><th>描述</th><th style="width:70px">操作</th></tr>` +
+      (d.milestones || []).map(m => `<tr><td style="font-size:12px">${esc(m.date)}</td><td><b>${esc(m.title)}</b></td>
+        <td>${esc(m.desc || '')}</td>
+        <td><button class="btn btn-r btn-sm" onclick="delMilestone('${esc(m.date)}','${esc(m.title)}')">删除</button></td></tr>`).join('') + `</table>`;
+    $('#evList').innerHTML = `<table class="tbl"><tr><th>ID</th><th>日期</th><th>名称</th><th>城市</th><th>状态</th><th style="width:70px">操作</th></tr>` +
+      (d.events || []).map(e => `<tr><td>${e.id}</td><td style="font-size:12px">${esc(e.date)}</td><td><b>${esc(e.name)}</b></td>
+        <td>${esc(e.city || '')}</td><td>${e.done ? '✅' : '⏳'}</td>
+        <td><button class="btn btn-r btn-sm" onclick="delEvent(${e.id})">删除</button></td></tr>`).join('') + `</table>`;
+  } catch (e) { $('#msList').innerHTML = '<div class="empty">' + esc(e.message) + '</div>'; }
+}
+async function saveMilestone() {
+  try {
+    await api('/admin/api/milestone/save', { method: 'POST', body: JSON.stringify({ date: $('#msDate').value, title: $('#msTitle').value.trim(), desc: $('#msDesc').value.trim() }) });
+    toast('已保存'); $('#msTitle').value = ''; $('#msDesc').value = ''; loadTimeline();
+  } catch (e) { toast(e.message, false); }
+}
+async function delMilestone(date, title) {
+  if (!confirm('删除纪念日「' + title + '」？')) return;
+  try { await api('/admin/api/milestone/delete', { method: 'POST', body: JSON.stringify({ date, title }) }); toast('已删除'); loadTimeline(); }
+  catch (e) { toast(e.message, false); }
+}
+async function saveEvent() {
+  try {
+    await api('/admin/api/event/save', { method: 'POST', body: JSON.stringify({
+      date: $('#evDate').value, name: $('#evName').value.trim(), city: $('#evCity').value.trim(),
+      image: $('#evImg').value.trim(), done: $('#evDone').checked
+    }) });
+    toast('已保存'); $('#evName').value = ''; $('#evCity').value = ''; $('#evImg').value = ''; loadTimeline();
+  } catch (e) { toast(e.message, false); }
+}
+async function delEvent(id) {
+  if (!confirm('删除事件 #' + id + '？')) return;
+  try { await api('/admin/api/event/delete', { method: 'POST', body: JSON.stringify({ id }) }); toast('已删除'); loadTimeline(); }
+  catch (e) { toast(e.message, false); }
+}
+
+// ============ 愿望清单 ============
+async function renderLovelist() {
+  const box = $('#viewBox');
+  box.innerHTML = `<div class="card"><h3 class="card-title">愿望清单</h3><div id="lvList"><div class="empty">加载中…</div></div></div>
+  <div class="card"><h3 class="card-title">新增愿望</h3>
+    <div class="form-row">
+      <div class="fg"><label>标题 *</label><input id="lvTitle"></div>
+      <div class="fg"><label>城市</label><input id="lvCity"></div>
+      <div class="fg"><label>完成日期</label><input id="lvDate" type="date"></div>
+    </div>
+    <div class="form-row"><div class="fg"><label>备注</label><input id="lvRemark"></div></div>
+    <label style="font-size:13px;color:#555"><input type="checkbox" id="lvDone"> 已完成</label>
+    <div style="margin-top:12px"><button class="btn btn-p" onclick="saveLv()">保存</button></div>
+  </div>`;
+  loadLv();
+}
+async function loadLv() {
+  try {
+    const d = await api('/admin/api/lovelist');
+    $('#lvList').innerHTML = `<table class="tbl"><tr><th>ID</th><th>标题</th><th>城市</th><th>完成日期</th><th>备注</th><th>状态</th><th style="width:70px">操作</th></tr>` +
+      (d.data || []).map(x => `<tr><td>${x.id}</td><td><b>${esc(x.title)}</b></td><td>${esc(x.city || '')}</td>
+        <td style="font-size:12px">${esc(x.finish_date || '')}</td><td>${esc(x.remark || '')}</td>
+        <td>${x.finish_date ? '✅' : '⏳'}</td>
+        <td><button class="btn btn-r btn-sm" onclick="delLv(${x.id})">删除</button></td></tr>`).join('') + `</table>`;
+  } catch (e) { $('#lvList').innerHTML = '<div class="empty">' + esc(e.message) + '</div>'; }
+}
+async function saveLv() {
+  try {
+    await api('/admin/api/lovelist/save', { method: 'POST', body: JSON.stringify({
+      title: $('#lvTitle').value.trim(), city: $('#lvCity').value.trim(),
+      finish_date: $('#lvDone').checked ? $('#lvDate').value : '', remark: $('#lvRemark').value.trim(), icon: $('#lvDone').checked ? 1 : 0
+    }) });
+    toast('已保存'); $('#lvTitle').value = ''; $('#lvRemark').value = ''; loadLv();
+  } catch (e) { toast(e.message, false); }
+}
+async function delLv(id) {
+  if (!confirm('删除愿望 #' + id + '？')) return;
+  try { await api('/admin/api/lovelist/delete', { method: 'POST', body: JSON.stringify({ id }) }); toast('已删除'); loadLv(); }
+  catch (e) { toast(e.message, false); }
+}
+
+// ============ 站点设置 ============
+async function renderConfig() {
+  const box = $('#viewBox');
+  box.innerHTML = '<div class="empty">加载中…</div>';
+  try {
+    const d = await api('/admin/api/config');
+    const c = d.config;
+    box.innerHTML = `<div class="card"><h3 class="card-title">站点基础设置</h3>
+      <div class="form-row">
+        <div class="fg"><label>站点标题</label><input id="cfTitle" value="${esc(c.title)}"></div>
+        <div class="fg"><label>版本号</label><input id="cfVer" value="${esc(c.version)}"></div>
+      </div>
+      <div class="form-row">
+        <div class="fg"><label>男主名字</label><input id="cfBoy" value="${esc(c.boy || c.maleName || '')}"></div>
+        <div class="fg"><label>女主名字</label><input id="cfGirl" value="${esc(c.girl || c.femaleName || '')}"></div>
+        <div class="fg"><label>开始时间</label><input id="cfStart" type="datetime-local" value="${esc(c.startTime || '')}"></div>
+      </div>
+      <div class="form-row"><div class="fg"><label>城市</label><input id="cfCity" value="${esc(c.userCity || '')}"></div></div>
+      <div style="display:flex;gap:22px;font-size:13.5px;color:#555">
+        <label><input type="checkbox" id="cfWeather" ${c.weatherEnabled ? 'checked' : ''}> 启用天气</label>
+        <label><input type="checkbox" id="cfSolo" ${c.soloMode ? 'checked' : ''}> 单机模式</label>
+      </div>
+      <div style="margin-top:16px"><button class="btn btn-p" onclick="saveConfig()">保存设置</button></div>
+    </div>
+    <div class="card"><h3 class="card-title">说明</h3>
+      <p style="font-size:13px;color:#666;line-height:1.9;margin:0">
+        设置保存在 <code>work/withu-config.json</code>，保存后刷新前台页面即可生效。<br>
+        前台读取的是首页注入的 WITHU_CONFIG，本后台修改会同步写入该文件。
+      </p>
+    </div>`;
+  } catch (e) { box.innerHTML = '<div class="empty">' + esc(e.message) + '</div>'; }
+}
+async function saveConfig() {
+  try {
+    await api('/admin/api/config/save', { method: 'POST', body: JSON.stringify({
+      title: $('#cfTitle').value.trim(), version: $('#cfVer').value.trim(),
+      boy: $('#cfBoy').value.trim(), girl: $('#cfGirl').value.trim(),
+      startTime: $('#cfStart').value, userCity: $('#cfCity').value.trim(),
+      weatherEnabled: $('#cfWeather').checked, soloMode: $('#cfSolo').checked
+    }) });
+    toast('设置已保存，刷新前台生效');
+  } catch (e) { toast(e.message, false); }
+}
+
+// ============ 账号管理 ============
+async function renderAccount() {
+  const box = $('#viewBox');
+  box.innerHTML = `<div class="card"><h3 class="card-title">账号列表</h3><div id="accList"><div class="empty">加载中…</div></div></div>
+  <div class="card"><h3 class="card-title">修改我的密码</h3>
+    <div class="form-row">
+      <div class="fg"><label>安全码 *（默认 Love）</label><input id="acCode" type="password"></div>
+      <div class="fg"><label>新密码 *（≥4位）</label><input id="acNewPw" type="password"></div>
+    </div>
+    <button class="btn btn-p" onclick="changePw()">修改密码</button>
+  </div>
+  <div class="card"><h3 class="card-title">新增管理员账号</h3>
+    <div class="form-row">
+      <div class="fg"><label>新账号</label><input id="acUser"></div>
+      <div class="fg"><label>初始密码</label><input id="acPw" value="123456"></div>
+      <div class="fg"><label>名称</label><input id="acName"></div>
+      <div class="fg"><label>安全码</label><input id="acNewCode" value="Love"></div>
+    </div>
+    <button class="btn btn-p" onclick="addAccount()">新增</button>
+  </div>`;
+  try {
+    const d = await api('/admin/api/account');
+    $('#accList').innerHTML = `<table class="tbl"><tr><th>账号</th><th>名称</th><th style="width:80px">操作</th></tr>` +
+      d.users.map(u => `<tr><td><b>${esc(u.user)}</b></td><td>${esc(u.name)}</td>
+        <td>${u.user !== 'admin' ? `<button class="btn btn-r btn-sm" onclick="delAccount('${esc(u.user)}')">删除</button>` : '<span style="color:#aaa;font-size:12px">主账号</span>'}</td></tr>`).join('') + `</table>`;
+  } catch (e) { $('#accList').innerHTML = '<div class="empty">' + esc(e.message) + '</div>'; }
+}
+async function changePw() {
+  try {
+    const r = await api('/admin/api/account/password', { method: 'POST', body: JSON.stringify({ code: $('#acCode').value, newPw: $('#acNewPw').value }) });
+    toast(r.msg || '已修改'); setTimeout(() => doLogout(), 1200);
+  } catch (e) { toast(e.message, false); }
+}
+async function addAccount() {
+  try {
+    await api('/admin/api/account/save', { method: 'POST', body: JSON.stringify({ newUser: $('#acUser').value.trim(), newPw: $('#acPw').value, name: $('#acName').value.trim(), code: $('#acNewCode').value }) });
+    toast('账号已新增'); $('#acUser').value = ''; $('#acName').value = ''; renderAccount();
+  } catch (e) { toast(e.message, false); }
+}
+async function delAccount(u) {
+  if (!confirm('删除账号 ' + u + '？')) return;
+  try { await api('/admin/api/account/save', { method: 'POST', body: JSON.stringify({ delUser: u }) }); toast('已删除'); renderAccount(); }
+  catch (e) { toast(e.message, false); }
+}
+
+// ============ 操作日志 ============
+async function renderLogs() {
+  const box = $('#viewBox');
+  box.innerHTML = '<div class="empty">加载中…</div>';
+  try {
+    const d = await api('/admin/api/dashboard');
+    box.innerHTML = `<div class="card"><h3 class="card-title">操作日志（最近 50 条）</h3>
+      <div class="ops-log">${(d.ops || []).map(o => `<div><span class="t">${esc(o.t)}</span>${esc(o.user)} ${esc(o.action)}${o.detail ? ' — ' + esc(o.detail) : ''}</div>`).join('') || '<div class="empty">暂无记录</div>'}</div>
+    </div>`;
+  } catch (e) { box.innerHTML = '<div class="empty">' + esc(e.message) + '</div>'; }
+}
+
+// ============ 高德地图设置 ============
+async function renderMapConfig() {
+  const box = $('#viewBox');
+  box.innerHTML = '<div class="empty">加载中…</div>';
+  try {
+    const d = await api('/admin/api/map-config');
+    const c = d.config;
+    const loverForm = (l, i) => `
+      <div class="card">
+        <h3 class="card-title">情侣位置 ${i + 1}</h3>
+        <div class="form-row">
+          <div class="fg"><label>名字</label><input id="mcL${i}Name" value="${esc(l.name)}"></div>
+          <div class="fg"><label>位置标签</label><input id="mcL${i}Label" value="${esc(l.label)}"></div>
+          <div class="fg"><label>经度 lng</label><input id="mcL${i}Lng" value="${esc(l.coords && l.coords[0])}"></div>
+          <div class="fg"><label>纬度 lat</label><input id="mcL${i}Lat" value="${esc(l.coords && l.coords[1])}"></div>
+        </div>
+        <div class="form-row"><div class="fg"><label>头像 URL</label><input id="mcL${i}Avatar" value="${esc(l.avatar)}"></div></div>
+      </div>`;
+    box.innerHTML = `<div class="card"><h3 class="card-title">高德地图接入（JS API）</h3>
+      <div class="form-row">
+        <div class="fg"><label>Web 端 API Key *</label><input id="mcKey" value="${esc(c.amapKey)}" placeholder="高德控制台 → 应用 → Web服务 Key"></div>
+        <div class="fg"><label>安全模式</label>
+          <select id="mcMode"><option value="proxy"${c.securityMode === 'proxy' ? ' selected' : ''}>代理服务（/_AMapService）</option><option value="jsCode"${c.securityMode === 'jsCode' ? ' selected' : ''}>安全密钥 securityJsCode</option></select>
+        </div>
+        <div class="fg"><label>securityJsCode（jsCode 模式）</label><input id="mcSec" value="${esc(c.securityJsCode)}" placeholder="控制台 → 设置安全密钥"></div>
+      </div>
+      <div class="form-row"><div class="fg"><label>地图样式</label>
+        <select id="mcStyle">
+          <option value="amap://styles/normal"${c.mapStyle === 'amap://styles/normal' ? ' selected' : ''}>标准 normal</option>
+          <option value="amap://styles/grey"${c.mapStyle === 'amap://styles/grey' ? ' selected' : ''}>清新 grey</option>
+          <option value="amap://styles/dark"${c.mapStyle === 'amap://styles/dark' ? ' selected' : ''}>暗色 dark</option>
+          <option value="amap://styles/fresh"${c.mapStyle === 'amap://styles/fresh' ? ' selected' : ''}>草色 fresh</option>
+          <option value="amap://styles/whitesmoke"${c.mapStyle === 'amap://styles/whitesmoke' ? ' selected' : ''}>极夜 whitesmoke</option>
+        </select>
+      </div></div>
+      <div style="margin-top:12px"><button class="btn btn-p" onclick="saveMapConfig()">保存地图设置</button></div>
+    </div>` + loverForm(c.lovers[0] || { name: '', label: '', coords: [0, 0], avatar: '' }, 0) + loverForm(c.lovers[1] || { name: '', label: '', coords: [0, 0], avatar: '' }, 1) + `
+    <div class="card"><h3 class="card-title">说明</h3>
+      <p style="font-size:13px;color:#666;line-height:1.9;margin:0">
+        前端已内置高德 JS API SDK（withu-map-sdk.js）。填入 Web 端 Key 后即可在地图页显示情侣位置与足迹。<br>
+        默认使用「代理服务」安全模式：地图请求由本服务端转发到 webapi.amap.com，无需安全密钥。<br>
+        若你已在控制台配置了安全密钥，可切换为 jsCode 模式并填入 securityJsCode。<br>
+        Key 申请地址：<code>https://console.amap.com/</code>
+      </p>
+    </div>`;
+  } catch (e) { box.innerHTML = '<div class="empty">' + esc(e.message) + '</div>'; }
+}
+async function saveMapConfig() {
+  const lover = i => ({
+    name: $('#mcL' + i + 'Name').value.trim(), label: $('#mcL' + i + 'Label').value.trim(),
+    coords: [parseFloat($('#mcL' + i + 'Lng').value) || 0, parseFloat($('#mcL' + i + 'Lat').value) || 0],
+    avatar: $('#mcL' + i + 'Avatar').value.trim()
+  });
+  try {
+    await api('/admin/api/map-config/save', { method: 'POST', body: JSON.stringify({
+      amapKey: $('#mcKey').value.trim(), securityMode: $('#mcMode').value, securityJsCode: $('#mcSec').value.trim(),
+      mapStyle: $('#mcStyle').value, lovers: [lover(0), lover(1)]
+    }) });
+    toast('地图设置已保存');
+  } catch (e) { toast(e.message, false); }
+}
+
+// ============ 天气设置 ============
+const W_FIELDS = [['temp', '温度'], ['desc', '天气描述'], ['icon', '图标码'], ['humidity', '湿度%'], ['vis', '能见度km'], ['feelsLike', '体感温度'], ['windDir', '风向'], ['windScale', '风力']];
+function weatherCityForm(c, id, label) {
+  return `<div class="card"><h3 class="card-title">${label}</h3>
+    <div class="form-row">
+      <div class="fg"><label>城市名</label><input id="w${id}City" value="${esc(c.city || c.name || '')}"></div>
+      ${W_FIELDS.map(([k, l]) => `<div class="fg"><label>${l}</label><input id="w${id}_${k}" value="${esc(c[k] || '')}"></div>`).join('')}
+    </div>
+  </div>`;
+}
+async function renderWeather() {
+  const box = $('#viewBox');
+  box.innerHTML = '<div class="empty">加载中…</div>';
+  try {
+    const d = await api('/admin/api/weather-config');
+    const w = d.config;
+    box.innerHTML = weatherCityForm(w.cities['1'] || {}, '1', '首页天气卡 · 卡槽1（男方城市）') +
+      weatherCityForm(w.cities['2'] || {}, '2', '首页天气卡 · 卡槽2（女方城市）') +
+      weatherCityForm(w.ip || {}, 'ip', '访客城市（页头/留言页 mode=ip）') +
+      `<div class="card"><div style="margin-top:4px"><button class="btn btn-p" onclick="saveWeatherConfig()">保存天气设置</button></div></div>
+      <div class="card"><h3 class="card-title">说明</h3>
+        <p style="font-size:13px;color:#666;line-height:1.9;margin:0">
+          图标码使用和风天气风格：晴=100/101、多云=101/103、阴=104、小雨=300/305、中雨=306、大雨=307、雷阵雨=302、小雪=400、雾=500 等。<br>
+          保存后前台天气卡片 / 页头胶囊 / 留言页天气标签立即生效（页面刷新后）。
+        </p>
+      </div>`;
+  } catch (e) { box.innerHTML = '<div class="empty">' + esc(e.message) + '</div>'; }
+}
+function collectWeather(id) {
+  const o = {};
+  W_FIELDS.forEach(([k]) => o[k] = $('#w' + id + '_' + k).value.trim());
+  o.city = $('#w' + id + 'City').value.trim();
+  return o;
+}
+async function saveWeatherConfig() {
+  try {
+    await api('/admin/api/weather-config/save', { method: 'POST', body: JSON.stringify({
+      city1: collectWeather('1'), city2: collectWeather('2'), ip: collectWeather('ip')
+    }) });
+    toast('天气设置已保存，刷新前台生效');
+  } catch (e) { toast(e.message, false); }
+}
+
+// ============ 聊天记录管理 ============
+async function renderChat() {
+  const box = $('#viewBox');
+  box.innerHTML = '<div class="empty">加载中…</div>';
+  try {
+    const d = await api('/admin/api/chat-data');
+    const c = d.data || { settings: {}, dialogues: [] };
+    const st = c.settings || {};
+    const av = st.avatars || {}, co = st.colors || {};
+    const cm = co.male || { bg: '#007aff', text: '#ffffff' }, cf = co.female || { bg: '#ffffff', text: '#1d1d1f' };
+    const rows = (c.dialogues || []).map((dg, i) => `<tr>
+      <td>${i}</td>
+      <td><span class="badge" style="background:${dg.role === 'male' ? '#e8f0ff' : dg.role === 'female' ? '#ffe8ef' : '#eee'}">${esc(dg.role || 'notice')}</span></td>
+      <td><span class="badge badge-lv">${esc(dg.type || 'text')}</span></td>
+      <td style="max-width:320px">${esc((dg.content || '').slice(0, 60))}</td>
+      <td style="white-space:nowrap">
+        <button class="btn btn-g btn-sm" onclick="editChat(${i})">编辑</button>
+        <button class="btn btn-r btn-sm" onclick="delChat(${i})">删除</button>
+      </td></tr>`).join('');
+    box.innerHTML = `<div class="card"><h3 class="card-title">对话设置</h3>
+      <div class="form-row">
+        <div class="fg"><label>对话名称</label><input id="chName" value="${esc(st.dialogueName || '')}"></div>
+        <div class="fg"><label>结尾语</label><input id="chEnd" value="${esc(st.endingText || '')}"></div>
+        <div class="fg"><label>男方头像</label><input id="chAvM" value="${esc(av.male || '')}"></div>
+        <div class="fg"><label>女方头像</label><input id="chAvF" value="${esc(av.female || '')}"></div>
+      </div>
+      <div class="form-row">
+        <div class="fg"><label>男方气泡色</label><input id="chBgM" value="${esc(cm.bg || '#007aff')}"></div>
+        <div class="fg"><label>男方文字色</label><input id="chTxtM" value="${esc(cm.text || '#ffffff')}"></div>
+        <div class="fg"><label>女方气泡色</label><input id="chBgF" value="${esc(cf.bg || '#ffffff')}"></div>
+        <div class="fg"><label>女方文字色</label><input id="chTxtF" value="${esc(cf.text || '#1d1d1f')}"></div>
+      </div>
+      <label style="font-size:13px;color:#555"><input type="checkbox" id="chSwap" ${st.swapViewpoint ? 'checked' : ''}> 交换视角</label>
+      <div style="margin-top:12px"><button class="btn btn-p" onclick="saveChatSettings()">保存设置</button></div>
+    </div>
+    <div class="card"><h3 class="card-title">对话列表（${(c.dialogues || []).length} 条）</h3>
+      <div id="chList">${rows ? `<table class="tbl"><tr><th>#</th><th>角色</th><th>类型</th><th>内容</th><th style="width:120px">操作</th></tr>${rows}</table>` : '<div class="empty">暂无对话，前端将显示演示对话</div>'}</div>
+      <div class="form-row" style="margin-top:14px">
+        <div class="fg"><label>新增内容</label><input id="chNewContent" placeholder="对话内容"></div>
+        <div class="fg" style="max-width:130px"><label>角色</label><select id="chNewRole"><option value="male">男方</option><option value="female">女方</option><option value="notice">系统通知</option></select></div>
+        <div class="fg" style="max-width:130px"><label>类型</label><select id="chNewType"><option value="text">文本</option><option value="image">图片</option><option value="video">视频</option><option value="audio">语音</option></select></div>
+        <div class="fg"><button class="btn btn-p" style="margin-top:22px" onclick="addChat()">追加</button></div>
+      </div>
+    </div>`;
+  } catch (e) { box.innerHTML = '<div class="empty">' + esc(e.message) + '</div>'; }
+}
+async function saveChatSettings() {
+  try {
+    await api('/admin/api/chat-data/save', { method: 'POST', body: JSON.stringify({ settings: {
+      dialogueName: $('#chName').value.trim(), endingText: $('#chEnd').value.trim(), swapViewpoint: $('#chSwap').checked,
+      avatars: { male: $('#chAvM').value.trim(), female: $('#chAvF').value.trim() },
+      colors: { male: { bg: $('#chBgM').value, text: $('#chTxtM').value }, female: { bg: $('#chBgF').value, text: $('#chTxtF').value } }
+    } }) });
+    toast('设置已保存');
+  } catch (e) { toast(e.message, false); }
+}
+async function addChat() {
+  const content = $('#chNewContent').value.trim();
+  if (!content) { toast('内容不能为空', false); return; }
+  try {
+    await api('/admin/api/chat-data/save', { method: 'POST', body: JSON.stringify({ action: 'add', dialogue: { role: $('#chNewRole').value, type: $('#chNewType').value, content } }) });
+    toast('已追加'); renderChat();
+  } catch (e) { toast(e.message, false); }
+}
+async function delChat(i) {
+  if (!confirm('删除第 ' + i + ' 条对话？')) return;
+  try { await api('/admin/api/chat-data/save', { method: 'POST', body: JSON.stringify({ action: 'delete', index: i }) }); toast('已删除'); renderChat(); }
+  catch (e) { toast(e.message, false); }
+}
+function editChat(i) {
+  const v = $('#viewBox');
+  const c = prompt('编辑对话内容与角色\n格式：角色:类型:内容\n(角色 male/female/notice，类型 text/image/video/audio)', '');
+  if (c === null) return;
+  const parts = c.split(':');
+  const dialogue = { role: parts[0] || 'male', type: (parts[1] || 'text').trim() || 'text', content: (parts.slice(2).join(':') || parts[0]).trim() };
+  api('/admin/api/chat-data/save', { method: 'POST', body: JSON.stringify({ action: 'update', index: i, dialogue }) })
+    .then(() => { toast('已更新'); renderChat(); })
+    .catch(e => toast(e.message, false));
+}
+
+// ============ 照片管理 ============
+async function renderPhotos() {
+  const box = $('#viewBox');
+  box.innerHTML = '<div class="empty">加载中…</div>';
+  try {
+    const d = await api('/admin/api/photos');
+    const rows = (d.data || []).map(p => `<tr data-url="${esc(p.photo_url)}" onclick="pickPhoto(this)" style="cursor:pointer">
+      <td><img src="${esc(p.photo_thumb)}" style="width:44px;height:44px;object-fit:cover;border-radius:8px" onerror="this.style.visibility='hidden'"></td>
+      <td style="font-size:12px">${esc(p.photo_url)}</td>
+      <td style="font-size:12px">${esc(p.photo_date || '')}</td>
+      <td>${esc(p.photo_text || '')}</td>
+      <td>${esc(p.photo_byname || '')}</td>
+      <td>${esc(p.photo_location || '')}</td>
+      <td>${p.photo_type ? '🎬' : '🖼'}</td>
+    </tr>`).join('');
+    box.innerHTML = `<div class="card"><h3 class="card-title">照片编辑</h3>
+      <div class="form-row">
+        <div class="fg"><label>照片地址</label><input id="phUrl" readonly placeholder="点击下方照片自动填充"></div>
+        <div class="fg"><label>标题</label><input id="phText"></div>
+        <div class="fg"><label>作者昵称</label><input id="phBy"></div>
+        <div class="fg"><label>性别</label><select id="phGender"><option value="female">女</option><option value="male">男</option></select></div>
+      </div>
+      <div class="form-row">
+        <div class="fg"><label>位置名称</label><input id="phLoc"></div>
+        <div class="fg"><label>经度 lng</label><input id="phLng" placeholder="0=未定位"></div>
+        <div class="fg"><label>纬度 lat</label><input id="phLat" placeholder="0=未定位"></div>
+        <div class="fg"><label>头像 URL</label><input id="phAv"></div>
+      </div>
+      <label style="font-size:13px;color:#555"><input type="checkbox" id="phVideo"> 标记为视频</label>
+      <div style="margin-top:12px"><button class="btn btn-p" onclick="savePhoto()">保存照片信息</button></div>
+    </div>
+    <div class="card"><h3 class="card-title">照片列表（${d.total} 张）</h3><div style="max-height:460px;overflow:auto">${rows ? `<table class="tbl"><tr><th></th><th>文件</th><th>日期</th><th>标题</th><th>作者</th><th>位置</th><th>类型</th></tr>${rows}</table>` : '<div class="empty">Lovefolder 目录为空</div>'}</div></div>`;
+  } catch (e) { box.innerHTML = '<div class="empty">' + esc(e.message) + '</div>'; }
+}
+function pickPhoto(tr) {
+  const url = tr.getAttribute('data-url');
+  $('#phUrl').value = url;
+}
+async function savePhoto() {
+  const url = $('#phUrl').value.trim();
+  if (!url) { toast('请先点击选择一张照片', false); return; }
+  try {
+    await api('/admin/api/photo/save', { method: 'POST', body: JSON.stringify({
+      url, photo_text: $('#phText').value.trim(), photo_byname: $('#phBy').value.trim(),
+      photo_location: $('#phLoc').value.trim(), photo_lng: $('#phLng').value, photo_lat: $('#phLat').value,
+      up_avatar: $('#phAv').value.trim(), up_gender: $('#phGender').value, photo_type: $('#phVideo').checked ? 1 : 0
+    }) });
+    toast('已保存'); renderPhotos();
+  } catch (e) { toast(e.message, false); }
+}
+
+// ============ 互动统计 ============
+async function renderInteractions() {
+  const box = $('#viewBox');
+  box.innerHTML = '<div class="empty">加载中…</div>';
+  try {
+    const d = await api('/admin/api/interactions');
+    const rows = (d.data || []).map(x => `<tr><td>${esc(x.key)}</td><td>${x.like_count}</td><td>${x.view_count}</td><td>${x.likers}</td></tr>`).join('');
+    box.innerHTML = `<div class="card"><h3 class="card-title">互动数据（点赞 / 浏览 / 访客）</h3>
+      ${rows ? `<table class="tbl"><tr><th>目标 target_type:target_id</th><th>点赞数</th><th>浏览量</th><th>点赞访客</th></tr>${rows}</table>` : '<div class="empty">暂无互动数据</div>'}
+      <p style="font-size:12.5px;color:#999;margin:12px 0 0">留言/文章/相册的点赞与浏览量在此持久化记录。</p>
+    </div>`;
+  } catch (e) { box.innerHTML = '<div class="empty">' + esc(e.message) + '</div>'; }
+}
+
+// ============ 访问统计 ============
+async function renderBeacons() {
+  const box = $('#viewBox');
+  box.innerHTML = '<div class="empty">加载中…</div>';
+  try {
+    const d = await api('/admin/api/beacons');
+    const pageHtml = Object.entries(d.byPage || {}).map(([p, n]) => `<div class="stat"><div class="num">${n}</div><div class="lbl">${esc(p)}</div></div>`).join('');
+    const dayHtml = Object.entries(d.byDay || {}).sort().map(([p, n]) => `<div class="stat"><div class="num">${n}</div><div class="lbl">${esc(p)}</div></div>`).join('');
+    const recRows = (d.records || []).map(r => `<tr><td style="font-size:12px">${esc(r.t || '')}</td><td>${esc(r.page || '/')}</td><td>${r.stay_seconds}s</td><td style="font-size:12px">${esc(r.ip || '')}</td></tr>`).join('');
+    box.innerHTML = `<div class="stats">
+        <div class="stat"><div class="num">${d.total}</div><div class="lbl">访问信标总数</div></div>
+        <div class="stat"><div class="num">${Object.keys(d.byDay || {}).length}</div><div class="lbl">活跃天数</div></div>
+      </div>
+      <div class="card" style="margin-top:18px"><h3 class="card-title">按页面</h3><div class="stats">${pageHtml || '<div class="empty">暂无数据</div>'}</div></div>
+      <div class="card"><h3 class="card-title">按日期</h3><div class="stats">${dayHtml || '<div class="empty">暂无数据</div>'}</div></div>
+      <div class="card"><h3 class="card-title">最近记录</h3>
+        ${recRows ? `<table class="tbl"><tr><th>时间</th><th>页面</th><th>停留</th><th>IP</th></tr>${recRows}</table>` : '<div class="empty">暂无记录</div>'}
+        <div style="margin-top:14px"><button class="btn btn-r" onclick="clearBeacons()">清空统计</button></div>
+      </div>`;
+  } catch (e) { box.innerHTML = '<div class="empty">' + esc(e.message) + '</div>'; }
+}
+async function clearBeacons() {
+  if (!confirm('确定清空全部访问统计？')) return;
+  try { await api('/admin/api/beacons/clear', { method: 'POST' }); toast('已清空'); renderBeacons(); }
+  catch (e) { toast(e.message, false); }
+}
+
+// ============ 视图注册（必须在所有渲染函数定义之后） ============
+const VIEWS = {
+  dashboard: ['仪表盘', renderDashboard],
+  messages: ['留言管理', renderMessages],
+  albums: ['相册管理', renderAlbums],
+  photos: ['照片管理', renderPhotos],
+  moments: ['时光碎片', renderMoments],
+  timeline: ['时间线', renderTimeline],
+  lovelist: ['愿望清单', renderLovelist],
+  chat: ['聊天记录', renderChat],
+  mapconfig: ['高德地图', renderMapConfig],
+  weather: ['天气设置', renderWeather],
+  interactions: ['互动数据', renderInteractions],
+  beacons: ['访问统计', renderBeacons],
+  config: ['站点设置', renderConfig],
+  account: ['账号管理', renderAccount],
+  logs: ['操作日志', renderLogs]
+};
+// let currentView = 'dashboard'; // 已在 block2 声明，重复声明会抛 SyntaxError
+
+// ============ 初始化 ============
+async function doLogout() {
+  try { await fetch('/admin/api/logout', { method: 'POST' }); } catch (e) {}
+  location.href = '/admin/';
+}
+document.querySelectorAll('#sideMenu a[data-v]').forEach(a => a.addEventListener('click', () => switchView(a.dataset.v)));
+
+if (BOOT_USER) {
+  $('#loginView').style.display = 'none';
+  $('#appView').style.display = 'block';
+  $('#whoName').textContent = BOOT_USER.name || BOOT_USER.user;
+  switchView('dashboard');
+} else {
+  $('#loginView').style.display = 'flex';
+  $('#appView').style.display = 'none';
+  $('#lgUser').focus();
+}
+</script>
+</body>
+</html>

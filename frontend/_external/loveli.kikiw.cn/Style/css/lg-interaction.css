@@ -1,0 +1,224 @@
+/* ============================================
+   LG Interaction — 点赞 / 浏览量交互样式
+   ============================================ */
+
+/* 点赞按钮基础态 */
+[data-like-target] {
+    cursor: pointer;
+    transition: transform 0.2s ease, color 0.25s ease;
+    -webkit-user-select: none;
+    user-select: none;
+}
+
+[data-like-target]:active {
+    transform: scale(0.92);
+}
+
+/* 已点赞态 — phosphor 图标 */
+.lg-interaction-liked i.ph-heart,
+.lg-interaction-liked i.ph-fill.ph-heart,
+.lg-interaction-liked .ph-heart {
+    color: #ef4444 !important;
+}
+
+/* 相册详情页胶囊点赞高亮 */
+.lgnew-new-photo-head-chip.lg-interaction-liked .lgnew-new-photo-head-chip-icon-bg {
+    color: #ef4444;
+}
+.lgnew-new-photo-head-chip.lg-interaction-liked .lgnew-new-photo-head-chip-icon-bg i {
+    color: #ef4444 !important;
+}
+
+/* 文章详情页元信息点赞高亮 */
+.lgnewui-detail-meta-badge.lg-interaction-liked .lgnewui-detail-meta-icon-wrapper {
+    color: #ef4444;
+}
+.lgnewui-detail-meta-badge.lg-interaction-liked .lgnewui-detail-meta-icon-wrapper i {
+    color: #ef4444 !important;
+}
+
+/* 已点赞态 — lucide SVG 图标 */
+.lg-interaction-liked svg[data-lucide="heart"],
+.lg-interaction-liked svg.lucide-heart {
+    color: #ef4444 !important;
+    fill: #ef4444 !important;
+}
+
+/* 弹跳动画 */
+.lg-interaction-bounce {
+    animation: lg-interaction-bounce 0.6s cubic-bezier(0.28, 0.84, 0.42, 1);
+}
+
+@keyframes lg-interaction-bounce {
+    0%   { transform: scale(1); }
+    15%  { transform: scale(1.35); }
+    30%  { transform: scale(0.88); }
+    45%  { transform: scale(1.15); }
+    60%  { transform: scale(0.95); }
+    80%  { transform: scale(1.04); }
+    100% { transform: scale(1); }
+}
+
+/* 加载中状态 */
+.lg-interaction-loading {
+    pointer-events: none;
+    opacity: 0.6;
+}
+
+/* 计数更新动画 */
+.lg-interaction-count-update {
+    animation: lg-interaction-count-pop 0.3s ease;
+}
+
+@keyframes lg-interaction-count-pop {
+    0%   { transform: scale(1); opacity: 0.7; }
+    50%  { transform: scale(1.15); opacity: 1; }
+    100% { transform: scale(1); opacity: 1; }
+}
+
+/* 爱心粒子 */
+.lg-interaction-heart-particle {
+    pointer-events: none;
+    z-index: 99999;
+}
+
+.lg-interaction-heart-particle i {
+    display: block;
+    line-height: 1;
+}
+
+/* ============================================
+   侧边栏点赞按钮增强（page.php 详情页）
+   ============================================ */
+
+.lgnewui-detail-rail-btn[data-like-target] {
+    position: relative;
+}
+
+.lgnewui-detail-rail-btn[data-like-target].lg-interaction-liked {
+    color: #ef4444;
+}
+
+.lgnewui-detail-rail-btn[data-like-target].lg-interaction-liked i {
+    color: #ef4444;
+}
+
+.lgnewui-detail-rail-btn[data-like-target] .lg-interaction-like-num {
+    font-size: 0.7rem;
+    font-weight: 500;
+    opacity: 0.7;
+    margin-top: 2px;
+    display: block;
+    line-height: 1;
+    transition: opacity 0.2s ease;
+}
+
+.lgnewui-detail-rail-btn[data-like-target].lg-interaction-liked .lg-interaction-like-num {
+    color: #ef4444;
+    opacity: 1;
+}
+
+/* ============================================
+   卡片内联点赞按钮（时间轴 / 恋爱清单 / 留言）
+   ============================================ */
+
+.lg-interaction-inline-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 4px 10px;
+    border: none;
+    background: transparent;
+    color: #999;
+    font-size: 0.85rem;
+    cursor: pointer;
+    border-radius: 6px;
+    transition: all 0.2s ease;
+    -webkit-user-select: none;
+    user-select: none;
+    line-height: 1.4;
+}
+
+.lg-interaction-inline-btn:hover {
+    background: rgba(239, 68, 68, 0.06);
+    color: #666;
+}
+
+.lg-interaction-inline-btn.lg-interaction-liked {
+    color: #ef4444;
+}
+
+.lg-interaction-inline-btn.lg-interaction-liked:hover {
+    background: rgba(239, 68, 68, 0.08);
+}
+
+.lg-interaction-inline-btn i {
+    font-size: 1rem;
+    transition: transform 0.2s ease, color 0.2s ease;
+}
+
+.lg-interaction-inline-btn .lg-interaction-like-num {
+    font-variant-numeric: tabular-nums;
+    min-width: 1em;
+    transition: color 0.2s ease;
+}
+
+/* 浏览量显示 */
+.lg-interaction-view-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    color: #999;
+    font-size: 0.85rem;
+}
+
+.lg-interaction-view-badge i {
+    font-size: 0.95rem;
+}
+
+/* 相册列表页 like 按钮 hover */
+.lg-action-item[data-like-target] {
+    cursor: pointer;
+    transition: color 0.2s ease, transform 0.2s ease;
+}
+
+.lg-action-item[data-like-target]:hover {
+    color: #ef4444;
+}
+
+.lg-action-item[data-like-target]:active {
+    transform: scale(0.9);
+}
+
+.lg-action-item[data-like-target].lg-interaction-liked {
+    color: #ef4444;
+}
+
+/* 点滴列表页 like 按钮 hover */
+.lgnewui-article-action-btn[data-like-target] {
+    cursor: pointer;
+    transition: color 0.2s ease, transform 0.2s ease;
+}
+
+.lgnewui-article-action-btn[data-like-target]:hover {
+    color: #ef4444;
+}
+
+.lgnewui-article-action-btn[data-like-target]:active {
+    transform: scale(0.9);
+}
+
+.lgnewui-article-action-btn[data-like-target].lg-interaction-liked {
+    color: #ef4444;
+}
+
+/* ============================================
+   Toastify 交互反馈样式覆盖
+   ============================================ */
+
+.lg-toast-interaction {
+    font-size: 0.875rem !important;
+    border-radius: 8px !important;
+    padding: 8px 16px !important;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1) !important;
+}

@@ -1,0 +1,3739 @@
+/* ============================================================
+ * withU 留言板页面样式
+ * 包含：页面头部、加载更多、骨架屏、卡片回复徽章、
+ *       侧边抽屉（1:1 来自 fullscreen-message-v2.html demo）
+ * 卡片本体样式沿用 leav.css 中的 MessageCard
+ * ============================================================ */
+
+:root {
+    --withumsg-primary: #007aff;
+    --withumsg-text-main: #1d1d1f;
+    --withumsg-text-muted: #98989d;
+    --withumsg-radius-round: 100px;
+    --withumsg-spring: cubic-bezier(0.32, 0.72, 0, 1);
+}
+
+/* 滚动锁定 + 滚动条宽度补偿（加在 html 上，与后台弹窗方案一致） */
+html.withu-scroll-locked {
+    overflow: hidden !important;
+    padding-right: var(--withu-scrollbar-compensate, 0px) !important;
+}
+
+html.withu-scroll-locked body {
+    overflow: hidden !important;
+}
+
+/* 全宽固定定位元素：padding-right 缩小内容区，防止跳动 */
+html.withu-scroll-locked .header-wrap,
+html.withu-scroll-locked .withu-mobile-nav-root,
+html.withu-scroll-locked #NavBtnList {
+    padding-right: var(--withu-scrollbar-compensate, 0px) !important;
+}
+
+/* 右锚定固定定位元素：margin-right 将整个元素推回原位 */
+html.withu-scroll-locked .message_btn,
+html.withu-scroll-locked #withuFloatingActions {
+    margin-right: var(--withu-scrollbar-compensate, 0px) !important;
+}
+
+/* ── 留言页全局留言按钮样式覆盖（清新蓝色） ── */
+.leav .message_btn .mesly {
+    background: var(--withumsg-primary, #007AFF);
+    border-radius: 16px;
+    padding: 0.7rem;
+    box-shadow: 0 4px 16px rgba(0, 122, 255, 0.3);
+}
+
+.leav .message_btn .mesly:hover {
+    background: #fff;
+    box-shadow: 0 4px 20px rgba(0, 122, 255, 0.35);
+}
+
+.leav .message_btn .mesly:hover svg {
+    color: var(--withumsg-primary, #007AFF);
+    fill: var(--withumsg-primary, #007AFF) !important;
+}
+
+/* ── @提及标签（PHP parseMessageContent 输出的 withu-msg-at） ── */
+.withu-msg-at,
+.MsgContent p .withu-msg-at,
+.withu-message-msg-bubble .withu-msg-at {
+    color: var(--withumsg-primary) !important;
+    font-weight: 500;
+    cursor: pointer;
+    padding: 1px 4px;
+    border-radius: 4px;
+    background: rgba(0, 122, 255, 0.08);
+    transition: background 0.2s ease;
+    white-space: nowrap;
+    font-size: 0.85em;
+    display: inline;
+    line-height: inherit;
+    margin: 0 2px;
+}
+
+.withu-msg-at:hover {
+    background: rgba(0, 122, 255, 0.15);
+}
+
+/* ── MsgFooter 虚线 → 渐变实线 ── */
+.Message_Wrap .MessageCard .MsgFooter {
+    border-top: none;
+    position: relative;
+}
+
+.Message_Wrap .MessageCard .MsgFooter::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 1px;
+    background: linear-gradient(to left, #f1f1f1, transparent);
+}
+
+.Message_Wrap .MessageCard:nth-child(even) .MsgFooter::before {
+    background: linear-gradient(to right, #f1f1f1, transparent);
+}
+
+/* ── 留言卡片 MsgFooter / HeightCalc 约束宽度 ── */
+.Message_Wrap .MessageCard .HeightCalc {
+    min-width: 0;
+}
+
+.Message_Wrap .MessageCard .MsgFooter {
+    min-width: 0;
+}
+
+/* ── 卡片 UserName 内 h1 与徽章对齐 + 溢出截断 ── */
+.Message_Wrap .MessageCard .UserName {
+    overflow: hidden;
+    max-width: 100%;
+}
+.Message_Wrap .MessageCard .UserName h1 {
+    display: inline-flex;
+    align-items: center;
+    gap: 0;
+    max-width: 100%;
+    overflow: hidden;
+}
+.Message_Wrap .MessageCard .UserName h1 > .withumsg-card-name {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    min-width: 0;
+}
+.Message_Wrap .MessageCard .UserName h1 > .withu-message-badge {
+    flex-shrink: 0;
+}
+.Message_Wrap .MessageCard:nth-child(even) .UserName {
+    display: flex;
+    justify-content: flex-end;
+}
+.Message_Wrap .MessageCard:nth-child(even) .UserName h1 {
+    flex-direction: row-reverse;
+}
+.Message_Wrap .MessageCard:nth-child(even) .UserName h1 > .withu-message-badge {
+    margin-left: 0;
+    margin-right: 6px;
+}
+
+/* ═══════════════════════════════════════════════
+   留言徽章组件
+   ═══════════════════════════════════════════════ */
+
+.Message_Wrap .MessageCard .UserName .withu-message-badge{
+        font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+}
+
+.withu-message-badge {
+    display: inline-flex;
+    align-items: center;
+    height: 22px;
+    border-radius: 9999px;
+    padding-right: 10px;
+    box-sizing: border-box;
+    cursor: default;
+    user-select: none;
+    overflow: hidden;
+    font-family: inherit;
+    transition: background-color 0.2s ease;
+    flex-shrink: 0;
+    vertical-align: middle;
+    margin-left: 6px;
+}
+
+.withu-message-badge-icon-box {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 22px;
+    height: 22px;
+    border-radius: 9999px;
+    margin-right: 5px;
+    flex-shrink: 0;
+    font-size: 11px;
+}
+
+.withu-message-badge-text {
+    font-size: 10px;
+    font-weight: 700;
+    white-space: nowrap;
+}
+
+/* 程序开发者 */
+.withu-message-badge-dev { background-color: #f1f5f9; }
+.withu-message-badge-dev .withu-message-badge-icon-box { background-color: #1e293b; color: #ffffff; }
+.withu-message-badge-dev .withu-message-badge-text { color: #334155; letter-spacing: 0.05em; }
+
+/* 管理员 */
+.withu-message-badge-admin { background-color: #fffbeb; }
+.withu-message-badge-admin .withu-message-badge-icon-box { background: linear-gradient(to bottom right, #fbbf24, #f97316); color: #ffffff; }
+.withu-message-badge-admin .withu-message-badge-text { color: #b45309; letter-spacing: 0.05em; }
+
+/* 游客通用 */
+.withu-message-badge-lv .withu-message-badge-icon-box { font-size: 10px; }
+
+/* Lv.1 */
+.withu-message-badge-lv1 { background-color: #f8fafc; }
+.withu-message-badge-lv1 .withu-message-badge-icon-box { background-color: #e2e8f0; color: #64748b; }
+.withu-message-badge-lv1 .withu-message-badge-text { color: #475569; }
+
+/* Lv.2 */
+.withu-message-badge-lv2 { background-color: #ecfdf5; }
+.withu-message-badge-lv2 .withu-message-badge-icon-box { background-color: #a7f3d0; color: #059669; }
+.withu-message-badge-lv2 .withu-message-badge-text { color: #059669; }
+
+/* Lv.3 */
+.withu-message-badge-lv3 { background-color: #f0f9ff; }
+.withu-message-badge-lv3 .withu-message-badge-icon-box { background-color: #bae6fd; color: #0284c7; }
+.withu-message-badge-lv3 .withu-message-badge-text { color: #0284c7; }
+
+/* Lv.4 */
+.withu-message-badge-lv4 { background-color: #eef2ff; }
+.withu-message-badge-lv4 .withu-message-badge-icon-box { background-color: #c7d2fe; color: #4f46e5; }
+.withu-message-badge-lv4 .withu-message-badge-text { color: #4f46e5; }
+
+/* Lv.5 */
+.withu-message-badge-lv5 { background-color: #fff7ed; }
+.withu-message-badge-lv5 .withu-message-badge-icon-box { background-color: #fed7aa; color: #ea580c; }
+.withu-message-badge-lv5 .withu-message-badge-text { color: #ea580c; }
+
+/* Lv.6 */
+.withu-message-badge-lv6 { background-color: #fff1f2; }
+.withu-message-badge-lv6 .withu-message-badge-icon-box { background-color: #f43f5e; color: #ffffff; }
+.withu-message-badge-lv6 .withu-message-badge-text { color: #e11d48; }
+
+/* 流光特效（管理员 + Lv.6 满级游客） */
+.withu-message-badge-shine {
+    position: relative;
+}
+.withu-message-badge-shine::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 50%;
+    height: 100%;
+    background: linear-gradient(to right, transparent, rgba(255, 255, 255, 0.6), transparent);
+    transform: skewX(-20deg);
+    animation: withu-badge-shine 3s infinite;
+}
+@keyframes withu-badge-shine {
+    0% { left: -100%; }
+    20% { left: 200%; }
+    100% { left: 200%; }
+}
+
+/* 侧边栏抽屉内徽章：紧跟用户名 */
+.withu-message-msg-info .withu-message-badge {
+    height: 20px;
+    margin-left: 5px;
+}
+.withu-message-msg-info .withu-message-badge-icon-box {
+    width: 20px;
+    height: 20px;
+    font-size: 10px;
+}
+.withu-message-msg-info .withu-message-badge-text {
+    font-size: 9px;
+}
+
+/* 待审核徽章 */
+.withu-message-badge-pending { background-color: #fef3c7; }
+.withu-message-badge-pending .withu-message-badge-icon-box { background-color: #fbbf24; color: #ffffff; }
+.withu-message-badge-pending .withu-message-badge-text { color: #92400e; }
+
+/* 待审核卡片半透明 */
+.MessageCard.is-pending .HeightCalc { opacity: 0.65; }
+.MessageCard.is-pending .MsgContent::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+}
+
+/* 待审核抽屉气泡半透明 */
+.withu-message-msg-item.is-pending .withu-message-msg-bubble { opacity: 0.65; }
+
+/* ═══════════════════════════════════════════════
+   开发者身份验证弹窗（复用后台安全码验证弹窗风格）
+   ═══════════════════════════════════════════════ */
+.withumsg-security-overlay {
+    --withu-text-primary: #1D1D1F;
+    --withu-text-secondary: #86868B;
+    --withu-text-tertiary: #A1A1A6;
+    --withu-color-error: #FF3B30;
+    --withu-color-success: #34C759;
+    --withu-color-success-glow: rgba(52, 199, 89, 0.25);
+    --withu-overlay-bg: rgba(255, 255, 255, 0.45);
+    --withu-overlay-blur: blur(36px);
+    --withu-overlay-saturate: saturate(200%);
+    --withu-ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+    --withu-ease-out: cubic-bezier(0.25, 0.1, 0.25, 1);
+    --withu-ease-smooth: cubic-bezier(0.32, 0.72, 0, 1);
+    --withu-duration-enter: 0.6s;
+    --withu-duration-exit: 0.5s;
+}
+.withumsg-security-overlay *,
+.withumsg-security-overlay *::before,
+.withumsg-security-overlay *::after {
+    box-sizing: border-box;
+    -webkit-tap-highlight-color: transparent;
+}
+.withumsg-security-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 100010;
+    background: var(--withu-overlay-bg);
+    backdrop-filter: var(--withu-overlay-blur) var(--withu-overlay-saturate);
+    -webkit-backdrop-filter: var(--withu-overlay-blur) var(--withu-overlay-saturate);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity var(--withu-duration-enter) var(--withu-ease-smooth);
+}
+.withumsg-security-overlay::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(circle at center, rgba(255,255,255,0.9) 0%, rgba(255,255,255,0) 100%);
+    opacity: 0.6;
+    pointer-events: none;
+}
+.withumsg-security-overlay.withumsg-security-is-open {
+    opacity: 1;
+    pointer-events: auto;
+}
+
+/* 弹窗主体 */
+.withumsg-security-base {
+    position: relative;
+    z-index: 1;
+    transform: scale(0.92) translateY(20px);
+    opacity: 0;
+    transition: transform var(--withu-duration-enter) var(--withu-ease-spring),
+                opacity calc(var(--withu-duration-enter) * 0.8) var(--withu-ease-smooth);
+    will-change: transform, opacity, filter;
+    width: 420px;
+    max-width: 90vw;
+    background: #FFFFFF;
+    border-radius: 24px;
+    box-shadow: 0 20px 40px -10px rgba(0,0,0,0.06),
+                0 40px 80px -20px rgba(0,0,0,0.08);
+}
+.withumsg-security-overlay.withumsg-security-is-open .withumsg-security-base {
+    transform: scale(1) translateY(0);
+    opacity: 1;
+}
+.withumsg-security-overlay.withumsg-security-is-closing {
+    opacity: 0;
+    transition-duration: var(--withu-duration-exit);
+}
+.withumsg-security-overlay.withumsg-security-is-closing .withumsg-security-base {
+    transform: scale(0.94) translateY(-15px);
+    opacity: 0;
+    filter: blur(8px);
+    transition: transform var(--withu-duration-exit) var(--withu-ease-smooth),
+                opacity var(--withu-duration-exit) var(--withu-ease-smooth),
+                filter var(--withu-duration-exit) var(--withu-ease-smooth);
+}
+.withumsg-security-overlay.withumsg-security-is-closing .withumsg-security-base.withumsg-security-is-success {
+    transform: scale(0.96) translateY(0);
+    filter: blur(0px);
+    transition: transform 0.4s var(--withu-ease-smooth),
+                opacity 0.35s ease-out,
+                filter 0.4s var(--withu-ease-smooth);
+}
+
+/* 表单内容层 */
+.withumsg-security-form-content {
+    position: relative;
+    padding: 40px;
+    width: 100%;
+    transition: transform 0.6s var(--withu-ease-smooth),
+                opacity 0.6s var(--withu-ease-smooth),
+                filter 0.6s var(--withu-ease-smooth);
+    will-change: transform, opacity, filter;
+}
+.withumsg-security-base.withumsg-security-is-success .withumsg-security-form-content {
+    opacity: 0;
+    transform: scale(0.92) translateY(10px);
+    filter: blur(12px);
+    pointer-events: none;
+}
+
+/* 关闭按钮 */
+.withumsg-security-close {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    color: var(--withu-text-tertiary);
+    cursor: pointer;
+    transition: all 0.2s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: transparent;
+    border: none;
+    padding: 6px;
+    border-radius: 8px;
+    font-size: 18px;
+}
+.withumsg-security-close:hover {
+    color: var(--withu-text-primary);
+    background: rgba(0,0,0,0.04);
+    transform: scale(1.05);
+}
+
+/* 标题 & 描述 */
+.withumsg-security-title {
+    font-size: 24px;
+    font-weight: 600;
+    margin: 0 0 10px 0;
+    color: var(--withu-text-primary);
+    letter-spacing: -0.5px;
+}
+.withumsg-security-desc {
+    font-size: 15px;
+    color: var(--withu-text-secondary);
+    line-height: 1.6;
+    margin: 0 0 32px 0;
+}
+
+/* 输入框标签 */
+.withumsg-security-input-label {
+    display: block;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--withu-text-primary);
+    margin-bottom: 8px;
+}
+
+/* 输入框组 */
+.withumsg-security-input-group {
+    position: relative;
+}
+.withumsg-security-input-icon {
+    position: absolute;
+    left: 16px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--withu-text-tertiary);
+    font-size: 20px;
+    display: flex;
+    pointer-events: none;
+    transition: color 0.3s;
+    z-index: 2;
+}
+.withumsg-security-input-group:focus-within .withumsg-security-input-icon {
+    color: var(--withu-text-primary);
+}
+.withumsg-security-input-group .withumsg-security-pw-wrap {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+.withumsg-security-input-group .withumsg-security-pw-input {
+    width: 100%;
+    box-sizing: border-box;
+    height: 52px;
+    padding: 0 48px 0 48px;
+    border: none;
+    border-radius: 14px;
+    font-size: 15px;
+    font-family: inherit;
+    outline: none;
+    background: #F3F4F6;
+    color: var(--withu-text-primary);
+    letter-spacing: 2px;
+    transition: background 0.3s;
+}
+.withumsg-security-input-group .withumsg-security-pw-input:focus {
+    background: #ECEDF0;
+}
+.withumsg-security-input-group .withumsg-security-pw-input::placeholder {
+    letter-spacing: 0;
+    color: var(--withu-text-tertiary);
+    font-size: 14px;
+}
+.withumsg-security-pw-toggle {
+    position: absolute;
+    right: 14px;
+    width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    color: var(--withu-text-tertiary);
+    padding: 0;
+    border-radius: 8px;
+    transition: color 0.2s, background 0.2s, transform 0.15s ease;
+    z-index: 2;
+}
+.withumsg-security-pw-toggle:hover {
+    color: var(--withu-text-primary);
+    background: rgba(0, 0, 0, 0.05);
+}
+.withumsg-security-pw-toggle:focus-visible {
+    background: rgba(0, 0, 0, 0.05);
+}
+.withumsg-security-pw-toggle:active {
+    transform: scale(0.82);
+}
+.withumsg-security-pw-toggle svg { width: 18px; height: 18px; }
+
+/* 错误提示 */
+.withumsg-security-error {
+    color: var(--withu-color-error);
+    font-size: 13px;
+    margin-top: 8px;
+    display: none;
+}
+@keyframes withumsgSecurityShake {
+    0%, 100% { transform: translateX(0); }
+    20% { transform: translateX(-4px); }
+    40% { transform: translateX(4px); }
+    60% { transform: translateX(-4px); }
+    80% { transform: translateX(4px); }
+}
+.withumsg-security-input-error-anim {
+    animation: withumsgSecurityShake 0.4s cubic-bezier(0.36, 0.07, 0.19, 0.97) both;
+}
+
+/* 提示信息区 */
+.withumsg-security-hash-info {
+    margin-top: 24px;
+    padding: 18px 20px;
+    background: #F5F5F7;
+    border-radius: 16px;
+    display: flex;
+    gap: 12px;
+    align-items: flex-start;
+}
+.withumsg-security-hash-icon {
+    color: var(--withu-text-tertiary);
+    margin-top: 2px;
+    flex-shrink: 0;
+    font-size: 16px;
+    display: flex;
+}
+.withumsg-security-hash-text {
+    font-size: 13.5px;
+    color: var(--withu-text-secondary);
+    line-height: 1.5;
+    margin: 0;
+}
+
+/* 操作按钮 */
+.withumsg-security-actions {
+    margin-top: 36px;
+    display: flex;
+    justify-content: center;
+}
+.withumsg-security-btn {
+    width: 100%;
+    height: 52px;
+    border-radius: 999px;
+    font-size: 16px;
+    font-weight: 600;
+    transition: all 0.3s var(--withu-ease-out);
+    position: relative;
+    border: none;
+    outline: none;
+    cursor: pointer;
+    font-family: inherit;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    overflow: hidden;
+    background: #111;
+    color: #FFF;
+    box-shadow: 0 8px 24px -6px rgba(0,0,0,0.12);
+}
+.withumsg-security-btn:hover {
+    background: #000;
+    transform: translateY(-1px);
+    box-shadow: 0 12px 28px -8px rgba(0,0,0,0.15);
+}
+.withumsg-security-btn:active {
+    transform: scale(0.97) translateY(0);
+}
+.withumsg-security-btn-spinner {
+    font-size: 20px;
+    animation: withumsgSecuritySpin 1s linear infinite;
+    display: none;
+}
+.withumsg-security-btn-icon {
+    font-size: 18px;
+}
+.withumsg-security-btn::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 50%;
+    height: 100%;
+    background: linear-gradient(to right, rgba(255,255,255,0) 0%, rgba(255,255,255,0.15) 50%, rgba(255,255,255,0) 100%);
+    transform: skewX(-20deg);
+    pointer-events: none;
+}
+.withumsg-security-btn.withumsg-security-is-loading::before {
+    animation: withumsgSecurityShimmer 1.5s infinite;
+}
+@keyframes withumsgSecurityShimmer { 100% { left: 200%; } }
+@keyframes withumsgSecuritySpin { 100% { transform: rotate(360deg); } }
+.withumsg-security-btn.withumsg-security-is-loading {
+    pointer-events: none;
+    background: #333;
+    box-shadow: 0 4px 12px -4px rgba(0,0,0,0.1);
+    transform: scale(0.98);
+}
+
+/* 成功动画面板 */
+.withumsg-security-success-panel {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    border-radius: 24px;
+    z-index: 10;
+    pointer-events: none;
+    overflow: hidden;
+}
+.withumsg-security-success-aura {
+    position: absolute;
+    width: 140px;
+    height: 140px;
+    background: var(--withu-color-success);
+    filter: blur(45px);
+    border-radius: 50%;
+    opacity: 0;
+    transform: scale(0.3);
+    transition: transform 0.8s var(--withu-ease-smooth),
+                opacity 0.8s var(--withu-ease-smooth);
+    z-index: 1;
+}
+.withumsg-security-base.withumsg-security-is-success .withumsg-security-success-aura {
+    opacity: 0.25;
+    transform: scale(1.5);
+    animation: withumsgSecurityAuraPulse 2s ease-in-out infinite alternate 0.8s;
+}
+@keyframes withumsgSecurityAuraPulse {
+    0% { transform: scale(1.5); opacity: 0.25; }
+    100% { transform: scale(1.6); opacity: 0.35; }
+}
+.withumsg-security-success-content {
+    position: relative;
+    z-index: 2;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+.withumsg-security-success-svg {
+    width: 76px;
+    height: 76px;
+    color: var(--withu-color-success);
+    margin-bottom: 24px;
+    filter: drop-shadow(0 8px 16px var(--withu-color-success-glow));
+}
+.withumsg-security-success-circle {
+    stroke-dasharray: 151px;
+    stroke-dashoffset: 151px;
+    opacity: 0;
+}
+.withumsg-security-success-check {
+    stroke-dasharray: 36px;
+    stroke-dashoffset: 36px;
+    opacity: 0;
+}
+.withumsg-security-base.withumsg-security-is-success .withumsg-security-success-circle {
+    opacity: 1;
+    animation: withumsgSecurityDrawCircle 0.6s cubic-bezier(0.65, 0, 0.35, 1) forwards;
+    animation-delay: 0.1s;
+}
+.withumsg-security-base.withumsg-security-is-success .withumsg-security-success-check {
+    opacity: 1;
+    animation: withumsgSecurityDrawCheck 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+    animation-delay: 0.45s;
+}
+@keyframes withumsgSecurityDrawCircle { 100% { stroke-dashoffset: 0; } }
+@keyframes withumsgSecurityDrawCheck { 100% { stroke-dashoffset: 0; } }
+
+.withumsg-security-success-text {
+    font-size: 22px;
+    font-weight: 600;
+    color: var(--withu-text-primary);
+    letter-spacing: 1px;
+    opacity: 0;
+    transform: translateY(15px);
+    transition: opacity 0.5s ease, transform 0.6s var(--withu-ease-smooth);
+}
+.withumsg-security-base.withumsg-security-is-success .withumsg-security-success-text {
+    opacity: 1;
+    transform: translateY(0);
+    transition-delay: 0.5s;
+}
+@keyframes withumsgSecurityHapticBump {
+    0%   { transform: scale(1); }
+    40%  { transform: scale(1.03); }
+    100% { transform: scale(1); }
+}
+.withumsg-security-trigger-bump {
+    animation: withumsgSecurityHapticBump 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) !important;
+}
+
+/* ── 留言卡片 InfoItem 胶囊样式（单行不换行） ── */
+.Message_Wrap .MessageCard .UserInfo {
+    flex-wrap: nowrap;
+    gap: 5px;
+    overflow: hidden;
+    max-width: 100%;
+}
+
+.Message_Wrap .MessageCard .MsgFooter .InfoItem {
+    padding: 3px 8px 3px 3px !important;
+    margin-right: 0 !important;
+    margin-bottom: 0 !important;
+    font-size: 11px;
+    white-space: nowrap;
+    flex-shrink: 1;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    border-radius: 6px;
+    line-height: 1;
+    color: #8e8e93;
+    background: rgba(0, 0, 0, 0.035);
+    border: none;
+    box-shadow: none;
+    cursor: default;
+    transition: color 0.2s;
+    min-width: 0;
+    max-width: 100%;
+    overflow: hidden;
+}
+
+.Message_Wrap .MessageCard .MsgFooter .InfoItem .withumsg-info-text {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    min-width: 0;
+    max-width: 80px;
+}
+
+/* 短文本（移动端回复数字）桌面端默认隐藏 */
+.Message_Wrap .MessageCard .MsgFooter .withumsg-info-text-short {
+    display: none;
+}
+
+/* 有经纬度可打开地图的归属地：浅蓝色背景（卡片 + 抽屉通用） */
+.withumsg-location-has-coords {
+    color: #3b82f6;
+    cursor: pointer;
+}
+
+.Message_Wrap .MessageCard .MsgFooter .InfoItem.withumsg-location-has-coords {
+    background: rgba(59, 130, 246, 0.08);
+    color: #3b82f6;
+}
+
+.Message_Wrap .MessageCard .MsgFooter .InfoItem.withumsg-location-has-coords .withumsg-ico {
+    background: rgba(59, 130, 246, 0.12);
+    color: #3b82f6;
+}
+
+/* 图标圆角背景容器 */
+.Message_Wrap .MessageCard .MsgFooter .InfoItem .withumsg-ico {
+    width: 10px !important;
+    height: 10px !important;
+    flex-shrink: 0;
+    stroke: currentColor;
+    fill: none;
+    stroke-width: 2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    opacity: 1;
+    padding: 3px;
+    box-sizing: content-box;
+    background: rgba(0, 0, 0, 0.05);
+    border-radius: 5px;
+}
+
+.Message_Wrap .MessageCard .MsgFooter .InfoItem i[class*="qi-"].withumsg-ico {
+    width: auto !important;
+    height: auto !important;
+    font-size: 10px;
+    line-height: 1;
+    opacity: 1;
+    padding: 3px;
+    background: rgba(0, 0, 0, 0.05);
+    border-radius: 5px;
+}
+
+.Message_Wrap .MessageCard .MsgFooter .InfoItem svg {
+    width: 10px !important;
+    height: 10px !important;
+}
+
+.Message_Wrap .MessageCard .UserAvatar {
+    cursor: pointer;
+}
+
+.Message_Wrap .MessageCard {
+    cursor: pointer;
+}
+
+.Message_Wrap .MessageCard .UserAvatar::after {
+    content: '@';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 2;
+    background: rgba(0, 0, 0, 0.3);
+    backdrop-filter: blur(3px);
+    -webkit-backdrop-filter: blur(3px);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #fff;
+    font-size: 1.4rem;
+    font-weight: 700;
+    opacity: 0;
+    transition: opacity 0.25s ease;
+    pointer-events: none;
+}
+
+.Message_Wrap .MessageCard:hover .UserAvatar::after,
+.Message_Wrap .MessageCard .UserAvatar.withumsg-avatar-tap::after {
+    opacity: 1;
+}
+
+
+
+/* ============================================================
+ * MessageCard 卡片回复徽章（附加到原始 leav.css 卡片上）
+ * ============================================================ */
+.MessageCard .withumsg-reply-badge {
+    color: var(--withumsg-primary);
+    background: rgba(0, 122, 255, 0.08);
+    transition: background 0.2s;
+    cursor: pointer;
+}
+
+.MessageCard:hover .withumsg-reply-badge {
+    background: rgba(0, 122, 255, 0.14);
+}
+
+.MessageCard .withumsg-reply-badge svg {
+    width: 12px;
+    height: 12px;
+}
+
+/* ── InfoItem SVG 图标尺寸 ── */
+.InfoItem .withumsg-ico {
+    width: 14px !important;
+    height: 14px !important;
+    flex-shrink: 0;
+    vertical-align: middle;
+    /* margin-right: 4px; */
+    stroke: currentColor;
+    fill: none;
+    stroke-width: 2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+}
+
+/* ── 卡片插入动画 ── */
+@keyframes withumsg-card-fadeIn {
+    0% {
+        opacity: 0;
+        transform: translateY(20px) scale(0.96);
+    }
+
+    100% {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+.MessageCard {
+    animation: withumsg-card-fadeIn 0.5s var(--withumsg-spring) both;
+}
+
+.MessageCard:nth-child(1) {
+    animation-delay: 0ms;
+}
+
+.MessageCard:nth-child(2) {
+    animation-delay: 60ms;
+}
+
+.MessageCard:nth-child(3) {
+    animation-delay: 120ms;
+}
+
+.MessageCard:nth-child(4) {
+    animation-delay: 180ms;
+}
+
+.MessageCard:nth-child(5) {
+    animation-delay: 240ms;
+}
+
+.MessageCard:nth-child(6) {
+    animation-delay: 300ms;
+}
+
+.MessageCard:nth-child(n+7) {
+    animation-delay: 350ms;
+}
+
+/* ============================================================
+ * 骨架屏（匹配 MessageCard 布局）
+ * ============================================================ */
+@keyframes withumsg-skeleton-pulse {
+
+    0%,
+    100% {
+        opacity: 0.4;
+    }
+
+    50% {
+        opacity: 0.8;
+    }
+}
+
+.withumsg-skeleton {
+    margin-top: 2rem;
+    padding: 0 0.8rem 1.2rem;
+    position: relative;
+}
+
+.withumsg-skeleton-line {
+    background: rgba(0, 0, 0, 0.04);
+    border-radius: 8px;
+    animation: withumsg-skeleton-pulse 1.5s ease-in-out infinite;
+}
+
+.withumsg-skeleton .sk-avatar {
+    width: 4rem;
+    height: 4rem;
+    border-radius: 50%;
+    flex-shrink: 0;
+}
+
+.withumsg-skeleton .sk-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 14px;
+}
+
+.withumsg-skeleton .sk-name {
+    width: 70px;
+    height: 12px;
+}
+
+.withumsg-skeleton .sk-time {
+    width: 50px;
+    height: 9px;
+    margin-top: 5px;
+}
+
+.withumsg-skeleton .sk-text1 {
+    width: 90%;
+    height: 10px;
+    margin-bottom: 8px;
+}
+
+.withumsg-skeleton .sk-text2 {
+    width: 65%;
+    height: 10px;
+    margin-bottom: 8px;
+}
+
+.withumsg-skeleton .sk-text3 {
+    width: 40%;
+    height: 10px;
+    margin-bottom: 0;
+}
+
+.withumsg-skeleton .sk-footer {
+    display: flex;
+    gap: 8px;
+    margin-top: 14px;
+}
+
+.withumsg-skeleton .sk-pill {
+    width: 60px;
+    height: 20px;
+    border-radius: 100px;
+}
+
+/* ============================================================
+ * 加载更多按钮
+ * ============================================================ */
+.withumsg-load-more-wrap {
+    text-align: center;
+    padding: 2rem 0;
+}
+
+.withumsg-load-more-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 12px 36px;
+    border: none;
+    border-radius: 100px;
+    background: linear-gradient(135deg, #2c2c2c, #1a1a1a);
+    color: rgba(255, 255, 255, 0.9);
+    font-size: 13px;
+    font-weight: 500;
+    font-family: inherit;
+    letter-spacing: 0.5px;
+    cursor: pointer;
+    transition: all 0.4s cubic-bezier(0.2, 0.8, 0.2, 1);
+    outline: none;
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.15), inset 0 1px 0 rgba(255, 255, 255, 0.08);
+}
+
+.withumsg-load-more-btn:hover {
+    background: linear-gradient(135deg, #3a3a3a, #222);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.2), inset 0 1px 0 rgba(255, 255, 255, 0.1);
+    color: #fff;
+}
+
+.withumsg-load-more-btn:active {
+    transform: translateY(0) scale(0.97);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+}
+
+.withumsg-load-more-btn:disabled {
+    opacity: 0.75;
+    cursor: not-allowed;
+    transform: none;
+}
+
+.withumsg-load-more-btn .btn-text {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.withumsg-load-more-btn .btn-text i {
+    font-size: 14px;
+    line-height: 1;
+}
+
+@keyframes withumsg-spin {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+}
+
+.withumsg-load-more-btn .withumsg-spinner {
+    display: inline-block;
+    animation: withumsg-spin 0.9s linear infinite;
+}
+
+.withumsg-no-more {
+    text-align: center;
+    padding: 20px 0 40px;
+    color: var(--withumsg-text-muted);
+    font-size: 13px;
+}
+
+/* ============================================================
+ * 卡片空状态
+ * ============================================================ */
+.withumsg-empty {
+    text-align: center;
+    padding: 40px 20px;
+    color: var(--withumsg-text-muted);
+    font-size: 14px;
+}
+
+.withumsg-empty svg {
+    width: 48px;
+    height: 48px;
+    margin-bottom: 12px;
+    opacity: 0.3;
+}
+
+/* ============================================================
+ * 侧边抽屉 (1:1 from fullscreen-message-v2.html demo)
+ * 使用 withu-message-* 命名空间
+ * ============================================================ */
+.withu-message-drawer-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 100001;
+    opacity: 0;
+    pointer-events: none;
+}
+
+.withu-message-drawer-overlay::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.15);
+    backdrop-filter: blur(2px);
+    -webkit-backdrop-filter: blur(2px);
+    z-index: -1;
+    pointer-events: none;
+    transform: translateZ(0);
+    transition: opacity 0.35s cubic-bezier(0.32, 0.72, 0, 1);
+
+    /* will-change: opacity; */
+}
+
+.withu-message-drawer-overlay.active {
+    opacity: 1;
+    pointer-events: auto;
+}
+
+.withu-message-drawer-overlay.closing {
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s ease;
+}
+
+.withu-message-drawer-content {
+    position: absolute;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    width: 500px;
+    display: flex;
+    flex-direction: column;
+    transform: translateX(100%);
+    transition: transform 0.4s cubic-bezier(0.32, 0.72, 0, 1);
+    will-change: transform;
+    background: transparent;
+}
+
+.withu-message-drawer-bg {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    background: rgba(245, 245, 247, 0.75);
+    backdrop-filter: blur(40px) saturate(180%);
+    -webkit-backdrop-filter: blur(40px) saturate(180%);
+    border-left: 1px solid rgba(255, 255, 255, 0.4);
+    pointer-events: none;
+    transform: translateZ(0);
+}
+
+.withu-message-drawer-overlay.active .withu-message-drawer-content {
+    transform: translateX(0);
+}
+
+.withu-message-drawer-overlay.closing .withu-message-drawer-content {
+    transform: translateX(100%);
+    transition: transform 0.3s ease;
+}
+
+.withu-message-drawer-header {
+    position: relative;
+    z-index: 1;
+    padding: 20px 24px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+.withu-message-drawer-title-wrap {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.withu-message-drawer-title-icon {
+    width: 36px;
+    height: 36px;
+    border-radius: 10px;
+    background: rgba(0, 0, 0, 0.05);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #3a3a3c;
+    flex-shrink: 0;
+}
+
+.withu-message-drawer-title {
+    font-size: 16px;
+    font-weight: 600;
+    line-height: 1.3;
+}
+
+.withu-message-drawer-subtitle {
+    font-size: 12px;
+    color: #a1a1a6;
+    font-weight: 400;
+    margin-top: 1px;
+}
+
+/* ── 抽屉内容分隔线 ── */
+.withu-message-drawer-divider {
+    height: 1px;
+    background: linear-gradient(to right, transparent, rgba(0, 0, 0, 0.06) 20%, rgba(0, 0, 0, 0.06) 80%, transparent);
+    margin: 16px 0;
+}
+
+.withu-message-close-btn {
+    width: 34px;
+    height: 34px;
+    border-radius: 50%;
+    border: none;
+    background: rgba(0, 0, 0, 0.04);
+    color: var(--withumsg-text-muted);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    transition: all 0.25s ease;
+}
+
+.withu-message-close-btn:hover {
+    background: rgba(0, 0, 0, 0.08);
+    color: var(--withumsg-text-main);
+}
+
+.withu-message-drawer-scroll {
+    position: relative;
+    z-index: 1;
+    flex: 1;
+    overflow-y: auto;
+    scrollbar-width: none;
+    display: flex;
+    flex-direction: column;
+    contain: layout style;
+    -webkit-overflow-scrolling: touch;
+}
+
+.withu-message-drawer-scroll::-webkit-scrollbar {
+    display: none;
+}
+
+.withu-message-drawer-body {
+    flex: 1;
+    padding: 24px 20px 24px 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+}
+
+/* ── 抽屉内消息项（QQ 风格气泡） ── */
+.withu-message-msg-item {
+    display: flex;
+    gap: 12px;
+    align-items: flex-start;
+    contain: content;
+}
+
+.withu-message-msg-item.is-me {
+    flex-direction: row-reverse;
+}
+
+.withu-message-avatar-wrap {
+    position: relative;
+    width: 40px;
+    height: 40px;
+    border-radius: 12px;
+    flex-shrink: 0;
+    cursor: pointer;
+    overflow: hidden;
+    user-select: none;
+}
+
+.withu-message-avatar-wrap .withu-message-avatar-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.25);
+    backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(4px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    transition: all 0.3s ease;
+    color: #fff;
+    border-radius: 12px;
+}
+
+.withu-message-avatar-wrap .withu-message-avatar-overlay svg {
+    width: 16px;
+    height: 16px;
+    transform: scale(0.5);
+    transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.withu-message-avatar-wrap:hover .withu-message-avatar-overlay {
+    opacity: 1;
+}
+
+.withu-message-avatar-wrap:hover .withu-message-avatar-overlay svg {
+    transform: scale(1);
+}
+
+.withu-message-msg-avatar {
+    width: 100%;
+    height: 100%;
+    border-radius: 12px;
+    object-fit: cover;
+    background: #fff;
+    display: block;
+}
+
+.withu-message-msg-main {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    max-width: 75%;
+    align-items: flex-start;
+    min-width: 0;
+}
+
+.withu-message-msg-item.is-me .withu-message-msg-main {
+    align-items: flex-end;
+}
+
+.withu-message-msg-info {
+    font-size: 12px;
+    color: var(--withumsg-text-muted);
+    display: flex;
+    gap: 8px;
+    align-items: center;
+}
+
+.withu-message-msg-item.is-me .withu-message-msg-info {
+    flex-direction: row-reverse;
+}
+
+.withu-message-msg-name {
+    font-weight: 500;
+    color: #555;
+    cursor: pointer;
+    max-width: 120px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    display: inline-block;
+    vertical-align: middle;
+}
+
+.withu-message-msg-name:hover {
+    color: var(--withumsg-text-main);
+}
+
+.withu-message-msg-bubble {
+    padding: 12px 16px;
+    background: rgba(255, 255, 255, 0.9);
+    border-radius: 4px 16px 16px 16px;
+    font-size: 14px;
+    line-height: 1.6;
+    color: var(--withumsg-text-main);
+    word-break: break-word;
+    position: relative;
+    cursor: pointer;
+    transition: opacity 0.2s;
+    max-width: 100%;
+    box-sizing: border-box;
+    min-width: 0;
+}
+
+.withu-message-msg-bubble:active {
+    opacity: 0.8;
+}
+
+.withu-message-msg-bubble img.emoji,
+.withu-message-msg-bubble img[data-emoji] {
+    height: 24px;
+    width: auto;
+    max-width: 80px;
+    vertical-align: bottom;
+    margin: -2px 2px 0;
+    display: inline-block;
+    object-fit: contain;
+}
+
+/* 兜底：气泡内所有非头像 img 限高，防止 textHtml 中的表情撑大 */
+.withu-message-msg-bubble img:not(.withu-message-msg-avatar) {
+    max-height: 28px;
+    vertical-align: bottom;
+}
+
+.withu-message-msg-item.is-me .withu-message-msg-bubble {
+    background: #007aff;
+    color: #fff;
+    border-radius: 16px 4px 16px 16px;
+}
+
+/* ── @ 标签 ── */
+.withu-message-at-tag {
+    color: var(--withumsg-text-main);
+    background: rgba(0, 0, 0, 0.05);
+    padding: 1px 5px;
+    border-radius: 6px;
+    margin: 0 2px;
+    cursor: pointer;
+    font-weight: 600;
+    font-size: 0.85em;
+    user-select: none;
+    transition: all 0.2s ease;
+    vertical-align: baseline;
+    display: inline;
+    line-height: inherit;
+    white-space: nowrap;
+}
+
+.withu-message-at-tag:hover {
+    background: rgba(0, 0, 0, 0.08);
+}
+
+.withu-message-msg-item.is-me .withu-message-at-tag {
+    color: #fff;
+    background: rgba(255, 255, 255, 0.2);
+}
+
+.withu-message-msg-item.is-me .withu-message-at-tag:hover {
+    background: rgba(255, 255, 255, 0.3);
+}
+
+/* ── 引用块 ── */
+.withu-message-msg-bubble blockquote,
+.withu-message-drawer-editor blockquote {
+    margin: 0 0 8px 0;
+    color: #555;
+    font-size: 13px;
+    background: rgba(0, 0, 0, 0.05);
+    border-radius: 12px;
+    padding: 8px 12px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    user-select: none;
+    -webkit-user-select: none;
+    display: block;
+    max-width: 100%;
+    box-sizing: border-box;
+}
+
+/* ── 编辑器内引用条（带删除按钮） ── */
+.withumsg-editor-quote {
+    display: flex !important;
+    align-items: center;
+    gap: 4px;
+    white-space: nowrap;
+    overflow: hidden;
+    position: relative;
+    padding-right: 28px !important;
+}
+
+.withumsg-editor-quote .emoji {
+    height: 18px;
+    width: 18px;
+    vertical-align: text-bottom;
+}
+
+.withumsg-editor-quote-label {
+    font-weight: 600;
+    color: var(--withumsg-primary, #007AFF);
+    flex-shrink: 0;
+}
+
+.withumsg-editor-quote-close {
+    position: absolute;
+    right: 6px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 20px;
+    height: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    background: rgba(0, 0, 0, 0.08);
+    color: #666;
+    font-size: 14px;
+    line-height: 1;
+    cursor: pointer;
+    flex-shrink: 0;
+    transition: background 0.15s ease;
+}
+
+.withumsg-editor-quote-close:hover {
+    background: rgba(0, 0, 0, 0.15);
+    color: #333;
+}
+
+.withumsg-editor-input {
+    min-height: 1em;
+    outline: none;
+}
+
+/* ── 引用回复（基于 reply_to_id） ── */
+.withumsg-reply-quote {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    white-space: normal;
+    cursor: pointer;
+    margin-bottom: 4px;
+    padding: 0;
+    border: none;
+    box-shadow: none;
+}
+
+.withumsg-reply-quote-name {
+    font-weight: 600;
+    font-size: 12px;
+    color: var(--withumsg-primary, #007AFF);
+}
+
+.withumsg-reply-quote-name::after {
+    content: '\FF1A';
+}
+
+.withumsg-reply-quote-text {
+    font-size: 12px;
+    opacity: 0.7;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    line-height: 1.6;
+}
+
+/* 引用摘要内的表情图片（懒加载 class="lazy"，用 img 选择器统一匹配） */
+.withumsg-reply-quote-text img {
+    height: 16px;
+    width: 16px;
+    vertical-align: middle;
+    margin: 0 1px;
+    display: inline;
+}
+
+.withu-message-msg-item.is-me .withumsg-reply-quote-name {
+    color: rgba(255, 255, 255, 0.95);
+}
+
+.withu-message-msg-item.is-me .withumsg-reply-quote-text {
+    color: rgba(255, 255, 255, 0.7);
+}
+
+.withu-message-drawer-editor blockquote {
+    cursor: default;
+}
+
+.withu-message-msg-item.is-me .withu-message-msg-bubble blockquote {
+    color: rgba(255, 255, 255, 0.9);
+    background: rgba(255, 255, 255, 0.18);
+    border-left-color: rgba(255, 255, 255, 0.5);
+}
+
+.withu-message-msg-item.is-me .withu-message-msg-bubble .withu-msg-at {
+    color: #fff !important;
+    background: rgba(255, 255, 255, 0.2);
+}
+
+.withu-message-msg-item.is-me .withu-message-msg-bubble .withu-msg-at:hover {
+    background: rgba(255, 255, 255, 0.3);
+}
+
+/* ── 徽章 ── */
+.withu-message-msg-badge {
+    font-size: 10px;
+    padding: 2px 6px;
+    border-radius: 6px;
+    font-weight: 600;
+    margin-left: 4px;
+    display: inline-flex;
+    align-items: center;
+    gap: 3px;
+}
+
+.withu-message-msg-badge svg {
+    width: 10px;
+    height: 10px;
+    stroke-width: 2.5;
+}
+
+.withu-message-msg-badge.author {
+    color: #f5d787;
+    background: linear-gradient(135deg, #2c2c2e, #1a1a1c);
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+}
+
+.withu-message-msg-badge.admin {
+    color: #fff;
+    background: linear-gradient(135deg, #FF6B6B, #E03131);
+    box-shadow: 0 1px 2px rgba(224, 49, 49, 0.2);
+}
+
+.withu-message-msg-badge.pending {
+    color: #d97706;
+    background: rgba(245, 158, 11, 0.1);
+    border: none;
+    box-shadow: none;
+}
+
+.withu-message-msg-item.is-pending .withu-message-msg-bubble {
+    opacity: 0.85;
+}
+
+/* ── 消息元信息（城市、浏览器、OS） ── */
+.withu-message-msg-meta {
+    display: flex;
+    gap: 6px;
+    margin-top: 4px;
+    min-width: 0;
+    flex: 1 1 0;
+    flex-wrap: wrap;
+}
+
+/* 移动端：横向滚动 */
+@media (max-width: 768px) {
+    .withu-message-msg-meta {
+        flex: none;
+        width: 100%;
+        flex-wrap: nowrap;
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+        scrollbar-width: none;
+    }
+}
+
+.withu-message-msg-meta::-webkit-scrollbar {
+    display: none;
+}
+
+.withu-message-msg-meta span {
+    font-size: 11px;
+    color: #98989d !important;
+    background: rgba(0, 0, 0, 0.03);
+    padding: 4px 8px;
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+    gap: 3px;
+    flex-shrink: 0;
+    white-space: nowrap;
+}
+
+.withu-message-msg-meta .withumsg-ico-sm {
+    width: 10px !important;
+    height: 10px !important;
+    flex-shrink: 0;
+    stroke: currentColor;
+    fill: none;
+    stroke-width: 2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+}
+
+.withu-message-msg-meta i[class*="qi-"].withumsg-ico-sm {
+    width: auto !important;
+    height: auto !important;
+    font-size: 11px;
+    line-height: 1;
+}
+
+.withu-message-msg-meta svg {
+    width: 10px;
+    height: 10px;
+    color: inherit;
+    stroke: currentColor;
+}
+
+.withu-message-msg-item.is-me .withu-message-msg-meta {
+    justify-content: flex-end;
+}
+
+/* ── 消息底部（meta + 点赞按钮） ── */
+.withu-message-msg-footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: 4px;
+    gap: 8px;
+    min-width: 0;
+    width: 100%;
+}
+
+.withu-message-msg-item.is-me .withu-message-msg-footer {
+    flex-direction: row-reverse;
+}
+
+/* ── 点赞包装器（气泡右上角，hover 显示） ── */
+.withu-message-like-wrap {
+    position: absolute;
+    top: -6px;
+    right: -6px;
+    display: flex;
+    align-items: center;
+    gap: 2px;
+    background: #fff;
+    border-radius: 20px;
+    padding: 2px 6px 2px 2px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    z-index: 1;
+    opacity: 0;
+    transform: scale(0.8);
+    transition: opacity 0.2s ease, transform 0.2s ease;
+    pointer-events: none;
+}
+
+.withu-message-msg-bubble:hover .withu-message-like-wrap {
+    opacity: 1;
+    transform: scale(1);
+    pointer-events: auto;
+}
+
+.withu-message-msg-item.is-me .withu-message-like-wrap {
+    right: auto;
+    left: -6px;
+}
+
+/* ── 点赞按钮 ── */
+.withu-message-like-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 20px;
+    height: 20px;
+    padding: 0;
+    border: none;
+    background: transparent;
+    color: #c8c8cc;
+    cursor: pointer;
+    border-radius: 50%;
+    transition: all 0.15s ease;
+    flex-shrink: 0;
+}
+
+.withu-message-like-btn:hover {
+    color: #ef4444;
+    background: rgba(239, 68, 68, 0.1);
+    transform: scale(1.1);
+}
+
+.withu-message-like-btn:active {
+    transform: scale(0.95);
+}
+
+.withu-message-like-btn.is-liked,
+.withu-message-like-btn[data-liked="true"] {
+    color: #ef4444;
+}
+
+.withu-message-like-btn.is-liked:hover,
+.withu-message-like-btn[data-liked="true"]:hover {
+    color: #dc2626;
+}
+
+.withu-message-like-btn i {
+    font-size: 12px;
+    line-height: 1;
+}
+
+/* 点赞数量 */
+.withu-message-like-count {
+    font-size: 11px;
+    color: #98989d;
+    min-width: 12px;
+    text-align: center;
+}
+
+/* AuthModal 层级高于 CommentModal */
+#withumsgAuthModal.withu-message-modal-overlay {
+    z-index: 100002;
+}
+
+/* 上下文菜单项样式见下方主声明块 */
+
+/* ── 消息弹入动画 ── */
+.withu-message-msg-pop-in {
+    animation: msgPopIn 0.4s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+    transform-origin: bottom right;
+}
+
+@keyframes msgPopIn {
+    0% {
+        opacity: 0;
+        transform: scale(0.8) translateY(20px);
+    }
+
+    100% {
+        opacity: 1;
+        transform: scale(1) translateY(0);
+    }
+}
+
+/* ── 高亮动画（普通气泡） ── */
+@keyframes highlightFlash {
+    0% {
+        box-shadow: 0 0 0 0 rgba(0, 122, 255, 0);
+    }
+
+    15% {
+        box-shadow: 0 0 0 4px rgba(0, 122, 255, 0.2);
+    }
+
+    100% {
+        box-shadow: 0 0 0 0 rgba(0, 122, 255, 0);
+    }
+}
+
+/* ── 高亮动画（蓝色气泡 is-me） ── */
+@keyframes highlightFlashMe {
+    0% {
+        box-shadow: 0 0 0 0 rgba(0, 122, 255, 0);
+    }
+
+    15% {
+        box-shadow: 0 0 0 4px rgba(0, 122, 255, 0.35);
+    }
+
+    100% {
+        box-shadow: 0 0 0 0 rgba(0, 122, 255, 0);
+    }
+}
+
+.withu-message-bubble-highlight {
+    animation: highlightFlash 1.2s ease-out;
+}
+
+.withu-message-msg-item.is-me .withu-message-bubble-highlight {
+    animation: highlightFlashMe 1.2s ease-out;
+}
+
+/* ── 抽屉底部 ── */
+.withu-message-drawer-footer {
+    position: sticky;
+    bottom: 0;
+    z-index: 10;
+    padding: 16px 20px calc(16px + env(safe-area-inset-bottom, 0px));
+    border-top: none;
+    background: rgb(245 245 247 / 60%);
+    transition: padding-bottom 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+    box-shadow: 0 -1px 0 rgba(0, 0, 0, 0.03);
+    backdrop-filter: blur(24px) saturate(200%);
+    -webkit-backdrop-filter: blur(24px) saturate(200%);
+}
+
+.withu-message-drawer-footer::before {
+    content: '';
+    position: absolute;
+    top: -40px;
+    left: 0;
+    right: 0;
+    height: 40px;
+    background: linear-gradient(to bottom, transparent, rgba(245, 245, 247, 0.4));
+    pointer-events: none;
+    z-index: -1;
+}
+
+.withu-message-drawer-footer-inner {
+    display: flex;
+    flex-direction: column;
+}
+
+/* 收起/展开状态 */
+.withu-message-drawer-collapsed-wrap {
+    transition: max-height 0.3s cubic-bezier(0.25, 0.8, 0.25, 1), opacity 0.2s ease;
+    max-height: 80px;
+    opacity: 1;
+    overflow: hidden;
+}
+
+.withu-message-drawer-expanded-wrap {
+    transition: max-height 0.3s cubic-bezier(0.25, 0.8, 0.25, 1), opacity 0.25s ease;
+    max-height: 0;
+    opacity: 0;
+    overflow: hidden;
+}
+
+.withu-message-drawer-footer.is-expanded .withu-message-drawer-collapsed-wrap {
+    max-height: 0;
+    opacity: 0;
+    pointer-events: none;
+}
+
+.withu-message-drawer-footer.is-expanded .withu-message-drawer-expanded-wrap {
+    max-height: 400px;
+    opacity: 1;
+    pointer-events: auto;
+}
+
+.withu-message-drawer-collapsed {
+    cursor: pointer;
+    padding: 0 4px;
+}
+
+.withu-message-dc-input {
+    background: rgb(227 227 227 / 67%);
+    /* border: 1px solid rgba(255, 255, 255, 0.4); */
+    border-radius: 20px;
+    padding: 10px 16px;
+    color: var(--withumsg-text-muted);
+    font-size: 14px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    transition: background 0.2s;
+}
+
+.withu-message-dc-input:hover {
+    background: rgba(0, 0, 0, 0.08);
+}
+
+.withu-message-dc-input svg {
+    width: 16px;
+    height: 16px;
+    opacity: 0.7;
+}
+
+/* ── 身份栏 ── */
+.withu-message-drawer-identity {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 12px;
+    padding: 8px 12px;
+    background: rgba(242, 242, 247, 0.38);
+    border-radius: 10px;
+    cursor: pointer;
+    transition: background 0.2s ease;
+}
+
+.withu-message-drawer-identity:hover {
+    background: rgba(229, 229, 234, 0.42);
+}
+
+.withu-message-drawer-identity img {
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+.withu-message-drawer-identity span {
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--withumsg-text-main);
+    flex: 1;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.withu-message-drawer-identity .edit-icon {
+    color: var(--withumsg-text-muted);
+    width: 14px;
+    height: 14px;
+    flex-shrink: 0;
+}
+
+/* ── 访客标签 ── */
+.withu-message-drawer-input-tags {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 12px;
+    flex-wrap: wrap;
+}
+
+.withu-message-drawer-input-tags .withu-message-v-tag {
+    font-size: 11px;
+    padding: 4px 10px 4px 4px;
+    background: rgba(242, 242, 247, 0.38);
+    border-radius: var(--withumsg-radius-round);
+}
+
+.withu-message-drawer-input-tags .withu-message-v-tag-icon {
+    width: 20px;
+    height: 20px;
+}
+
+.withu-message-drawer-input-tags .withu-message-v-tag-icon svg {
+    width: 10px;
+    height: 10px;
+}
+
+.withu-message-drawer-input-tags .withu-message-v-tag-icon i[class*="qi-"] {
+    font-size: 12px;
+    line-height: 1;
+}
+
+/* ── 编辑器 ── */
+.withu-message-drawer-editor-wrap {
+    background: rgba(242, 242, 247, 0.38);
+    border-radius: 10px;
+    display: flex;
+    flex-direction: column;
+    transition: background 0.2s ease;
+}
+
+.withu-message-drawer-editor-wrap:focus-within {
+    background: rgba(229, 229, 234, 0.42);
+}
+
+.withu-message-drawer-editor {
+    min-height: 60px;
+    max-height: 150px;
+    padding: 12px 14px;
+    font-size: 14px;
+    line-height: 1.6;
+    outline: none;
+    overflow-y: auto;
+    scrollbar-width: none;
+}
+
+.withu-message-drawer-editor::-webkit-scrollbar {
+    display: none;
+}
+
+.withu-message-drawer-editor[data-placeholder]:empty::before {
+    content: attr(data-placeholder);
+    color: #a1a1a6;
+    pointer-events: none;
+}
+
+.withu-message-drawer-editor img.emoji {
+    vertical-align: bottom;
+    height: 24px;
+    width: auto;
+    margin: -2px 2px 0;
+}
+
+.withu-message-drawer-toolbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 6px 10px 10px;
+}
+
+/* ── 工具按钮 ── */
+.withu-message-tb-left {
+    display: flex;
+    gap: 4px;
+}
+
+.withu-message-tb-btn {
+    background: transparent;
+    border: none;
+    outline: none;
+    color: var(--withumsg-text-muted);
+    width: 36px;
+    height: 36px;
+    border-radius: 10px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.withu-message-tb-btn:hover {
+    background: rgba(0, 0, 0, 0.06);
+    color: var(--withumsg-text-main);
+}
+
+.withu-message-tb-btn svg {
+    width: 22px;
+    height: 22px;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+}
+
+/* ── 发送按钮 ── */
+.withu-message-reply-btn {
+    padding: 10px 20px;
+    border-radius: var(--withumsg-radius-round);
+    background: var(--withumsg-text-main);
+    color: #fff;
+    border: none;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.withu-message-reply-btn:hover {
+    background: #3a3a3c;
+}
+
+.withu-message-reply-btn:active {
+    background: #2c2c2e;
+}
+
+.withu-message-reply-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+/* ── Enter 发送开关 ── */
+.withu-message-switch-wrap {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-left: 8px;
+    cursor: pointer;
+    padding: 4px 8px;
+    border-radius: 8px;
+    transition: background 0.2s;
+    user-select: none;
+}
+
+.withu-message-switch-wrap:hover {
+    background: rgba(0, 0, 0, 0.04);
+}
+
+.withu-message-switch-text {
+    font-size: 13px;
+    color: var(--withumsg-text-muted);
+    font-weight: 500;
+    transition: color 0.3s ease;
+}
+
+.withu-message-switch-wrap.active .withu-message-switch-text {
+    color: var(--withumsg-text-main);
+}
+
+.withu-message-switch {
+    width: 32px;
+    height: 16px;
+    border-radius: 16px;
+    background: rgba(0, 0, 0, 0.05);
+    overflow: hidden;
+}
+
+.withu-message-switch::after {
+    content: '';
+    display: block;
+    width: 100%;
+    height: 100%;
+    background: var(--withumsg-text-main);
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.withu-message-switch-wrap.active .withu-message-switch::after {
+    transform: scaleX(1);
+}
+
+/* ── 字数统计 ── */
+.withu-message-char-counter {
+    font-size: 12px;
+    color: var(--withumsg-text-muted);
+    font-weight: 500;
+    opacity: 0.5;
+    transition: color 0.25s ease;
+    font-variant-numeric: tabular-nums;
+    white-space: nowrap;
+    padding: 0 4px;
+}
+
+.withu-message-char-counter.warning {
+    color: #ff9f0a;
+    opacity: 1;
+}
+
+.withu-message-char-counter.danger {
+    color: #ff3b30;
+    opacity: 1;
+}
+
+/* ── 表情面板（全局定位，抽屉和弹窗共用） ── */
+.withu-message-emoji-panel {
+    position: fixed;
+    z-index: 100010;
+    width: 420px;
+    background: rgba(255, 255, 255, 0.38);
+    backdrop-filter: blur(40px) saturate(200%);
+    -webkit-backdrop-filter: blur(40px) saturate(200%);
+    border-radius: 16px;
+    border: 1px solid rgba(255, 255, 255, 0.4);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    transform-origin: bottom left;
+    will-change: transform, opacity;
+    visibility: hidden;
+    pointer-events: none;
+    opacity: 0;
+    transform: scale(0.82) translateY(14px) translateZ(0);
+    user-select: none;
+    -webkit-user-select: none;
+}
+
+.withu-message-emoji-panel.show {
+    visibility: visible;
+    pointer-events: auto;
+    animation: epIn 0.38s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+}
+
+.withu-message-emoji-panel.hide {
+    visibility: visible;
+    pointer-events: none;
+    animation: epOut 0.22s ease-out forwards;
+}
+
+@keyframes epIn {
+    0% {
+        opacity: 0;
+        transform: scale(0.82) translateY(14px) translateZ(0);
+    }
+
+    60% {
+        opacity: 1;
+        transform: scale(1.04) translateY(-3px) translateZ(0);
+    }
+
+    100% {
+        opacity: 1;
+        transform: scale(1) translateY(0) translateZ(0);
+    }
+}
+
+@keyframes epOut {
+    0% {
+        opacity: 1;
+        transform: scale(1) translateY(0) translateZ(0);
+    }
+
+    100% {
+        opacity: 0;
+        transform: scale(0.88) translateY(10px) translateZ(0);
+    }
+}
+
+.withu-message-emoji-tabs-wrap {
+    display: flex;
+    align-items: center;
+    padding: 6px 10px 2px;
+    gap: 2px;
+}
+
+.withu-message-emoji-tabs {
+    display: flex;
+    overflow-x: auto;
+    gap: 2px;
+    scrollbar-width: none;
+    flex: 1;
+}
+
+.withu-message-emoji-tabs::-webkit-scrollbar {
+    display: none;
+}
+
+.withu-message-e-tab {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    padding: 8px 12px;
+    border-radius: 10px;
+    transition: all 0.15s ease;
+    opacity: 0.35;
+    background: transparent;
+    min-width: 46px;
+    flex-shrink: 0;
+    border: none;
+    outline: none;
+}
+
+.withu-message-e-tab:hover {
+    opacity: 0.65;
+    background: rgba(0, 0, 0, 0.04);
+}
+
+.withu-message-e-tab.active {
+    opacity: 1;
+    background: rgba(0, 0, 0, 0.06);
+}
+
+.withu-message-e-tab img {
+    height: 28px;
+    width: auto;
+    object-fit: contain;
+    pointer-events: none;
+}
+
+.withu-message-emoji-cat-title {
+    font-size: 11px;
+    font-weight: 600;
+    color: rgba(0, 0, 0, 0.2);
+    padding: 0 16px 4px;
+    letter-spacing: 0.3px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.withu-message-emoji-cat-title::before {
+    content: '';
+    flex: 1;
+    height: 0.5px;
+    background: linear-gradient(to right, transparent, rgba(0, 0, 0, 0.08));
+}
+
+.withu-message-emoji-cat-title::after {
+    content: '';
+    flex: 1;
+    height: 0.5px;
+    background: linear-gradient(to left, transparent, rgba(0, 0, 0, 0.08));
+}
+
+.withu-message-emoji-list {
+    padding: 6px 12px 14px;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(42px, 1fr));
+    gap: 4px;
+    max-height: 230px;
+    overflow-y: auto;
+    scrollbar-width: none;
+    align-content: start;
+    contain: layout style;
+}
+
+.withu-message-emoji-list::-webkit-scrollbar {
+    display: none;
+}
+
+.withu-message-emoji-item {
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 8px;
+    padding: 6px;
+    transition: transform 0.15s ease, background 0.15s ease;
+    aspect-ratio: 1/1;
+    contain: layout style paint;
+}
+
+.withu-message-emoji-item:hover {
+    background: rgba(0, 0, 0, 0.05);
+    transform: scale(1.12);
+}
+
+.withu-message-emoji-item:active {
+    transform: scale(0.92);
+}
+
+.withu-message-emoji-item img {
+    height: 28px;
+    width: auto;
+    max-width: 100%;
+    object-fit: contain;
+    pointer-events: none;
+}
+
+/* 表情预览气泡 */
+.withu-message-emoji-preview {
+    position: fixed;
+    background: rgba(255, 255, 255, 0.42);
+    backdrop-filter: blur(30px) saturate(180%);
+    -webkit-backdrop-filter: blur(30px) saturate(180%);
+    border: 1px solid rgba(255, 255, 255, 0.4);
+    border-radius: 14px;
+    padding: 12px 16px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    z-index: 100012;
+    transform: translate(-50%, 0) scale(0.6);
+    opacity: 0;
+    pointer-events: none;
+    visibility: hidden;
+    transition: opacity 0.2s ease, transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1), visibility 0.2s,
+        left 0.15s ease-out, top 0.15s ease-out;
+    user-select: none;
+}
+
+.withu-message-emoji-preview.active {
+    opacity: 1;
+    visibility: visible;
+    transform: translate(-50%, 0) scale(1);
+}
+
+.withu-message-emoji-preview img {
+    height: 48px;
+    width: auto;
+    max-width: 120px;
+    object-fit: contain;
+}
+
+.withu-message-emoji-preview span {
+    font-size: 13px;
+    font-weight: 500;
+    color: #555;
+    max-width: 100px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    text-align: center;
+}
+
+/* 表情骨架 */
+@keyframes shimmer {
+    0% {
+        background-position: -200% 0;
+    }
+
+    100% {
+        background-position: 200% 0;
+    }
+}
+
+.withu-message-emoji-skeleton {
+    border-radius: 10px;
+    background: linear-gradient(90deg, rgba(0, 0, 0, 0.012) 25%, rgba(0, 0, 0, 0.04) 50%, rgba(0, 0, 0, 0.012) 75%);
+    background-size: 200% 100%;
+    animation: shimmer 1.4s ease-in-out infinite;
+    aspect-ratio: 1/1;
+}
+
+@keyframes emojiListFadeIn {
+    0% {
+        opacity: 0;
+        transform: translateY(4px);
+    }
+
+    100% {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.withu-message-emoji-list.fade-in {
+    animation: emojiListFadeIn 0.22s ease-out forwards;
+}
+
+/* ── 抽屉空状态 ── */
+.withu-message-drawer-empty {
+    text-align: center;
+    padding: 60px 20px;
+    margin-top: 20px;
+    color: var(--withumsg-text-muted);
+    font-size: 14px;
+    letter-spacing: 0.5px;
+    font-weight: 300;
+}
+
+.withu-message-drawer-empty svg {
+    width: 36px;
+    height: 36px;
+    margin-bottom: 10px;
+    opacity: 0.25;
+    stroke-width: 1.2;
+}
+
+/* ── 抽屉加载状态 ── */
+.withu-message-drawer-loading {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+    min-height: 200px;
+    color: var(--withumsg-text-muted, #a1a1a6);
+    gap: 10px;
+}
+
+.withu-message-drawer-loading span {
+    font-size: 14px;
+    font-weight: 500;
+}
+
+/* ── 时间分隔（纯文字居中，无线条） ── */
+.withu-message-time-divider {
+    text-align: center;
+    font-size: 11px;
+    color: #a1a1a6;
+    margin: 12px 0 4px;
+    padding: 4px 0;
+    letter-spacing: 0.3px;
+}
+
+/* ── 身份认证弹窗 ── */
+.withu-message-modal-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 100002;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    opacity: 0;
+    pointer-events: none;
+    padding: 3vh 3vw;
+}
+
+.withu-message-modal-overlay::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: rgb(160 160 160 / 53%);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    z-index: -1;
+    pointer-events: none;
+    transform: translateZ(0);
+    will-change: opacity;
+}
+
+.withu-message-modal-overlay.active {
+    opacity: 1;
+    pointer-events: auto;
+}
+
+.withu-message-modal-overlay.closing {
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.35s ease;
+}
+
+.withu-message-modal-content {
+    background: rgb(255 255 255 / 35%);
+    backdrop-filter: blur(40px);
+    -webkit-backdrop-filter: blur(40px);
+    border: 1px solid rgba(255, 255, 255, 0.4);
+    width: 100%;
+    max-width: 900px;
+    max-height: 760px;
+    border-radius: 28px;
+    display: flex;
+    flex-direction: column;
+    transform: scale(0.92) translateY(16px);
+    opacity: 0;
+    transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1), opacity 0.3s ease;
+    position: relative;
+    overflow: hidden;
+    will-change: transform, opacity;
+}
+
+.withu-message-modal-overlay.active .withu-message-modal-content {
+    transform: scale(1) translateY(0);
+    opacity: 1;
+}
+
+.withu-message-modal-overlay.closing .withu-message-modal-content {
+    transform: scale(0.88) translateY(24px);
+    opacity: 0;
+    transition: transform 0.4s cubic-bezier(0.4, 0, 0.6, 1), opacity 0.3s ease;
+}
+
+.withu-message-close-wrapper {
+    position: absolute;
+    top: 24px;
+    right: 28px;
+    z-index: 10;
+}
+
+.withu-message-modal-body {
+    padding: 36px 44px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    overflow-y: auto;
+    scrollbar-width: none;
+}
+
+.withu-message-modal-body::-webkit-scrollbar {
+    display: none;
+}
+
+/* iOS Tab */
+.withu-message-ios-tabs-wrap {
+    display: flex;
+}
+
+.withu-message-ios-tabs {
+    position: relative;
+    display: inline-flex;
+    background: rgba(242, 242, 247, 0.38);
+    padding: 4px;
+    border-radius: var(--withumsg-radius-round);
+}
+
+.withu-message-ios-tab {
+    position: relative;
+    z-index: 2;
+    padding: 10px 28px;
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--withumsg-text-muted);
+    cursor: pointer;
+    transition: color 0.3s;
+}
+
+.withu-message-ios-tab.active {
+    color: var(--withumsg-text-main);
+}
+
+.withu-message-ios-tab-slider {
+    position: absolute;
+    top: 4px;
+    bottom: 4px;
+    left: 0;
+    background: rgba(255, 255, 255, 0.85);
+    border-radius: var(--withumsg-radius-round);
+    transition: transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1), width 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+    z-index: 1;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08), 0 1px 2px rgba(0, 0, 0, 0.04);
+    will-change: transform, width;
+}
+
+/* 输入框 */
+.withu-message-input-row {
+    display: flex;
+    gap: 16px;
+    transition: all 0.25s ease;
+}
+
+.withu-message-input-wrapper {
+    position: relative;
+    flex: 1;
+}
+
+.withu-message-i-icon {
+    position: absolute;
+    left: 14px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 28px;
+    height: 28px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: var(--withumsg-text-muted);
+    z-index: 2;
+}
+
+.withu-message-input-wrapper input {
+    width: 100%;
+    padding: 16px 20px 16px 52px;
+    border: 1px solid rgba(255, 255, 255, 0.4);
+    border-radius: 16px;
+    background: rgba(242, 242, 247, 0.38);
+    font-size: 15px;
+    color: #6e6e73;
+    outline: none;
+    transition: background 0.2s ease, color 0.2s ease;
+    font-weight: 500;
+}
+
+.withu-message-input-wrapper input::placeholder {
+    color: #a1a1a6;
+    font-weight: 400;
+}
+
+.withu-message-input-wrapper input:focus {
+    background: rgba(229, 229, 234, 0.42);
+    color: var(--withumsg-text-main);
+}
+
+.withu-message-i-icon .withu-message-input-avatar {
+    width: 28px;
+    height: 28px;
+    border-radius: 8px;
+    object-fit: cover;
+}
+
+/* 提交按钮动画 */
+.withu-message-submit-btn {
+    background: var(--withumsg-text-main);
+    color: #fff;
+    border: none;
+    padding: 12px 28px;
+    border-radius: var(--withumsg-radius-round);
+    font-size: 15px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.withu-message-submit-btn:hover {
+    background: #3a3a3c;
+}
+
+.withu-message-submit-btn .withu-message-submit-loader,
+.withu-message-submit-btn .withu-message-submit-check {
+    display: none;
+}
+
+.withu-message-submit-btn.is-loading {
+    pointer-events: none;
+    opacity: 0.85;
+}
+
+.withu-message-submit-btn.is-loading .withu-message-submit-icon {
+    display: none;
+}
+
+.withu-message-submit-btn.is-loading .withu-message-submit-loader {
+    display: inline-block;
+}
+
+.withu-message-submit-btn.is-success {
+    opacity: 0.75;
+    pointer-events: none;
+}
+
+.withu-message-submit-btn.is-success .withu-message-submit-icon {
+    display: none;
+}
+
+.withu-message-submit-btn.is-success .withu-message-submit-loader {
+    display: none;
+}
+
+.withu-message-submit-btn.is-success .withu-message-submit-check {
+    display: inline-block;
+}
+
+.withu-message-lucide-loader {
+    animation: withumsg-spin 1.2s linear infinite;
+}
+
+/* ── 上下文菜单（z-index 必须高于抽屉 100002） ── */
+.withu-message-context-menu {
+    position: fixed;
+    z-index: 100005;
+    background: rgba(40, 40, 40, 0.88);
+    backdrop-filter: blur(24px);
+    -webkit-backdrop-filter: blur(24px);
+    border-radius: 14px;
+    display: flex;
+    padding: 6px;
+    gap: 4px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.18);
+    opacity: 0;
+    visibility: hidden;
+    transform: scale(0.4);
+    transition: opacity 0.22s cubic-bezier(0.32, 0.72, 0, 1),
+        transform 0.22s cubic-bezier(0.32, 0.72, 0, 1),
+        visibility 0.22s;
+    transform-origin: center bottom;
+    pointer-events: none;
+}
+
+.withu-message-context-menu.active {
+    opacity: 1;
+    visibility: visible;
+    transform: scale(1);
+    pointer-events: auto;
+}
+
+.withu-message-cm-item {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #fff;
+    cursor: pointer;
+    padding: 8px;
+    border-radius: 8px;
+    transition: background 0.2s;
+    width: 38px;
+    height: 38px;
+}
+
+.withu-message-cm-item:hover,
+.withu-message-cm-item:active {
+    background: rgba(255, 255, 255, 0.15);
+}
+
+.withu-message-cm-item svg {
+    width: 20px;
+    height: 20px;
+    opacity: 0.9;
+}
+
+/* ── 弹窗内头部标题 ── */
+.withu-message-head-titles .withu-message-title {
+    font-size: 26px;
+    font-weight: 600;
+    margin-bottom: 6px;
+    letter-spacing: 0.2px;
+}
+
+.withu-message-head-titles .withu-message-subtitle {
+    font-size: 15px;
+    color: var(--withumsg-text-muted);
+    font-weight: 400;
+}
+
+/* ── 弹窗内访客标签 ── */
+.withu-message-visitor-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.withu-message-v-tag {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 13px;
+    font-weight: 500;
+    color: #636366;
+    background: rgba(242, 242, 247, 0.38);
+    padding: 6px 14px 6px 6px;
+    border-radius: var(--withumsg-radius-round);
+}
+
+.withu-message-v-tag-icon {
+    width: 26px;
+    height: 26px;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-shrink: 0;
+    background: rgba(0, 0, 0, 0.06);
+    color: #8e8e93;
+}
+
+.withu-message-v-tag-icon svg {
+    width: 14px;
+    height: 14px;
+    flex-shrink: 0;
+}
+
+.withu-message-v-tag-icon i[class*="qi-"] {
+    font-size: 16px;
+    line-height: 1;
+}
+
+/* ── 弹窗内输入行（demo input-wrapper 结构） ── */
+.withu-message-input-row {
+    display: flex;
+    gap: 12px;
+    transition: opacity 0.2s ease;
+}
+
+.withu-message-input-wrapper {
+    position: relative;
+    display: flex;
+    align-items: center;
+    flex: 1;
+}
+
+.withu-message-i-icon {
+    position: absolute;
+    left: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 28px;
+    height: 28px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: var(--withumsg-text-muted);
+    z-index: 2;
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+.withu-message-i-icon svg {
+    width: 18px;
+    height: 18px;
+}
+
+.withu-message-input-avatar {
+    width: 28px;
+    height: 28px;
+    border-radius: 8px;
+    object-fit: cover;
+    flex-shrink: 0;
+}
+
+.withu-message-input-wrapper input {
+    width: 100%;
+    padding: 14px 16px 14px 50px;
+    border: 1px solid rgba(255, 255, 255, 0.4);
+    border-radius: 14px;
+    background: rgba(242, 242, 247, 0.38);
+    backdrop-filter: blur(20px) saturate(180%);
+    -webkit-backdrop-filter: blur(20px) saturate(180%);
+    font-size: 15px;
+    color: var(--withumsg-text-main);
+    outline: none;
+    transition: background 0.2s ease, border-color 0.2s ease;
+    font-weight: 500;
+    letter-spacing: 0.3px;
+}
+
+.withu-message-input-wrapper input::placeholder {
+    color: #a1a1a6;
+    font-weight: 400;
+}
+
+.withu-message-input-wrapper input:focus {
+    background: rgba(229, 229, 234, 0.42);
+    color: var(--withumsg-text-main);
+}
+
+/* QQ 缓存快捷填入 hint（对齐 demo） */
+.withu-message-qq-cache-hint {
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%) scale(1);
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 4px 10px 4px 5px;
+    border-radius: var(--withumsg-radius-round);
+    background: rgba(0, 0, 0, 0.04);
+    cursor: pointer;
+    font-size: 12px;
+    color: var(--withumsg-text-muted);
+    transition: transform 0.4s var(--withumsg-spring, cubic-bezier(0.34, 1.56, 0.64, 1)), opacity 0.3s ease, background 0.2s ease;
+    z-index: 2;
+    -webkit-tap-highlight-color: transparent;
+    transform-origin: right center;
+}
+
+.withu-message-qq-cache-hint img {
+    width: 22px;
+    height: 22px;
+    border-radius: 6px;
+    object-fit: cover;
+}
+
+.withu-message-qq-cache-hint span {
+    font-weight: 500;
+    white-space: nowrap;
+}
+
+.withu-message-qq-cache-hint:hover {
+    background: rgba(0, 0, 0, 0.08);
+}
+
+.withu-message-qq-cache-hint:active {
+    transform: translateY(-50%) scale(0.96);
+}
+
+.withu-message-qq-cache-hint.withu-message-hint-hidden {
+    opacity: 0;
+    transform: translateY(-50%) scale(0.5);
+    pointer-events: none;
+}
+
+/* 抽屉身份栏 QQ 辅助文本（用 small 避免 span 选择器冲突） */
+.withu-message-drawer-qq-sub {
+    font-size: 10px;
+    font-weight: 400;
+    color: var(--withumsg-text-muted);
+    opacity: 0.45;
+    margin-left: 6px;
+    letter-spacing: 0.5px;
+    flex-shrink: 0;
+}
+
+/* ── 表情快捷气泡栏 ── */
+.withu-message-emoji-bubbles {
+    display: flex;
+    gap: 8px;
+    padding: 0 16px 6px;
+    overflow-x: auto;
+    scrollbar-width: none;
+    flex-shrink: 0;
+}
+
+.withu-message-emoji-bubbles::-webkit-scrollbar {
+    display: none;
+}
+
+.withu-message-emoji-bubble {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    padding: 5px 12px 5px 7px;
+    border-radius: var(--withumsg-radius-round);
+    background: rgba(0, 0, 0, 0.035);
+    cursor: pointer;
+    white-space: nowrap;
+    font-size: 13px;
+    color: var(--withumsg-text-muted);
+    font-weight: 500;
+    transition: all 0.2s ease;
+    flex-shrink: 0;
+    -webkit-tap-highlight-color: transparent;
+    user-select: none;
+    -webkit-user-select: none;
+}
+
+.withu-message-emoji-bubble:hover {
+    background: rgba(0, 0, 0, 0.07);
+    color: var(--withumsg-text-main);
+}
+
+.withu-message-emoji-bubble:active {
+    transform: scale(0.95);
+}
+
+.withu-message-emoji-bubble img {
+    height: 22px;
+    width: auto;
+    pointer-events: none;
+}
+
+.withu-message-emoji-bubble.withu-message-bubble-out {
+    animation: bubbleOut 0.28s ease forwards;
+    pointer-events: none;
+}
+
+.withu-message-emoji-bubble.withu-message-bubble-in {
+    animation: bubbleIn 0.35s var(--withumsg-spring) forwards;
+}
+
+@keyframes bubbleOut {
+    0% {
+        opacity: 1;
+        transform: scale(1) translateZ(0);
+    }
+
+    100% {
+        opacity: 0;
+        transform: scale(0.4) translateZ(0);
+    }
+}
+
+@keyframes bubbleIn {
+    0% {
+        opacity: 0;
+        transform: scale(0.3) translateZ(0);
+    }
+
+    50% {
+        opacity: 1;
+    }
+
+    100% {
+        opacity: 1;
+        transform: scale(1) translateZ(0);
+    }
+}
+
+/* ── 旧版输入框组兼容 ── */
+.withu-message-input-group {
+    position: relative;
+    display: flex;
+    align-items: center;
+    flex: 1;
+    margin-bottom: 0;
+}
+
+.withu-message-input-icon {
+    position: absolute;
+    left: 14px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 28px;
+    height: 28px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: var(--withumsg-text-muted);
+    z-index: 2;
+}
+
+.withu-message-input-icon svg {
+    width: 18px;
+    height: 18px;
+}
+
+.withu-message-input {
+    width: 100%;
+    padding: 16px 20px 16px 52px;
+    border: 1px solid rgba(255, 255, 255, 0.4);
+    border-radius: 16px;
+    background: rgba(242, 242, 247, 0.38);
+    backdrop-filter: blur(20px) saturate(180%);
+    -webkit-backdrop-filter: blur(20px) saturate(180%);
+    font-size: 15px;
+    color: #6e6e73;
+    outline: none;
+    transition: background 0.2s ease, color 0.2s ease;
+    font-weight: 500;
+    letter-spacing: 0.3px;
+}
+
+.withu-message-input::placeholder {
+    color: #a1a1a6;
+    font-weight: 400;
+}
+
+.withu-message-input:focus {
+    background: rgba(229, 229, 234, 0.42);
+    color: var(--withumsg-text-main);
+}
+
+/* ── 隐私安全提示 ── */
+.withu-message-privacy-hint {
+    display: none;
+    padding: 2px 4px 6px;
+    font-family: 'Inter', system-ui, sans-serif;
+    font-weight: 400;
+    font-size: 12px;
+    color: var(--withumsg-text-muted, #8e8e93);
+    letter-spacing: 0.01em;
+    line-height: 1.5;
+    opacity: .85;
+}
+
+.withu-message-privacy-hint svg {
+    width: 13px;
+    height: 13px;
+    vertical-align: -2px;
+    margin-right: 4px;
+    opacity: .65;
+}
+
+/* ── 弹窗内编辑器区域 ── */
+.withu-message-editor-wrap {
+    display: flex;
+    flex-direction: column;
+    border-radius: 16px;
+    background: rgba(242, 242, 247, 0.38);
+    backdrop-filter: blur(20px) saturate(180%);
+    -webkit-backdrop-filter: blur(20px) saturate(180%);
+    border: 1px solid rgba(255, 255, 255, 0.4);
+    transition: background 0.2s ease;
+    position: relative;
+    flex-shrink: 0;
+}
+
+.withu-message-editor-wrap:focus-within {
+    background: rgba(229, 229, 234, 0.42);
+}
+
+.withu-message-editor-content {
+    flex: 1;
+    padding: 16px 20px;
+    font-size: 16px;
+    line-height: 1.8;
+    color: var(--withumsg-text-main);
+    outline: none;
+    overflow-y: auto;
+    scrollbar-width: none;
+    font-weight: 400;
+    letter-spacing: 0.3px;
+    min-height: 150px;
+    max-height: 200px;
+}
+
+.withu-message-editor-content::-webkit-scrollbar {
+    display: none;
+}
+
+.withu-message-editor-content[data-placeholder]:empty::before {
+    content: attr(data-placeholder);
+    color: #a1a1a6;
+    pointer-events: none;
+}
+
+.withu-message-editor-content img.emoji {
+    vertical-align: bottom;
+    height: 28px;
+    width: auto;
+    max-width: 100%;
+    object-fit: contain;
+    margin: -2px 2px 0;
+}
+
+.withu-message-editor-toolbar {
+    padding: 10px 16px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+/* ── 抽屉消息气泡内 emoji 尺寸限制 ── */
+.withu-message-msg-bubble img.emoji {
+    vertical-align: bottom;
+    height: 24px;
+    width: auto;
+    max-width: 80px;
+    margin: -2px 2px 0;
+    object-fit: contain;
+}
+
+/* ── 抽屉编辑器内 emoji 尺寸 ── */
+.withu-message-drawer-editor img.emoji {
+    vertical-align: bottom;
+    height: 24px;
+    width: auto;
+    margin: -2px 2px 0;
+}
+
+/* ============================================================
+ * 移动端适配
+ * ============================================================ */
+@media (max-width: 768px) {
+    .withu-message-drawer-content {
+        right: 0;
+        left: 0;
+        bottom: 0;
+        top: auto;
+        width: 100%;
+        height: 85vh;
+        transform: translateY(100%);
+    }
+
+    .withu-message-drawer-bg {
+        border-radius: 24px 24px 0 0;
+        border-left: none;
+        border-top: 1px solid rgba(255, 255, 255, 0.4);
+    }
+
+    .withu-message-drawer-overlay.active .withu-message-drawer-content {
+        transform: translateY(0);
+    }
+
+    .withu-message-drawer-overlay.closing .withu-message-drawer-content {
+        transform: translateY(100%);
+    }
+
+    /* 移动端留言卡片 InfoItem：紧凑 + 可横向滑动 */
+    .Message_Wrap .MessageCard .MsgFooter {
+        overflow: visible;
+    }
+
+    .Message_Wrap .MessageCard .UserInfo {
+        gap: 4px;
+        overflow: visible;
+        overflow-x: scroll;
+        -webkit-overflow-scrolling: touch;
+        scrollbar-width: none;
+        touch-action: pan-x;
+        padding-bottom: 2px;
+    }
+
+    .Message_Wrap .MessageCard .UserInfo::-webkit-scrollbar {
+        display: none;
+    }
+
+    .Message_Wrap .MessageCard .MsgFooter .InfoItem {
+        padding: 4px 8px 4px 4px !important;
+        font-size: 11px;
+        gap: 4px;
+    }
+
+    /* 移动端：设备/天气/时间仅显示图标，点击 tooltip 显示完整内容 */
+    .Message_Wrap .MessageCard .MsgFooter .InfoItem.withumsg-info-hideable .withumsg-info-text {
+        display: none;
+    }
+
+    .Message_Wrap .MessageCard .MsgFooter .InfoItem.withumsg-info-hideable {
+        padding: 4px !important;
+        gap: 0;
+        min-width: 28px;
+        min-height: 28px;
+        justify-content: center;
+    }
+
+    /* 移动端回复项：完整文本隐藏，仅显示短文本(数字) */
+    .Message_Wrap .MessageCard .MsgFooter .withumsg-reply-badge .withumsg-info-text-full {
+        display: none;
+    }
+
+    .Message_Wrap .MessageCard .MsgFooter .withumsg-reply-badge .withumsg-info-text-short {
+        display: inline;
+    }
+
+    .Message_Wrap .MessageCard .MsgFooter .InfoItem .withumsg-ico {
+        width: 12px !important;
+        height: 12px !important;
+        padding: 3px;
+        border-radius: 5px;
+    }
+
+    .Message_Wrap .MessageCard .MsgFooter .InfoItem i[class*="qi-"].withumsg-ico {
+        font-size: 12px;
+        padding: 3px;
+        border-radius: 5px;
+    }
+
+    .Message_Wrap .MessageCard .MsgFooter .InfoItem svg {
+        width: 12px !important;
+        height: 12px !important;
+    }
+
+    .withu-message-emoji-panel {
+        width: calc(100vw - 24px) !important;
+        left: 12px !important;
+        right: 12px !important;
+    }
+
+    .withu-message-input-row {
+        flex-direction: column;
+        gap: 12px;
+    }
+
+    /* 留言弹窗移动端 */
+    .withu-message-modal-overlay {
+        padding: 0;
+    }
+
+    .withu-message-modal-content {
+        max-width: 100%;
+        max-height: 100%;
+        border-radius: 0;
+        height: 100%;
+    }
+
+    .withu-message-modal-body {
+        padding: 24px 16px;
+    }
+
+    .withu-message-editor-content {
+        min-height: 80px;
+        max-height: 160px;
+        overflow-y: auto;
+    }
+
+    /* 发送留言按钮：紧凑 */
+    .withu-message-editor-toolbar .withu-message-submit-btn {
+        padding: 10px 20px;
+        font-size: 14px;
+    }
+
+    /* 身份设置弹窗：移动端不要全屏，加圆角和间距 */
+    #withumsgAuthModal .withu-message-modal-content {
+        max-width: calc(100% - 20px);
+        max-height: unset;
+        height: auto;
+        margin: 10px;
+        border-radius: 20px;
+    }
+
+    .withu-message-head-titles .withu-message-title {
+        font-size: 22px;
+    }
+
+    /* 弹窗编辑器工具栏：移动端两行布局 */
+    .withu-message-editor-toolbar {
+        padding: 8px 12px;
+        flex-wrap: wrap;
+        gap: 6px;
+    }
+
+    .withu-message-editor-toolbar .withu-message-tb-left {
+        width: 100%;
+        align-items: center;
+        gap: 2px;
+    }
+
+    .withu-message-editor-toolbar .withu-message-tb-left .withu-message-switch-wrap {
+        margin-left: auto;
+    }
+
+    .withu-message-editor-toolbar .withu-message-char-counter {
+        order: 10;
+    }
+
+    .withu-message-editor-toolbar .withu-message-submit-btn {
+        order: 11;
+        margin-left: auto;
+    }
+
+    /* Enter发送开关：不换行 */
+    .withu-message-switch-wrap {
+        white-space: nowrap;
+    }
+
+    .withu-message-switch-text {
+        font-size: 11px;
+    }
+
+    /* 提交按钮：不换行，紧凑化 */
+    .withu-message-submit-btn {
+        white-space: nowrap;
+        padding: 10px 18px;
+        font-size: 14px;
+    }
+
+    /* 弹窗 v-tags：移动端缩小+横向滚动 */
+    .withu-message-visitor-tags {
+        flex-wrap: nowrap;
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+        scrollbar-width: none;
+        gap: 6px;
+    }
+
+    .withu-message-visitor-tags::-webkit-scrollbar {
+        display: none;
+    }
+
+    .withu-message-visitor-tags .withu-message-v-tag {
+        font-size: 11px;
+        padding: 4px 10px 4px 4px;
+        gap: 4px;
+        white-space: nowrap;
+        flex-shrink: 0;
+    }
+
+    .withu-message-visitor-tags .withu-message-v-tag-icon {
+        width: 20px;
+        height: 20px;
+    }
+
+    .withu-message-visitor-tags .withu-message-v-tag-icon svg {
+        width: 11px;
+        height: 11px;
+    }
+
+    .withu-message-visitor-tags .withu-message-v-tag-icon i[class*="qi-"] {
+        font-size: 12px;
+    }
+
+    /* 抽屉工具栏：移动端换行自适应 */
+    .withu-message-drawer-toolbar {
+        flex-wrap: wrap;
+        gap: 6px;
+        padding: 6px 8px 8px;
+    }
+
+    .withu-message-drawer-toolbar .withu-message-tb-left {
+        flex-wrap: wrap;
+    }
+
+    .withu-message-reply-btn {
+        white-space: nowrap;
+        padding: 8px 16px;
+        font-size: 13px;
+    }
+
+    /* 抽屉 v-tags：移动端缩小+横向滚动 */
+    .withu-message-drawer-input-tags {
+        flex-wrap: nowrap;
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+        scrollbar-width: none;
+        gap: 6px;
+    }
+
+    .withu-message-drawer-input-tags::-webkit-scrollbar {
+        display: none;
+    }
+
+    .withu-message-drawer-input-tags .withu-message-v-tag {
+        white-space: nowrap;
+        flex-shrink: 0;
+    }
+}
+
+/* ── 确认弹窗（about.php 风格） ── */
+.withumsg-confirm-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 100010;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(247, 247, 249, 0.65);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.withumsg-confirm-overlay.active {
+    opacity: 1;
+    pointer-events: auto;
+}
+
+.withumsg-confirm-panel {
+    width: min(340px, 88vw);
+    background: #FFFFFF;
+    border-radius: 24px;
+    border: none;
+    box-shadow: none;
+    transform: translateY(20px) scale(0.98);
+    opacity: 0;
+    transition: all 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+    overflow: hidden;
+    position: relative;
+    padding: 32px 24px;
+    text-align: center;
+}
+
+.withumsg-confirm-overlay.active .withumsg-confirm-panel {
+    transform: translateY(0) scale(1);
+    opacity: 1;
+}
+
+/* 关闭按钮 */
+.withumsg-confirm-close-btn {
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    width: 32px;
+    height: 32px;
+    border: none;
+    background: rgba(0, 0, 0, 0.04);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    color: #86868b;
+}
+
+.withumsg-confirm-close-btn:hover {
+    background: rgba(0, 0, 0, 0.08);
+    color: #1d1d1f;
+}
+
+.withumsg-confirm-close-btn i {
+    font-size: 16px;
+}
+
+/* 图标 */
+.withumsg-confirm-icon-wrapper {
+    width: 56px;
+    height: 56px;
+    border-radius: 16px;
+    background: linear-gradient(135deg, #FFD60A 0%, #FFCA28 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 20px;
+    box-shadow: 0 8px 24px rgba(255, 214, 10, 0.35);
+}
+
+.withumsg-confirm-icon-wrapper svg {
+    width: 28px;
+    height: 28px;
+    color: #fff;
+}
+
+/* 标题 */
+.withumsg-confirm-title {
+    font-size: 18px;
+    font-weight: 700;
+    color: #1d1d1f;
+    margin: 0 0 8px 0;
+    letter-spacing: -0.3px;
+}
+
+/* 描述 */
+.withumsg-confirm-desc {
+    font-size: 14px;
+    color: #86868b;
+    line-height: 1.6;
+    margin: 0 0 24px 0;
+}
+
+/* 操作按钮 */
+.withumsg-confirm-actions {
+    display: flex;
+    gap: 12px;
+}
+
+.withumsg-confirm-btn {
+    flex: 1;
+    padding: 14px 0;
+    border: none;
+    border-radius: 14px;
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+    letter-spacing: 0.2px;
+}
+
+.withumsg-confirm-btn-secondary {
+    background: rgba(0, 0, 0, 0.05);
+    color: #6e6e73;
+}
+
+.withumsg-confirm-btn-secondary:hover {
+    background: rgba(0, 0, 0, 0.08);
+}
+
+.withumsg-confirm-btn-primary {
+    background: linear-gradient(135deg, #FFD60A 0%, #FFCA28 100%);
+    color: #1a1a1a;
+    box-shadow: 0 4px 16px rgba(255, 214, 10, 0.35);
+}
+
+.withumsg-confirm-btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(255, 214, 10, 0.45);
+}
+
+.withumsg-confirm-btn-primary:active {
+    transform: translateY(0);
+    box-shadow: 0 2px 12px rgba(255, 214, 10, 0.3);
+}
+
+/* ============================================================
+ * 留言成功 —— 编辑器收缩 + 飞行纸条 + 纸飞机动画
+ * ============================================================ */
+.withu-message-editor-wrap.withu-message-fly-shrink {
+    animation: withumsg-contentShrink 0.6s ease forwards;
+}
+
+@keyframes withumsg-contentShrink {
+    0% {
+        opacity: 1;
+        transform: scale(1);
+    }
+
+    60% {
+        opacity: 0.4;
+        transform: scale(0.95);
+    }
+
+    100% {
+        opacity: 0.15;
+        transform: scale(0.88);
+    }
+}
+
+.withu-message-flying-note {
+    position: fixed;
+    z-index: 100001;
+    pointer-events: none;
+    padding: 10px 16px;
+    background: rgba(255, 255, 255, 0.88);
+    backdrop-filter: blur(16px) saturate(160%);
+    -webkit-backdrop-filter: blur(16px) saturate(160%);
+    border-radius: 10px;
+    border: 1px solid rgba(255, 255, 255, 0.5);
+    font-size: 12px;
+    line-height: 1.5;
+    color: var(--withumsg-text-muted);
+    font-weight: 500;
+    max-width: 140px;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    animation: withumsg-notePack 0.9s cubic-bezier(0.22, 0.68, 0.35, 1) forwards;
+    will-change: transform, opacity;
+}
+
+@keyframes withumsg-notePack {
+    0% {
+        opacity: 0;
+        transform: translate(-50%, -50%) scale(0.35);
+    }
+
+    22% {
+        opacity: 1;
+        transform: translate(-50%, -50%) scale(1.06);
+    }
+
+    38% {
+        opacity: 1;
+        transform: translate(-50%, -50%) scale(1);
+    }
+
+    72% {
+        opacity: 0.9;
+        transform: translate(-50%, -50%) scale(0.45) rotate(6deg);
+    }
+
+    92% {
+        opacity: 0.3;
+        transform: translate(-50%, -50%) scale(0.15) rotate(12deg);
+    }
+
+    100% {
+        opacity: 0;
+        transform: translate(-50%, -50%) scale(0.08) rotate(15deg);
+    }
+}
+
+.withu-message-paper-plane-fly {
+    position: fixed;
+    z-index: 100002;
+    width: 36px;
+    height: 36px;
+    color: var(--withumsg-primary);
+    pointer-events: none;
+    animation: withumsg-planeArc 1.4s cubic-bezier(0.22, 0.68, 0.35, 1) forwards;
+    will-change: transform, opacity;
+}
+
+.withu-message-paper-plane-fly svg {
+    width: 100%;
+    height: 100%;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 1.8;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+}
+
+@keyframes withumsg-planeArc {
+    0% {
+        opacity: 0;
+        transform: scale(0.4) rotate(-15deg);
+    }
+
+    14% {
+        opacity: 1;
+        transform: scale(1.2) rotate(-8deg);
+    }
+
+    28% {
+        opacity: 1;
+        transform: scale(1) rotate(-3deg) translate(0, 0);
+    }
+
+    100% {
+        opacity: 0;
+        transform: scale(0.55) rotate(-30deg) translate(60vw, -55vh);
+    }
+}

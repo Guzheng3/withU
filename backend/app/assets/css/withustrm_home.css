@@ -1,0 +1,557 @@
+/* WithU · withU-home interaction layer
+   Transferred from withu-site homepage (index.php) interactions:
+   - hero split-text title (withu-hero-title / .char)
+   - iOS tabs filter for love-day/events (withu-ios-tabs)
+   - horizontal message carousel (withu-home-message-container/track)
+   - epilogue notebook card (withu-epilogue__card)
+   Scoped with `withustrm-` prefix to stay consistent with withu-sakura.css
+   and avoid clashing with the legacy withu-* nav classes. */
+
+/* ── 1. Hero split-text title ─────────────────────────────── */
+body.withu-front-modern #withustrm-hero-title {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: baseline;
+    gap: 0 0.08em;
+    max-width: 100%;
+}
+
+body.withu-front-modern #withustrm-hero-title .withustrm-char {
+    display: inline-block;
+    min-width: 0.2em;
+    opacity: 0;
+    filter: blur(12px);
+    transform: scale(0.92) translateY(12px);
+    transition: opacity 0.7s cubic-bezier(.2, .8, .2, 1),
+        filter 0.7s cubic-bezier(.2, .8, .2, 1),
+        transform 0.7s cubic-bezier(.2, .8, .2, 1);
+}
+
+body.withu-front-modern #withustrm-hero-title .withustrm-char.is-in {
+    opacity: 1;
+    filter: blur(0);
+    transform: scale(1) translateY(0);
+}
+
+@media (prefers-reduced-motion: reduce) {
+    body.withu-front-modern #withustrm-hero-title .withustrm-char {
+        opacity: 1;
+        filter: none;
+        transform: none;
+        transition: none;
+    }
+}
+
+/* ── 2. iOS-style tabs (Love Day filter) ──────────────────── */
+body.withu-front-modern .withustrm-ios-tabs {
+    position: relative;
+    display: inline-flex;
+    background: rgba(118, 118, 128, 0.12);
+    border-radius: 12px;
+    padding: 3px;
+    gap: 4px;
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    flex-shrink: 0;
+}
+
+body.withu-front-modern .withustrm-ios-tabs-slider {
+    position: absolute;
+    top: 3px;
+    left: 0;
+    height: calc(100% - 6px);
+    background: #ffffff;
+    border-radius: 10px;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.08);
+    transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1),
+        width 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+    z-index: 0;
+    pointer-events: none;
+}
+
+body.withu-front-modern .withustrm-ios-tab {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 8px 16px;
+    border: none;
+    background: transparent;
+    color: rgba(60, 60, 67, 0.72);
+    font-family: inherit;
+    font-size: 0.88rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    white-space: nowrap;
+    border-radius: 10px;
+    line-height: 1;
+}
+
+body.withu-front-modern .withustrm-ios-tab i {
+    font-size: 0.95rem;
+    transition: all 0.3s ease;
+}
+
+body.withu-front-modern .withustrm-ios-tab.active {
+    color: #000;
+    font-weight: 650;
+}
+
+body.withu-front-modern .withustrm-ios-tab.active i {
+    color: #ec4899;
+}
+
+body.withu-front-modern .withustrm-ios-tab:hover:not(.active) {
+    color: rgba(60, 60, 67, 0.85);
+}
+
+@media (max-width: 640px) {
+    body.withu-front-modern .withustrm-ios-tab {
+        padding: 8px 10px;
+        font-size: 0.8rem;
+        gap: 4px;
+    }
+}
+
+/* Love Day filter grid */
+body.withu-front-modern .withustrm-loveday-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 1rem;
+    margin-top: 1.15rem;
+}
+
+body.withu-front-modern .withustrm-loveday-widget {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    min-height: 148px;
+    padding: 1.3rem 1.35rem;
+    border-radius: 20px;
+    color: #fff;
+    overflow: hidden;
+    box-shadow: 0 14px 32px rgba(30, 41, 59, 0.16);
+    transition: transform 0.3s ease, box-shadow 0.3s ease, opacity 0.3s ease;
+    cursor: pointer;
+}
+
+body.withu-front-modern .withustrm-loveday-widget:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 20px 40px rgba(30, 41, 59, 0.22);
+}
+
+body.withu-front-modern .withustrm-loveday-widget--past {
+    background: linear-gradient(135deg, #fb923c, #f97316 55%, #fbbf24);
+}
+
+body.withu-front-modern .withustrm-loveday-widget--future {
+    background: linear-gradient(135deg, #60a5fa, #3b82f6 55%, #818cf8);
+}
+
+body.withu-front-modern .withustrm-loveday-sup-label {
+    position: absolute;
+    top: 0;
+    right: 0;
+    display: inline-flex;
+    align-items: center;
+    padding: 0.35rem 1rem;
+    background: rgba(0, 0, 0, 0.45);
+    border-radius: 0 1.4rem 0 0.8rem;
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 3px;
+    color: rgba(255, 255, 255, 0.92);
+}
+
+body.withu-front-modern .withustrm-loveday-bg-icon {
+    position: absolute;
+    right: -1.5rem;
+    bottom: -1.5rem;
+    width: 6rem;
+    height: 6rem;
+    opacity: 0.1;
+    transform: rotate(10deg) scale(1.2);
+    fill: #fff;
+    pointer-events: none;
+}
+
+body.withu-front-modern .withustrm-loveday-content {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.75rem;
+    width: 100%;
+    position: relative;
+    z-index: 1;
+}
+
+body.withu-front-modern .withustrm-loveday-left {
+    display: flex;
+    align-items: center;
+    gap: 0.85rem;
+    min-width: 0;
+}
+
+body.withu-front-modern .withustrm-loveday-icon {
+    width: 3rem;
+    height: 3rem;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 1rem;
+    background: rgba(255, 255, 255, 0.22);
+    border: 1px solid rgba(255, 255, 255, 0.22);
+    backdrop-filter: blur(8px);
+    color: #fff;
+    font-size: 1.4rem;
+}
+
+body.withu-front-modern .withustrm-loveday-copy {
+    min-width: 0;
+}
+
+body.withu-front-modern .withustrm-loveday-title {
+    font-size: 1rem;
+    font-weight: 700;
+    color: #fff;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.12);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+body.withu-front-modern .withustrm-loveday-date {
+    margin-top: 0.28rem;
+    font-size: 0.78rem;
+    color: rgba(255, 255, 255, 0.9);
+}
+
+body.withu-front-modern .withustrm-loveday-count {
+    font-size: 1.7rem;
+    font-weight: 800;
+    line-height: 1;
+    color: #fff;
+    text-shadow: 0 2px 10px rgba(0, 0, 0, 0.15);
+    white-space: nowrap;
+}
+
+body.withu-front-modern .withustrm-loveday-unit {
+    font-size: 0.8rem;
+    font-weight: 600;
+    margin-left: 2px;
+}
+
+/* filter visibility: hidden items collapse */
+body.withu-front-modern .withustrm-loveday-item {
+    transition: opacity 0.28s ease, transform 0.28s ease;
+}
+
+body.withu-front-modern .withustrm-loveday-item.is-filtered {
+    display: none;
+}
+
+@media (max-width: 640px) {
+    body.withu-front-modern .withustrm-loveday-grid {
+        grid-template-columns: 1fr;
+    }
+    body.withu-front-modern .withustrm-loveday-widget {
+        padding: 1.15rem 1.1rem;
+    }
+    body.withu-front-modern .withustrm-loveday-count {
+        font-size: 1.35rem;
+    }
+}
+
+/* ── 3. Horizontal message carousel ───────────────────────── */
+body.withu-front-modern .withustrm-msg-container {
+    --withustrm-msg-bg: rgba(255, 255, 255, 0.8);
+    width: 100%;
+    overflow: hidden;
+    cursor: grab;
+    transform: translateZ(0);
+    -webkit-mask: linear-gradient(90deg, transparent, #000 3%, #000 97%, transparent);
+    mask: linear-gradient(90deg, transparent, #000 3%, #000 97%, transparent);
+    touch-action: pan-y;
+    user-select: none;
+    -webkit-user-select: none;
+}
+
+body.withu-front-modern .withustrm-msg-container.is-dragging {
+    cursor: grabbing;
+}
+
+body.withu-front-modern .withustrm-msg-track {
+    display: flex;
+    gap: 1.25rem;
+    padding: 1.6rem 0 2.2rem;
+    width: max-content;
+    will-change: transform;
+    backface-visibility: hidden;
+    -webkit-backface-visibility: hidden;
+}
+
+body.withu-front-modern .withustrm-msg-card {
+    width: min(360px, 82vw);
+    flex-shrink: 0;
+    display: flex;
+    flex-direction: column;
+    padding: 1.4rem 1.5rem;
+    border-radius: 20px;
+    border: 1px solid rgba(255, 255, 255, 0.88);
+    background: var(--withustrm-msg-bg);
+    box-shadow: 0 10px 28px rgba(44, 51, 87, 0.08);
+    box-sizing: border-box;
+    transition: transform 0.28s ease, box-shadow 0.28s ease;
+}
+
+body.withu-front-modern .withustrm-msg-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 18px 38px rgba(44, 51, 87, 0.14);
+}
+
+body.withu-front-modern .withustrm-msg-more {
+    width: min(360px, 82vw);
+    flex-shrink: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 0.7rem;
+    padding: 1.4rem 1.5rem;
+    border-radius: 20px;
+    border: 1.5px dashed rgba(236, 72, 153, 0.4);
+    background: rgba(255, 255, 255, 0.5);
+    color: #ec4899;
+    text-decoration: none;
+    cursor: pointer;
+    transition: all 0.28s ease;
+}
+
+body.withu-front-modern .withustrm-msg-more:hover {
+    background: rgba(236, 72, 153, 0.08);
+    border-color: rgba(236, 72, 153, 0.7);
+    transform: translateY(-4px);
+}
+
+body.withu-front-modern .withustrm-msg-more__icon {
+    width: 44px;
+    height: 44px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #f9a8d4, #ec4899);
+    color: #fff;
+    font-size: 1.05rem;
+    box-shadow: 0 6px 16px rgba(236, 72, 153, 0.3);
+}
+
+body.withu-front-modern .withustrm-msg-more__text {
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: #ec4899;
+    letter-spacing: 0.02em;
+}
+
+body.withu-front-modern .withustrm-msg-header {
+    display: flex;
+    align-items: center;
+    gap: 0.7rem;
+}
+
+body.withu-front-modern .withustrm-msg-avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    object-fit: cover;
+    flex-shrink: 0;
+}
+
+body.withu-front-modern .withustrm-msg-user-info {
+    min-width: 0;
+    flex: 1;
+}
+
+body.withu-front-modern .withustrm-msg-name-row {
+    display: flex;
+    align-items: center;
+    gap: 0.45rem;
+}
+
+body.withu-front-modern .withustrm-msg-user-name {
+    font-size: 0.9rem;
+    font-weight: 700;
+    color: var(--ink);
+}
+
+body.withu-front-modern .withustrm-msg-post-time {
+    font-size: 0.72rem;
+    color: var(--muted);
+}
+
+body.withu-front-modern .withustrm-msg-content {
+    margin-top: 0.8rem;
+    font-size: 0.86rem;
+    line-height: 1.65;
+    color: var(--ink);
+    overflow: hidden;
+}
+
+body.withu-front-modern .withustrm-msg-divider {
+    height: 1px;
+    margin: 0.9rem 0 0.75rem;
+    background: rgba(148, 163, 184, 0.18);
+}
+
+body.withu-front-modern .withustrm-msg-footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.5rem;
+}
+
+body.withu-front-modern .withustrm-msg-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    padding: 0.3rem 0.7rem;
+    border-radius: 999px;
+    font-size: 0.72rem;
+    color: #db2777;
+    background: rgba(236, 72, 153, 0.1);
+}
+
+body.withu-front-modern .withustrm-msg-loc {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.3rem;
+    font-size: 0.72rem;
+    color: var(--muted);
+}
+
+@media (prefers-reduced-motion: reduce) {
+    body.withu-front-modern .withustrm-msg-container {
+        -webkit-mask: none;
+        mask: none;
+    }
+}
+
+/* ── 4. Epilogue notebook card ────────────────────────────── */
+body.withu-front-modern .withustrm-epilogue {
+    margin-top: 2.6rem;
+}
+
+body.withu-front-modern .withustrm-epilogue__card {
+    position: relative;
+    max-width: 760px;
+    margin: 0 auto;
+    padding: 2.6rem 2.2rem 2.2rem;
+    border-radius: 8px 8px 22px 22px;
+    background: linear-gradient(180deg, #fffdf8, #fff7ee);
+    border: 1px solid rgba(217, 182, 128, 0.4);
+    box-shadow: 0 22px 52px rgba(84, 62, 32, 0.12);
+    overflow: hidden;
+}
+
+body.withu-front-modern .withustrm-epilogue__holes {
+    position: absolute;
+    top: 0.9rem;
+    left: 0;
+    right: 0;
+    display: flex;
+    justify-content: space-around;
+    padding: 0 2.2rem;
+}
+
+body.withu-front-modern .withustrm-epilogue__hole {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: #d8bca0;
+    box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.18);
+}
+
+body.withu-front-modern .withustrm-epilogue__header {
+    text-align: center;
+}
+
+body.withu-front-modern .withustrm-epilogue__title {
+    font-family: "Noto Serif SC", "Songti SC", serif;
+    font-size: 1.5rem;
+    font-weight: 700;
+    letter-spacing: 0.18em;
+    color: #9a6b3f;
+    margin: 0.6rem 0 0.4rem;
+}
+
+body.withu-front-modern .withustrm-epilogue__subtitle {
+    font-size: 0.78rem;
+    color: #b4906a;
+    letter-spacing: 0.12em;
+}
+
+body.withu-front-modern .withustrm-epilogue__quote-container {
+    position: relative;
+    margin-top: 1.4rem;
+    padding: 1.4rem 1.6rem;
+    border-radius: 14px;
+    background: rgba(255, 255, 255, 0.72);
+    border: 1px dashed rgba(217, 182, 128, 0.5);
+    text-align: center;
+}
+
+body.withu-front-modern .withustrm-epilogue__quote {
+    font-family: "Noto Serif SC", "Songti SC", serif;
+    font-size: 1.02rem;
+    line-height: 1.9;
+    color: #7a5330;
+    transition: opacity 0.4s ease, transform 0.4s ease;
+    margin: 0;
+}
+
+body.withu-front-modern .withustrm-epilogue__quote.is-switching {
+    opacity: 0;
+    transform: translateY(8px);
+}
+
+body.withu-front-modern .withustrm-epilogue__actions {
+    display: flex;
+    justify-content: center;
+    gap: 0.75rem;
+    margin-top: 1.3rem;
+}
+
+body.withu-front-modern .withustrm-epilogue__btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.45rem;
+    padding: 0.55rem 1.05rem;
+    border: 1px solid rgba(217, 182, 128, 0.5);
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.7);
+    color: #9a6b3f;
+    font-size: 0.8rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: transform 0.22s ease, background 0.22s ease, box-shadow 0.22s ease;
+}
+
+body.withu-front-modern .withustrm-epilogue__btn:hover {
+    transform: translateY(-2px);
+    background: #fff;
+    box-shadow: 0 8px 18px rgba(154, 107, 63, 0.16);
+}
+
+@media (max-width: 640px) {
+    body.withu-front-modern .withustrm-epilogue__card {
+        padding: 2.2rem 1.3rem 1.7rem;
+    }
+    body.withu-front-modern .withustrm-epilogue__quote-container {
+        padding: 1.1rem 1rem;
+    }
+}

@@ -1,0 +1,12 @@
+.env
+analog/
+node_modules/
+docs/.vitepress/dist
+docs/.vitepress/cache
+.claude/
+tmp/
+strm/
+data/
+logs/
+.vscode/
+.agent/

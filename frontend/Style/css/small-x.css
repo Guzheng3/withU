@@ -1,0 +1,573 @@
+:root {
+  font-size: 12px;
+}
+
+.col-sm-x-12 {
+  grid-column: span 12;
+}
+
+.col-sm-x-11 {
+  grid-column: span 11;
+}
+
+.col-sm-x-10 {
+  grid-column: span 10;
+}
+
+.col-sm-x-9 {
+  grid-column: span 9;
+}
+
+.col-sm-x-8 {
+  grid-column: span 8;
+}
+
+.col-sm-x-7 {
+  grid-column: span 7;
+}
+
+.col-sm-x-6 {
+  grid-column: span 6;
+}
+
+.col-sm-x-5 {
+  grid-column: span 5;
+}
+
+.col-sm-x-4 {
+  grid-column: span 4;
+}
+
+.col-sm-x-3 {
+  grid-column: span 3;
+}
+
+.col-sm-x-2 {
+  grid-column: span 2;
+}
+
+.col-sm-x-1 {
+  grid-column: span 1;
+}
+
+.central {
+  width: 100%;
+  margin: 2rem auto;
+  padding: 1rem;
+  box-sizing: border-box;
+}
+
+.central.maxW95 {
+  width: 95%;
+}
+
+.bg-img .middle {
+  border-radius: 2rem;
+  padding: 3rem 2rem;
+}
+
+.bg-img .middle img {
+  width: 6rem;
+  height: 6rem;
+}
+
+.bg-img .middle .love-icon img {
+  width: 5rem;
+  height: 5rem;
+  border: none;
+}
+
+.card-wrap .card-b {
+  width: 90%;
+}
+
+.card-wrap .card-b img {
+  width: 5rem;
+  margin-right: 2rem;
+}
+
+.icon {
+  width: 1.5rem !important;
+  height: 1.5rem !important;
+  vertical-align: -0.15em;
+  fill: currentColor;
+  overflow: hidden;
+  margin-right: 0rem !important;
+}
+
+.sm22 {
+  width: 2.2rem !important;
+  height: 2.2rem !important;
+  vertical-align: -0.15em;
+  fill: currentColor;
+  overflow: hidden;
+  margin-right: 0rem !important;
+}
+
+.central.bg .row .card .leavform .textinfo {
+  width: 70%;
+  margin-left: 1rem;
+  padding: 1rem 1.3rem !important;
+  margin-left: 5rem !important;
+}
+
+.central.bg .row .card .leavform img {
+  width: 4rem !important;
+  height: 4rem !important;
+  border-radius: 5rem;
+  display: block;
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+.header-btn-wrap .header-btn .btnClass span a b {
+  display: none;
+}
+
+.central.bg .row .card .inputbox .rig {
+  width: 100%;
+  margin-right: 0;
+  box-sizing: border-box;
+}
+
+.central.bg .row .card .inputbox .let {
+  width: 100%;
+  margin-right: 0;
+  box-sizing: border-box;
+}
+
+.central.bg .row .card .inputbox {
+  flex-direction: column;
+}
+
+.central.bg .row .card .inputbox input {
+  margin: 1rem 0;
+}
+
+.sm-w125 {
+  width: 800px !important;
+}
+
+.central.bg .row .card .inputbox input {
+  padding: 1rem 1.5rem;
+}
+
+.flex-ha1 {
+  display: flex !important;
+  flex-direction: row !important;
+  flex-wrap: nowrap !important;
+  justify-content: flex-start;
+}
+
+#spotlight .icon {
+  margin-top: 16px;
+}
+
+.bg-img .middle {
+  border-radius: 2rem;
+  padding: 3rem 2rem;
+}
+
+.bg-img .middle img {
+  width: 7rem;
+  height: 7rem;
+}
+
+.bg-img .middle .love-icon img {
+  width: 5rem;
+  height: 5rem;
+  border: none;
+}
+
+.card-wrap .card-b {
+  width: 90%;
+}
+
+.card-wrap .card-b img {
+  width: 5rem;
+  margin-right: 2rem;
+}
+
+.icon {
+  width: 1.5rem !important;
+  height: 1.5rem !important;
+  vertical-align: -0.15em;
+  fill: currentColor;
+  overflow: hidden;
+  margin-right: 0rem !important;
+}
+
+.sm22 {
+  width: 2.2rem !important;
+  height: 2.2rem !important;
+  vertical-align: -0.15em;
+  fill: currentColor;
+  overflow: hidden;
+  margin-right: 0rem !important;
+}
+
+.central.bg .row .card .leavform .textinfo {
+  width: 70%;
+  margin-left: 1rem;
+  padding: 1rem 1.3rem !important;
+  margin-left: 5rem !important;
+}
+
+.central.bg .row .card .leavform img {
+  width: 4rem !important;
+  height: 4rem !important;
+  border-radius: 5rem;
+  display: block;
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+.header-btn-wrap .header-btn .btnClass span a b {
+  display: none;
+}
+
+.central.bg .row .card .inputbox .rig {
+  width: 100%;
+  margin-right: 0;
+  box-sizing: border-box;
+}
+
+.central.bg .row .card .inputbox .let {
+  width: 100%;
+  margin-right: 0;
+  box-sizing: border-box;
+}
+
+.central.bg .row .card .inputbox {
+  flex-direction: column;
+}
+
+.central.bg .row .card .inputbox input {
+  margin: 1rem 0;
+}
+
+.sm-w125 {
+  width: 800px !important;
+}
+
+.central.bg .row .card .inputbox input {
+  padding: 1rem 1.5rem;
+}
+
+.flex-ha1 {
+  display: flex !important;
+  flex-direction: row !important;
+  flex-wrap: nowrap !important;
+  justify-content: flex-start;
+}
+
+#spotlight .icon {
+  margin-top: 16px;
+}
+
+.central.central-800.bg {
+  width: 93%;
+}
+
+.central.bg .row .card .leavform .textinfo .time {
+  display: block;
+  padding: 0.5rem 0;
+  text-align: right;
+}
+
+.central.central-600 {
+  width: 95%;
+}
+
+.love_img img {
+  width: 100% !important;
+}
+
+.img_card span {
+  font-size: 1.2rem;
+}
+
+.words {
+  padding: 0 1rem;
+}
+
+.spl-footer .spl-title {
+  font-size: 18px;
+  line-height: 2.5rem;
+  letter-spacing: 2px;
+}
+
+.central.bg .row .card .inputbox {
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+}
+
+.central.bg .row .card #wenben {
+  background-size: 55%;
+}
+
+div#homePage {
+  width: 94%;
+  height: 300px;
+}
+
+div#homePage .list {
+  height: 100%;
+}
+
+div#homePage .list .item {
+  border-radius: 1.3rem;
+}
+
+.bg-img .middle .img-male span,
+.bg-img .middle .img-female span {
+  padding: 0.4rem 0;
+}
+
+.bg-img .middle {
+  padding: 3rem 2rem;
+}
+
+.withu_card_block {
+  display: none;
+}
+
+.leav_card_ {
+  /*display: none;*/
+  padding: 0 4rem;
+}
+
+.img_list img {
+  /*height: 8.5rem!important;*/
+  aspect-ratio: 1/1 !important;
+}
+
+.ding_icon svg {
+  width: 2.5rem !important;
+  height: 2.5rem !important;
+}
+
+.img_list .lovelist_img {
+  width: 100% !important;
+  height: 100% !important;
+}
+
+.content_a ul li {
+  text-align: center;
+}
+
+.alert {
+  width: 60% !important;
+  transform: translateX(-2rem) !important;
+}
+
+svg.icon.close_btn {
+  width: 20px !important;
+  height: 20px !important;
+}
+
+.mian_music {
+  width: 100% !important;
+}
+
+.music_card .author .music_name {
+  font-size: 1.2rem !important;
+}
+
+.bg-img .middle .img-male span,
+.bg-img .middle .img-female span {
+  padding: 0.3rem 0 !important;
+}
+
+.Search_warp .position {
+  width: 90%;
+}
+
+.leav #show_mes {
+  position: fixed;
+  bottom: 0;
+  left: 50%;
+  top: 30px;
+  transform: translate(-50%);
+  z-index: 10002;
+}
+
+
+.NavItemBtnHide {
+  display: none;
+}
+
+.Photo.row .PhotoCard {
+  width: 100%;
+}
+
+.Photo.row {
+  margin: 1rem 1rem 2rem;
+}
+
+.CityHide {
+  display: none;
+}
+
+#md-view .plyr--video {
+  width: 100%;
+}
+
+#md-view iframe {
+  width: 100%;
+  height: 500px;
+}
+
+div#ConventionPhoto {
+  /* height: 500px; */
+  width: 100%;
+  margin: 1rem auto;
+}
+
+
+div#homePage[data-Fullscreen] {
+  height: 360px;
+}
+
+.wrap[data-Fullscreen] .waves {
+  height: 5rem;
+}
+
+div#homePage[data-Fullscreen] .bg-wrap.central.limg {
+  width: 95%;
+  margin-top: 2rem;
+}
+
+
+.Message_Wrap .MessageCard .MsgFooter .InfoItem svg {
+  width: 1.3rem !important;
+  height: 1.3rem !important;
+}
+
+.Message_Wrap .MessageCard .MsgFooter .InfoItem {
+  margin-right: .5rem !important;
+  margin-bottom: .5rem !important;
+}
+
+.video-player {
+  min-height: 260px !important;
+}
+
+.PreviousPage {
+  left: 3rem;
+}
+
+.withu-mobile-nav-root {
+  display: block;
+}
+
+.Search_warp .Tab_Warp {
+  max-width: 300px;
+}
+
+.footer-warp {
+  padding: 2rem 0 7rem !important;
+}
+
+.contentDetails {
+  margin-top: 1rem;
+}
+
+.OwO_Tab_Contents img {
+  height: 3.2rem !important;
+}
+
+#md-view .plyr--video {
+  max-height: 350px;
+}
+
+#isAdminIcon {
+  top: auto;
+  right: .5rem;
+  bottom: 18rem;
+}
+
+.pointList .point.active {
+  background-color: #fff;
+  width: 16px;
+}
+
+.avatarArea .withu-head-avatar-status-text {
+  font-size: .75rem;
+}
+.avatarArea .withu-head-avatar-gender-icon {
+  width: 22px;
+  height: 22px;
+}
+.avatarArea .withu-head-avatar-gender-icon .lucide {
+  width: 13px;
+  height: 13px;
+}
+.avatarArea .withu-head-avatar-location {
+  font-size: .6rem;
+  padding: 0.1rem 0.4rem;
+}
+.avatarArea .withu-head-avatar-mask {
+  padding: 0.6rem 0;
+}
+.avatarArea .withu-head-avatar-divider {
+  width: 2.5rem;
+  margin-top: 0.25rem;
+}
+
+.start-time-card {
+  padding: 0.5rem 1rem;
+}
+
+.st-time {
+  font-size: 1rem;
+}
+
+/* Header 移动端适配 - 简化版 */
+/* 1. 隐藏昵称logo */
+.withu-header-left-avatar {
+  display: none !important;
+}
+
+/* 2. 左侧显示logo标题 */
+.header .logo {
+  position: absolute !important;
+  left: 16px !important;
+  transform: none !important;
+}
+
+/* 3. 隐藏情侣头像、分隔线、更多按钮 */
+.withu-couple-avatars-right,
+.withu-header-divider,
+.withu-header-more-btn {
+  display: none !important;
+}
+
+/* 4. 移动端logo不要faded效果 */
+.alogo.withu-logo-faded {
+  opacity: 1 !important;
+  transform: none !important;
+}
+
+/* 4.1 移动端详情页滚动时隐藏标题logo */
+.header .logo.scroll-logo-hidden {
+  opacity: 0 !important;
+  transform: translateX(-20px) !important;
+  pointer-events: none !important;
+}
+
+/* 5. 移动端天气地图始终显示 */
+.withu-header-actions {
+  opacity: 1 !important;
+  pointer-events: auto !important;
+  transform: translateY(-50%) !important;
+  gap: 6px !important;
+}
+
+/* 6. header布局 */
+.header {
+  justify-content: flex-end !important;
+}

@@ -1,0 +1,192 @@
+/* WithUContextMenu — 自定义右键菜单样式 */
+
+.withucm-overlay {
+    position: fixed;
+    z-index: 100080;
+    min-width: 200px;
+    max-width: 280px;
+    padding: 5px;
+    background: linear-gradient(135deg, rgba(255,255,255,0.96), rgba(248,249,252,0.94));
+    backdrop-filter: saturate(180%) blur(16px);
+    -webkit-backdrop-filter: saturate(180%) blur(16px);
+    border: 1px solid rgba(0, 0, 0, 0.06);
+    border-radius: 14px;
+    box-shadow:
+        0 12px 32px -6px rgba(0, 0, 0, 0.1),
+        0 4px 12px -2px rgba(0, 0, 0, 0.04),
+        inset 0 1px 0 rgba(255,255,255,0.6);
+    opacity: 0;
+    transform: scale(0.92) translateY(4px) translateZ(0);
+    transition: opacity 0.14s cubic-bezier(0.2,0.6,0.3,1), transform 0.14s cubic-bezier(0.2,0.6,0.3,1);
+    will-change: transform, opacity;
+    backface-visibility: hidden;
+    user-select: none;
+    white-space: nowrap;
+    line-height: 1.45;
+    display: none;
+    font-size: 13.5px;
+    color: #3d4451;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}
+
+.withucm-overlay.withucm-in {
+    opacity: 1;
+    transform: scale(1) translateY(0) translateZ(0);
+}
+
+.withucm-overlay.withucm-out {
+    opacity: 0;
+    transform: scale(0.92) translateY(4px) translateZ(0);
+    transition-duration: 0.1s;
+}
+
+/* 子菜单面板 */
+.withucm-nest {
+    position: fixed;
+    z-index: 100081;
+    min-width: 184px;
+    max-width: 260px;
+    padding: 5px;
+    background: linear-gradient(135deg, rgba(255,255,255,0.96), rgba(248,249,252,0.94));
+    backdrop-filter: saturate(180%) blur(16px);
+    -webkit-backdrop-filter: saturate(180%) blur(16px);
+    border: 1px solid rgba(0, 0, 0, 0.06);
+    border-radius: 14px;
+    box-shadow:
+        0 12px 32px -6px rgba(0, 0, 0, 0.1),
+        0 4px 12px -2px rgba(0, 0, 0, 0.04),
+        inset 0 1px 0 rgba(255,255,255,0.6);
+    opacity: 0;
+    visibility: hidden;
+    transform: scale(0.92) translateY(4px) translateZ(0);
+    transition: opacity 0.16s cubic-bezier(0.2,0.6,0.3,1), transform 0.16s cubic-bezier(0.2,0.6,0.3,1), visibility 0.16s;
+    will-change: transform, opacity;
+    backface-visibility: hidden;
+    pointer-events: none;
+    contain: layout paint;
+    user-select: none;
+    white-space: nowrap;
+    line-height: 1.45;
+    font-size: 13.5px;
+    color: #3d4451;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}
+
+.withucm-nest.withucm-pop {
+    opacity: 1;
+    visibility: visible;
+    transform: scale(1) translateY(0) translateZ(0);
+    pointer-events: auto;
+}
+
+/* 菜单条目 */
+.withucm-row {
+    display: flex;
+    align-items: center;
+    padding: 9px 12px;
+    margin: 1px 0;
+    cursor: pointer;
+    color: #4a5060;
+    position: relative;
+    border-radius: 10px;
+    z-index: 1;
+    transition: color 0.15s ease;
+    gap: 10px;
+}
+
+.withucm-row::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.04);
+    border-radius: 10px;
+    z-index: -1;
+    opacity: 0;
+    transition: opacity 0.15s ease;
+}
+
+.withucm-row:hover,
+.withucm-row.withucm-held {
+    color: #1a1d24;
+}
+
+.withucm-row:hover::before,
+.withucm-row.withucm-held::before {
+    opacity: 1;
+}
+
+.withucm-row:active::before {
+    opacity: 1;
+    background: rgba(0, 0, 0, 0.07);
+}
+
+/* 分组标题 */
+.withucm-heading {
+    padding: 6px 12px 2px;
+    font-size: 11px;
+    color: #9ca3af;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+}
+
+/* 分隔线 */
+.withucm-divider {
+    border: 0;
+    border-top: 1px solid rgba(0, 0, 0, 0.06);
+    margin: 4px 8px;
+}
+
+/* 图标容器 */
+.withucm-glyph {
+    width: 18px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    font-size: 16px;
+    color: #6b7380;
+    transition: color 0.15s ease;
+}
+
+.withucm-row:hover .withucm-glyph,
+.withucm-row.withucm-held .withucm-glyph {
+    color: #3d4451;
+}
+
+/* 子菜单展开箭头 */
+.withucm-arrow {
+    margin-left: auto;
+    font-size: 14px;
+    opacity: 0.35;
+    display: flex;
+    align-items: center;
+    padding-left: 12px;
+    transition: opacity 0.15s ease;
+}
+
+.withucm-row:hover .withucm-arrow {
+    opacity: 0.6;
+}
+
+/* 暗色适配 */
+@media (prefers-color-scheme: dark) {
+    .withucm-overlay,
+    .withucm-nest {
+        background: linear-gradient(135deg, rgba(36,38,46,0.94), rgba(28,30,36,0.92));
+        border-color: rgba(255, 255, 255, 0.08);
+        box-shadow:
+            0 12px 32px -6px rgba(0, 0, 0, 0.4),
+            0 4px 12px -2px rgba(0, 0, 0, 0.25),
+            inset 0 1px 0 rgba(255,255,255,0.06);
+        color: #c9cdd4;
+    }
+    .withucm-row { color: #b0b5bf; }
+    .withucm-row:hover, .withucm-row.withucm-held { color: #e4e6ea; }
+    .withucm-row::before { background: rgba(255, 255, 255, 0.06); }
+    .withucm-row:active::before { background: rgba(255, 255, 255, 0.1); }
+    .withucm-heading { color: #6b7280; }
+    .withucm-divider { border-color: rgba(255, 255, 255, 0.07); }
+    .withucm-glyph { color: #8b92a0; }
+    .withucm-row:hover .withucm-glyph { color: #c9cdd4; }
+}

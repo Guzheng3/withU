@@ -1,0 +1,370 @@
+[
+ {
+  "name": "葡萄成熟时",
+  "artist": "陈奕迅",
+  "quality": "SQ",
+  "url": "music/葡萄成熟时.mp3",
+  "lrc": "music/葡萄成熟时.lrc",
+  "cover": "music/葡萄成熟时_cover.webp"
+ },
+ {
+  "name": "光辉岁月",
+  "artist": "Beyond",
+  "quality": "SQ",
+  "url": "music/光辉岁月.mp3",
+  "lrc": "music/光辉岁月.lrc",
+  "cover": "music/光辉岁月_cover.webp"
+ },
+ {
+  "name": "千千阙歌",
+  "artist": "陈慧娴",
+  "quality": "SQ",
+  "url": "music/千千阙歌.mp3",
+  "lrc": "music/千千阙歌.lrc",
+  "cover": "music/千千阙歌_cover.webp"
+ },
+ {
+  "name": "喜帖街",
+  "artist": "谢安琪",
+  "quality": "SQ",
+  "url": "music/喜帖街.mp3",
+  "lrc": "music/喜帖街.lrc",
+  "cover": "music/喜帖街_cover.webp"
+ },
+ {
+  "name": "最佳损友",
+  "artist": "陈奕迅",
+  "quality": "SQ",
+  "url": "music/最佳损友.mp3",
+  "lrc": "music/最佳损友.lrc",
+  "cover": "music/最佳损友_cover.webp"
+ },
+ {
+  "name": "富士山下",
+  "artist": "陈奕迅",
+  "quality": "SQ",
+  "url": "music/富士山下.mp3",
+  "lrc": "music/富士山下.lrc",
+  "cover": "music/富士山下_cover.webp"
+ },
+ {
+  "name": "偏偏喜欢你",
+  "artist": "陈百强",
+  "quality": "SQ",
+  "url": "music/偏偏喜欢你.mp3",
+  "lrc": "music/偏偏喜欢你.lrc",
+  "cover": "music/偏偏喜欢你_cover.webp"
+ },
+ {
+  "name": "够钟",
+  "artist": "周柏豪",
+  "quality": "SQ",
+  "url": "music/够钟.mp3",
+  "lrc": "music/够钟.lrc",
+  "cover": "music/够钟_cover.webp"
+ },
+ {
+  "name": "真的爱你",
+  "artist": "Beyond",
+  "quality": "SQ",
+  "url": "music/真的爱你.mp3",
+  "lrc": "music/真的爱你.lrc",
+  "cover": "music/真的爱你_cover.webp"
+ },
+ {
+  "name": "单车",
+  "artist": "陈奕迅",
+  "quality": "SQ",
+  "url": "music/单车.mp3",
+  "lrc": "music/单车.lrc",
+  "cover": "music/单车_cover.webp"
+ },
+ {
+  "name": "春娇与志明",
+  "artist": "街道办GDC 欧阳耀莹",
+  "quality": "SQ",
+  "url": "music/春娇与志明.mp3",
+  "lrc": "music/春娇与志明.lrc",
+  "cover": "music/春娇与志明_cover.webp"
+ },
+ {
+  "name": "你瞒我瞒",
+  "artist": "陈柏宇",
+  "quality": "SQ",
+  "url": "music/你瞒我瞒.mp3",
+  "lrc": "music/你瞒我瞒.lrc",
+  "cover": "music/你瞒我瞒_cover.webp"
+ },
+ {
+  "name": "狂恋你",
+  "artist": "沈以诚",
+  "quality": "SQ",
+  "url": "music/狂恋你.mp3",
+  "lrc": "music/狂恋你.lrc",
+  "cover": "music/狂恋你_cover.webp"
+ },
+ {
+  "name": "演员",
+  "artist": "薛之谦",
+  "quality": "SQ",
+  "url": "music/演员.mp3",
+  "lrc": "music/演员.lrc",
+  "cover": "music/演员_cover.webp"
+ },
+ {
+  "name": "千千阕歌",
+  "artist": "陈慧娴",
+  "quality": "SQ",
+  "url": "music/千千阕歌.mp3",
+  "lrc": "music/千千阕歌.lrc",
+  "cover": "music/千千阕歌_cover.webp"
+ },
+ {
+  "name": "老街",
+  "artist": "李荣浩",
+  "quality": "SQ",
+  "url": "music/老街.mp3",
+  "lrc": "music/老街.lrc",
+  "cover": "music/老街_cover.webp"
+ },
+ {
+  "name": "后来的我们",
+  "artist": "五月天",
+  "quality": "SQ",
+  "url": "music/后来的我们.mp3",
+  "lrc": "music/后来的我们.lrc",
+  "cover": "music/后来的我们_cover.webp"
+ },
+ {
+  "name": "天使的翅膀",
+  "artist": "DJ阿智",
+  "quality": "SQ",
+  "url": "music/天使的翅膀.mp3",
+  "lrc": "music/天使的翅膀.lrc",
+  "cover": "music/天使的翅膀_cover.webp"
+ },
+ {
+  "name": "一点点",
+  "artist": "周杰伦",
+  "quality": "SQ",
+  "url": "music/一点点.mp3",
+  "lrc": "music/一点点.lrc",
+  "cover": "music/一点点_cover.webp"
+ },
+ {
+  "name": "我们",
+  "artist": "陈奕迅",
+  "quality": "SQ",
+  "url": "music/我们.mp3",
+  "lrc": "music/我们.lrc",
+  "cover": "music/我们_cover.webp"
+ },
+ {
+  "name": "疑心病",
+  "artist": "任然",
+  "quality": "HQ",
+  "url": "music/疑心病.mp3",
+  "lrc": "music/疑心病.lrc",
+  "cover": "music/疑心病_cover.webp"
+ },
+ {
+  "name": "遇见",
+  "artist": "孙燕姿",
+  "quality": "SQ",
+  "url": "music/遇见.mp3",
+  "lrc": "music/遇见.lrc",
+  "cover": "music/遇见_cover.webp"
+ },
+ {
+  "name": "八年的爱",
+  "artist": "冰冰超人 (刘冰)",
+  "quality": "FLAC",
+  "url": "music/八年的爱.flac",
+  "lrc": "music/八年的爱.lrc",
+  "cover": "https://love-really.kikiw.cn/Lovefolder/20260408154451_69d6077355c29547239968.webp"
+ },
+ {
+  "name": "恋人",
+  "artist": "李荣浩",
+  "quality": "SQ",
+  "url": "music/恋人.mp3",
+  "lrc": "music/恋人.lrc",
+  "cover": "music/恋人_cover.webp"
+ },
+ {
+  "name": "Call You Tonight（DJ阿智版）",
+  "artist": "DJ阿智",
+  "quality": "SQ",
+  "url": "music/Call_You_Tonight_DJ阿智版_.mp3",
+  "lrc": "music/Call_You_Tonight_DJ阿智版_.lrc",
+  "cover": "music/Call_You_Tonight_DJ阿智版__cover.webp"
+ },
+ {
+  "name": "十年人间(DJ版)",
+  "artist": "沉默书生",
+  "quality": "SQ",
+  "url": "music/十年人间_DJ版_.mp3",
+  "lrc": "music/十年人间_DJ版_.lrc",
+  "cover": "music/十年人间_DJ版__cover.webp"
+ },
+ {
+  "name": "西厢寻他",
+  "artist": "伯爵Johnny 唐伯虎Annie",
+  "quality": "SQ",
+  "url": "music/西厢寻他.mp3",
+  "lrc": "music/西厢寻他.lrc",
+  "cover": "music/西厢寻他_cover.webp"
+ },
+ {
+  "name": "爱你（DJ阿智版）",
+  "artist": "DJ阿智",
+  "quality": "SQ",
+  "url": "music/爱你（DJ阿智版）.mp3",
+  "lrc": "music/爱你（DJ阿智版）.lrc",
+  "cover": "https://love-really.kikiw.cn/Lovefolder/20260408062612_69d5848497b39353641152.webp"
+ },
+ {
+  "name": "雨天",
+  "artist": "戚薇",
+  "quality": "SQ",
+  "url": "music/雨天.mp3",
+  "lrc": "music/雨天.lrc",
+  "cover": "https://love-really.kikiw.cn/Lovefolder/20260408062610_69d5848229da8769406073.webp"
+ },
+ {
+  "name": "你在 不在",
+  "artist": "郭采洁",
+  "quality": "SQ",
+  "url": "music/你在 不在.mp3",
+  "lrc": "music/你在 不在.lrc",
+  "cover": "https://love-really.kikiw.cn/Lovefolder/20260408062609_69d5848128130370096671.webp"
+ },
+ {
+  "name": "讲不出再见",
+  "artist": "谭咏麟",
+  "quality": "SQ",
+  "url": "music/讲不出再见.mp3",
+  "lrc": "music/讲不出再见.lrc",
+  "cover": "https://love-really.kikiw.cn/Lovefolder/20260408062607_69d5847f221bf032448046.webp"
+ },
+ {
+  "name": "好好说再见",
+  "artist": "陶喆 关诗敏",
+  "quality": "SQ",
+  "url": "music/好好说再见.mp3",
+  "lrc": "music/好好说再见.lrc",
+  "cover": "https://love-really.kikiw.cn/Lovefolder/20260408062605_69d5847dc9ea2738798649.webp"
+ },
+ {
+  "name": "小传奇",
+  "artist": "Mr.",
+  "quality": "SQ",
+  "url": "music/小传奇.mp3",
+  "lrc": "music/小传奇.lrc",
+  "cover": "https://love-really.kikiw.cn/Lovefolder/20260408062603_69d5847bb5510038288027.webp"
+ },
+ {
+  "name": "2084",
+  "artist": "Dear Jane",
+  "quality": "SQ",
+  "url": "music/2084.mp3",
+  "lrc": "music/2084.lrc",
+  "cover": "https://love-really.kikiw.cn/Lovefolder/20260408062602_69d5847a9e0b7406166292.webp"
+ },
+ {
+  "name": "明年今日",
+  "artist": "陈奕迅",
+  "quality": "SQ",
+  "url": "music/明年今日.mp3",
+  "lrc": "music/明年今日.lrc",
+  "cover": "https://love-really.kikiw.cn/Lovefolder/20260408062601_69d58479a8f84426173327.webp"
+ },
+ {
+  "name": "红色高跟鞋",
+  "artist": "蔡健雅",
+  "quality": "SQ",
+  "url": "music/红色高跟鞋.mp3",
+  "lrc": "music/红色高跟鞋.lrc",
+  "cover": "https://love-really.kikiw.cn/Lovefolder/20260408062559_69d58477bfb0f981817691.webp"
+ },
+ {
+  "name": "没想到",
+  "artist": "许嵩",
+  "quality": "SQ",
+  "url": "music/没想到.mp3",
+  "lrc": "music/没想到.lrc",
+  "cover": "https://love-really.kikiw.cn/Lovefolder/20260408062558_69d58476e61c9875671605.webp"
+ },
+ {
+  "name": "你是对的人",
+  "artist": "戚薇 俊昊",
+  "quality": "SQ",
+  "url": "music/你是对的人.mp3",
+  "lrc": "music/你是对的人.lrc",
+  "cover": "https://love-really.kikiw.cn/Lovefolder/20260408062557_69d58475e7003986826710.webp"
+ },
+ {
+  "name": "天若有情",
+  "artist": "黄丽玲",
+  "quality": "SQ",
+  "url": "music/天若有情.mp3",
+  "lrc": "music/天若有情.lrc",
+  "cover": "https://love-really.kikiw.cn/Lovefolder/20260408062556_69d58474731c0698529115.webp"
+ },
+ {
+  "name": "最后一页",
+  "artist": "江语晨",
+  "quality": "SQ",
+  "url": "music/最后一页.mp3",
+  "lrc": "music/最后一页.lrc",
+  "cover": "https://love-really.kikiw.cn/Lovefolder/20260408062555_69d584737920f500852973.webp"
+ },
+ {
+  "name": "唱不完的歌",
+  "artist": "Beyond 刘汉乐 王菲 方季惟 黄翊",
+  "quality": "SQ",
+  "url": "music/唱不完的歌.mp3",
+  "lrc": "music/唱不完的歌.lrc",
+  "cover": "https://love-really.kikiw.cn/Lovefolder/20260408062554_69d584725bfcb548749469.webp"
+ },
+ {
+  "name": "隆里电丝 (LIVE版)",
+  "artist": "盛宇D-SHINE KEY.L刘聪 ICE杨长青",
+  "quality": "SQ",
+  "url": "music/隆里电丝 (LIVE版).mp3",
+  "lrc": "music/隆里电丝 (LIVE版).lrc",
+  "cover": "https://love-really.kikiw.cn/Lovefolder/20260408062553_69d5847128478228233873.webp"
+ },
+ {
+  "name": "如果的事",
+  "artist": "Superluckyqi",
+  "quality": "SQ",
+  "url": "music/如果的事.mp3",
+  "lrc": "music/如果的事.lrc",
+  "cover": "https://love-really.kikiw.cn/Lovefolder/20260408062456_69d5843833db6701109298.webp"
+ },
+ {
+  "name": "长相厮守",
+  "artist": "TONICK",
+  "quality": "SQ",
+  "url": "music/长相厮守.mp3",
+  "lrc": "music/长相厮守.lrc",
+  "cover": "https://love-really.kikiw.cn/Lovefolder/20260408062451_69d584331eccd411285085.webp"
+ },
+ {
+  "name": "后来",
+  "artist": "刘若英",
+  "quality": "HQ",
+  "url": "music/后来.mp3",
+  "lrc": "music/后来.lrc",
+  "cover": "https://love-really.kikiw.cn/Lovefolder/20260408062450_69d5843233711389619782.webp"
+ },
+ {
+  "name": "爱丫爱丫",
+  "artist": "By2",
+  "quality": "SQ",
+  "url": "music/爱丫爱丫.mp3",
+  "lrc": "music/爱丫爱丫.lrc",
+  "cover": "https://love-really.kikiw.cn/Lovefolder/20260408062448_69d58430f1c30194882660.webp"
+ }
+]

@@ -1,0 +1,555 @@
+@import './vue-select.css';
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ============================================
+   withUstrm Design System - Light Mode
+   Sakura Pink / Sky Blue / Leaf Green
+   ============================================ */
+
+/* 基础样式 */
+@layer base {
+  html {
+    font-family: "Inter", system-ui, -apple-system, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  body {
+    @apply bg-gradient-to-br from-[#FDF2F8] via-[#F4F9FF] to-[#EFFBF4]
+           text-gray-800 min-h-screen;
+  }
+
+  /* 数字等宽显示 */
+  .tabular-nums {
+    font-variant-numeric: tabular-nums;
+    letter-spacing: 0.02em;
+  }
+}
+
+/* ============================================
+   组件类定义
+   ============================================ */
+
+@layer components {
+  /* 按钮变体 */
+  .btn-primary {
+    @apply px-6 py-3 bg-gradient-to-r from-pink-500 to-pink-400
+           text-white font-semibold rounded-xl
+           border border-pink-300
+           shadow-lg shadow-pink-200
+           hover:from-pink-400 hover:to-pink-300
+           active:scale-[0.98]
+           transition-all duration-200
+           cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed;
+  }
+
+  .btn-secondary {
+    @apply px-6 py-3 bg-white
+           text-gray-700 font-medium rounded-xl
+           border border-gray-200
+           shadow-sm
+           hover:bg-gray-50 hover:border-gray-300
+           active:scale-[0.98]
+           transition-all duration-200
+           cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed;
+  }
+
+  .btn-danger {
+    @apply px-6 py-3 bg-gradient-to-r from-red-500 to-red-400
+           text-white font-semibold rounded-xl
+           border border-red-300
+           shadow-lg shadow-red-200
+           hover:from-red-400 hover:to-red-300
+           active:scale-[0.98]
+           transition-all duration-200
+           cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed;
+  }
+
+  .btn-success {
+    @apply px-6 py-3 bg-gradient-to-r from-green-500 to-emerald-400
+           text-white font-semibold rounded-xl
+           border border-green-300
+           shadow-lg shadow-green-200
+           hover:from-green-400 hover:to-emerald-300
+           active:scale-[0.98]
+           transition-all duration-200
+           cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed;
+  }
+
+  .btn-icon {
+    @apply p-2.5 rounded-xl
+           text-gray-500 hover:text-pink-500
+           bg-white hover:bg-pink-50
+           border border-gray-200 hover:border-pink-300
+           shadow-sm
+           transition-all duration-200
+           cursor-pointer;
+  }
+
+  .btn-ghost {
+    @apply px-4 py-2 text-gray-500 hover:text-pink-500
+           hover:bg-pink-50 rounded-lg
+           transition-all duration-200
+           cursor-pointer;
+  }
+
+  /* 输入框 */
+  .input-field {
+    @apply w-full px-4 py-3
+           bg-white border border-gray-200
+           rounded-xl text-gray-800 placeholder-gray-400
+           shadow-sm
+           focus:outline-none focus:border-pink-400 focus:ring-2 focus:ring-pink-200
+           transition-all duration-200;
+  }
+
+  .input-field:disabled {
+    @apply opacity-50 cursor-not-allowed;
+  }
+
+  /* 下拉选择框专用样式 */
+  select.input-field {
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3e%3c/svg%3e");
+    background-position: right 0.75rem center;
+    background-size: 1.5em 1.5em;
+    padding-right: 2.5rem;
+  }
+
+  select.input-field:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%23999999' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3e%3c/svg%3e");
+  }
+
+  /* 卡片 */
+  .card {
+    @apply bg-white/90 backdrop-blur-sm border border-pink-100
+           rounded-2xl p-6 shadow-sm
+           transition-all duration-200;
+  }
+
+  .card-hover {
+    @apply hover:border-pink-200 hover:bg-white
+           hover:shadow-xl hover:shadow-pink-100
+           hover:-translate-y-1 cursor-pointer;
+  }
+
+  /* 数据统计卡片 */
+  .stat-card {
+    @apply bg-white/90 backdrop-blur-sm border border-blue-100
+           rounded-2xl p-6
+           relative overflow-hidden shadow-sm
+           transition-all duration-200;
+  }
+
+  .stat-card::before {
+    content: '';
+    @apply absolute inset-0
+           bg-gradient-to-br from-pink-50/60 to-transparent
+           opacity-0 transition-opacity duration-300;
+  }
+
+  .stat-card:hover::before {
+    @apply opacity-100;
+  }
+
+  .stat-card:hover {
+    @apply border-blue-200 bg-white;
+  }
+
+  /* 徽章 */
+  .badge {
+    @apply inline-flex items-center px-2.5 py-1 rounded-full
+           text-xs font-semibold transition-all duration-200;
+  }
+
+  .badge-success {
+    @apply badge bg-green-100 text-green-700 border border-green-200;
+  }
+
+  .badge-warning {
+    @apply badge bg-amber-100 text-amber-700 border border-amber-200;
+  }
+
+  .badge-error {
+    @apply badge bg-red-100 text-red-600 border border-red-200;
+  }
+
+  .badge-info {
+    @apply badge bg-sky-100 text-sky-700 border border-sky-200;
+  }
+
+  .badge-neutral {
+    @apply badge bg-gray-100 text-gray-600 border border-gray-200;
+  }
+
+  /* 导航栏 */
+  .nav-glass {
+    @apply sticky top-0 z-50
+           bg-white/80 backdrop-blur-xl
+           border-b border-pink-100 shadow-sm;
+    height: 64px;
+  }
+
+  /* 页脚 */
+  .footer-glass {
+    @apply bg-white/80 border-t border-pink-100;
+    padding: 24px 0;
+  }
+
+  /* 渐变文字 */
+  .gradient-text {
+    @apply bg-gradient-to-r from-pink-500 via-rose-400 to-blue-400
+           bg-clip-text text-transparent;
+  }
+
+  /* 模态框遮罩 */
+  .modal-overlay {
+    @apply fixed inset-0 bg-pink-900/20 backdrop-blur-sm z-50;
+  }
+
+  .modal-content {
+    @apply bg-white border border-gray-200
+           rounded-2xl shadow-2xl shadow-pink-100
+           max-w-2xl w-full mx-4 p-6;
+  }
+
+  /* 浮动操作按钮 */
+  .fab {
+    @apply fixed bottom-6 right-6
+           bg-gradient-to-r from-pink-500 to-blue-400
+           text-white p-4 rounded-full
+           shadow-2xl shadow-pink-200
+           hover:shadow-pink-300 hover:scale-110
+           active:scale-95
+           transition-all duration-300 z-50
+           cursor-pointer;
+  }
+
+  /* 表格样式 */
+  .data-table {
+    @apply w-full border-collapse;
+  }
+
+  .data-table th {
+    @apply px-4 py-3 text-left text-xs font-semibold
+           text-gray-500 uppercase tracking-wider
+           bg-pink-50 border-b border-pink-100;
+  }
+
+  .data-table td {
+    @apply px-4 py-4 text-sm text-gray-700
+           border-b border-gray-100;
+  }
+
+  .data-table tr:hover td {
+    @apply bg-blue-50/50;
+  }
+
+  /* 分隔线 */
+  .divider {
+    @apply border-t border-gray-100 my-6;
+  }
+
+  .divider-vertical {
+    @apply border-l border-gray-100 mx-4;
+  }
+
+  /* 标签页 */
+  .tab {
+    @apply px-4 py-2 text-sm font-medium
+           text-gray-500 hover:text-pink-500
+           border-b-2 border-transparent
+           hover:border-pink-200
+           transition-all duration-200
+           cursor-pointer;
+  }
+
+  .tab-active {
+    @apply text-pink-500 border-pink-400;
+  }
+
+  /* 加载状态 */
+  .loading-spinner {
+    @apply inline-block w-5 h-5 border-2 border-current border-t-transparent
+           rounded-full animate-spin;
+  }
+
+  .loading-skeleton {
+    @apply bg-gray-100 rounded animate-pulse;
+  }
+
+  /* 空状态 */
+  .empty-state {
+    @apply text-center py-16 px-4;
+  }
+
+  .empty-state-icon {
+    @apply w-16 h-16 mx-auto mb-4
+           bg-pink-50 rounded-full flex items-center justify-center;
+  }
+
+  .empty-state-title {
+    @apply text-xl font-semibold text-gray-800 mb-2;
+  }
+
+  .empty-state-description {
+    @apply text-gray-500 mb-6;
+  }
+
+  /* 提示框 */
+  .tooltip {
+    @apply absolute z-50 px-3 py-1.5
+           bg-gray-800 text-white text-xs
+           rounded-lg shadow-xl
+           border border-gray-700
+           pointer-events-none;
+  }
+
+  /* 进度条 */
+  .progress-bar {
+    @apply w-full h-2 bg-pink-100 rounded-full overflow-hidden;
+  }
+
+  .progress-bar-fill {
+    @apply h-full bg-gradient-to-r from-pink-500 to-blue-400
+           transition-all duration-300;
+  }
+}
+
+/* ============================================
+   工具类
+   ============================================ */
+
+@layer utilities {
+  /* 文字渐变 */
+  .text-gradient {
+    @apply bg-gradient-to-r from-pink-500 via-rose-400 to-blue-400
+           bg-clip-text text-transparent;
+  }
+
+  /* 玻璃效果 */
+  .glass {
+    @apply bg-white/70 backdrop-blur-md border border-pink-100;
+  }
+
+  /* 隐藏滚动条 */
+  .scrollbar-hide {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+
+  .scrollbar-hide::-webkit-scrollbar {
+    display: none;
+  }
+
+  /* 滚动条样式 */
+  .scrollbar-thin {
+    scrollbar-width: thin;
+    scrollbar-color: rgba(244, 114, 182, 0.4) transparent;
+  }
+
+  .scrollbar-thin::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+
+  .scrollbar-thin::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  .scrollbar-thin::-webkit-scrollbar-thumb {
+    background-color: rgba(244, 114, 182, 0.4);
+    border-radius: 3px;
+  }
+
+  .scrollbar-thin::-webkit-scrollbar-thumb:hover {
+    background-color: rgba(244, 114, 182, 0.6);
+  }
+
+  /* 动画 */
+  .animate-fade-in {
+    animation: fadeIn 0.3s ease-out forwards;
+  }
+
+  .animate-slide-up {
+    animation: slideUp 0.3s ease-out forwards;
+  }
+
+  .animate-slide-down {
+    animation: slideDown 0.3s ease-out forwards;
+  }
+
+  .animate-scale-in {
+    animation: scaleIn 0.2s ease-out forwards;
+  }
+
+  .animate-pulse-slow {
+    animation: pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+  }
+
+  /* 页面与布局过渡 */
+  .page-enter-active,
+  .page-leave-active,
+  .layout-enter-active,
+  .layout-leave-active {
+    transition: opacity 0.25s ease-out, transform 0.25s ease-out;
+  }
+
+  .page-enter-from,
+  .page-leave-to,
+  .layout-enter-from,
+  .layout-leave-to {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+
+  /* 文字截断 */
+  .truncate-2 {
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+
+  .truncate-3 {
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+
+  /* 边框透明度 */
+  .border-white\/6 { border-color: rgba(255, 255, 255, 0.06); }
+  .border-white\/10 { border-color: rgba(255, 255, 255, 0.10); }
+  .border-white\/12 { border-color: rgba(255, 255, 255, 0.12); }
+  .border-white\/20 { border-color: rgba(255, 255, 255, 0.20); }
+
+  /* 背景透明度 */
+  .bg-white\/5 { background-color: rgba(255, 255, 255, 0.05); }
+  .bg-white\/8 { background-color: rgba(255, 255, 255, 0.08); }
+  .bg-white\/10 { background-color: rgba(255, 255, 255, 0.10); }
+}
+
+/* ============================================
+   动画关键帧
+   ============================================ */
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes scaleIn {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.5; }
+}
+
+/* 背景海报缓慢缩放，增加呼吸感 */
+@keyframes heroZoom {
+  from { transform: scale(1); }
+  to { transform: scale(1.08); }
+}
+
+.hero-zoom {
+  animation: heroZoom 18s ease-out forwards;
+}
+
+/* ============================================
+   响应式工具类
+   ============================================ */
+
+@media (max-width: 640px) {
+  .card {
+    @apply p-4;
+  }
+
+  .btn-primary,
+  .btn-secondary {
+    @apply px-4 py-2.5;
+  }
+
+  .modal-content {
+    @apply max-w-full mx-2 p-4;
+  }
+}
+
+/* ============================================
+   浅色主题输入控件覆盖
+   ============================================ */
+
+/* 确保浅色主题下所有输入框背景一致 */
+input[type="text"],
+input[type="password"],
+input[type="email"],
+input[type="url"],
+input[type="number"],
+textarea,
+select {
+  @apply bg-white border-gray-200 text-gray-800;
+}
+
+/* 选择框样式 */
+select {
+  @apply appearance-none cursor-pointer;
+  background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3e%3c/svg%3e");
+  background-position: right 0.75rem center;
+  background-repeat: no-repeat;
+  background-size: 1.5em 1.5em;
+  padding-right: 2.5rem;
+}
+
+/* 复选框样式 */
+input[type="checkbox"] {
+  @apply bg-white border-gray-300 rounded
+         cursor-pointer
+         checked:bg-pink-500 checked:border-pink-500
+         focus:ring-2 focus:ring-pink-200 focus:ring-offset-0;
+}
+
+/* 占位符颜色 */
+::placeholder {
+  color: #9CA3AF !important;
+}
+
+/* 选中文字颜色 */
+::selection {
+  @apply bg-pink-200 text-pink-900;
+}
