@@ -677,6 +677,25 @@
     white-space: nowrap;
 }
 
+/* 竖排变体：图标在上，文字在下 */
+.withu-header-map--stack {
+    flex-direction: column;
+    gap: 1px;
+    padding: 6px 14px;
+    height: auto;
+}
+.withu-header-map--stack .withu-header-map-icon-wrap {
+    width: 24px;
+    height: 24px;
+}
+.withu-header-map--stack .withu-header-map-icon-wrap i {
+    font-size: 15px;
+}
+.withu-header-map--stack .withu-header-map-text {
+    font-size: 11px;
+    line-height: 1;
+}
+
 /* 分隔线 - 白色渐变透明 */
 .withu-header-divider {
     width: 1px;

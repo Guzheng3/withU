@@ -58,34 +58,6 @@
         return null;
     }
 
-    /* ═══════════════════ 音乐辅助 ═══════════════════ */
-
-    function getMusicPlayer() {
-        var meting = doc.querySelector('#nav-music meting-js');
-        return meting && meting.aplayer ? meting.aplayer : null;
-    }
-
-    function isMusicAvailable() {
-        return !!doc.getElementById('nav-music');
-    }
-
-    function isMobile() {
-        if (win.matchMedia && win.matchMedia('(hover: none) and (pointer: coarse)').matches) return true;
-        return win.innerWidth <= 768;
-    }
-
-    function isMusicPlaying() {
-        var el = doc.getElementById('nav-music');
-        return el && el.classList.contains('playing');
-    }
-
-    function getMusicTitle() {
-        var ap = getMusicPlayer();
-        if (ap && ap.list && ap.list.audios && ap.list.audios[ap.list.index]) {
-            return ap.list.audios[ap.list.index].name || '';
-        }
-        return '';
-    }
 
     /* ═══════════════════ 剪贴板 ═══════════════════ */
 
@@ -711,47 +683,7 @@
                     }
                 ]
             },
-            {
-                id: 'music',
-                order: 40,
-                items: [
-                    {
-                        id: 'music-toggle',
-                        label: function() { return isMusicPlaying() ? '暂停播放' : '播放音乐'; },
-                        icon: function() { return isMusicPlaying() ? 'ri-pause-line' : 'ri-play-line'; },
-                        action: function() {
-                            if (!win.withu_love) return;
-                            var playing = isMusicPlaying();
-                            win.withu_love.musicToggle(true);
-                            setTimeout(function() {
-                                var title = getMusicTitle();
-                                toast('info', playing ? '已暂停' : (title ? '正在播放：' + title : '开始播放'));
-                            }, 150);
-                        },
-                        when: function() { return isMusicAvailable(); }
-                    },
-                    {
-                        id: 'music-prev',
-                        label: '上一首',
-                        icon: 'ri-skip-back-line',
-                        action: function() {
-                            if (!win.withu_love) return;
-                            win.withu_love.musicSkipBack();
-                            setTimeout(function() { var t = getMusicTitle(); if (t) toast('info', t); }, 300);
-                        },
-                        when: function() { return isMusicPlaying(); }
-                    },
-                    {
-                        id: 'music-next',
-                        label: '下一首',
-                        icon: 'ri-skip-forward-line',
-                        action: function() {
-                            if (!win.withu_love) return;
-                            win.withu_love.musicSkipForward();
-                            setTimeout(function() { var t = getMusicTitle(); if (t) toast('info', t); }, 300);
-                        },
-                        when: function() { return isMusicPlaying(); }
-                    }
+                    
                 ]
             },
             (function() {
@@ -820,16 +752,7 @@
                 ];
 
                 var navItems = [goBack];
-                if (isMusicAvailable()) {
-                    navItems.push({
-                        id: 'nav-more',
-                        label: '更多操作',
-                        icon: 'ri-apps-line',
-                        children: moreItems
-                    });
-                } else {
-                    for (var i = 0; i < moreItems.length; i++) navItems.push(moreItems[i]);
-                }
+                for (var i = 0; i < moreItems.length; i++) navItems.push(moreItems[i]);
 
                 return { id: 'nav', order: 50, items: navItems };
             })()

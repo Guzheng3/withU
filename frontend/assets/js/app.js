@@ -636,12 +636,7 @@
                         window.ImglistApp.relayout();
                     }
                 },
-                callback_error: (el) => {
-                    // 音乐卡片封面加载失败 → 回退默认封面
-                    if (el.closest && el.closest('.mian_music') && typeof window._mcCoverError === 'function') {
-                        window._mcCoverError(el);
-                    }
-                }
+                callback_error: (el) => {}
             });
             window.lazyLoadInstance = this._instance;
         },
@@ -1357,7 +1352,7 @@
             console.log('%c购买地址: https://blog.kikiw.cn/index.php/archives/65/', 'color:#fff;background-image:linear-gradient(to right,#1FA2FF 0%,#fdfdfd 21%,#fafafa 100%);padding:8px 15px;border-radius:5px;');
             console.log('%cContact Me: 3439780232 | mail@kikiw.cn', 'color:#fff;background:#000;padding:8px 15px;border-radius:10px');
             console.log(`%cwithU ${version} | Powered by Ki`, 'color:#fff;background:linear-gradient(to right,hsl(206.57deg 100% 61.11%) 0%,hsl(57deg 100% 85.15%) 100%);padding:8px 15px;border-radius:15px');
-            console.log('%cDependencies: APlayer | MetingJS | Plyr | PJAX | Masonry | QRCodeStyling | AOS | Fancybox', 'color:#fff;background:#475569;padding:8px 15px;border-radius:10px');
+            console.log('%cDependencies: Plyr | PJAX | Masonry | QRCodeStyling | AOS | Fancybox', 'color:#fff;background:#475569;padding:8px 15px;border-radius:10px');
         }
     };
 

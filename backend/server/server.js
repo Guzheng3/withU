@@ -459,12 +459,6 @@ function serviceHandler(req, res, urlPath, reqUrl, body) {
     return json({ Status: true, randomContent: QUOTES[Math.floor(Math.random() * QUOTES.length)] });
   }
 
-  // ---------- 音乐接口 ----------
-  if (urlPath.includes('services/music-player-data')) {
-    const f = path.join(ROOT, 'services', 'music-player-data.json');
-    if (fs.existsSync(f)) return { file: f, json: true };
-  }
-
   return null;
 }
 

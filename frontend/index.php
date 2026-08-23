@@ -2355,150 +2355,6 @@ try {
         z-index: 10000 !important;
     }
 
-    /* 音乐播放器悬浮 */
-    .music_info {
-        position: fixed;
-        top: 6rem;
-        left: 1rem;
-        width: 6.5rem;
-        height: 8rem;
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-        background-size: cover;
-        border-radius: 0.8rem;
-        background-position: center;
-        overflow: hidden;
-        z-index: 999999;
-        display: none;
-        cursor: move;
-        transition: left 0.3s cubic-bezier(0.25, 0.8, 0.25, 1), transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
-    }
-    .music_info:hover {
-        transform: scale(1.05);
-        box-shadow: 0 8px 28px rgba(0,0,0,0.18);
-    }
-
-    .music_info_dragging {
-        cursor: move;
-        opacity: 0.9;
-        transform: scale(1.04);
-        box-shadow: 0 8px 32px rgba(0,0,0,0.18);
-    }
-
-    /* 拖拽全屏遮罩 */
-    .music-drag-overlay {
-        position: fixed;
-        top: 0; left: 0; right: 0; bottom: 0;
-        background: rgba(0,0,0,0.08);
-        z-index: 999998;
-        pointer-events: none;
-        opacity: 0;
-        transition: opacity .2s ease;
-    }
-    .music-drag-overlay.visible {
-        opacity: 1;
-    }
-
-    /* 拖拽停靠区指示器 */
-    .music-drag-zone {
-        position: fixed;
-        top: 0;
-        bottom: 0;
-        width: 10px;
-        z-index: 999998;
-        pointer-events: none;
-        opacity: 0;
-        transition: opacity .2s ease, width .25s cubic-bezier(0.25, 0.8, 0.25, 1), background .25s ease;
-    }
-    .music-drag-zone--left {
-        left: 0;
-        border-radius: 0 8px 8px 0;
-        background: linear-gradient(90deg, rgba(0,0,0,0.18), transparent);
-    }
-    .music-drag-zone--right {
-        right: 0;
-        border-radius: 8px 0 0 8px;
-        background: linear-gradient(-90deg, rgba(0,0,0,0.18), transparent);
-    }
-    .music-drag-zone.visible {
-        opacity: 1;
-    }
-    .music-drag-zone.active {
-        width: 64px;
-        opacity: 1;
-        background: linear-gradient(90deg, rgba(0,0,0,0.32), transparent);
-    }
-    .music-drag-zone--right.active {
-        background: linear-gradient(-90deg, rgba(0,0,0,0.32), transparent);
-    }
-
-    .music_info .music_info_time {
-        position: absolute;
-        top: calc(50% - 1rem);
-        left: 50%;
-        transform: translate(-50%, -50%);
-        background: rgba(0,0,0,0.5);
-        backdrop-filter: blur(8px);
-        -webkit-backdrop-filter: blur(8px);
-        color: #fff;
-        font-size: 0.85rem;
-        font-weight: 600;
-        font-variant-numeric: tabular-nums;
-        padding: 0.2rem 0.5rem;
-        border-radius: 0.4rem;
-        pointer-events: none;
-        z-index: 2;
-        opacity: 1;
-        transition: opacity 0.2s ease;
-        white-space: nowrap;
-        letter-spacing: 0.5px;
-    }
-    .music_info .music_info_time:empty {
-        display: none;
-    }
-    .music_info:hover .music_info_time,
-    .music_info_dragging .music_info_time {
-        opacity: 0;
-    }
-
-    .music_info .music_info_btn {
-        padding: 0.4rem 0.6rem;
-        background: #d0d0d073;
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        position: absolute;
-        bottom: 0;
-        left: 0;
-        width: 100%;
-        backdrop-filter: saturate(3) blur(30px);
-        -webkit-backdrop-filter: saturate(3) blur(30px);
-        box-sizing: border-box;
-    }
-
-    .music_info .music_info_btn span {
-        width: 1.3rem;
-        height: 1.3rem;
-        display: block;
-        background-size: 100%;
-        cursor: pointer;
-        transition: transform 0.15s ease, opacity 0.15s ease;
-    }
-    .music_info .music_info_btn span:hover {
-        transform: scale(1.15);
-        opacity: 0.85;
-    }
-    .music_info .music_info_btn span:active {
-        transform: scale(0.95);
-    }
-
-    .music_info .music_info_btn .music_info_btn_play {
-        background-image: url(Style/img/pause2.svg");
-    }
-
-    .music_info .music_info_btn .music_info_btn_close {
-        background-image: url(Style/img/close.svg");
-    }
-
     img.photo_style,
     img.aiv_touxiang,
     img.lazy {
@@ -3176,7 +3032,7 @@ try {
                 <?php if ($loggedIn): ?>
                 <a href="/watch.php" class="withu-header-map" data-entry="media" title="观影">
                     <span class="withu-header-map-icon-wrap">
-                        <i class="ph-fill ph-play"></i>
+                        <i class="ph-fill ph-film-slate"></i>
                     </span>
                     <span class="withu-header-map-text">观影</span>
                 </a>
@@ -3255,7 +3111,7 @@ try {
                         <?php if ($loggedIn): ?>
                         <a href="/watch.php" class="withu-header-more-action-item">
                 <span class="withu-header-more-action-icon">
-                    <i class="ph-fill ph-play"></i>
+                    <i class="ph-fill ph-film-slate"></i>
                 </span>
                 <span class="withu-header-more-action-label">观影</span>
             </a>
@@ -3482,14 +3338,6 @@ try {
     </div>
 </div>
 
-<div class="music_info">
-    <div class="music_info_time" id="musicInfoTime"></div>
-    <div class="music_info_btn">
-        <span class="music_info_btn_play" data-music></span>
-        <span class="music_info_btn_close"></span>
-    </div>
-</div>
-<audio id="music"></audio>
 <!-- 情侣头像点击效果已迁移到 components.js 的 AvatarInteraction 模块 -->
 
 <!DOCTYPE html>
@@ -5716,7 +5564,6 @@ try {
 <script src="assets/js/clipboard.js"></script>
 <script src="assets/js/tooltip.js"></script>
 <script src="Style/js/view-image.min.js"></script>
-<script src="Style/js/mian.js"></script>
 <script src="Style/LoveListStyle/carousel.umd.js"></script>
 <script src="Style/LoveListStyle/carousel.thumbs.umd.js"></script>
 <script src="Style/LoveListStyle/fancybox.umd.js"></script>

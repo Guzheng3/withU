@@ -478,8 +478,6 @@
             images.forEach(function(img) {
                 // 跳过已在 figure 里的
                 if (img.closest('figure')) return;
-                // 跳过音乐卡片中的图片
-                if (img.closest('.music_card') || img.closest('.mian_music')) return;
                 // 跳过表情、小图标等（宽度 <= 64 的跳过）
                 if (img.naturalWidth > 0 && img.naturalWidth <= 64) return;
                 if (img.width > 0 && img.width <= 64) return;
