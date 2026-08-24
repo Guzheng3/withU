@@ -12,9 +12,9 @@
     var chinaLoading = false;
 
     function initScreenshotBtn() {
-        var container = document.querySelector('.map-controls, .amap-controlbar');
+        var container = document.querySelector('.full-screen-function');
         if (!container) {
-            // 如果地图控件还没渲染，等待后重试
+            // 如果控件还没渲染，等待后重试
             setTimeout(initScreenshotBtn, 500);
             return;
         }
@@ -22,17 +22,13 @@
 
         var btn = document.createElement('button');
         btn.id = 'withuMapScreenshotBtn';
-        btn.className = 'control-btn withu-screenshot-btn';
+        btn.type = 'button';
+        btn.className = 'control-icon-button withu-screenshot-btn';
         btn.title = '截图（仅中国领土）';
         btn.innerHTML = '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg>';
         btn.addEventListener('click', captureScreenshot);
 
-        // 插入到控件容器中
-        if (container.classList.contains('amap-controlbar')) {
-            container.appendChild(btn);
-        } else {
-            container.insertBefore(btn, container.firstChild);
-        }
+        container.appendChild(btn);
     }
 
     function loadChinaBoundary() {
@@ -113,9 +109,9 @@
             showToast('正在生成截图...', 'info');
 
             // 获取地图容器
-            var mapContainer = document.querySelector('.amap-container');
+            var mapContainer = document.getElementById('missing-pets-map');
             if (!mapContainer) {
-                mapContainer = document.querySelector('#mapContainer');
+                mapContainer = document.querySelector('.amap-container');
             }
             if (!mapContainer) {
                 showToast('未找到地图容器', 'error');
