@@ -159,12 +159,20 @@
         }
     };
 
-    // 自动初始化
+    // 自动初始化（仅当后台未设置固定位置时启用）
+    function shouldAutoLocate() {
+        var cfg = window.WITHU_CONFIG;
+        if (!cfg) return true;
+        // 如果后台设置了固定位置，不再触发浏览器定位
+        if (cfg.weatherLocLat && cfg.weatherLocLng) return false;
+        return true;
+    }
+
     if (document.readyState === 'loading') {
         document.addEventListener('DOMContentLoaded', function () {
-            window.WithULocation.request();
+            if (shouldAutoLocate()) window.WithULocation.request();
         });
     } else {
-        window.WithULocation.request();
+        if (shouldAutoLocate()) window.WithULocation.request();
     }
 })();

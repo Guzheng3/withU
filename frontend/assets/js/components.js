@@ -1067,24 +1067,13 @@
                 this._setLoading(true);
                 var _siteBase = (window.WITHU_CONFIG && window.WITHU_CONFIG.siteBase) || '';
 
-                // 根据定位模式决定参数
-                var locMode = (window.WITHU_CONFIG && window.WITHU_CONFIG.weatherLocMode) || 'auto';
+                // 使用后台设置的固定位置
+                var locLat = window.WITHU_CONFIG && window.WITHU_CONFIG.weatherLocLat;
+                var locLng = window.WITHU_CONFIG && window.WITHU_CONFIG.weatherLocLng;
                 var geoParams = 'mode=ip';
                 
-                if (locMode === 'auto') {
-                    // 自动模式：使用浏览器定位
-                    if (window.WithULocation) {
-                        var loc = window.WithULocation.get();
-                        if (loc && loc.lat && loc.lng) {
-                            geoParams = 'mode=geo&lat=' + loc.lat + '&lng=' + loc.lng;
-                        }
-                    }
-                } else {
-                    // 手动模式：使用后台设置的固定城市
-                    var manualCity = (window.WITHU_CONFIG && window.WITHU_CONFIG.weatherLocCity) || '';
-                    if (manualCity) {
-                        geoParams = 'mode=city&city=' + encodeURIComponent(manualCity);
-                    }
+                if (locLat && locLng) {
+                    geoParams = 'mode=geo&lat=' + locLat + '&lng=' + locLng;
                 }
 
                 this._pendingRequest = fetch(_siteBase + 'services/weather.php?' + geoParams, {

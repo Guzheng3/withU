@@ -505,16 +505,29 @@ include __DIR__ . '/header.php';
                 </div>
 
                 <div class="form-group" style="margin-bottom:0.75rem;">
-                    <label style="display:block;font-size:0.85rem;margin-bottom:0.25rem;">天气定位模式</label>
-                    <?php $locMode = $settingsData['weather_loc_mode'] ?? 'auto'; ?>
-                    <label class="switch" style="margin-bottom:0.35rem;">
-                        <input type="checkbox" name="settings[weather_loc_mode]" value="auto" <?php echo $locMode === 'auto' ? 'checked' : ''; ?>
-                               onchange="var manualInput=document.getElementById('weather_loc_city'); if(this.checked){manualInput.style.display='none';}else{manualInput.style.display='';}">
-                        <span class="switch-track"><span class="switch-thumb"></span></span>
-                        <span class="switch-label">自动定位（浏览器 GPS）</span>
-                    </label>
-                    <input type="text" id="weather_loc_city" name="settings[weather_loc_city]" value="<?php echo e($settingsData['weather_loc_city'] ?? ''); ?>" placeholder="例如：北京市海淀区" style="width:100%;padding:.55rem .75rem;border-radius:.75rem;border:1px solid rgba(148,163,184,.6);font-size:.9rem;<?php echo $locMode === 'auto' ? 'display:none;' : ''; ?>">
-                    <small style="color:#888;">关闭「自动定位」后，将使用下方填写的固定地址查询天气</small>
+                    <label style="display:block;font-size:0.85rem;margin-bottom:0.25rem;">天气定位</label>
+                    <?php
+                    $locLat  = $settingsData['weather_loc_lat'] ?? '';
+                    $locLng  = $settingsData['weather_loc_lng'] ?? '';
+                    $locName = $settingsData['weather_loc_name'] ?? '';
+                    $hasLoc  = $locLat !== '' && $locLng !== '';
+                    ?>
+                    <div style="position:relative;">
+                        <input type="text" id="weather_loc_search" placeholder="搜索城市或地址..." value="<?php echo e($locName); ?>" autocomplete="off"
+                               style="width:100%;padding:.55rem .75rem;border-radius:.75rem;border:1px solid rgba(148,163,184,.6);font-size:.9rem;">
+                        <div id="weather_loc_results" style="display:none;position:absolute;top:100%;left:0;right:0;z-index:100;background:#fff;border:1px solid rgba(148,163,184,.3);border-radius:.75rem;max-height:240px;overflow-y:auto;box-shadow:0 8px 24px rgba(0,0,0,.12);"></div>
+                    </div>
+                    <input type="hidden" name="settings[weather_loc_lat]" id="weather_loc_lat" value="<?php echo e($locLat); ?>">
+                    <input type="hidden" name="settings[weather_loc_lng]" id="weather_loc_lng" value="<?php echo e($locLng); ?>">
+                    <input type="hidden" name="settings[weather_loc_name]" id="weather_loc_name" value="<?php echo e($locName); ?>">
+                    <div id="weather_loc_selected" style="margin-top:.35rem;font-size:.8rem;color:<?php echo $hasLoc ? '#16a34a' : '#888'; ?>;">
+                        <?php if ($hasLoc): ?>
+                            ✅ 已选择：<?php echo e($locName); ?>（<?php echo e($locLat); ?>, <?php echo e($locLng); ?>）
+                        <?php else: ?>
+                            未选择位置，天气将使用默认数据
+                        <?php endif; ?>
+                    </div>
+                    <small style="color:#888;">搜索并选择城市，天气和地图将使用此位置</small>
                 </div>
 
                 <div class="form-group" style="margin-bottom:0.75rem;">
@@ -718,6 +731,117 @@ include __DIR__ . '/header.php';
         // 后台界面模式已固定为 apple，无需切换逻辑
         renderPreview();
     }());
+
+    // 位置搜索自动完成
+    (function () {
+        var searchInput = document.getElementById('weather_loc_search');
+        var resultsDiv = document.getElementById('weather_loc_results');
+        var latInput = document.getElementById('weather_loc_lat');
+        var lngInput = document.getElementById('weather_loc_lng');
+        var nameInput = document.getElementById('weather_loc_name');
+        var selectedDiv = document.getElementById('weather_loc_selected');
+        if (!searchInput) return;
+
+        var searchTimer = null;
+
+        function loadAMap(callback) {
+            if (window.AMap && window.AMap.Autocomplete) { callback(); return; }
+            var script = document.createElement('script');
+            script.src = '/assets/js/map-sdk.js';
+            script.onload = function () {
+                var check = setInterval(function () {
+                    if (window.AMap && window.AMap.Autocomplete) {
+                        clearInterval(check);
+                        callback();
+                    }
+                }, 200);
+            };
+            script.onerror = function () {
+                console.warn('AMap SDK 加载失败，位置搜索不可用');
+            };
+            document.head.appendChild(script);
+        }
+
+        function selectLocation(item) {
+            var lng = item.location.lng;
+            var lat = item.location.lat;
+            var name = item.name || '';
+            if (item.district && item.district !== name && name.indexOf(item.district) === -1) {
+                name = item.district + ' ' + name;
+            }
+            if (item.city && name.indexOf(item.city) === -1) {
+                name = item.city + ' ' + name;
+            }
+            latInput.value = lat;
+            lngInput.value = lng;
+            nameInput.value = name;
+            searchInput.value = name;
+            selectedDiv.innerHTML = '已选择：' + name + '（' + lat + ', ' + lng + '）';
+            selectedDiv.style.color = '#16a34a';
+            resultsDiv.style.display = 'none';
+        }
+
+        searchInput.addEventListener('input', function () {
+            var val = this.value.trim();
+            if (!val || val.length < 1) {
+                resultsDiv.style.display = 'none';
+                return;
+            }
+            if (searchTimer) clearTimeout(searchTimer);
+            searchTimer = setTimeout(function () {
+                loadAMap(function () {
+                    try {
+                        AMap.plugin('AMap.Autocomplete', function () {
+                            var auto = new AMap.Autocomplete({ citylimit: false });
+                            auto.search(val, function (status, result) {
+                                if (status === 'complete' && result.tips) {
+                                    var tips = result.tips.filter(function (t) {
+                                        return t.location && t.location.lng && t.location.lat;
+                                    });
+                                    if (tips.length === 0) {
+                                        resultsDiv.innerHTML = '<div style="padding:10px;color:#888;">未找到结果</div>';
+                                    } else {
+                                        resultsDiv.innerHTML = tips.map(function (t, i) {
+                                            var n = t.name || '';
+                                            if (t.district && t.district !== n) n = t.district + ' ' + n;
+                                            return '<div class="loc-result-item" data-index="' + i + '" style="padding:8px 12px;cursor:pointer;border-bottom:1px solid #f0f0f0;font-size:.85rem;" onmouseover="this.style.background=\'#f8fafc\'" onmouseout="this.style.background=\'\'">' + n + '</div>';
+                                        }).join('');
+                                        resultsDiv.querySelectorAll('.loc-result-item').forEach(function (el) {
+                                            el.addEventListener('click', function () {
+                                                var idx = parseInt(this.getAttribute('data-index'), 10);
+                                                selectLocation(tips[idx]);
+                                            });
+                                        });
+                                    }
+                                    resultsDiv.style.display = 'block';
+                                }
+                            });
+                        });
+                    } catch (e) { console.warn('位置搜索失败:', e); }
+                });
+            }, 300);
+        });
+
+        document.addEventListener('click', function (e) {
+            if (!searchInput.contains(e.target) && !resultsDiv.contains(e.target)) {
+                resultsDiv.style.display = 'none';
+            }
+        });
+
+        var clearBtn = document.createElement('button');
+        clearBtn.type = 'button';
+        clearBtn.textContent = '清除';
+        clearBtn.style.cssText = 'margin-top:.35rem;padding:4px 12px;border-radius:6px;border:1px solid #e2e8f0;background:#fff;font-size:.78rem;cursor:pointer;color:#888;';
+        clearBtn.addEventListener('click', function () {
+            latInput.value = '';
+            lngInput.value = '';
+            nameInput.value = '';
+            searchInput.value = '';
+            selectedDiv.innerHTML = '未选择位置，天气将使用默认数据';
+            selectedDiv.style.color = '#888';
+        });
+        searchInput.parentNode.parentNode.appendChild(clearBtn);
+    })();
     </script>
 
 <?php include __DIR__ . '/footer.php'; ?>

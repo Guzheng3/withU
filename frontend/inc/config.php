@@ -6,7 +6,7 @@
  */
 
 // 默认静态配置（数据库不可用时兜底）
-$withuConfigJson = '{"title":"withU","boy":"Ki.","girl":"Really","startTime":"2023-07-19 00:00:00","version":"2.2.5","pcCarouselHeight":"80vh","mobileCarouselHeight":"50vh","pcPhotoCoverHeight":"80vh","mobilePhotoCoverHeight":"60vh","pcImgMaxHeight":"450px","mobileImgMaxHeight":"260px","maleName":"Ki.","maleAvatar":"/Lovefolder/20260411043037_69d95ded97293201118237.webp","femaleName":"Really","femaleAvatar":"/Lovefolder/20260411043046_69d95df639c33274072975.webp","siteBase":"","assetBase":"","imageErrorFallback":"/Style/img/file-placeholder.svg","owoBase":"/OwO","soloMode":false,"weatherEnabled":true,"weatherToken":"d4210665334edba618aecc1829a5e734701e2b824c5aebd4ff8859d7a2536721","weatherType":"qweather","amapKey":"","weatherLocMode":"auto","weatherLocCity":"","soloOwnerGeo":{"lat":21.915454,"lng":110.856708},"boyCoords":[116.39,39.90],"girlCoords":[116.39,39.90],"bannedChars":"操屌","endpoints":{"mapApi":"/assets/map-api.php","weatherNow":"/services/weather.php","interaction":"/services/interaction.php","accessBeacon":"/services/access-beacon.php","messageList":"/services/message-list.php","messageSubmit":"/services/message.php","infoService":"/services/info-service.php","weatherApi":"/services/weather.php"}}';
+$withuConfigJson = '{"title":"withU","boy":"Ki.","girl":"Really","startTime":"2023-07-19 00:00:00","version":"2.2.5","pcCarouselHeight":"80vh","mobileCarouselHeight":"50vh","pcPhotoCoverHeight":"80vh","mobilePhotoCoverHeight":"60vh","pcImgMaxHeight":"450px","mobileImgMaxHeight":"260px","maleName":"Ki.","maleAvatar":"/Lovefolder/20260411043037_69d95ded97293201118237.webp","femaleName":"Really","femaleAvatar":"/Lovefolder/20260411043046_69d95df639c33274072975.webp","siteBase":"","assetBase":"","imageErrorFallback":"/Style/img/file-placeholder.svg","owoBase":"/OwO","soloMode":false,"weatherEnabled":true,"weatherToken":"d4210665334edba618aecc1829a5e734701e2b824c5aebd4ff8859d7a2536721","weatherType":"qweather","amapKey":"","weatherLocMode":"auto","weatherLocCity":"","weatherLocLat":null,"weatherLocLng":null,"weatherLocName":"","soloOwnerGeo":{"lat":21.915454,"lng":110.856708},"boyCoords":[116.39,39.90],"girlCoords":[116.39,39.90],"bannedChars":"操屌","endpoints":{"mapApi":"/assets/map-api.php","weatherNow":"/services/weather.php","interaction":"/services/interaction.php","accessBeacon":"/services/access-beacon.php","messageList":"/services/message-list.php","messageSubmit":"/services/message.php","infoService":"/services/info-service.php","weatherApi":"/services/weather.php"}}';
 
 try {
     $rootPath = dirname(__DIR__, 2) . '/backend/app';
@@ -60,6 +60,15 @@ try {
     $locCityRow = $db->fetch("SELECT value FROM settings WHERE `key`='weather_loc_city'");
     $locCity = ($locCityRow && !empty($locCityRow['value'])) ? $locCityRow['value'] : '';
 
+    $locLatRow = $db->fetch("SELECT value FROM settings WHERE `key`='weather_loc_lat'");
+    $locLat = ($locLatRow && $locLatRow['value'] !== '') ? floatval($locLatRow['value']) : null;
+
+    $locLngRow = $db->fetch("SELECT value FROM settings WHERE `key`='weather_loc_lng'");
+    $locLng = ($locLngRow && $locLngRow['value'] !== '') ? floatval($locLngRow['value']) : null;
+
+    $locNameRow = $db->fetch("SELECT value FROM settings WHERE `key`='weather_loc_name'");
+    $locName = ($locNameRow && !empty($locNameRow['value'])) ? $locNameRow['value'] : '';
+
     $withuConfig = [
         'title' => $siteTitle,
         'boy' => $boyName, 'girl' => $girlName,
@@ -79,6 +88,9 @@ try {
         'amapKey' => $weatherKey ?: '',
         'weatherLocMode' => $locMode,
         'weatherLocCity' => $locCity,
+        'weatherLocLat' => $locLat,
+        'weatherLocLng' => $locLng,
+        'weatherLocName' => $locName,
         'soloOwnerGeo' => ['lat' => 21.915454, 'lng' => 110.856708],
         'boyCoords' => $boyCoords,
         'girlCoords' => $girlCoords,
