@@ -8,7 +8,16 @@ require_once __DIR__ . '/core/withu.php';
 
 migrate_schema_if_needed();
 $auth = new Auth();
+$loggedIn = $auth->isLoggedIn();
 $user = withu_require_couple_user($auth);
+
+// 加载全局配置（情侣信息等）
+$configPath = __DIR__ . '/../../frontend/inc/config.php';
+if (file_exists($configPath)) {
+    require_once $configPath;
+} else {
+    $withuConfigJson = '{}';
+}
 $db = Database::getInstance();
 $historyMinMs = withu_watch_history_min_ms();
 
@@ -65,6 +74,9 @@ $themeInlineStyle = '';
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title><?php echo e($pageTitle); ?> - withU 共享观影</title>
+<link rel="stylesheet" href="/Style/vendor/qweather-icons/qweather-icons.css">
+<link rel="stylesheet" href="/Style/vendor/remixicon/remixicon.css">
+<link rel="stylesheet" href="/Style/css/header.css">
 <style>
 :root{
   --pink:#f78da7; --pink-soft:#ffe9ef;
@@ -98,19 +110,12 @@ body.watch-page a{color:inherit}
 @keyframes watch-spin{to{transform:rotate(360deg)}}
 
 /* ===== 顶部品牌 + 搜索 ===== */
-.site-header{position:sticky;top:0;z-index:60;display:flex;align-items:center;gap:1.2rem;padding:.85rem 2rem;background:rgba(255,247,250,.82);backdrop-filter:blur(18px) saturate(150%);-webkit-backdrop-filter:blur(18px) saturate(150%);border-bottom:1px solid rgba(247,141,167,.16)}
- .site-header .brand{display:inline-flex;align-items:center;gap:.45rem;font-size:1.25rem;font-weight:800;text-decoration:none;letter-spacing:.02em}
- .site-header .brand .brand-mark{font-size:1.3rem}
- .site-header .brand em{font-style:normal;font-size:.78rem;font-weight:600;color:var(--ink-soft)}
- .site-header .brand .brand-logo{display:block;width:auto;height:34px;max-width:180px;object-fit:contain}
-.site-header .search-box{flex:1;max-width:480px;margin-left:auto;display:flex;align-items:center;gap:.5rem;padding:.5rem 1rem;border-radius:999px;background:rgba(255,255,255,.82);border:1px solid rgba(247,141,167,.22);box-shadow:0 6px 18px rgba(247,141,167,.08);transition:border-color .2s,box-shadow .2s}
-.site-header .search-box:focus-within{border-color:var(--pink);box-shadow:0 8px 24px rgba(247,141,167,.18)}
-.site-header .search-box .s-icon{color:var(--pink);font-size:.95rem}
-.site-header .search-box input{flex:1;border:0;outline:0;background:transparent;color:var(--ink);font-size:.92rem}
-.site-header .search-box input::placeholder{color:var(--ink-soft)}
-.site-header .header-links{display:flex;align-items:center;gap:.5rem}
-.site-header .header-links a{font-size:.85rem;color:var(--ink-soft);text-decoration:none;padding:.4rem .7rem;border-radius:999px;transition:background .2s,color .2s}
-.site-header .header-links a:hover{background:var(--pink-soft);color:var(--pink)}
+.watch-search-bar{display:flex;justify-content:center;padding:1rem 2rem;background:rgba(255,255,255,.6)}
+.watch-search-bar .search-box{flex:1;max-width:480px;display:flex;align-items:center;gap:.5rem;padding:.5rem 1rem;border-radius:999px;background:rgba(255,255,255,.82);border:1px solid rgba(247,141,167,.22);box-shadow:0 6px 18px rgba(247,141,167,.08);transition:border-color .2s,box-shadow .2s}
+.watch-search-bar .search-box:focus-within{border-color:var(--pink);box-shadow:0 8px 24px rgba(247,141,167,.18)}
+.watch-search-bar .search-box .s-icon{color:var(--pink);font-size:.95rem}
+.watch-search-bar .search-box input{flex:1;border:0;outline:0;background:transparent;color:var(--ink);font-size:.92rem}
+.watch-search-bar .search-box input::placeholder{color:var(--ink-soft)}
 
 /* ===== 左侧液态玻璃导航 ===== */
 .side-nav{position:fixed;left:26px;z-index:50;display:flex;flex-direction:column;gap:.35rem;padding:.7rem;border-radius:22px;background:linear-gradient(135deg,rgba(255,255,255,.6),rgba(255,255,255,.28));backdrop-filter:blur(22px) saturate(170%);-webkit-backdrop-filter:blur(22px) saturate(170%);border:1px solid rgba(255,255,255,.72);box-shadow:inset 0 1px 0 rgba(255,255,255,.8),inset 1px 0 0 rgba(255,255,255,.4),inset -1px -1px 0 rgba(255,255,255,.2),0 22px 46px rgba(247,141,167,.18);top:50%;transform:translateY(-50%);transition:top .7s cubic-bezier(.34,1.56,.64,1),transform .7s cubic-bezier(.34,1.56,.64,1)}
@@ -190,8 +195,8 @@ body.watch-page a{color:inherit}
   .side-link .side-txt{display:none}
 }
 @media(max-width:760px){
-  .site-header{padding:.7rem 1rem;flex-wrap:wrap;gap:.6rem}
-  .site-header .search-box{order:3;max-width:100%;width:100%}
+  .watch-search-bar{padding:.7rem 1rem}
+  .watch-search-bar .search-box{max-width:100%;width:100%}
   .header-links .hide-m{display:none}
   .grid{grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:.7rem}
   .rail .card{flex-basis:120px}
@@ -208,16 +213,17 @@ body.watch-page a{color:inherit}
 </style>
 </head>
 <body class="watch-page">
+<?php
+$headerPath = __DIR__ . '/../../frontend/inc/header.php';
+if (file_exists($headerPath)) {
+    include $headerPath;
+}
+?>
 <div id="watchLoading" class="watch-loading"><span class="watch-spinner"></span><span>正在加载影视库</span></div>
 
-<header class="site-header">
-  <a class="brand" href="/watch.php" aria-label="withU 共享观影"><img class="brand-logo" src="/assets/images/withu-logo.png" alt="withU"></a>
+<div class="watch-search-bar">
   <label class="search-box"><span class="s-icon">⌕</span><input id="watchSearch" placeholder="搜索媒体库"></label>
-  <nav class="header-links">
-    <a href="/watch_history.php">历史</a>
-    <a class="hide-m" href="/">情侣空间</a>
-  </nav>
-</header>
+</div>
 
 <div class="page">
   <nav class="side-nav" id="sideNav">
