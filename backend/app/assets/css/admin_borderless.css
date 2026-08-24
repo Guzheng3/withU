@@ -1,0 +1,261 @@
+/* ============================================================
+   WithU Admin — 无边框轻量化皮肤
+   
+   覆盖 admin_v2 / admin_apple 的卡片样式：
+   - 删除卡片白色背景、阴影、边框
+   - 模块之间用间距分割
+   - 网格排版优化
+   - 按钮保留原样
+   ============================================================ */
+
+/* ---- 基础：页面背景透出粉渐变 ---- */
+body.admin-v2 {
+    background:
+        radial-gradient(ellipse 80% 60% at 20% 10%, rgba(255, 182, 193, .28) 0%, transparent 60%),
+        radial-gradient(ellipse 70% 50% at 80% 20%, rgba(181, 240, 213, .22) 0%, transparent 55%),
+        radial-gradient(ellipse 60% 45% at 50% 70%, rgba(168, 216, 234, .22) 0%, transparent 55%),
+        linear-gradient(180deg, #fdf2f6 0%, #f0f9f4 35%, #f0f5ff 65%, #fdf2f6 100%) !important;
+    background-attachment: fixed !important;
+}
+
+/* ---- 卡片：去除背景/阴影/边框 ---- */
+body.admin-v2 .admin-card,
+body.admin-v2 .admin-stat-card,
+body.admin-v2 .admin-dashboard-stat-card,
+body.admin-v2 .admin-dashboard-panel {
+    background: transparent !important;
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+    border: none !important;
+    border-radius: 0 !important;
+    box-shadow: none !important;
+    padding: 0 !important;
+}
+
+/* 卡片顶部高光线（伪元素） */
+body.admin-v2 .admin-card::before,
+body.admin-v2 .admin-stat-card::before {
+    display: none !important;
+}
+
+/* 卡片 hover 效果移除 */
+body.admin-v2 .admin-card:hover,
+body.admin-v2 .admin-stat-card:hover {
+    transform: none !important;
+    box-shadow: none !important;
+}
+
+/* ---- 卡片标题统一 ---- */
+body.admin-v2 .admin-card-header {
+    margin-bottom: 0.5rem !important;
+    padding: 0 !important;
+}
+
+body.admin-v2 .admin-card-title {
+    font-size: 0.9rem !important;
+    font-weight: 650 !important;
+    color: var(--admin-text, #273038) !important;
+    letter-spacing: -0.01em !important;
+}
+
+body.admin-v2 .admin-card-subtitle {
+    font-size: 0.75rem !important;
+    color: var(--admin-text-3, #71808d) !important;
+    margin-top: 2px !important;
+}
+
+/* ---- 页面标题 ---- */
+body.admin-v2 .admin-page-title {
+    margin-bottom: 1.5rem !important;
+}
+
+body.admin-v2 .admin-page-title h1 {
+    font-size: 1.35rem !important;
+    font-weight: 720 !important;
+    color: var(--admin-text, #273038) !important;
+}
+
+/* ---- 网格优化 ---- */
+body.admin-v2 .admin-grid {
+    gap: 1.5rem !important;
+}
+
+/* 仪表盘统计网格：2列 桌面 */
+body.admin-v2 .admin-dashboard-stats {
+    display: grid !important;
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+    gap: 1.5rem !important;
+    margin-bottom: 2rem !important;
+}
+
+/* 仪表盘面板网格 */
+body.admin-v2 .admin-dashboard-panels {
+    display: grid !important;
+    grid-template-columns: minmax(0, 1fr) !important;
+    gap: 1.5rem !important;
+}
+
+/* 统计卡片内部：数字 + 标签 横向排列 */
+body.admin-v2 .admin-dashboard-stat-card .admin-card-header {
+    display: flex !important;
+    align-items: baseline !important;
+    gap: 0.5rem !important;
+}
+
+body.admin-v2 .admin-dashboard-stat-card .admin-card-title {
+    font-size: 1.5rem !important;
+    font-weight: 720 !important;
+}
+
+/* 统计卡片 hover 微交互 */
+body.admin-v2 .admin-dashboard-stat-card .admin-card-title {
+    transition: color 0.2s ease !important;
+}
+
+body.admin-v2 .admin-dashboard-stat-card:hover .admin-card-title {
+    color: var(--admin-pink-deep, #e3548a) !important;
+}
+
+/* ---- 表格卡片（如文章列表）---- */
+body.admin-v2 .admin-card table {
+    margin-top: 0.5rem !important;
+}
+
+body.admin-v2 .admin-card table th {
+    font-size: 0.78rem !important;
+    font-weight: 600 !important;
+    color: var(--admin-text-2, #5d6b76) !important;
+    padding: 0.5rem 0.75rem !important;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.06) !important;
+}
+
+body.admin-v2 .admin-card table td {
+    padding: 0.6rem 0.75rem !important;
+    font-size: 0.85rem !important;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.04) !important;
+}
+
+body.admin-v2 .admin-card table tbody tr:hover {
+    background: rgba(0, 0, 0, 0.02) !important;
+}
+
+body.admin-v2 .admin-card table tbody tr:last-child td {
+    border-bottom: none !important;
+}
+
+/* ---- 设置页面 ---- */
+body.admin-v2 .admin-settings-section {
+    margin-bottom: 2rem !important;
+}
+
+body.admin-v2 .admin-settings-section .admin-card-title {
+    margin-bottom: 1rem !important;
+}
+
+/* ---- 表单输入框 ---- */
+body.admin-v2 input[type="text"],
+body.admin-v2 input[type="url"],
+body.admin-v2 input[type="password"],
+body.admin-v2 input[type="number"],
+body.admin-v2 input[type="email"],
+body.admin-v2 textarea,
+body.admin-v2 select {
+    background: rgba(255, 255, 255, 0.55) !important;
+    border: 1px solid rgba(148, 163, 184, 0.25) !important;
+    border-radius: 10px !important;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease !important;
+}
+
+body.admin-v2 input:focus,
+body.admin-v2 textarea:focus,
+body.admin-v2 select:focus {
+    border-color: var(--admin-pink, #f26d9c) !important;
+    box-shadow: 0 0 0 3px rgba(242, 109, 156, 0.1) !important;
+    outline: none !important;
+}
+
+/* ---- 按钮保留原样，微调 hover ---- */
+body.admin-v2 .btn,
+body.admin-v2 button {
+    transition: filter 0.15s ease, transform 0.15s ease !important;
+}
+
+body.admin-v2 .btn:hover,
+body.admin-v2 button:hover {
+    filter: brightness(1.05) !important;
+}
+
+body.admin-v2 .btn:active,
+body.admin-v2 button:active {
+    transform: scale(0.97) !important;
+}
+
+/* ---- FFmpeg 通知条弱化 ---- */
+body.admin-v2 .admin-card[style*="ffmpeg"] {
+    background: rgba(255, 255, 255, 0.35) !important;
+    border: 1px solid rgba(0, 0, 0, 0.04) !important;
+    border-radius: 12px !important;
+    padding: 0.75rem 1rem !important;
+    margin-bottom: 1.5rem !important;
+    font-size: 0.85rem !important;
+    color: var(--admin-text-2, #5d6b76) !important;
+}
+
+/* ---- 侧边栏 ---- */
+body.admin-v2 .admin-appbar {
+    background: rgba(255, 255, 255, 0.55) !important;
+    backdrop-filter: blur(16px) !important;
+    -webkit-backdrop-filter: blur(16px) !important;
+    border: none !important;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.04) !important;
+    box-shadow: none !important;
+}
+
+body.admin-v2 .admin-drawer {
+    background: rgba(255, 255, 255, 0.65) !important;
+    backdrop-filter: blur(16px) !important;
+    -webkit-backdrop-filter: blur(16px) !important;
+    border: none !important;
+    border-right: 1px solid rgba(0, 0, 0, 0.04) !important;
+    box-shadow: none !important;
+}
+
+/* ---- 底部导航栏 ---- */
+body.admin-v2 .admin-tabbar {
+    background: rgba(255, 255, 255, 0.55) !important;
+    backdrop-filter: blur(16px) !important;
+    -webkit-backdrop-filter: blur(16px) !important;
+    border: none !important;
+    border-top: 1px solid rgba(0, 0, 0, 0.04) !important;
+    box-shadow: none !important;
+}
+
+/* ---- 响应式 ---- */
+@media (min-width: 768px) {
+    body.admin-v2 .admin-dashboard-stats {
+        grid-template-columns: repeat(4, minmax(0, 1fr)) !important;
+    }
+    
+    body.admin-v2 .admin-dashboard-panels {
+        grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+    }
+}
+
+@media (max-width: 767px) {
+    body.admin-v2 .admin-dashboard-stats {
+        grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+        gap: 1rem !important;
+    }
+    
+    body.admin-v2 .admin-grid {
+        gap: 1rem !important;
+    }
+    
+    body.admin-v2 .admin-card-title {
+        font-size: 0.85rem !important;
+    }
+    
+    body.admin-v2 .admin-dashboard-stat-card .admin-card-title {
+        font-size: 1.25rem !important;
+    }
+}
