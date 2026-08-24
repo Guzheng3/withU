@@ -3348,6 +3348,9 @@ try {
 </head>
 
 <body class="bg-pdot-vignette">
+    <?php if (isset($_GET['logout']) && $_GET['logout'] === '1'): ?>
+    <script>document.addEventListener('DOMContentLoaded',function(){if(typeof Toastify!=='undefined'&&Toastify.showScenario)Toastify.showScenario('success',{text:'已退出登录'});});</script>
+    <?php endif; ?>
     <div id="pjax-container">
         <main class="withu-home withu-container">
 

@@ -12,5 +12,5 @@ require_once __DIR__ . '/core/helpers.php';
 $auth = new Auth();
 $auth->logout();
 
-header('Location: /');
+header('Location: /?logout=1');
 exit;

@@ -142,7 +142,7 @@ foreach (($themeConfig['colors'] ?? []) as $themeName => $themeValue) {
         <a href="/admin/tools_image_stats.php" class="admin-drawer-link <?php echo ($adminPage === 'tools_stats' && $toolsTab !== 'optimize') ? 'admin-drawer-link-active' : ''; ?>">
             <i class="fas fa-chart-bar"></i><span>图片统计</span>
         </a>
-        <a href="/logout.php" class="admin-drawer-link admin-drawer-link-danger">
+        <a href="/logout.php" class="admin-drawer-link admin-drawer-link-danger" onclick="return confirm('确定要退出登录吗？');">
             <i class="fas fa-sign-out-alt"></i><span>退出登录</span>
         </a>
     </div>
