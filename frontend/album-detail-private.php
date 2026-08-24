@@ -3575,7 +3575,6 @@ if (typeof window.initPrivatePage === 'function') window.initPrivatePage();
 </div>
 <!-- ============ /足迹地图弹窗 ============ -->
 <script src="/assets/js/map.js?wm=4c668768&v=1.0.74"></script>
-<script src="/assets/js/map-screenshot.js"></script>
 
 <div id="pjax-container">
 

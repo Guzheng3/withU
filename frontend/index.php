@@ -5482,7 +5482,6 @@ require __DIR__ . '/inc/config.php';
 </div>
 <!-- ============ /足迹地图弹窗 ============ -->
 <script src="assets/js/map.js"></script>
-<script src="/assets/js/map-screenshot.js"></script>
 
 <div id="pjax-container">
 
