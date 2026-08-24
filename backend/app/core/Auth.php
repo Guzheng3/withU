@@ -307,6 +307,18 @@ class Auth
             $_SESSION = [];
             session_destroy();
         }
+        // 清除信任设备 Cookie，防止自动恢复登录
+        if (isset($_COOKIE['withu_device'])) {
+            $secure = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off');
+            setcookie('withu_device', '', [
+                'expires'  => time() - 3600,
+                'path'     => '/',
+                'secure'   => $secure,
+                'httponly' => true,
+                'samesite' => 'Lax',
+            ]);
+            unset($_COOKIE['withu_device']);
+        }
         return true;
     }
 
