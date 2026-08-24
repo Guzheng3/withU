@@ -1065,60 +1065,18 @@
 
             try {
                 this._setLoading(true);
-                const _wtParam = (window.WITHU_CONFIG && window.WITHU_CONFIG.weatherToken) ? '&_wt=' + encodeURIComponent(window.WITHU_CONFIG.weatherToken) : '';
                 var _siteBase = (window.WITHU_CONFIG && window.WITHU_CONFIG.siteBase) || '';
 
-                // 尝试使用浏览器定位获取真实天气
-                var loc = null;
+                // 尝试使用浏览器定位
+                var geoParams = 'mode=ip';
                 if (window.WithULocation) {
-                    loc = window.WithULocation.get();
-                }
-
-                // 优先使用 QWeather API 直接获取（浏览器端调用，key 不受 host 限制）
-                if (loc && loc.lat && loc.lng) {
-                    try {
-                        var qwKey = (window.WITHU_CONFIG && window.WITHU_CONFIG.weatherToken) || '';
-                        var qwUrl = 'https://devapi.qweather.com/v7/weather/now?location=' + loc.lng + ',' + loc.lat + '&key=' + qwKey;
-                        var qwResp = await fetch(qwUrl, { method: 'GET', cache: 'default' });
-                        if (qwResp.ok) {
-                            var qwData = await qwResp.json();
-                            if (qwData && qwData.code === '200' && qwData.now) {
-                                var n = qwData.now;
-                                var result = {
-                                    code: 200,
-                                    data: {
-                                        temp: n.temp || '--',
-                                        feelsLike: n.feelsLike || '--',
-                                        desc: n.text || '未知',
-                                        icon: n.icon || '999',
-                                        humidity: n.humidity || '--',
-                                        windDir: n.windDir || '--',
-                                        windScale: n.windScale || '--',
-                                        vis: n.vis || '--',
-                                        city: loc.city || '当前位置',
-                                        obsTime: n.obsTime || '',
-                                        source: 'qweather'
-                                    }
-                                };
-                                this._cachePayload = result.data;
-                                this._cacheAt = Date.now();
-                                this._applyPayload(result.data);
-                                this._pendingRequest = null;
-                                return;
-                            }
-                        }
-                    } catch (e) {
-                        console.warn('[Weather] QWeather direct call failed:', e.message);
+                    var loc = window.WithULocation.get();
+                    if (loc && loc.lat && loc.lng) {
+                        geoParams = 'mode=geo&lat=' + loc.lat + '&lng=' + loc.lng;
                     }
                 }
 
-                // 回退到服务器端天气接口
-                var geoParams = 'mode=ip';
-                if (loc && loc.lat && loc.lng) {
-                    geoParams = 'mode=geo&lat=' + loc.lat + '&lng=' + loc.lng;
-                }
-
-                this._pendingRequest = fetch(_siteBase + 'services/weather.php?' + geoParams + _wtParam, {
+                this._pendingRequest = fetch(_siteBase + 'services/weather.php?' + geoParams, {
                     method: 'GET',
                     credentials: 'same-origin',
                     cache: 'default'

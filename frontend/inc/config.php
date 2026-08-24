@@ -36,6 +36,9 @@ try {
     $siteTitleRow = $db->fetch("SELECT value FROM settings WHERE `key`='site_title'");
     $siteTitle = ($siteTitleRow && !empty($siteTitleRow['value'])) ? $siteTitleRow['value'] : 'withU';
 
+    $weatherKeyRow = $db->fetch("SELECT value FROM settings WHERE `key`='amap_weather_key'");
+    $weatherKey = ($weatherKeyRow && !empty($weatherKeyRow['value'])) ? $weatherKeyRow['value'] : '';
+
     $withuConfig = [
         'title' => $siteTitle,
         'boy' => $boyName, 'girl' => $girlName,
@@ -50,7 +53,8 @@ try {
         'imageErrorFallback' => '/Style/img/file-placeholder.svg',
         'owoBase' => '/OwO', 'soloMode' => false,
         'weatherEnabled' => true,
-        'weatherToken' => 'd4210665334edba618aecc1829a5e734701e2b824c5aebd4ff8859d7a2536721',
+        'weatherToken' => $weatherKey ?: 'd4210665334edba618aecc1829a5e734701e2b824c5aebd4ff8859d7a2536721',
+        'weatherType' => $weatherKey ? 'amap' : 'qweather',
         'soloOwnerGeo' => ['lat' => 21.915454, 'lng' => 110.856708],
         'bannedChars' => '操屌',
         'endpoints' => [

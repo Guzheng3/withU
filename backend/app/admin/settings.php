@@ -499,6 +499,12 @@ include __DIR__ . '/header.php';
                 </div>
 
                 <div class="form-group" style="margin-bottom:0.75rem;">
+                    <label style="display:block;font-size:0.85rem;margin-bottom:0.25rem;">天气 API Key（高德）</label>
+                    <input type="text" name="settings[amap_weather_key]" value="<?php echo e($settingsData['amap_weather_key'] ?? ''); ?>" placeholder="高德 Web服务 Key，用于天气查询，可留空" style="width:100%;padding:.55rem .75rem;border-radius:.75rem;border:1px solid rgba(148,163,184,.6);font-size:.9rem;">
+                    <small style="color:#888;">使用高德地图同款 Key 即可，留空则使用 IP 定位天气</small>
+                </div>
+
+                <div class="form-group" style="margin-bottom:0.75rem;">
                     <label style="display:block;font-size:0.85rem;margin-bottom:0.25rem;">AI 安全与媒体识别</label>
                     <?php $aiModeration = $settingsData['ai_moderation_enabled'] ?? '0'; ?>
                     <label class="switch"><input type="checkbox" name="settings[ai_moderation_enabled]" value="1" <?php echo $aiModeration === '1' ? 'checked' : ''; ?>><span class="switch-track"><span class="switch-thumb"></span></span><span class="switch-label">启用 AI 辅助审核（规则审核始终保留）</span></label>
