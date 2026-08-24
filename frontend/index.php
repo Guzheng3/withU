@@ -2946,7 +2946,236 @@ require __DIR__ . '/inc/config.php';
             </ul>
 
     <?php include __DIR__ . '/inc/head-avatars.php'; ?>
-<div class="withu-home-weather-card blue" data-weather-slot="1" data-location-name="--">
+
+
+    <svg class="waves" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
+        viewBox="0 24 150 28" preserveAspectRatio="none" shape-rendering="auto">
+        <defs>
+            <path id="gentle-wave" d="M-160 44c30 0 58-18 88-18s 58 18 88 18 58-18 88-18 58 18 88 18 v44h-352z" />
+        </defs>
+        <g class="parallax">
+            <use xlink:href="#gentle-wave" x="48" y="0" fill="rgba(255,255,255,0.7" />
+            <use xlink:href="#gentle-wave" x="48" y="3" fill="rgba(255,255,255,0.5)" />
+            <use xlink:href="#gentle-wave" x="48" y="5" fill="rgba(255,255,255,0.3)" />
+            <use xlink:href="#gentle-wave" x="48" y="7" fill="#fff" />
+        </g>
+    </svg>
+
+    <ul class="pointList">
+                    <li class="point active" data-index="0"></li>
+                    <li class="point " data-index="1"></li>
+                    <li class="point " data-index="2"></li>
+                    <li class="point " data-index="3"></li>
+                    <li class="point " data-index="4"></li>
+                    <li class="point " data-index="5"></li>
+                    <li class="point " data-index="6"></li>
+                    <li class="point " data-index="7"></li>
+            </ul>
+</div>
+
+<div class="Width_limit_10rem">
+    <div class="withu-sticky-sentinel" id="withuStickySentinel"></div>
+</div>
+
+<div class="withu-nav-placeholder" id="withuNavPlaceholder"></div>
+<div class="withu-nav-wrapper" id="withuNavWrapper">
+    <nav class="withu-nav-island-container" id="withuNavIsland">
+        <div class="withu-nav-indicator" id="withuNavIndicator"></div>
+
+                <a href="articles.php"
+           class="withu-nav-island-item  "
+           draggable="false"
+           data-desc="写下日常、心情与想念"
+           data-meta="Memory Notes">
+            <i class="ph-fill ph-notebook"></i>
+            <span>点滴</span>        </a>
+                <a href="messages.php"
+           class="withu-nav-island-item  "
+           draggable="false"
+           data-desc="留下想说的话与温柔回应"
+           data-meta="Kind Messages">
+            <i class="ph-fill ph-chat-teardrop-dots"></i>
+            <span>留言</span>        </a>
+                <a href="timeline.php"
+           class="withu-nav-island-item  "
+           draggable="false"
+           data-desc="回看我们一路走来的轨迹"
+           data-meta="Steps of Us">
+            <i class="ph-fill ph-clock-countdown"></i>
+            <span>轨迹</span>        </a>
+                <a href="index.php"
+           class="withu-nav-island-item active nav-home"
+           draggable="false"
+           data-desc="收好我们的日常与心动"
+           data-meta="Our Cozy Place">
+            <i class="ph-fill ph-house"></i>
+                    </a>
+                <a href="albums.php"
+           class="withu-nav-island-item  "
+           draggable="false"
+           data-desc="收藏见面与出游的闪亮瞬间"
+           data-meta="Photo Keepsakes">
+            <i class="ph-fill ph-camera"></i>
+            <span>相册</span>        </a>
+                <a href="lovelist.php"
+           class="withu-nav-island-item  "
+           draggable="false"
+           data-desc="记下想一起完成的心愿"
+           data-meta="Plans Together">
+            <i class="ph-fill ph-list-checks"></i>
+            <span>清单</span>        </a>
+                <a href="about.php"
+           class="withu-nav-island-item  "
+           draggable="false"
+           data-desc="用对话回放我们的故事"
+           data-meta="Story Replay">
+            <i class="ph-fill ph-book-open-text"></i>
+            <span>关于</span>        </a>
+            </nav>
+</div>
+
+<div class="Width_limit_10rem">
+    <div class="withu-page-header">
+        <div class="withu-meta-container">
+            <div class="withu-meta-tag" id="withuMetaTag">
+                <i class="fa-solid fa-star-of-life withu-meta-icon"></i>
+                <span id="withuMetaText">Sanctuary of Us</span>
+                <i class="fa-solid fa-star-of-life withu-meta-icon"></i>
+            </div>
+            <div class="withu-meta-line" id="withuMetaLine"></div>
+        </div>
+        <h2 class="withu-hero-title" id="withuHeroTitle"></h2>
+    </div>
+</div>
+
+<!-- 情侣头像点击效果已迁移到 components.js 的 AvatarInteraction 模块 -->
+
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>withU Demo</title>
+
+</head>
+
+<body class="bg-pdot-vignette">
+    <?php if (isset($_GET['logout']) && $_GET['logout'] === '1'): ?>
+    <script>document.addEventListener('DOMContentLoaded',function(){if(typeof Toastify!=='undefined'&&Toastify.showScenario)Toastify.showScenario('success',{text:'已退出登录'});});</script>
+    <?php endif; ?>
+    <div id="pjax-container">
+        <main class="withu-home withu-container">
+
+            <!-- Countdown Module -->
+            <div class="withu-day-wrapper withu-mb-4" data-aos="fade-up" data-aos-delay="0">
+                <div class="withu-day-fusion-card">
+                    <!-- 朦胧光斑 -->
+                    <div class="withu-day-ambient-light"></div>
+                    <!-- Mac 装饰点 -->
+                    <div class="withu-day-mac-dots">
+                        <div class="withu-day-dot withu-day-dot-red"></div>
+                        <div class="withu-day-dot withu-day-dot-yellow"></div>
+                        <div class="withu-day-dot withu-day-dot-green"></div>
+                    </div>
+                    <!-- 左侧 -->
+                    <div class="withu-day-left-section">
+                        <div class="withu-day-title-container">
+                            <h2 class="withu-day-poetic-title">
+                                朝暮与年岁并往， <br />
+与你行至天光。                            </h2>
+                        </div>
+                        <!-- 起始日 -->
+                        <div class="withu-day-start-date-capsule">
+                            <div class="withu-day-icon-circle">
+                                <i class="ph-fill ph-heart"></i>
+                            </div>
+                            <div class="withu-day-date-text-group">
+                                <span class="withu-day-date-label-small">Together Since</span>
+                                <span class="withu-day-date-value-clean"
+                                    id="withu-day-start-date-display">2023-07-19 00:00</span>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- 右侧 -->
+                    <div class="withu-day-right-section">
+                        <div class="withu-day-main-days-wrapper">
+                            <div class="withu-day-main-days-number" id="withu-day-counter-days">0</div>
+                            <div class="withu-day-days-divider"></div>
+                            <div class="withu-day-days-label">DAYS</div>
+                        </div>
+                        <div class="withu-day-digital-timer">
+                            <div class="withu-day-timer-block">
+                                <div class="withu-day-timer-val" id="withu-day-counter-hours">00</div>
+                                <div class="withu-day-timer-label">Hours</div>
+                            </div>
+                            <div class="withu-day-timer-block">
+                                <div class="withu-day-timer-val" id="withu-day-counter-minutes">00</div>
+                                <div class="withu-day-timer-label">Minutes</div>
+                            </div>
+                            <div class="withu-day-timer-block">
+                                <div class="withu-day-timer-val" id="withu-day-counter-seconds">00</div>
+                                <div class="withu-day-timer-label">Seconds</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 1. Top Section: Staggered Masonry -->
+            <section class="withu-section">
+                <div class="withu-grid">
+
+                    <!-- Card 1: Moment of the Day -->
+                                        <div class="withu-col-2 withu-row-2" data-aos="fade-up" data-aos-delay="0">                    <!-- 智能媒体卡片：时光碎片 -->
+                    <div id="moment-card" class="withu-smart-card">
+                        <!-- 媒体容器 -->
+                        <div class="withu-smart-card__media"></div>
+                        <!-- 遮罩层 -->
+                        <div class="withu-smart-card__overlay"></div>
+
+                        <!-- 顶部：发布者信息 + 相册入口 -->
+                        <div class="withu-smart-card__header">
+                            <div class="withu-smart-card__capsule">
+                                <img class="withu-smart-card__avatar lazy" src="" alt="">
+                                <div class="withu-smart-card__user-info">
+                                    <span class="withu-smart-card__name"></span>
+                                    <span class="withu-smart-card__time"></span>
+                                </div>
+                            </div>
+                            <!-- 相册入口链接 -->
+                            <a href="albums.php" class="withu-smart-card__album-link">
+                                <span>进入相册</span>
+                                <i class="ph-bold ph-arrow-right"></i>
+                            </a>
+                        </div>
+
+                        <!-- 底部：内容区域 -->
+                        <div class="withu-smart-card__content">
+                            <!-- 地点胶囊 -->
+                            <div class="withu-smart-card__location-pill">
+                                <i class="ph-fill ph-map-pin"></i>
+                                <span class="withu-smart-card__location-text"></span>
+                            </div>
+                            <!-- 标题 -->
+                            <h2 class="withu-smart-card__title"></h2>
+                            <!-- 元数据 -->
+                            <div class="withu-smart-card__meta">
+                                <span class="withu-smart-card__date"></span>
+                                <p class="withu-smart-card__desc"></p>
+                            </div>
+                        </div>
+
+                        <!-- 切换按钮 -->
+                        <div class="withu-smart-card__switch-btn-container">
+                            <button class="withu-smart-card__switch-btn" type="button">
+                                <i class="ph-bold ph-arrows-clockwise"></i>
+                            </button>
+                        </div>
+                    </div>
+                    </div>
+                                                            <!-- Card 2: Weather -->
+                    <div class="withu-col-2 withu-col-md-1 withu-weather-wrapper" data-aos="fade-up" data-aos-delay="50">                    <div class="withu-home-weather-card blue" data-weather-slot="1" data-location-name="--">
 
                         <!-- 装饰背景 -->
                         <div class="withu-home-weather-bg-decoration"></div>

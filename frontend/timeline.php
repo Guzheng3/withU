@@ -2949,6 +2949,554 @@
             </ul>
 
     <?php include __DIR__ . '/inc/head-avatars.php'; ?>
+
+
+    <svg class="waves" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
+        viewBox="0 24 150 28" preserveAspectRatio="none" shape-rendering="auto">
+        <defs>
+            <path id="gentle-wave" d="M-160 44c30 0 58-18 88-18s 58 18 88 18 58-18 88-18 58 18 88 18 v44h-352z" />
+        </defs>
+        <g class="parallax">
+            <use xlink:href="#gentle-wave" x="48" y="0" fill="rgba(255,255,255,0.7" />
+            <use xlink:href="#gentle-wave" x="48" y="3" fill="rgba(255,255,255,0.5)" />
+            <use xlink:href="#gentle-wave" x="48" y="5" fill="rgba(255,255,255,0.3)" />
+            <use xlink:href="#gentle-wave" x="48" y="7" fill="#fff" />
+        </g>
+    </svg>
+
+    <ul class="pointList">
+                    <li class="point active" data-index="0"></li>
+                    <li class="point " data-index="1"></li>
+                    <li class="point " data-index="2"></li>
+                    <li class="point " data-index="3"></li>
+                    <li class="point " data-index="4"></li>
+                    <li class="point " data-index="5"></li>
+                    <li class="point " data-index="6"></li>
+                    <li class="point " data-index="7"></li>
+            </ul>
+</div>
+
+<div class="Width_limit_10rem">
+    <div class="withu-sticky-sentinel" id="withuStickySentinel"></div>
+</div>
+
+<div class="withu-nav-placeholder" id="withuNavPlaceholder"></div>
+<div class="withu-nav-wrapper" id="withuNavWrapper">
+    <nav class="withu-nav-island-container" id="withuNavIsland">
+        <div class="withu-nav-indicator" id="withuNavIndicator"></div>
+
+                <a href="articles.php"
+           class="withu-nav-island-item  "
+           draggable="false"
+           data-desc="写下日常、心情与想念"
+           data-meta="Memory Notes">
+            <i class="ph-fill ph-notebook"></i>
+            <span>点滴</span>        </a>
+                <a href="messages.php"
+           class="withu-nav-island-item  "
+           draggable="false"
+           data-desc="留下想说的话与温柔回应"
+           data-meta="Kind Messages">
+            <i class="ph-fill ph-chat-teardrop-dots"></i>
+            <span>留言</span>        </a>
+                <a href="timeline.php"
+           class="withu-nav-island-item active "
+           draggable="false"
+           data-desc="回看我们一路走来的轨迹"
+           data-meta="Steps of Us">
+            <i class="ph-fill ph-clock-countdown"></i>
+            <span>轨迹</span>        </a>
+                <a href="index.php"
+           class="withu-nav-island-item  nav-home"
+           draggable="false"
+           data-desc="收好我们的日常与心动"
+           data-meta="Our Cozy Place">
+            <i class="ph-fill ph-house"></i>
+                    </a>
+                <a href="albums.php"
+           class="withu-nav-island-item  "
+           draggable="false"
+           data-desc="收藏见面与出游的闪亮瞬间"
+           data-meta="Photo Keepsakes">
+            <i class="ph-fill ph-camera"></i>
+            <span>相册</span>        </a>
+                <a href="lovelist.php"
+           class="withu-nav-island-item  "
+           draggable="false"
+           data-desc="记下想一起完成的心愿"
+           data-meta="Plans Together">
+            <i class="ph-fill ph-list-checks"></i>
+            <span>清单</span>        </a>
+                <a href="about.php"
+           class="withu-nav-island-item  "
+           draggable="false"
+           data-desc="用对话回放我们的故事"
+           data-meta="Story Replay">
+            <i class="ph-fill ph-book-open-text"></i>
+            <span>关于</span>        </a>
+            </nav>
+</div>
+
+<div class="Width_limit_10rem">
+    <div class="withu-page-header">
+        <div class="withu-meta-container">
+            <div class="withu-meta-tag" id="withuMetaTag">
+                <i class="fa-solid fa-star-of-life withu-meta-icon"></i>
+                <span id="withuMetaText">Sanctuary of Us</span>
+                <i class="fa-solid fa-star-of-life withu-meta-icon"></i>
+            </div>
+            <div class="withu-meta-line" id="withuMetaLine"></div>
+        </div>
+        <h2 class="withu-hero-title" id="withuHeroTitle"></h2>
+    </div>
+</div>
+
+<!-- 情侣头像点击效果已迁移到 components.js 的 AvatarInteraction 模块 -->
+
+    <meta charset="utf-8" />
+    <meta name="viewport"
+        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>轨迹 — withU Demo</title>
+</head>
+
+<body class="bg-pdot-vignette">
+    <div id="pjax-container">
+        <!-- 时间轴专用样式 -->
+        <link rel="stylesheet" href="/Style/css/timeline.css">
+        <!-- 迷你地图组件（地点卡片） -->
+        <link rel="stylesheet" href="/assets/css/mini-map.css">
+        <script src="/assets/js/mini-map.js"></script>
+
+        <!-- 滚动提示 -->
+        <div class="withu-scroll-hint" id="timelineScrollHint">
+            <div class="withu-scroll-hint-inner">
+                <!-- PC 端：鼠标图标 -->
+                <div class="withu-scroll-mouse">
+                    <div class="withu-scroll-wheel"></div>
+                </div>
+                <!-- 移动端：手指滑动图标 -->
+                <div class="withu-scroll-touch">
+                    <div class="withu-scroll-touch-hand">
+                        <i class="ph-fill ph-hand-tap"></i>
+                    </div>
+                    <div class="withu-scroll-touch-trail"></div>
+                </div>
+                <span class="withu-scroll-text withu-scroll-text-pc">向下滚动查看时间轴</span>
+                <span class="withu-scroll-text withu-scroll-text-mobile">向上滑动查看时间轴</span>
+            </div>
+        </div>
+
+
+        <style>
+            /* 滚动提示样式 */
+            .withu-scroll-hint {
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                padding: 30px 0 50px;
+            }
+
+            .withu-scroll-hint-inner {
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                gap: 16px;
+            }
+
+            /* 鼠标图标 - PC 端 */
+            .withu-scroll-mouse {
+                width: 26px;
+                height: 42px;
+                border: 2px solid rgba(0, 0, 0, 0.2);
+                border-radius: 15px;
+                position: relative;
+                display: flex;
+                justify-content: center;
+            }
+
+            .withu-scroll-wheel {
+                width: 4px;
+                height: 8px;
+                background: rgba(0, 0, 0, 0.3);
+                border-radius: 2px;
+                position: absolute;
+                top: 8px;
+                animation: scrollWheel 1.8s ease-in-out infinite;
+            }
+
+            @keyframes scrollWheel {
+                0% {
+                    opacity: 1;
+                    transform: translateY(0);
+                }
+
+                50% {
+                    opacity: 0.5;
+                    transform: translateY(10px);
+                }
+
+                100% {
+                    opacity: 0;
+                    transform: translateY(16px);
+                }
+            }
+
+            /* 手指滑动图标 - 移动端 */
+            .withu-scroll-touch {
+                display: none;
+                flex-direction: column;
+                align-items: center;
+                position: relative;
+                height: 60px;
+            }
+
+            .withu-scroll-touch-hand {
+                font-size: 28px;
+                color: rgba(0, 0, 0, 0.35);
+                animation: touchSwipe 1.8s ease-in-out infinite;
+            }
+
+            .withu-scroll-touch-trail {
+                position: absolute;
+                bottom: 0;
+                width: 2px;
+                height: 20px;
+                background: linear-gradient(to bottom, rgba(0, 0, 0, 0.15), transparent);
+                border-radius: 1px;
+                animation: touchTrail 1.8s ease-in-out infinite;
+            }
+
+            @keyframes touchSwipe {
+                0%, 100% {
+                    transform: translateY(20px);
+                    opacity: 0.3;
+                }
+                50% {
+                    transform: translateY(-5px);
+                    opacity: 1;
+                }
+            }
+
+            @keyframes touchTrail {
+                0%, 100% {
+                    opacity: 0;
+                    height: 0;
+                }
+                30%, 70% {
+                    opacity: 0.5;
+                    height: 20px;
+                }
+            }
+
+            .withu-scroll-text {
+                font-size: 13px;
+                color: rgba(0, 0, 0, 0.4);
+                font-family: 'Noto Serif SC', serif;
+                letter-spacing: 0.1em;
+            }
+
+            .withu-scroll-text-mobile {
+                display: none;
+            }
+
+            @media (max-width: 768px) {
+                .withu-scroll-hint {
+                    padding: 20px 0 40px;
+                }
+
+                .withu-scroll-mouse {
+                    display: none;
+                }
+
+                .withu-scroll-touch {
+                    display: flex;
+                }
+
+                .withu-scroll-text-pc {
+                    display: none;
+                }
+
+                .withu-scroll-text-mobile {
+                    display: block;
+                }
+
+                .withu-scroll-text {
+                    font-size: 12px;
+                }
+            }
+        </style>
+
+        <!-- <div class="withu-time-line-spacer"></div> -->
+
+        <main class="withu-time-line-main">
+            <div id="timeline-container" class="withu-time-line-container"></div>
+        </main>
+
+        <!-- PHP 配置输出 -->
+        <script>
+            // 双主角配置（由 PHP 注入，key = login_id）
+            window.TIMELINE_AUTHORS = {};
+                        window.TIMELINE_AUTHORS[1] = {
+                name: "Ki.",
+                avatar: "https:\/\/love-really.kikiw.cn\/Lovefolder\/20260411043037_69d95ded97293201118237.webp",
+                gender: "male"            };
+                        window.TIMELINE_AUTHORS[2] = {
+                name: "Really",
+                avatar: "https:\/\/love-really.kikiw.cn\/Lovefolder\/20260411043046_69d95df639c33274072975.webp",
+                gender: "female"            };
+                        // 兼容旧数据 male/female 键
+            window.TIMELINE_AUTHORS['male'] = window.TIMELINE_AUTHORS[1];
+window.TIMELINE_AUTHORS['female'] = window.TIMELINE_AUTHORS[2];
+        </script>
+
+        <!-- WaveSurfer 音频波形 -->
+        <script src="/Style/js/wavesurfer.min.js"></script>
+        <!-- 时间轴页面 JS -->
+        <script src="/assets/js/page-timeline.js"></script>
+
+        <script>
+            // 通过 AJAX 从后端加载时间轴数据
+            if (typeof window.WithUTimelineModule !== 'undefined' && document.getElementById('timeline-container')) {
+                window.WithUTimelineModule.loadFromServer();
+            }
+        </script>
+    </div>
+
+    
+    <!-- 留言弹窗遮罩层 -->
+    <div class="mask" id="mask">
+        <div class="close">
+            <svg t="1682818912164" class="icon" viewBox="0 0 1024 1024" version="1.1"
+                xmlns="http://www.w3.org/2000/svg" p-id="2416" width="200" height="200">
+                <path
+                    d="M550.848 502.496l308.64-308.896a31.968 31.968 0 1 0-45.248-45.248l-308.608 308.896-308.64-308.928a31.968 31.968 0 1 0-45.248 45.248l308.64 308.896-308.64 308.896a31.968 31.968 0 1 0 45.248 45.248l308.64-308.896 308.608 308.896a31.968 31.968 0 1 0 45.248-45.248l-308.64-308.864z"
+                    p-id="2417"></path>
+            </svg>
+        </div>
+    </div>
+
+
+    <!-- 表情面板（全局可用，弹窗 & 抽屉共用） -->
+    <div class="withu-message-emoji-panel" id="withumsgEmojiPanel">
+        <div class="withu-message-emoji-tabs-wrap">
+            <div class="withu-message-emoji-tabs" id="withumsgEmojiTabs"></div>
+        </div>
+        <div class="withu-message-emoji-cat-title" id="withumsgEmojiCatTitle"></div>
+        <div class="withu-message-emoji-list" id="withumsgEmojiGrid"></div>
+    </div>
+
+    <div class="withu-message-emoji-preview" id="withumsgEmojiPreview">
+        <img src="" id="withumsgPreviewImg">
+        <span id="withumsgPreviewText"></span>
+    </div>
+
+    <!-- 留言触发按钮 -->
+    <div class="message_btn" id="mes">
+        <span class="mesly shadow-blur">
+            <i data-lucide="message-circle" style="width:2rem;height:2rem;fill:currentColor;stroke:none;"></i>
+        </span>
+    </div>
+
+    <!-- 随机一言确认弹窗（about.php 风格） -->
+    <div class="withumsg-confirm-overlay" id="withumsgConfirmOverlay">
+        <div class="withumsg-confirm-panel">
+            <!-- 关闭按钮 -->
+            <button class="withumsg-confirm-close-btn" id="withumsgConfirmClose" aria-label="关闭">
+                <i class="ph ph-x"></i>
+            </button>
+            <!-- 图标 -->
+            <div class="withumsg-confirm-icon-wrapper">
+                <svg viewBox="0 0 24 24" fill="currentColor"><path d="M9.937 15.5A2 2 0 0 0 8.5 14.063l-6.135-1.582a.5.5 0 0 1 0-.962L8.5 9.936A2 2 0 0 0 9.937 8.5l1.582-6.135a.5.5 0 0 1 .963 0L14.063 8.5A2 2 0 0 0 15.5 9.937l6.135 1.582a.5.5 0 0 1 0 .962L15.5 14.063a2 2 0 0 0-1.437 1.437l-1.582 6.135a.5.5 0 0 1-.963 0z"/><path d="M20 3v4"/><path d="M22 5h-4"/></svg>
+            </div>
+            <!-- 标题 -->
+            <h2 class="withumsg-confirm-title">替换为随机一言？</h2>
+            <!-- 描述 -->
+            <p class="withumsg-confirm-desc">当前输入框已有内容，确认后将清空并替换为一条随机文案</p>
+            <!-- 操作按钮 -->
+            <div class="withumsg-confirm-actions">
+                <button class="withumsg-confirm-btn withumsg-confirm-btn-secondary" id="withumsgConfirmCancel">取消</button>
+                <button class="withumsg-confirm-btn withumsg-confirm-btn-primary" id="withumsgConfirmOk">确认替换</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 留言弹窗（全局可用） -->
+    <div class="withu-message-modal-overlay" id="withumsgCommentModal">
+        <div class="withu-message-modal-content" id="withumsgModalContent">
+            <div class="withu-message-close-wrapper">
+                <button class="withu-message-close-btn" id="withumsgModalCloseBtn">
+                    <i data-lucide="x" style="width:20px;height:20px;"></i>
+                </button>
+            </div>
+            <div class="withu-message-modal-body">
+                <div class="withu-message-head-titles">
+                    <div class="withu-message-title">写一条留言</div>
+                    <div class="withu-message-subtitle">在这里，留下属于你的印记</div>
+                </div>
+                <div class="withu-message-ios-tabs-wrap">
+                    <div class="withu-message-ios-tabs" id="withumsgTabContainer">
+                        <div class="withu-message-ios-tab-slider" id="withumsgTabSlider"></div>
+                        <div class="withu-message-ios-tab active" data-mode="qq">QQ留言</div>
+                        <div class="withu-message-ios-tab" data-mode="anonymous">匿名留言</div>
+                    </div>
+                </div>
+                <div class="withu-message-visitor-tags" id="withumsgVisitorTags">
+                    <div class="withu-message-v-tag">
+                        <div class="withu-message-v-tag-icon withu-message-icon-os">
+                            <i data-lucide="monitor"></i>
+                        </div>
+                        <span id="withumsgTagOS">--</span>
+                    </div>
+                    <div class="withu-message-v-tag">
+                        <div class="withu-message-v-tag-icon withu-message-icon-browser">
+                            <i data-lucide="globe"></i>
+                        </div>
+                        <span id="withumsgTagBrowser">--</span>
+                    </div>
+                    <div class="withu-message-v-tag">
+                        <div class="withu-message-v-tag-icon withu-message-icon-location">
+                            <i data-lucide="map-pin"></i>
+                        </div>
+                        <span id="withumsgTagLocation">--</span>
+                    </div>
+                    <div class="withu-message-v-tag">
+                        <div class="withu-message-v-tag-icon withu-message-icon-weather">
+                            <i class="qi-100-fill" id="withumsgWeatherIcon"></i>
+                        </div>
+                        <span id="withumsgTagWeather">--</span>
+                    </div>
+                </div>
+                <div class="withu-message-input-row" id="withumsgInputRow"></div>
+                <div class="withu-message-privacy-hint" id="withumsgPrivacyHint"><i data-lucide="lock"></i>QQ 信息经过加密脱敏处理，不会公开展示，请放心留言</div>
+                <div class="withu-message-editor-wrap">
+                    <div class="withu-message-editor-content" id="withumsgEditor" contenteditable="true" data-placeholder="想说点什么..."></div>
+                    <div class="withu-message-emoji-bubbles" id="withumsgEmojiBubbles"></div>
+                    <div class="withu-message-editor-toolbar">
+                        <div class="withu-message-tb-left">
+                            <button class="withu-message-tb-btn" id="withumsgBtnEmoji" title="表情">
+                                <i data-lucide="smile"></i>
+                            </button>
+                            <button class="withu-message-tb-btn" id="withumsgBtnQuote" title="随机一言">
+                                <i data-lucide="sparkles"></i>
+                            </button>
+                            <div class="withu-message-switch-wrap" id="withumsgEnterToSendWrap">
+                                <div class="withu-message-switch"></div>
+                                <span class="withu-message-switch-text">Enter 发送</span>
+                            </div>
+                        </div>
+                        <span class="withu-message-char-counter" id="withumsgCharCounter">0/500</span>
+                        <button class="withu-message-submit-btn" id="withumsgSubmitBtn">
+                            <span class="withu-message-submit-label">发送留言</span>
+                            <i data-lucide="send" class="withu-message-submit-icon" style="width:18px;height:18px;"></i>
+                            <i data-lucide="loader" class="withu-message-submit-loader withu-message-lucide-loader" style="width:18px;height:18px;"></i>
+                            <i data-lucide="check" class="withu-message-submit-check" style="width:18px;height:18px;"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 留言弹窗配置输出 -->
+    <script>
+        window.WITHU_CONFIG = window.WITHU_CONFIG || {};
+        window.WITHU_CONFIG.userCity = "湖北 · 武汉";
+        window.WITHU_CONFIG.anonymousAvatar = "/Lovefolder/20250310095643_67ce46dbe2fa8.webp";
+    </script>
+
+    <!-- 极验验证与留言提交绑定 -->
+    <script>
+    $(function() {
+        if (typeof GeetestHelper !== 'undefined') {
+            var siteTitle = (window.WITHU_CONFIG && window.WITHU_CONFIG.title) || '';
+
+            GeetestHelper.init({
+                toast: {
+                    success: function(msg) { Toastify.showScenario('success', { text: msg }); },
+                    error: function(msg) { Toastify.showScenario('error', { text: msg }); },
+                    warning: function(msg) { Toastify.showScenario('warning', { text: msg }); }
+                },
+                onClose: function() {
+                    $('#leavingPost').removeAttr('disabled').text('提交留言');
+                },
+                onSuccess: function(result) {
+                    if (typeof submitMessage === 'function') {
+                        submitMessage(result);
+                    }
+                }
+            });
+
+            $('#leavingPost').off('click.withuGeetest').on('click.withuGeetest', function() {
+                var qq = $("input[name='qq']").val();
+                var name = $("input[name='name']").val();
+                var text = $("textarea[name='text']").val();
+
+                if (!qq || !name || !text) {
+                    Toastify.showScenario('warning', { text: '留言提交失败 表单输入不完整！' });
+                    return false;
+                }
+
+                if (typeof containsBannedChar === 'function' && containsBannedChar((name || '') + ' ' + (text || ''))) {
+                    Toastify.showScenario('warning', { text: '留言包含违禁内容，请修改后重试' });
+                    return false;
+                }
+
+                $('#leavingPost').text('请完成验证...').attr('disabled', 'disabled');
+                GeetestHelper.show();
+            });
+        } else {
+            $('#leavingPost').off('click.withuGeetest').on('click.withuGeetest', function() {
+                var qq = $("input[name='qq']").val();
+                var name = $("input[name='name']").val();
+                var text = $("textarea[name='text']").val();
+
+                if (!qq || !name || !text) {
+                    Toastify.showScenario('warning', { text: '留言提交失败 表单输入不完整！' });
+                    return false;
+                }
+
+                if (typeof containsBannedChar === 'function' && containsBannedChar((name || '') + ' ' + (text || ''))) {
+                    Toastify.showScenario('warning', { text: '留言包含违禁内容，请修改后重试' });
+                    return false;
+                }
+
+                if (typeof submitMessage === 'function') {
+                    submitMessage({});
+                }
+            });
+        }
+    });
+    </script>
+
+
+<link rel="stylesheet" href="/Style/Font/font_footer/iconfont.css">
+
+<script src="/Style/vendor/confetti/confetti.browser.min.js"></script>
+<script src="/assets/js/page-messages.js"></script>
+<script src="/Style/toastify/lucide.min.js"></script>
+<script src="/Style/toastify/toastify.js"></script>
+<script>if(typeof lucide!=='undefined')lucide.createIcons();</script>
+<script src="/Style/js/clipboard.min.js"></script>
+<script src="/assets/js/clipboard.js"></script>
+<script src="/assets/js/tooltip.js"></script>
+<script src="/Style/js/view-image.min.js"></script>
+<script src="/Style/LoveListStyle/carousel.umd.js"></script>
+<script src="/Style/LoveListStyle/carousel.thumbs.umd.js"></script>
+<script src="/Style/LoveListStyle/fancybox.umd.js"></script>
+<script src="/assets/js/page-lovelist.js"></script>
+<script src="/assets/js/page-index.js"></script>
+<script src="/assets/js/page-detail.js"></script>
+<script src="/assets/js/page-album-detail.js"></script>
+<script src="/assets/js/html2canvas.min.js"></script>
+<script src="/assets/js/chat.js"></script>
+
+<script src="/assets/js/visitor-hash.js"></script>
+<script src="/assets/js/interaction.js"></script>
+<script src="/assets/js/context-menu.js"></script>
+
+
+<!-- 足迹地图弹窗 -->
+<!-- ============ 足迹地图弹窗 ============ -->
 <div class="withu-map-overlay" id="withuMapOverlay" style="display:none;">
     <div class="withu-map-modal">
         <div class="withu-map">

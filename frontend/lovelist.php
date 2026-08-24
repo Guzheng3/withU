@@ -2949,6 +2949,3170 @@
             </ul>
 
     <?php include __DIR__ . '/inc/head-avatars.php'; ?>
+
+
+    <svg class="waves" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
+        viewBox="0 24 150 28" preserveAspectRatio="none" shape-rendering="auto">
+        <defs>
+            <path id="gentle-wave" d="M-160 44c30 0 58-18 88-18s 58 18 88 18 58-18 88-18 58 18 88 18 v44h-352z" />
+        </defs>
+        <g class="parallax">
+            <use xlink:href="#gentle-wave" x="48" y="0" fill="rgba(255,255,255,0.7" />
+            <use xlink:href="#gentle-wave" x="48" y="3" fill="rgba(255,255,255,0.5)" />
+            <use xlink:href="#gentle-wave" x="48" y="5" fill="rgba(255,255,255,0.3)" />
+            <use xlink:href="#gentle-wave" x="48" y="7" fill="#fff" />
+        </g>
+    </svg>
+
+    <ul class="pointList">
+                    <li class="point active" data-index="0"></li>
+                    <li class="point " data-index="1"></li>
+                    <li class="point " data-index="2"></li>
+                    <li class="point " data-index="3"></li>
+                    <li class="point " data-index="4"></li>
+                    <li class="point " data-index="5"></li>
+                    <li class="point " data-index="6"></li>
+                    <li class="point " data-index="7"></li>
+            </ul>
+</div>
+
+<div class="Width_limit_10rem">
+    <div class="withu-sticky-sentinel" id="withuStickySentinel"></div>
+</div>
+
+<div class="withu-nav-placeholder" id="withuNavPlaceholder"></div>
+<div class="withu-nav-wrapper" id="withuNavWrapper">
+    <nav class="withu-nav-island-container" id="withuNavIsland">
+        <div class="withu-nav-indicator" id="withuNavIndicator"></div>
+
+                <a href="articles.php"
+           class="withu-nav-island-item  "
+           draggable="false"
+           data-desc="写下日常、心情与想念"
+           data-meta="Memory Notes">
+            <i class="ph-fill ph-notebook"></i>
+            <span>点滴</span>        </a>
+                <a href="messages.php"
+           class="withu-nav-island-item  "
+           draggable="false"
+           data-desc="留下想说的话与温柔回应"
+           data-meta="Kind Messages">
+            <i class="ph-fill ph-chat-teardrop-dots"></i>
+            <span>留言</span>        </a>
+                <a href="timeline.php"
+           class="withu-nav-island-item  "
+           draggable="false"
+           data-desc="回看我们一路走来的轨迹"
+           data-meta="Steps of Us">
+            <i class="ph-fill ph-clock-countdown"></i>
+            <span>轨迹</span>        </a>
+                <a href="index.php"
+           class="withu-nav-island-item  nav-home"
+           draggable="false"
+           data-desc="收好我们的日常与心动"
+           data-meta="Our Cozy Place">
+            <i class="ph-fill ph-house"></i>
+                    </a>
+                <a href="albums.php"
+           class="withu-nav-island-item  "
+           draggable="false"
+           data-desc="收藏见面与出游的闪亮瞬间"
+           data-meta="Photo Keepsakes">
+            <i class="ph-fill ph-camera"></i>
+            <span>相册</span>        </a>
+                <a href="lovelist.php"
+           class="withu-nav-island-item active "
+           draggable="false"
+           data-desc="记下想一起完成的心愿"
+           data-meta="Plans Together">
+            <i class="ph-fill ph-list-checks"></i>
+            <span>清单</span>        </a>
+                <a href="about.php"
+           class="withu-nav-island-item  "
+           draggable="false"
+           data-desc="用对话回放我们的故事"
+           data-meta="Story Replay">
+            <i class="ph-fill ph-book-open-text"></i>
+            <span>关于</span>        </a>
+            </nav>
+</div>
+
+<div class="Width_limit_10rem">
+    <div class="withu-page-header">
+        <div class="withu-meta-container">
+            <div class="withu-meta-tag" id="withuMetaTag">
+                <i class="fa-solid fa-star-of-life withu-meta-icon"></i>
+                <span id="withuMetaText">Sanctuary of Us</span>
+                <i class="fa-solid fa-star-of-life withu-meta-icon"></i>
+            </div>
+            <div class="withu-meta-line" id="withuMetaLine"></div>
+        </div>
+        <h2 class="withu-hero-title" id="withuHeroTitle"></h2>
+    </div>
+</div>
+
+<!-- 情侣头像点击效果已迁移到 components.js 的 AvatarInteraction 模块 -->
+
+    <title>清单 — withU Demo</title>
+    <meta name="description" content="withU 是一个适合记录恋爱日常与纪念时刻的情侣小站，支持相册、时间轴、点滴文章、留言互动和邀请页面，让每一段关系都能拥有自己的专属回忆空间。">
+    <meta name="keywords" content="情侣网站,恋爱记录,祝福留言,情侣相册,恋爱清单,爱情纪念,情侣头像框,祝福语句,情侣互动,爱情相册,情侣事件记录,情侣留言,爱情故事,情感交流,用户互动,祝福卡片,音乐分享,甜蜜瞬间,情侣活动,爱情动态,withU">
+    <meta name="author" content="Ki">
+    <meta name="love-theme" content="withU-情侣小站">
+    <meta name="copyright" content="2024 withU Web All Rights Reserved">
+</head>
+
+<body class="bg-pdot-vignette">
+    <div id="pjax-container">
+        <link rel="stylesheet" href="/Style/LoveListStyle/styleCarousel.css" />
+        <style>
+            /* --- 样式保持：简约清新风 --- */
+            :root {
+                --main-accent: #71b7ff;
+                --text-primary: #333;
+                --text-secondary: #999;
+                --bg-card: #fff;
+                --shadow-soft: 0 8px 25px -5px rgba(0, 0, 0, 0.08);
+                --radius-lg: 16px;
+            }
+
+            /* 搜索与Tab */
+            .Search_warp {
+                margin-bottom: 2rem;
+            }
+
+            .search-box {
+                position: relative;
+                width: 90%;
+                max-width: 550px;
+                margin: 0 auto;
+            }
+
+            .Search_warp #search {
+                padding: 1.1rem 1.8rem;
+                border: none;
+                background: #fff;
+                box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+                border-radius: 50px;
+                width: 100%;
+                outline: none;
+                transition: 0.3s;
+                box-sizing: border-box;
+                font-family: 'Noto Serif SC', serif;
+                color: #515151;
+            }
+
+            .Search_warp #search:focus {
+                box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            }
+
+            .Search_warp #search_btn {
+                padding: 0.7rem 1.8rem;
+                border: none;
+                border-radius: 50px;
+                color: #fff;
+                background: var(--main-accent);
+                font-weight: 600;
+                position: absolute;
+                top: 50%;
+                right: 8px;
+                transform: translateY(-50%);
+                cursor: pointer;
+                font-family: 'Noto Serif SC', serif;
+                transition: all .3s;
+            }
+
+            .Tab_Warp {
+                font-family: 'Noto Serif SC', serif;
+                width: fit-content;
+                margin: 1rem auto 2rem;
+            }
+
+            .LgLoveList-tab-container {
+                position: relative;
+                display: inline-flex;
+                background: rgb(164 164 164 / 12%);
+                border-radius: 12px;
+                padding: 3px;
+                gap: 2px;
+                backdrop-filter: blur(10px);
+                -webkit-backdrop-filter: blur(10px);
+            }
+
+            .LgLoveList-tab-slider {
+                position: absolute;
+                top: 3px;
+                left: 0;
+                height: calc(100% - 6px);
+                background: #ffffff;
+                border-radius: 10px;
+                transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1),
+                            width 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+                z-index: 0;
+                pointer-events: none;
+            }
+
+            .LgLoveList-tab {
+                position: relative;
+                z-index: 1;
+                text-align: center;
+                padding: 8px 16px;
+                border-radius: 10px;
+                cursor: pointer;
+                color: rgba(60, 60, 67, 0.6);
+                font-weight: 500;
+                transition: color 0.3s ease;
+                font-size: 0.85rem;
+                background: transparent;
+                border: none;
+                white-space: nowrap;
+            }
+
+            .LgLoveList-tab-active {
+                color: #000;
+                font-weight: 600;
+            }
+
+            .LgLoveList-tab:hover:not(.LgLoveList-tab-active) {
+                color: rgba(60, 60, 67, 0.85);
+            }
+
+            #list_container {
+                max-width: 900px;
+                margin: 0 auto;
+                padding: 0 16px;
+                position: relative;
+            }
+
+            /* --- 卡片核心样式 --- */
+            .love-card {
+                background: var(--bg-card);
+                border-radius: var(--radius-lg);
+                box-shadow: var(--shadow-soft);
+                margin-bottom: 1.2rem;
+                overflow: hidden;
+                transition: transform 0.3s;
+            }
+
+            .love-card:hover {
+                transform: translateY(-2px);
+            }
+
+            /* 高亮效果（从首页跳转过来时）- 流光边框 */
+            .love-card.withu-highlight {
+                position: relative;
+                overflow: hidden;
+            }
+
+            .love-card.withu-highlight::before {
+                content: '';
+                position: absolute;
+                inset: 0;
+                border-radius: inherit;
+                padding: 2px;
+                background: conic-gradient(
+                    from var(--highlight-angle, 0deg),
+                    transparent 0%,
+                    rgba(113, 183, 255, 0.8) 10%,
+                    rgba(167, 130, 255, 0.6) 15%,
+                    transparent 25%
+                );
+                -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+                -webkit-mask-composite: xor;
+                mask-composite: exclude;
+                animation: highlightSweep 4s linear forwards;
+                pointer-events: none;
+                z-index: 10;
+            }
+
+            .love-card.withu-highlight::after {
+                content: '';
+                position: absolute;
+                inset: -2px;
+                border-radius: inherit;
+                background: radial-gradient(circle at var(--glow-x, 50%) var(--glow-y, 0%), rgba(113, 183, 255, 0.15), transparent 60%);
+                animation: highlightGlow 4s ease-in-out forwards;
+                pointer-events: none;
+                z-index: 9;
+            }
+
+            @keyframes highlightSweep {
+                0% { --highlight-angle: 0deg; opacity: 1; }
+                90% { --highlight-angle: 1080deg; opacity: 1; }
+                100% { --highlight-angle: 1080deg; opacity: 0; }
+            }
+
+            @keyframes highlightGlow {
+                0% { opacity: 0; }
+                10% { opacity: 1; }
+                90% { opacity: 1; }
+                100% { opacity: 0; }
+            }
+
+            @property --highlight-angle {
+                syntax: '<angle>';
+                initial-value: 0deg;
+                inherits: false;
+            }
+
+            .love-card.withu-highlight-fade {
+                /* 清除态 */
+            }
+
+            /* 1. 头部 */
+            .card-header {
+                padding: 1.2rem 1.5rem;
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                cursor: pointer;
+                background: #fff;
+                position: relative;
+                z-index: 2;
+                user-select: none;
+            }
+
+            .header-left {
+                display: flex;
+                align-items: center;
+                gap: 12px;
+                flex: 1;
+                min-width: 0;
+                overflow: hidden;
+                padding-left: 4px;
+            }
+
+            .status-dot {
+                width: 10px;
+                height: 10px;
+                border-radius: 50%;
+                flex-shrink: 0;
+            }
+
+            .status-dot.com {
+                background: var(--main-accent);
+                box-shadow: 0 0 0 4px rgba(113, 183, 255, 0.2);
+            }
+
+            .status-dot.air {
+                background: #e0e0e0;
+                box-shadow: 0 0 0 4px rgba(204, 204, 204, 0.2);
+            }
+
+            .event-name {
+                font-size: 1.1rem;
+                font-weight: 600;
+                color: var(--text-primary);
+                font-family: 'Noto Serif SC', serif;
+                transition: color 0.3s;
+                white-space: nowrap;
+                overflow: hidden;
+                text-overflow: ellipsis;
+                min-width: 0;
+            }
+
+            .status-dot.air+.event-name {
+                color: #bbb;
+                font-weight: 500;
+            }
+
+            /* 标题后标识图标 */
+            .event-tags {
+                display: inline-flex;
+                align-items: center;
+                gap: 5px;
+                flex-shrink: 0;
+                margin-left: 6px;
+            }
+            .event-tags .etag {
+                width: 22px;
+                height: 22px;
+                border-radius: 50%;
+                background: #f0f0f0;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                flex-shrink: 0;
+            }
+            .event-tags .etag svg {
+                width: 13px;
+                height: 13px;
+                stroke-width: 1.8;
+                color: #999;
+            }
+            .status-dot.com ~ .event-tags .etag { background: #f0f0f0; }
+            .status-dot.com ~ .event-tags .etag svg { color: #b1b1b1; }
+            .status-dot.air ~ .event-tags .etag { background: #f0f0f0; }
+            .status-dot.air ~ .event-tags .etag svg { color: #bbb; }
+
+            .toggle-icon {
+                font-size: 1rem;
+                color: #ccc;
+                transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+                width: 24px;
+                height: 24px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+            }
+
+            .love-card.active .toggle-icon {
+                transform: rotate(180deg);
+                color: var(--main-accent);
+            }
+
+            .love-card.active .card-header {
+                background: #fafafa;
+            }
+
+            /* 2. 内容折叠区 */
+            .card-body {
+                display: none;
+                border-top: 1px solid #f0f0f0;
+                background: #fff;
+            }
+
+            .body-content {
+                display: flex;
+                flex-direction: column;
+                position: relative;
+                overflow: hidden;
+            }
+
+
+            /* 面板内完整标题（在body-info内部） */
+            .body-full-title {
+                font-size: 1.25rem;
+                font-weight: 300;
+                color: #9f9f9f;
+                line-height: 1.6;
+                word-break: break-word;
+                padding-bottom: 1rem;
+                margin-bottom: 0.5rem;
+                border-bottom: 1px solid transparent;
+                background-image: linear-gradient(to right, #e8e8e8, transparent);
+                background-size: 100% 1px;
+                background-position: bottom;
+                background-repeat: no-repeat;
+            }
+
+            /* 成就/状态水印 */
+            .achievement-watermark {
+                position: absolute;
+                bottom: 16px;
+                right: 16px;
+                pointer-events: none;
+                z-index: 2;
+            }
+            .achievement-watermark i {
+                font-size: 4.5rem;
+                color: #71b7ff;
+            }
+            .achievement-watermark.wm-pending i {
+                font-size: 3.5rem;
+                color: #e0e0e0;
+            }
+
+            .body-gallery {
+                width: 100%;
+                height: 240px;
+                background: #f8f8f8;
+                position: relative;
+                overflow: hidden;
+            }
+
+            .ConventionPhoto,
+            .f-carousel__viewport,
+            .f-carousel__track,
+            .f-carousel__slide {
+                height: 100% !important;
+            }
+
+            .f-carousel__slide img.lazy-loaded,
+            .f-carousel__slide img {
+                width: 100%;
+                height: 100% !important;
+                object-fit: cover;
+                display: block;
+            }
+
+            .body-info {
+                padding: 1.5rem;
+                display: flex;
+                flex-direction: column;
+                gap: 2rem;
+            }
+
+            @media (min-width: 768px) {
+                .body-content {
+                    flex-direction: row;
+                    height: 360px;
+                }
+
+                .body-gallery {
+                    flex: 6;
+                    height: 100%;
+                    border-right: 1px solid #f0f0f0;
+                }
+
+                .body-info {
+                    flex: 4;
+                    padding: 2.5rem 2rem;
+                    justify-content: center;
+                    overflow-y: auto;
+                }
+            }
+
+            .info-item {
+                display: flex;
+                flex-direction: column;
+                gap: 4px;
+            }
+
+            .info-label {
+                font-size: 0.8rem;
+                color: #aaa;
+                font-weight: 500;
+                text-transform: uppercase;
+                letter-spacing: 0.5px;
+            }
+
+            .info-value {
+                font-size: 1rem;
+                color: #444;
+                font-weight: 500;
+                line-height: 1.5;
+            }
+
+            .info-item.remark-item .info-value {
+                font-size: 1rem;
+                color: #504b4b;
+                margin-top: 5px;
+                font-weight: 300;
+            }
+
+            /* 达成地点（与相册归属地统一） */
+            .lovelist-location-link {
+                display: inline-flex;
+                align-items: center;
+                gap: 6px;
+                padding: 4px 10px 4px 4px;
+                border-radius: 999px;
+                background: #f3f4f6;
+                font-size: 12px;
+                font-weight: 500;
+                color: #c5c5c5;
+                transition: all 0.2s ease;
+                max-width: 180px;
+                width: fit-content;
+            }
+
+            .lovelist-location-link i {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                width: 22px;
+                height: 22px;
+                border-radius: 50%;
+                background: #ffffff;
+                font-size: 11px;
+                color: #9ca3af;
+                flex-shrink: 0;
+                transition: all 0.2s ease;
+            }
+
+            .lovelist-location-link span {
+                overflow: hidden;
+                text-overflow: ellipsis;
+                white-space: nowrap;
+                flex: 1;
+                min-width: 0;
+            }
+
+            .lovelist-location-link.has-coords {
+                cursor: pointer;
+            }
+
+            .lovelist-location-link.has-coords:hover {
+                background: #f0f9ff;
+                color: #3b82f6;
+            }
+
+            .lovelist-location-link.has-coords:hover i {
+                background: #dbeafe;
+                color: #3b82f6;
+            }
+
+            .lovelist-location-link.has-coords:active {
+                transform: scale(0.95);
+            }
+
+            .no-img-placeholder {
+                height: 100%;
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                justify-content: center;
+                color: #ddd;
+                gap: 8px;
+                font-size: 0.9rem;
+            }
+
+            .no-img-placeholder svg {
+                width: 32px;
+                height: 32px;
+                fill: #eee;
+            }
+
+            /* --- 强制隐藏轮播图按钮 --- */
+            .f-carousel__nav,
+            .f-button.is-prev,
+            .f-button.is-next,
+            .f-carousel__button {
+                display: none !important;
+                visibility: hidden !important;
+                opacity: 0 !important;
+                pointer-events: none !important;
+            }
+
+            /* --- 图片计数器 --- */
+            .img-counter {
+                position: absolute;
+                bottom: 15px;
+                right: 15px;
+                background: rgba(0, 0, 0, 0.5);
+                color: #fff;
+                font-size: 12px;
+                padding: 4px 10px;
+                border-radius: 20px;
+                z-index: 10;
+                pointer-events: none;
+                backdrop-filter: blur(4px);
+                font-family: Arial, sans-serif;
+                font-weight: 500;
+                letter-spacing: 1px;
+            }
+
+            /* --- Tab 图标样式优化 --- */
+            .LgLoveList-tab {
+                /* 弹性布局，图标文字水平居中 */
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                gap: 6px;
+                /* 图标和文字的间距 */
+                position: relative;
+            }
+
+            /* 图标基础样式 */
+            .LgLoveList-tab i {
+                font-size: 16px;
+                transition: all 0.3s ease;
+                line-height: 1;
+                vertical-align: middle;
+            }
+
+            /* 激活状态下图标 */
+            .LgLoveList-tab-active i {
+                transform: scale(1.1);
+                color: #000;
+            }
+
+            /* ── 恋爱清单独立骨架条（按 _dev/gujia.html 落地） ── */
+            @keyframes withu-skeleton-screen-shimmer {
+                0% { background-position: -1000px 0; }
+                100% { background-position: 1000px 0; }
+            }
+            .withu-skeleton-screen-wrap {
+                display: grid;
+                gap: 16px;
+                opacity: 0;
+                visibility: hidden;
+                position: absolute;
+                top: 0;
+                left: 16px;
+                right: 16px;
+                z-index: 8;
+                pointer-events: none;
+                transform: translateY(4px);
+                transition: opacity 0.24s ease, transform 0.24s ease, visibility 0s linear 0.24s;
+            }
+            .withu-skeleton-screen-wrap.is-active {
+                opacity: 1;
+                visibility: visible;
+                transform: translateY(0);
+                transition-delay: 0s;
+            }
+            .withu-skeleton-screen-anim {
+                background-color: #e2e5e7;
+                background-image: linear-gradient(
+                    90deg,
+                    rgba(255, 255, 255, 0) 0%,
+                    rgba(255, 255, 255, 0.6) 20%,
+                    rgba(255, 255, 255, 0) 40%
+                );
+                background-size: 1000px 100%;
+                background-repeat: no-repeat;
+                animation: withu-skeleton-screen-shimmer 2s infinite linear forwards;
+                overflow: hidden;
+                position: relative;
+            }
+            .withu-skeleton-screen-text { border-radius: 4px; }
+            .withu-skeleton-screen-circle { border-radius: 50%; }
+            .withu-skeleton-screen-flex { display: flex; }
+            .withu-skeleton-screen-items-center { align-items: center; }
+            .withu-skeleton-screen-justify-between { justify-content: space-between; }
+            .withu-skeleton-screen-gap-3 { gap: 12px; }
+            .withu-skeleton-screen-gap-4 { gap: 16px; }
+            .withu-skeleton-screen-card {
+                box-sizing: border-box;
+                background-color: #ffffff;
+                padding: 16px 24px;
+                border-radius: 16px;
+                width: 100%;
+                box-shadow: none;
+                border: none;
+                margin: 0;
+            }
+            .withu-skeleton-screen-left-wrap { flex: 1; }
+            .withu-skeleton-screen-dot { width: 22px; height: 22px; flex-shrink: 0; }
+            .withu-skeleton-screen-line { width: 100%; max-width: 240px; height: 18px; }
+            .withu-skeleton-screen-arrow { width: 16px; height: 16px; border-radius: 3px; flex-shrink: 0; }
+            #list_data,
+            .query_data {
+                transition: none;
+            }
+            .withu-list-loading-stage {
+                opacity: 0 !important;
+                pointer-events: none;
+            }
+            /* 骨架态移除后的内容淡入 */
+            .love-card:not(.withu-skeleton-card) > * {
+                transition: opacity 0.3s ease, background 0.3s ease;
+            }
+
+            /* 列表淡入动画 */
+            .withu-list-fade-in {
+                animation: withuListFadeIn 0.4s ease-out forwards;
+            }
+            .withu-list-fade-in .love-card {
+                animation: withuCardSlideIn 0.35s ease-out backwards;
+            }
+            .withu-list-fade-in .love-card:nth-child(1) { animation-delay: 0ms; }
+            .withu-list-fade-in .love-card:nth-child(2) { animation-delay: 40ms; }
+            .withu-list-fade-in .love-card:nth-child(3) { animation-delay: 80ms; }
+            .withu-list-fade-in .love-card:nth-child(4) { animation-delay: 120ms; }
+            .withu-list-fade-in .love-card:nth-child(5) { animation-delay: 160ms; }
+            .withu-list-fade-in .love-card:nth-child(6) { animation-delay: 200ms; }
+            .withu-list-fade-in .love-card:nth-child(7) { animation-delay: 240ms; }
+            .withu-list-fade-in .love-card:nth-child(8) { animation-delay: 280ms; }
+            .withu-list-fade-in .love-card:nth-child(9) { animation-delay: 320ms; }
+            .withu-list-fade-in .love-card:nth-child(10) { animation-delay: 360ms; }
+            .withu-list-fade-in .love-card:nth-child(n+11) { animation-delay: 400ms; }
+
+            @keyframes withuListFadeIn {
+                from { opacity: 0; }
+                to { opacity: 1; }
+            }
+            @keyframes withuCardSlideIn {
+                from {
+                    opacity: 0;
+                    transform: translateY(12px);
+                }
+                to {
+                    opacity: 1;
+                    transform: translateY(0);
+                }
+            }
+
+            /* Tab 数量徽章 - 自适应药丸形 */
+            .tab-badge {
+                display: inline-flex;
+                align-items: center;
+                justify-content: center;
+                min-width: 18px;
+                height: 18px;
+                padding: 0 5px;
+                font-size: 0.65rem;
+                font-weight: 600;
+                font-family: 'Inter', sans-serif;
+                color: #999;
+                background: #f0f0f0;
+                border-radius: 10px;
+                margin-left: 4px;
+                transition: all 0.3s ease;
+                box-sizing: border-box;
+            }
+
+            .LgLoveList-tab-active .tab-badge {
+                background: #58aaff;
+                color: #ffffff;
+            }
+
+            /* --- 搜索框样式优化 --- */
+            .search-box {
+                position: relative;
+                width: 90%;
+                max-width: 550px;
+                margin: 0 auto;
+                display: flex;
+                align-items: center;
+            }
+
+            /* --- 搜索范围内嵌胶囊 --- */
+            .scope-tag {
+                position: absolute;
+                left: 10px;
+                top: 50%;
+                transform: translateY(-50%);
+                display: inline-flex;
+                align-items: center;
+                gap: 6px;
+                padding: 8px 14px;
+                background: #f8f8f8;
+                border-radius: 20px;
+                cursor: pointer;
+                font-family: 'Noto Serif SC', serif;
+                font-size: 0.82rem;
+                font-weight: 500;
+                color: #999;
+                transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+                user-select: none;
+                z-index: 2;
+                white-space: nowrap;
+            }
+
+            .scope-tag:hover {
+                background: #f0f0f0;
+                color: #666;
+            }
+
+            .scope-tag.active {
+                background: #1d1d1f;
+                color: #fff;
+            }
+
+            .scope-tag.active:hover {
+                background: #333;
+                color: #fff;
+            }
+
+            .scope-tag i {
+                font-size: 11px;
+            }
+
+            .scope-tag-text {
+                font-family: 'Noto Serif SC', serif;
+            }
+
+            /* 调整搜索框 padding 给标签留位置 */
+            .Search_warp #search {
+                padding: 1.1rem 6.5rem 1.1rem 7rem;
+                font-family: 'Noto Serif SC', serif;
+            }
+
+            /* 查询按钮带搜索图标 */
+            .Search_warp #search_btn {
+                display: inline-flex;
+                align-items: center;
+                gap: 6px;
+                padding: 0.7rem 1.5rem;
+            }
+
+            .Search_warp #search_btn i {
+                font-size: 13px;
+            }
+
+            .Search_warp #search_btn:hover {
+                background: #5aa8f5;
+            }
+
+            /* Loading 旋转动画 */
+            .Search_warp #search_btn i.fa-spinner {
+                animation: spin 1s linear infinite;
+            }
+
+            @keyframes spin {
+                from {
+                    transform: rotate(0deg);
+                }
+
+                to {
+                    transform: rotate(360deg);
+                }
+            }
+
+            /* 移动端适配 */
+            @media (max-width: 480px) {
+                .scope-tag {
+                    padding: 6px 10px;
+                    font-size: 0.75rem;
+                    gap: 5px;
+                    left: 6px;
+                }
+
+                .scope-tag i {
+                    font-size: 10px;
+                }
+
+                .Search_warp #search {
+                    padding: 1rem 5.5rem 1rem 6rem;
+                    font-size: 0.85rem;
+                }
+
+                .Search_warp #search_btn {
+                    padding: 0.6rem 1rem;
+                    font-size: 0.8rem;
+                }
+
+                .Search_warp #search_btn i {
+                    font-size: 11px;
+                }
+
+                /* Tab 移动端优化 */
+                .Tab_Warp {
+                    max-width: 100%;
+                    margin: 0.8rem auto 1.2rem;
+                }
+
+                .LgLoveList-tab-container {
+                    padding: 2px;
+                    gap: 2px;
+                    border-radius: 10px;
+                }
+
+                .LgLoveList-tab {
+                    padding: 7px 10px;
+                    font-size: 0.8rem;
+                    gap: 4px;
+                }
+
+                .LgLoveList-tab i {
+                    font-size: 14px;
+                }
+
+                .LgLoveList-tab-slider {
+                    top: 2px;
+                    height: calc(100% - 4px);
+                    border-radius: 8px;
+                }
+
+                .tab-badge {
+                    min-width: 16px;
+                    height: 16px;
+                    padding: 0 4px;
+                    font-size: 0.6rem;
+                    border-radius: 8px;
+                }
+            }
+        </style>
+
+        <div class="Width_limit_10rem">
+            <div class="central mar_t0">
+
+                
+                                    <div class="Search_warp">
+                        <div class="Tab_Warp">
+                            <div class="LgLoveList-tab-container">
+                                <div class="LgLoveList-tab-slider"></div>
+                                <div class="LgLoveList-tab" data-id="1">
+                                    <i class="ph-fill ph-check-circle"></i>
+                                    <span>已完成</span>
+                                    <span class="tab-badge">23</span>
+                                </div>
+
+                                <div class="LgLoveList-tab LgLoveList-tab-active" data-id="2">
+                                    <i class="ph-fill ph-heart"></i>
+                                    <span>全部</span>
+                                    <span class="tab-badge">36</span>
+                                </div>
+
+                                <div class="LgLoveList-tab" data-id="3">
+                                    <i class="ph-fill ph-clock"></i>
+                                    <span>未完成</span>
+                                    <span class="tab-badge">13</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="search-box">
+                            <!-- 内嵌范围胶囊 -->
+                            <div class="scope-tag" id="scopeTag" data-scope="all">
+                                <i class="fa-solid fa-heart"></i>
+                                <span class="scope-tag-text">全部</span>
+                            </div>
+
+                            <input id="search" name="search" type="text" placeholder="搜索甜蜜回忆...">
+
+                            <button id="search_btn" class="shadow-blur">
+                                <i class="fa-solid fa-magnifying-glass"></i>
+                                <span>查询</span>
+                            </button>
+                        </div>
+                    </div>
+
+                    <div id="list_container">
+                        <div id="withuListSkeleton" class="withu-skeleton-screen-wrap" aria-hidden="true">
+                                                            <div class="withu-skeleton-screen-card withu-skeleton-screen-flex withu-skeleton-screen-items-center withu-skeleton-screen-justify-between withu-skeleton-screen-gap-4">
+                                    <div class="withu-skeleton-screen-flex withu-skeleton-screen-items-center withu-skeleton-screen-gap-3 withu-skeleton-screen-left-wrap">
+                                        <div class="withu-skeleton-screen-anim withu-skeleton-screen-circle withu-skeleton-screen-dot"></div>
+                                        <div class="withu-skeleton-screen-anim withu-skeleton-screen-text withu-skeleton-screen-line"></div>
+                                    </div>
+                                    <div class="withu-skeleton-screen-anim withu-skeleton-screen-text withu-skeleton-screen-arrow"></div>
+                                </div>
+                                                            <div class="withu-skeleton-screen-card withu-skeleton-screen-flex withu-skeleton-screen-items-center withu-skeleton-screen-justify-between withu-skeleton-screen-gap-4">
+                                    <div class="withu-skeleton-screen-flex withu-skeleton-screen-items-center withu-skeleton-screen-gap-3 withu-skeleton-screen-left-wrap">
+                                        <div class="withu-skeleton-screen-anim withu-skeleton-screen-circle withu-skeleton-screen-dot"></div>
+                                        <div class="withu-skeleton-screen-anim withu-skeleton-screen-text withu-skeleton-screen-line"></div>
+                                    </div>
+                                    <div class="withu-skeleton-screen-anim withu-skeleton-screen-text withu-skeleton-screen-arrow"></div>
+                                </div>
+                                                            <div class="withu-skeleton-screen-card withu-skeleton-screen-flex withu-skeleton-screen-items-center withu-skeleton-screen-justify-between withu-skeleton-screen-gap-4">
+                                    <div class="withu-skeleton-screen-flex withu-skeleton-screen-items-center withu-skeleton-screen-gap-3 withu-skeleton-screen-left-wrap">
+                                        <div class="withu-skeleton-screen-anim withu-skeleton-screen-circle withu-skeleton-screen-dot"></div>
+                                        <div class="withu-skeleton-screen-anim withu-skeleton-screen-text withu-skeleton-screen-line"></div>
+                                    </div>
+                                    <div class="withu-skeleton-screen-anim withu-skeleton-screen-text withu-skeleton-screen-arrow"></div>
+                                </div>
+                                                            <div class="withu-skeleton-screen-card withu-skeleton-screen-flex withu-skeleton-screen-items-center withu-skeleton-screen-justify-between withu-skeleton-screen-gap-4">
+                                    <div class="withu-skeleton-screen-flex withu-skeleton-screen-items-center withu-skeleton-screen-gap-3 withu-skeleton-screen-left-wrap">
+                                        <div class="withu-skeleton-screen-anim withu-skeleton-screen-circle withu-skeleton-screen-dot"></div>
+                                        <div class="withu-skeleton-screen-anim withu-skeleton-screen-text withu-skeleton-screen-line"></div>
+                                    </div>
+                                    <div class="withu-skeleton-screen-anim withu-skeleton-screen-text withu-skeleton-screen-arrow"></div>
+                                </div>
+                                                            <div class="withu-skeleton-screen-card withu-skeleton-screen-flex withu-skeleton-screen-items-center withu-skeleton-screen-justify-between withu-skeleton-screen-gap-4">
+                                    <div class="withu-skeleton-screen-flex withu-skeleton-screen-items-center withu-skeleton-screen-gap-3 withu-skeleton-screen-left-wrap">
+                                        <div class="withu-skeleton-screen-anim withu-skeleton-screen-circle withu-skeleton-screen-dot"></div>
+                                        <div class="withu-skeleton-screen-anim withu-skeleton-screen-text withu-skeleton-screen-line"></div>
+                                    </div>
+                                    <div class="withu-skeleton-screen-anim withu-skeleton-screen-text withu-skeleton-screen-arrow"></div>
+                                </div>
+                                                            <div class="withu-skeleton-screen-card withu-skeleton-screen-flex withu-skeleton-screen-items-center withu-skeleton-screen-justify-between withu-skeleton-screen-gap-4">
+                                    <div class="withu-skeleton-screen-flex withu-skeleton-screen-items-center withu-skeleton-screen-gap-3 withu-skeleton-screen-left-wrap">
+                                        <div class="withu-skeleton-screen-anim withu-skeleton-screen-circle withu-skeleton-screen-dot"></div>
+                                        <div class="withu-skeleton-screen-anim withu-skeleton-screen-text withu-skeleton-screen-line"></div>
+                                    </div>
+                                    <div class="withu-skeleton-screen-anim withu-skeleton-screen-text withu-skeleton-screen-arrow"></div>
+                                </div>
+                                                            <div class="withu-skeleton-screen-card withu-skeleton-screen-flex withu-skeleton-screen-items-center withu-skeleton-screen-justify-between withu-skeleton-screen-gap-4">
+                                    <div class="withu-skeleton-screen-flex withu-skeleton-screen-items-center withu-skeleton-screen-gap-3 withu-skeleton-screen-left-wrap">
+                                        <div class="withu-skeleton-screen-anim withu-skeleton-screen-circle withu-skeleton-screen-dot"></div>
+                                        <div class="withu-skeleton-screen-anim withu-skeleton-screen-text withu-skeleton-screen-line"></div>
+                                    </div>
+                                    <div class="withu-skeleton-screen-anim withu-skeleton-screen-text withu-skeleton-screen-arrow"></div>
+                                </div>
+                                                            <div class="withu-skeleton-screen-card withu-skeleton-screen-flex withu-skeleton-screen-items-center withu-skeleton-screen-justify-between withu-skeleton-screen-gap-4">
+                                    <div class="withu-skeleton-screen-flex withu-skeleton-screen-items-center withu-skeleton-screen-gap-3 withu-skeleton-screen-left-wrap">
+                                        <div class="withu-skeleton-screen-anim withu-skeleton-screen-circle withu-skeleton-screen-dot"></div>
+                                        <div class="withu-skeleton-screen-anim withu-skeleton-screen-text withu-skeleton-screen-line"></div>
+                                    </div>
+                                    <div class="withu-skeleton-screen-anim withu-skeleton-screen-text withu-skeleton-screen-arrow"></div>
+                                </div>
+                                                            <div class="withu-skeleton-screen-card withu-skeleton-screen-flex withu-skeleton-screen-items-center withu-skeleton-screen-justify-between withu-skeleton-screen-gap-4">
+                                    <div class="withu-skeleton-screen-flex withu-skeleton-screen-items-center withu-skeleton-screen-gap-3 withu-skeleton-screen-left-wrap">
+                                        <div class="withu-skeleton-screen-anim withu-skeleton-screen-circle withu-skeleton-screen-dot"></div>
+                                        <div class="withu-skeleton-screen-anim withu-skeleton-screen-text withu-skeleton-screen-line"></div>
+                                    </div>
+                                    <div class="withu-skeleton-screen-anim withu-skeleton-screen-text withu-skeleton-screen-arrow"></div>
+                                </div>
+                                                            <div class="withu-skeleton-screen-card withu-skeleton-screen-flex withu-skeleton-screen-items-center withu-skeleton-screen-justify-between withu-skeleton-screen-gap-4">
+                                    <div class="withu-skeleton-screen-flex withu-skeleton-screen-items-center withu-skeleton-screen-gap-3 withu-skeleton-screen-left-wrap">
+                                        <div class="withu-skeleton-screen-anim withu-skeleton-screen-circle withu-skeleton-screen-dot"></div>
+                                        <div class="withu-skeleton-screen-anim withu-skeleton-screen-text withu-skeleton-screen-line"></div>
+                                    </div>
+                                    <div class="withu-skeleton-screen-anim withu-skeleton-screen-text withu-skeleton-screen-arrow"></div>
+                                </div>
+                                                    </div>
+
+                        <div class="query_data"></div>
+
+                        <div id="list_data">
+                                                            <div class="love-card" id="event-36" data-aos="fade-up" data-aos-delay="50">
+                                    <div class="card-header">
+                                        <div class="header-left">
+                                            <span class="status-dot com"></span>
+                                            <span class="event-name">一起去吃淘蛙</span>
+                                            <span class="event-tags">
+                                                <span class="etag"><i data-lucide="image" title="有照片"></i></span>                                                <span class="etag"><i data-lucide="map-pin" title="有定位"></i></span>                                                <span class="etag"><i data-lucide="notebook-pen" title="有备注"></i></span>                                            </span>
+                                        </div>
+                                        <div class="header-right">
+                                            <span class="toggle-icon">
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20"
+                                                    viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                                                    stroke-linecap="round" stroke-linejoin="round">
+                                                    <path d="M6 9l6 6 6-6" />
+                                                </svg>
+                                            </span>
+                                        </div>
+                                    </div>
+
+                                    <div class="card-body">
+                                        <div class="body-content">
+                                                                                        <div class="achievement-watermark">
+                                                <i class="ph-fill ph-seal-check"></i>
+                                            </div>
+                                                                                        <div class="body-gallery">
+                                                                                                    <div class="img-counter">1 / 4</div>
+                                                    <div class="f-carousel ConventionPhoto" view-image>
+                                                                                                                    <div class="f-carousel__slide">
+                                                                <img class="lazy" draggable="false" data-src="/Lovefolder/20260411053515_69d96d13af174939872800.webp" data-original="/Lovefolder/20260411053515_69d96d13af174939872800.webp" />
+                                                            </div>
+                                                                                                                    <div class="f-carousel__slide">
+                                                                <img class="lazy" draggable="false" data-src="Lovefolder/20260411053516_69d96d1401905291123552.webp" data-original="/Lovefolder/20260411053516_69d96d1401905291123552.webp" />
+                                                            </div>
+                                                                                                                    <div class="f-carousel__slide">
+                                                                <img class="lazy" draggable="false" data-src="Lovefolder/20260411053516_69d96d145e059867107434.webp" data-original="/Lovefolder/20260411053516_69d96d145e059867107434.webp" />
+                                                            </div>
+                                                                                                                    <div class="f-carousel__slide">
+                                                                <img class="lazy" draggable="false" data-src="Lovefolder/20260411053516_69d96d14a01d9816507175.webp" data-original="/Lovefolder/20260411053516_69d96d14a01d9816507175.webp" />
+                                                            </div>
+                                                                                                            </div>
+                                                                                            </div>
+
+                                            <div class="body-info">
+                                                <div class="body-full-title">一起去吃淘蛙</div>
+                                                <div class="info-item">
+                                                    <span class="info-label">完成时间 / TIME</span>
+                                                    <span class="info-value">2026-04-11</span>
+                                                </div>
+                                                <div class="info-item">
+                                                    <span class="info-label">达成地点 / LOCATION</span>
+                                                                                                        <span class="info-value lovelist-location-link has-coords" onclick="event.stopPropagation(); if(window.WithUMap) WithUMap.open({ mode:'events', coords:[113.820617,22.808944], zoom:15 });" data-tooltip="淘蛙(长安万达店)"><i class="ph-fill ph-map-pin"></i><span>淘蛙(长安万达店)</span></span>
+                                                                                                    </div>
+                                                                                                    <div class="info-item remark-item">
+                                                        <span class="info-label">清单备注 / NOTE</span>
+                                                        <span class="info-value">好像一直都在吃的路上 个个不重样</span>
+                                                    </div>
+                                                                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                                            <div class="love-card" id="event-35" data-aos="fade-up" data-aos-delay="100">
+                                    <div class="card-header">
+                                        <div class="header-left">
+                                            <span class="status-dot com"></span>
+                                            <span class="event-name">测试修改问题 2.0.7</span>
+                                            <span class="event-tags">
+                                                <span class="etag"><i data-lucide="image" title="有照片"></i></span>                                                <span class="etag"><i data-lucide="map-pin" title="有定位"></i></span>                                                                                            </span>
+                                        </div>
+                                        <div class="header-right">
+                                            <span class="toggle-icon">
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20"
+                                                    viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                                                    stroke-linecap="round" stroke-linejoin="round">
+                                                    <path d="M6 9l6 6 6-6" />
+                                                </svg>
+                                            </span>
+                                        </div>
+                                    </div>
+
+                                    <div class="card-body">
+                                        <div class="body-content">
+                                                                                        <div class="achievement-watermark">
+                                                <i class="ph-fill ph-seal-check"></i>
+                                            </div>
+                                                                                        <div class="body-gallery">
+                                                                                                    <div class="img-counter">1 / 1</div>
+                                                    <div class="f-carousel ConventionPhoto" view-image>
+                                                                                                                    <div class="f-carousel__slide">
+                                                                <img class="lazy" draggable="false" data-src="Lovefolder/20260409211730_69d7a6eaecf46322029252.webp" data-original="/Lovefolder/20260409211730_69d7a6eaecf46322029252.webp" />
+                                                            </div>
+                                                                                                            </div>
+                                                                                            </div>
+
+                                            <div class="body-info">
+                                                <div class="body-full-title">测试修改问题 2.0.7</div>
+                                                <div class="info-item">
+                                                    <span class="info-label">完成时间 / TIME</span>
+                                                    <span class="info-value">2026-02-17</span>
+                                                </div>
+                                                <div class="info-item">
+                                                    <span class="info-label">达成地点 / LOCATION</span>
+                                                                                                        <span class="info-value lovelist-location-link has-coords" onclick="event.stopPropagation(); if(window.WithUMap) WithUMap.open({ mode:'events', coords:[110.993509,21.947605], zoom:15 });" data-tooltip="高州市"><i class="ph-fill ph-map-pin"></i><span>高州市</span></span>
+                                                                                                    </div>
+                                                                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                                            <div class="love-card" id="event-34" data-aos="fade-up" data-aos-delay="150">
+                                    <div class="card-header">
+                                        <div class="header-left">
+                                            <span class="status-dot air"></span>
+                                            <span class="event-name">测试最新版本新增问题</span>
+                                            <span class="event-tags">
+                                                                                                                                                <span class="etag"><i data-lucide="notebook-pen" title="有备注"></i></span>                                            </span>
+                                        </div>
+                                        <div class="header-right">
+                                            <span class="toggle-icon">
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20"
+                                                    viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                                                    stroke-linecap="round" stroke-linejoin="round">
+                                                    <path d="M6 9l6 6 6-6" />
+                                                </svg>
+                                            </span>
+                                        </div>
+                                    </div>
+
+                                    <div class="card-body">
+                                        <div class="body-content">
+                                                                                        <div class="achievement-watermark wm-pending">
+                                                <i class="ph-fill ph-seal-check"></i>
+                                            </div>
+                                                                                        <div class="body-gallery">
+                                                                                                    <div class="no-img-placeholder">
+                                                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
+                                                            fill="currentColor">
+                                                            <path
+                                                                d="M21 19V5c0-1.1-.9-2-2-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2zM8.5 13.5l2.5 3.01L14.5 12l4.5 6H5l3.5-4.5z" />
+                                                        </svg>
+                                                        <span>暂无影像</span>
+                                                    </div>
+                                                                                            </div>
+
+                                            <div class="body-info">
+                                                <div class="body-full-title">测试最新版本新增问题</div>
+                                                <div class="info-item">
+                                                    <span class="info-label">完成时间 / TIME</span>
+                                                    <span class="info-value">---</span>
+                                                </div>
+                                                <div class="info-item">
+                                                    <span class="info-label">达成地点 / LOCATION</span>
+                                                                                                        <span class="info-value">---</span>
+                                                                                                    </div>
+                                                                                                    <div class="info-item remark-item">
+                                                        <span class="info-label">清单备注 / NOTE</span>
+                                                        <span class="info-value">测试一下</span>
+                                                    </div>
+                                                                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                                            <div class="love-card" id="event-33" data-aos="fade-up" data-aos-delay="200">
+                                    <div class="card-header">
+                                        <div class="header-left">
+                                            <span class="status-dot com"></span>
+                                            <span class="event-name">一起去吃海底捞</span>
+                                            <span class="event-tags">
+                                                <span class="etag"><i data-lucide="image" title="有照片"></i></span>                                                <span class="etag"><i data-lucide="map-pin" title="有定位"></i></span>                                                <span class="etag"><i data-lucide="notebook-pen" title="有备注"></i></span>                                            </span>
+                                        </div>
+                                        <div class="header-right">
+                                            <span class="toggle-icon">
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20"
+                                                    viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                                                    stroke-linecap="round" stroke-linejoin="round">
+                                                    <path d="M6 9l6 6 6-6" />
+                                                </svg>
+                                            </span>
+                                        </div>
+                                    </div>
+
+                                    <div class="card-body">
+                                        <div class="body-content">
+                                                                                        <div class="achievement-watermark">
+                                                <i class="ph-fill ph-seal-check"></i>
+                                            </div>
+                                                                                        <div class="body-gallery">
+                                                                                                    <div class="img-counter">1 / 5</div>
+                                                    <div class="f-carousel ConventionPhoto" view-image>
+                                                                                                                    <div class="f-carousel__slide">
+                                                                <img class="lazy" draggable="false" data-src="/Lovefolder/20260411053340_69d96cb4ec19c441742336.webp" data-original="/Lovefolder/20260411053340_69d96cb4ec19c441742336.webp" />
+                                                            </div>
+                                                                                                                    <div class="f-carousel__slide">
+                                                                <img class="lazy" draggable="false" data-src="Lovefolder/20260411053340_69d96cb48a9b7708963429.webp" data-original="/Lovefolder/20260411053340_69d96cb48a9b7708963429.webp" />
+                                                            </div>
+                                                                                                                    <div class="f-carousel__slide">
+                                                                <img class="lazy" draggable="false" data-src="/Lovefolder/20260411053340_69d96cb427f3a007965255.webp" data-original="/Lovefolder/20260411053340_69d96cb427f3a007965255.webp" />
+                                                            </div>
+                                                                                                                    <div class="f-carousel__slide">
+                                                                <img class="lazy" draggable="false" data-src="/Lovefolder/20260411053339_69d96cb3d69e4764961994.webp" data-original="/Lovefolder/20260411053339_69d96cb3d69e4764961994.webp" />
+                                                            </div>
+                                                                                                                    <div class="f-carousel__slide">
+                                                                <img class="lazy" draggable="false" data-src="Lovefolder/20260411053339_69d96cb368213953103954.webp" data-original="/Lovefolder/20260411053339_69d96cb368213953103954.webp" />
+                                                            </div>
+                                                                                                            </div>
+                                                                                            </div>
+
+                                            <div class="body-info">
+                                                <div class="body-full-title">一起去吃海底捞</div>
+                                                <div class="info-item">
+                                                    <span class="info-label">完成时间 / TIME</span>
+                                                    <span class="info-value">2026-04-11</span>
+                                                </div>
+                                                <div class="info-item">
+                                                    <span class="info-label">达成地点 / LOCATION</span>
+                                                                                                        <span class="info-value lovelist-location-link has-coords" onclick="event.stopPropagation(); if(window.WithUMap) WithUMap.open({ mode:'events', coords:[113.799025,22.800425], zoom:15 });" data-tooltip="海底捞火锅(长安万科店)"><i class="ph-fill ph-map-pin"></i><span>海底捞火锅(长安万科店)</span></span>
+                                                                                                    </div>
+                                                                                                    <div class="info-item remark-item">
+                                                        <span class="info-label">清单备注 / NOTE</span>
+                                                        <span class="info-value">太好了 你妹也在这里了</span>
+                                                    </div>
+                                                                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                                            <div class="love-card" id="event-32" data-aos="fade-up" data-aos-delay="250">
+                                    <div class="card-header">
+                                        <div class="header-left">
+                                            <span class="status-dot com"></span>
+                                            <span class="event-name">测试上传自动读取EXIF</span>
+                                            <span class="event-tags">
+                                                <span class="etag"><i data-lucide="image" title="有照片"></i></span>                                                <span class="etag"><i data-lucide="map-pin" title="有定位"></i></span>                                                                                            </span>
+                                        </div>
+                                        <div class="header-right">
+                                            <span class="toggle-icon">
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20"
+                                                    viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                                                    stroke-linecap="round" stroke-linejoin="round">
+                                                    <path d="M6 9l6 6 6-6" />
+                                                </svg>
+                                            </span>
+                                        </div>
+                                    </div>
+
+                                    <div class="card-body">
+                                        <div class="body-content">
+                                                                                        <div class="achievement-watermark">
+                                                <i class="ph-fill ph-seal-check"></i>
+                                            </div>
+                                                                                        <div class="body-gallery">
+                                                                                                    <div class="img-counter">1 / 1</div>
+                                                    <div class="f-carousel ConventionPhoto" view-image>
+                                                                                                                    <div class="f-carousel__slide">
+                                                                <img class="lazy" draggable="false" data-src="Lovefolder/20260409200659_69d7966311ed3484002730.webp" data-original="/Lovefolder/20260409200659_69d7966311ed3484002730.webp" />
+                                                            </div>
+                                                                                                            </div>
+                                                                                            </div>
+
+                                            <div class="body-info">
+                                                <div class="body-full-title">测试上传自动读取EXIF</div>
+                                                <div class="info-item">
+                                                    <span class="info-label">完成时间 / TIME</span>
+                                                    <span class="info-value">2025-12-07</span>
+                                                </div>
+                                                <div class="info-item">
+                                                    <span class="info-label">达成地点 / LOCATION</span>
+                                                                                                        <span class="info-value lovelist-location-link has-coords" onclick="event.stopPropagation(); if(window.WithUMap) WithUMap.open({ mode:'events', coords:[114.695386,23.006932], zoom:15 });" data-tooltip="惠东县"><i class="ph-fill ph-map-pin"></i><span>惠东县</span></span>
+                                                                                                    </div>
+                                                                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                                            <div class="love-card" id="event-31" data-aos="fade-up" data-aos-delay="300">
+                                    <div class="card-header">
+                                        <div class="header-left">
+                                            <span class="status-dot com"></span>
+                                            <span class="event-name">测试照片自动读EXIF</span>
+                                            <span class="event-tags">
+                                                <span class="etag"><i data-lucide="image" title="有照片"></i></span>                                                <span class="etag"><i data-lucide="map-pin" title="有定位"></i></span>                                                                                            </span>
+                                        </div>
+                                        <div class="header-right">
+                                            <span class="toggle-icon">
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20"
+                                                    viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                                                    stroke-linecap="round" stroke-linejoin="round">
+                                                    <path d="M6 9l6 6 6-6" />
+                                                </svg>
+                                            </span>
+                                        </div>
+                                    </div>
+
+                                    <div class="card-body">
+                                        <div class="body-content">
+                                                                                        <div class="achievement-watermark">
+                                                <i class="ph-fill ph-seal-check"></i>
+                                            </div>
+                                                                                        <div class="body-gallery">
+                                                                                                    <div class="img-counter">1 / 3</div>
+                                                    <div class="f-carousel ConventionPhoto" view-image>
+                                                                                                                    <div class="f-carousel__slide">
+                                                                <img class="lazy" draggable="false" data-src="/Lovefolder/20260411004651_69d9297b8e0ae609910748.webp" data-original="/Lovefolder/20260411004651_69d9297b8e0ae609910748.webp" />
+                                                            </div>
+                                                                                                                    <div class="f-carousel__slide">
+                                                                <img class="lazy" draggable="false" data-src="Lovefolder/20260411004647_69d929774f115996156546.webp" data-original="/Lovefolder/20260411004647_69d929774f115996156546.webp" />
+                                                            </div>
+                                                                                                                    <div class="f-carousel__slide">
+                                                                <img class="lazy" draggable="false" data-src="Lovefolder/20260411004643_69d92973937db905949089.webp" data-original="/Lovefolder/20260411004643_69d92973937db905949089.webp" />
+                                                            </div>
+                                                                                                            </div>
+                                                                                            </div>
+
+                                            <div class="body-info">
+                                                <div class="body-full-title">测试照片自动读EXIF</div>
+                                                <div class="info-item">
+                                                    <span class="info-label">完成时间 / TIME</span>
+                                                    <span class="info-value">2025-12-14</span>
+                                                </div>
+                                                <div class="info-item">
+                                                    <span class="info-label">达成地点 / LOCATION</span>
+                                                                                                        <span class="info-value lovelist-location-link has-coords" onclick="event.stopPropagation(); if(window.WithUMap) WithUMap.open({ mode:'events', coords:[114.700042,23.004825], zoom:15 });" data-tooltip="惠东县"><i class="ph-fill ph-map-pin"></i><span>惠东县</span></span>
+                                                                                                    </div>
+                                                                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                                            <div class="love-card" id="event-30" data-aos="fade-up" data-aos-delay="300">
+                                    <div class="card-header">
+                                        <div class="header-left">
+                                            <span class="status-dot com"></span>
+                                            <span class="event-name">带上咕噜一起去海边</span>
+                                            <span class="event-tags">
+                                                <span class="etag"><i data-lucide="image" title="有照片"></i></span>                                                <span class="etag"><i data-lucide="map-pin" title="有定位"></i></span>                                                <span class="etag"><i data-lucide="notebook-pen" title="有备注"></i></span>                                            </span>
+                                        </div>
+                                        <div class="header-right">
+                                            <span class="toggle-icon">
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20"
+                                                    viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                                                    stroke-linecap="round" stroke-linejoin="round">
+                                                    <path d="M6 9l6 6 6-6" />
+                                                </svg>
+                                            </span>
+                                        </div>
+                                    </div>
+
+                                    <div class="card-body">
+                                        <div class="body-content">
+                                                                                        <div class="achievement-watermark">
+                                                <i class="ph-fill ph-seal-check"></i>
+                                            </div>
+                                                                                        <div class="body-gallery">
+                                                                                                    <div class="img-counter">1 / 8</div>
+                                                    <div class="f-carousel ConventionPhoto" view-image>
+                                                                                                                    <div class="f-carousel__slide">
+                                                                <img class="lazy" draggable="false" data-src="https://loveli-1255495366.cos.ap-guangzhou.myqcloud.com/Lovefolder/20260409041123_69d6b66b54d23885513672.webp" data-original="https://loveli-1255495366.cos.ap-guangzhou.myqcloud.com/Lovefolder/20260409041123_69d6b66b54d23885513672.webp" />
+                                                            </div>
+                                                                                                                    <div class="f-carousel__slide">
+                                                                <img class="lazy" draggable="false" data-src="https://loveli-1255495366.cos.ap-guangzhou.myqcloud.com/Lovefolder/20260409041124_69d6b66c6e4fa859548001.webp" data-original="https://loveli-1255495366.cos.ap-guangzhou.myqcloud.com/Lovefolder/20260409041124_69d6b66c6e4fa859548001.webp" />
+                                                            </div>
+                                                                                                                    <div class="f-carousel__slide">
+                                                                <img class="lazy" draggable="false" data-src="https://loveli-1255495366.cos.ap-guangzhou.myqcloud.com/Lovefolder/20260409041123_69d6b66be06d0791462106.webp" data-original="https://loveli-1255495366.cos.ap-guangzhou.myqcloud.com/Lovefolder/20260409041123_69d6b66be06d0791462106.webp" />
+                                                            </div>
+                                                                                                                    <div class="f-carousel__slide">
+                                                                <img class="lazy" draggable="false" data-src="https://loveli-1255495366.cos.ap-guangzhou.myqcloud.com/Lovefolder/20260409041122_69d6b66ac985e009630399.webp" data-original="https://loveli-1255495366.cos.ap-guangzhou.myqcloud.com/Lovefolder/20260409041122_69d6b66ac985e009630399.webp" />
+                                                            </div>
+                                                                                                                    <div class="f-carousel__slide">
+                                                                <img class="lazy" draggable="false" data-src="https://loveli-1255495366.cos.ap-guangzhou.myqcloud.com/Lovefolder/20260409041122_69d6b66a69895063869438.webp" data-original="https://loveli-1255495366.cos.ap-guangzhou.myqcloud.com/Lovefolder/20260409041122_69d6b66a69895063869438.webp" />
+                                                            </div>
+                                                                                                                    <div class="f-carousel__slide">
+                                                                <img class="lazy" draggable="false" data-src="https://loveli-1255495366.cos.ap-guangzhou.myqcloud.com/Lovefolder/20260409040937_69d6b6018a85e995422179.webp" data-original="https://loveli-1255495366.cos.ap-guangzhou.myqcloud.com/Lovefolder/20260409040937_69d6b6018a85e995422179.webp" />
+                                                            </div>
+                                                                                                                    <div class="f-carousel__slide">
+                                                                <img class="lazy" draggable="false" data-src="https://loveli-1255495366.cos.ap-guangzhou.myqcloud.com/Lovefolder/20260409040932_69d6b5fc34687391366004.webp" data-original="https://loveli-1255495366.cos.ap-guangzhou.myqcloud.com/Lovefolder/20260409040932_69d6b5fc34687391366004.webp" />
+                                                            </div>
+                                                                                                                    <div class="f-carousel__slide">
+                                                                <img class="lazy" draggable="false" data-src="https://loveli-1255495366.cos.ap-guangzhou.myqcloud.com/Lovefolder/20260409000955_69d67dd3b7a69592012172.webp" data-original="https://loveli-1255495366.cos.ap-guangzhou.myqcloud.com/Lovefolder/20260409000955_69d67dd3b7a69592012172.webp" />
+                                                            </div>
+                                                                                                            </div>
+                                                                                            </div>
+
+                                            <div class="body-info">
+                                                <div class="body-full-title">带上咕噜一起去海边</div>
+                                                <div class="info-item">
+                                                    <span class="info-label">完成时间 / TIME</span>
+                                                    <span class="info-value">2025-06-28</span>
+                                                </div>
+                                                <div class="info-item">
+                                                    <span class="info-label">达成地点 / LOCATION</span>
+                                                                                                        <span class="info-value lovelist-location-link has-coords" onclick="event.stopPropagation(); if(window.WithUMap) WithUMap.open({ mode:'events', coords:[113.589436,22.284681], zoom:15 });" data-tooltip="珠海日月贝"><i class="ph-fill ph-map-pin"></i><span>珠海日月贝</span></span>
+                                                                                                    </div>
+                                                                                                    <div class="info-item remark-item">
+                                                        <span class="info-label">清单备注 / NOTE</span>
+                                                        <span class="info-value">这个紫外线 不愧是珠海 很过瘾</span>
+                                                    </div>
+                                                                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                                            <div class="love-card" id="event-29" data-aos="fade-up" data-aos-delay="300">
+                                    <div class="card-header">
+                                        <div class="header-left">
+                                            <span class="status-dot com"></span>
+                                            <span class="event-name">一起去远方旅游</span>
+                                            <span class="event-tags">
+                                                <span class="etag"><i data-lucide="image" title="有照片"></i></span>                                                <span class="etag"><i data-lucide="map-pin" title="有定位"></i></span>                                                                                            </span>
+                                        </div>
+                                        <div class="header-right">
+                                            <span class="toggle-icon">
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20"
+                                                    viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                                                    stroke-linecap="round" stroke-linejoin="round">
+                                                    <path d="M6 9l6 6 6-6" />
+                                                </svg>
+                                            </span>
+                                        </div>
+                                    </div>
+
+                                    <div class="card-body">
+                                        <div class="body-content">
+                                                                                        <div class="achievement-watermark">
+                                                <i class="ph-fill ph-seal-check"></i>
+                                            </div>
+                                                                                        <div class="body-gallery">
+                                                                                                    <div class="img-counter">1 / 5</div>
+                                                    <div class="f-carousel ConventionPhoto" view-image>
+                                                                                                                    <div class="f-carousel__slide">
+                                                                <img class="lazy" draggable="false" data-src="Lovefolder/20241225224015_676c194fa9c7d_thumb.webp" data-original="/Lovefolder/20241225224015_676c194fa9c7d.jpeg" />
+                                                            </div>
+                                                                                                                    <div class="f-carousel__slide">
+                                                                <img class="lazy" draggable="false" data-src="Lovefolder/20241225224015_676c194fbd6a9_thumb.webp" data-original="/Lovefolder/20241225224015_676c194fbd6a9.jpeg" />
+                                                            </div>
+                                                                                                                    <div class="f-carousel__slide">
+                                                                <img class="lazy" draggable="false" data-src="Lovefolder/20241225224015_676c194fc11f9_thumb.webp" data-original="/Lovefolder/20241225224015_676c194fc11f9.jpeg" />
+                                                            </div>
+                                                                                                                    <div class="f-carousel__slide">
+                                                                <img class="lazy" draggable="false" data-src="Lovefolder/20241225224015_676c194fc4e95_thumb.webp" data-original="/Lovefolder/20241225224015_676c194fc4e95.jpeg" />
+                                                            </div>
+                                                                                                                    <div class="f-carousel__slide">
+                                                                <img class="lazy" draggable="false" data-src="Lovefolder/20241225224015_676c194fc8970_thumb.webp" data-original="/Lovefolder/20241225224015_676c194fc8970.jpeg" />
+                                                            </div>
+                                                                                                            </div>
+                                                                                            </div>
+
+                                            <div class="body-info">
+                                                <div class="body-full-title">一起去远方旅游</div>
+                                                <div class="info-item">
+                                                    <span class="info-label">完成时间 / TIME</span>
+                                                    <span class="info-value">2024-10-01</span>
+                                                </div>
+                                                <div class="info-item">
+                                                    <span class="info-label">达成地点 / LOCATION</span>
+                                                                                                        <span class="info-value lovelist-location-link has-coords" onclick="event.stopPropagation(); if(window.WithUMap) WithUMap.open({ mode:'events', coords:[113.890634,22.915318], zoom:15 });" data-tooltip="松山湖风景区"><i class="ph-fill ph-map-pin"></i><span>松山湖风景区</span></span>
+                                                                                                    </div>
+                                                                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                                            <div class="love-card" id="event-28" data-aos="fade-up" data-aos-delay="300">
+                                    <div class="card-header">
+                                        <div class="header-left">
+                                            <span class="status-dot com"></span>
+                                            <span class="event-name">withU 冬至限定 多图约定测试</span>
+                                            <span class="event-tags">
+                                                <span class="etag"><i data-lucide="image" title="有照片"></i></span>                                                                                                                                            </span>
+                                        </div>
+                                        <div class="header-right">
+                                            <span class="toggle-icon">
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20"
+                                                    viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                                                    stroke-linecap="round" stroke-linejoin="round">
+                                                    <path d="M6 9l6 6 6-6" />
+                                                </svg>
+                                            </span>
+                                        </div>
+                                    </div>
+
+                                    <div class="card-body">
+                                        <div class="body-content">
+                                                                                        <div class="achievement-watermark">
+                                                <i class="ph-fill ph-seal-check"></i>
+                                            </div>
+                                                                                        <div class="body-gallery">
+                                                                                                    <div class="img-counter">1 / 8</div>
+                                                    <div class="f-carousel ConventionPhoto" view-image>
+                                                                                                                    <div class="f-carousel__slide">
+                                                                <img class="lazy" draggable="false" data-src="Lovefolder/20241223171943_67692b2fd5982_thumb.webp" data-original="/Lovefolder/20241223171943_67692b2fd5982.png" />
+                                                            </div>
+                                                                                                                    <div class="f-carousel__slide">
+                                                                <img class="lazy" draggable="false" data-src="Lovefolder/20241223171943_67692b2faaa02_thumb.webp" data-original="/Lovefolder/20241223171943_67692b2faaa02.png" />
+                                                            </div>
+                                                                                                                    <div class="f-carousel__slide">
+                                                                <img class="lazy" draggable="false" data-src="Lovefolder/20241223171943_67692b2f18406_thumb.webp" data-original="/Lovefolder/20241223171943_67692b2f18406.png" />
+                                                            </div>
+                                                                                                                    <div class="f-carousel__slide">
+                                                                <img class="lazy" draggable="false" data-src="Lovefolder/20241223171943_67692b2f03c46_thumb.webp" data-original="/Lovefolder/20241223171943_67692b2f03c46.png" />
+                                                            </div>
+                                                                                                                    <div class="f-carousel__slide">
+                                                                <img class="lazy" draggable="false" data-src="Lovefolder/20241223171942_67692b2edb1fc_thumb.webp" data-original="/Lovefolder/20241223171942_67692b2edb1fc.png" />
+                                                            </div>
+                                                                                                                    <div class="f-carousel__slide">
+                                                                <img class="lazy" draggable="false" data-src="Lovefolder/20241223171942_67692b2edb1fc_thumb.webp" data-original="/Lovefolder/20241223171942_67692b2edb1fc.png" />
+                                                            </div>
+                                                                                                                    <div class="f-carousel__slide">
+                                                                <img class="lazy" draggable="false" data-src="Lovefolder/20241223171942_67692b2ec69e3_thumb.webp" data-original="/Lovefolder/20241223171942_67692b2ec69e3.png" />
+                                                            </div>
+                                                                                                                    <div class="f-carousel__slide">
+                                                                <img class="lazy" draggable="false" data-src="Lovefolder/20241223171805_67692acdb71b5_thumb.webp" data-original="/Lovefolder/20241223171805_67692acdb71b5.png" />
+                                                            </div>
+                                                                                                            </div>
+                                                                                            </div>
+
+                                            <div class="body-info">
+                                                <div class="body-full-title">withU 冬至限定 多图约定测试</div>
+                                                <div class="info-item">
+                                                    <span class="info-label">完成时间 / TIME</span>
+                                                    <span class="info-value">---</span>
+                                                </div>
+                                                <div class="info-item">
+                                                    <span class="info-label">达成地点 / LOCATION</span>
+                                                                                                        <span class="info-value">---</span>
+                                                                                                    </div>
+                                                                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                                            <div class="love-card" id="event-27" data-aos="fade-up" data-aos-delay="300">
+                                    <div class="card-header">
+                                        <div class="header-left">
+                                            <span class="status-dot com"></span>
+                                            <span class="event-name">一起骑小电驴去上班</span>
+                                            <span class="event-tags">
+                                                <span class="etag"><i data-lucide="image" title="有照片"></i></span>                                                                                                                                            </span>
+                                        </div>
+                                        <div class="header-right">
+                                            <span class="toggle-icon">
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20"
+                                                    viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                                                    stroke-linecap="round" stroke-linejoin="round">
+                                                    <path d="M6 9l6 6 6-6" />
+                                                </svg>
+                                            </span>
+                                        </div>
+                                    </div>
+
+                                    <div class="card-body">
+                                        <div class="body-content">
+                                                                                        <div class="achievement-watermark">
+                                                <i class="ph-fill ph-seal-check"></i>
+                                            </div>
+                                                                                        <div class="body-gallery">
+                                                                                                    <div class="img-counter">1 / 2</div>
+                                                    <div class="f-carousel ConventionPhoto" view-image>
+                                                                                                                    <div class="f-carousel__slide">
+                                                                <img class="lazy" draggable="false" data-src="Lovefolder/20240729105425_1_thumb.webp" data-original="/uploads/20240729105425_1.jpeg" />
+                                                            </div>
+                                                                                                                    <div class="f-carousel__slide">
+                                                                <img class="lazy" draggable="false" data-src="Lovefolder/20241223172154_67692bb20f4aa_thumb.webp" data-original="/Lovefolder/20241223172154_67692bb20f4aa.jpeg" />
+                                                            </div>
+                                                                                                            </div>
+                                                                                            </div>
+
+                                            <div class="body-info">
+                                                <div class="body-full-title">一起骑小电驴去上班</div>
+                                                <div class="info-item">
+                                                    <span class="info-label">完成时间 / TIME</span>
+                                                    <span class="info-value">---</span>
+                                                </div>
+                                                <div class="info-item">
+                                                    <span class="info-label">达成地点 / LOCATION</span>
+                                                                                                        <span class="info-value">---</span>
+                                                                                                    </div>
+                                                                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                                            <div class="love-card" id="event-26" data-aos="fade-up" data-aos-delay="300">
+                                    <div class="card-header">
+                                        <div class="header-left">
+                                            <span class="status-dot com"></span>
+                                            <span class="event-name">一起去理发</span>
+                                            <span class="event-tags">
+                                                <span class="etag"><i data-lucide="image" title="有照片"></i></span>                                                                                                                                            </span>
+                                        </div>
+                                        <div class="header-right">
+                                            <span class="toggle-icon">
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20"
+                                                    viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                                                    stroke-linecap="round" stroke-linejoin="round">
+                                                    <path d="M6 9l6 6 6-6" />
+                                                </svg>
+                                            </span>
+                                        </div>
+                                    </div>
+
+                                    <div class="card-body">
+                                        <div class="body-content">
+                                                                                        <div class="achievement-watermark">
+                                                <i class="ph-fill ph-seal-check"></i>
+                                            </div>
+                                                                                        <div class="body-gallery">
+                                                                                                    <div class="img-counter">1 / 1</div>
+                                                    <div class="f-carousel ConventionPhoto" view-image>
+                                                                                                                    <div class="f-carousel__slide">
+                                                                <img class="lazy" draggable="false" data-src="Lovefolder/20240630231525_1_thumb.webp" data-original="/uploads/20240630231525_1.jpeg" />
+                                                            </div>
+                                                                                                            </div>
+                                                                                            </div>
+
+                                            <div class="body-info">
+                                                <div class="body-full-title">一起去理发</div>
+                                                <div class="info-item">
+                                                    <span class="info-label">完成时间 / TIME</span>
+                                                    <span class="info-value">---</span>
+                                                </div>
+                                                <div class="info-item">
+                                                    <span class="info-label">达成地点 / LOCATION</span>
+                                                                                                        <span class="info-value">---</span>
+                                                                                                    </div>
+                                                                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                                            <div class="love-card" id="event-25" data-aos="fade-up" data-aos-delay="300">
+                                    <div class="card-header">
+                                        <div class="header-left">
+                                            <span class="status-dot com"></span>
+                                            <span class="event-name">测试恋爱约定多图显示 📷️</span>
+                                            <span class="event-tags">
+                                                <span class="etag"><i data-lucide="image" title="有照片"></i></span>                                                                                                                                            </span>
+                                        </div>
+                                        <div class="header-right">
+                                            <span class="toggle-icon">
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20"
+                                                    viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                                                    stroke-linecap="round" stroke-linejoin="round">
+                                                    <path d="M6 9l6 6 6-6" />
+                                                </svg>
+                                            </span>
+                                        </div>
+                                    </div>
+
+                                    <div class="card-body">
+                                        <div class="body-content">
+                                                                                        <div class="achievement-watermark">
+                                                <i class="ph-fill ph-seal-check"></i>
+                                            </div>
+                                                                                        <div class="body-gallery">
+                                                                                                    <div class="img-counter">1 / 9</div>
+                                                    <div class="f-carousel ConventionPhoto" view-image>
+                                                                                                                    <div class="f-carousel__slide">
+                                                                <img class="lazy" draggable="false" data-src="Lovefolder/20240601163852_9_thumb.webp" data-original="/uploads/20240601163852_9.jpeg" />
+                                                            </div>
+                                                                                                                    <div class="f-carousel__slide">
+                                                                <img class="lazy" draggable="false" data-src="Lovefolder/20240601163852_8_thumb.webp" data-original="/uploads/20240601163852_8.jpeg" />
+                                                            </div>
+                                                                                                                    <div class="f-carousel__slide">
+                                                                <img class="lazy" draggable="false" data-src="Lovefolder/20240601163852_7_thumb.webp" data-original="/uploads/20240601163852_7.jpeg" />
+                                                            </div>
+                                                                                                                    <div class="f-carousel__slide">
+                                                                <img class="lazy" draggable="false" data-src="Lovefolder/20240601163851_6_thumb.webp" data-original="/uploads/20240601163851_6.jpeg" />
+                                                            </div>
+                                                                                                                    <div class="f-carousel__slide">
+                                                                <img class="lazy" draggable="false" data-src="Lovefolder/20240601163851_5_thumb.webp" data-original="/uploads/20240601163851_5.jpeg" />
+                                                            </div>
+                                                                                                                    <div class="f-carousel__slide">
+                                                                <img class="lazy" draggable="false" data-src="Lovefolder/20240601163850_4_thumb.webp" data-original="/uploads/20240601163850_4.jpeg" />
+                                                            </div>
+                                                                                                                    <div class="f-carousel__slide">
+                                                                <img class="lazy" draggable="false" data-src="Lovefolder/20240601163849_3_thumb.webp" data-original="/uploads/20240601163849_3.jpeg" />
+                                                            </div>
+                                                                                                                    <div class="f-carousel__slide">
+                                                                <img class="lazy" draggable="false" data-src="Lovefolder/20240601163848_2_thumb.webp" data-original="/uploads/20240601163848_2.jpeg" />
+                                                            </div>
+                                                                                                                    <div class="f-carousel__slide">
+                                                                <img class="lazy" draggable="false" data-src="Lovefolder/20240601163848_1_thumb.webp" data-original="/uploads/20240601163848_1.jpeg" />
+                                                            </div>
+                                                                                                            </div>
+                                                                                            </div>
+
+                                            <div class="body-info">
+                                                <div class="body-full-title">测试恋爱约定多图显示 📷️</div>
+                                                <div class="info-item">
+                                                    <span class="info-label">完成时间 / TIME</span>
+                                                    <span class="info-value">---</span>
+                                                </div>
+                                                <div class="info-item">
+                                                    <span class="info-label">达成地点 / LOCATION</span>
+                                                                                                        <span class="info-value">---</span>
+                                                                                                    </div>
+                                                                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                                            <div class="love-card" id="event-24" data-aos="fade-up" data-aos-delay="300">
+                                    <div class="card-header">
+                                        <div class="header-left">
+                                            <span class="status-dot com"></span>
+                                            <span class="event-name">亲手烤个鸡翅给你吃</span>
+                                            <span class="event-tags">
+                                                <span class="etag"><i data-lucide="image" title="有照片"></i></span>                                                                                                                                            </span>
+                                        </div>
+                                        <div class="header-right">
+                                            <span class="toggle-icon">
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20"
+                                                    viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                                                    stroke-linecap="round" stroke-linejoin="round">
+                                                    <path d="M6 9l6 6 6-6" />
+                                                </svg>
+                                            </span>
+                                        </div>
+                                    </div>
+
+                                    <div class="card-body">
+                                        <div class="body-content">
+                                                                                        <div class="achievement-watermark">
+                                                <i class="ph-fill ph-seal-check"></i>
+                                            </div>
+                                                                                        <div class="body-gallery">
+                                                                                                    <div class="img-counter">1 / 1</div>
+                                                    <div class="f-carousel ConventionPhoto" view-image>
+                                                                                                                    <div class="f-carousel__slide">
+                                                                <img class="lazy" draggable="false" data-src="Lovefolder/20240516165358_1_thumb.webp" data-original="/uploads/20240516165358_1.jpeg" />
+                                                            </div>
+                                                                                                            </div>
+                                                                                            </div>
+
+                                            <div class="body-info">
+                                                <div class="body-full-title">亲手烤个鸡翅给你吃</div>
+                                                <div class="info-item">
+                                                    <span class="info-label">完成时间 / TIME</span>
+                                                    <span class="info-value">---</span>
+                                                </div>
+                                                <div class="info-item">
+                                                    <span class="info-label">达成地点 / LOCATION</span>
+                                                                                                        <span class="info-value">---</span>
+                                                                                                    </div>
+                                                                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                                            <div class="love-card" id="event-23" data-aos="fade-up" data-aos-delay="300">
+                                    <div class="card-header">
+                                        <div class="header-left">
+                                            <span class="status-dot com"></span>
+                                            <span class="event-name">一起听音乐，听同一首歌♪</span>
+                                            <span class="event-tags">
+                                                <span class="etag"><i data-lucide="image" title="有照片"></i></span>                                                                                                                                            </span>
+                                        </div>
+                                        <div class="header-right">
+                                            <span class="toggle-icon">
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20"
+                                                    viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                                                    stroke-linecap="round" stroke-linejoin="round">
+                                                    <path d="M6 9l6 6 6-6" />
+                                                </svg>
+                                            </span>
+                                        </div>
+                                    </div>
+
+                                    <div class="card-body">
+                                        <div class="body-content">
+                                                                                        <div class="achievement-watermark">
+                                                <i class="ph-fill ph-seal-check"></i>
+                                            </div>
+                                                                                        <div class="body-gallery">
+                                                                                                    <div class="img-counter">1 / 1</div>
+                                                    <div class="f-carousel ConventionPhoto" view-image>
+                                                                                                                    <div class="f-carousel__slide">
+                                                                <img class="lazy" draggable="false" data-src="Lovefolder/20240430113332_1_thumb.webp" data-original="/uploads/20240430113332_1.jpeg" />
+                                                            </div>
+                                                                                                            </div>
+                                                                                            </div>
+
+                                            <div class="body-info">
+                                                <div class="body-full-title">一起听音乐，听同一首歌♪</div>
+                                                <div class="info-item">
+                                                    <span class="info-label">完成时间 / TIME</span>
+                                                    <span class="info-value">---</span>
+                                                </div>
+                                                <div class="info-item">
+                                                    <span class="info-label">达成地点 / LOCATION</span>
+                                                                                                        <span class="info-value">---</span>
+                                                                                                    </div>
+                                                                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                                            <div class="love-card" id="event-22" data-aos="fade-up" data-aos-delay="300">
+                                    <div class="card-header">
+                                        <div class="header-left">
+                                            <span class="status-dot air"></span>
+                                            <span class="event-name">一起去旅游🚄</span>
+                                            <span class="event-tags">
+                                                                                                                                                                                            </span>
+                                        </div>
+                                        <div class="header-right">
+                                            <span class="toggle-icon">
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20"
+                                                    viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                                                    stroke-linecap="round" stroke-linejoin="round">
+                                                    <path d="M6 9l6 6 6-6" />
+                                                </svg>
+                                            </span>
+                                        </div>
+                                    </div>
+
+                                    <div class="card-body">
+                                        <div class="body-content">
+                                                                                        <div class="achievement-watermark wm-pending">
+                                                <i class="ph-fill ph-seal-check"></i>
+                                            </div>
+                                                                                        <div class="body-gallery">
+                                                                                                    <div class="no-img-placeholder">
+                                                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
+                                                            fill="currentColor">
+                                                            <path
+                                                                d="M21 19V5c0-1.1-.9-2-2-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2zM8.5 13.5l2.5 3.01L14.5 12l4.5 6H5l3.5-4.5z" />
+                                                        </svg>
+                                                        <span>暂无影像</span>
+                                                    </div>
+                                                                                            </div>
+
+                                            <div class="body-info">
+                                                <div class="body-full-title">一起去旅游🚄</div>
+                                                <div class="info-item">
+                                                    <span class="info-label">完成时间 / TIME</span>
+                                                    <span class="info-value">---</span>
+                                                </div>
+                                                <div class="info-item">
+                                                    <span class="info-label">达成地点 / LOCATION</span>
+                                                                                                        <span class="info-value">---</span>
+                                                                                                    </div>
+                                                                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                                            <div class="love-card" id="event-21" data-aos="fade-up" data-aos-delay="300">
+                                    <div class="card-header">
+                                        <div class="header-left">
+                                            <span class="status-dot air"></span>
+                                            <span class="event-name">一起熬夜通宵跨年🧨</span>
+                                            <span class="event-tags">
+                                                                                                                                                                                            </span>
+                                        </div>
+                                        <div class="header-right">
+                                            <span class="toggle-icon">
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20"
+                                                    viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                                                    stroke-linecap="round" stroke-linejoin="round">
+                                                    <path d="M6 9l6 6 6-6" />
+                                                </svg>
+                                            </span>
+                                        </div>
+                                    </div>
+
+                                    <div class="card-body">
+                                        <div class="body-content">
+                                                                                        <div class="achievement-watermark wm-pending">
+                                                <i class="ph-fill ph-seal-check"></i>
+                                            </div>
+                                                                                        <div class="body-gallery">
+                                                                                                    <div class="no-img-placeholder">
+                                                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
+                                                            fill="currentColor">
+                                                            <path
+                                                                d="M21 19V5c0-1.1-.9-2-2-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2zM8.5 13.5l2.5 3.01L14.5 12l4.5 6H5l3.5-4.5z" />
+                                                        </svg>
+                                                        <span>暂无影像</span>
+                                                    </div>
+                                                                                            </div>
+
+                                            <div class="body-info">
+                                                <div class="body-full-title">一起熬夜通宵跨年🧨</div>
+                                                <div class="info-item">
+                                                    <span class="info-label">完成时间 / TIME</span>
+                                                    <span class="info-value">---</span>
+                                                </div>
+                                                <div class="info-item">
+                                                    <span class="info-label">达成地点 / LOCATION</span>
+                                                                                                        <span class="info-value">---</span>
+                                                                                                    </div>
+                                                                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                                            <div class="love-card" id="event-20" data-aos="fade-up" data-aos-delay="300">
+                                    <div class="card-header">
+                                        <div class="header-left">
+                                            <span class="status-dot com"></span>
+                                            <span class="event-name">一起去吃一次全家桶🍔</span>
+                                            <span class="event-tags">
+                                                <span class="etag"><i data-lucide="image" title="有照片"></i></span>                                                                                                                                            </span>
+                                        </div>
+                                        <div class="header-right">
+                                            <span class="toggle-icon">
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20"
+                                                    viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                                                    stroke-linecap="round" stroke-linejoin="round">
+                                                    <path d="M6 9l6 6 6-6" />
+                                                </svg>
+                                            </span>
+                                        </div>
+                                    </div>
+
+                                    <div class="card-body">
+                                        <div class="body-content">
+                                                                                        <div class="achievement-watermark">
+                                                <i class="ph-fill ph-seal-check"></i>
+                                            </div>
+                                                                                        <div class="body-gallery">
+                                                                                                    <div class="img-counter">1 / 1</div>
+                                                    <div class="f-carousel ConventionPhoto" view-image>
+                                                                                                                    <div class="f-carousel__slide">
+                                                                <img class="lazy" draggable="false" data-src="Lovefolder/20240729104806_1_thumb.webp" data-original="/uploads/20240729104806_1.jpeg" />
+                                                            </div>
+                                                                                                            </div>
+                                                                                            </div>
+
+                                            <div class="body-info">
+                                                <div class="body-full-title">一起去吃一次全家桶🍔</div>
+                                                <div class="info-item">
+                                                    <span class="info-label">完成时间 / TIME</span>
+                                                    <span class="info-value">---</span>
+                                                </div>
+                                                <div class="info-item">
+                                                    <span class="info-label">达成地点 / LOCATION</span>
+                                                                                                        <span class="info-value">---</span>
+                                                                                                    </div>
+                                                                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                                            <div class="love-card" id="event-19" data-aos="fade-up" data-aos-delay="300">
+                                    <div class="card-header">
+                                        <div class="header-left">
+                                            <span class="status-dot air"></span>
+                                            <span class="event-name">一起去做次陶艺👩‍🎨</span>
+                                            <span class="event-tags">
+                                                                                                                                                                                            </span>
+                                        </div>
+                                        <div class="header-right">
+                                            <span class="toggle-icon">
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20"
+                                                    viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                                                    stroke-linecap="round" stroke-linejoin="round">
+                                                    <path d="M6 9l6 6 6-6" />
+                                                </svg>
+                                            </span>
+                                        </div>
+                                    </div>
+
+                                    <div class="card-body">
+                                        <div class="body-content">
+                                                                                        <div class="achievement-watermark wm-pending">
+                                                <i class="ph-fill ph-seal-check"></i>
+                                            </div>
+                                                                                        <div class="body-gallery">
+                                                                                                    <div class="no-img-placeholder">
+                                                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
+                                                            fill="currentColor">
+                                                            <path
+                                                                d="M21 19V5c0-1.1-.9-2-2-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2zM8.5 13.5l2.5 3.01L14.5 12l4.5 6H5l3.5-4.5z" />
+                                                        </svg>
+                                                        <span>暂无影像</span>
+                                                    </div>
+                                                                                            </div>
+
+                                            <div class="body-info">
+                                                <div class="body-full-title">一起去做次陶艺👩‍🎨</div>
+                                                <div class="info-item">
+                                                    <span class="info-label">完成时间 / TIME</span>
+                                                    <span class="info-value">---</span>
+                                                </div>
+                                                <div class="info-item">
+                                                    <span class="info-label">达成地点 / LOCATION</span>
+                                                                                                        <span class="info-value">---</span>
+                                                                                                    </div>
+                                                                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                                            <div class="love-card" id="event-18" data-aos="fade-up" data-aos-delay="300">
+                                    <div class="card-header">
+                                        <div class="header-left">
+                                            <span class="status-dot air"></span>
+                                            <span class="event-name">一起为对方抹指甲油💅🏻</span>
+                                            <span class="event-tags">
+                                                                                                                                                                                            </span>
+                                        </div>
+                                        <div class="header-right">
+                                            <span class="toggle-icon">
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20"
+                                                    viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                                                    stroke-linecap="round" stroke-linejoin="round">
+                                                    <path d="M6 9l6 6 6-6" />
+                                                </svg>
+                                            </span>
+                                        </div>
+                                    </div>
+
+                                    <div class="card-body">
+                                        <div class="body-content">
+                                                                                        <div class="achievement-watermark wm-pending">
+                                                <i class="ph-fill ph-seal-check"></i>
+                                            </div>
+                                                                                        <div class="body-gallery">
+                                                                                                    <div class="no-img-placeholder">
+                                                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
+                                                            fill="currentColor">
+                                                            <path
+                                                                d="M21 19V5c0-1.1-.9-2-2-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2zM8.5 13.5l2.5 3.01L14.5 12l4.5 6H5l3.5-4.5z" />
+                                                        </svg>
+                                                        <span>暂无影像</span>
+                                                    </div>
+                                                                                            </div>
+
+                                            <div class="body-info">
+                                                <div class="body-full-title">一起为对方抹指甲油💅🏻</div>
+                                                <div class="info-item">
+                                                    <span class="info-label">完成时间 / TIME</span>
+                                                    <span class="info-value">---</span>
+                                                </div>
+                                                <div class="info-item">
+                                                    <span class="info-label">达成地点 / LOCATION</span>
+                                                                                                        <span class="info-value">---</span>
+                                                                                                    </div>
+                                                                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                                            <div class="love-card" id="event-17" data-aos="fade-up" data-aos-delay="300">
+                                    <div class="card-header">
+                                        <div class="header-left">
+                                            <span class="status-dot air"></span>
+                                            <span class="event-name">一起给对方化妆🤡</span>
+                                            <span class="event-tags">
+                                                                                                                                                                                            </span>
+                                        </div>
+                                        <div class="header-right">
+                                            <span class="toggle-icon">
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20"
+                                                    viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                                                    stroke-linecap="round" stroke-linejoin="round">
+                                                    <path d="M6 9l6 6 6-6" />
+                                                </svg>
+                                            </span>
+                                        </div>
+                                    </div>
+
+                                    <div class="card-body">
+                                        <div class="body-content">
+                                                                                        <div class="achievement-watermark wm-pending">
+                                                <i class="ph-fill ph-seal-check"></i>
+                                            </div>
+                                                                                        <div class="body-gallery">
+                                                                                                    <div class="no-img-placeholder">
+                                                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
+                                                            fill="currentColor">
+                                                            <path
+                                                                d="M21 19V5c0-1.1-.9-2-2-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2zM8.5 13.5l2.5 3.01L14.5 12l4.5 6H5l3.5-4.5z" />
+                                                        </svg>
+                                                        <span>暂无影像</span>
+                                                    </div>
+                                                                                            </div>
+
+                                            <div class="body-info">
+                                                <div class="body-full-title">一起给对方化妆🤡</div>
+                                                <div class="info-item">
+                                                    <span class="info-label">完成时间 / TIME</span>
+                                                    <span class="info-value">---</span>
+                                                </div>
+                                                <div class="info-item">
+                                                    <span class="info-label">达成地点 / LOCATION</span>
+                                                                                                        <span class="info-value">---</span>
+                                                                                                    </div>
+                                                                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                                            <div class="love-card" id="event-16" data-aos="fade-up" data-aos-delay="300">
+                                    <div class="card-header">
+                                        <div class="header-left">
+                                            <span class="status-dot air"></span>
+                                            <span class="event-name">一起研究口红色号💄</span>
+                                            <span class="event-tags">
+                                                                                                                                                                                            </span>
+                                        </div>
+                                        <div class="header-right">
+                                            <span class="toggle-icon">
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20"
+                                                    viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                                                    stroke-linecap="round" stroke-linejoin="round">
+                                                    <path d="M6 9l6 6 6-6" />
+                                                </svg>
+                                            </span>
+                                        </div>
+                                    </div>
+
+                                    <div class="card-body">
+                                        <div class="body-content">
+                                                                                        <div class="achievement-watermark wm-pending">
+                                                <i class="ph-fill ph-seal-check"></i>
+                                            </div>
+                                                                                        <div class="body-gallery">
+                                                                                                    <div class="no-img-placeholder">
+                                                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
+                                                            fill="currentColor">
+                                                            <path
+                                                                d="M21 19V5c0-1.1-.9-2-2-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2zM8.5 13.5l2.5 3.01L14.5 12l4.5 6H5l3.5-4.5z" />
+                                                        </svg>
+                                                        <span>暂无影像</span>
+                                                    </div>
+                                                                                            </div>
+
+                                            <div class="body-info">
+                                                <div class="body-full-title">一起研究口红色号💄</div>
+                                                <div class="info-item">
+                                                    <span class="info-label">完成时间 / TIME</span>
+                                                    <span class="info-value">---</span>
+                                                </div>
+                                                <div class="info-item">
+                                                    <span class="info-label">达成地点 / LOCATION</span>
+                                                                                                        <span class="info-value">---</span>
+                                                                                                    </div>
+                                                                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                                            <div class="love-card" id="event-15" data-aos="fade-up" data-aos-delay="300">
+                                    <div class="card-header">
+                                        <div class="header-left">
+                                            <span class="status-dot com"></span>
+                                            <span class="event-name">一起养一只宠物🐕️</span>
+                                            <span class="event-tags">
+                                                <span class="etag"><i data-lucide="image" title="有照片"></i></span>                                                                                                                                            </span>
+                                        </div>
+                                        <div class="header-right">
+                                            <span class="toggle-icon">
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20"
+                                                    viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                                                    stroke-linecap="round" stroke-linejoin="round">
+                                                    <path d="M6 9l6 6 6-6" />
+                                                </svg>
+                                            </span>
+                                        </div>
+                                    </div>
+
+                                    <div class="card-body">
+                                        <div class="body-content">
+                                                                                        <div class="achievement-watermark">
+                                                <i class="ph-fill ph-seal-check"></i>
+                                            </div>
+                                                                                        <div class="body-gallery">
+                                                                                                    <div class="img-counter">1 / 1</div>
+                                                    <div class="f-carousel ConventionPhoto" view-image>
+                                                                                                                    <div class="f-carousel__slide">
+                                                                <img class="lazy" draggable="false" data-src="/Lovefolder/20241223180401_676935918919c.jpeg" data-original="/Lovefolder/20241223180401_676935918919c.jpeg" />
+                                                            </div>
+                                                                                                            </div>
+                                                                                            </div>
+
+                                            <div class="body-info">
+                                                <div class="body-full-title">一起养一只宠物🐕️</div>
+                                                <div class="info-item">
+                                                    <span class="info-label">完成时间 / TIME</span>
+                                                    <span class="info-value">---</span>
+                                                </div>
+                                                <div class="info-item">
+                                                    <span class="info-label">达成地点 / LOCATION</span>
+                                                                                                        <span class="info-value">---</span>
+                                                                                                    </div>
+                                                                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                                            <div class="love-card" id="event-14" data-aos="fade-up" data-aos-delay="300">
+                                    <div class="card-header">
+                                        <div class="header-left">
+                                            <span class="status-dot air"></span>
+                                            <span class="event-name">一起去蹦极🥝</span>
+                                            <span class="event-tags">
+                                                                                                                                                                                            </span>
+                                        </div>
+                                        <div class="header-right">
+                                            <span class="toggle-icon">
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20"
+                                                    viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                                                    stroke-linecap="round" stroke-linejoin="round">
+                                                    <path d="M6 9l6 6 6-6" />
+                                                </svg>
+                                            </span>
+                                        </div>
+                                    </div>
+
+                                    <div class="card-body">
+                                        <div class="body-content">
+                                                                                        <div class="achievement-watermark wm-pending">
+                                                <i class="ph-fill ph-seal-check"></i>
+                                            </div>
+                                                                                        <div class="body-gallery">
+                                                                                                    <div class="no-img-placeholder">
+                                                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
+                                                            fill="currentColor">
+                                                            <path
+                                                                d="M21 19V5c0-1.1-.9-2-2-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2zM8.5 13.5l2.5 3.01L14.5 12l4.5 6H5l3.5-4.5z" />
+                                                        </svg>
+                                                        <span>暂无影像</span>
+                                                    </div>
+                                                                                            </div>
+
+                                            <div class="body-info">
+                                                <div class="body-full-title">一起去蹦极🥝</div>
+                                                <div class="info-item">
+                                                    <span class="info-label">完成时间 / TIME</span>
+                                                    <span class="info-value">---</span>
+                                                </div>
+                                                <div class="info-item">
+                                                    <span class="info-label">达成地点 / LOCATION</span>
+                                                                                                        <span class="info-value">---</span>
+                                                                                                    </div>
+                                                                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                                            <div class="love-card" id="event-13" data-aos="fade-up" data-aos-delay="300">
+                                    <div class="card-header">
+                                        <div class="header-left">
+                                            <span class="status-dot air"></span>
+                                            <span class="event-name">一起去一次鬼屋🥥</span>
+                                            <span class="event-tags">
+                                                                                                                                                                                            </span>
+                                        </div>
+                                        <div class="header-right">
+                                            <span class="toggle-icon">
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20"
+                                                    viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                                                    stroke-linecap="round" stroke-linejoin="round">
+                                                    <path d="M6 9l6 6 6-6" />
+                                                </svg>
+                                            </span>
+                                        </div>
+                                    </div>
+
+                                    <div class="card-body">
+                                        <div class="body-content">
+                                                                                        <div class="achievement-watermark wm-pending">
+                                                <i class="ph-fill ph-seal-check"></i>
+                                            </div>
+                                                                                        <div class="body-gallery">
+                                                                                                    <div class="no-img-placeholder">
+                                                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
+                                                            fill="currentColor">
+                                                            <path
+                                                                d="M21 19V5c0-1.1-.9-2-2-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2zM8.5 13.5l2.5 3.01L14.5 12l4.5 6H5l3.5-4.5z" />
+                                                        </svg>
+                                                        <span>暂无影像</span>
+                                                    </div>
+                                                                                            </div>
+
+                                            <div class="body-info">
+                                                <div class="body-full-title">一起去一次鬼屋🥥</div>
+                                                <div class="info-item">
+                                                    <span class="info-label">完成时间 / TIME</span>
+                                                    <span class="info-value">---</span>
+                                                </div>
+                                                <div class="info-item">
+                                                    <span class="info-label">达成地点 / LOCATION</span>
+                                                                                                        <span class="info-value">---</span>
+                                                                                                    </div>
+                                                                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                                            <div class="love-card" id="event-12" data-aos="fade-up" data-aos-delay="300">
+                                    <div class="card-header">
+                                        <div class="header-left">
+                                            <span class="status-dot air"></span>
+                                            <span class="event-name">一起给对方写信，然后读给对方听🍍</span>
+                                            <span class="event-tags">
+                                                                                                                                                                                            </span>
+                                        </div>
+                                        <div class="header-right">
+                                            <span class="toggle-icon">
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20"
+                                                    viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                                                    stroke-linecap="round" stroke-linejoin="round">
+                                                    <path d="M6 9l6 6 6-6" />
+                                                </svg>
+                                            </span>
+                                        </div>
+                                    </div>
+
+                                    <div class="card-body">
+                                        <div class="body-content">
+                                                                                        <div class="achievement-watermark wm-pending">
+                                                <i class="ph-fill ph-seal-check"></i>
+                                            </div>
+                                                                                        <div class="body-gallery">
+                                                                                                    <div class="no-img-placeholder">
+                                                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
+                                                            fill="currentColor">
+                                                            <path
+                                                                d="M21 19V5c0-1.1-.9-2-2-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2zM8.5 13.5l2.5 3.01L14.5 12l4.5 6H5l3.5-4.5z" />
+                                                        </svg>
+                                                        <span>暂无影像</span>
+                                                    </div>
+                                                                                            </div>
+
+                                            <div class="body-info">
+                                                <div class="body-full-title">一起给对方写信，然后读给对方听🍍</div>
+                                                <div class="info-item">
+                                                    <span class="info-label">完成时间 / TIME</span>
+                                                    <span class="info-value">---</span>
+                                                </div>
+                                                <div class="info-item">
+                                                    <span class="info-label">达成地点 / LOCATION</span>
+                                                                                                        <span class="info-value">---</span>
+                                                                                                    </div>
+                                                                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                                            <div class="love-card" id="event-11" data-aos="fade-up" data-aos-delay="300">
+                                    <div class="card-header">
+                                        <div class="header-left">
+                                            <span class="status-dot com"></span>
+                                            <span class="event-name">一起打扫卫生🥭</span>
+                                            <span class="event-tags">
+                                                                                                                                                                                            </span>
+                                        </div>
+                                        <div class="header-right">
+                                            <span class="toggle-icon">
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20"
+                                                    viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                                                    stroke-linecap="round" stroke-linejoin="round">
+                                                    <path d="M6 9l6 6 6-6" />
+                                                </svg>
+                                            </span>
+                                        </div>
+                                    </div>
+
+                                    <div class="card-body">
+                                        <div class="body-content">
+                                                                                        <div class="achievement-watermark">
+                                                <i class="ph-fill ph-seal-check"></i>
+                                            </div>
+                                                                                        <div class="body-gallery">
+                                                                                                    <div class="no-img-placeholder">
+                                                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
+                                                            fill="currentColor">
+                                                            <path
+                                                                d="M21 19V5c0-1.1-.9-2-2-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2zM8.5 13.5l2.5 3.01L14.5 12l4.5 6H5l3.5-4.5z" />
+                                                        </svg>
+                                                        <span>暂无影像</span>
+                                                    </div>
+                                                                                            </div>
+
+                                            <div class="body-info">
+                                                <div class="body-full-title">一起打扫卫生🥭</div>
+                                                <div class="info-item">
+                                                    <span class="info-label">完成时间 / TIME</span>
+                                                    <span class="info-value">---</span>
+                                                </div>
+                                                <div class="info-item">
+                                                    <span class="info-label">达成地点 / LOCATION</span>
+                                                                                                        <span class="info-value">---</span>
+                                                                                                    </div>
+                                                                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                                            <div class="love-card" id="event-10" data-aos="fade-up" data-aos-delay="300">
+                                    <div class="card-header">
+                                        <div class="header-left">
+                                            <span class="status-dot com"></span>
+                                            <span class="event-name">一起过生日🎂</span>
+                                            <span class="event-tags">
+                                                <span class="etag"><i data-lucide="image" title="有照片"></i></span>                                                                                                                                            </span>
+                                        </div>
+                                        <div class="header-right">
+                                            <span class="toggle-icon">
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20"
+                                                    viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                                                    stroke-linecap="round" stroke-linejoin="round">
+                                                    <path d="M6 9l6 6 6-6" />
+                                                </svg>
+                                            </span>
+                                        </div>
+                                    </div>
+
+                                    <div class="card-body">
+                                        <div class="body-content">
+                                                                                        <div class="achievement-watermark">
+                                                <i class="ph-fill ph-seal-check"></i>
+                                            </div>
+                                                                                        <div class="body-gallery">
+                                                                                                    <div class="img-counter">1 / 1</div>
+                                                    <div class="f-carousel ConventionPhoto" view-image>
+                                                                                                                    <div class="f-carousel__slide">
+                                                                <img class="lazy" draggable="false" data-src="Lovefolder/20240430112144_1_thumb.webp" data-original="/uploads/20240430112144_1.jpeg" />
+                                                            </div>
+                                                                                                            </div>
+                                                                                            </div>
+
+                                            <div class="body-info">
+                                                <div class="body-full-title">一起过生日🎂</div>
+                                                <div class="info-item">
+                                                    <span class="info-label">完成时间 / TIME</span>
+                                                    <span class="info-value">---</span>
+                                                </div>
+                                                <div class="info-item">
+                                                    <span class="info-label">达成地点 / LOCATION</span>
+                                                                                                        <span class="info-value">---</span>
+                                                                                                    </div>
+                                                                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                                            <div class="love-card" id="event-9" data-aos="fade-up" data-aos-delay="300">
+                                    <div class="card-header">
+                                        <div class="header-left">
+                                            <span class="status-dot air"></span>
+                                            <span class="event-name">一起过次烛光晚餐🍒</span>
+                                            <span class="event-tags">
+                                                                                                                                                                                            </span>
+                                        </div>
+                                        <div class="header-right">
+                                            <span class="toggle-icon">
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20"
+                                                    viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                                                    stroke-linecap="round" stroke-linejoin="round">
+                                                    <path d="M6 9l6 6 6-6" />
+                                                </svg>
+                                            </span>
+                                        </div>
+                                    </div>
+
+                                    <div class="card-body">
+                                        <div class="body-content">
+                                                                                        <div class="achievement-watermark wm-pending">
+                                                <i class="ph-fill ph-seal-check"></i>
+                                            </div>
+                                                                                        <div class="body-gallery">
+                                                                                                    <div class="no-img-placeholder">
+                                                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
+                                                            fill="currentColor">
+                                                            <path
+                                                                d="M21 19V5c0-1.1-.9-2-2-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2zM8.5 13.5l2.5 3.01L14.5 12l4.5 6H5l3.5-4.5z" />
+                                                        </svg>
+                                                        <span>暂无影像</span>
+                                                    </div>
+                                                                                            </div>
+
+                                            <div class="body-info">
+                                                <div class="body-full-title">一起过次烛光晚餐🍒</div>
+                                                <div class="info-item">
+                                                    <span class="info-label">完成时间 / TIME</span>
+                                                    <span class="info-value">---</span>
+                                                </div>
+                                                <div class="info-item">
+                                                    <span class="info-label">达成地点 / LOCATION</span>
+                                                                                                        <span class="info-value">---</span>
+                                                                                                    </div>
+                                                                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                                            <div class="love-card" id="event-8" data-aos="fade-up" data-aos-delay="300">
+                                    <div class="card-header">
+                                        <div class="header-left">
+                                            <span class="status-dot com"></span>
+                                            <span class="event-name">一起在厨房做n次饭🍲</span>
+                                            <span class="event-tags">
+                                                <span class="etag"><i data-lucide="image" title="有照片"></i></span>                                                                                                                                            </span>
+                                        </div>
+                                        <div class="header-right">
+                                            <span class="toggle-icon">
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20"
+                                                    viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                                                    stroke-linecap="round" stroke-linejoin="round">
+                                                    <path d="M6 9l6 6 6-6" />
+                                                </svg>
+                                            </span>
+                                        </div>
+                                    </div>
+
+                                    <div class="card-body">
+                                        <div class="body-content">
+                                                                                        <div class="achievement-watermark">
+                                                <i class="ph-fill ph-seal-check"></i>
+                                            </div>
+                                                                                        <div class="body-gallery">
+                                                                                                    <div class="img-counter">1 / 1</div>
+                                                    <div class="f-carousel ConventionPhoto" view-image>
+                                                                                                                    <div class="f-carousel__slide">
+                                                                <img class="lazy" draggable="false" data-src="Lovefolder/20240430110747_6_thumb.webp" data-original="/uploads/20240430110747_6.jpeg" />
+                                                            </div>
+                                                                                                            </div>
+                                                                                            </div>
+
+                                            <div class="body-info">
+                                                <div class="body-full-title">一起在厨房做n次饭🍲</div>
+                                                <div class="info-item">
+                                                    <span class="info-label">完成时间 / TIME</span>
+                                                    <span class="info-value">---</span>
+                                                </div>
+                                                <div class="info-item">
+                                                    <span class="info-label">达成地点 / LOCATION</span>
+                                                                                                        <span class="info-value">---</span>
+                                                                                                    </div>
+                                                                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                                            <div class="love-card" id="event-7" data-aos="fade-up" data-aos-delay="300">
+                                    <div class="card-header">
+                                        <div class="header-left">
+                                            <span class="status-dot com"></span>
+                                            <span class="event-name">一起唱唱歌并且录下来🎹</span>
+                                            <span class="event-tags">
+                                                <span class="etag"><i data-lucide="image" title="有照片"></i></span>                                                                                                                                            </span>
+                                        </div>
+                                        <div class="header-right">
+                                            <span class="toggle-icon">
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20"
+                                                    viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                                                    stroke-linecap="round" stroke-linejoin="round">
+                                                    <path d="M6 9l6 6 6-6" />
+                                                </svg>
+                                            </span>
+                                        </div>
+                                    </div>
+
+                                    <div class="card-body">
+                                        <div class="body-content">
+                                                                                        <div class="achievement-watermark">
+                                                <i class="ph-fill ph-seal-check"></i>
+                                            </div>
+                                                                                        <div class="body-gallery">
+                                                                                                    <div class="img-counter">1 / 1</div>
+                                                    <div class="f-carousel ConventionPhoto" view-image>
+                                                                                                                    <div class="f-carousel__slide">
+                                                                <img class="lazy" draggable="false" data-src="Lovefolder/537f33cfc6a0d1b48d608b724dd57d1e_thumb.webp" data-original="https://img.gejiba.com/images/537f33cfc6a0d1b48d608b724dd57d1e.jpg" />
+                                                            </div>
+                                                                                                            </div>
+                                                                                            </div>
+
+                                            <div class="body-info">
+                                                <div class="body-full-title">一起唱唱歌并且录下来🎹</div>
+                                                <div class="info-item">
+                                                    <span class="info-label">完成时间 / TIME</span>
+                                                    <span class="info-value">---</span>
+                                                </div>
+                                                <div class="info-item">
+                                                    <span class="info-label">达成地点 / LOCATION</span>
+                                                                                                        <span class="info-value">---</span>
+                                                                                                    </div>
+                                                                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                                            <div class="love-card" id="event-6" data-aos="fade-up" data-aos-delay="300">
+                                    <div class="card-header">
+                                        <div class="header-left">
+                                            <span class="status-dot air"></span>
+                                            <span class="event-name">一起去游泳🏊‍♂️🏊‍♀️</span>
+                                            <span class="event-tags">
+                                                                                                                                                                                            </span>
+                                        </div>
+                                        <div class="header-right">
+                                            <span class="toggle-icon">
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20"
+                                                    viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                                                    stroke-linecap="round" stroke-linejoin="round">
+                                                    <path d="M6 9l6 6 6-6" />
+                                                </svg>
+                                            </span>
+                                        </div>
+                                    </div>
+
+                                    <div class="card-body">
+                                        <div class="body-content">
+                                                                                        <div class="achievement-watermark wm-pending">
+                                                <i class="ph-fill ph-seal-check"></i>
+                                            </div>
+                                                                                        <div class="body-gallery">
+                                                                                                    <div class="no-img-placeholder">
+                                                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
+                                                            fill="currentColor">
+                                                            <path
+                                                                d="M21 19V5c0-1.1-.9-2-2-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2zM8.5 13.5l2.5 3.01L14.5 12l4.5 6H5l3.5-4.5z" />
+                                                        </svg>
+                                                        <span>暂无影像</span>
+                                                    </div>
+                                                                                            </div>
+
+                                            <div class="body-info">
+                                                <div class="body-full-title">一起去游泳🏊‍♂️🏊‍♀️</div>
+                                                <div class="info-item">
+                                                    <span class="info-label">完成时间 / TIME</span>
+                                                    <span class="info-value">---</span>
+                                                </div>
+                                                <div class="info-item">
+                                                    <span class="info-label">达成地点 / LOCATION</span>
+                                                                                                        <span class="info-value">---</span>
+                                                                                                    </div>
+                                                                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                                            <div class="love-card" id="event-5" data-aos="fade-up" data-aos-delay="300">
+                                    <div class="card-header">
+                                        <div class="header-left">
+                                            <span class="status-dot air"></span>
+                                            <span class="event-name">一起去一趟迪士尼游乐园🍉</span>
+                                            <span class="event-tags">
+                                                                                                                                                                                            </span>
+                                        </div>
+                                        <div class="header-right">
+                                            <span class="toggle-icon">
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20"
+                                                    viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                                                    stroke-linecap="round" stroke-linejoin="round">
+                                                    <path d="M6 9l6 6 6-6" />
+                                                </svg>
+                                            </span>
+                                        </div>
+                                    </div>
+
+                                    <div class="card-body">
+                                        <div class="body-content">
+                                                                                        <div class="achievement-watermark wm-pending">
+                                                <i class="ph-fill ph-seal-check"></i>
+                                            </div>
+                                                                                        <div class="body-gallery">
+                                                                                                    <div class="no-img-placeholder">
+                                                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
+                                                            fill="currentColor">
+                                                            <path
+                                                                d="M21 19V5c0-1.1-.9-2-2-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2zM8.5 13.5l2.5 3.01L14.5 12l4.5 6H5l3.5-4.5z" />
+                                                        </svg>
+                                                        <span>暂无影像</span>
+                                                    </div>
+                                                                                            </div>
+
+                                            <div class="body-info">
+                                                <div class="body-full-title">一起去一趟迪士尼游乐园🍉</div>
+                                                <div class="info-item">
+                                                    <span class="info-label">完成时间 / TIME</span>
+                                                    <span class="info-value">---</span>
+                                                </div>
+                                                <div class="info-item">
+                                                    <span class="info-label">达成地点 / LOCATION</span>
+                                                                                                        <span class="info-value">---</span>
+                                                                                                    </div>
+                                                                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                                            <div class="love-card" id="event-4" data-aos="fade-up" data-aos-delay="300">
+                                    <div class="card-header">
+                                        <div class="header-left">
+                                            <span class="status-dot com"></span>
+                                            <span class="event-name">一起穿情侣装逛街💑🏻</span>
+                                            <span class="event-tags">
+                                                <span class="etag"><i data-lucide="image" title="有照片"></i></span>                                                                                                                                            </span>
+                                        </div>
+                                        <div class="header-right">
+                                            <span class="toggle-icon">
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20"
+                                                    viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                                                    stroke-linecap="round" stroke-linejoin="round">
+                                                    <path d="M6 9l6 6 6-6" />
+                                                </svg>
+                                            </span>
+                                        </div>
+                                    </div>
+
+                                    <div class="card-body">
+                                        <div class="body-content">
+                                                                                        <div class="achievement-watermark">
+                                                <i class="ph-fill ph-seal-check"></i>
+                                            </div>
+                                                                                        <div class="body-gallery">
+                                                                                                    <div class="img-counter">1 / 1</div>
+                                                    <div class="f-carousel ConventionPhoto" view-image>
+                                                                                                                    <div class="f-carousel__slide">
+                                                                <img class="lazy" draggable="false" data-src="Lovefolder/20240430112324_1_thumb.webp" data-original="/uploads/20240430112324_1.jpeg" />
+                                                            </div>
+                                                                                                            </div>
+                                                                                            </div>
+
+                                            <div class="body-info">
+                                                <div class="body-full-title">一起穿情侣装逛街💑🏻</div>
+                                                <div class="info-item">
+                                                    <span class="info-label">完成时间 / TIME</span>
+                                                    <span class="info-value">---</span>
+                                                </div>
+                                                <div class="info-item">
+                                                    <span class="info-label">达成地点 / LOCATION</span>
+                                                                                                        <span class="info-value">---</span>
+                                                                                                    </div>
+                                                                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                                            <div class="love-card" id="event-3" data-aos="fade-up" data-aos-delay="300">
+                                    <div class="card-header">
+                                        <div class="header-left">
+                                            <span class="status-dot com"></span>
+                                            <span class="event-name">一起去电影院看一场电影🎬</span>
+                                            <span class="event-tags">
+                                                <span class="etag"><i data-lucide="image" title="有照片"></i></span>                                                                                                                                            </span>
+                                        </div>
+                                        <div class="header-right">
+                                            <span class="toggle-icon">
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20"
+                                                    viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                                                    stroke-linecap="round" stroke-linejoin="round">
+                                                    <path d="M6 9l6 6 6-6" />
+                                                </svg>
+                                            </span>
+                                        </div>
+                                    </div>
+
+                                    <div class="card-body">
+                                        <div class="body-content">
+                                                                                        <div class="achievement-watermark">
+                                                <i class="ph-fill ph-seal-check"></i>
+                                            </div>
+                                                                                        <div class="body-gallery">
+                                                                                                    <div class="img-counter">1 / 1</div>
+                                                    <div class="f-carousel ConventionPhoto" view-image>
+                                                                                                                    <div class="f-carousel__slide">
+                                                                <img class="lazy" draggable="false" data-src="Lovefolder/20240430112343_1_thumb.webp" data-original="/uploads/20240430112343_1.jpeg" />
+                                                            </div>
+                                                                                                            </div>
+                                                                                            </div>
+
+                                            <div class="body-info">
+                                                <div class="body-full-title">一起去电影院看一场电影🎬</div>
+                                                <div class="info-item">
+                                                    <span class="info-label">完成时间 / TIME</span>
+                                                    <span class="info-value">---</span>
+                                                </div>
+                                                <div class="info-item">
+                                                    <span class="info-label">达成地点 / LOCATION</span>
+                                                                                                        <span class="info-value">---</span>
+                                                                                                    </div>
+                                                                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                                            <div class="love-card" id="event-2" data-aos="fade-up" data-aos-delay="300">
+                                    <div class="card-header">
+                                        <div class="header-left">
+                                            <span class="status-dot com"></span>
+                                            <span class="event-name">一起去看海🌊</span>
+                                            <span class="event-tags">
+                                                <span class="etag"><i data-lucide="image" title="有照片"></i></span>                                                                                                                                            </span>
+                                        </div>
+                                        <div class="header-right">
+                                            <span class="toggle-icon">
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20"
+                                                    viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                                                    stroke-linecap="round" stroke-linejoin="round">
+                                                    <path d="M6 9l6 6 6-6" />
+                                                </svg>
+                                            </span>
+                                        </div>
+                                    </div>
+
+                                    <div class="card-body">
+                                        <div class="body-content">
+                                                                                        <div class="achievement-watermark">
+                                                <i class="ph-fill ph-seal-check"></i>
+                                            </div>
+                                                                                        <div class="body-gallery">
+                                                                                                    <div class="img-counter">1 / 1</div>
+                                                    <div class="f-carousel ConventionPhoto" view-image>
+                                                                                                                    <div class="f-carousel__slide">
+                                                                <img class="lazy" draggable="false" data-src="Lovefolder/f3b164c311ebce22a5403b908c2f8b9a_thumb.webp" data-original="https://img.gejiba.com/images/f3b164c311ebce22a5403b908c2f8b9a.jpg" />
+                                                            </div>
+                                                                                                            </div>
+                                                                                            </div>
+
+                                            <div class="body-info">
+                                                <div class="body-full-title">一起去看海🌊</div>
+                                                <div class="info-item">
+                                                    <span class="info-label">完成时间 / TIME</span>
+                                                    <span class="info-value">---</span>
+                                                </div>
+                                                <div class="info-item">
+                                                    <span class="info-label">达成地点 / LOCATION</span>
+                                                                                                        <span class="info-value">---</span>
+                                                                                                    </div>
+                                                                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                                            <div class="love-card" id="event-1" data-aos="fade-up" data-aos-delay="300">
+                                    <div class="card-header">
+                                        <div class="header-left">
+                                            <span class="status-dot com"></span>
+                                            <span class="event-name">一起吃火锅🧂</span>
+                                            <span class="event-tags">
+                                                <span class="etag"><i data-lucide="image" title="有照片"></i></span>                                                                                                                                            </span>
+                                        </div>
+                                        <div class="header-right">
+                                            <span class="toggle-icon">
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20"
+                                                    viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                                                    stroke-linecap="round" stroke-linejoin="round">
+                                                    <path d="M6 9l6 6 6-6" />
+                                                </svg>
+                                            </span>
+                                        </div>
+                                    </div>
+
+                                    <div class="card-body">
+                                        <div class="body-content">
+                                                                                        <div class="achievement-watermark">
+                                                <i class="ph-fill ph-seal-check"></i>
+                                            </div>
+                                                                                        <div class="body-gallery">
+                                                                                                    <div class="img-counter">1 / 1</div>
+                                                    <div class="f-carousel ConventionPhoto" view-image>
+                                                                                                                    <div class="f-carousel__slide">
+                                                                <img class="lazy" draggable="false" data-src="Lovefolder/20240430110749_8_thumb.webp" data-original="/uploads/20240430110749_8.jpeg" />
+                                                            </div>
+                                                                                                            </div>
+                                                                                            </div>
+
+                                            <div class="body-info">
+                                                <div class="body-full-title">一起吃火锅🧂</div>
+                                                <div class="info-item">
+                                                    <span class="info-label">完成时间 / TIME</span>
+                                                    <span class="info-value">---</span>
+                                                </div>
+                                                <div class="info-item">
+                                                    <span class="info-label">达成地点 / LOCATION</span>
+                                                                                                        <span class="info-value">---</span>
+                                                                                                    </div>
+                                                                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                                    </div>
+                    </div>
+                
+            </div>
+        </div>
+    </div>
+    
+
+    <!-- 留言弹窗遮罩层 -->
+    <div class="mask" id="mask">
+        <div class="close">
+            <svg t="1682818912164" class="icon" viewBox="0 0 1024 1024" version="1.1"
+                xmlns="http://www.w3.org/2000/svg" p-id="2416" width="200" height="200">
+                <path
+                    d="M550.848 502.496l308.64-308.896a31.968 31.968 0 1 0-45.248-45.248l-308.608 308.896-308.64-308.928a31.968 31.968 0 1 0-45.248 45.248l308.64 308.896-308.64 308.896a31.968 31.968 0 1 0 45.248 45.248l308.64-308.896 308.608 308.896a31.968 31.968 0 1 0 45.248-45.248l-308.64-308.864z"
+                    p-id="2417"></path>
+            </svg>
+        </div>
+    </div>
+
+
+    <!-- 表情面板（全局可用，弹窗 & 抽屉共用） -->
+    <div class="withu-message-emoji-panel" id="withumsgEmojiPanel">
+        <div class="withu-message-emoji-tabs-wrap">
+            <div class="withu-message-emoji-tabs" id="withumsgEmojiTabs"></div>
+        </div>
+        <div class="withu-message-emoji-cat-title" id="withumsgEmojiCatTitle"></div>
+        <div class="withu-message-emoji-list" id="withumsgEmojiGrid"></div>
+    </div>
+
+    <div class="withu-message-emoji-preview" id="withumsgEmojiPreview">
+        <img src="" id="withumsgPreviewImg">
+        <span id="withumsgPreviewText"></span>
+    </div>
+
+    <!-- 留言触发按钮 -->
+    <div class="message_btn" id="mes">
+        <span class="mesly shadow-blur">
+            <i data-lucide="message-circle" style="width:2rem;height:2rem;fill:currentColor;stroke:none;"></i>
+        </span>
+    </div>
+
+    <!-- 随机一言确认弹窗（about.php 风格） -->
+    <div class="withumsg-confirm-overlay" id="withumsgConfirmOverlay">
+        <div class="withumsg-confirm-panel">
+            <!-- 关闭按钮 -->
+            <button class="withumsg-confirm-close-btn" id="withumsgConfirmClose" aria-label="关闭">
+                <i class="ph ph-x"></i>
+            </button>
+            <!-- 图标 -->
+            <div class="withumsg-confirm-icon-wrapper">
+                <svg viewBox="0 0 24 24" fill="currentColor"><path d="M9.937 15.5A2 2 0 0 0 8.5 14.063l-6.135-1.582a.5.5 0 0 1 0-.962L8.5 9.936A2 2 0 0 0 9.937 8.5l1.582-6.135a.5.5 0 0 1 .963 0L14.063 8.5A2 2 0 0 0 15.5 9.937l6.135 1.582a.5.5 0 0 1 0 .962L15.5 14.063a2 2 0 0 0-1.437 1.437l-1.582 6.135a.5.5 0 0 1-.963 0z"/><path d="M20 3v4"/><path d="M22 5h-4"/></svg>
+            </div>
+            <!-- 标题 -->
+            <h2 class="withumsg-confirm-title">替换为随机一言？</h2>
+            <!-- 描述 -->
+            <p class="withumsg-confirm-desc">当前输入框已有内容，确认后将清空并替换为一条随机文案</p>
+            <!-- 操作按钮 -->
+            <div class="withumsg-confirm-actions">
+                <button class="withumsg-confirm-btn withumsg-confirm-btn-secondary" id="withumsgConfirmCancel">取消</button>
+                <button class="withumsg-confirm-btn withumsg-confirm-btn-primary" id="withumsgConfirmOk">确认替换</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 留言弹窗（全局可用） -->
+    <div class="withu-message-modal-overlay" id="withumsgCommentModal">
+        <div class="withu-message-modal-content" id="withumsgModalContent">
+            <div class="withu-message-close-wrapper">
+                <button class="withu-message-close-btn" id="withumsgModalCloseBtn">
+                    <i data-lucide="x" style="width:20px;height:20px;"></i>
+                </button>
+            </div>
+            <div class="withu-message-modal-body">
+                <div class="withu-message-head-titles">
+                    <div class="withu-message-title">写一条留言</div>
+                    <div class="withu-message-subtitle">在这里，留下属于你的印记</div>
+                </div>
+                <div class="withu-message-ios-tabs-wrap">
+                    <div class="withu-message-ios-tabs" id="withumsgTabContainer">
+                        <div class="withu-message-ios-tab-slider" id="withumsgTabSlider"></div>
+                        <div class="withu-message-ios-tab active" data-mode="qq">QQ留言</div>
+                        <div class="withu-message-ios-tab" data-mode="anonymous">匿名留言</div>
+                    </div>
+                </div>
+                <div class="withu-message-visitor-tags" id="withumsgVisitorTags">
+                    <div class="withu-message-v-tag">
+                        <div class="withu-message-v-tag-icon withu-message-icon-os">
+                            <i data-lucide="monitor"></i>
+                        </div>
+                        <span id="withumsgTagOS">--</span>
+                    </div>
+                    <div class="withu-message-v-tag">
+                        <div class="withu-message-v-tag-icon withu-message-icon-browser">
+                            <i data-lucide="globe"></i>
+                        </div>
+                        <span id="withumsgTagBrowser">--</span>
+                    </div>
+                    <div class="withu-message-v-tag">
+                        <div class="withu-message-v-tag-icon withu-message-icon-location">
+                            <i data-lucide="map-pin"></i>
+                        </div>
+                        <span id="withumsgTagLocation">--</span>
+                    </div>
+                    <div class="withu-message-v-tag">
+                        <div class="withu-message-v-tag-icon withu-message-icon-weather">
+                            <i class="qi-100-fill" id="withumsgWeatherIcon"></i>
+                        </div>
+                        <span id="withumsgTagWeather">--</span>
+                    </div>
+                </div>
+                <div class="withu-message-input-row" id="withumsgInputRow"></div>
+                <div class="withu-message-privacy-hint" id="withumsgPrivacyHint"><i data-lucide="lock"></i>QQ 信息经过加密脱敏处理，不会公开展示，请放心留言</div>
+                <div class="withu-message-editor-wrap">
+                    <div class="withu-message-editor-content" id="withumsgEditor" contenteditable="true" data-placeholder="想说点什么..."></div>
+                    <div class="withu-message-emoji-bubbles" id="withumsgEmojiBubbles"></div>
+                    <div class="withu-message-editor-toolbar">
+                        <div class="withu-message-tb-left">
+                            <button class="withu-message-tb-btn" id="withumsgBtnEmoji" title="表情">
+                                <i data-lucide="smile"></i>
+                            </button>
+                            <button class="withu-message-tb-btn" id="withumsgBtnQuote" title="随机一言">
+                                <i data-lucide="sparkles"></i>
+                            </button>
+                            <div class="withu-message-switch-wrap" id="withumsgEnterToSendWrap">
+                                <div class="withu-message-switch"></div>
+                                <span class="withu-message-switch-text">Enter 发送</span>
+                            </div>
+                        </div>
+                        <span class="withu-message-char-counter" id="withumsgCharCounter">0/500</span>
+                        <button class="withu-message-submit-btn" id="withumsgSubmitBtn">
+                            <span class="withu-message-submit-label">发送留言</span>
+                            <i data-lucide="send" class="withu-message-submit-icon" style="width:18px;height:18px;"></i>
+                            <i data-lucide="loader" class="withu-message-submit-loader withu-message-lucide-loader" style="width:18px;height:18px;"></i>
+                            <i data-lucide="check" class="withu-message-submit-check" style="width:18px;height:18px;"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 留言弹窗配置输出 -->
+    <script>
+        window.WITHU_CONFIG = window.WITHU_CONFIG || {};
+        window.WITHU_CONFIG.userCity = "湖北 · 武汉";
+        window.WITHU_CONFIG.anonymousAvatar = "/Lovefolder/20250310095643_67ce46dbe2e56.webp";
+    </script>
+
+    <!-- 极验验证与留言提交绑定 -->
+    <script>
+    $(function() {
+        if (typeof GeetestHelper !== 'undefined') {
+            var siteTitle = (window.WITHU_CONFIG && window.WITHU_CONFIG.title) || '';
+
+            GeetestHelper.init({
+                toast: {
+                    success: function(msg) { Toastify.showScenario('success', { text: msg }); },
+                    error: function(msg) { Toastify.showScenario('error', { text: msg }); },
+                    warning: function(msg) { Toastify.showScenario('warning', { text: msg }); }
+                },
+                onClose: function() {
+                    $('#leavingPost').removeAttr('disabled').text('提交留言');
+                },
+                onSuccess: function(result) {
+                    if (typeof submitMessage === 'function') {
+                        submitMessage(result);
+                    }
+                }
+            });
+
+            $('#leavingPost').off('click.withuGeetest').on('click.withuGeetest', function() {
+                var qq = $("input[name='qq']").val();
+                var name = $("input[name='name']").val();
+                var text = $("textarea[name='text']").val();
+
+                if (!qq || !name || !text) {
+                    Toastify.showScenario('warning', { text: '留言提交失败 表单输入不完整！' });
+                    return false;
+                }
+
+                if (typeof containsBannedChar === 'function' && containsBannedChar((name || '') + ' ' + (text || ''))) {
+                    Toastify.showScenario('warning', { text: '留言包含违禁内容，请修改后重试' });
+                    return false;
+                }
+
+                $('#leavingPost').text('请完成验证...').attr('disabled', 'disabled');
+                GeetestHelper.show();
+            });
+        } else {
+            $('#leavingPost').off('click.withuGeetest').on('click.withuGeetest', function() {
+                var qq = $("input[name='qq']").val();
+                var name = $("input[name='name']").val();
+                var text = $("textarea[name='text']").val();
+
+                if (!qq || !name || !text) {
+                    Toastify.showScenario('warning', { text: '留言提交失败 表单输入不完整！' });
+                    return false;
+                }
+
+                if (typeof containsBannedChar === 'function' && containsBannedChar((name || '') + ' ' + (text || ''))) {
+                    Toastify.showScenario('warning', { text: '留言包含违禁内容，请修改后重试' });
+                    return false;
+                }
+
+                if (typeof submitMessage === 'function') {
+                    submitMessage({});
+                }
+            });
+        }
+    });
+    </script>
+
+
+<link rel="stylesheet" href="/Style/Font/font_footer/iconfont.css">
+
+<script src="/Style/vendor/confetti/confetti.browser.min.js"></script>
+<script src="/assets/js/page-messages.js"></script>
+<script src="/Style/toastify/lucide.min.js"></script>
+<script src="/Style/toastify/toastify.js"></script>
+<script>if(typeof lucide!=='undefined')lucide.createIcons();</script>
+<script src="/Style/js/clipboard.min.js"></script>
+<script src="/assets/js/clipboard.js"></script>
+<script src="/assets/js/tooltip.js"></script>
+<script src="/Style/js/view-image.min.js"></script>
+<script src="/Style/LoveListStyle/carousel.umd.js"></script>
+<script src="/Style/LoveListStyle/carousel.thumbs.umd.js"></script>
+<script src="/Style/LoveListStyle/fancybox.umd.js"></script>
+<script src="/assets/js/page-lovelist.js"></script>
+<script src="/assets/js/page-index.js"></script>
+<script src="/assets/js/page-detail.js"></script>
+<script src="/assets/js/page-album-detail.js"></script>
+<script src="/assets/js/html2canvas.min.js"></script>
+<script src="/assets/js/chat.js"></script>
+
+<script src="/assets/js/visitor-hash.js"></script>
+<script src="/assets/js/interaction.js"></script>
+<script src="/assets/js/context-menu.js"></script>
+
+
+<!-- 足迹地图弹窗 -->
+<!-- ============ 足迹地图弹窗 ============ -->
 <div class="withu-map-overlay" id="withuMapOverlay" style="display:none;">
     <div class="withu-map-modal">
         <div class="withu-map">

@@ -2945,6 +2945,1611 @@
             </ul>
 
     <?php include __DIR__ . '/inc/head-avatars.php'; ?>
+
+
+    <svg class="waves" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
+        viewBox="0 24 150 28" preserveAspectRatio="none" shape-rendering="auto">
+        <defs>
+            <path id="gentle-wave" d="M-160 44c30 0 58-18 88-18s 58 18 88 18 58-18 88-18 58 18 88 18 v44h-352z" />
+        </defs>
+        <g class="parallax">
+            <use xlink:href="#gentle-wave" x="48" y="0" fill="rgba(255,255,255,0.7" />
+            <use xlink:href="#gentle-wave" x="48" y="3" fill="rgba(255,255,255,0.5)" />
+            <use xlink:href="#gentle-wave" x="48" y="5" fill="rgba(255,255,255,0.3)" />
+            <use xlink:href="#gentle-wave" x="48" y="7" fill="#fff" />
+        </g>
+    </svg>
+
+    <ul class="pointList">
+                    <li class="point active" data-index="0"></li>
+                    <li class="point " data-index="1"></li>
+                    <li class="point " data-index="2"></li>
+                    <li class="point " data-index="3"></li>
+                    <li class="point " data-index="4"></li>
+                    <li class="point " data-index="5"></li>
+                    <li class="point " data-index="6"></li>
+                    <li class="point " data-index="7"></li>
+            </ul>
+</div>
+
+<div class="Width_limit_10rem">
+    <div class="withu-sticky-sentinel" id="withuStickySentinel"></div>
+</div>
+
+<div class="withu-nav-placeholder" id="withuNavPlaceholder"></div>
+<div class="withu-nav-wrapper" id="withuNavWrapper">
+    <nav class="withu-nav-island-container" id="withuNavIsland">
+        <div class="withu-nav-indicator" id="withuNavIndicator"></div>
+
+                <a href="articles.php"
+           class="withu-nav-island-item active "
+           draggable="false"
+           data-desc="写下日常、心情与想念"
+           data-meta="Memory Notes">
+            <i class="ph-fill ph-notebook"></i>
+            <span>点滴</span>        </a>
+                <a href="messages.php"
+           class="withu-nav-island-item  "
+           draggable="false"
+           data-desc="留下想说的话与温柔回应"
+           data-meta="Kind Messages">
+            <i class="ph-fill ph-chat-teardrop-dots"></i>
+            <span>留言</span>        </a>
+                <a href="timeline.php"
+           class="withu-nav-island-item  "
+           draggable="false"
+           data-desc="回看我们一路走来的轨迹"
+           data-meta="Steps of Us">
+            <i class="ph-fill ph-clock-countdown"></i>
+            <span>轨迹</span>        </a>
+                <a href="index.php"
+           class="withu-nav-island-item  nav-home"
+           draggable="false"
+           data-desc="收好我们的日常与心动"
+           data-meta="Our Cozy Place">
+            <i class="ph-fill ph-house"></i>
+                    </a>
+                <a href="albums.php"
+           class="withu-nav-island-item  "
+           draggable="false"
+           data-desc="收藏见面与出游的闪亮瞬间"
+           data-meta="Photo Keepsakes">
+            <i class="ph-fill ph-camera"></i>
+            <span>相册</span>        </a>
+                <a href="lovelist.php"
+           class="withu-nav-island-item  "
+           draggable="false"
+           data-desc="记下想一起完成的心愿"
+           data-meta="Plans Together">
+            <i class="ph-fill ph-list-checks"></i>
+            <span>清单</span>        </a>
+                <a href="about.php"
+           class="withu-nav-island-item  "
+           draggable="false"
+           data-desc="用对话回放我们的故事"
+           data-meta="Story Replay">
+            <i class="ph-fill ph-book-open-text"></i>
+            <span>关于</span>        </a>
+            </nav>
+</div>
+
+<div class="Width_limit_10rem">
+    <div class="withu-page-header">
+        <div class="withu-meta-container">
+            <div class="withu-meta-tag" id="withuMetaTag">
+                <i class="fa-solid fa-star-of-life withu-meta-icon"></i>
+                <span id="withuMetaText">Sanctuary of Us</span>
+                <i class="fa-solid fa-star-of-life withu-meta-icon"></i>
+            </div>
+            <div class="withu-meta-line" id="withuMetaLine"></div>
+        </div>
+        <h2 class="withu-hero-title" id="withuHeroTitle"></h2>
+    </div>
+</div>
+
+<!-- 情侣头像点击效果已迁移到 components.js 的 AvatarInteraction 模块 -->
+<html>
+
+<head>
+    <meta charset="utf-8" />
+    <title>点滴 — withU Demo</title>
+    <meta name="description" content="withU 是一个适合记录恋爱日常与纪念时刻的情侣小站，支持相册、时间轴、点滴文章、留言互动和邀请页面，让每一段关系都能拥有自己的专属回忆空间。">
+    <meta name="keywords" content="情侣网站,恋爱记录,祝福留言,情侣相册,恋爱清单,爱情纪念,情侣头像框,祝福语句,情侣互动,爱情相册,情侣事件记录,情侣留言,爱情故事,情感交流,用户互动,祝福卡片,音乐分享,甜蜜瞬间,情侣活动,爱情动态,withU">
+    <meta name="author" content="Ki">
+    <meta name="love-theme" content="withU-情侣小站">
+    <meta name="copyright" content="2024 withU Web All Rights Reserved">
+    <!-- 字体已在 head.php 全局引入，无需重复加载 -->
+    <!-- 引入卡片样式 -->
+    <link rel="stylesheet" href="/Style/css/little.css">
+</head>
+
+<body class="bg-pdot-vignette">
+
+    <div id="pjax-container">
+        <div class="Width_limit_10rem">
+            <div class="central mar_t0">
+                
+                
+                <!-- 文章卡片瀑布流 -->
+                <div class="withu-article-grid ">
+                    <div class="withu-article-masonry" id="withu-article-masonry">
+                                                                    <div class="withu-article-masonry-item" data-aos="fade-up" data-aos-delay="50">
+                        <div data-href="page.php?id=12" 
+                           class="withu-article-card-base withu-article-theme-light withu-article-aurora-spot" 
+                           style="cursor:pointer;">
+                            
+                            <header class="withu-article-card-header">
+                                <div class="withu-article-date-group">
+                                    <div class="withu-article-big-day">15</div>
+                                    <div class="withu-article-date-divider"></div>
+                                    <div class="withu-article-month-year-group">
+                                        <span class="withu-article-month-chinese">四月</span>
+                                        <span class="withu-article-year-text">2026</span>
+                                    </div>
+                                </div>
+                                <div class="withu-article-badge-serial">
+                                    <span class="withu-article-label">DAY</span>
+                                    <span class="withu-article-num">1002</span>
+                                </div>
+                            </header>
+
+                            <main class="withu-article-card-content">
+                                <div class="withu-article-meta-info">
+                                    <div class="withu-article-meta-item">
+                                        <i class="ph-duotone ph-clock"></i>
+                                        <span>21:04</span>
+                                    </div>
+                                                                        <div class="withu-article-meta-item">
+                                        <i class="ph-duotone ph-cloud-moon"></i>
+                                        <span>多云</span>
+                                    </div>
+                                                                        <div class="withu-article-meta-item">
+                                                                                    <i class="ph-duotone ph-smiley"></i>
+                                                                                <span>开心</span>
+                                    </div>
+                                </div>
+
+                                                                                                        <h3 class="withu-article-card-title">测试女主发布文章丨の 文章标题</h3>
+                                    <p class="withu-article-card-desc">&nbsp; 自动识别1233。&nbsp;&nbsp;
+test</p>
+                                                            </main>
+
+                            <footer class="withu-article-card-footer">
+                                                                <div class="withu-author show-gender">
+                                    <div class="withu-author__ring">
+                                        <div class="withu-author__avatar" style="background-image: url(/Lovefolder/20260411043046_69d95df639c33274072975.webp)"></div>
+                                                                                <div class="withu-author__badge female">
+                                            <i class="ph-bold ph-gender-female"></i>
+                                        </div>
+                                                                            </div>
+                                    <div class="withu-author__text">
+                                        <span class="withu-author__name">Really</span>
+                                        <span class="withu-author__meta" data-tooltip="广东 · 惠东">
+                                            <i class="ph-fill ph-map-pin"></i>
+                                            <span>广东 · 惠东</span>
+                                        </span>
+                                    </div>
+                                </div>
+                                <div class="withu-article-interact-box">
+                                    <div class="withu-article-action-btn">
+                                        <i class="ph ph-eye"></i>
+                                        <span data-view-count="article:12">109</span>
+                                    </div>
+                                    <div class="withu-article-action-btn" data-like-target="article" data-like-id="12">
+                                        <i class="ph ph-heart"></i>
+                                        <span class="withu-interaction-like-num" data-like-count="article:12">4</span>
+                                    </div>
+                                </div>
+                            </footer>
+                        </div>
+                        </div>
+                                                <div class="withu-article-masonry-item" data-aos="fade-up" data-aos-delay="100">
+                        <div data-href="page.php?id=11" 
+                           class="withu-article-card-base withu-article-theme-light withu-article-aurora-spot" 
+                           style="cursor:pointer;">
+                            
+                            <header class="withu-article-card-header">
+                                <div class="withu-article-date-group">
+                                    <div class="withu-article-big-day">10</div>
+                                    <div class="withu-article-date-divider"></div>
+                                    <div class="withu-article-month-year-group">
+                                        <span class="withu-article-month-chinese">四月</span>
+                                        <span class="withu-article-year-text">2026</span>
+                                    </div>
+                                </div>
+                                <div class="withu-article-badge-serial">
+                                    <span class="withu-article-label">DAY</span>
+                                    <span class="withu-article-num">997</span>
+                                </div>
+                            </header>
+
+                            <main class="withu-article-card-content">
+                                <div class="withu-article-meta-info">
+                                    <div class="withu-article-meta-item">
+                                        <i class="ph-duotone ph-clock"></i>
+                                        <span>17:39</span>
+                                    </div>
+                                                                        <div class="withu-article-meta-item">
+                                        <i class="ph-duotone ph-cloud-sun"></i>
+                                        <span>多云</span>
+                                    </div>
+                                                                        <div class="withu-article-meta-item">
+                                                                                    <i class="ph-duotone ph-smiley"></i>
+                                                                                <span>开心</span>
+                                    </div>
+                                </div>
+
+                                                                                                        <h3 class="withu-article-card-title">测试 v2.0.7发布是否正常</h3>
+                                    <p class="withu-article-card-desc">测试 v2.0.7发布是否正常测试 v2.0.7发布是否正常测试 v2.0.7发布是否正常测试 v2.0.7发布是否正常测试 v2.0.7发布是否正常测试 v2.0.7发布是否正常测试 v2.0.7发布是否正常测试 v2.0.7发布是否正常测试 v2.0.7发布是否正常测试 v2.0.7发布是否正常测试 v2.0.7发布是否正常测试 v2.0.7发布是否正常测试 v2.0.7发布是否正常测试 v2.0.7发布是否正常
+&nbsp;</p>
+                                                            </main>
+
+                            <footer class="withu-article-card-footer">
+                                                                <div class="withu-author show-gender">
+                                    <div class="withu-author__ring">
+                                        <div class="withu-author__avatar" style="background-image: url(/Lovefolder/20260411043037_69d95ded97293201118237.webp)"></div>
+                                                                                <div class="withu-author__badge male">
+                                            <i class="ph-bold ph-gender-male"></i>
+                                        </div>
+                                                                            </div>
+                                    <div class="withu-author__text">
+                                        <span class="withu-author__name">Ki.</span>
+                                        <span class="withu-author__meta" data-tooltip="广东 · 惠东">
+                                            <i class="ph-fill ph-map-pin"></i>
+                                            <span>广东 · 惠东</span>
+                                        </span>
+                                    </div>
+                                </div>
+                                <div class="withu-article-interact-box">
+                                    <div class="withu-article-action-btn">
+                                        <i class="ph ph-eye"></i>
+                                        <span data-view-count="article:11">85</span>
+                                    </div>
+                                    <div class="withu-article-action-btn" data-like-target="article" data-like-id="11">
+                                        <i class="ph ph-heart"></i>
+                                        <span class="withu-interaction-like-num" data-like-count="article:11">2</span>
+                                    </div>
+                                </div>
+                            </footer>
+                        </div>
+                        </div>
+                                                <div class="withu-article-masonry-item" data-aos="fade-up" data-aos-delay="150">
+                        <div data-href="page.php?id=10" 
+                           class="withu-article-card-base withu-article-theme-light withu-article-aurora-spot" 
+                           style="cursor:pointer;">
+                            
+                            <header class="withu-article-card-header">
+                                <div class="withu-article-date-group">
+                                    <div class="withu-article-big-day">10</div>
+                                    <div class="withu-article-date-divider"></div>
+                                    <div class="withu-article-month-year-group">
+                                        <span class="withu-article-month-chinese">四月</span>
+                                        <span class="withu-article-year-text">2026</span>
+                                    </div>
+                                </div>
+                                <div class="withu-article-badge-serial">
+                                    <span class="withu-article-label">DAY</span>
+                                    <span class="withu-article-num">997</span>
+                                </div>
+                            </header>
+
+                            <main class="withu-article-card-content">
+                                <div class="withu-article-meta-info">
+                                    <div class="withu-article-meta-item">
+                                        <i class="ph-duotone ph-clock"></i>
+                                        <span>05:36</span>
+                                    </div>
+                                                                        <div class="withu-article-meta-item">
+                                        <i class="ph-duotone ph-cloud-sun"></i>
+                                        <span>多云</span>
+                                    </div>
+                                                                        <div class="withu-article-meta-item">
+                                                                                    <i class="ph-duotone ph-smiley"></i>
+                                                                                <span>开心</span>
+                                    </div>
+                                </div>
+
+                                                                                                        <h3 class="withu-article-card-title">我再新增一遍测试</h3>
+                                    <p class="withu-article-card-desc">我再新增一遍测试我再新增一遍测试我再新增一遍测试我再新增一遍测试我再新增一遍测试我再新增一遍测试我再新增一遍测试我再新增一遍测试我再新增一遍测试我再新增一遍测试我再新增一遍测试我再新增一遍测试我再新增一遍测试我再新增一遍测试我再新增一遍测试我再新增一遍测试我再新增一遍测试我再新增一遍测试我再新增一遍测试我再新增一遍测试</p>
+                                                            </main>
+
+                            <footer class="withu-article-card-footer">
+                                                                <div class="withu-author show-gender">
+                                    <div class="withu-author__ring">
+                                        <div class="withu-author__avatar" style="background-image: url(/Lovefolder/20260411043037_69d95ded97293201118237.webp)"></div>
+                                                                                <div class="withu-author__badge male">
+                                            <i class="ph-bold ph-gender-male"></i>
+                                        </div>
+                                                                            </div>
+                                    <div class="withu-author__text">
+                                        <span class="withu-author__name">Ki.</span>
+                                        <span class="withu-author__meta" data-tooltip="广东 · 惠东">
+                                            <i class="ph-fill ph-map-pin"></i>
+                                            <span>广东 · 惠东</span>
+                                        </span>
+                                    </div>
+                                </div>
+                                <div class="withu-article-interact-box">
+                                    <div class="withu-article-action-btn">
+                                        <i class="ph ph-eye"></i>
+                                        <span data-view-count="article:10">36</span>
+                                    </div>
+                                    <div class="withu-article-action-btn" data-like-target="article" data-like-id="10">
+                                        <i class="ph ph-heart"></i>
+                                        <span class="withu-interaction-like-num" data-like-count="article:10">1</span>
+                                    </div>
+                                </div>
+                            </footer>
+                        </div>
+                        </div>
+                                                <div class="withu-article-masonry-item" data-aos="fade-up" data-aos-delay="200">
+                        <div data-href="page.php?id=9" 
+                           class="withu-article-card-base withu-article-theme-light withu-article-aurora-spot" 
+                           style="cursor:pointer;">
+                            
+                            <header class="withu-article-card-header">
+                                <div class="withu-article-date-group">
+                                    <div class="withu-article-big-day">09</div>
+                                    <div class="withu-article-date-divider"></div>
+                                    <div class="withu-article-month-year-group">
+                                        <span class="withu-article-month-chinese">四月</span>
+                                        <span class="withu-article-year-text">2026</span>
+                                    </div>
+                                </div>
+                                <div class="withu-article-badge-serial">
+                                    <span class="withu-article-label">DAY</span>
+                                    <span class="withu-article-num">996</span>
+                                </div>
+                            </header>
+
+                            <main class="withu-article-card-content">
+                                <div class="withu-article-meta-info">
+                                    <div class="withu-article-meta-item">
+                                        <i class="ph-duotone ph-clock"></i>
+                                        <span>21:40</span>
+                                    </div>
+                                                                        <div class="withu-article-meta-item">
+                                        <i class="ph-duotone ph-cloud-sun"></i>
+                                        <span>多云</span>
+                                    </div>
+                                                                        <div class="withu-article-meta-item">
+                                                                                    <i class="ph-duotone ph-smiley"></i>
+                                                                                <span>开心</span>
+                                    </div>
+                                </div>
+
+                                                                                                        <h3 class="withu-article-card-title">测试新增文章 目前时间</h3>
+                                    <p class="withu-article-card-desc">31232123123
+123312123
+123
+123123
+123
+123
+123
+123
+
+&nbsp;
+&nbsp;
+&nbsp;
+
+&nbsp;
+&nbsp;
+&nbsp;
+1231
+&nbsp;
+312
+123
+312
+123
+123
+123
+123
+123
+123
+123</p>
+                                                            </main>
+
+                            <footer class="withu-article-card-footer">
+                                                                <div class="withu-author show-gender">
+                                    <div class="withu-author__ring">
+                                        <div class="withu-author__avatar" style="background-image: url(/Lovefolder/20260411043037_69d95ded97293201118237.webp)"></div>
+                                                                                <div class="withu-author__badge male">
+                                            <i class="ph-bold ph-gender-male"></i>
+                                        </div>
+                                                                            </div>
+                                    <div class="withu-author__text">
+                                        <span class="withu-author__name">Ki.</span>
+                                        <span class="withu-author__meta" data-tooltip="广东 · 惠东">
+                                            <i class="ph-fill ph-map-pin"></i>
+                                            <span>广东 · 惠东</span>
+                                        </span>
+                                    </div>
+                                </div>
+                                <div class="withu-article-interact-box">
+                                    <div class="withu-article-action-btn">
+                                        <i class="ph ph-eye"></i>
+                                        <span data-view-count="article:9">34</span>
+                                    </div>
+                                    <div class="withu-article-action-btn" data-like-target="article" data-like-id="9">
+                                        <i class="ph ph-heart"></i>
+                                        <span class="withu-interaction-like-num" data-like-count="article:9">0</span>
+                                    </div>
+                                </div>
+                            </footer>
+                        </div>
+                        </div>
+                                                <div class="withu-article-masonry-item" data-aos="fade-up" data-aos-delay="250">
+                        <div data-href="page.php?id=8" 
+                           class="withu-article-card-base withu-article-theme-light withu-article-aurora-spot" 
+                           style="cursor:pointer;">
+                            
+                            <header class="withu-article-card-header">
+                                <div class="withu-article-date-group">
+                                    <div class="withu-article-big-day">09</div>
+                                    <div class="withu-article-date-divider"></div>
+                                    <div class="withu-article-month-year-group">
+                                        <span class="withu-article-month-chinese">四月</span>
+                                        <span class="withu-article-year-text">2026</span>
+                                    </div>
+                                </div>
+                                <div class="withu-article-badge-serial">
+                                    <span class="withu-article-label">DAY</span>
+                                    <span class="withu-article-num">996</span>
+                                </div>
+                            </header>
+
+                            <main class="withu-article-card-content">
+                                <div class="withu-article-meta-info">
+                                    <div class="withu-article-meta-item">
+                                        <i class="ph-duotone ph-clock"></i>
+                                        <span>20:09</span>
+                                    </div>
+                                                                        <div class="withu-article-meta-item">
+                                        <i class="ph-duotone ph-cloud-moon"></i>
+                                        <span>多云</span>
+                                    </div>
+                                                                        <div class="withu-article-meta-item">
+                                                                                    <i class="ph-duotone ph-smiley"></i>
+                                                                                <span>开心</span>
+                                    </div>
+                                </div>
+
+                                                                                                        <h3 class="withu-article-card-title">测试新增点点滴滴内容😈表情测试《》</h3>
+                                    <p class="withu-article-card-desc">测试彩色标签
+测试解析音乐
+
+&nbsp;
+测试测试 21:38:34
+&nbsp;
+&nbsp;
+《》《》：，
+
+哈哈哈
+测试一下测试
+
+测试测试发布动画效果</p>
+                                                            </main>
+
+                            <footer class="withu-article-card-footer">
+                                                                <div class="withu-author show-gender">
+                                    <div class="withu-author__ring">
+                                        <div class="withu-author__avatar" style="background-image: url(/Lovefolder/20260411043037_69d95ded97293201118237.webp)"></div>
+                                                                                <div class="withu-author__badge male">
+                                            <i class="ph-bold ph-gender-male"></i>
+                                        </div>
+                                                                            </div>
+                                    <div class="withu-author__text">
+                                        <span class="withu-author__name">Ki.</span>
+                                        <span class="withu-author__meta" data-tooltip="广东 · 惠东">
+                                            <i class="ph-fill ph-map-pin"></i>
+                                            <span>广东 · 惠东</span>
+                                        </span>
+                                    </div>
+                                </div>
+                                <div class="withu-article-interact-box">
+                                    <div class="withu-article-action-btn">
+                                        <i class="ph ph-eye"></i>
+                                        <span data-view-count="article:8">36</span>
+                                    </div>
+                                    <div class="withu-article-action-btn" data-like-target="article" data-like-id="8">
+                                        <i class="ph ph-heart"></i>
+                                        <span class="withu-interaction-like-num" data-like-count="article:8">1</span>
+                                    </div>
+                                </div>
+                            </footer>
+                        </div>
+                        </div>
+                                                <div class="withu-article-masonry-item" data-aos="fade-up" data-aos-delay="300">
+                        <div data-href="page.php?id=5" 
+                           class="withu-article-card-base withu-article-theme-light withu-article-aurora-spot withu-article-card-encrypted" 
+                           style="cursor:pointer;">
+                            
+                            <header class="withu-article-card-header">
+                                <div class="withu-article-date-group">
+                                    <div class="withu-article-big-day">12</div>
+                                    <div class="withu-article-date-divider"></div>
+                                    <div class="withu-article-month-year-group">
+                                        <span class="withu-article-month-chinese">三月</span>
+                                        <span class="withu-article-year-text">2025</span>
+                                    </div>
+                                </div>
+                                <div class="withu-article-badge-serial">
+                                    <span class="withu-article-label">LOCKED</span>
+                                    <span class="withu-article-num">603</span>
+                                </div>
+                            </header>
+
+                            <main class="withu-article-card-content">
+                                <div class="withu-article-meta-info">
+                                    <div class="withu-article-meta-item">
+                                        <i class="ph-duotone ph-clock"></i>
+                                        <span>00:43</span>
+                                    </div>
+                                                                        <div class="withu-article-meta-item">
+                                        <i class="ph-duotone ph-cloud-sun"></i>
+                                        <span>未知</span>
+                                    </div>
+                                                                        <div class="withu-article-meta-item">
+                                                                                    <i class="ph-duotone ph-smiley"></i>
+                                                                                <span>未知</span>
+                                    </div>
+                                </div>
+
+                                                                    <!-- 加密内容：点阵遮罩 -->
+                                    <div class="withu-content-lock-wrapper">
+                                        <div class="withu-encrypted-mask">
+                                            <div class="withu-dot-pattern"></div>
+                                            <div class="withu-lock-btn">
+                                                <i class="ph-duotone ph-fingerprint"></i>
+                                            </div>
+                                            <div class="withu-lock-text">点击查看</div>
+                                        </div>
+                                    </div>
+                                                            </main>
+
+                            <footer class="withu-article-card-footer">
+                                                                <div class="withu-author show-gender">
+                                    <div class="withu-author__ring">
+                                        <div class="withu-author__avatar" style="background-image: url(/Lovefolder/20260411043046_69d95df639c33274072975.webp)"></div>
+                                                                                <div class="withu-author__badge female">
+                                            <i class="ph-bold ph-gender-female"></i>
+                                        </div>
+                                                                            </div>
+                                    <div class="withu-author__text">
+                                        <span class="withu-author__name">Really</span>
+                                        <span class="withu-author__meta" data-tooltip="广东·中山">
+                                            <i class="ph-fill ph-map-pin"></i>
+                                            <span>广东·中山</span>
+                                        </span>
+                                    </div>
+                                </div>
+                                <div class="withu-article-interact-box">
+                                    <div class="withu-article-action-btn">
+                                        <i class="ph ph-eye"></i>
+                                        <span data-view-count="article:5">3</span>
+                                    </div>
+                                    <div class="withu-article-action-btn" data-like-target="article" data-like-id="5">
+                                        <i class="ph ph-heart"></i>
+                                        <span class="withu-interaction-like-num" data-like-count="article:5">0</span>
+                                    </div>
+                                </div>
+                            </footer>
+                        </div>
+                        </div>
+                                                <div class="withu-article-masonry-item" data-aos="fade-up" data-aos-delay="300">
+                        <div data-href="page.php?id=1" 
+                           class="withu-article-card-base withu-article-theme-light withu-article-aurora-spot" 
+                           style="cursor:pointer;">
+                            
+                            <header class="withu-article-card-header">
+                                <div class="withu-article-date-group">
+                                    <div class="withu-article-big-day">22</div>
+                                    <div class="withu-article-date-divider"></div>
+                                    <div class="withu-article-month-year-group">
+                                        <span class="withu-article-month-chinese">一月</span>
+                                        <span class="withu-article-year-text">2025</span>
+                                    </div>
+                                </div>
+                                <div class="withu-article-badge-serial">
+                                    <span class="withu-article-label">DAY</span>
+                                    <span class="withu-article-num">554</span>
+                                </div>
+                            </header>
+
+                            <main class="withu-article-card-content">
+                                <div class="withu-article-meta-info">
+                                    <div class="withu-article-meta-item">
+                                        <i class="ph-duotone ph-clock"></i>
+                                        <span>09:03</span>
+                                    </div>
+                                                                        <div class="withu-article-meta-item">
+                                        <i class="ph-duotone ph-cloud-sun"></i>
+                                        <span>未知</span>
+                                    </div>
+                                                                        <div class="withu-article-meta-item">
+                                                                                    <i class="ph-duotone ph-smiley"></i>
+                                                                                <span>未知</span>
+                                    </div>
+                                </div>
+
+                                                                                                        <h3 class="withu-article-card-title">音乐解析播放演示</h3>
+                                    <p class="withu-article-card-desc">音乐解析测试
+
+音乐解析参考#直链解析
+
+ data-id：音乐ID 
+ data-type：netease 为网易云 tencent为QQ音乐
+
+双双
+
+
+Copy
+
+
+音乐解析参考#直链解析+本地URL文件
+
+ data-id：音乐ID 
+ data-type：netease 为网易云 tencent为QQ音乐
+data-url：自定义音乐文件地址
+
+十年
+
+
+Copy
+
+
+音乐解析参考#自定义音乐信息
+
+ data-id：音乐ID 
+ data-type：netease 为网易云 tencent为QQ音乐
+data-url：自定义音乐文件地址
+
+Customize
+
+
+Copy
+
+</p>
+                                                            </main>
+
+                            <footer class="withu-article-card-footer">
+                                                                <div class="withu-author show-gender">
+                                    <div class="withu-author__ring">
+                                        <div class="withu-author__avatar" style="background-image: url(/Lovefolder/20260411043037_69d95ded97293201118237.webp)"></div>
+                                                                                <div class="withu-author__badge male">
+                                            <i class="ph-bold ph-gender-male"></i>
+                                        </div>
+                                                                            </div>
+                                    <div class="withu-author__text">
+                                        <span class="withu-author__name">Ki.</span>
+                                        <span class="withu-author__meta" data-tooltip="广东·深圳">
+                                            <i class="ph-fill ph-map-pin"></i>
+                                            <span>广东·深圳</span>
+                                        </span>
+                                    </div>
+                                </div>
+                                <div class="withu-article-interact-box">
+                                    <div class="withu-article-action-btn">
+                                        <i class="ph ph-eye"></i>
+                                        <span data-view-count="article:1">45</span>
+                                    </div>
+                                    <div class="withu-article-action-btn" data-like-target="article" data-like-id="1">
+                                        <i class="ph ph-heart"></i>
+                                        <span class="withu-interaction-like-num" data-like-count="article:1">1</span>
+                                    </div>
+                                </div>
+                            </footer>
+                        </div>
+                        </div>
+                                                <div class="withu-article-masonry-item" data-aos="fade-up" data-aos-delay="300">
+                        <div data-href="page.php?id=7" 
+                           class="withu-article-card-base withu-article-theme-light withu-article-aurora-spot" 
+                           style="cursor:pointer;">
+                            
+                            <header class="withu-article-card-header">
+                                <div class="withu-article-date-group">
+                                    <div class="withu-article-big-day">24</div>
+                                    <div class="withu-article-date-divider"></div>
+                                    <div class="withu-article-month-year-group">
+                                        <span class="withu-article-month-chinese">十二月</span>
+                                        <span class="withu-article-year-text">2024</span>
+                                    </div>
+                                </div>
+                                <div class="withu-article-badge-serial">
+                                    <span class="withu-article-label">DAY</span>
+                                    <span class="withu-article-num">525</span>
+                                </div>
+                            </header>
+
+                            <main class="withu-article-card-content">
+                                <div class="withu-article-meta-info">
+                                    <div class="withu-article-meta-item">
+                                        <i class="ph-duotone ph-clock"></i>
+                                        <span>22:04</span>
+                                    </div>
+                                                                        <div class="withu-article-meta-item">
+                                        <i class="ph-duotone ph-cloud"></i>
+                                        <span>阴</span>
+                                    </div>
+                                                                        <div class="withu-article-meta-item">
+                                                                                    <i class="ph-duotone ph-smiley"></i>
+                                                                                <span>开心</span>
+                                    </div>
+                                </div>
+
+                                                                                                        <h3 class="withu-article-card-title">标签书写演示🎄🍰🐍</h3>
+                                    <p class="withu-article-card-desc">
+这篇文章通过细腻的文字表达了对青春的感悟与怀念。文章以一段关于青春的对话引入，引用了对青春的深刻思考：“青春是一个短暂的美梦，当你醒来时，它早已消失无踪。”通过这样的话语，作者引发读者对自己青春岁月的回忆与思考。
+
+
+&nbsp;
+这是一段测试文本内容，用于各种可能的需求评估与分析。 它可以用来检查格式的兼容性， 看看在不同的系统或软件中， 换行是否能够正确地显示。 也可以用于测试文本的排版效果， 比如每行的长度是否合适， 是否会出现文字的重叠或错乱。 还能借此观察字体的清晰度与可读性， 在不同的分辨率下， 文字是否依然能够清晰地被辨认。 并且可以探究文本的编辑功能， 例如能否方便地插入、删除或修改内容， 而不会影响整体的结构与格式。 这只是一个开始， 后续还可以有更多的尝试与探索， 以不断完善对文本处理的各个方面的了解。 比如尝试不同的字符组合， 看看特殊字符是否会引发异常， 或者测试大段文本的加载速度与流畅性。 总之，这样的测试文本具有多方面的用途， 能够帮助我们更好地应对各种与文本相关的任务和挑战。
+
+无序列表
+无序列表
+无序列表
+无序列表
+无序列表
+无序列表
+无序列表
+
+
+测试测试
+测试测试
+测试测试
+测试测试
+测试测试
+
+
+测试测试
+测试测试
+测试测试
+测试测试
+测试测试
+
+
+有序列表
+有序列表
+有序列表
+有序列表
+有序列表
+有序列表
+有序列表
+
+
+有序列表
+有序列表
+有序列表
+有序列表
+有序列表
+有序列表
+有序列表
+
+
+有序列表
+有序列表
+有序列表
+有序列表
+有序列表
+有序列表
+有序列表
+
+
+有序列表
+有序列表
+有序列表
+有序列表
+有序列表
+有序列表
+有序列表
+
+
+有序列表
+有序列表
+有序列表
+有序列表
+有序列表
+有序列表
+有序列表
+
+
+有序列表
+有序列表
+有序列表
+有序列表
+有序列表
+有序列表
+有序列表
+
+&nbsp;
+“你觉得青春是什么？”
+青春是一个短暂的美梦，当你醒来时，它早已消失无踪。
+ 🎄🍰🐍
+前往 bilibili  查看我们的相册
+
+&nbsp;
+&nbsp;
+
+&nbsp;
+&nbsp;
+
+&nbsp;
+&nbsp;
+正在读这篇文章的你是正在经历着青春岁月，还是那一段段青春往事早已沉淀为遗憾是那样难以言说?你的青春于你而言是怎样一副模样呢?是有那样一场毕生难忘的暗恋?还是有一个对你影响深远的少年?抑或是，你觉得陪你走过那段日子的人们仅仅只是你生命中的过客?
+人的一生是万里山河，来往无数过客。
+有人给山河添色，有人使日月无光，有人改他江流，有人塑他骨梁。我的青春里，便有那样一个女孩，悄悄改变了从前那个胆小怯懦的少年。这一生漫长崎岖，总会有一些人消失在生活里却刻骨铭心的住在心里。那个女孩 是在偶然的一天， 悄然走进我的视线，慢慢填满了我的心间。就是那样的一天，那个看似遥不可及的女孩，让我一点点为她做出改变。也就这样，女孩在我的一生里原本注定是个过客，却偏偏变成了记忆中的常客。
+人生天地间，忽如远行客，世间的一切无非是十里长亭一杯酒，折下柳枝，依依挥手。
+曾看到一句话“命运就像是齿轮，在一无所知的时候把我们的人生轨迹重叠到一起，却又在紧密相连时把我们硬生生拆开。”人生天地间，忽如远行客，世间的一切无非是十里长亭一杯酒，折下柳枝，依依挥手。人总是很难在青春时认识青春，只有走过了青春，才能认识青春。所以，无论你现在是正在经历着，亦或是已经经历过，都不必为了去寻找那个答案而变得小心翼翼。
+哈吉米南北绿豆
+
+在这秋意渐浓黄昏下的落日余晖中，抬起头看看天边的落日与云彩吧，他都为我们而脸红。
+
+2024-05-16 14:57:24 星期四
+</p>
+                                                            </main>
+
+                            <footer class="withu-article-card-footer">
+                                                                <div class="withu-author show-gender">
+                                    <div class="withu-author__ring">
+                                        <div class="withu-author__avatar" style="background-image: url(/Lovefolder/20260411043037_69d95ded97293201118237.webp)"></div>
+                                                                                <div class="withu-author__badge male">
+                                            <i class="ph-bold ph-gender-male"></i>
+                                        </div>
+                                                                            </div>
+                                    <div class="withu-author__text">
+                                        <span class="withu-author__name">Ki.</span>
+                                        <span class="withu-author__meta" data-tooltip="广东 · 惠东">
+                                            <i class="ph-fill ph-map-pin"></i>
+                                            <span>广东 · 惠东</span>
+                                        </span>
+                                    </div>
+                                </div>
+                                <div class="withu-article-interact-box">
+                                    <div class="withu-article-action-btn">
+                                        <i class="ph ph-eye"></i>
+                                        <span data-view-count="article:7">31</span>
+                                    </div>
+                                    <div class="withu-article-action-btn" data-like-target="article" data-like-id="7">
+                                        <i class="ph ph-heart"></i>
+                                        <span class="withu-interaction-like-num" data-like-count="article:7">2</span>
+                                    </div>
+                                </div>
+                            </footer>
+                        </div>
+                        </div>
+                                                <div class="withu-article-masonry-item" data-aos="fade-up" data-aos-delay="300">
+                        <div data-href="page.php?id=6" 
+                           class="withu-article-card-base withu-article-theme-light withu-article-aurora-spot" 
+                           style="cursor:pointer;">
+                            
+                            <header class="withu-article-card-header">
+                                <div class="withu-article-date-group">
+                                    <div class="withu-article-big-day">31</div>
+                                    <div class="withu-article-date-divider"></div>
+                                    <div class="withu-article-month-year-group">
+                                        <span class="withu-article-month-chinese">七月</span>
+                                        <span class="withu-article-year-text">2024</span>
+                                    </div>
+                                </div>
+                                <div class="withu-article-badge-serial">
+                                    <span class="withu-article-label">DAY</span>
+                                    <span class="withu-article-num">379</span>
+                                </div>
+                            </header>
+
+                            <main class="withu-article-card-content">
+                                <div class="withu-article-meta-info">
+                                    <div class="withu-article-meta-item">
+                                        <i class="ph-duotone ph-clock"></i>
+                                        <span>16:51</span>
+                                    </div>
+                                                                        <div class="withu-article-meta-item">
+                                        <i class="ph-duotone ph-cloud-sun"></i>
+                                        <span>未知</span>
+                                    </div>
+                                                                        <div class="withu-article-meta-item">
+                                                                                    <i class="ph-duotone ph-smiley"></i>
+                                                                                <span>未知</span>
+                                    </div>
+                                </div>
+
+                                                                                                        <h3 class="withu-article-card-title">点点滴滴语法书写参考</h3>
+                                    <p class="withu-article-card-desc">在时光的长河中，青春如同一颗璀璨而又转瞬即逝的流星，划过我们生命的夜空。它是一个短暂的美梦，当我们从梦中醒来，却发现它早已消失得无影无踪。那么，正在读这篇文章的你，是正在经历着如梦似幻的青春岁月，还是那一段段青春往事早已沉淀为心中难以言说的遗憾呢？你的青春，又有着怎样独特的模样？是藏着一场刻骨铭心的暗恋，还是有一个对你影响深远的少年？亦或是，你觉得陪你走过那段日子的人们仅仅只是你生命中的过客？让我们一同走进青春的回忆与思索之中。
+
+“你觉得青春是什么？”
+
+青春是一个短暂的美梦，当你醒来时，它早已消失无踪。
+
+
+前往 bilibili 
+
+查看我们的相册
+
+
+正在读这篇文章的你是正在经历着青春岁月，还是那一段段青春往事早已沉淀为遗憾是那样难以言说?你的青春于你而言是怎样一副模样呢?是有那样一场毕生难忘的暗恋?还是有一个对你影响深远的少年?抑或是，你觉得陪你走过那段日子的人们仅仅只是你生命中的过客？
+
+人的一生是万里山河，来往无数过客。
+
+有人给山河添色，有人使日月无光，有人改他江流，有人塑他骨梁。我的青春里，便有那样一个女孩，悄悄改变了从前那个胆小怯懦的少年。这一生漫长崎岖，总会有一些人消失在生活里却刻骨铭心的住在心里。那个女孩 是在偶然的一天， 悄然走进我的视线，慢慢填满了我的心间。就是那样的一天，那个看似遥不可及的女孩，让我一点点为她做出改变。也就这样，女孩在我的一生里原本注定是个过客，却偏偏变成了记忆中的常客。
+
+
+人生天地间，忽如远行客，世间的一切无非是十里长亭一杯酒，折下柳枝，依依挥手。
+曾看到一句话“命运就像是齿轮，在一无所知的时候把我们的人生轨迹重叠到一起，却又在紧密相连时把我们硬生生拆开。”人生天地间，忽如远行客，世间的一切无非是十里长亭一杯酒，折下柳枝，依依挥手。人总是很难在青春时认识青春，只有走过了青春，才能认识青春。所以，无论你现在是正在经历着，亦或是已经经历过，都不必为了去寻找那个答案而变得小心翼翼。
+
+
+在这秋意渐浓黄昏下的落日余晖中，抬起头看看天边的落日与云彩吧，他都为我们而脸红。
+
+
+B 站视频插入
+
+ 
+2024-05-16 14:57:24 星期四
+</p>
+                                                            </main>
+
+                            <footer class="withu-article-card-footer">
+                                                                <div class="withu-author show-gender">
+                                    <div class="withu-author__ring">
+                                        <div class="withu-author__avatar" style="background-image: url(/Lovefolder/20260411043037_69d95ded97293201118237.webp)"></div>
+                                                                                <div class="withu-author__badge male">
+                                            <i class="ph-bold ph-gender-male"></i>
+                                        </div>
+                                                                            </div>
+                                    <div class="withu-author__text">
+                                        <span class="withu-author__name">Ki.</span>
+                                        <span class="withu-author__meta" data-tooltip="广东·惠州">
+                                            <i class="ph-fill ph-map-pin"></i>
+                                            <span>广东·惠州</span>
+                                        </span>
+                                    </div>
+                                </div>
+                                <div class="withu-article-interact-box">
+                                    <div class="withu-article-action-btn">
+                                        <i class="ph ph-eye"></i>
+                                        <span data-view-count="article:6">33</span>
+                                    </div>
+                                    <div class="withu-article-action-btn" data-like-target="article" data-like-id="6">
+                                        <i class="ph ph-heart"></i>
+                                        <span class="withu-interaction-like-num" data-like-count="article:6">0</span>
+                                    </div>
+                                </div>
+                            </footer>
+                        </div>
+                        </div>
+                                                <div class="withu-article-masonry-item" data-aos="fade-up" data-aos-delay="300">
+                        <div data-href="page.php?id=3" 
+                           class="withu-article-card-base withu-article-theme-light withu-article-aurora-spot" 
+                           style="cursor:pointer;">
+                            
+                            <header class="withu-article-card-header">
+                                <div class="withu-article-date-group">
+                                    <div class="withu-article-big-day">09</div>
+                                    <div class="withu-article-date-divider"></div>
+                                    <div class="withu-article-month-year-group">
+                                        <span class="withu-article-month-chinese">五月</span>
+                                        <span class="withu-article-year-text">2024</span>
+                                    </div>
+                                </div>
+                                <div class="withu-article-badge-serial">
+                                    <span class="withu-article-label">DAY</span>
+                                    <span class="withu-article-num">296</span>
+                                </div>
+                            </header>
+
+                            <main class="withu-article-card-content">
+                                <div class="withu-article-meta-info">
+                                    <div class="withu-article-meta-item">
+                                        <i class="ph-duotone ph-clock"></i>
+                                        <span>11:23</span>
+                                    </div>
+                                                                        <div class="withu-article-meta-item">
+                                        <i class="ph-duotone ph-cloud-sun"></i>
+                                        <span>未知</span>
+                                    </div>
+                                                                        <div class="withu-article-meta-item">
+                                                                                    <i class="ph-duotone ph-smiley"></i>
+                                                                                <span>未知</span>
+                                    </div>
+                                </div>
+
+                                                                                                        <h3 class="withu-article-card-title">withU点点滴滴语法参考</h3>
+                                    <p class="withu-article-card-desc">音乐插入参考
+
+
+Copy
+
+
+引用标签
+
+Copy
+引用标签
+
+
+H1文字样式
+
+Copy
+H1文字样式
+
+
+H2文字样式
+
+Copy
+H2文字样式
+
+
+H3文字样式
+
+Copy
+H3文字样式
+
+
+H4文字样式
+
+Copy
+H4文字样式
+
+
+H5文字样式
+
+Copy
+H5文字样式
+
+
+H6文字样式
+
+Copy
+H6文字样式
+
+
+加粗字体
+
+
+Copy
+加粗字体
+
+
+删除线字体
+
+
+Copy
+删除线字体
+
+
+斜体
+
+
+Copy
+斜体
+
+
+行内代码提示
+
+
+Copy
+行内代码提示
+
+
+居中文本
+
+
+Copy
+居中文本
+
+
+a标签 本窗口打开
+
+
+Copy
+a标签 本窗口打开
+
+
+a标签 新窗口打开
+
+
+Copy
+a标签 新窗口打开
+
+
+分割线
+
+
+Copy
+
+
+图片插入
+
+
+Copy
+
+
+视频插入 ## iframe嵌入式
+
+
+Copy
+
+
+视频插入 ## video标签插入
+
+
+Copy
+
+
+</p>
+                                                            </main>
+
+                            <footer class="withu-article-card-footer">
+                                                                <div class="withu-author show-gender">
+                                    <div class="withu-author__ring">
+                                        <div class="withu-author__avatar" style="background-image: url(/Lovefolder/20260411043037_69d95ded97293201118237.webp)"></div>
+                                                                                <div class="withu-author__badge male">
+                                            <i class="ph-bold ph-gender-male"></i>
+                                        </div>
+                                                                            </div>
+                                    <div class="withu-author__text">
+                                        <span class="withu-author__name">Ki.</span>
+                                        <span class="withu-author__meta" data-tooltip="广东·佛山">
+                                            <i class="ph-fill ph-map-pin"></i>
+                                            <span>广东·佛山</span>
+                                        </span>
+                                    </div>
+                                </div>
+                                <div class="withu-article-interact-box">
+                                    <div class="withu-article-action-btn">
+                                        <i class="ph ph-eye"></i>
+                                        <span data-view-count="article:3">20</span>
+                                    </div>
+                                    <div class="withu-article-action-btn" data-like-target="article" data-like-id="3">
+                                        <i class="ph ph-heart"></i>
+                                        <span class="withu-interaction-like-num" data-like-count="article:3">0</span>
+                                    </div>
+                                </div>
+                            </footer>
+                        </div>
+                        </div>
+                                                <div class="withu-article-masonry-item" data-aos="fade-up" data-aos-delay="300">
+                        <div data-href="page.php?id=4" 
+                           class="withu-article-card-base withu-article-theme-light withu-article-aurora-spot withu-article-card-encrypted" 
+                           style="cursor:pointer;">
+                            
+                            <header class="withu-article-card-header">
+                                <div class="withu-article-date-group">
+                                    <div class="withu-article-big-day">07</div>
+                                    <div class="withu-article-date-divider"></div>
+                                    <div class="withu-article-month-year-group">
+                                        <span class="withu-article-month-chinese">五月</span>
+                                        <span class="withu-article-year-text">2024</span>
+                                    </div>
+                                </div>
+                                <div class="withu-article-badge-serial">
+                                    <span class="withu-article-label">LOCKED</span>
+                                    <span class="withu-article-num">294</span>
+                                </div>
+                            </header>
+
+                            <main class="withu-article-card-content">
+                                <div class="withu-article-meta-info">
+                                    <div class="withu-article-meta-item">
+                                        <i class="ph-duotone ph-clock"></i>
+                                        <span>22:37</span>
+                                    </div>
+                                                                        <div class="withu-article-meta-item">
+                                        <i class="ph-duotone ph-cloud-sun"></i>
+                                        <span>未知</span>
+                                    </div>
+                                                                        <div class="withu-article-meta-item">
+                                                                                    <i class="ph-duotone ph-smiley"></i>
+                                                                                <span>未知</span>
+                                    </div>
+                                </div>
+
+                                                                    <!-- 加密内容：点阵遮罩 -->
+                                    <div class="withu-content-lock-wrapper">
+                                        <div class="withu-encrypted-mask">
+                                            <div class="withu-dot-pattern"></div>
+                                            <div class="withu-lock-btn">
+                                                <i class="ph-duotone ph-fingerprint"></i>
+                                            </div>
+                                            <div class="withu-lock-text">点击查看</div>
+                                        </div>
+                                    </div>
+                                                            </main>
+
+                            <footer class="withu-article-card-footer">
+                                                                <div class="withu-author show-gender">
+                                    <div class="withu-author__ring">
+                                        <div class="withu-author__avatar" style="background-image: url(/Lovefolder/20260411043037_69d95ded97293201118237.webp)"></div>
+                                                                                <div class="withu-author__badge male">
+                                            <i class="ph-bold ph-gender-male"></i>
+                                        </div>
+                                                                            </div>
+                                    <div class="withu-author__text">
+                                        <span class="withu-author__name">Ki.</span>
+                                        <span class="withu-author__meta" data-tooltip="广东·珠海">
+                                            <i class="ph-fill ph-map-pin"></i>
+                                            <span>广东·珠海</span>
+                                        </span>
+                                    </div>
+                                </div>
+                                <div class="withu-article-interact-box">
+                                    <div class="withu-article-action-btn">
+                                        <i class="ph ph-eye"></i>
+                                        <span data-view-count="article:4">1</span>
+                                    </div>
+                                    <div class="withu-article-action-btn" data-like-target="article" data-like-id="4">
+                                        <i class="ph ph-heart"></i>
+                                        <span class="withu-interaction-like-num" data-like-count="article:4">0</span>
+                                    </div>
+                                </div>
+                            </footer>
+                        </div>
+                        </div>
+                                                <div class="withu-article-masonry-item" data-aos="fade-up" data-aos-delay="300">
+                        <div data-href="page.php?id=2" 
+                           class="withu-article-card-base withu-article-theme-light withu-article-aurora-spot" 
+                           style="cursor:pointer;">
+                            
+                            <header class="withu-article-card-header">
+                                <div class="withu-article-date-group">
+                                    <div class="withu-article-big-day">29</div>
+                                    <div class="withu-article-date-divider"></div>
+                                    <div class="withu-article-month-year-group">
+                                        <span class="withu-article-month-chinese">四月</span>
+                                        <span class="withu-article-year-text">2024</span>
+                                    </div>
+                                </div>
+                                <div class="withu-article-badge-serial">
+                                    <span class="withu-article-label">DAY</span>
+                                    <span class="withu-article-num">286</span>
+                                </div>
+                            </header>
+
+                            <main class="withu-article-card-content">
+                                <div class="withu-article-meta-info">
+                                    <div class="withu-article-meta-item">
+                                        <i class="ph-duotone ph-clock"></i>
+                                        <span>23:40</span>
+                                    </div>
+                                                                        <div class="withu-article-meta-item">
+                                        <i class="ph-duotone ph-cloud-sun"></i>
+                                        <span>未知</span>
+                                    </div>
+                                                                        <div class="withu-article-meta-item">
+                                                                                    <i class="ph-duotone ph-smiley"></i>
+                                                                                <span>未知</span>
+                                    </div>
+                                </div>
+
+                                                                                                        <h3 class="withu-article-card-title">音乐故事文章测试</h3>
+                                    <p class="withu-article-card-desc">写给黄淮
+
+我最喜欢的民谣歌曲之一
+
+解忧邵帅原名为邵帅，他是黄淮学院学生，对于音乐，邵帅从小就喜欢，但早些年家人并不支持他做音乐，甚至偷偷买了吉他后被妈妈发现，吉他最后保住没有摔也是因为苦苦求了很久。
+
+
+黄淮是一所学校。只因为他在黄淮学院遇见了她，与她所有的记忆都给了黄淮学院。
+
+
+大概的故事其实是这样的，他在这里遇见了云南姑娘，一眼定情，爱上了她，本以为可以长相厮守。转眼毕业了，云南姑娘离开了，他以为自己的不够强大，所有没把她留住。
+
+
+他开始创业，哪怕一次次的失败，他也不怕，怕的是再也见不到云南姑娘。几年过去了，他已经事业有成了。只是云南姑娘已经走远了，回不来了。
+
+
+他也没有什么感觉，心里在慢慢地感谢，感谢能与她相遇黄淮，感谢在黄淮的记忆是那么美好，感谢因为有她，创业的道路上也少了些许辛苦。最终写下了《写给黄淮》纪念她。
+
+
+邵帅曾在采访中表示自己进入大学后，其实没有过真正的校园生活，除了完成课业外，他更多的时候喜欢待在工作室里。“你是我患得患失的梦，我是你可有可无的人”这句话令很多人费解，而邵帅所说的“患得患失”是他在创业的那段时间的感受，对黄淮和对他自己。
+
+
+我记得 — 赵雷
+
+
+世间是一个轮回，离开我们的人，在另一个时空，我们总会失忆着相遇； 歌词里没有提一句母亲，却表达了对她的思念。
+
+
+多想在平庸的生活拥抱你
+
+
+这是老樊自己的经历，表达了对生活的期望的心态和奋斗不止的积极向上的精神。生而为人，赤手空拳地来到这个世界，也将赤手空拳的离开，是现实，也是每个人的必经之路。离开的这条路上，爱情，旋律，恐惧，风景都会在走时离你而去，能带走的只有自己，和与生俱来的脾气。
+
+
+爱的回归线
+
+
+欢迎继续收听你的月亮我的心，好男人就是我，我就是 曾小贤。相聚和离别，仿佛一个转身，一圈接着一圈，连成生命的舞蹈。有的人还会回来，有的人知道再见太难。幸运的是，爱的邂逅，每天 都会发生。
+
+
+每次听到这首歌就能想到子乔为美嘉抢回手链时候美嘉的眼泪，子乔的苦笑，就能想到子乔和美嘉把所有的情侣锁在各自的房间，却把自己锁到阳台，下雨了，小林又沐风消失了，第二天天晴了。每对情侣出来的时候看到美嘉靠在子乔肩膀睡着了。愿每对情侣都能终老，愿每段爱情都有结局。
+
+
+亲爱的展博：当你看到这封信的时候，我已经 在去机场的路上了，请原谅我改签了航班，我知道，如果我看到你们，肯定就走不了了，因为我舍不得你们每一个人，尤其是你，和大家在一起的日子，是我一生中最快乐的时光，虽然我也不想结束，但是新的故事总要开始，展博，过去我不懂，爱是什么，是你让我明白爱是当你爱上一个人会舍弃自己的自由换取他的自由，爱是当你爱上一个人会改变自己的人生成全他的心愿，爱是当你爱上一个人会愿意放开手留下最好的回忆和祝福，爱情最美的不一定是终点，旅途一起走过，也已不负一生，原谅我的天真，这是我能想到的，最好的结局 爱你的宛瑜。
+
+
+追光者
+
+
+我可以跟在你身后，像影子追着光梦游；我可以等在这路口，不管你会不会经过。每当我为你抬起头，连眼泪都觉得自由。有的爱像阳光倾落，边拥有边失去着。
+
+——节选自歌曲《追光者》</p>
+                                                            </main>
+
+                            <footer class="withu-article-card-footer">
+                                                                <div class="withu-author show-gender">
+                                    <div class="withu-author__ring">
+                                        <div class="withu-author__avatar" style="background-image: url(/Lovefolder/20260411043046_69d95df639c33274072975.webp)"></div>
+                                                                                <div class="withu-author__badge female">
+                                            <i class="ph-bold ph-gender-female"></i>
+                                        </div>
+                                                                            </div>
+                                    <div class="withu-author__text">
+                                        <span class="withu-author__name">Really</span>
+                                        <span class="withu-author__meta" data-tooltip="广东·东莞">
+                                            <i class="ph-fill ph-map-pin"></i>
+                                            <span>广东·东莞</span>
+                                        </span>
+                                    </div>
+                                </div>
+                                <div class="withu-article-interact-box">
+                                    <div class="withu-article-action-btn">
+                                        <i class="ph ph-eye"></i>
+                                        <span data-view-count="article:2">67</span>
+                                    </div>
+                                    <div class="withu-article-action-btn" data-like-target="article" data-like-id="2">
+                                        <i class="ph ph-heart"></i>
+                                        <span class="withu-interaction-like-num" data-like-count="article:2">0</span>
+                                    </div>
+                                </div>
+                            </footer>
+                        </div>
+                        </div>
+                                                                </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast 容器 -->
+    <div id="withu-toast" class="withu-toast"></div>
+
+    <script src="/assets/js/page-articles.js"></script>
+    
+
+    <!-- 留言弹窗遮罩层 -->
+    <div class="mask" id="mask">
+        <div class="close">
+            <svg t="1682818912164" class="icon" viewBox="0 0 1024 1024" version="1.1"
+                xmlns="http://www.w3.org/2000/svg" p-id="2416" width="200" height="200">
+                <path
+                    d="M550.848 502.496l308.64-308.896a31.968 31.968 0 1 0-45.248-45.248l-308.608 308.896-308.64-308.928a31.968 31.968 0 1 0-45.248 45.248l308.64 308.896-308.64 308.896a31.968 31.968 0 1 0 45.248 45.248l308.64-308.896 308.608 308.896a31.968 31.968 0 1 0 45.248-45.248l-308.64-308.864z"
+                    p-id="2417"></path>
+            </svg>
+        </div>
+    </div>
+
+
+    <!-- 表情面板（全局可用，弹窗 & 抽屉共用） -->
+    <div class="withu-message-emoji-panel" id="withumsgEmojiPanel">
+        <div class="withu-message-emoji-tabs-wrap">
+            <div class="withu-message-emoji-tabs" id="withumsgEmojiTabs"></div>
+        </div>
+        <div class="withu-message-emoji-cat-title" id="withumsgEmojiCatTitle"></div>
+        <div class="withu-message-emoji-list" id="withumsgEmojiGrid"></div>
+    </div>
+
+    <div class="withu-message-emoji-preview" id="withumsgEmojiPreview">
+        <img src="" id="withumsgPreviewImg">
+        <span id="withumsgPreviewText"></span>
+    </div>
+
+    <!-- 留言触发按钮 -->
+    <div class="message_btn" id="mes">
+        <span class="mesly shadow-blur">
+            <i data-lucide="message-circle" style="width:2rem;height:2rem;fill:currentColor;stroke:none;"></i>
+        </span>
+    </div>
+
+    <!-- 随机一言确认弹窗（about.php 风格） -->
+    <div class="withumsg-confirm-overlay" id="withumsgConfirmOverlay">
+        <div class="withumsg-confirm-panel">
+            <!-- 关闭按钮 -->
+            <button class="withumsg-confirm-close-btn" id="withumsgConfirmClose" aria-label="关闭">
+                <i class="ph ph-x"></i>
+            </button>
+            <!-- 图标 -->
+            <div class="withumsg-confirm-icon-wrapper">
+                <svg viewBox="0 0 24 24" fill="currentColor"><path d="M9.937 15.5A2 2 0 0 0 8.5 14.063l-6.135-1.582a.5.5 0 0 1 0-.962L8.5 9.936A2 2 0 0 0 9.937 8.5l1.582-6.135a.5.5 0 0 1 .963 0L14.063 8.5A2 2 0 0 0 15.5 9.937l6.135 1.582a.5.5 0 0 1 0 .962L15.5 14.063a2 2 0 0 0-1.437 1.437l-1.582 6.135a.5.5 0 0 1-.963 0z"/><path d="M20 3v4"/><path d="M22 5h-4"/></svg>
+            </div>
+            <!-- 标题 -->
+            <h2 class="withumsg-confirm-title">替换为随机一言？</h2>
+            <!-- 描述 -->
+            <p class="withumsg-confirm-desc">当前输入框已有内容，确认后将清空并替换为一条随机文案</p>
+            <!-- 操作按钮 -->
+            <div class="withumsg-confirm-actions">
+                <button class="withumsg-confirm-btn withumsg-confirm-btn-secondary" id="withumsgConfirmCancel">取消</button>
+                <button class="withumsg-confirm-btn withumsg-confirm-btn-primary" id="withumsgConfirmOk">确认替换</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 留言弹窗（全局可用） -->
+    <div class="withu-message-modal-overlay" id="withumsgCommentModal">
+        <div class="withu-message-modal-content" id="withumsgModalContent">
+            <div class="withu-message-close-wrapper">
+                <button class="withu-message-close-btn" id="withumsgModalCloseBtn">
+                    <i data-lucide="x" style="width:20px;height:20px;"></i>
+                </button>
+            </div>
+            <div class="withu-message-modal-body">
+                <div class="withu-message-head-titles">
+                    <div class="withu-message-title">写一条留言</div>
+                    <div class="withu-message-subtitle">在这里，留下属于你的印记</div>
+                </div>
+                <div class="withu-message-ios-tabs-wrap">
+                    <div class="withu-message-ios-tabs" id="withumsgTabContainer">
+                        <div class="withu-message-ios-tab-slider" id="withumsgTabSlider"></div>
+                        <div class="withu-message-ios-tab active" data-mode="qq">QQ留言</div>
+                        <div class="withu-message-ios-tab" data-mode="anonymous">匿名留言</div>
+                    </div>
+                </div>
+                <div class="withu-message-visitor-tags" id="withumsgVisitorTags">
+                    <div class="withu-message-v-tag">
+                        <div class="withu-message-v-tag-icon withu-message-icon-os">
+                            <i data-lucide="monitor"></i>
+                        </div>
+                        <span id="withumsgTagOS">--</span>
+                    </div>
+                    <div class="withu-message-v-tag">
+                        <div class="withu-message-v-tag-icon withu-message-icon-browser">
+                            <i data-lucide="globe"></i>
+                        </div>
+                        <span id="withumsgTagBrowser">--</span>
+                    </div>
+                    <div class="withu-message-v-tag">
+                        <div class="withu-message-v-tag-icon withu-message-icon-location">
+                            <i data-lucide="map-pin"></i>
+                        </div>
+                        <span id="withumsgTagLocation">--</span>
+                    </div>
+                    <div class="withu-message-v-tag">
+                        <div class="withu-message-v-tag-icon withu-message-icon-weather">
+                            <i class="qi-100-fill" id="withumsgWeatherIcon"></i>
+                        </div>
+                        <span id="withumsgTagWeather">--</span>
+                    </div>
+                </div>
+                <div class="withu-message-input-row" id="withumsgInputRow"></div>
+                <div class="withu-message-privacy-hint" id="withumsgPrivacyHint"><i data-lucide="lock"></i>QQ 信息经过加密脱敏处理，不会公开展示，请放心留言</div>
+                <div class="withu-message-editor-wrap">
+                    <div class="withu-message-editor-content" id="withumsgEditor" contenteditable="true" data-placeholder="想说点什么..."></div>
+                    <div class="withu-message-emoji-bubbles" id="withumsgEmojiBubbles"></div>
+                    <div class="withu-message-editor-toolbar">
+                        <div class="withu-message-tb-left">
+                            <button class="withu-message-tb-btn" id="withumsgBtnEmoji" title="表情">
+                                <i data-lucide="smile"></i>
+                            </button>
+                            <button class="withu-message-tb-btn" id="withumsgBtnQuote" title="随机一言">
+                                <i data-lucide="sparkles"></i>
+                            </button>
+                            <div class="withu-message-switch-wrap" id="withumsgEnterToSendWrap">
+                                <div class="withu-message-switch"></div>
+                                <span class="withu-message-switch-text">Enter 发送</span>
+                            </div>
+                        </div>
+                        <span class="withu-message-char-counter" id="withumsgCharCounter">0/500</span>
+                        <button class="withu-message-submit-btn" id="withumsgSubmitBtn">
+                            <span class="withu-message-submit-label">发送留言</span>
+                            <i data-lucide="send" class="withu-message-submit-icon" style="width:18px;height:18px;"></i>
+                            <i data-lucide="loader" class="withu-message-submit-loader withu-message-lucide-loader" style="width:18px;height:18px;"></i>
+                            <i data-lucide="check" class="withu-message-submit-check" style="width:18px;height:18px;"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 留言弹窗配置输出 -->
+    <script>
+        window.WITHU_CONFIG = window.WITHU_CONFIG || {};
+        window.WITHU_CONFIG.userCity = "湖北 · 武汉";
+        window.WITHU_CONFIG.anonymousAvatar = "/Lovefolder/20250310095445_67ce46659778a.gif";
+    </script>
+
+    <!-- 极验验证与留言提交绑定 -->
+    <script>
+    $(function() {
+        if (typeof GeetestHelper !== 'undefined') {
+            var siteTitle = (window.WITHU_CONFIG && window.WITHU_CONFIG.title) || '';
+
+            GeetestHelper.init({
+                toast: {
+                    success: function(msg) { Toastify.showScenario('success', { text: msg }); },
+                    error: function(msg) { Toastify.showScenario('error', { text: msg }); },
+                    warning: function(msg) { Toastify.showScenario('warning', { text: msg }); }
+                },
+                onClose: function() {
+                    $('#leavingPost').removeAttr('disabled').text('提交留言');
+                },
+                onSuccess: function(result) {
+                    if (typeof submitMessage === 'function') {
+                        submitMessage(result);
+                    }
+                }
+            });
+
+            $('#leavingPost').off('click.withuGeetest').on('click.withuGeetest', function() {
+                var qq = $("input[name='qq']").val();
+                var name = $("input[name='name']").val();
+                var text = $("textarea[name='text']").val();
+
+                if (!qq || !name || !text) {
+                    Toastify.showScenario('warning', { text: '留言提交失败 表单输入不完整！' });
+                    return false;
+                }
+
+                if (typeof containsBannedChar === 'function' && containsBannedChar((name || '') + ' ' + (text || ''))) {
+                    Toastify.showScenario('warning', { text: '留言包含违禁内容，请修改后重试' });
+                    return false;
+                }
+
+                $('#leavingPost').text('请完成验证...').attr('disabled', 'disabled');
+                GeetestHelper.show();
+            });
+        } else {
+            $('#leavingPost').off('click.withuGeetest').on('click.withuGeetest', function() {
+                var qq = $("input[name='qq']").val();
+                var name = $("input[name='name']").val();
+                var text = $("textarea[name='text']").val();
+
+                if (!qq || !name || !text) {
+                    Toastify.showScenario('warning', { text: '留言提交失败 表单输入不完整！' });
+                    return false;
+                }
+
+                if (typeof containsBannedChar === 'function' && containsBannedChar((name || '') + ' ' + (text || ''))) {
+                    Toastify.showScenario('warning', { text: '留言包含违禁内容，请修改后重试' });
+                    return false;
+                }
+
+                if (typeof submitMessage === 'function') {
+                    submitMessage({});
+                }
+            });
+        }
+    });
+    </script>
+
+
+<link rel="stylesheet" href="/Style/Font/font_footer/iconfont.css">
+
+<script src="/Style/vendor/confetti/confetti.browser.min.js"></script>
+<script src="/assets/js/page-messages.js"></script>
+<script src="/Style/toastify/lucide.min.js"></script>
+<script src="/Style/toastify/toastify.js"></script>
+<script>if(typeof lucide!=='undefined')lucide.createIcons();</script>
+<script src="/Style/js/clipboard.min.js"></script>
+<script src="/assets/js/clipboard.js"></script>
+<script src="/assets/js/tooltip.js"></script>
+<script src="/Style/js/view-image.min.js"></script>
+<script src="/Style/LoveListStyle/carousel.umd.js"></script>
+<script src="/Style/LoveListStyle/carousel.thumbs.umd.js"></script>
+<script src="/Style/LoveListStyle/fancybox.umd.js"></script>
+<script src="/assets/js/page-lovelist.js"></script>
+<script src="/assets/js/page-index.js"></script>
+<script src="/assets/js/page-detail.js"></script>
+<script src="/assets/js/page-album-detail.js"></script>
+<script src="/assets/js/html2canvas.min.js"></script>
+<script src="/assets/js/chat.js"></script>
+
+<script src="/assets/js/visitor-hash.js"></script>
+<script src="/assets/js/interaction.js"></script>
+<script src="/assets/js/context-menu.js"></script>
+
+
+<!-- 足迹地图弹窗 -->
+<!-- ============ 足迹地图弹窗 ============ -->
 <div class="withu-map-overlay" id="withuMapOverlay" style="display:none;">
     <div class="withu-map-modal">
         <div class="withu-map">
