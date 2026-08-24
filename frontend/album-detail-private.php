@@ -25,12 +25,7 @@
 <meta name="twitter:image" content="withU">
 
     <!-- Google Fonts CDN 版本 -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link
-        href="https://fonts.googleapis.com/css2?family=Pacifico&family=Inter:wght@200;300;400;500;600;700&family=Noto+Serif+SC:wght@400;600;700&family=Noto+Sans+SC:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@1,500&family=Oswald:wght@400;600;700&family=Dancing+Script:wght@400;700&family=Crimson+Pro:wght@300;400;500;600;700&family=Libre+Baskerville:wght@400;700&family=Montserrat:wght@400&family=Niconne&family=Ma+Shan+Zheng&family=Liu+Jian+Mao+Cao&display=swap"
-        rel="stylesheet">
-    <!-- 非 Google Fonts 字体（HarmonyOS Sans、汉仪粗仿宋）本地补充 -->
+            <!-- 非 Google Fonts 字体（HarmonyOS Sans、汉仪粗仿宋）本地补充 -->
     <link rel="stylesheet" href="/Style/vendor/google-fonts/fonts-non-google.css?wm=4c668768&v=1.0.74">
 
 <!-- Font Awesome 本地化 -->

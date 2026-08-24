@@ -31,9 +31,7 @@ require __DIR__ . '/inc/config.php';
 <meta name="twitter:image" content="withU">
 
     <!-- Google Fonts CDN 版本 -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link rel="stylesheet" href="Style/vendor/google-fonts/google-fonts.css">
+        <link rel="stylesheet" href="Style/vendor/google-fonts/google-fonts.css">
     <!-- 非 Google Fonts 字体（HarmonyOS Sans、汉仪粗仿宋）本地补充 -->
     <link rel="stylesheet" href="Style/vendor/google-fonts/fonts-non-google.css">
 
@@ -5266,6 +5264,7 @@ require __DIR__ . '/inc/config.php';
     </script>
 
 <link rel="stylesheet" href="Style/Font/font_footer/iconfont.css">
+    <link rel="stylesheet" href="/assets/fonts/pacifico.css">
 
 <script src="Style/vendor/confetti/confetti.browser.min.js"></script>
 <script src="assets/js/page-messages.js"></script>

@@ -1,0 +1,8 @@
+/* Pacifico 字体 - 本地托管 */
+@font-face {
+  font-family: 'Pacifico';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url('/assets/fonts/pacifico.ttf') format('truetype');
+}
