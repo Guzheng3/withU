@@ -1,4 +1,4 @@
-<?php require_once __DIR__ . '/inc/auth.php'; ?>
+<?php require __DIR__ . '/inc/auth.php'; ?>
 <meta name="x-withu-license-instance" content="858ee1d099b9">
 
 <link rel="icon" href="/favicon.png" />

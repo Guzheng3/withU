@@ -3260,7 +3260,7 @@
 
 <!-- 情侣头像点击效果已迁移到 components.js 的 AvatarInteraction 模块 -->
 
-<?php require_once __DIR__ . '/inc/auth.php'; ?>
+<?php require __DIR__ . '/inc/auth.php'; ?>
 <!DOCTYPE html>
 <html lang="zh-CN">
 
