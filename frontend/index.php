@@ -1548,7 +1548,7 @@ try {
 
     /* solo-en-v3: Minimal Serif · 大写衬线+两侧线条 */
     .stuck-logo--solo-en-v3 {
-        gap: 14px;
+        gap: 13.14px;
     }
     .stuck-logo--solo-en-v3 .stuck-logo__divider {
         width: 28px;
@@ -1607,7 +1607,7 @@ try {
         transform: translateY(-50%) translateX(0) scale(1);
         display: flex;
         align-items: center;
-        gap: 24px;
+        gap: 13.14px;
         opacity: 1;
         pointer-events: auto;
         z-index: 10;
