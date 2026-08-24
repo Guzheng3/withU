@@ -1,4 +1,5 @@
 <?php require __DIR__ . '/inc/auth.php'; ?>
+<?php require __DIR__ . '/inc/config.php'; ?>
 <meta name="x-withu-license-instance" content="858ee1d099b9">
 
 <link rel="icon" href="/favicon.png" />
@@ -123,7 +124,7 @@
 
 <!-- withU 核心框架 -->
 <script>
-    window.WITHU_CONFIG = Object.assign(window.WITHU_CONFIG || {}, {"title":"withU Demo","boy":"Ki.","girl":"Really","startTime":"2023-07-19 00:00:00","version":"2.2.5","pcCarouselHeight":"80vh","mobileCarouselHeight":"50vh","pcPhotoCoverHeight":"80vh","mobilePhotoCoverHeight":"60vh","pcImgMaxHeight":"450px","mobileImgMaxHeight":"260px","maleName":"Ki.","maleAvatar":"/Lovefolder/20260411043037_69d95ded97293201118237.webp","femaleName":"Really","femaleAvatar":"/Lovefolder/20260411043046_69d95df639c33274072975.webp","siteBase":"","assetBase":"","imageErrorFallback":"/Style/img/file-placeholder.svg","owoBase":"/OwO","soloMode":false,"weatherEnabled":true,"weatherToken":"00732a2ee2110d6953116ec247dcc910e035864d7a041b3b4ce192cf5e0cf9f0","soloOwnerGeo":{"lat":21.915454,"lng":110.856708},"bannedChars":"操屌","endpoints":{"mapApi":"/assets/map-api.php","weatherNow":"/services/weather.php","interaction":"/services/interaction.php"}});
+    window.WITHU_CONFIG = <?php echo $withuConfigJson; ?>;
 
     // AOS 动画配置（供 app.js 的 AOSManager 使用）
     window.WITHU_AOS_CONFIG = {"enabled":true,"animation":"fade-up","duration":800,"delay":0,"interval":50,"maxDelay":300,"easing":"ease-out-cubic","offset":50,"once":true,"mirror":true,"anchorPlacement":"top-bottom"};

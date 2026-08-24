@@ -1,4 +1,5 @@
 <?php require __DIR__ . '/inc/auth.php'; ?>
+<?php require __DIR__ . '/inc/config.php'; ?>
 
 <meta name="x-withu-license-instance" content="858ee1d099b9">
 
@@ -125,7 +126,7 @@
 
 <!-- withU 核心框架 -->
 <script>
-    window.WITHU_CONFIG = Object.assign(window.WITHU_CONFIG || {}, {"title":"withU","boy":"Ki.","girl":"Really","startTime":"2023-07-19 00:00:00","version":"2.2.5","pcCarouselHeight":"80vh","mobileCarouselHeight":"50vh","pcPhotoCoverHeight":"80vh","mobilePhotoCoverHeight":"60vh","pcImgMaxHeight":"450px","mobileImgMaxHeight":"260px","maleName":"Ki.","maleAvatar":"https://love-really.kikiw.cn/Lovefolder/20260411043037_69d95ded97293201118237.webp","femaleName":"Really","femaleAvatar":"https://love-really.kikiw.cn/Lovefolder/20260411043046_69d95df639c33274072975.webp","siteBase":"","assetBase":"","imageErrorFallback":"/Style/img/file-placeholder.svg?wm=4c668768","owoBase":"/OwO","soloMode":false,"weatherEnabled":true,"weatherToken":"340ab755e51d7635128e17c5c0b0367b0788075645856ed01852ed495f41098a","soloOwnerGeo":{"lat":21.915454,"lng":110.856708},"bannedChars":"操屌","endpoints":{"mapApi":"assets/map-api.php","weatherNow":"services/weather.php","interaction":"services/interaction.php","accessBeacon":"services/access-beacon.php","messageList":"services/message-list.php","messageSubmit":"services/message.php","infoService":"services/info-service.php","weatherApi":"services/weather.php"}});
+    window.WITHU_CONFIG = <?php echo $withuConfigJson; ?>;
 
     // AOS 动画配置（供 app.js 的 AOSManager 使用）
     window.WITHU_AOS_CONFIG = {"enabled":true,"animation":"fade-up","duration":800,"delay":0,"interval":50,"maxDelay":300,"easing":"ease-out-cubic","offset":50,"once":true,"mirror":true,"anchorPlacement":"top-bottom"};
