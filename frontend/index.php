@@ -6110,7 +6110,7 @@ try {
     })();
 </script>
 
-<script src="assets/js/auth-status.js"></script>
+<!-- auth-status.js removed: server-side PHP auth now handles login state -->
 </body>
 
 </html>
