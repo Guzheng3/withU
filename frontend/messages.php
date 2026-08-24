@@ -1,3 +1,4 @@
+<?php require __DIR__ . '/inc/auth.php'; ?>
 <meta name="x-withu-license-instance" content="858ee1d099b9">
 
 <link rel="icon" href="/favicon.png" />
@@ -3259,9 +3260,6 @@
 </div>
 
 <!-- 情侣头像点击效果已迁移到 components.js 的 AvatarInteraction 模块 -->
-
-<?php require __DIR__ . '/inc/auth.php'; ?>
-<!DOCTYPE html>
 <html>
 
 <head>
