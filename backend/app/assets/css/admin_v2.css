@@ -607,15 +607,16 @@ body.admin-v2 .admin-stat-card {
     backdrop-filter: blur(14px) saturate(140%);
     -webkit-backdrop-filter: blur(14px) saturate(140%);
     border: 1px solid var(--admin-glass-border);
-    border-radius: var(--admin-radius-lg);
+    border-radius: 14px;
     box-shadow: var(--admin-glass-highlight), var(--admin-glass-shadow);
-    padding: 1.1rem 1.2rem;
+    padding: 1.25rem;
     display: flex;
     flex-direction: column;
-    gap: 0.5rem;
+    justify-content: space-between;
     position: relative;
     overflow: hidden;
     transition: box-shadow 0.3s var(--admin-ease-out), transform 0.3s var(--admin-ease-out), border-color 0.3s var(--admin-ease-out);
+    min-height: 160px;
 }
 
 body.admin-v2 .admin-stat-card::before {
@@ -630,9 +631,23 @@ body.admin-v2 .admin-stat-card::before {
 }
 
 body.admin-v2 .admin-stat-card:hover {
-    transform: translateY(-4px);
+    transform: translateY(-2px);
     box-shadow: var(--admin-glass-highlight), var(--admin-glass-shadow-hover);
     border-color: var(--admin-glass-border-strong);
+}
+
+body.admin-v2 .admin-stat-value {
+    font-size: 2.2rem;
+    font-weight: 720;
+    line-height: 1.1;
+    color: var(--admin-text);
+    letter-spacing: -0.02em;
+}
+
+body.admin-v2 .admin-stat-label {
+    font-size: 0.75rem;
+    color: var(--admin-text-3);
+    margin-top: 3px;
 }
 
 body.admin-v2 .admin-stat-value {

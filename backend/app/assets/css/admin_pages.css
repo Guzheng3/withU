@@ -91,36 +91,65 @@ body.admin-v2:not(.admin-ui-apple) .admin-album-card-actions > form {
 body.admin-v2:not(.admin-ui-apple) .admin-dashboard-stats {
     grid-template-columns: repeat(4, minmax(0, 1fr));
     align-items: stretch;
-    gap: 1rem;
+    gap: 1.5rem;
 }
 
 body.admin-v2:not(.admin-ui-apple) .admin-dashboard-stat-card {
     min-width: 0;
-    min-height: 154px;
+    min-height: 160px;
     display: flex;
     flex-direction: column;
+    justify-content: space-between;
+    padding: 1.25rem 1.25rem 1rem;
 }
 
 body.admin-v2:not(.admin-ui-apple) .admin-dashboard-stat-card .admin-card-header {
-    min-height: 48px;
-    margin-bottom: .75rem;
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 0.5rem;
+    margin-bottom: 0.75rem;
+    min-height: auto;
 }
 
-body.admin-v2:not(.admin-ui-apple) .admin-dashboard-stat-card > div:last-child {
-    margin-top: auto;
+body.admin-v2:not(.admin-ui-apple) .admin-dashboard-stat-card .admin-card-header .admin-card-title {
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--admin-text-2);
+}
+
+body.admin-v2:not(.admin-ui-apple) .admin-dashboard-stat-card .admin-card-header .admin-card-subtitle {
+    font-size: 0.72rem;
+    color: var(--admin-text-3);
+    margin-top: 2px;
+}
+
+body.admin-v2:not(.admin-ui-apple) .admin-dashboard-stat-card .admin-stat-value {
+    font-size: 2.2rem;
+    font-weight: 720;
+    line-height: 1.1;
+    color: var(--admin-text);
+    letter-spacing: -0.02em;
+}
+
+body.admin-v2:not(.admin-ui-apple) .admin-dashboard-stat-card .admin-stat-label {
+    font-size: 0.75rem;
+    color: var(--admin-text-3);
+    margin-top: 2px;
 }
 
 body.admin-v2:not(.admin-ui-apple) .admin-dashboard-panels {
     grid-template-columns: repeat(2, minmax(0, 1fr));
     align-items: stretch;
-    gap: 1rem;
+    gap: 1.5rem;
 }
 
 body.admin-v2:not(.admin-ui-apple) .admin-dashboard-panel {
     min-width: 0;
-    min-height: 332px;
+    min-height: 280px;
     display: flex;
     flex-direction: column;
+    padding: 1.25rem;
 }
 
 body.admin-v2:not(.admin-ui-apple) .admin-dashboard-panel > ul {
