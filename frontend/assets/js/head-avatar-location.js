@@ -14,26 +14,31 @@
         return null;
     }
 
-    // 使用 AMap SDK 的 Geocoder 逆地理编码
-    function reverseGeocodeSDK(lng, lat, callback) {
-        if (!window.AMap || !window.AMap.Geocoder) {
+    // 加载 AMap.Geocoder 插件并逆地理编码
+    function reverseGeocode(lng, lat, callback) {
+        if (!window.AMap) {
             callback(null);
             return;
         }
         try {
-            var geocoder = new AMap.Geocoder({ extensions: 'base' });
-            geocoder.getAddress([lng, lat], function (status, result) {
-                if (status === 'complete' && result.regeocode) {
-                    var comp = result.regeocode.addressComponent || {};
-                    // 优先显示乡镇/街道，其次区县
-                    var name = comp.township || comp.district || '';
-                    if (name && name.length > 0) {
-                        name = name.replace(/街道$/, '');
-                        callback(name);
-                        return;
-                    }
+            AMap.plugin('AMap.Geocoder', function () {
+                try {
+                    var geocoder = new AMap.Geocoder({ extensions: 'base' });
+                    geocoder.getAddress([lng, lat], function (status, result) {
+                        if (status === 'complete' && result.regeocode) {
+                            var comp = result.regeocode.addressComponent || {};
+                            var name = comp.township || comp.district || '';
+                            if (name && name.length > 0) {
+                                name = name.replace(/街道$/, '');
+                                callback(name);
+                                return;
+                            }
+                        }
+                        callback(null);
+                    });
+                } catch (e) {
+                    callback(null);
                 }
-                callback(null);
             });
         } catch (e) {
             callback(null);
@@ -54,15 +59,15 @@
             if (!em) return;
 
             // 已经有地名了就不重复更新
-            if (em.textContent && em.textContent !== '加载中...' && em.textContent.indexOf(',') === -1) {
+            var current = em.textContent || '';
+            if (current && current !== '加载中...' && current.indexOf(',') === -1 && current.length > 1) {
                 return;
             }
 
-            reverseGeocodeSDK(coords[0], coords[1], function (name) {
+            reverseGeocode(coords[0], coords[1], function (name) {
                 if (name) {
                     em.textContent = name;
                 } else {
-                    // 保留坐标作为兜底
                     em.textContent = coords[1].toFixed(2) + ', ' + coords[0].toFixed(2);
                 }
             });
@@ -72,26 +77,24 @@
     function tryInit() {
         if (_initialized) return;
 
-        // 检查 AMap SDK 是否就绪
-        if (window.AMap && window.AMap.Geocoder) {
+        if (window.AMap) {
             _initialized = true;
             updateLocations();
             return;
         }
 
-        // 轮询等待 AMap 加载（最多等 10 秒）
+        // 轮询等待 AMap SDK 加载（最多等 15 秒）
         var attempts = 0;
-        var maxAttempts = 20;
+        var maxAttempts = 30;
         var pollTimer = setInterval(function () {
             attempts++;
-            if (window.AMap && window.AMap.Geocoder) {
+            if (window.AMap) {
                 clearInterval(pollTimer);
                 _initialized = true;
                 updateLocations();
             } else if (attempts >= maxAttempts) {
                 clearInterval(pollTimer);
                 _initialized = true;
-                // 超时后显示坐标兜底
                 updateLocations();
             }
         }, 500);
@@ -105,7 +108,6 @@
         setTimeout(tryInit, 500);
     }
 
-    // 同时监听 AMap 加载完成事件
     window.addEventListener('load', function () {
         tryInit();
     });
