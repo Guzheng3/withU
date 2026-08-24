@@ -593,6 +593,8 @@
             apiBase: 'services/weather.php'
         },
         _refreshTimer: null,
+        _geocoderReady: false,
+        _geocoderQueue: [],
 
         init() {
             if (config.weatherEnabled === false) {
@@ -648,6 +650,42 @@
             return data.data;
         },
 
+        // 逆地理编码获取具体位置
+        _reverseGeocodeLocation(lng, lat, callback) {
+            if (window.AMap) {
+                try {
+                    AMap.plugin('AMap.Geocoder', function () {
+                        try {
+                            var geocoder = new AMap.Geocoder({ extensions: 'base' });
+                            geocoder.getAddress([lng, lat], function (status, result) {
+                                if (status === 'complete' && result.regeocode) {
+                                    var comp = result.regeocode.addressComponent || {};
+                                    var name = comp.township || comp.district || '';
+                                    if (name) {
+                                        name = name.replace(/街道$/, '');
+                                        callback(name);
+                                        return;
+                                    }
+                                }
+                                callback(null);
+                            });
+                        } catch (e) { callback(null); }
+                    });
+                } catch (e) { callback(null); }
+            } else {
+                callback(null);
+            }
+        },
+
+        // 获取情侣坐标
+        _getLoverCoords(slot) {
+            var cfg = window.WITHU_CONFIG;
+            if (!cfg) return null;
+            if (slot === 1) return cfg.boyCoords || null;
+            if (slot === 2) return cfg.girlCoords || null;
+            return null;
+        },
+
         _renderCard(cardEl, payload) {
             const timeTag = cardEl.querySelector('.withu-home-weather-time-tag');
             if (timeTag) timeTag.textContent = this._getRelativeTime(payload.obsTime);
@@ -655,11 +693,8 @@
             const tempEl = cardEl.querySelector('.withu-home-weather-text-temp');
             if (tempEl) tempEl.textContent = (payload.temp ?? '--') + '°';
 
-            const cityName = payload.city || cardEl.getAttribute('data-location-name') || '--';
             const statusText = payload.desc || '--';
-            const cityEl = cardEl.querySelector('.withu-home-weather-text-city');
             const statusEl = cardEl.querySelector('.withu-home-weather-text-status');
-            if (cityEl) cityEl.textContent = cityName;
             if (statusEl) statusEl.textContent = statusText;
 
             const iconEl = cardEl.querySelector('.withu-home-weather-icon-main');
@@ -675,6 +710,25 @@
             if (humidityEl) humidityEl.textContent = (payload.humidity ?? '--') + '%';
             if (visEl) visEl.textContent = (payload.vis ?? '--') + 'km';
             if (feelsEl) feelsEl.textContent = (payload.feelsLike ?? '--') + '°';
+
+            // 城市名：优先用逆地理编码，回退到天气 API 返回的城市
+            const cityEl = cardEl.querySelector('.withu-home-weather-text-city');
+            if (cityEl) {
+                const slot = parseInt(cardEl.getAttribute('data-weather-slot') || '1', 10);
+                const coords = this._getLoverCoords(slot);
+                const self = this;
+                if (coords && coords.length >= 2) {
+                    this._reverseGeocodeLocation(coords[0], coords[1], function (locName) {
+                        if (locName) {
+                            cityEl.textContent = locName;
+                        } else {
+                            cityEl.textContent = payload.city || '--';
+                        }
+                    });
+                } else {
+                    cityEl.textContent = payload.city || '--';
+                }
+            }
         },
 
         async _updateCard(cardEl) {
