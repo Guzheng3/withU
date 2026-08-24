@@ -4,7 +4,7 @@
             <div class="img-male">
                 <div class="avatarArea withu-head-avatar-boy">
                     <img draggable="false" class="avatarFrame lazy" data-src='https://s1.locimg.com/2024/10/18/db01c99842e69.png' style='transform: scale(1.6);top: 2px;left: 2px;'>
-                    <img draggable="false" class="aiv_touxiang" data-src="<?php echo htmlspecialchars($boyAvatar ?? '/assets/images/default-avatar.svg', ENT_QUOTES, 'UTF-8'); ?>">
+                    <img draggable="false" class="aiv_touxiang" data-src="<?php echo $boyAvatar ?? '/assets/images/default-avatar.svg'; ?>">
                     <div class="withu-head-avatar-mask">
                         <div class="withu-head-avatar-top withu-head-avatar-anim-item">
                             <div class="withu-head-avatar-gender-icon" data-gender="male"><i data-lucide="mars"></i></div>
@@ -44,7 +44,7 @@
             <div class="img-female">
                 <div class="avatarArea withu-head-avatar-girl">
                     <img draggable="false" class="avatarFrame lazy" data-src='https://s1.locimg.com/2024/10/18/db01c99842e69.png' style='transform: scale(1.6);top: 2px;left: 2px;'>
-                    <img draggable="false" class="aiv_touxiang" data-src="<?php echo htmlspecialchars($girlAvatar ?? '/assets/images/default-avatar.svg', ENT_QUOTES, 'UTF-8'); ?>">
+                    <img draggable="false" class="aiv_touxiang" data-src="<?php echo $girlAvatar ?? '/assets/images/default-avatar.svg'; ?>">
                     <div class="withu-head-avatar-mask">
                         <div class="withu-head-avatar-top withu-head-avatar-anim-item">
                             <div class="withu-head-avatar-gender-icon" data-gender="female"><i data-lucide="venus"></i></div>
