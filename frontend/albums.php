@@ -1,3 +1,15 @@
+<?php
+$loggedIn = false;
+try {
+    $rootPath = dirname(__DIR__) . '/backend/app';
+    if (is_file($rootPath . '/config/database.php') && is_file($rootPath . '/.installed')) {
+        require_once $rootPath . '/config/config.php';
+        require_once $rootPath . '/core/Database.php';
+        require_once $rootPath . '/core/Auth.php';
+        $loggedIn = (new Auth())->isLoggedIn();
+    }
+} catch (Throwable $e) {}
+?>
 <meta name="x-withu-license-instance" content="858ee1d099b9">
 
 <link rel="icon" href="/favicon.png" />
@@ -3260,20 +3272,6 @@
 
 <!-- 情侣头像点击效果已迁移到 components.js 的 AvatarInteraction 模块 -->
 
-
-<?php
-$loggedIn = false;
-try {
-    $rootPath = dirname(__DIR__) . '/backend/app';
-    if (is_file($rootPath . '/config/database.php') && is_file($rootPath . '/.installed')) {
-        require_once $rootPath . '/config/config.php';
-        require_once $rootPath . '/core/Database.php';
-        require_once $rootPath . '/core/Auth.php';
-        $loggedIn = (new Auth())->isLoggedIn();
-    }
-} catch (Throwable $e) {}
-?>
-<!DOCTYPE html>
 <html lang="zh-CN">
 
 <head>
