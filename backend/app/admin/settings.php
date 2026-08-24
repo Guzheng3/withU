@@ -505,6 +505,19 @@ include __DIR__ . '/header.php';
                 </div>
 
                 <div class="form-group" style="margin-bottom:0.75rem;">
+                    <label style="display:block;font-size:0.85rem;margin-bottom:0.25rem;">天气定位模式</label>
+                    <?php $locMode = $settingsData['weather_loc_mode'] ?? 'auto'; ?>
+                    <label class="switch" style="margin-bottom:0.35rem;">
+                        <input type="checkbox" name="settings[weather_loc_mode]" value="auto" <?php echo $locMode === 'auto' ? 'checked' : ''; ?>
+                               onchange="var manualInput=document.getElementById('weather_loc_city'); if(this.checked){manualInput.style.display='none';}else{manualInput.style.display='';}">
+                        <span class="switch-track"><span class="switch-thumb"></span></span>
+                        <span class="switch-label">自动定位（浏览器 GPS）</span>
+                    </label>
+                    <input type="text" id="weather_loc_city" name="settings[weather_loc_city]" value="<?php echo e($settingsData['weather_loc_city'] ?? ''); ?>" placeholder="例如：北京市海淀区" style="width:100%;padding:.55rem .75rem;border-radius:.75rem;border:1px solid rgba(148,163,184,.6);font-size:.9rem;<?php echo $locMode === 'auto' ? 'display:none;' : ''; ?>">
+                    <small style="color:#888;">关闭「自动定位」后，将使用下方填写的固定地址查询天气</small>
+                </div>
+
+                <div class="form-group" style="margin-bottom:0.75rem;">
                     <label style="display:block;font-size:0.85rem;margin-bottom:0.25rem;">AI 安全与媒体识别</label>
                     <?php $aiModeration = $settingsData['ai_moderation_enabled'] ?? '0'; ?>
                     <label class="switch"><input type="checkbox" name="settings[ai_moderation_enabled]" value="1" <?php echo $aiModeration === '1' ? 'checked' : ''; ?>><span class="switch-track"><span class="switch-thumb"></span></span><span class="switch-label">启用 AI 辅助审核（规则审核始终保留）</span></label>

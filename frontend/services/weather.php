@@ -8,6 +8,7 @@ header('Content-Type: application/json; charset=utf-8');
 $mode = $_GET['mode'] ?? 'ip';
 $lat  = $_GET['lat'] ?? null;
 $lng  = $_GET['lng'] ?? null;
+$city = $_GET['city'] ?? null;
 $slot = $_GET['slot'] ?? '1';
 
 // 读取数据库中的天气 Key
@@ -45,14 +46,16 @@ function outputFallback() {
 }
 
 function fetchAmapWeather($key) {
-    global $mode, $lat, $lng;
+    global $mode, $lat, $lng, $city;
     
     // 高德天气 API 需要城市编码或经纬度
-    // 优先使用传入的经纬度，否则使用 IP 定位
     $cityParam = '';
     if ($mode === 'geo' && $lat !== null && $lng !== null) {
         // 高德支持经纬度格式: 经度,纬度
         $cityParam = '&city=' . $lng . ',' . $lat;
+    } elseif ($mode === 'city' && $city !== null) {
+        // 手动模式：使用城市名称
+        $cityParam = '&city=' . urlencode($city);
     } else {
         // 使用 IP 定位获取城市编码
         $ipUrl = 'https://restapi.amap.com/v3/ip?key=' . $key;

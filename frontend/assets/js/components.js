@@ -1067,12 +1067,23 @@
                 this._setLoading(true);
                 var _siteBase = (window.WITHU_CONFIG && window.WITHU_CONFIG.siteBase) || '';
 
-                // 尝试使用浏览器定位
+                // 根据定位模式决定参数
+                var locMode = (window.WITHU_CONFIG && window.WITHU_CONFIG.weatherLocMode) || 'auto';
                 var geoParams = 'mode=ip';
-                if (window.WithULocation) {
-                    var loc = window.WithULocation.get();
-                    if (loc && loc.lat && loc.lng) {
-                        geoParams = 'mode=geo&lat=' + loc.lat + '&lng=' + loc.lng;
+                
+                if (locMode === 'auto') {
+                    // 自动模式：使用浏览器定位
+                    if (window.WithULocation) {
+                        var loc = window.WithULocation.get();
+                        if (loc && loc.lat && loc.lng) {
+                            geoParams = 'mode=geo&lat=' + loc.lat + '&lng=' + loc.lng;
+                        }
+                    }
+                } else {
+                    // 手动模式：使用后台设置的固定城市
+                    var manualCity = (window.WITHU_CONFIG && window.WITHU_CONFIG.weatherLocCity) || '';
+                    if (manualCity) {
+                        geoParams = 'mode=city&city=' + encodeURIComponent(manualCity);
                     }
                 }
 
