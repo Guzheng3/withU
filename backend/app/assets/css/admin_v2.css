@@ -619,15 +619,83 @@ body.admin-v2 .admin-stat-card {
     min-height: 160px;
 }
 
+/* 彩色小方块：各卡片不同渐变底色 */
+body.admin-v2 .admin-dashboard-stat-card:nth-child(1) {
+    background: linear-gradient(135deg, #78716c 0%, #44403c 100%) !important;
+    border: none !important;
+    box-shadow: 0 4px 16px rgba(120, 113, 108, 0.3) !important;
+    color: #fff !important;
+}
+
+body.admin-v2 .admin-dashboard-stat-card:nth-child(2) {
+    background: linear-gradient(135deg, #45bdff 0%, #1782ff 100%) !important;
+    border: none !important;
+    box-shadow: 0 4px 16px rgba(69, 189, 255, 0.3) !important;
+    color: #fff !important;
+}
+
+body.admin-v2 .admin-dashboard-stat-card:nth-child(3) {
+    background: linear-gradient(135deg, #fb7185 0%, #e11d48 100%) !important;
+    border: none !important;
+    box-shadow: 0 4px 16px rgba(251, 113, 133, 0.3) !important;
+    color: #fff !important;
+}
+
+body.admin-v2 .admin-dashboard-stat-card:nth-child(4) {
+    background: linear-gradient(135deg, #a78bfa 0%, #7c3aed 100%) !important;
+    border: none !important;
+    box-shadow: 0 4px 16px rgba(167, 139, 250, 0.3) !important;
+    color: #fff !important;
+}
+
+/* 彩色卡片内的文字颜色 */
+body.admin-v2 .admin-dashboard-stat-card:nth-child(1) .admin-card-title,
+body.admin-v2 .admin-dashboard-stat-card:nth-child(1) .admin-card-subtitle,
+body.admin-v2 .admin-dashboard-stat-card:nth-child(1) .admin-stat-value,
+body.admin-v2 .admin-dashboard-stat-card:nth-child(1) .admin-stat-label,
+body.admin-v2 .admin-dashboard-stat-card:nth-child(2) .admin-card-title,
+body.admin-v2 .admin-dashboard-stat-card:nth-child(2) .admin-card-subtitle,
+body.admin-v2 .admin-dashboard-stat-card:nth-child(2) .admin-stat-value,
+body.admin-v2 .admin-dashboard-stat-card:nth-child(2) .admin-stat-label,
+body.admin-v2 .admin-dashboard-stat-card:nth-child(3) .admin-card-title,
+body.admin-v2 .admin-dashboard-stat-card:nth-child(3) .admin-card-subtitle,
+body.admin-v2 .admin-dashboard-stat-card:nth-child(3) .admin-stat-value,
+body.admin-v2 .admin-dashboard-stat-card:nth-child(3) .admin-stat-label,
+body.admin-v2 .admin-dashboard-stat-card:nth-child(4) .admin-card-title,
+body.admin-v2 .admin-dashboard-stat-card:nth-child(4) .admin-card-subtitle,
+body.admin-v2 .admin-dashboard-stat-card:nth-child(4) .admin-stat-value,
+body.admin-v2 .admin-dashboard-stat-card:nth-child(4) .admin-stat-label {
+    color: #fff !important;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* 彩色卡片 hover */
+body.admin-v2 .admin-dashboard-stat-card:nth-child(1):hover,
+body.admin-v2 .admin-dashboard-stat-card:nth-child(2):hover,
+body.admin-v2 .admin-dashboard-stat-card:nth-child(3):hover,
+body.admin-v2 .admin-dashboard-stat-card:nth-child(4):hover {
+    transform: translateY(-2px);
+}
+
+/* 彩色卡片内的按钮保持白色半透明 */
+body.admin-v2 .admin-dashboard-stat-card:nth-child(1) .btn,
+body.admin-v2 .admin-dashboard-stat-card:nth-child(2) .btn,
+body.admin-v2 .admin-dashboard-stat-card:nth-child(3) .btn,
+body.admin-v2 .admin-dashboard-stat-card:nth-child(4) .btn {
+    background: rgba(255, 255, 255, 0.2) !important;
+    border-color: rgba(255, 255, 255, 0.3) !important;
+    color: #fff !important;
+}
+
+body.admin-v2 .admin-dashboard-stat-card:nth-child(1) .btn:hover,
+body.admin-v2 .admin-dashboard-stat-card:nth-child(2) .btn:hover,
+body.admin-v2 .admin-dashboard-stat-card:nth-child(3) .btn:hover,
+body.admin-v2 .admin-dashboard-stat-card:nth-child(4) .btn:hover {
+    background: rgba(255, 255, 255, 0.3) !important;
+}
+
 body.admin-v2 .admin-stat-card::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    height: 3px;
-    background: linear-gradient(90deg, var(--admin-pink), var(--admin-blue), var(--admin-green));
-    opacity: 0.85;
+    display: none;
 }
 
 body.admin-v2 .admin-stat-card:hover {

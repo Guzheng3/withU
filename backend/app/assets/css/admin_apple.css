@@ -143,6 +143,72 @@ body.admin-v2.admin-ui-apple select {
     border-color: #e2e8f0 !important;
 }
 
+/* 仪表盘彩色方块 */
+body.admin-v2.admin-ui-apple .admin-dashboard-stat-card:nth-child(1) {
+    background: linear-gradient(135deg, #78716c 0%, #44403c 100%) !important;
+    border: none !important;
+    box-shadow: 0 4px 16px rgba(120, 113, 108, 0.3) !important;
+}
+body.admin-v2.admin-ui-apple .admin-dashboard-stat-card:nth-child(2) {
+    background: linear-gradient(135deg, #45bdff 0%, #1782ff 100%) !important;
+    border: none !important;
+    box-shadow: 0 4px 16px rgba(69, 189, 255, 0.3) !important;
+}
+body.admin-v2.admin-ui-apple .admin-dashboard-stat-card:nth-child(3) {
+    background: linear-gradient(135deg, #fb7185 0%, #e11d48 100%) !important;
+    border: none !important;
+    box-shadow: 0 4px 16px rgba(251, 113, 133, 0.3) !important;
+}
+body.admin-v2.admin-ui-apple .admin-dashboard-stat-card:nth-child(4) {
+    background: linear-gradient(135deg, #a78bfa 0%, #7c3aed 100%) !important;
+    border: none !important;
+    box-shadow: 0 4px 16px rgba(167, 139, 250, 0.3) !important;
+}
+
+/* 彩色卡片内文字颜色 */
+body.admin-v2.admin-ui-apple .admin-dashboard-stat-card:nth-child(1) .admin-card-title,
+body.admin-v2.admin-ui-apple .admin-dashboard-stat-card:nth-child(1) .admin-card-subtitle,
+body.admin-v2.admin-ui-apple .admin-dashboard-stat-card:nth-child(1) .admin-stat-value,
+body.admin-v2.admin-ui-apple .admin-dashboard-stat-card:nth-child(1) .admin-stat-label,
+body.admin-v2.admin-ui-apple .admin-dashboard-stat-card:nth-child(2) .admin-card-title,
+body.admin-v2.admin-ui-apple .admin-dashboard-stat-card:nth-child(2) .admin-card-subtitle,
+body.admin-v2.admin-ui-apple .admin-dashboard-stat-card:nth-child(2) .admin-stat-value,
+body.admin-v2.admin-ui-apple .admin-dashboard-stat-card:nth-child(2) .admin-stat-label,
+body.admin-v2.admin-ui-apple .admin-dashboard-stat-card:nth-child(3) .admin-card-title,
+body.admin-v2.admin-ui-apple .admin-dashboard-stat-card:nth-child(3) .admin-card-subtitle,
+body.admin-v2.admin-ui-apple .admin-dashboard-stat-card:nth-child(3) .admin-stat-value,
+body.admin-v2.admin-ui-apple .admin-dashboard-stat-card:nth-child(3) .admin-stat-label,
+body.admin-v2.admin-ui-apple .admin-dashboard-stat-card:nth-child(4) .admin-card-title,
+body.admin-v2.admin-ui-apple .admin-dashboard-stat-card:nth-child(4) .admin-card-subtitle,
+body.admin-v2.admin-ui-apple .admin-dashboard-stat-card:nth-child(4) .admin-stat-value,
+body.admin-v2.admin-ui-apple .admin-dashboard-stat-card:nth-child(4) .admin-stat-label {
+    color: #fff !important;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* 彩色卡片按钮 */
+body.admin-v2.admin-ui-apple .admin-dashboard-stat-card:nth-child(1) .btn,
+body.admin-v2.admin-ui-apple .admin-dashboard-stat-card:nth-child(2) .btn,
+body.admin-v2.admin-ui-apple .admin-dashboard-stat-card:nth-child(3) .btn,
+body.admin-v2.admin-ui-apple .admin-dashboard-stat-card:nth-child(4) .btn {
+    background: rgba(255, 255, 255, 0.2) !important;
+    border-color: rgba(255, 255, 255, 0.3) !important;
+    color: #fff !important;
+}
+
+body.admin-v2.admin-ui-apple .admin-dashboard-stat-card:nth-child(1) .btn:hover,
+body.admin-v2.admin-ui-apple .admin-dashboard-stat-card:nth-child(2) .btn:hover,
+body.admin-v2.admin-ui-apple .admin-dashboard-stat-card:nth-child(3) .btn:hover,
+body.admin-v2.admin-ui-apple .admin-dashboard-stat-card:nth-child(4) .btn:hover {
+    background: rgba(255, 255, 255, 0.3) !important;
+}
+
+/* 隐藏原装饰圆 */
+body.admin-v2.admin-ui-apple .admin-dashboard-stat-card::after {
+    display: none;
+}
+
+/* 保留普通 stat-card 样式（非仪表盘） */
 body.admin-v2.admin-ui-apple .admin-stat-card {
     position: relative;
     overflow: hidden;
