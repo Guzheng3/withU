@@ -8,6 +8,7 @@ header('Content-Type: application/json; charset=utf-8');
 $mode = $_GET['mode'] ?? 'ip';
 $lat  = $_GET['lat'] ?? null;
 $lng  = $_GET['lng'] ?? null;
+$slot = $_GET['slot'] ?? '1';
 
 // 读取数据库中的天气 Key
 $weatherKey = '';
@@ -130,9 +131,32 @@ function fetchAmapWeather($key) {
 }
 
 // 主逻辑
+if ($mode === 'couple') {
+    // 情侣模式：根据 slot 返回对应情侣所在地的天气
+    $coupleData = null;
+    try {
+        $mapFile = __DIR__ . '/map-all.json';
+        if (file_exists($mapFile)) {
+            $mapData = json_decode(file_get_contents($mapFile), true);
+            $lovers = $mapData['lovers'] ?? [];
+            $idx = intval($slot) - 1;
+            if (isset($lovers[$idx]) && !empty($lovers[$idx]['coords'])) {
+                $lat = $lovers[$idx]['coords'][1];
+                $lng = $lovers[$idx]['coords'][0];
+                $mode = 'geo';
+                $coupleData = ['lat' => $lat, 'lng' => $lng, 'name' => $lovers[$idx]['name'] ?? ''];
+            }
+        }
+    } catch (Throwable $e) {}
+}
+
 if ($weatherType === 'amap' && $weatherKey) {
     $result = fetchAmapWeather($weatherKey);
     if ($result) {
+        // 情侣模式下用对方昵称
+        if ($coupleData && !empty($coupleData['name'])) {
+            $result['data']['city'] = $coupleData['name'] . ' · ' . ($result['data']['city'] ?? '');
+        }
         echo json_encode($result, JSON_UNESCAPED_UNICODE);
         exit;
     }
