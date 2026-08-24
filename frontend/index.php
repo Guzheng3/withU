@@ -1595,7 +1595,7 @@ try {
         }
 
         .withu-header-actions {
-            right: 67px !important;
+            right: 52px !important;
         }
     }
 
