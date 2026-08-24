@@ -57,7 +57,6 @@ foreach (($themeConfig['colors'] ?? []) as $themeName => $themeValue) {
     <link rel="stylesheet" href="/admin-assets/css/theme.css?v=withu-theme-20260724-1">
     <link rel="stylesheet" href="/admin-assets/css/admin_pages.css?v=ui-polish-2">
     <link rel="stylesheet" href="/admin-assets/css/admin_apple.css?v=ui-polish-2">
-    <link rel="stylesheet" href="/admin-assets/css/admin_borderless.css?v=ui-polish-1">
     <link rel="stylesheet"
           href="https://cdn.bootcdn.net/ajax/libs/font-awesome/6.4.0/css/all.min.css"
           onerror="this.onerror=null;this.href='https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css';">
