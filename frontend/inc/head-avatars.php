@@ -17,9 +17,9 @@
                             <div class="withu-head-avatar-divider"></div>
                         </div>
                         <div class="withu-head-avatar-bottom withu-head-avatar-anim-item">
-                            <div class="withu-head-avatar-location">
+                            <div class="withu-head-avatar-location" data-location-slot="1">
                                 <i data-lucide="map-pin"></i>
-                                <em>潘州公园</em>
+                                <em>加载中...</em>
                             </div>
                         </div>
                     </div>
@@ -57,9 +57,9 @@
                             <div class="withu-head-avatar-divider"></div>
                         </div>
                         <div class="withu-head-avatar-bottom withu-head-avatar-anim-item">
-                            <div class="withu-head-avatar-location">
+                            <div class="withu-head-avatar-location" data-location-slot="2">
                                 <i data-lucide="map-pin"></i>
-                                <em>甲子公园</em>
+                                <em>加载中...</em>
                             </div>
                         </div>
                     </div>
