@@ -48,6 +48,33 @@ $totalVisitRow = $db->fetch("SELECT SUM(page_views) AS total_views, SUM(unique_v
 $totalViews    = (int) ($totalVisitRow['total_views'] ?? 0);
 $totalVisitors = (int) ($totalVisitRow['total_visitors'] ?? 0);
 
+// 详细统计：域名分布
+$domainStats = [];
+try {
+    $domainRows = $db->fetchAll("SELECT domain, COUNT(*) AS cnt FROM visitor_logs WHERE visit_date = ? GROUP BY domain ORDER BY cnt DESC LIMIT 5", [$today]);
+    $domainStats = $domainRows ?: [];
+} catch (Throwable $e) { $domainStats = []; }
+
+// 最近访问记录
+$recentVisitors = [];
+try {
+    $recentVisitors = $db->fetchAll(
+        "SELECT visit_time, ip_address, domain, ua_browser, ua_os, ua_device, page_url 
+         FROM visitor_logs 
+         ORDER BY visit_time DESC LIMIT 10"
+    ) ?: [];
+} catch (Throwable $e) { $recentVisitors = []; }
+
+// 设备/浏览器分布
+$deviceStats = [];
+$browserStats = [];
+try {
+    $deviceRows = $db->fetchAll("SELECT ua_device, COUNT(*) AS cnt FROM visitor_logs WHERE visit_date = ? GROUP BY ua_device ORDER BY cnt DESC", [$today]);
+    $deviceStats = $deviceRows ?: [];
+    $browserRows = $db->fetchAll("SELECT ua_browser, COUNT(*) AS cnt FROM visitor_logs WHERE visit_date = ? AND ua_browser != '' GROUP BY ua_browser ORDER BY cnt DESC LIMIT 5", [$today]);
+    $browserStats = $browserRows ?: [];
+} catch (Throwable $e) { $deviceStats = []; $browserStats = []; }
+
 // ffmpeg 状态检测（统一放在仪表盘），用于提示视频相关能力
 // 状态：
 // - embedded/ok: 已检测到可执行的内置或系统 ffmpeg
@@ -487,6 +514,59 @@ include __DIR__ . '/header.php';
                 </ul>
             <?php else: ?>
                 <p style="font-size:0.85rem;color:var(--text-light);">暂时还没有足够的相册图片用于统计。</p>
+            <?php endif; ?>
+        </div>
+
+        <!-- 域名分布 -->
+        <div class="admin-card admin-dashboard-panel">
+            <div class="admin-card-header">
+                <div>
+                    <div class="admin-card-title">域名分布</div>
+                    <div class="admin-card-subtitle">今日 <?php echo $today; ?> 各域名访问量</div>
+                </div>
+            </div>
+            <?php if (!empty($domainStats)): ?>
+                <ul style="list-style:none;margin:0;padding:0;font-size:0.88rem;color:var(--text-normal);">
+                    <?php foreach ($domainStats as $ds): ?>
+                    <li style="padding:0.4rem 0;border-bottom:1px solid rgba(226,232,240,0.7);display:flex;justify-content:space-between;align-items:center;">
+                        <span style="font-family:monospace;font-size:0.82rem;"><?php echo e($ds['domain'] ?: '(未知)'); ?></span>
+                        <strong><?php echo (int)$ds['cnt']; ?> 次</strong>
+                    </li>
+                    <?php endforeach; ?>
+                </ul>
+            <?php else: ?>
+                <p style="font-size:0.85rem;color:var(--text-light);">暂无今日访问数据。</p>
+            <?php endif; ?>
+        </div>
+
+        <!-- 最近访问 -->
+        <div class="admin-card admin-dashboard-panel">
+            <div class="admin-card-header">
+                <div>
+                    <div class="admin-card-title">最近访问</div>
+                    <div class="admin-card-subtitle">最近 10 条访问记录</div>
+                </div>
+            </div>
+            <?php if (!empty($recentVisitors)): ?>
+                <ul style="list-style:none;margin:0;padding:0;font-size:0.82rem;color:var(--text-normal);">
+                    <?php foreach ($recentVisitors as $rv): ?>
+                    <li style="padding:0.35rem 0;border-bottom:1px solid rgba(226,232,240,0.7);">
+                        <div style="display:flex;justify-content:space-between;align-items:center;gap:0.5rem;">
+                            <div style="min-width:0;">
+                                <div style="font-family:monospace;font-size:0.78rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;" title="<?php echo e($rv['ip_address']); ?>">
+                                    <?php echo e($rv['ip_address']); ?>
+                                </div>
+                                <div style="color:var(--text-light);font-size:0.72rem;margin-top:1px;">
+                                    <?php echo e($rv['domain'] ?: ''); ?> · <?php echo e($rv['ua_browser'] ?: '未知浏览器'); ?> · <?php echo e($rv['ua_os'] ?: '未知系统'); ?>
+                                </div>
+                            </div>
+                            <span style="color:var(--text-light);font-size:0.72rem;white-space:nowrap;"><?php echo e(date('H:i:s', strtotime($rv['visit_time']))); ?></span>
+                        </div>
+                    </li>
+                    <?php endforeach; ?>
+                </ul>
+            <?php else: ?>
+                <p style="font-size:0.85rem;color:var(--text-light);">暂无访问记录。</p>
             <?php endif; ?>
         </div>
     </section>
