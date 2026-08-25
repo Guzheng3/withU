@@ -89,7 +89,7 @@ body.admin-v2:not(.admin-ui-apple) .admin-album-card-actions > form {
 
 /* 仪表盘：统一统计卡和功能面板的几何节奏 */
 body.admin-v2:not(.admin-ui-apple) .admin-dashboard-stats {
-    grid-template-columns: repeat(4, minmax(0, 1fr));
+    grid-template-columns: repeat(3, minmax(0, 1fr));
     align-items: stretch;
     gap: 1.5rem;
 }

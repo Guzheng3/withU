@@ -15,6 +15,18 @@ $auth->requireLogin();
 $db          = Database::getInstance();
 $currentUser = $auth->getCurrentUser();
 
+// 确保 site_visits 表存在
+$db->exec("CREATE TABLE IF NOT EXISTS `site_visits` (
+    `id` INT AUTO_INCREMENT PRIMARY KEY,
+    `visit_date` DATE NOT NULL,
+    `page_views` INT NOT NULL DEFAULT 0,
+    `unique_visitors` INT NOT NULL DEFAULT 0,
+    UNIQUE KEY `uk_date` (`visit_date`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4");
+
+// 今日日期
+$today = date('Y-m-d');
+
 // 统计数据
 // 基础统计
 $articleCountRow = $db->fetch("SELECT COUNT(*) AS c FROM articles WHERE status != 'deleted'");
@@ -26,6 +38,15 @@ $articleCount = (int) ($articleCountRow['c'] ?? 0);
 $albumCount   = (int) ($albumCountRow['c'] ?? 0);
 $eventCount   = (int) ($eventCountRow['c'] ?? 0);
 $messageCount = (int) ($messageCountRow['c'] ?? 0);
+
+// 访问统计
+$todayVisitRow = $db->fetch("SELECT page_views, unique_visitors FROM site_visits WHERE visit_date = ?", [$today]);
+$todayViews    = (int) ($todayVisitRow['page_views'] ?? 0);
+$todayVisitors = (int) ($todayVisitRow['unique_visitors'] ?? 0);
+
+$totalVisitRow = $db->fetch("SELECT SUM(page_views) AS total_views, SUM(unique_visitors) AS total_visitors FROM site_visits");
+$totalViews    = (int) ($totalVisitRow['total_views'] ?? 0);
+$totalVisitors = (int) ($totalVisitRow['total_visitors'] ?? 0);
 
 // ffmpeg 状态检测（统一放在仪表盘），用于提示视频相关能力
 // 状态：
@@ -344,6 +365,32 @@ include __DIR__ . '/header.php';
             <div>
                 <div class="admin-stat-value"><?php echo $messageCount; ?></div>
                 <div class="admin-stat-label">条留言</div>
+            </div>
+        </div>
+
+        <div class="admin-card admin-dashboard-stat-card">
+            <div class="admin-card-header">
+                <div>
+                    <div class="admin-card-title">今日访问</div>
+                    <div class="admin-card-subtitle"><?php echo $today; ?></div>
+                </div>
+            </div>
+            <div>
+                <div class="admin-stat-value"><?php echo $todayViews; ?></div>
+                <div class="admin-stat-label">访问次数 · <?php echo $todayVisitors; ?> 访客</div>
+            </div>
+        </div>
+
+        <div class="admin-card admin-dashboard-stat-card">
+            <div class="admin-card-header">
+                <div>
+                    <div class="admin-card-title">累计访问</div>
+                    <div class="admin-card-subtitle">从建站至今</div>
+                </div>
+            </div>
+            <div>
+                <div class="admin-stat-value"><?php echo $totalViews; ?></div>
+                <div class="admin-stat-label">总访问 · <?php echo $totalVisitors; ?> 访客</div>
             </div>
         </div>
     </section>
