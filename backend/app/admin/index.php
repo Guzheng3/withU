@@ -16,7 +16,7 @@ $db          = Database::getInstance();
 $currentUser = $auth->getCurrentUser();
 
 // 确保 site_visits 表存在
-$db->exec("CREATE TABLE IF NOT EXISTS `site_visits` (
+$db->query("CREATE TABLE IF NOT EXISTS `site_visits` (
     `id` INT AUTO_INCREMENT PRIMARY KEY,
     `visit_date` DATE NOT NULL,
     `page_views` INT NOT NULL DEFAULT 0,

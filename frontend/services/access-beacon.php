@@ -21,7 +21,7 @@ try {
         
         if ($row) {
             // 更新访问次数
-            $db->exec("UPDATE site_visits SET page_views = page_views + 1 WHERE visit_date = ?", [$today]);
+            $db->query("UPDATE site_visits SET page_views = page_views + 1 WHERE visit_date = ?", [$today]);
         } else {
             // 新增今日记录
             $db->insert('site_visits', [
