@@ -6,6 +6,27 @@ mb_http_output('UTF-8');
 
 require __DIR__ . '/inc/auth.php';
 require __DIR__ . '/inc/config.php';
+
+// 访问统计（使用已有的 $db 连接）
+$todayViews = 0;
+$todayVisitors = 0;
+$totalViews = 0;
+$totalVisitors = 0;
+try {
+    if (isset($db) && $db) {
+        $today = date('Y-m-d');
+        $tvRow = $db->fetch("SELECT page_views, unique_visitors FROM site_visits WHERE visit_date = ?", [$today]);
+        if ($tvRow) {
+            $todayViews = (int)($tvRow['page_views'] ?? 0);
+            $todayVisitors = (int)($tvRow['unique_visitors'] ?? 0);
+        }
+        $totalRow = $db->fetch("SELECT SUM(page_views) AS total_views, SUM(unique_visitors) AS total_visitors FROM site_visits");
+        if ($totalRow) {
+            $totalViews = (int)($totalRow['total_views'] ?? 0);
+            $totalVisitors = (int)($totalRow['total_visitors'] ?? 0);
+        }
+    }
+} catch (Throwable $e) {}
 ?>
 <meta name="x-withu-license-instance" content="858ee1d099b9">
 
@@ -3402,16 +3423,16 @@ require __DIR__ . '/inc/config.php';
                             </div>
                             <div class="withu-traffic-metrics">
                                 <div class="withu-traffic-metric"
-                                    data-withu-tip="访问次数：121" data-withu-tip-force="true">
+                                    data-withu-tip="访问次数：<?php echo $todayViews; ?>" data-withu-tip-force="true">
                                     <div class="withu-font-num withu-traffic-value">
-                                        121                                    </div>
+                                        <?php echo $todayViews; ?>                                    </div>
                                     <div class="withu-traffic-label">访问次数</div>
                                 </div>
                                 <div class="withu-traffic-divider" aria-hidden="true"></div>
                                 <div class="withu-traffic-metric"
-                                    data-withu-tip="今日访客：23" data-withu-tip-force="true">
+                                    data-withu-tip="今日访客：<?php echo $todayVisitors; ?>" data-withu-tip-force="true">
                                     <div class="withu-font-num withu-traffic-value">
-                                        23                                    </div>
+                                        <?php echo $todayVisitors; ?>                                    </div>
                                     <div class="withu-traffic-label">今日访客</div>
                                 </div>
                             </div>
@@ -3431,16 +3452,16 @@ require __DIR__ . '/inc/config.php';
                             </div>
                             <div class="withu-traffic-metrics">
                                 <div class="withu-traffic-metric"
-                                    data-withu-tip="总访客数：4,047" data-withu-tip-force="true">
+                                    data-withu-tip="总访客数：<?php echo $totalVisitors; ?>" data-withu-tip-force="true">
                                     <div class="withu-font-num withu-traffic-value">
-                                        4,047                                    </div>
+                                        <?php echo $totalVisitors; ?>                                    </div>
                                     <div class="withu-traffic-label">总访客数</div>
                                 </div>
                                 <div class="withu-traffic-divider" aria-hidden="true"></div>
                                 <div class="withu-traffic-metric"
-                                    data-withu-tip="总访问次：14,998" data-withu-tip-force="true">
+                                    data-withu-tip="总访问次：<?php echo $totalViews; ?>" data-withu-tip-force="true">
                                     <div class="withu-font-num withu-traffic-value">
-                                        14,998                                    </div>
+                                        <?php echo $totalViews; ?>                                    </div>
                                     <div class="withu-traffic-label">总访问次</div>
                                 </div>
                             </div>
