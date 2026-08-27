@@ -5,21 +5,21 @@
     <div class="admin-tabbar-inner">
         <a href="/admin/index.php"
            class="admin-tab-item <?php echo $adminPage === 'dashboard' ? 'admin-tab-item-active' : ''; ?>">
-            <i class="fas fa-home"></i>
+            <i class="ti ti-home"></i>
             <span>概览</span>
         </a>
         <a href="/admin/articles.php"
            class="admin-tab-item <?php echo in_array($adminPage, ['articles', 'albums', 'messages', 'events', 'map'], true) ? 'admin-tab-item-active' : ''; ?>">
-            <i class="fas fa-layer-group"></i>
+            <i class="ti ti-stack"></i>
             <span>内容</span>
         </a>
         <a href="/admin/player_art.php"
-           class="admin-tab-item <?php echo in_array($adminPage, ['together_settings', 'player_settings', 'player_art', 'strm'], true) ? 'admin-tab-item-active' : ''; ?>">
-            <i class="fas fa-film"></i>
+           class="admin-tab-item <?php echo in_array($adminPage, ['together_settings', 'player_settings', 'player_art'], true) ? 'admin-tab-item-active' : ''; ?>">
+            <i class="ti ti-movie"></i>
             <span>影视</span>
         </a>
         <button type="button" class="admin-tab-item admin-tab-item-menu" data-admin-toggle="drawer" aria-label="打开后台菜单" aria-controls="admin-drawer" aria-expanded="false">
-            <i class="fas fa-bars-staggered"></i>
+            <i class="ti ti-menu"></i>
             <span>菜单</span>
         </button>
     </div>

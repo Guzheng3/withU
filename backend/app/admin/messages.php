@@ -137,8 +137,8 @@ include __DIR__ . '/header.php';
     <div class="admin-card" style="margin-bottom:0.75rem;">
         <div class="admin-card-header">
             <div>
-                <div class="admin-card-title">留言概览</div>
-                <div class="admin-card-subtitle">共 <?php echo count($messages); ?> 条留言</div>
+                <div class="admin-card-title">留言概览<button type="button" class="admin-help-toggle" title="查看说明" aria-label="查看说明" aria-expanded="false"><i class="ti ti-info-circle"></i></button></div>
+                <div class="admin-card-help"><div class="admin-card-subtitle">共 <?php echo count($messages); ?> 条留言</div></div>
             </div>
             <div style="display:flex;gap:0.5rem;align-items:center;">
                 <a href="/admin/comment_ip_blacklist.php" class="btn btn-outline">
@@ -171,9 +171,9 @@ include __DIR__ . '/header.php';
                     <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:0.5rem;">
                         <div style="flex:1;min-width:0;">
                             <div class="admin-card-title" style="font-size:0.9rem;">
-                                <?php echo e($author); ?>
+                                <?php echo e($author); ?><button type="button" class="admin-help-toggle" title="查看说明" aria-label="查看说明" aria-expanded="false"><i class="ti ti-info-circle"></i></button>
                             </div>
-                            <div class="admin-card-subtitle">
+                            <div class="admin-card-help"><div class="admin-card-subtitle">
                                 <?php echo formatDate($message['created_at']); ?>
                                 <?php if ($ipText): ?>
                                     · IP：<?php echo e($ipText); ?>
@@ -181,7 +181,7 @@ include __DIR__ . '/header.php';
                                 <?php if ($locationText): ?>
                                     · 归属地：<?php echo e($locationText); ?>
                                 <?php endif; ?>
-                            </div>
+                            </div></div>
                         </div>
                         <div style="display:flex;flex-direction:column;gap:0.25rem;align-items:flex-end;">
                             <span class="badge <?php echo !empty($message['is_public']) ? 'badge-success' : 'badge-warning'; ?>">

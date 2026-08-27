@@ -187,10 +187,10 @@ include __DIR__ . '/header.php';
     <div class="admin-card" style="margin-bottom:0.75rem;">
         <div class="admin-card-header">
             <div>
-                <div class="admin-card-title">文章信息</div>
-                <div class="admin-card-subtitle">
+                <div class="admin-card-title">文章信息 <button type="button" class="admin-help-toggle" title="查看说明" aria-label="查看说明" aria-expanded="false"><i class="ti ti-info-circle"></i></button></div>
+                <div class="admin-card-help"><div class="admin-card-subtitle">
                     ID：<?php echo $article['id']; ?> · 创建于 <?php echo formatDate($article['created_at']); ?>
-                </div>
+                </div></div>
             </div>
             <div style="display:flex;gap:0.5rem;align-items:center;">
                 <a href="/admin/comment_ip_blacklist.php" class="btn btn-outline">
@@ -226,8 +226,8 @@ include __DIR__ . '/header.php';
     <div class="admin-card">
         <div class="admin-card-header">
             <div>
-                <div class="admin-card-title">评论列表</div>
-                <div class="admin-card-subtitle">共 <?php echo count($comments); ?> 条评论</div>
+                <div class="admin-card-title">评论列表 <button type="button" class="admin-help-toggle" title="查看说明" aria-label="查看说明" aria-expanded="false"><i class="ti ti-info-circle"></i></button></div>
+                <div class="admin-card-help"><div class="admin-card-subtitle">共 <?php echo count($comments); ?> 条评论</div></div>
             </div>
         </div>
 

@@ -69,28 +69,7 @@ body.withu-front-modern .section-header h2 i {
     font-size: .82rem;
 }
 
-/* 结语：英文副标题用浪漫衬线 */
-body.withu-front-modern .withustrm-epilogue__subtitle {
-    font-family: var(--font-display);
-    letter-spacing: .32em;
-    font-weight: 600;
-}
-
 /* 事件空态 */
-.withustrm-loveday-empty {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: .6rem;
-    padding: 2.2rem 1rem;
-    border: 1px dashed rgba(236, 72, 153, .35);
-    border-radius: 20px;
-    background: rgba(255, 255, 255, .6);
-    color: var(--muted);
-    text-align: center;
-    font-size: .92rem;
-}
-.withustrm-loveday-empty i { font-size: 1.6rem; color: #ec4899; opacity: .7; }
 
 /* 入场动画收敛（微交互 ≤ 500ms） */
 @keyframes withuSectionInFast { from { opacity: .85; transform: translateY(8px); } to { opacity: 1; transform: none; } }

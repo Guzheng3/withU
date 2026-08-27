@@ -200,8 +200,7 @@ if ($headerDb && (string)get_setting('front_animation_enabled', '1') !== '1') {
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Infant:wght@400;500;600;700&display=swap">
-    <link rel="stylesheet" href="https://cdn.bootcdn.net/ajax/libs/font-awesome/6.4.0/css/all.min.css"
-          onerror="this.onerror=null;this.href='https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css';">
+<link rel="stylesheet" href="/admin-assets/vendor/fontawesome/css/all.min.css">
 </head>
 <body<?php if (!empty($bodyClass)): ?> class="<?php echo e($bodyClass); ?>"<?php endif; ?>>
     <div class="top-nav">

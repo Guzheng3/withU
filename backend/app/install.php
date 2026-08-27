@@ -254,8 +254,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && $step === 1) {
     <link rel="stylesheet" href="/assets/css/style.css">
     <link rel="stylesheet" href="/assets/css/style.css">
     <link rel="stylesheet" href="/assets/css/auth.css">
-    <link rel="stylesheet" href="https://cdn.bootcdn.net/ajax/libs/font-awesome/6.4.0/css/all.min.css"
-          onerror="this.onerror=null;this.href='https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css';">
+<link rel="stylesheet" href="/admin-assets/vendor/fontawesome/css/all.min.css">
 </head>
 <body class="auth-page install-page">
     <?php

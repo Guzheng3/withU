@@ -1394,22 +1394,3 @@ body.admin-v2 :is(a,button,input,select,textarea):focus-visible {
 }
 
 
-/* ===== withUstrm 后台内嵌 ===== */
-body.admin-v2 .strm-frame-wrap {
-  width: 100%;
-  overflow: hidden;
-  border-radius: 14px;
-  background: #fff;
-  box-shadow: 0 6px 24px rgba(60, 35, 55, 0.10), var(--admin-glass-highlight);
-}
-body.admin-v2 .strm-frame {
-  display: block;
-  width: 100%;
-  height: calc(100vh - 12rem);
-  border: 0;
-  background: #fff;
-}
-@media (max-width: 640px) {
-  body.admin-v2 .strm-frame-wrap { border-radius: 10px; }
-  body.admin-v2 .strm-frame { height: calc(100vh - 9.5rem); }
-}

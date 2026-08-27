@@ -228,10 +228,15 @@ include __DIR__ . '/header.php';
             <div class="admin-card">
                 <div class="admin-card-header">
                     <div>
-                        <div class="admin-card-title">基础信息</div>
-                        <div class="admin-card-subtitle">站点标题与描述、登录安全</div>
+                        <div class="admin-card-title">
+                        基础信息
+                        <button type="button" class="admin-help-toggle" title="查看说明" aria-label="查看说明" aria-expanded="false"><i class="ti ti-info-circle"></i></button>
                     </div>
                 </div>
+            </div>
+            <div class="admin-card-help">
+                <div class="admin-card-subtitle">站点标题与描述、登录安全</div>
+            </div>
 
                 <div class="form-group" style="margin-bottom:0.75rem;">
                     <label style="display:block;font-size:0.85rem;margin-bottom:0.25rem;">网站标题</label>
@@ -305,10 +310,15 @@ include __DIR__ . '/header.php';
             <div class="admin-card">
                 <div class="admin-card-header">
                     <div>
-                        <div class="admin-card-title">恋爱与首页</div>
-                        <div class="admin-card-subtitle">恋爱开始日期与首页大图</div>
+                        <div class="admin-card-title">
+                        恋爱与首页
+                        <button type="button" class="admin-help-toggle" title="查看说明" aria-label="查看说明" aria-expanded="false"><i class="ti ti-info-circle"></i></button>
                     </div>
                 </div>
+            </div>
+            <div class="admin-card-help">
+                <div class="admin-card-subtitle">恋爱开始日期与首页大图</div>
+            </div>
 
                 <div class="form-group" style="margin-bottom:0.75rem;">
                     <label style="display:block;font-size:0.85rem;margin-bottom:0.25rem;">恋爱开始时间</label>
@@ -382,12 +392,12 @@ include __DIR__ . '/header.php';
         ?>
         <section class="admin-grid" id="together-settings" style="margin-bottom:0.75rem;">
             <div class="admin-card">
-                <div class="admin-card-header"><div><div class="admin-card-title">一起看</div><div class="admin-card-subtitle">同步、在线状态和自动播放</div></div></div>
+                <div class="admin-card-header"><div><div class="admin-card-title">一起看 <button type="button" class="admin-help-toggle" title="查看说明" aria-label="查看说明" aria-expanded="false"><i class="ti ti-info-circle"></i></button></div></div></div><div class="admin-card-help"><div class="admin-card-subtitle">同步、在线状态和自动播放</div></div>
                 <div class="form-group" style="margin-bottom:.65rem;"><label style="display:block;font-size:.85rem;margin-bottom:.25rem;">状态轮询间隔（毫秒）</label><input type="number" name="settings[watch_poll_interval_ms]" min="300" max="3000" value="<?php echo $watchPollIntervalValue; ?>" style="width:100%;padding:.55rem .75rem;border-radius:.75rem;border:1px solid rgba(148,163,184,.6);font-size:.9rem;"><div style="margin-top:.2rem;font-size:.78rem;color:var(--text-light);">默认 500ms，只读取房间状态，不会因此修改播放进度。</div></div>
                 <div class="form-group" style="margin-bottom:.65rem;"><label style="display:block;font-size:.85rem;margin-bottom:.25rem;">偏差校正阈值（毫秒）</label><input type="number" name="settings[watch_sync_threshold_ms]" min="500" max="5000" value="<?php echo $watchSyncThresholdValue; ?>" style="width:100%;padding:.55rem .75rem;border-radius:.75rem;border:1px solid rgba(148,163,184,.6);font-size:.9rem;"><div style="margin-top:.2rem;font-size:.78rem;color:var(--text-light);">小偏差使用短暂倍速追赶，大偏差才直接跳转。</div></div>
             </div>
             <div class="admin-card">
-                <div class="admin-card-header"><div><div class="admin-card-title">一起看体验</div><div class="admin-card-subtitle">在线判定、心跳与进入播放</div></div></div>
+                <div class="admin-card-header"><div><div class="admin-card-title">一起看体验 <button type="button" class="admin-help-toggle" title="查看说明" aria-label="查看说明" aria-expanded="false"><i class="ti ti-info-circle"></i></button></div></div></div><div class="admin-card-help"><div class="admin-card-subtitle">在线判定、心跳与进入播放</div></div>
                 <div class="form-group" style="margin-bottom:.65rem;"><label style="display:block;font-size:.85rem;margin-bottom:.25rem;">在线判定时间（秒）</label><input type="number" name="settings[watch_presence_timeout_sec]" min="3" max="30" value="<?php echo $watchPresenceTimeoutValue; ?>" style="width:100%;padding:.55rem .75rem;border-radius:.75rem;border:1px solid rgba(148,163,184,.6);font-size:.9rem;"></div>
                 <div class="form-group" style="margin-bottom:.65rem;"><label style="display:block;font-size:.85rem;margin-bottom:.25rem;">心跳间隔（毫秒）</label><input type="number" name="settings[watch_heartbeat_interval_ms]" min="1000" max="10000" value="<?php echo $watchHeartbeatValue; ?>" style="width:100%;padding:.55rem .75rem;border-radius:.75rem;border:1px solid rgba(148,163,184,.6);font-size:.9rem;"></div>
                 <label class="switch"><input type="checkbox" name="settings[watch_autoplay_enabled]" value="1" <?php echo $watchAutoplayValue === '1' ? 'checked' : ''; ?>><span class="switch-track"><span class="switch-thumb"></span></span><span class="switch-label">首次打开、换集和换剧默认自动播放</span></label>
@@ -408,10 +418,15 @@ include __DIR__ . '/header.php';
             <div class="admin-card">
                 <div class="admin-card-header">
                     <div>
-                        <div class="admin-card-title">主题与外观</div>
-                        <div class="admin-card-subtitle">主站、后台和播放器共用的颜色主题</div>
+                        <div class="admin-card-title">
+                        主题与外观
+                        <button type="button" class="admin-help-toggle" title="查看说明" aria-label="查看说明" aria-expanded="false"><i class="ti ti-info-circle"></i></button>
                     </div>
                 </div>
+            </div>
+            <div class="admin-card-help">
+                <div class="admin-card-subtitle">主站、后台和播放器共用的颜色主题</div>
+            </div>
                 <div class="form-group" style="margin-bottom:0.75rem;">
                     <label style="display:block;font-size:0.85rem;margin-bottom:0.25rem;">主题预设</label>
                     <select name="settings[theme_preset]" id="themePreset" style="width:100%;padding:0.55rem 0.75rem;border-radius:0.75rem;border:1px solid rgba(148,163,184,0.6);font-size:0.9rem;">
@@ -446,10 +461,15 @@ include __DIR__ . '/header.php';
             <div class="admin-card">
                 <div class="admin-card-header">
                     <div>
-                        <div class="admin-card-title">自定义强调色</div>
-                        <div class="admin-card-subtitle">留空则使用预设主题颜色</div>
+                        <div class="admin-card-title">
+                        自定义强调色
+                        <button type="button" class="admin-help-toggle" title="查看说明" aria-label="查看说明" aria-expanded="false"><i class="ti ti-info-circle"></i></button>
                     </div>
                 </div>
+            </div>
+            <div class="admin-card-help">
+                <div class="admin-card-subtitle">留空则使用预设主题颜色</div>
+            </div>
                 <div class="theme-color-grid">
                     <label>主色<input type="color" data-theme-picker="primary" value="<?php echo e($themeCustomPrimary); ?>"><input class="theme-hex-input" type="text" name="settings[theme_custom_primary]" value="<?php echo e($settingsData['theme_custom_primary'] ?? ''); ?>" placeholder="#F5B6C8" maxlength="7"></label>
                     <label>辅助色<input type="color" data-theme-picker="secondary" value="<?php echo e($themeCustomSecondary); ?>"><input class="theme-hex-input" type="text" name="settings[theme_custom_secondary]" value="<?php echo e($settingsData['theme_custom_secondary'] ?? ''); ?>" placeholder="#B9E3D0" maxlength="7"></label>
@@ -463,10 +483,15 @@ include __DIR__ . '/header.php';
             <div class="admin-card">
                 <div class="admin-card-header">
                     <div>
-                        <div class="admin-card-title">上传与其他</div>
-                        <div class="admin-card-subtitle">上传限制、图片压缩、备案号等信息</div>
+                        <div class="admin-card-title">
+                        上传与其他
+                        <button type="button" class="admin-help-toggle" title="查看说明" aria-label="查看说明" aria-expanded="false"><i class="ti ti-info-circle"></i></button>
                     </div>
                 </div>
+            </div>
+            <div class="admin-card-help">
+                <div class="admin-card-subtitle">上传限制、图片压缩、备案号等信息</div>
+            </div>
 
                 <div class="form-group" style="margin-bottom:0.75rem;">
                     <label style="display:block;font-size:0.85rem;margin-bottom:0.25rem;">图片压缩与 WebP 优化</label>
@@ -642,19 +667,23 @@ include __DIR__ . '/header.php';
             <div class="admin-card">
                 <div class="admin-card-header">
                     <div>
-                        <div class="admin-card-title">保存设置</div>
-                        <div class="admin-card-subtitle">确认无误后保存</div>
+                        <div class="admin-card-title">
+                        保存设置
+                        <button type="button" class="admin-help-toggle" title="查看说明" aria-label="查看说明" aria-expanded="false"><i class="ti ti-info-circle"></i></button>
                     </div>
                 </div>
-
-                <p style="font-size:0.85rem;color:var(--text-light);margin-bottom:0.75rem;">
+            </div>
+            <div class="admin-card-help">
+                <div class="admin-card-subtitle">确认无误后保存</div>
+                <p>
                     保存后，新设置会立即生效。涉及首页大图等资源的修改，可能需要刷新前台页面才能看到最新效果。
                 </p>
+            </div>
 
-                <button type="submit" class="btn btn-primary" style="width:100%;justify-content:center;">
-                    <i class="fas fa-save"></i>
-                    <span>保存设置</span>
-                </button>
+            <button type="submit" class="btn btn-primary" style="width:100%;justify-content:center;">
+                <i class="fas fa-save"></i>
+                <span>保存设置</span>
+            </button>
 
                 <div style="margin-top:0.5rem;font-size:0.78rem;color:var(--text-light);text-align:center;">
                     如果保存设置后出现异常，可以使用底部“旧版后台”入口回到旧设置页面排查。

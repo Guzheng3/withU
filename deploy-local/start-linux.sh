@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # ============================================================
-# withU + withUstrm  Linux 服务器一键启动（含内置 mihomo 代理）
+# withU  Linux 服务器一键启动（含内置 mihomo 代理）
 # ============================================================
 # 前置要求（首次部署）：
 #   1. apt install mariadb-server php-cli php-mysql php-gd php-curl php-xml php-mbstring openjdk-21-jre-headless nodejs npm
@@ -17,8 +17,6 @@ ROOT="$(pwd)"
 WORKROOT="$(dirname "$ROOT")"     # 工作目录（runtime 所在）
 MYSQL_PORT="${MYSQL_PORT:-3306}"
 WITHU_PORT="${WITHU_PORT:-1314}"
-STRM_BACKEND_PORT="${STRM_BACKEND_PORT:-8081}"
-STRM_BRIDGE_PORT="${STRM_BRIDGE_PORT:-3112}"
 log() { echo "[$(date '+%H:%M:%S')] $*"; }
 
 is_listening() { (echo >/dev/tcp/127.0.0.1/$1) >/dev/null 2>&1; }
@@ -71,7 +69,7 @@ if ! $MYSQL -e "USE withu_media" >/dev/null 2>&1; then
 fi
 if [ ! -f "$ROOT/config/config.php" ]; then
   log "生成 config/config.php..."
-  mkdir -p "$ROOT/config"
+  mkdir -p "$ROOT/config" "$ROOT/backend/app/config"
   cat > "$ROOT/config/config.php" <<PHPEOF
 <?php
 define('DEBUG_MODE', false);
@@ -87,16 +85,19 @@ define('LOGIN_ATTEMPT_WINDOW', 900);
 define('LOGIN_LOCKOUT_SECONDS', 900);
 define('SITE_NAME', '我们的小情侣网站');
 PHPEOF
+  cp "$ROOT/config/config.php" "$ROOT/backend/app/config/config.php"
 fi
 if [ ! -f "$ROOT/config/database.php" ]; then
   log "生成 config/database.php..."
-  mkdir -p "$ROOT/config"
+  mkdir -p "$ROOT/config" "$ROOT/backend/app/config"
   cat > "$ROOT/config/database.php" <<PHPEOF
 <?php
 return ['host'=>'127.0.0.1','port'=>$MYSQL_PORT,'dbname'=>'couple_website','username'=>'root','password'=>'','charset'=>'utf8mb4','options'=>[PDO::ATTR_ERRMODE=>PDO::ERRMODE_EXCEPTION,PDO::ATTR_DEFAULT_FETCH_MODE=>PDO::FETCH_ASSOC,PDO::ATTR_EMULATE_PREPARES=>false]];
 PHPEOF
+  cp "$ROOT/config/database.php" "$ROOT/backend/app/config/database.php"
 fi
-touch "$ROOT/.installed"
+touch "$ROOT/.installed" "$ROOT/backend/app/.installed"
+mkdir -p "$ROOT/backend/app/uploads" "$ROOT/backend/app/runtime" "$ROOT/backend/app/storage" "$ROOT/backend/app/logs"
 
 # ---------- 2. 内置 mihomo 代理（订阅地址自动拉取 + 自动选节点） ----------
 log "配置内置 mihomo 代理..."
@@ -121,25 +122,7 @@ else
 fi
 export MIHOMO_PORT
 
-# ---------- 3. withUstrm 后端 + bridge（幂等构建） ----------
-log "构建/准备 withUstrm 组件..."
-node deploy-local/setup-strm.cjs || { log "ERROR: withUstrm 构建失败"; exit 1; }
-if ! is_listening $STRM_BACKEND_PORT; then
-  detach strm-backend "node '$WORKROOT/runtime/strm/start-backend.js'" "$WORKROOT/runtime/strm/backend.log"
-  for i in $(seq 1 40); do is_listening $STRM_BACKEND_PORT && break; sleep 1; done
-  log "withUstrm 后端就绪: 127.0.0.1:$STRM_BACKEND_PORT"
-else
-  log "withUstrm 后端已在运行"
-fi
-if ! is_listening $STRM_BRIDGE_PORT; then
-  detach strm-bridge "node '$WORKROOT/runtime/strm/start-bridge.js'" "$WORKROOT/runtime/strm/bridge.log"
-  for i in $(seq 1 20); do is_listening $STRM_BRIDGE_PORT && break; sleep 1; done
-  log "withUstrm bridge 就绪: 127.0.0.1:$STRM_BRIDGE_PORT"
-else
-  log "withUstrm bridge 已在运行"
-fi
-
-# ---------- 4. withU PHP 服务 ----------
+# ---------- 3. withU PHP 服务 ----------
 log "启动 withU PHP 服务 (127.0.0.1:$WITHU_PORT)..."
 if is_listening $WITHU_PORT; then
   log "withU 已在运行"
@@ -148,7 +131,7 @@ else
     log "检测到 nginx+php-fpm 配置，请用 systemctl start nginx php-fpm"
     systemctl start nginx php8.1-fpm 2>/dev/null || systemctl start nginx php-fpm 2>/dev/null || true
   else
-    detach withu-php "php -S 127.0.0.1:$WITHU_PORT -t '$ROOT'" "$WORKROOT/runtime/withu-php.log"
+    detach withu-php "php -S 127.0.0.1:$WITHU_PORT -t '$ROOT' '$ROOT/router.php'" "$WORKROOT/runtime/withu-php.log"
     for i in $(seq 1 10); do is_listening $WITHU_PORT && break; sleep 1; done
     log "withU PHP 就绪: http://127.0.0.1:$WITHU_PORT/"
   fi
@@ -158,6 +141,5 @@ log "=============================================="
 log "全部启动完成："
 log "  withU 前台:        http://127.0.0.1:$WITHU_PORT/"
 log "  withU 后台:        http://127.0.0.1:$WITHU_PORT/admin/"
-log "  withUstrm 内嵌:    后台 → 媒体库 STRM"
 log "  TMDB 代理:         127.0.0.1:$MIHOMO_PORT (AUTO 自动选节点)"
 log "=============================================="

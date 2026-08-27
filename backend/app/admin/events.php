@@ -52,13 +52,18 @@ include __DIR__ . '/header.php';
     <div class="admin-card" style="margin-bottom:0.75rem;">
         <div class="admin-card-header">
             <div>
-                <div class="admin-card-title">纪念事件概览</div>
-                <div class="admin-card-subtitle">共 <?php echo count($events); ?> 个事件</div>
+                <div class="admin-card-title">
+                    纪念事件概览
+                    <button type="button" class="admin-help-toggle" title="查看说明" aria-label="查看说明" aria-expanded="false"><i class="ti ti-info-circle"></i></button>
+                </div>
             </div>
             <a href="/admin/event_add.php" class="btn btn-primary">
                 <i class="fas fa-plus"></i>
                 <span>新增事件</span>
             </a>
+        </div>
+        <div class="admin-card-help">
+            <div class="admin-card-subtitle">共 <?php echo count($events); ?> 个事件</div>
         </div>
     </div>
 

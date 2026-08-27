@@ -203,25 +203,25 @@ include __DIR__ . '/header.php';
     </section>
 
     <?php
-    // 根据 ffmpeg 状态选择不同的提示样式与摘要文案（统一在仪表盘常驻显示）
+    // 根据 ffmpeg 状态选择不同的提示样式与摘要文案
     $ffmpegCardBg     = 'rgba(59,130,246,0.04)';
     $ffmpegCardBorder = 'rgba(59,130,246,0.45)';
     $ffmpegCardColor  = '#1d4ed8';
-    $ffmpegIcon       = 'fas fa-circle-info';
+    $ffmpegIcon       = 'ti ti-info-circle';
     $ffmpegSummaryText = '';
 
     if (in_array($ffmpegStatus, ['embedded', 'ok'], true)) {
         $ffmpegCardBg     = 'rgba(34,197,94,0.05)';
         $ffmpegCardBorder = 'rgba(34,197,94,0.45)';
         $ffmpegCardColor  = '#15803d';
-        $ffmpegIcon       = 'fas fa-check-circle';
+        $ffmpegIcon       = 'ti ti-circle-check';
 
         if ($embeddedFfmpeg) {
             $ffmpegSummaryText = '已启用程序内置 FFmpeg，支持 H.264 + AAC 视频转码和自动封面生成。';
         } elseif ($ffmpegDiagnostics['has_libx264'] === true && $ffmpegDiagnostics['has_aac'] === true) {
             $ffmpegSummaryText = '已检测到可用的 FFmpeg，支持 H.264 + AAC 视频转码。';
         } elseif ($ffmpegDiagnostics['has_libx264'] === false) {
-            $ffmpegSummaryText = '已检测到 ffmpeg，但当前环境不支持 H.264（libx264） 视频转码，仅封面截取等基础能力可用。';
+            $ffmpegSummaryText = '已检测到 ffmpeg，但当前环境不支持 H.264（libx264）视频转码，仅封面截取等基础能力可用。';
         } else {
             $ffmpegSummaryText = '已检测到可用的 ffmpeg，可用于视频相关能力，编码器支持情况建议查看详情。';
         }
@@ -229,29 +229,27 @@ include __DIR__ . '/header.php';
         $ffmpegCardBg     = 'rgba(245,158,11,0.05)';
         $ffmpegCardBorder = 'rgba(245,158,11,0.55)';
         $ffmpegCardColor  = '#b45309';
-        $ffmpegIcon       = 'fas fa-exclamation-triangle';
+        $ffmpegIcon       = 'ti ti-alert-triangle';
         $ffmpegSummaryText = '检测到 ffmpeg，但 PHP 当前无法调用 exec，自动转码与封面生成能力受限。';
     } else {
         $ffmpegSummaryText = '当前未检测到可用的 ffmpeg 命令，视频转码与自动封面生成能力将被关闭。';
     }
     ?>
-    <div class="admin-card" style="margin-bottom:0.75rem;background:<?php echo $ffmpegCardBg; ?>;border:1px solid <?php echo $ffmpegCardBorder; ?>;">
-        <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:0.75rem;color:<?php echo $ffmpegCardColor; ?>;font-size:0.86rem;line-height:1.5;">
-            <div style="display:flex;align-items:flex-start;gap:0.55rem;flex:1 1 auto;">
-                <i class="<?php echo $ffmpegIcon; ?>" style="margin-top:2px;"></i>
-                <div>
-                    <div style="font-weight:600;margin-bottom:2px;">视频能力与内置 FFmpeg</div>
-                    <div style="font-size:0.8rem;"><?php echo e($ffmpegSummaryText); ?></div>
-                </div>
+    <div style="margin-bottom:1.5rem;padding:0.85rem 1rem;background:<?php echo $ffmpegCardBg; ?>;border:1px solid <?php echo $ffmpegCardBorder; ?>;border-radius:13.14px;display:flex;align-items:flex-start;justify-content:space-between;gap:0.75rem;color:<?php echo $ffmpegCardColor; ?>;font-size:0.86rem;line-height:1.5;">
+        <div style="display:flex;align-items:flex-start;gap:0.55rem;flex:1 1 auto;">
+            <i class="<?php echo $ffmpegIcon; ?>" style="margin-top:2px;font-size:16px;"></i>
+            <div>
+                <div style="font-weight:600;margin-bottom:2px;">视频能力与内置 FFmpeg</div>
+                <div style="font-size:0.8rem;"><?php echo e($ffmpegSummaryText); ?></div>
             </div>
-            <div style="flex:0 0 auto;display:flex;align-items:center;">
-                <button type="button"
-                        class="btn btn-secondary"
-                        style="padding:0.25rem 0.7rem;font-size:0.78rem;white-space:nowrap;"
-                        data-ffmpeg-details="open">
-                    查看详情
-                </button>
-            </div>
+        </div>
+        <div style="flex:0 0 auto;display:flex;align-items:center;">
+            <button type="button"
+                    class="btn btn-secondary"
+                    style="padding:0.25rem 0.7rem;font-size:0.78rem;white-space:nowrap;"
+                    data-ffmpeg-details="open">
+                查看详情
+            </button>
         </div>
     </div>
 
@@ -330,16 +328,21 @@ include __DIR__ . '/header.php';
         </div>
     </div>
 
-    <section class="admin-grid admin-dashboard-stats" style="margin-bottom: 0.75rem;">
-        <div class="admin-card admin-dashboard-stat-card">
+    <section class="admin-dashboard-stats" style="margin-bottom: 1.5rem;">
+        <div class="admin-dashboard-stat-card">
             <div class="admin-card-header">
                 <div>
-                    <div class="admin-card-title">文章 · 日记</div>
-                    <div class="admin-card-subtitle">记录的点点滴滴</div>
+                    <div class="admin-card-title">
+                        文章 · 日记
+                        <button type="button" class="admin-help-toggle" title="查看说明" aria-label="查看说明" aria-expanded="false"><i class="ti ti-info-circle"></i></button>
+                    </div>
                 </div>
                 <a href="/admin/articles.php" class="btn btn-outline">
-                    <i class="fas fa-pen"></i><span>去管理</span>
+                    <i class="ti ti-pencil"></i><span>去管理</span>
                 </a>
+            </div>
+            <div class="admin-card-help">
+                <div class="admin-card-subtitle">记录的点点滴滴</div>
             </div>
             <div>
                 <div class="admin-stat-value"><?php echo $articleCount; ?></div>
@@ -347,15 +350,20 @@ include __DIR__ . '/header.php';
             </div>
         </div>
 
-        <div class="admin-card admin-dashboard-stat-card">
+        <div class="admin-dashboard-stat-card">
             <div class="admin-card-header">
                 <div>
-                    <div class="admin-card-title">相册</div>
-                    <div class="admin-card-subtitle">保存的照片与回忆</div>
+                    <div class="admin-card-title">
+                        相册
+                        <button type="button" class="admin-help-toggle" title="查看说明" aria-label="查看说明" aria-expanded="false"><i class="ti ti-info-circle"></i></button>
+                    </div>
                 </div>
                 <a href="/admin/albums.php" class="btn btn-outline">
-                    <i class="fas fa-images"></i><span>去查看</span>
+                    <i class="ti ti-photo"></i><span>去查看</span>
                 </a>
+            </div>
+            <div class="admin-card-help">
+                <div class="admin-card-subtitle">保存的照片与回忆</div>
             </div>
             <div>
                 <div class="admin-stat-value"><?php echo $albumCount; ?></div>
@@ -363,15 +371,20 @@ include __DIR__ . '/header.php';
             </div>
         </div>
 
-        <div class="admin-card admin-dashboard-stat-card">
+        <div class="admin-dashboard-stat-card">
             <div class="admin-card-header">
                 <div>
-                    <div class="admin-card-title">纪念事件</div>
-                    <div class="admin-card-subtitle">重要的时刻</div>
+                    <div class="admin-card-title">
+                        纪念事件
+                        <button type="button" class="admin-help-toggle" title="查看说明" aria-label="查看说明" aria-expanded="false"><i class="ti ti-info-circle"></i></button>
+                    </div>
                 </div>
                 <a href="/admin/events.php" class="btn btn-outline">
-                    <i class="fas fa-calendar-plus"></i><span>去添加</span>
+                    <i class="ti ti-calendar-event"></i><span>去添加</span>
                 </a>
+            </div>
+            <div class="admin-card-help">
+                <div class="admin-card-subtitle">重要的时刻</div>
             </div>
             <div>
                 <div class="admin-stat-value"><?php echo $eventCount; ?></div>
@@ -379,15 +392,20 @@ include __DIR__ . '/header.php';
             </div>
         </div>
 
-        <div class="admin-card admin-dashboard-stat-card">
+        <div class="admin-dashboard-stat-card">
             <div class="admin-card-header">
                 <div>
-                    <div class="admin-card-title">留言</div>
-                    <div class="admin-card-subtitle">来自你们或朋友的话</div>
+                    <div class="admin-card-title">
+                        留言
+                        <button type="button" class="admin-help-toggle" title="查看说明" aria-label="查看说明" aria-expanded="false"><i class="ti ti-info-circle"></i></button>
+                    </div>
                 </div>
                 <a href="/admin/messages.php" class="btn btn-outline">
-                    <i class="fas fa-comments"></i><span>去查看</span>
+                    <i class="ti ti-messages"></i><span>去查看</span>
                 </a>
+            </div>
+            <div class="admin-card-help">
+                <div class="admin-card-subtitle">来自你们或朋友的话</div>
             </div>
             <div>
                 <div class="admin-stat-value"><?php echo $messageCount; ?></div>
@@ -395,12 +413,17 @@ include __DIR__ . '/header.php';
             </div>
         </div>
 
-        <div class="admin-card admin-dashboard-stat-card">
+        <div class="admin-dashboard-stat-card">
             <div class="admin-card-header">
                 <div>
-                    <div class="admin-card-title">今日访问</div>
-                    <div class="admin-card-subtitle"><?php echo $today; ?></div>
+                    <div class="admin-card-title">
+                        今日访问
+                        <button type="button" class="admin-help-toggle" title="查看说明" aria-label="查看说明" aria-expanded="false"><i class="ti ti-info-circle"></i></button>
+                    </div>
                 </div>
+            </div>
+            <div class="admin-card-help">
+                <div class="admin-card-subtitle"><?php echo $today; ?></div>
             </div>
             <div>
                 <div class="admin-stat-value"><?php echo $todayViews; ?></div>
@@ -408,12 +431,17 @@ include __DIR__ . '/header.php';
             </div>
         </div>
 
-        <div class="admin-card admin-dashboard-stat-card">
+        <div class="admin-dashboard-stat-card">
             <div class="admin-card-header">
                 <div>
-                    <div class="admin-card-title">累计访问</div>
-                    <div class="admin-card-subtitle">从建站至今</div>
+                    <div class="admin-card-title">
+                        累计访问
+                        <button type="button" class="admin-help-toggle" title="查看说明" aria-label="查看说明" aria-expanded="false"><i class="ti ti-info-circle"></i></button>
+                    </div>
                 </div>
+            </div>
+            <div class="admin-card-help">
+                <div class="admin-card-subtitle">从建站至今</div>
             </div>
             <div>
                 <div class="admin-stat-value"><?php echo $totalViews; ?></div>
@@ -422,71 +450,81 @@ include __DIR__ . '/header.php';
         </div>
     </section>
 
-    <section class="admin-grid admin-dashboard-panels">
-        <div class="admin-card admin-dashboard-panel">
+    <section class="admin-dashboard-panels">
+        <div class="admin-dashboard-panel">
             <div class="admin-card-header">
                 <div>
-                    <div class="admin-card-title">快捷设置</div>
-                    <div class="admin-card-subtitle">常用设置与个人信息入口</div>
+                    <div class="admin-card-title">
+                        快捷设置
+                        <button type="button" class="admin-help-toggle" title="查看说明" aria-label="查看说明" aria-expanded="false"><i class="ti ti-info-circle"></i></button>
+                    </div>
                 </div>
             </div>
-            <ul style="list-style:none;margin:0;padding:0;">
-                <li style="padding:0.4rem 0;border-bottom:1px solid rgba(226,232,240,0.7);">
+            <div class="admin-card-help">
+                <div class="admin-card-subtitle">常用设置与个人信息入口</div>
+            </div>
+            <ul>
+                <li>
                     <div style="display:flex;justify-content:space-between;align-items:center;gap:0.5rem;">
                         <div>
-                            <div style="font-size:0.9rem;">网站设置</div>
-                            <div style="font-size:0.78rem;color:var(--text-light);">修改站点标题、描述、首页大图、备案信息</div>
+                            <div style="font-size:0.9rem;font-weight:500;">网站设置</div>
+                            <div style="font-size:0.78rem;color:var(--v3-text-3);">修改站点标题、描述、首页大图、备案信息</div>
                         </div>
-                        <a href="/admin/settings.php" class="btn btn-secondary" style="white-space:nowrap;">
-                            <span>进入</span><i class="fas fa-chevron-right"></i>
+                        <a href="/admin/settings.php" class="btn btn-secondary btn-sm" style="white-space:nowrap;">
+                            <span>进入</span><i class="ti ti-chevron-right"></i>
                         </a>
                     </div>
                 </li>
-                <li style="padding:0.4rem 0;border-bottom:1px solid rgba(226,232,240,0.7);">
+                <li>
                     <div style="display:flex;justify-content:space-between;align-items:center;gap:0.5rem;">
                         <div>
-                            <div style="font-size:0.9rem;">个人资料</div>
-                            <div style="font-size:0.78rem;color:var(--text-light);">修改昵称、头像、QQ 头像来源与登录密码</div>
+                            <div style="font-size:0.9rem;font-weight:500;">个人资料</div>
+                            <div style="font-size:0.78rem;color:var(--v3-text-3);">修改昵称、头像、QQ 头像来源与登录密码</div>
                         </div>
-                        <a href="/admin/profile.php" class="btn btn-secondary" style="white-space:nowrap;">
-                            <span>进入</span><i class="fas fa-chevron-right"></i>
+                        <a href="/admin/profile.php" class="btn btn-secondary btn-sm" style="white-space:nowrap;">
+                            <span>进入</span><i class="ti ti-chevron-right"></i>
                         </a>
                     </div>
                 </li>
-                <li style="padding:0.4rem 0;border-bottom:1px solid rgba(226,232,240,0.7);">
+                <li>
                     <div style="display:flex;justify-content:space-between;align-items:center;gap:0.5rem;">
                         <div>
-                            <div style="font-size:0.9rem;">留言管理</div>
-                            <div style="font-size:0.78rem;color:var(--text-light);">查看和删除前台的留言内容</div>
+                            <div style="font-size:0.9rem;font-weight:500;">留言管理</div>
+                            <div style="font-size:0.78rem;color:var(--v3-text-3);">查看和删除前台的留言内容</div>
                         </div>
-                        <a href="/admin/messages.php" class="btn btn-secondary" style="white-space:nowrap;">
-                            <span>进入</span><i class="fas fa-chevron-right"></i>
+                        <a href="/admin/messages.php" class="btn btn-secondary btn-sm" style="white-space:nowrap;">
+                            <span>进入</span><i class="ti ti-chevron-right"></i>
                         </a>
                     </div>
                 </li>
-                <li style="padding:0.4rem 0;">
+                <li>
                     <div style="display:flex;justify-content:space-between;align-items:center;gap:0.5rem;">
                         <div>
-                            <div style="font-size:0.9rem;">IP 黑名单</div>
-                            <div style="font-size:0.78rem;color:var(--text-light);">统一管理被禁止评论与留言的 IP</div>
+                            <div style="font-size:0.9rem;font-weight:500;">IP 黑名单</div>
+                            <div style="font-size:0.78rem;color:var(--v3-text-3);">统一管理被禁止评论与留言的 IP</div>
                         </div>
-                        <a href="/admin/comment_ip_blacklist.php" class="btn btn-secondary" style="white-space:nowrap;">
-                            <span>进入</span><i class="fas fa-chevron-right"></i>
+                        <a href="/admin/comment_ip_blacklist.php" class="btn btn-secondary btn-sm" style="white-space:nowrap;">
+                            <span>进入</span><i class="ti ti-chevron-right"></i>
                         </a>
                     </div>
                 </li>
             </ul>
         </div>
 
-        <div class="admin-card admin-dashboard-panel">
+        <div class="admin-dashboard-panel">
             <div class="admin-card-header">
                 <div>
-                    <div class="admin-card-title">图片概览</div>
-                    <div class="admin-card-subtitle">最近相册图片的体积与加载估算</div>
+                    <div class="admin-card-title">
+                        图片概览
+                        <button type="button" class="admin-help-toggle" title="查看说明" aria-label="查看说明" aria-expanded="false"><i class="ti ti-info-circle"></i></button>
+                    </div>
                 </div>
-                <a href="/admin/tools_image_stats.php" class="btn btn-secondary">
-                    <span>详情</span><i class="fas fa-chevron-right"></i>
+                <a href="/admin/tools_image_stats.php" class="btn btn-secondary btn-sm">
+                    <span>详情</span><i class="ti ti-chevron-right"></i>
                 </a>
+            </div>
+            <div class="admin-card-help">
+                <div class="admin-card-subtitle">最近相册图片的体积与加载估算</div>
             </div>
             <?php if ($albumImageStats['count'] > 0): ?>
                 <?php
@@ -498,75 +536,85 @@ include __DIR__ . '/header.php';
                 $sceneCount = 30;
                 $sceneMb    = round($avgBytes * $sceneCount / 1024 / 1024, 2);
                 ?>
-                <ul style="list-style:none;margin:0;padding:0;font-size:0.88rem;color:var(--text-normal);">
-                    <li style="padding:0.3rem 0;border-bottom:1px solid rgba(226,232,240,0.7);">
+                <ul>
+                    <li style="padding:0.45rem 0;">
                         最近采样图片：<strong><?php echo $count; ?></strong> 张，总体积约 <strong><?php echo $totalMb; ?> MB</strong>
                     </li>
-                    <li style="padding:0.3rem 0;border-bottom:1px solid rgba(226,232,240,0.7);">
+                    <li style="padding:0.45rem 0;">
                         平均单张大小：约 <strong><?php echo $avgKb; ?> KB</strong>
                     </li>
-                    <li style="padding:0.3rem 0;">
+                    <li style="padding:0.45rem 0;">
                         场景估算：一次加载 <strong><?php echo $sceneCount; ?></strong> 张图 ≈ <strong><?php echo $sceneMb; ?> MB</strong>
-                        <div style="font-size:0.78rem;color:var(--text-light);margin-top:0.2rem;">
+                        <div style="font-size:0.78rem;color:var(--v3-text-3);margin-top:0.2rem;">
                             实际流量会因 WebP 与缩略图启用而更低，仅供参考。
                         </div>
                     </li>
                 </ul>
             <?php else: ?>
-                <p style="font-size:0.85rem;color:var(--text-light);">暂时还没有足够的相册图片用于统计。</p>
+                <p style="font-size:0.85rem;color:var(--v3-text-3);">暂时还没有足够的相册图片用于统计。</p>
             <?php endif; ?>
         </div>
 
         <!-- 域名分布 -->
-        <div class="admin-card admin-dashboard-panel">
+        <div class="admin-dashboard-panel">
             <div class="admin-card-header">
                 <div>
-                    <div class="admin-card-title">域名分布</div>
-                    <div class="admin-card-subtitle">今日 <?php echo $today; ?> 各域名访问量</div>
+                    <div class="admin-card-title">
+                        域名分布
+                        <button type="button" class="admin-help-toggle" title="查看说明" aria-label="查看说明" aria-expanded="false"><i class="ti ti-info-circle"></i></button>
+                    </div>
                 </div>
             </div>
+            <div class="admin-card-help">
+                <div class="admin-card-subtitle">今日 <?php echo $today; ?> 各域名访问量</div>
+            </div>
             <?php if (!empty($domainStats)): ?>
-                <ul style="list-style:none;margin:0;padding:0;font-size:0.88rem;color:var(--text-normal);">
+                <ul>
                     <?php foreach ($domainStats as $ds): ?>
-                    <li style="padding:0.4rem 0;border-bottom:1px solid rgba(226,232,240,0.7);display:flex;justify-content:space-between;align-items:center;">
+                    <li style="display:flex;justify-content:space-between;align-items:center;">
                         <span style="font-family:monospace;font-size:0.82rem;"><?php echo e($ds['domain'] ?: '(未知)'); ?></span>
                         <strong><?php echo (int)$ds['cnt']; ?> 次</strong>
                     </li>
                     <?php endforeach; ?>
                 </ul>
             <?php else: ?>
-                <p style="font-size:0.85rem;color:var(--text-light);">暂无今日访问数据。</p>
+                <p style="font-size:0.85rem;color:var(--v3-text-3);">暂无今日访问数据。</p>
             <?php endif; ?>
         </div>
 
         <!-- 最近访问 -->
-        <div class="admin-card admin-dashboard-panel">
+        <div class="admin-dashboard-panel">
             <div class="admin-card-header">
                 <div>
-                    <div class="admin-card-title">最近访问</div>
-                    <div class="admin-card-subtitle">最近 10 条访问记录</div>
+                    <div class="admin-card-title">
+                        最近访问
+                        <button type="button" class="admin-help-toggle" title="查看说明" aria-label="查看说明" aria-expanded="false"><i class="ti ti-info-circle"></i></button>
+                    </div>
                 </div>
             </div>
+            <div class="admin-card-help">
+                <div class="admin-card-subtitle">最近 10 条访问记录</div>
+            </div>
             <?php if (!empty($recentVisitors)): ?>
-                <ul style="list-style:none;margin:0;padding:0;font-size:0.82rem;color:var(--text-normal);">
+                <ul>
                     <?php foreach ($recentVisitors as $rv): ?>
-                    <li style="padding:0.35rem 0;border-bottom:1px solid rgba(226,232,240,0.7);">
+                    <li style="padding:0.4rem 0;">
                         <div style="display:flex;justify-content:space-between;align-items:center;gap:0.5rem;">
                             <div style="min-width:0;">
                                 <div style="font-family:monospace;font-size:0.78rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;" title="<?php echo e($rv['ip_address']); ?>">
                                     <?php echo e($rv['ip_address']); ?>
                                 </div>
-                                <div style="color:var(--text-light);font-size:0.72rem;margin-top:1px;">
+                                <div style="color:var(--v3-text-3);font-size:0.72rem;margin-top:1px;">
                                     <?php echo e($rv['domain'] ?: ''); ?> · <?php echo e($rv['ua_browser'] ?: '未知浏览器'); ?> · <?php echo e($rv['ua_os'] ?: '未知系统'); ?>
                                 </div>
                             </div>
-                            <span style="color:var(--text-light);font-size:0.72rem;white-space:nowrap;"><?php echo e(date('H:i:s', strtotime($rv['visit_time']))); ?></span>
+                            <span style="color:var(--v3-text-3);font-size:0.72rem;white-space:nowrap;"><?php echo e(date('H:i:s', strtotime($rv['visit_time']))); ?></span>
                         </div>
                     </li>
                     <?php endforeach; ?>
                 </ul>
             <?php else: ?>
-                <p style="font-size:0.85rem;color:var(--text-light);">暂无访问记录。</p>
+                <p style="font-size:0.85rem;color:var(--v3-text-3);">暂无访问记录。</p>
             <?php endif; ?>
         </div>
     </section>

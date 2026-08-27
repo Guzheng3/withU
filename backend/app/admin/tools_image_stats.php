@@ -923,9 +923,14 @@ include __DIR__ . '/header.php';
     <div class="admin-card">
         <div class="admin-card-header">
             <div>
-                <div class="admin-card-title">相册图片概览（最近 500 张）</div>
-                <div class="admin-card-subtitle">基于最近上传的图片样本进行估算。</div>
+                <div class="admin-card-title">
+                    相册图片概览（最近 500 张）
+                    <button type="button" class="admin-help-toggle" title="查看说明" aria-label="查看说明" aria-expanded="false"><i class="ti ti-info-circle"></i></button>
+                </div>
             </div>
+        </div>
+        <div class="admin-card-help">
+            <div class="admin-card-subtitle">基于最近上传的图片样本进行估算。</div>
         </div>
         <?php if ($albumImageStats['count'] > 0): ?>
             <?php
@@ -963,10 +968,15 @@ include __DIR__ . '/header.php';
     <div class="admin-card">
         <div class="admin-card-header">
             <div>
-                <div class="admin-card-title">压缩状态与一键压缩</div>
-                <div class="admin-card-subtitle">
-                    统计已压缩占比，按需批量压缩未压缩图片（只针对主图体积与 WebP，不修改 thumbnail_path）。
+                <div class="admin-card-title">
+                    压缩状态与一键压缩
+                    <button type="button" class="admin-help-toggle" title="查看说明" aria-label="查看说明" aria-expanded="false"><i class="ti ti-info-circle"></i></button>
                 </div>
+            </div>
+        </div>
+        <div class="admin-card-help">
+            <div class="admin-card-subtitle">
+                统计已压缩占比，按需批量压缩未压缩图片（只针对主图体积与 WebP，不修改 thumbnail_path）。
             </div>
         </div>
 
@@ -1003,23 +1013,28 @@ include __DIR__ . '/header.php';
         </p>
     </div>
 
-    <div class="admin-card">
-        <div class="admin-card-header">
+    <div class=”admin-card”>
+        <div class=”admin-card-header”>
             <div>
-                <div class="admin-card-title">相册图片：补齐缩略图 / WebP</div>
-                <div class="admin-card-subtitle">
-                    为旧相册中尚未生成缩略图的图片补齐 thumbs 与 WebP，并在生成成功后为其写入 thumbnail_path（不会处理已标记为“不压缩”的相册和图片）。
+                <div class=”admin-card-title”>
+                    相册图片：补齐缩略图 / WebP
+                    <button type=”button” class=”admin-help-toggle” title=”查看说明” aria-label=”查看说明” aria-expanded=”false”><i class=”ti ti-info-circle”></i></button>
                 </div>
             </div>
         </div>
-        <form method="POST">
-            <?php echo csrf_field(); ?>
-            <input type="hidden" name="mode" value="album_thumbs">
-            <p style="font-size:0.85rem;color:var(--text-light);margin-bottom:0.75rem;">
+        <div class=”admin-card-help”>
+            <div class=”admin-card-subtitle”>
+                为旧相册中尚未生成缩略图的图片补齐 thumbs 与 WebP，并在生成成功后为其写入 thumbnail_path（不会处理已标记为”不压缩”的相册和图片）。
+            </div>
+            <p>
                 每次最多处理 <?php echo (int)$batchLimit; ?> 张图片。建议在非高峰时间多次执行，直到没有明显变化为止。
             </p>
-            <button type="submit" class="btn btn-primary">
-                <i class="fas fa-magic"></i>
+        </div>
+        <form method=”POST”>
+            <?php echo csrf_field(); ?>
+            <input type=”hidden” name=”mode” value=”album_thumbs”>
+            <button type=”submit” class=”btn btn-primary”>
+                <i class=”fas fa-magic”></i>
                 <span>执行一次相册图片补齐</span>
             </button>
         </form>
@@ -1028,16 +1043,21 @@ include __DIR__ . '/header.php';
     <div class="admin-card">
         <div class="admin-card-header">
             <div>
-                <div class="admin-card-title">相册图片：仅补表（不重新生成缩略图）</div>
-                <div class="admin-card-subtitle">当磁盘上已经存在 thumbs 缩略图文件，但 thumbnail_path 尚未写入表时，可使用此工具回填字段。</div>
+                <div class="admin-card-title">
+                    相册图片：仅补表（不重新生成缩略图）
+                    <button type="button" class="admin-help-toggle" title="查看说明" aria-label="查看说明" aria-expanded="false"><i class="ti ti-info-circle"></i></button>
+                </div>
             </div>
+        </div>
+        <div class="admin-card-help">
+            <div class="admin-card-subtitle">当磁盘上已经存在 thumbs 缩略图文件，但 thumbnail_path 尚未写入表时，可使用此工具回填字段。</div>
+            <p>
+                每次最多处理 <?php echo (int)$batchLimit; ?> 张图片。仅在检测到 <code>thumbs/</code> 目录下已存在对应缩略图文件时，才会为该图片回填 <code>thumbnail_path</code> 字段，不会重新生成缩略图文件。
+            </p>
         </div>
         <form method="POST">
             <?php echo csrf_field(); ?>
             <input type="hidden" name="mode" value="album_thumbs_relink">
-            <p style="font-size:0.85rem;color:var(--text-light);margin-bottom:0.75rem;">
-                每次最多处理 <?php echo (int)$batchLimit; ?> 张图片。仅在检测到 <code>thumbs/</code> 目录下已存在对应缩略图文件时，才会为该图片回填 <code>thumbnail_path</code> 字段，不会重新生成缩略图文件。
-            </p>
             <button type="submit" class="btn btn-secondary">
                 <i class="fas fa-link"></i>
                 <span>执行一次相册 thumbnail_path 补表</span>
@@ -1048,16 +1068,21 @@ include __DIR__ . '/header.php';
     <div class="admin-card">
         <div class="admin-card-header">
             <div>
-                <div class="admin-card-title">文章图片：触发 WebP 补齐</div>
-                <div class="admin-card-subtitle">扫描文章正文中引用的 /uploads 图片，按需生成 WebP / 压缩版本。</div>
+                <div class="admin-card-title">
+                    文章图片：触发 WebP 补齐
+                    <button type="button" class="admin-help-toggle" title="查看说明" aria-label="查看说明" aria-expanded="false"><i class="ti ti-info-circle"></i></button>
+                </div>
             </div>
+        </div>
+        <div class="admin-card-help">
+            <div class="admin-card-subtitle">扫描文章正文中引用的 /uploads 图片，按需生成 WebP / 压缩版本。</div>
+            <p>
+                每次最多扫描 <?php echo (int)$batchLimit; ?> 篇文章。由于正文图片引用可能重复，请按需多次执行。
+            </p>
         </div>
         <form method="POST">
             <?php echo csrf_field(); ?>
             <input type="hidden" name="mode" value="article_images">
-            <p style="font-size:0.85rem;color:var(--text-light);margin-bottom:0.75rem;">
-                每次最多扫描 <?php echo (int)$batchLimit; ?> 篇文章。由于正文图片引用可能重复，请按需多次执行。
-            </p>
             <button type="submit" class="btn btn-secondary">
                 <i class="fas fa-sync-alt"></i>
                 <span>执行一次文章图片扫描</span>
@@ -1068,18 +1093,23 @@ include __DIR__ . '/header.php';
     <div class="admin-card">
         <div class="admin-card-header">
             <div>
-                <div class="admin-card-title">相册视频：一键转码为通用格式</div>
-                <div class="admin-card-subtitle">
-                    为尚未按统一规则转码的相册视频生成 H.264 + AAC 版本，提升浏览器兼容性，减少黑屏但有声音的情况。
+                <div class="admin-card-title">
+                    相册视频：一键转码为通用格式
+                    <button type="button" class="admin-help-toggle" title="查看说明" aria-label="查看说明" aria-expanded="false"><i class="ti ti-info-circle"></i></button>
                 </div>
             </div>
         </div>
-        <form method="POST" onsubmit="return false;">
-            <?php echo csrf_field(); ?>
-            <p style="font-size:0.85rem;color:var(--text-light);margin-bottom:0.75rem;">
+        <div class="admin-card-help">
+            <div class="admin-card-subtitle">
+                为尚未按统一规则转码的相册视频生成 H.264 + AAC 版本，提升浏览器兼容性，减少黑屏但有声音的情况。
+            </div>
+            <p>
                 每次最多处理 <?php echo (int)$batchLimit; ?> 个视频，仅针对 <code>album_videos</code> 中尚未标记为
                 <code>is_transcoded = 1</code> 的记录。转码成功后会更新视频播放路径，并在 <code>original_video_path</code> 中保留原始上传路径。
             </p>
+        </div>
+        <form method="POST" onsubmit="return false;">
+            <?php echo csrf_field(); ?>
             <p style="font-size:0.8rem;color:var(--text-light);margin-bottom:0.5rem;">
                 当前统计：共 <span id="videoTransTotal">-</span> 个视频，
                 已转码 <span id="videoTransDone">-</span> 个，
@@ -1101,20 +1131,25 @@ include __DIR__ . '/header.php';
     <div class="admin-card">
         <div class="admin-card-header">
             <div>
-                <div class="admin-card-title">相册视频：清理已转码视频的原始文件</div>
-                <div class="admin-card-subtitle">
-                    为已经完成转码（<code>is_transcoded = 1</code>）的视频清理原始上传文件，仅保留统一编码后的播放文件，以释放磁盘空间。
+                <div class="admin-card-title">
+                    相册视频：清理已转码视频的原始文件
+                    <button type="button" class="admin-help-toggle" title="查看说明" aria-label="查看说明" aria-expanded="false"><i class="ti ti-info-circle"></i></button>
                 </div>
             </div>
         </div>
-        <form method="POST" data-confirm="该操作将删除已转码视频的原始上传文件，仅保留转码版本，确认继续吗？">
-            <?php echo csrf_field(); ?>
-            <input type="hidden" name="mode" value="video_cleanup_originals">
-            <p style="font-size:0.85rem;color:var(--text-light);margin-bottom:0.75rem;">
+        <div class="admin-card-help">
+            <div class="admin-card-subtitle">
+                为已经完成转码（<code>is_transcoded = 1</code>）的视频清理原始上传文件，仅保留统一编码后的播放文件，以释放磁盘空间。
+            </div>
+            <p>
                 每次最多处理 <?php echo (int)$batchLimit; ?> 个视频，仅针对 <code>is_transcoded = 1</code> 且
                 <code>original_video_path</code> 仍有记录的条目。执行后将清空 <code>original_video_path</code> 字段，避免重复清理。
                 请在确认所有设备播放正常、且不再需要原始文件时再使用本工具。
             </p>
+        </div>
+        <form method="POST" data-confirm="该操作将删除已转码视频的原始上传文件，仅保留转码版本，确认继续吗？">
+            <?php echo csrf_field(); ?>
+            <input type="hidden" name="mode" value="video_cleanup_originals">
             <button type="submit" class="btn btn-danger">
                 <i class="fas fa-trash-alt"></i>
                 <span>执行一次原始视频清理</span>
@@ -1125,18 +1160,23 @@ include __DIR__ . '/header.php';
     <div class="admin-card">
         <div class="admin-card-header">
             <div>
-                <div class="admin-card-title">文章视频：一键转码为通用格式</div>
-                <div class="admin-card-subtitle">
-                    为尚未按统一规则转码的文章视频生成 H.264 + AAC 版本，提升浏览器兼容性，减少黑屏但有声音的情况。
+                <div class="admin-card-title">
+                    文章视频：一键转码为通用格式
+                    <button type="button" class="admin-help-toggle" title="查看说明" aria-label="查看说明" aria-expanded="false"><i class="ti ti-info-circle"></i></button>
                 </div>
             </div>
         </div>
-        <form method="POST" onsubmit="return false;">
-            <?php echo csrf_field(); ?>
-            <p style="font-size:0.85rem;color:var(--text-light);margin-bottom:0.75rem;">
+        <div class="admin-card-help">
+            <div class="admin-card-subtitle">
+                为尚未按统一规则转码的文章视频生成 H.264 + AAC 版本，提升浏览器兼容性，减少黑屏但有声音的情况。
+            </div>
+            <p>
                 每次最多处理 <?php echo (int)$batchLimit; ?> 个视频，仅针对 <code>article_videos</code> 中尚未标记为
                 <code>is_transcoded = 1</code> 的记录。转码成功后会更新视频播放路径，并在 <code>original_video_path</code> 中保留原始上传路径。
             </p>
+        </div>
+        <form method="POST" onsubmit="return false;">
+            <?php echo csrf_field(); ?>
             <p style="font-size:0.8rem;color:var(--text-light);margin-bottom:0.5rem;">
                 当前统计：共 <span id="articleVideoTransTotal">-</span> 个视频，
                 已转码 <span id="articleVideoTransDone">-</span> 个，
@@ -1158,20 +1198,25 @@ include __DIR__ . '/header.php';
     <div class="admin-card">
         <div class="admin-card-header">
             <div>
-                <div class="admin-card-title">文章视频：清理已转码视频的原始文件</div>
-                <div class="admin-card-subtitle">
-                    为已经完成转码（<code>is_transcoded = 1</code>）的文章视频清理原始上传文件，仅保留统一编码后的播放文件，以释放磁盘空间。
+                <div class="admin-card-title">
+                    文章视频：清理已转码视频的原始文件
+                    <button type="button" class="admin-help-toggle" title="查看说明" aria-label="查看说明" aria-expanded="false"><i class="ti ti-info-circle"></i></button>
                 </div>
             </div>
         </div>
-        <form method="POST" data-confirm="该操作将删除文章已转码视频的原始上传文件，仅保留转码版本，确认继续吗？">
-            <?php echo csrf_field(); ?>
-            <input type="hidden" name="mode" value="article_video_cleanup_originals">
-            <p style="font-size:0.85rem;color:var(--text-light);margin-bottom:0.75rem;">
+        <div class="admin-card-help">
+            <div class="admin-card-subtitle">
+                为已经完成转码（<code>is_transcoded = 1</code>）的文章视频清理原始上传文件，仅保留统一编码后的播放文件，以释放磁盘空间。
+            </div>
+            <p>
                 每次最多处理 <?php echo (int)$batchLimit; ?> 个视频，仅针对 <code>is_transcoded = 1</code> 且
                 <code>original_video_path</code> 仍有记录的条目。执行后将清空 <code>original_video_path</code> 字段，避免重复清理。
                 请在确认所有设备播放正常、且不再需要原始文件时再使用本工具。
             </p>
+        </div>
+        <form method="POST" data-confirm="该操作将删除文章已转码视频的原始上传文件，仅保留转码版本，确认继续吗？">
+            <?php echo csrf_field(); ?>
+            <input type="hidden" name="mode" value="article_video_cleanup_originals">
             <button type="submit" class="btn btn-danger">
                 <i class="fas fa-trash-alt"></i>
                 <span>执行一次文章原始视频清理</span>

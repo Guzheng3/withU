@@ -45,18 +45,7 @@ function desktop_payload(Auth $auth, Database $db): array
 
     try {
         if ($isCoupleUser) {
-            $counts = withu_strm_internal('?page=1&pageSize=1');
-            $watchRoomsRow = $db->fetch("SELECT COUNT(*) AS c FROM watch_rooms");
-            $mediaCount = (int)($counts['data']['total'] ?? 0);
-            $recognizedMedia = $mediaCount;
-            $watchRooms = (int)($watchRoomsRow['c'] ?? 0);
-        }
-        if ($isCoupleUser) {
             $partner = $auth->getPartner();
-            $defaultRoom = $db->fetch("SELECT * FROM watch_rooms WHERE room_code = 'WithU Watch' AND source = 'strm' LIMIT 1");
-            if ($defaultRoom) {
-                $room = withu_strm_merge_room($defaultRoom);
-            }
         }
     } catch (Throwable $e) {
         // Best-effort bootstrap; keep the desktop client usable even if media
@@ -85,18 +74,7 @@ function desktop_payload(Auth $auth, Database $db): array
             'recognized_media_count' => $recognizedMedia,
             'watch_room_count' => $watchRooms,
         ],
-        'watch' => $room ? [
-            'room_code' => $room['room_code'] ?? 'WithU Watch',
-            'media_id' => (int)($room['media_id'] ?? 0),
-            'file_name' => $room['file_name'] ?? '',
-            'series_name' => $room['series_name'] ?? '',
-            'episode_number' => $room['episode_number'] ?? null,
-            'playback_state' => $room['playback_state'] ?? 'paused',
-            'position_ms' => (int)($room['current_position_ms'] ?? 0),
-            'speed' => (float)($room['speed'] ?? 1),
-            'cover_url' => $room['cover_url'] ?? '',
-            'url' => withu_strm_room_url($room),
-        ] : null,
+        'watch' => null,
     ];
 }
 
@@ -124,122 +102,6 @@ if ($action === 'logout') {
     withu_require_json_csrf($body);
     $auth->logout();
     withu_json_response(['success' => true]);
-}
-
-if ($action === 'library') {
-    desktop_require_couple_user($auth);
-    try {
-        $search = trim((string)($_GET['q'] ?? ''));
-        $typeId = (int)($_GET['type_id'] ?? 0);
-        if ($typeId < 0 || !in_array($typeId, [0, 1, 2, 3, 4], true)) {
-            withu_json_response(['success' => false, 'message' => '影视分类无效'], 400);
-        }
-        $page = max(1, min(1000, (int)($_GET['page'] ?? 1)));
-        $perPage = max(20, min(500, (int)($_GET['per_page'] ?? 240)));
-        $q = [];
-        $q[] = 'page=' . $page;
-        $q[] = 'pageSize=' . $perPage;
-        if ($search !== '') $q[] = 'keyword=' . rawurlencode($search);
-        if ($typeId === 2 || $typeId === 3 || $typeId === 4) {
-            $q[] = 'mediaType=tv';
-        } elseif ($typeId === 1) {
-            $q[] = 'mediaType=movie';
-        }
-        $r = withu_strm_internal('?' . implode('&', $q));
-        if (!$r['success']) {
-            withu_json_response(['success' => false, 'message' => $r['message'] ?? '媒体库读取失败'], 502);
-        }
-        $items = [];
-        foreach ((array)($r['data']['items'] ?? []) as $item) {
-            $mid = (int)($item['id'] ?? 0);
-            if ($mid <= 0) continue;
-            $poster = (string)($item['posterUrl'] ?? '');
-            if ($poster === '') {
-                $imgFile = dirname(__DIR__, 2) . '/runtime/strm-posters/' . $mid . '.jpg';
-                if (is_file($imgFile)) $poster = '/api/strm.php?action=img&id=' . $mid;
-            }
-            $type = (string)($item['mediaType'] ?? 'movie');
-            $items[] = [
-                'key' => 'strm-title-' . preg_replace('/\s+/u', '', mb_strtolower((string)($item['title'] ?? ''), 'UTF-8')),
-                'id' => $mid,
-                'name' => (string)($item['title'] ?? 'strm 媒体'),
-                'type_id' => $type === 'tv' ? 2 : 1,
-                'count' => (int)($item['episodeCount'] ?? 0) ?: 1,
-                'cover_url' => $poster,
-                'resolution' => $type === 'tv' ? '剧集' : '电影',
-                'rating' => isset($item['voteAverage']) && (float)$item['voteAverage'] > 0 ? (string)round((float)$item['voteAverage'], 1) : null,
-                'summary' => '',
-                'cast_names' => '',
-                'recognition_status' => 'recognized',
-                'updated_at' => '',
-                'play_url' => '/api/strm.php?action=resolve&id=' . $mid,
-                'episodes' => [],
-            ];
-        }
-        withu_json_response([
-            'success' => true,
-            'items' => $items,
-            'page' => $page,
-            'per_page' => $perPage,
-            'has_more' => ($page * $perPage) < (int)($r['data']['total'] ?? 0),
-            'query' => $search,
-            'type_id' => $typeId,
-        ]);
-    } catch (Throwable $e) {
-        withu_json_response(['success' => false, 'message' => '媒体库读取失败'], 500);
-    }
-}
-
-if ($action === 'history') {
-    desktop_require_couple_user($auth);
-    try {
-        $historyRows = $db->fetchAll(
-            "SELECT wh.id,wh.media_id,wh.room_id,wh.started_at,wh.ended_at,wh.watch_duration_ms,wh.solo_duration_ms,wh.together_duration_ms,wh.last_position_ms,wh.participants,wh.updated_at,
-                    COALESCE(wr.source, 'library') AS history_source, COALESCE(wr.source_episode, 0) AS history_source_episode
-             FROM watch_history wh
-             LEFT JOIN watch_rooms wr ON wr.id = wh.room_id
-             ORDER BY wh.updated_at DESC, wh.id DESC
-             LIMIT 120"
-        );
-        $items = [];
-        foreach ($historyRows as $history) {
-            $mediaId = (int)$history['media_id'];
-            $media = [];
-            if ((string)($history['history_source'] ?? 'library') === 'strm') {
-                $media = withu_strm_media_fetch($mediaId) ?: [];
-            }
-            if (!$media) continue;
-            $episodeId = (int)($history['history_source_episode'] ?? 0);
-            $episode = null;
-            foreach ((array)($media['episodes'] ?? []) as $candidate) {
-                if ((int)($candidate['id'] ?? 0) === $episodeId) { $episode = $candidate; break; }
-            }
-            $title = (string)($media['title'] ?? 'strm 媒体');
-            $participants = json_decode((string)($history['participants'] ?? ''), true);
-            if (!is_array($participants)) $participants = [];
-            $items[] = [
-                'id' => (int)$history['id'],
-                'media_id' => $mediaId,
-                'file_name' => (string)($episode['sourceFileName'] ?? $title),
-                'series_name' => $title,
-                'episode_number' => $episode ? (int)($episode['episodeNo'] ?? 0) : null,
-                'episode_title' => (string)($episode['title'] ?? ''),
-                'cover_url' => (string)($media['posterUrl'] ?? ''),
-                'resolution' => '',
-                'play_url' => '/api/strm.php?action=resolve&id=' . $mediaId . ($episodeId > 0 ? '&episode=' . $episodeId : ''),
-                'started_at' => (string)($history['started_at'] ?? ''),
-                'updated_at' => (string)($history['updated_at'] ?? ''),
-                'watch_duration_ms' => (int)($history['watch_duration_ms'] ?? 0),
-                'solo_duration_ms' => (int)($history['solo_duration_ms'] ?? 0),
-                'together_duration_ms' => (int)($history['together_duration_ms'] ?? 0),
-                'last_position_ms' => (int)($history['last_position_ms'] ?? 0),
-                'participants_count' => count(array_unique(array_map('intval', $participants))),
-            ];
-        }
-        withu_json_response(['success' => true, 'items' => $items]);
-    } catch (Throwable $e) {
-        withu_json_response(['success' => false, 'message' => '观影历史读取失败'], 500);
-    }
 }
 
 if ($action === 'article' || $action === 'album') {

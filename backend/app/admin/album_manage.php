@@ -1324,7 +1324,10 @@ include __DIR__ . '/header.php';
             <div class="admin-card-header">
                 <div>
                     <div class="admin-card-title">相册封面</div>
-                    <div class="admin-card-subtitle">为这个相册设置一张封面</div>
+                    <div class="admin-card-help">
+                        <div class="admin-card-subtitle">为这个相册设置一张封面</div>
+                    </div>
+                    <button type="button" class="admin-help-toggle" title="查看说明" aria-label="查看说明" aria-expanded="false"><i class="ti ti-info-circle"></i></button>
                 </div>
             </div>
 
@@ -1371,7 +1374,10 @@ include __DIR__ . '/header.php';
             <div class="admin-card-header">
                 <div>
                     <div class="admin-card-title">相册信息</div>
-                    <div class="admin-card-subtitle">修改相册名称、描述、加密状态与编辑权限</div>
+                    <div class="admin-card-help">
+                        <div class="admin-card-subtitle">修改相册名称、描述、加密状态与编辑权限</div>
+                    </div>
+                    <button type="button" class="admin-help-toggle" title="查看说明" aria-label="查看说明" aria-expanded="false"><i class="ti ti-info-circle"></i></button>
                 </div>
             </div>
             <form method="POST" novalidate>
@@ -1473,7 +1479,10 @@ include __DIR__ . '/header.php';
         <div class="admin-card-header">
             <div>
                 <div class="admin-card-title">上传媒体</div>
-                <div class="admin-card-subtitle">在这里上传当前相册的图片和视频</div>
+                <div class="admin-card-help">
+                    <div class="admin-card-subtitle">在这里上传当前相册的图片和视频</div>
+                </div>
+                <button type="button" class="admin-help-toggle" title="查看说明" aria-label="查看说明" aria-expanded="false"><i class="ti ti-info-circle"></i></button>
             </div>
         </div>
 
@@ -1588,13 +1597,16 @@ include __DIR__ . '/header.php';
             <div class="admin-card-header">
                 <div>
                     <div class="admin-card-title">相册媒体</div>
-                    <div class="admin-card-subtitle">
-                        <?php
-                        $imageCount = count($images);
-                        $videoCount = count($videos);
-                        ?>
-                        已上传 <?php echo $imageCount; ?> 张图片 / <?php echo $videoCount; ?> 个视频
+                    <div class="admin-card-help">
+                        <div class="admin-card-subtitle">
+                            <?php
+                            $imageCount = count($images);
+                            $videoCount = count($videos);
+                            ?>
+                            已上传 <?php echo $imageCount; ?> 张图片 / <?php echo $videoCount; ?> 个视频
+                        </div>
                     </div>
+                    <button type="button" class="admin-help-toggle" title="查看说明" aria-label="查看说明" aria-expanded="false"><i class="ti ti-info-circle"></i></button>
                 </div>
                 <div style="display:flex;flex-direction:column;align-items:flex-end;gap:0.25rem;font-size:0.85rem;color:var(--text-light);">
                     <label style="display:flex;align-items:center;gap:0.35rem;">

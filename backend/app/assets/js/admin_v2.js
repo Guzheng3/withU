@@ -220,4 +220,19 @@ document.addEventListener('DOMContentLoaded', function () {
             }
         });
     })();
+
+    // 卡片说明文字折叠/展开
+    Array.from(document.querySelectorAll('.admin-help-toggle')).forEach(function (btn) {
+        btn.addEventListener('click', function (e) {
+            e.preventDefault();
+            e.stopPropagation();
+            var card = btn.closest('.admin-card');
+            if (!card) return;
+            var help = card.querySelector('.admin-card-help');
+            if (!help) return;
+            var open = help.classList.toggle('open');
+            btn.setAttribute('aria-expanded', open ? 'true' : 'false');
+            btn.title = open ? '收起说明' : '查看说明';
+        });
+    });
 });

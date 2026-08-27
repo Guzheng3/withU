@@ -56,9 +56,7 @@ if (strpos($path, '/admin-assets/') === 0) {
 // ── 后台 PHP 路径 ────────────────────────
 $isBackend = strpos($path, '/admin') === 0
     || $path === '/login.php' || $path === '/logout.php'
-    || $path === '/install.php' || strpos($path, '/install') === 0
-    || $path === '/watch.php' || $path === '/watch_play.php' || $path === '/watch_history.php'
-    || strpos($path, '/watch.php') === 0 || strpos($path, '/watch_play.php') === 0 || strpos($path, '/watch_history.php') === 0;
+    || $path === '/install.php' || strpos($path, '/install') === 0;
 
 if ($isBackend) {
     if ($path === '/login.php' && requirePhp($appRoot . '/login.php')) return true;

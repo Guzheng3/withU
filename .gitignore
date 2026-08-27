@@ -90,3 +90,12 @@ backend/app/config/mihomo.json
 **/.kilocode
 **/.kilocodemodes
 **/.roomodes
+
+# 主站本地生成配置（含 SECRET_KEY，勿入库）
+/config/
+
+# ZCode 工作区状态
+/.zcode/
+
+# Python 缓存
+__pycache__/
