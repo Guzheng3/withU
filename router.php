@@ -56,7 +56,9 @@ if (strpos($path, '/admin-assets/') === 0) {
 // ── 后台 PHP 路径 ────────────────────────
 $isBackend = strpos($path, '/admin') === 0
     || $path === '/login.php' || $path === '/logout.php'
-    || $path === '/install.php' || strpos($path, '/install') === 0;
+    || $path === '/install.php' || strpos($path, '/install') === 0
+    // 影视库与播放页位于 backend/app，需要显式路由到后台目录
+    || preg_match('#^/(watch|watch_play|watch_history|player|cz_player)\.php$#', $path) === 1;
 
 if ($isBackend) {
     if ($path === '/login.php' && requirePhp($appRoot . '/login.php')) return true;

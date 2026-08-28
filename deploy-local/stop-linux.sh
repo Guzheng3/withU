@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# withU + withUstrm + mihomo  Linux 一键停止
+# withU + withUstrm  Linux 一键停止
 set -u
 cd "$(dirname "$0")/.."
 ROOT="$(pwd)"
@@ -28,7 +28,6 @@ kill_by_port() {
 
 stop_pidfile withu-php
 kill_by_port 1314 withu-php
-stop_pidfile mihomo
 stop_pidfile mariadb
 
 log "服务已全部停止（如需停 MariaDB 服务本身请用 systemctl stop mariadb）"

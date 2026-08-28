@@ -32,6 +32,7 @@ $adminPageMeta = [
     'together_settings' => ['title' => '一起看设置', 'section' => '影视与播放'],
     'player_settings' => ['title' => '播放器设置', 'section' => '影视与播放'],
     'player_art' => ['title' => '播放器设置', 'section' => '影视与播放'],
+    'strm_settings' => ['title' => 'withUstrm 媒体库', 'section' => '影视与播放'],
     'moderation' => ['title' => '安全审核', 'section' => '系统管理'],
     'devices' => ['title' => '信任设备', 'section' => '系统管理'],
     'settings' => ['title' => $adminSection === 'theme' ? '主题与外观' : '系统设置', 'section' => '系统管理'],
@@ -107,6 +108,9 @@ foreach (($themeConfig['colors'] ?? []) as $themeName => $themeValue) {
         </a>
         <a href="/admin/player_art.php" class="admin-drawer-link <?php echo in_array($adminPage, ['player_settings', 'player_art'], true) ? 'admin-drawer-link-active' : ''; ?>">
             <i class="ti ti-player-play"></i><span>播放器设置</span>
+        </a>
+        <a href="/admin/strm_settings.php" class="admin-drawer-link <?php echo $adminPage === 'strm_settings' ? 'admin-drawer-link-active' : ''; ?>">
+            <i class="ti ti-server-2"></i><span>withUstrm 媒体库</span>
         </a>
 
         <div class="admin-drawer-section-title">系统管理</div>

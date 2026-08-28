@@ -1,15 +1,11 @@
 #!/usr/bin/env bash
 # ============================================================
-# withU  Linux 服务器一键启动（含内置 mihomo 代理）
+# withU  Linux 服务器一键启动
 # ============================================================
 # 前置要求（首次部署）：
-#   1. apt install mariadb-server php-cli php-mysql php-gd php-curl php-xml php-mbstring openjdk-21-jre-headless nodejs npm
+#   1. apt install mariadb-server php-cli php-mysql php-gd php-curl php-xml php-mbstring
 #   2. git clone https://github.com/Guzheng3/withU.git && cd withU
-#   3. 配置订阅地址（二选一）：
-#        export WITHU_PROXY_SUB_URL="https://你的机场订阅地址"
-#        或写入 repo/config/mihomo.json: { "subUrl": "https://..." }
-#   4. bash deploy-local/setup-linux.sh   ← 初始化数据库/构建 strm
-#   5. bash deploy-local/start-linux.sh    ← 启动全部服务（本脚本）
+#   3. bash deploy-local/start-linux.sh    ← 启动服务（本脚本，幂等）
 # ============================================================
 set -u
 cd "$(dirname "$0")/.."
@@ -99,30 +95,7 @@ fi
 touch "$ROOT/.installed" "$ROOT/backend/app/.installed"
 mkdir -p "$ROOT/backend/app/uploads" "$ROOT/backend/app/runtime" "$ROOT/backend/app/storage" "$ROOT/backend/app/logs"
 
-# ---------- 2. 内置 mihomo 代理（订阅地址自动拉取 + 自动选节点） ----------
-log "配置内置 mihomo 代理..."
-WITHU_PROXY_SUB_URL="${WITHU_PROXY_SUB_URL:-$(node -e "try{console.log(require('./config/mihomo.json').subUrl||'')}catch(e){console.log('')}" 2>/dev/null)}"
-node deploy-local/setup-mihomo.cjs
-MIHOMO_STATUS="$WORKROOT/runtime/mihomo/status.json"
-MIHOMO_ENABLED=0; MIHOMO_PORT=7898
-if [ -f "$MIHOMO_STATUS" ]; then
-  MIHOMO_ENABLED=$(node -e "console.log(require('$MIHOMO_STATUS').enabled?1:0)" 2>/dev/null || echo 0)
-  MIHOMO_PORT=$(node -e "console.log(require('$MIHOMO_STATUS').port||7898)" 2>/dev/null || echo 7898)
-fi
-if [ "$MIHOMO_ENABLED" = "1" ]; then
-  if ! is_listening "$MIHOMO_PORT"; then
-    detach mihomo "node '$WORKROOT/runtime/mihomo/start.cjs'" "$WORKROOT/runtime/mihomo/mihomo.log"
-    for i in $(seq 1 20); do is_listening "$MIHOMO_PORT" && break; sleep 1; done
-    log "mihomo 代理就绪: 127.0.0.1:$MIHOMO_PORT"
-  else
-    log "mihomo 已在运行: 127.0.0.1:$MIHOMO_PORT"
-  fi
-else
-  log "未配置订阅地址，跳过内置代理（如需 TMDB 刮削请设置 WITHU_PROXY_SUB_URL）"
-fi
-export MIHOMO_PORT
-
-# ---------- 3. withU PHP 服务 ----------
+# ---------- 2. withU PHP 服务 ----------
 log "启动 withU PHP 服务 (127.0.0.1:$WITHU_PORT)..."
 if is_listening $WITHU_PORT; then
   log "withU 已在运行"
@@ -141,5 +114,4 @@ log "=============================================="
 log "全部启动完成："
 log "  withU 前台:        http://127.0.0.1:$WITHU_PORT/"
 log "  withU 后台:        http://127.0.0.1:$WITHU_PORT/admin/"
-log "  TMDB 代理:         127.0.0.1:$MIHOMO_PORT (AUTO 自动选节点)"
 log "=============================================="
