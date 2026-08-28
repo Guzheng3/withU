@@ -135,13 +135,59 @@ bash install-linux.sh
 
 ## TMDB 国内访问方案
 
-withUstrm 刮削依赖 TMDB。国内网络环境推荐组合方案：
+withUstrm 刮削依赖 TMDB。国内网络环境下 `api.themoviedb.org` 通常被 DNS 污染、`image.tmdb.org` 图床普遍不可达，推荐以下组合方案（两者互补，缺一不可）。
 
-1. **API 直连**：`api.themoviedb.org` 的不可达多为 DNS 污染，可通过 [CheckTMDB](https://github.com/cnwikee/CheckTMDB) 每日更新的 hosts（IPv4 条目）写入 `/etc/hosts` 解决，建议配 cron 自动更新。
-2. **图片反代**：`image.tmdb.org` 在多数线路无法通过 hosts 解决，推荐用 Cloudflare Worker 十行代码反向代理（`/t/p/*` → 图床，其余 → API），绑定一个 DNS 托管在 Cloudflare 的自定义域（`workers.dev` 国内不稳定）。
-3. **withUstrm 推荐配置**：`baseUrl` / `chinaApiUrl` 用官方 API 域名（配合 hosts），`imageBaseUrl` / `chinaImageUrl` 指向反代域名。
-4. **无 IPv6 出口的服务器**：Cloudflare 域名为双栈，Java 不会自动回退 IPv4，启动需加 `-Djava.net.preferIPv4Stack=true`（`install-linux.sh` 已自动检测并附加）。
-5. 可选：对 CF 边缘 IP 做延迟探测后写入 hosts 固定（“优选 IP”），可显著提升稳定性。
+### 第一步：API 走 hosts 直连（修复 DNS 污染）
+
+`api.themoviedb.org` 的问题本质是 DNS 污染，用 [CheckTMDB](https://github.com/cnwikee/CheckTMDB) 每日更新的可用 IP 写入 `/etc/hosts` 即可解决：
+
+```bash
+# 立即执行一次（需 root）
+bash deploy/update-tmdb-hosts.sh
+
+# 加入 cron 每日自动更新（07:17）
+echo '17 7 * * * root bash /path/to/withU/deploy/update-tmdb-hosts.sh >> /var/log/tmdb-hosts.log 2>&1' \
+  > /etc/cron.d/withu-tmdb-hosts
+```
+
+脚本只替换 `/etc/hosts` 中 `# BEGIN WITHU-TMDB` ~ `# END WITHU-TMDB` 标记块，不碰其他条目；拉取失败或校验不过时保持原样；自动备份旧文件。注意只写入 IPv4 条目——国内多数服务器无 IPv6 出口，AAAA 记录反而会拖垮连接。
+
+### 第二步：图床走 Cloudflare Worker 反代
+
+`image.tmdb.org` 无法通过 hosts 解决，用 Cloudflare 边缘节点反代。仓库已提供现成代码 [`deploy/cloudflare-worker-tmdb.js`](./deploy/cloudflare-worker-tmdb.js)：
+
+1. 登录 [dash.cloudflare.com](https://dash.cloudflare.com) → **Workers 和 Pages** → 创建 → 命名（如 `tmdb-proxy`）→ 部署；
+2. **编辑代码**：删除默认内容，粘贴 `deploy/cloudflare-worker-tmdb.js` 全文，重新部署；
+3. **绑定自定义域**：Worker → 设置 → 域和路由 → 添加自定义域（如 `tmdb.example.com`）。
+   域名 DNS 必须托管在 Cloudflare；`*.workers.dev` 默认域在国内不稳定，不要用；
+4. 验证：
+
+```bash
+curl https://tmdb.example.com/3/movie/550
+# → 401 JSON（未带 API key 的正常响应，说明链路已通）
+curl -o t.png https://tmdb.example.com/t/p/original/wwemzKWzjKYJFfCeiB57q3r4Bcm.png
+# → 真实 PNG 图片
+```
+
+代码中已启用 24 小时边缘缓存（`cacheEverything`），海报第二次起毫秒级返回，批量刮削提速明显。免费额度每天 10 万次请求，个人使用足够；**不要公开分享该域名**，避免被滥用。
+
+### 第三步：配置 withUstrm（混合路由）
+
+在 withUstrm 管理界面 → 系统设置 → TMDB 中填写：
+
+| 配置项 | 值 | 说明 |
+| --- | --- | --- |
+| `baseUrl` / `chinaApiUrl` | `https://api.themoviedb.org` | API 走 hosts 直连，快且稳 |
+| `imageBaseUrl` / `chinaImageUrl` | `https://tmdb.example.com` | 图床走 Worker 反代（唯一可行路径） |
+| `apiKey` | 你的 TMDB API Key | [themoviedb.org](https://www.themoviedb.org/settings/api) 免费注册获取 |
+
+> 实测结论：API 小 JSON 请求直连（0.9~4s）比绕 Worker（1~10s 且偶发超时）更稳，故 API 不绕反代；图床则必须走反代。
+
+### 其他注意事项
+
+- **无 IPv6 出口的服务器**：Cloudflare 域名为双栈，Java 不会像 curl 那样自动回退 IPv4，启动需加 `-Djava.net.preferIPv4Stack=true`（`install-linux.sh` 已自动检测并附加）。
+- **可选优化（优选 IP）**：若 Worker 域名时快时慢，可对 CF 边缘 IP 做延迟探测，把最快 IP 写入 `/etc/hosts` 固定该域名，稳定性显著提升。
+- **备选方案**：若已有机场订阅，可用 mihomo 等代理统一解决（withUstrm 支持 `tmdb.proxyHost` / `tmdb.proxyPort`）；hosts + Worker 方案的优势是零依赖、零成本。
 
 ## FFmpeg 独立运行包
 
