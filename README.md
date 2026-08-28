@@ -1,154 +1,102 @@
 # WithU
 
-WithU 是面向两位授权用户的情侣专属网站。项目提供点滴记录、留言墙、爱情相册、纪念事件、地图与足迹、天气旅行、一起看/同步观影、聊天/弹幕、网页播放器、后台管理，并提供可选的 Windows Qt 桌面客户端。
+WithU 是面向两位授权用户的情侣专属网站，提供点滴记录、留言墙、爱情相册、纪念事件、地图与足迹、天气旅行、一起看/同步观影，并通过对接独立部署的 **withUstrm** 媒体服务，提供影视库浏览与在线播放能力。
 
 项目地址：[GitHub](https://github.com/Guzheng3/withU.git)
 
 ## 功能
 
-- **影视库**：`watch.php` 提供影视搜索、筛选、分组、最近播放和猜你喜欢。
-- **网页播放**：`watch_play.php` 支持 MP4、HLS 与 withUstrm 提供的媒体来源、分集切换、播放历史和清晰度信息。
-- **一起看**：两位用户可加入同一房间，同步播放/暂停、拖动、倍速和换集；支持聊天、弹幕以及浏览器支持时的麦克风连线。
-- **媒体元数据**：withUstrm 提供海报、评分、类型、演员、简介、总集数和完结状态；播放页同时显示总集数与库内集数。
-- **访问边界**：影视库、播放和管理功能默认只向现有的两位授权用户开放，不提供公开注册流程。
-- **桌面客户端**：可选 Windows Qt/libmpv/WebView2 客户端，复用 WithU 的网页资源和播放能力。
+- **影视库**：`/watch.php` 提供影视浏览、搜索、筛选、分组、最近播放和详情页，数据来自 withUstrm 媒体库。
+- **网页播放**：`/watch_play.php` 支持 MP4 / HLS 直链播放、分集切换、播放历史、倍速与手势操作。
+- **一起看**：两位用户加入同一房间，同步播放/暂停、拖动、换集，支持聊天与弹幕；strm 媒体同样可入房同步。
+- **站点功能**：文章日记、相册、留言墙、纪念事件、地图足迹、天气旅行、评论审核、信任设备等。
+- **管理后台**：Admin v3 轻量通透界面，涵盖内容管理、影视与播放设置、系统管理。
+
+## 架构
+
+| 服务 | 说明 | 默认地址 |
+| --- | --- | --- |
+| withU 主站 | PHP 站点，`frontend/`（前台）+ `backend/app/`（后台与接口），`router.php` 统一路由 | `http://127.0.0.1:1314` |
+| withUstrm 后端 | Spring Boot（独立仓库），SQLite 存储，提供媒体库与外部接口 | `http://127.0.0.1:8081` |
+| withUstrm bridge | Node 静态服务，承载 Nuxt 前端并反代后端 API | `http://127.0.0.1:3111` |
+
+withU 与 withUstrm 通过 **外部媒体库接口** 对接（`/api/external/**`，`X-API-Key` 鉴权），主站服务端持有 Key 并代理全部请求，前端拿不到任何凭据。
 
 ## 技术要求
 
-- PHP 8.2（推荐），启用 PDO MySQL、cURL、OpenSSL、JSON、mbstring、fileinfo 等常用扩展。
-- MySQL 5.7+/8.x 或 MariaDB；影视元数据与播放资源由独立的 withUstrm 服务提供（基于 SQLite，不依赖主库）。
-- Nginx 或 Apache，并将站点根目录指向本项目。
-- Redis 仅在部署配置或相关服务启用时需要。
-- HTTPS 是生产环境推荐配置，尤其是一起看麦克风和外部媒体源场景。
+- PHP 8.2+，启用 PDO MySQL、cURL、OpenSSL、JSON、mbstring、fileinfo、GD。
+- MariaDB / MySQL 5.7+（主站数据）。
+- Node.js ≥ 18（withUstrm 前端构建与 bridge）。
+- OpenJDK ≥ 21（withUstrm 后端构建与运行）。
+- FFmpeg（可选）：用于转码与视频封面，使用独立发布包，见下文。
 
-FFmpeg 不属于 GitHub 源码仓库，使用时请单独下载发布包，见下方说明。
+## 目录结构
 
-## 目录
-
-| 目录 | 用途 |
+| 路径 | 用途 |
 | --- | --- |
-| `admin/` | 后台管理页面 |
-| `api/` | 播放、媒体、一起看等接口 |
-| `assets/` | CSS、JavaScript、字体和图片 |
-| `core/` | 认证、数据库与一起看/播放器公共逻辑 |
-| `database/` | 主站数据库结构 |
-| `deploy/` | Nginx 和部署说明 |
-| `desktop/` | Windows Qt 桌面客户端源码 |
-| `scripts/` | 维护脚本 |
-| `views/` | 页面模板和公共视图 |
-| `uploads/`、`runtime/`、`storage/`、`logs/` | 本地运行数据，不应提交到仓库 |
+| `frontend/` | 前台页面与静态资源 |
+| `backend/app/` | 后台管理、接口、影视对接网关 |
+| `backend/app/api/strm.php` | withUstrm 媒体库网关（列表/详情/解析/流式代理） |
+| `backend/app/admin/strm_settings.php` | 后台「withUstrm 媒体库」对接配置页 |
+| `deploy-local/` | 本地/服务器启动脚本 |
+| `frontend/../config/`（`config/`） | 运行时生成的站点配置（不入库） |
 
-本地生成的 `config/config.php`、`config/database.php` 和 `.installed` 也不提交到仓库。安装配置、媒体路径、日志和账号信息请保留在部署环境中。
+## 快速开始（Linux）
 
-## 安装
+```bash
+# 1. 准备 MariaDB、PHP、Node、JDK（见技术要求）
+# 2. 启动主站（幂等：自动建库、生成 config、拉起 PHP 服务）
+bash deploy-local/start-linux.sh
 
-1. 将源码复制到 Web 站点根目录，并准备 PHP 与 MySQL/MariaDB。
-2. 创建一个空的主站数据库，或准备一个有权限创建数据库和表的数据库账号。
-3. 在站点根目录创建空文件 `enable_install.lock`。
-4. 浏览器访问 `/install.php`，按向导填写数据库信息并完成初始化。
-5. 安装完成后删除或移走 `enable_install.lock`；生产环境建议将 `install.php` 移出 Web 根目录。
-6. 登录后台创建/确认两位授权用户，并确保 withUstrm 服务已启动（见下方说明）。
+# 3. 停止
+bash deploy-local/stop-linux.sh
+```
 
-安装向导会生成 `config/database.php` 和 `.installed`。不要把这两个文件中的连接信息复制到 GitHub，也不要在 README、日志或工单中粘贴密码。
+withUstrm 为独立部署的服务：后端 `gradlew bootJar` 构建、前端 `nuxt generate` 构建、`bridge.js` 承载静态产物并反代 API。首次对接步骤见下节。
 
-### withUstrm 媒体库
+## withUstrm 媒体库对接
 
-- 影视元数据（海报、评分、简介、演员、分集）由 withUstrm 提供，主站经 `/api/strm.php` 网关代理访问。
-- 播放链路：主站向 withUstrm 请求播放地址并转发，播放时按需解析，不缓存过期签名。
+1. 在 withUstrm 管理界面 → 系统设置 → **外部媒体库接口**，启用并生成 API Key。
+2. 登录 withU 后台 → **影视与播放 → withUstrm 媒体库**（`/admin/strm_settings.php`）：
+   - 填写 withUstrm 服务地址（如 `http://127.0.0.1:8081`）；
+   - 粘贴 API Key，点击「测试连接」确认，保存。
+3. 访问 `/watch.php` 浏览媒体库；播放与一起看入口均在影视库内。
+
+安全边界：API Key 只保存在主站数据库（服务器端）；影视库、播放、解析接口全部要求情侣账号（user1/user2）登录；withUstrm 建议只绑定内网地址，不对外暴露。
+
+## TMDB 国内访问方案
+
+withUstrm 刮削依赖 TMDB。国内网络环境推荐组合方案：
+
+1. **API 直连**：`api.themoviedb.org` 的不可达多为 DNS 污染，可通过 [CheckTMDB](https://github.com/cnwikee/CheckTMDB) 每日更新的 hosts（IPv4 条目）写入 `/etc/hosts` 解决，建议配 cron 自动更新。
+2. **图片反代**：`image.tmdb.org` 在多数线路无法通过 hosts 解决，推荐用 Cloudflare Worker 十行代码反向代理（`/t/p/*` → 图床，其余 → API），绑定一个 DNS 托管在 Cloudflare 的自定义域（`workers.dev` 国内不稳定）。
+3. **withUstrm 推荐配置**：`baseUrl` / `chinaApiUrl` 用官方 API 域名（配合 hosts），`imageBaseUrl` / `chinaImageUrl` 指向反代域名。
+4. **无 IPv6 出口的服务器**：Cloudflare 域名为双栈，Java 不会自动回退 IPv4，启动需加 `-Djava.net.preferIPv4Stack=true`。
+5. 可选：对 CF 边缘 IP 做延迟探测后写入 hosts 固定（"优选 IP"），可显著提升稳定性。
 
 ## FFmpeg 独立运行包
 
-FFmpeg 用于视频兼容性转码、媒体探测和视频封面生成；OpenList/WebDAV 直链播放不经过 FFmpeg。请从发布文件中下载 `withU-ffmpeg-runtime-20260724.zip`，直接解压到与 `index.php`、`watch.php` 同级的 Web 站点根目录。
-
-解压后至少应存在以下路径：
+FFmpeg 用于视频兼容性转码、媒体探测和封面生成，不随仓库分发。请从发布文件下载 `withU-ffmpeg-runtime-*.zip` 解压到站点根目录，确保存在：
 
 ```text
-bin/ffmpeg/ffmpeg.exe
-bin/ffmpeg/ffprobe.exe
-bin/ffmpeg/linux-x86_64/ffmpeg
-bin/ffmpeg/linux-x86_64/ffprobe
+bin/ffmpeg/ffmpeg
+bin/ffmpeg/ffprobe
 ```
 
-Windows 部署可删除 `linux-x86_64/`；Linux 部署可删除 Windows 的 `.exe` 文件。Linux 文件如果丢失可执行权限，请执行：
-
-```bash
-chmod +x bin/ffmpeg/linux-x86_64/ffmpeg bin/ffmpeg/linux-x86_64/ffprobe
-```
-
-请保留包内的 FFmpeg GPL 许可证文件。FFmpeg 运行包较大，因此不放入 GitHub 源码仓库；没有它时，基础直链播放仍可用，但转码和自动生成视频封面可能不可用。
+Linux 下注意保留可执行权限（`chmod +x`）。没有 FFmpeg 时直链播放仍可用，仅转码与自动封面不可用。
 
 ## 本地开发
 
-Windows 本地开发环境位于项目外的 `C:\WithU\dev`。启动服务：
-
-```powershell
-powershell -ExecutionPolicy Bypass -File C:\WithU\dev\start-withu.ps1
-```
-
-本地地址：<http://127.0.0.1:8080/>
-
-PHP 语法检查示例：
-
-```powershell
-C:\WithU\tools\php82\php.exe -c C:\WithU\dev\php.ini -l watch_play.php
-```
-
-停止服务：
-
-```powershell
-powershell -ExecutionPolicy Bypass -File C:\WithU\dev\stop-withu.ps1
-```
-
-### CodeGraph 代码图谱
-
-[CodeGraph](https://github.com/colbymchenry/codegraph) 为本项目提供代码索引与知识图谱，支持符号搜索、调用链查询和代码结构浏览。索引数据存放在 `.codegraph/`，已在 `.gitignore` 中忽略。
-
-安装（独立二进制，无需 Node）：
-
 ```bash
-curl -fsSL https://raw.githubusercontent.com/colbymchenry/codegraph/main/install.sh | sh
+# Linux / WSL
+bash deploy-local/start-linux.sh    # 一键启动（幂等）
+bash deploy-local/stop-linux.sh     # 一键停止
 ```
 
-初始化/增量同步：
+Windows 环境可参考 `deploy-local/start-withu.cjs`（路径按本机调整）。
 
-```bash
-scripts/codegraph-sync.sh          # init 或 sync
-scripts/codegraph-sync.sh -q       # 静默模式(适合 git hooks)
-```
+## 安全说明
 
-常用查询：
-
-```bash
-codegraph status                  # 索引状态统计
-codegraph query <符号>            # 搜索符号
-codegraph callers <符号>          # 谁调用了它
-codegraph callees <符号>          # 它调用了谁
-codegraph node <文件或符号>       # 源码 + 调用链
-codegraph files                   # 文件结构
-```
-
-## Windows 桌面客户端
-
-桌面客户端需要 Qt 6.8.3 MinGW、CMake、Ninja 和本地 libmpv/WebView2 依赖。构建 Release：
-
-```powershell
-cd desktop\withu-player
-.\build.ps1 -QtRoot C:\WithU\tools\Qt\6.8.3\mingw_64 -Configuration Release
-```
-
-输出目录为 `desktop\withu-player\dist-wmf`，程序名为 `withU Desktop.exe`。构建脚本会部署 Qt 运行库，并复制可用的 libmpv、WebView2 Loader 和网页图片资源。桌面源码与大型运行库不随 Web 源码包发布。
-
-## 发布文件
-
-推荐使用发布目录中的两个包：
-
-- `withU-web-release-20260724-core.zip`：不含 FFmpeg 的精简 Web 源码包。
-- `withU-ffmpeg-runtime-20260724.zip`：独立 FFmpeg 运行包，解压到 Web 站点根目录。
-
-Windows 桌面端发布包另行提供。发布包不包含本机数据库、上传媒体、运行日志、调试配置和测试账号。
-
-## 安全与许可证
-
-- 生产环境请启用 HTTPS，使用强密码，并限制数据库和 withUstrm 管理入口的网络访问。
-- 不要提交 `config/` 中的本地配置、上传媒体、运行日志、FFmpeg/libmpv 二进制、备份和含测试账号的脚本。
-- 本项目遵循 [MIT License](LICENSE)。二次开发请保留许可证要求的原项目信息：`I Love Day 情侣成长记录小站`、[原项目地址](https://github.com/MiTaosot/I_Love_Day)、作者 `MiTao`，以及原许可证中列出的 AI 贡献说明。
+- 站点不提供公开注册，仅两位授权用户（user1/user2）可登录。
+- 运行时生成的 `config/config.php`、`config/database.php`、`.installed` 不入库，注意保管 `SECRET_KEY`。
+- 媒体播放直链经主站服务端解析与代理，签名地址不暴露给前端。
