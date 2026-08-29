@@ -307,46 +307,27 @@ if (!function_exists('withu_strm_localize_items')) {
      */
     function withu_strm_localize_items(array &$items, array $types = ['poster'], ?int $budget = null): int
     {
-        $replaceLocal = function (array &$items, array $types): void {
-            foreach ($items as $i => $item) {
-                if (!is_array($item)) continue;
-                $id = (int)($item['id'] ?? 0);
-                if ($id <= 0) continue;
-                foreach ($types as $type) {
-                    $field = $type === 'backdrop' ? 'backdropUrl' : 'posterUrl';
-                    $url = trim((string)($item[$field] ?? ''));
-                    if ($url === '') continue;
-                    if ($url[0] === '/' && strpos($url, '/api/external/') === 0) { // 外部库相对地址（withUstrm 本地图片）→ 经网关鉴权转发
-                        $items[$i][$field] = '/api/strm.php?action=extimg&id=' . $id . '&kind=' . $type;
-                        continue;
-                    }
-                    if ($url[0] === '/') continue; // 网关自身本地地址（action=img 等），保持不变
-                    if (!preg_match('#^https?://#i', $url)) continue; // 已是本地地址
-                    if (is_file(withu_strm_img_file($id, $type))) {
-                        $items[$i][$field] = withu_strm_img_url($id, $type);
-                    }
-                }
-            }
-        };
-        $replaceLocal($items, $types); // 已落地过的直接换链，零开销
-
-        $jobs = [];
-        foreach ($items as $item) {
+        // 只使用 withUstrm 本地刮削图片（/api/external 相对地址 → extimg 鉴权转发）；
+        // 不使用 CDN 图片：远程热链一律置空，前端走占位图，也不再发起 CDN 下载预热。
+        foreach ($items as $i => $item) {
             if (!is_array($item)) continue;
             $id = (int)($item['id'] ?? 0);
             if ($id <= 0) continue;
             foreach ($types as $type) {
                 $field = $type === 'backdrop' ? 'backdropUrl' : 'posterUrl';
                 $url = trim((string)($item[$field] ?? ''));
-                if ($url === '' || !preg_match('#^https?://#i', $url)) continue;
-                if (is_file(withu_strm_img_file($id, $type))) continue;
-                if ($budget !== null && count($jobs) >= $budget) continue; // 超预算留给下轮
-                $jobs[$id . ':' . $type] = ['id' => $id, 'type' => $type, 'url' => $url];
+                if ($url === '') continue;
+                if ($url[0] === '/' && strpos($url, '/api/external/') === 0) {
+                    $items[$i][$field] = '/api/strm.php?action=extimg&id=' . $id . '&kind=' . $type;
+                    continue;
+                }
+                if ($url[0] === '/') continue; // 网关自身本地地址，保持不变
+                if (preg_match('#^https?://#i', $url)) {
+                    $items[$i][$field] = ''; // 不使用 CDN 图片
+                }
             }
         }
-        if ($jobs) withu_strm_img_download_jobs(array_values($jobs));
-        $replaceLocal($items, $types); // 下载成功的换链，失败的保留原链
-        return count($jobs);
+        return 0;
     }
 }
 
