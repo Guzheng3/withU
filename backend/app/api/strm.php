@@ -15,7 +15,9 @@
 //   GET ?action=detail&id=                 → 媒体详情（含剧集）
 //   GET ?action=resolve&id=&episode=       → 播放直链 {success,url,type}
 //   GET ?action=posters                    → 豆瓣海报兜底映射
-//   GET ?action=img&id=                    → 本地兜底海报图片
+//   GET ?action=img&id=&type=poster|backdrop → 本地海报/封面（TMDB 已落地图 + 豆瓣兜底图）
+//   海报/封面本地化：列表/详情出口把 CDN 直链替换为本地地址（缺失时并行下载，
+//   失败保留原链）；media 首页请求触发节流巡检，媒体被刮削移除后清理本地文件。
 //   代理端点（播放用，服务端转发，免跨域）：
 //   GET ?action=proxy&url=<直链>           → 通用流式代理（支持 Range）
 //   GET ?action=proxy_m3u8&url=<m3u8>      → 拉 m3u8 并把分片改写为 proxy_seg
@@ -137,18 +139,26 @@ function strm_internal(string $path): array
 {
     if (preg_match('#^/(\d+)$#', $path, $m)) {
         // 详情：外部 name/year → 旧 title/releaseYear；剧集标题用文件名兜底
-        $r = withu_strm_request('media/' . (int)$m[1]);
+        $r = withu_strm_request_cached('media/' . (int)$m[1], [], 300);
         if (!$r['success']) {
             return ['success' => false, 'message' => (string)$r['message'], 'http' => $r['status']];
         }
         $d = is_array($r['data']) ? $r['data'] : [];
         $d['title'] = (string)($d['name'] ?? '');
         $d['releaseYear'] = (string)($d['year'] ?? '');
-        foreach (($d['episodes'] ?? []) as &$ep) {
+        // 详情出口本地化海报+封面
+        $wrap = [$d];
+        withu_strm_localize_items($wrap, ['poster', 'backdrop']);
+        $d = $wrap[0];
+        // 注意：不能对 ($d['episodes'] ?? []) 表达式直接引用迭代 —— ?? 返回副本，
+        // 引用修改不会写回 $d，下游读 title 会拿到空值
+        $eps = is_array($d['episodes'] ?? null) ? $d['episodes'] : [];
+        foreach ($eps as &$ep) {
             if (!is_array($ep)) continue;
             $ep['title'] = (string)($ep['sourceFileName'] ?? '');
         }
         unset($ep);
+        $d['episodes'] = $eps;
         return ['success' => true, 'data' => $d];
     }
 
@@ -159,17 +169,21 @@ function strm_internal(string $path): array
     // 兼容旧版 size= 分页别名
     $eq['page']     = max(1, (int)($q['page'] ?? 1));
     $eq['pageSize'] = max(1, min(100, (int)($q['pageSize'] ?? ($q['size'] ?? 24))));
-    $r = withu_strm_request('media', $eq);
+    $r = withu_strm_request_cached('media', $eq, 120);
     if (!$r['success']) {
         return ['success' => false, 'message' => (string)$r['message'], 'http' => $r['status']];
     }
     $d = is_array($r['data']) ? $r['data'] : [];
-    foreach (($d['items'] ?? []) as &$it) {
+    // 同上：?? 表达式引用迭代会丢失修改，先落到变量再写回 $d
+    $items = is_array($d['items'] ?? null) ? $d['items'] : [];
+    foreach ($items as &$it) {
         if (!is_array($it)) continue;
         $it['title'] = (string)($it['name'] ?? '');
         $it['releaseYear'] = (string)($it['year'] ?? '');
     }
     unset($it);
+    withu_strm_localize_items($items, ['poster'], 60); // 列表出口本地化海报
+    $d['items'] = $items;
     return ['success' => true, 'data' => $d];
 }
 
@@ -354,6 +368,9 @@ switch ($action) {
         $pageSize = max(1, min(100, (int)($_GET['pageSize'] ?? 24)));
         $q[] = 'page=' . $page;
         $q[] = 'pageSize=' . $pageSize;
+        // 列表出口即刮削结果的同步点：首页请求时做本地化巡检（节流 60s）——
+        // 全量对账清理已移除媒体的本地海报/封面，并预热缺失图片
+        if ($page === 1) withu_strm_images_maintain();
         $r = strm_internal('?' . implode('&', $q));
         if (!$r['success']) {
             strm_json(['success' => false, 'message' => $r['message'] ?? '媒体列表获取失败'], 502);
@@ -483,12 +500,15 @@ switch ($action) {
     }
     case 'img': {
         $id = (int)($_GET['id'] ?? 0);
-        $file = dirname(__DIR__, 2) . '/runtime/strm-posters/' . $id . '.jpg';
+        $type = ($_GET['type'] ?? '') === 'backdrop' ? 'backdrop' : 'poster';
+        $file = withu_strm_img_file($id, $type);
         if (!is_file($file)) strm_json(['success' => false, 'message' => '海报不存在'], 404);
+        $bytes = (string)file_get_contents($file);
         while (ob_get_level() > 0) ob_end_clean();
-        header('Content-Type: image/jpeg');
+        header('Content-Type: ' . (withu_strm_img_mime($bytes) ?: 'image/jpeg'));
+        header('Content-Length: ' . strlen($bytes));
         header('Cache-Control: max-age=86400');
-        readfile($file);
+        echo $bytes;
         exit;
     }
     default:
