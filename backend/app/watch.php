@@ -128,6 +128,9 @@ body.watch-page a{color:inherit}
 .withu-header-search input::placeholder{color:var(--ink-soft)}
 @media(max-width:768px){.withu-header-search input{width:96px}}
 
+/* ===== 头部诗句常显：吸顶后不随 withu-actions-visible 隐藏 ===== */
+.withu-header-actions.withu-actions-visible .withu-header-poem{display:block !important}
+
 /* ===== 左侧液态玻璃导航 ===== */
 .side-nav{position:fixed;left:26px;z-index:50;display:flex;flex-direction:column;gap:.35rem;padding:.7rem;border-radius:22px;background:linear-gradient(135deg,rgba(255,255,255,.6),rgba(255,255,255,.28));backdrop-filter:blur(22px) saturate(170%);-webkit-backdrop-filter:blur(22px) saturate(170%);border:1px solid rgba(255,255,255,.72);box-shadow:inset 0 1px 0 rgba(255,255,255,.8),inset 1px 0 0 rgba(255,255,255,.4),inset -1px -1px 0 rgba(255,255,255,.2),0 22px 46px rgba(247,141,167,.18);top:50%;transform:translateY(-50%);transition:top .7s cubic-bezier(.34,1.56,.64,1),transform .7s cubic-bezier(.34,1.56,.64,1)}
 .side-nav::before{content:"";position:absolute;left:14%;right:14%;top:0;height:1px;background:linear-gradient(90deg,transparent,rgba(255,255,255,.95),transparent)}
@@ -224,6 +227,7 @@ body.watch-page a{color:inherit}
 <body class="watch-page">
 <?php
 $withuHeaderSearchBeforePoem = true; // 搜索框由 header.php 条件插槽渲染到诗句前（仅本页生效）
+$withuHeaderHideWeatherFootprint = true; // 本页不显示头部天气胶囊与足迹入口（header.php 条件渲染）
 $headerPath = __DIR__ . '/../../frontend/inc/header.php';
 if (file_exists($headerPath)) {
     include $headerPath;

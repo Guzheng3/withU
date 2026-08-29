@@ -8,10 +8,32 @@
                             
             <?php if (!empty($withuHeaderSearchBeforePoem)): ?>
             <label class="search-box withu-header-search"><span class="s-icon">⌕</span><input id="watchSearch" placeholder="搜索媒体库"></label>
+            <?php elseif (!empty($withuHeaderBeforePoemHtml)): ?>
+            <?php echo $withuHeaderBeforePoemHtml; ?>
             <?php endif; ?>
             <div class="withu-header-poem" id="withuHeaderPoem" aria-hidden="true">
                         <span class="withu-header-poem-line">树是梧桐树，城是南京城，一句梧桐美，种满南京城</span>
                     </div>
+<?php if (empty($withuHeaderHideWeatherFootprint)): ?>
+<div class="withu-header-weather is-loading" id="withuHeaderVisitorWeather" title="点击查看当前天气信息" role="button" tabindex="0" aria-expanded="false">
+                    <span class="withu-header-weather-loading" id="withuHeaderVisitorWeatherLoading" aria-label="天气加载中">
+                        <i data-lucide="loader-circle"></i>
+                    </span>
+                    <span class="withu-header-weather-icon-wrap">
+                        <i class="qi-999-fill withu-header-weather-icon" id="withuHeaderVisitorWeatherIcon"></i>
+                    </span>
+                    <span class="withu-header-weather-text" id="withuHeaderVisitorWeatherText"></span>
+                </div>
+            
+                            <a href="javascript:void(0);" class="withu-header-map" id="withuMapOpenBtn" title="足迹地图">
+                    <span class="withu-header-map-icon-wrap">
+                        <i class="ph-fill ph-globe-hemisphere-west"></i>
+                    </span>
+                    <span class="withu-header-map-text">足迹</span>
+                </a>
+
+                <div class="withu-header-divider"></div>
+<?php endif; ?>
 <div class="withu-couple-avatars-right">
                 <div class="withu-avatar-group">
                     <img src="<?php echo htmlspecialchars($girlAvatar ?? '/assets/images/default-avatar.svg', ENT_QUOTES, 'UTF-8'); ?>"
@@ -76,6 +98,21 @@
 
         <!-- 功能入口 -->
         <div class="withu-header-more-actions">
+                        <?php if (empty($withuHeaderHideWeatherFootprint)): ?>
+                        <a href="javascript:void(0);" class="withu-header-more-action-item" id="withuMorePanelWeather" data-close-panel>
+                <span class="withu-header-more-action-icon">
+                    <i class="qi-999-fill" id="withuMorePanelWeatherIcon"></i>
+                </span>
+                <span class="withu-header-more-action-label" id="withuMorePanelWeatherText">天气</span>
+            </a>
+
+                        <a href="javascript:void(0);" class="withu-header-more-action-item" id="withuMorePanelMap" data-close-panel>
+                <span class="withu-header-more-action-icon">
+                    <i class="ph-fill ph-globe-hemisphere-west"></i>
+                </span>
+                <span class="withu-header-more-action-label">足迹地图</span>
+            </a>
+                        <?php endif; ?>
                         <?php if ($loggedIn): ?>
                         <a href="/watch.php" class="withu-header-more-action-item">
                 <span class="withu-header-more-action-icon">
@@ -123,6 +160,21 @@
 
         <!-- 功能入口 -->
         <div class="withu-header-more-actions">
+                        <?php if (empty($withuHeaderHideWeatherFootprint)): ?>
+                        <a href="javascript:void(0);" class="withu-header-more-action-item" id="withuMorePanelWeather" data-close-panel>
+                <span class="withu-header-more-action-icon">
+                    <i class="qi-999-fill" id="withuMorePanelWeatherIcon"></i>
+                </span>
+                <span class="withu-header-more-action-label" id="withuMorePanelWeatherText">天气</span>
+            </a>
+
+                        <a href="javascript:void(0);" class="withu-header-more-action-item" id="withuMorePanelMap" data-close-panel>
+                <span class="withu-header-more-action-icon">
+                    <i class="ph-fill ph-globe-hemisphere-west"></i>
+                </span>
+                <span class="withu-header-more-action-label">足迹地图</span>
+            </a>
+                        <?php endif; ?>
                         <?php if ($loggedIn): ?>
                         <a href="/watch.php" class="withu-header-more-action-item">
                 <span class="withu-header-more-action-icon">
