@@ -74,6 +74,20 @@
         }
     };
 
+    /**
+     * 判断 PJAX 跳转目标是否为首页。
+     * 仅打开首页时展示切换加载动画，跳转其他页面不显示（用户要求）。
+     */
+    function isHomeTarget(options) {
+        try {
+            const raw = (options && options.url) || window.location.href;
+            const path = new URL(raw, window.location.href).pathname;
+            return path === '/' || /\/index\.(php|html)$/.test(path);
+        } catch (e) {
+            return false;
+        }
+    }
+
     // ============================================
     // Masonry 瀑布流管理模块
     // ============================================
@@ -606,9 +620,12 @@
          */
         _bindEvents() {
             // ========== pjax:start ==========
-            $(document).on('pjax:start.withuPjax', () => {
+            $(document).on('pjax:start.withuPjax', (event, xhr, options) => {
                 $('html').css('scroll-behavior', 'auto');
-                LoadingIndicator.show();
+                // 仅跳转到首页时显示切换加载动画；其他页面直接切换
+                if (isHomeTarget(options)) {
+                    LoadingIndicator.show();
+                }
 
                 // ---- 统一清理：防止内存泄漏 ----
                 // 0. 强制释放滚动锁（弹窗打开时切页会导致 withu-scroll-locked 残留）
@@ -671,8 +688,9 @@
             });
 
             // ========== pjax:send ==========
-            $(document).on('pjax:send.withuPjax', () => {
-                if (typeof NProgress !== 'undefined') {
+            $(document).on('pjax:send.withuPjax', (event, xhr, options) => {
+                // 顶部进度条与切换动画一致：仅跳转首页时展示
+                if (isHomeTarget(options) && typeof NProgress !== 'undefined') {
                     NProgress.start();
                 }
                 // 导航前保存当前页面的真实滚动位置
