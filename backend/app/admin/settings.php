@@ -649,6 +649,7 @@ include __DIR__ . '/header.php';
                         style="width:100%;padding:0.55rem 0.75rem;border-radius:0.75rem;border:1px solid rgba(148,163,184,0.6);font-size:0.9rem;">
                     <div style="margin-top:0.2rem;font-size:0.78rem;color:var(--text-light);">
                         填写后会显示在网站底部，可点击跳转备案查询页面。留空则不显示。
+                        支持一次填写多个备案号（换行、逗号或分号分隔），系统会自动识别备案机关类型（工信部ICP / 萌ICP / 公安备案）并自动匹配徽章图标与查询链接；工信部备案号还会根据省份简称自动推导省级通信管理局（鼠标悬停可见）。
                     </div>
                 </div>
 

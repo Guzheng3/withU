@@ -3752,39 +3752,7 @@ if (typeof window.initPrivatePage === 'function') window.initPrivatePage();
     <img class="animal" src="/Style/img/animals.png?wm=4c668768&v=1.0.74" draggable="false" alt="动物">
 </div>
 
-<div class="div_marb_7rem-none">
-    <div class="footer-warp">
-        <div class="footer">
-
-                            <p><a class="github-badge" href="https://icp.gov.moe/?keyword=20248288" target="_blank">
-                        <span class="badge-subject"><img src="/Style/img/icp/moeICP.png?wm=4c668768&v=1.0.74"></span>
-                        <span class="badge-value bg-pink">
-                            萌ICP备20248288号                        </span>
-                    </a></p>
-                                        <p><a class="github-badge" href="https://beian.miit.gov.cn/#/Integrated/index" target="_blank">
-                        <span class="badge-subject"><img src="/Style/img/icp/ICP.svg?wm=4c668768&v=1.0.74"></span>
-                        <span class="badge-value bg-blue">
-                            粤ICP备2021037776号                        </span>
-                    </a></p>
-                                        <p><a class="github-badge"
-                        href="http://www.beian.gov.cn/portal/registerSystemInfo?recordcode=1112223334455"
-                        target="_blank">
-                        <span class="badge-subject"><img src="/Style/img/icp/policeICP.svg?wm=4c668768&v=1.0.74"></span>
-                        <span class="badge-value bg-DIY">
-                            粤公网安备 1112223334455号                        </span>
-                    </a></p>
-                                        <p>
-                    <a href="javascript:void(0);" class="github-badge">
-                        <span class="badge-subject">Copyright</span>
-                        <span class="badge-value bg-DIY1">
-                            ©
-                            2026 withU Web All Rights Reserved.
-                        </span>
-                    </a>
-                </p>
-                    </div>
-    </div>
-</div>
+<?php include __DIR__ . '/inc/footer.php'; ?>
 
 <div class="withu-mobile-nav-root">
 
