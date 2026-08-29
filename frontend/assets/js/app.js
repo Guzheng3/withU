@@ -748,7 +748,8 @@
             const $capsule = $('.withu-capsule-back');
 
             const pageName = currentURL.split('/').pop() || '';
-            if (pageName === 'page.php' || pageName === 'album-detail.php') {
+            // 子页面白名单：这些页面显示顶部返回胶囊
+            if (['page.php', 'album-detail.php', 'watch.php'].includes(pageName)) {
                 // 子页面：激活胶囊，设置返回链接
                 $capsule.addClass('subpage-back-ready');
                 const homeUrl = (window.WITHU_CONFIG && window.WITHU_CONFIG.siteBase || '') + 'index.php';

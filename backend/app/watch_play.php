@@ -10,8 +10,14 @@ migrate_schema_if_needed();
 $csrfToken = csrf_token();
 $auth = new Auth();
 $user = withu_require_couple_user($auth);
+$loggedIn = $auth->isLoggedIn();
 $partner = $auth->getPartner();
 $partnerId = (int)($partner['id'] ?? 0);
+// 头部模板 frontend/inc/header.php 依赖的情侣信息变量（$boyName/$girlName/$boyAvatar/$girlAvatar）
+$headerConfigPath = __DIR__ . '/../../frontend/inc/config.php';
+if (file_exists($headerConfigPath)) {
+    require_once $headerConfigPath;
+}
 $mediaId = (int)($_GET['media_id'] ?? 0);
 $strmMode = (($_GET['source'] ?? '') === 'strm');
 // 媒体库(STRM)作为唯一来源：cz 与本地库入口一律停用
@@ -82,6 +88,11 @@ if ($strmMode) {
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="/assets/css/style.css">
 <link rel="stylesheet" href="/assets/css/theme.css?v=withu-theme-20260719-3">
+<link rel="stylesheet" href="/Style/css/header.css">
+<link rel="stylesheet" href="/Style/css/header-layout.css">
+<link rel="stylesheet" href="/Style/vendor/qweather-icons/qweather-icons.css">
+<link rel="stylesheet" href="/Style/css/phosphor-icons.css">
+<link rel="stylesheet" href="/Style/css/phosphor-fill.css">
 <style>
 body,button,input,select{font-family:'Inter','system-ui',-apple-system,BlinkMacSystemFont,'Segoe UI','PingFang SC','Microsoft YaHei',sans-serif!important}
 .player-shell{max-width:1480px;margin:0 auto;padding:1rem}.player-top{display:flex;justify-content:space-between;align-items:center;gap:1rem;flex-wrap:wrap;margin-bottom:1rem}.player-top h1{margin:0;font-size:1.4rem}.player-top p{margin:.35rem 0 0;color:#64748b}.player-actions{display:flex;gap:.5rem;flex-wrap:wrap}.player-layout{display:grid;grid-template-columns:minmax(0,1fr) 360px;gap:1rem}.player-stage{background:#10131a;border-radius:8px;padding:1rem}.player-gesture{position:relative;touch-action:manipulation}.player-container{width:100%;aspect-ratio:16/9;background:#000;border-radius:5px;overflow:hidden}.player-container .artplayer-app{width:100%;height:100%}.player-container .artplayer-app video{width:100%;height:100%;object-fit:contain}.player-info{display:flex;align-items:center;gap:1rem;flex-wrap:wrap;color:#e5e7eb;margin-top:.75rem;font-size:.9rem}.player-status{margin:.75rem 0;padding:.7rem 1rem;border-radius:6px;background:#f3f4f6;color:#334155}.heart-status{display:inline-flex;align-items:center;gap:.3rem;color:#94a3b8}.heart-status .heart{font-size:1.1rem;transition:color .2s,transform .2s}.heart-status .link{width:28px;height:2px;background:#cbd5e1;transition:background .2s}.heart-status.connected{color:#ec4899}.heart-status.connected .heart{color:#ec4899;transform:scale(1.12)}.heart-status.connected .link{background:#ec4899}.episode-panel{background:#fff;border:1px solid #e5e7eb;border-radius:8px;padding:1rem;max-height:72vh;overflow:auto}.episode-panel h2{font-size:1rem;margin:0 0 .8rem}.episode-list{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:.45rem}.episode-btn{min-height:34px;border:1px solid #dbe1ea;background:#fff;border-radius:5px;cursor:pointer;font-size:.8rem;padding:.3rem;transition:border-color .18s,background .18s,color .18s,transform .18s,box-shadow .18s}.episode-btn:hover,.episode-btn.active{border-color:#ec4899;color:#ec4899;background:#fff5fa;box-shadow:0 3px 10px rgba(236,72,153,.12)}.episode-btn:active{transform:scale(.97)}.withu-episode-overlay{position:absolute;right:1rem;bottom:4rem;z-index:9999!important;width:min(360px,calc(100% - 2rem));max-height:min(68vh,560px);padding:.75rem;background:rgba(15,23,42,.97);border:1px solid rgba(255,255,255,.16);border-radius:7px;overflow:hidden;box-shadow:0 16px 48px rgba(0,0,0,.45);pointer-events:none;opacity:0;visibility:hidden;transform:translateY(12px) scale(.98);transform-origin:bottom right;transition:opacity .22s ease,transform .22s ease,visibility 0s linear .22s}.withu-episode-overlay.is-open{pointer-events:auto;opacity:1;visibility:visible;transform:translateY(0) scale(1);transition-delay:0s}.withu-episode-overlay h3{margin:0 0 .55rem;color:#fff;font-size:.9rem}.withu-episode-list{display:flex;flex-direction:column;gap:.4rem}.withu-episode-list .episode-btn{width:100%;min-height:34px;text-align:left;border-color:#475569;background:#1e293b;color:#f8fafc;opacity:0;transform:translateY(7px)}.withu-episode-overlay.is-open .withu-episode-list .episode-btn{animation:withu-episode-in .24s ease forwards}.withu-episode-overlay.is-open .withu-episode-list .episode-btn:nth-child(2){animation-delay:.025s}.withu-episode-overlay.is-open .withu-episode-list .episode-btn:nth-child(3){animation-delay:.05s}.withu-episode-overlay.is-open .withu-episode-list .episode-btn:nth-child(4){animation-delay:.075s}.withu-episode-overlay.is-open .withu-episode-list .episode-btn:nth-child(5){animation-delay:.1s}.withu-episode-overlay.is-open .withu-episode-list .episode-btn:nth-child(6){animation-delay:.125s}.withu-episode-overlay.is-open .withu-episode-list .episode-btn:nth-child(7){animation-delay:.15s}.withu-episode-overlay.is-open .withu-episode-list .episode-btn:nth-child(8){animation-delay:.175s}.withu-episode-overlay.is-open .withu-episode-list .episode-btn:nth-child(9){animation-delay:.2s}.withu-episode-overlay.is-open .withu-episode-list .episode-btn:nth-child(10){animation-delay:.225s}.withu-episode-list .episode-btn.active{border-color:#ec4899;background:#4c1d3b;color:#fff}.withu-episode-select{width:100%;margin-top:.5rem;min-height:34px;border:1px solid #475569;border-radius:4px;background:#1e293b;color:#fff;padding:.25rem}.watch-choice{position:fixed;inset:0;z-index:50;display:flex;align-items:center;justify-content:center;padding:1rem;background:#0f172a80}.watch-choice[hidden]{display:none}.watch-choice-box{width:min(420px,100%);padding:1.25rem;border-radius:8px;background:#fff;box-shadow:0 20px 60px #0f172a4d}.watch-choice-actions{display:flex;gap:.6rem;flex-wrap:wrap;margin-top:1rem}.gesture-value{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);color:#fff;background:#111827cc;padding:.5rem .75rem;border-radius:6px;pointer-events:none;z-index:40}.player-hint{color:#64748b;font-size:.82rem;margin:.6rem 0}@keyframes withu-episode-in{to{opacity:1;transform:translateY(0)}}@media(max-width:980px){.player-layout{grid-template-columns:minmax(0,1fr) 320px}}@media(max-width:850px){.player-layout{grid-template-columns:1fr}.episode-panel{max-height:none}.episode-list{grid-template-columns:repeat(5,minmax(0,1fr))}}
@@ -90,10 +101,10 @@ body,button,input,select{font-family:'Inter','system-ui',-apple-system,BlinkMacS
 <style id="withu-player-overrides">
  .gesture-value{display:none}
  .gesture-value:not(:empty){display:block}
- :root{--withu-ease-out:cubic-bezier(.23,1,.32,1);--withu-ease-in-out:cubic-bezier(.77,0,.175,1);--withu-ui-fast:160ms;--withu-ui-pop:200ms;--withu-player-radius:30px;--withu-player-inner-radius:26px;--withu-player-control-radius:18px}
+ :root{--withu-ease-out:cubic-bezier(.23,1,.32,1);--withu-ease-in-out:cubic-bezier(.77,0,.175,1);--withu-ui-fast:160ms;--withu-ui-pop:200ms;--withu-player-radius:13.14px;--withu-player-inner-radius:26px;--withu-player-control-radius:18px}
  .player-container{position:relative}
  .player-container,.player-container .artplayer-app,.player-container .art-video-player{border-radius:var(--withu-player-radius)!important;overflow:hidden!important;background:#000!important;clip-path:inset(0 round var(--withu-player-radius))!important}
- .player-container .art-video,.player-container .art-video video,.player-container video{border-radius:var(--withu-player-inner-radius)!important;overflow:hidden!important}
+ .player-container .art-video,.player-container .art-video video,.player-container video{border-radius:inherit!important;overflow:hidden!important}
  .art-video-player .art-mask,.art-video-player .art-poster,.art-video-player .art-layers,.art-video-player .art-subtitle{border-radius:inherit!important;overflow:hidden!important}
  .art-video-player .art-bottom{left:.7rem!important;right:.7rem!important;bottom:.65rem!important;width:auto!important;overflow:visible!important}
  .art-video-player .art-bottom .art-progress{border-radius:999px!important;overflow:visible!important}
@@ -395,6 +406,9 @@ body,button,input,select{font-family:'Inter','system-ui',-apple-system,BlinkMacS
   @media(max-width:720px){.withu-danmaku-inline-form{width:min(210px,38vw);min-width:142px}.withu-danmaku-inline-send{padding:0 .46rem}}
   @media(max-width:640px){.withu-chat-panel{right:.35rem;bottom:calc(var(--art-control-height) + var(--art-progress-height) + var(--art-progress-top-gap) + .38rem);width:calc(100% - .7rem)}.withu-danmaku-item{max-width:72%;font-size:.78rem}}
   :root{--withu-sakura:#f5b6c8;--withu-sakura-strong:#e486a4;--withu-sakura-soft:rgba(245,182,200,.18);--withu-sakura-glow:rgba(228,134,164,.36);--withu-player-logo-bg:<?php echo e($playerLogoBgStyle); ?>}
+  /* 樱花飘落层(sakura.js 注入 z-index:60)置于页面内容(含播放器)下层；body 需先建立层叠上下文，否则负 z-index 会被 body 背景盖住导致花瓣整体不可见 */
+  body{isolation:isolate}
+  body #withu-sakura{z-index:-1}
   .art-video-player .art-control-screenshot,.art-video-player .art-control-pip,.art-video-player .art-control-fullscreenWeb,.art-video-player .art-control-fullscreen-web,.art-video-player .art-control-web-fullscreen,.art-video-player [data-name="screenshot"],.art-video-player [data-name="pip"],.art-video-player [data-name="fullscreenWeb"]{display:none!important}
   .art-video-player .art-bottom .art-controls{--withu-input-width:220px;position:relative!important;min-width:0!important;}
   .art-video-player .art-controls-right{position:static!important;display:flex!important;align-items:center!important;gap:.18rem!important;min-width:0!important;flex:0 1 auto!important}
@@ -551,6 +565,12 @@ html,body{background:
   radial-gradient(circle at 90% 18%, rgba(247,141,167,.20), transparent 34%),
   radial-gradient(circle at 55% 92%, rgba(127,191,157,.20), transparent 38%),
   #fff7fa!important;background-attachment:fixed!important;color:#263238!important}
+/* 站点级 fixed 顶栏（frontend/inc/header.php）避让，高度与 header-layout.css 三档一致 */
+body{padding-top:54px!important}
+@media(min-width:769px){body{padding-top:63px!important}}
+@media(min-width:960px){body{padding-top:70px!important}}
+/* 一起看/自己看选择弹窗需盖过站点顶栏（z-index:9999） */
+.watch-choice{z-index:10001}
 .player-shell{max-width:1600px!important;background:transparent!important;padding:1rem 1.1rem 2.2rem!important}
 .player-top{background:transparent!important;border:none!important;border-radius:0!important;box-shadow:none!important;backdrop-filter:none!important;padding:.15rem 0 .9rem!important}
 .player-top h1{color:#1f2937!important;font-size:1.32rem!important}
@@ -561,7 +581,7 @@ html,body{background:
 .player-icon-action:hover{color:#ec4899!important;transform:none!important}
 .player-status{margin:.8rem 0 1rem!important;padding:0!important;border:none!important;border-radius:0!important;background:transparent!important;color:#5b6b72!important;box-shadow:none!important}
 .player-layout{background:transparent!important;gap:1.1rem!important}
-.player-stage{background:#000!important;border:none!important;border-radius:12px!important;padding:0!important;box-shadow:0 10px 40px rgba(0,0,0,.22)!important}
+.player-stage{background:#000!important;border:none!important;border-radius:var(--withu-player-radius)!important;padding:0!important;box-shadow:0 10px 40px rgba(0,0,0,.22)!important}
 .episode-panel{background:transparent!important;border:none!important;border-radius:0!important;box-shadow:none!important;backdrop-filter:none!important;color:#263238!important}
 .episode-panel h2,.episode-panel-header h2{color:#1f2937!important;font-size:.95rem!important}
 .episode-toggle,.episode-control-group{border:none!important;background:transparent!important;color:#42545b!important;border-radius:0!important;box-shadow:none!important}
@@ -600,14 +620,57 @@ html,body{background:
 </style>
 </head>
 <body>
+<?php
+$headerPath = __DIR__ . '/../../frontend/inc/header.php';
+if (file_exists($headerPath)) {
+    include $headerPath;
+}
+?>
 <main class="player-shell">
-  <div class="player-top"><div class="player-top-search"><div class="media-search-wrap"><label class="sr-only" for="mediaSearch">搜索影片</label><span class="media-search-icon" aria-hidden="true">⌕</span><input id="mediaSearch" type="search" autocomplete="off" placeholder="搜索影片…"><div id="mediaSearchResults" class="media-search-results" hidden></div></div></div><div class="player-actions"><button id="togetherExit" class="btn btn-secondary" type="button" hidden title="退出一起看" aria-label="退出一起看">一起看</button><a class="player-icon-action" href="/watch_history.php" aria-label="观影历史"><svg aria-hidden="true" fill="none" viewBox="0 0 24 24" stroke-width="2"><path d="M12 8v5l3 2"/><path d="M3.05 11a9 9 0 1 1 2.63 6.36"/><path d="M3 17v-6h6"/></svg><span>历史</span></a><a class="player-icon-action" href="/admin/index.php" aria-label="后台设置"><svg aria-hidden="true" fill="none" viewBox="0 0 24 24" stroke-width="2"><path d="M12 15.5A3.5 3.5 0 1 0 12 8a3.5 3.5 0 0 0 0 7.5Z"/><path d="M19.4 15a1.8 1.8 0 0 0 .36 1.98l.04.04a2.1 2.1 0 0 1-2.97 2.97l-.04-.04a1.8 1.8 0 0 0-1.98-.36 1.8 1.8 0 0 0-1.1 1.66V21a2.1 2.1 0 0 1-4.2 0v-.06a1.8 1.8 0 0 0-1.1-1.66 1.8 1.8 0 0 0-1.98.36l-.04.04a2.1 2.1 0 0 1-2.97-2.97l.04-.04A1.8 1.8 0 0 0 3.8 15a1.8 1.8 0 0 0-1.66-1.1H2a2.1 2.1 0 0 1 0-4.2h.06A1.8 1.8 0 0 0 3.72 8.6a1.8 1.8 0 0 0-.36-1.98l-.04-.04a2.1 2.1 0 0 1 2.97-2.97l.04.04A1.8 1.8 0 0 0 8.3 4a1.8 1.8 0 0 0 1.1-1.66V2a2.1 2.1 0 0 1 4.2 0v.06A1.8 1.8 0 0 0 14.7 3.72a1.8 1.8 0 0 0 1.98-.36l.04-.04a2.1 2.1 0 0 1 2.97 2.97l-.04.04A1.8 1.8 0 0 0 19.28 8.3a1.8 1.8 0 0 0 1.66 1.1H21a2.1 2.1 0 0 1 0 4.2h-.06A1.8 1.8 0 0 0 19.4 15Z"/></svg><span>后台</span></a></div></div>
+  <div class="player-top"><div class="player-top-search"><div class="media-search-wrap"><label class="sr-only" for="mediaSearch">搜索影片</label><span class="media-search-icon" aria-hidden="true">⌕</span><input id="mediaSearch" type="search" autocomplete="off" placeholder="搜索影片…"><div id="mediaSearchResults" class="media-search-results" hidden></div></div></div><div class="player-actions"><button id="togetherExit" class="btn btn-secondary" type="button" hidden title="退出一起看" aria-label="退出一起看">一起看</button></div></div>
   <div id="status" class="player-status">正在读取播放器…</div>
   <div class="player-layout"><section class="player-stage"><div id="gesture" class="player-gesture"><div id="playerContainer" class="player-container"><div id="playerTopBar" class="withu-player-topbar is-solo" aria-live="polite"><span class="withu-player-topbar-left"><img class="withu-player-topbar-logo" src="<?php echo e($playerLogoUrl); ?>" alt="withU"><span id="playerTopTitle" class="withu-player-topbar-title"><?php echo e($media['series_name'] ?: $media['file_name']); ?></span></span><span id="playerTopWatch" class="withu-player-topbar-watch">一起看<span class="withu-player-topbar-heart">❤</span><span id="playerTopOnlineText">宝宝离线中</span></span><span class="withu-player-topbar-right"><span id="playerNetSpeed" class="withu-player-topbar-speed">网速 --</span><span id="playerTopTime" class="withu-player-topbar-time">--:--</span></span></div><div id="playerWatermark" class="player-watermark" aria-live="polite"><span id="watermarkMark" class="watermark-mark"><img src="<?php echo e($playerLogoUrl); ?>" alt="withU"><span class="watermark-heart" aria-hidden="true">♥</span></span><span id="watermarkOnline" class="watermark-online" hidden>宝宝在线中</span></div><div id="switchLoading" class="withu-switch-loading" hidden aria-live="polite"><div class="withu-switch-loading-box"><span class="withu-switch-loading-spinner" aria-hidden="true"></span><span id="switchLoadingText">正在切换选集…</span></div></div></div><span id="gestureValue" class="gesture-value"></span></div></section><section class="episode-panel" aria-labelledby="episodeListHeading"><div class="episode-panel-header"><h2 id="episodeListHeading">选集列表</h2><div class="episode-panel-controls"><button type="button" class="episode-toggle" data-episode-toggle="columns" aria-label="切换选集排版"><span class="episode-toggle-label">排版</span><span class="episode-toggle-option" data-episode-columns-state="2">双排</span><span class="episode-toggle-option" data-episode-columns-state="1">单排</span></button><button type="button" class="episode-toggle" data-episode-toggle="order" aria-label="切换选集排序"><span class="episode-toggle-label">排序</span><span class="episode-toggle-option" data-episode-order-state="asc">正序</span><span class="episode-toggle-option" data-episode-order-state="desc">倒序</span></button></div></div><div id="episodeListOutside" class="episode-list" data-columns="2"></div></section></div>
   <section class="media-detail<?php echo ($strmMode && !empty($strmRecommendations)) ? ' has-recommend' : ''; ?>" aria-label="影片简介"><div class="media-detail-kicker">简介</div><span class="poster-badge-wrap"<?php echo (empty($strmMeta['posterUrl'] ?? '')) ? ' style="display:none"' : ''; ?>><img id="detailPoster" class="media-detail-poster" src="<?php echo e($strmMeta['posterUrl'] ?? ''); ?>" alt=""><span id="detailResolutionBadge"></span></span><div class="media-detail-copy"><div class="media-detail-titlebar"><h2 id="detailTitle"><?php echo e($media['series_name'] ?: $media['file_name']); ?></h2><div id="detailFacts" class="media-detail-facts"></div></div><div id="detailSummary" class="media-detail-summary"><div class="media-summary-body"><?php echo e($media['summary'] ?? '正在读取评分、简介和演职员信息…'); ?></div></div></div><?php if ($strmMode && !empty($strmRecommendations)): ?><h3 class="media-detail-recommend-title">推荐视频</h3><div class="media-detail-recommend"><div class="media-detail-recommend-list"><?php foreach ($strmRecommendations as $strmRec): ?><?php $strmImg = $strmRec['poster'] !== '' ? $strmRec['poster'] : $strmRec['backdrop']; ?><a class="media-detail-recommend-item" href="/watch_play.php?source=strm&amp;id=<?php echo (int)$strmRec['id']; ?>" title="<?php echo e($strmRec['title']); ?>"><span class="mdr-poster"><?php if ($strmImg !== ''): ?><img loading="lazy" src="<?php echo e($strmImg); ?>" alt=""><?php endif; ?></span><span class="mdr-copy"><span class="mdr-title"><?php echo e($strmRec['title']); ?></span><?php if ($strmRec['year'] !== ''): ?><span class="mdr-year"><?php echo e($strmRec['year']); ?></span><?php endif; ?></span></a><?php endforeach; ?></div></div><?php endif; ?></section>
   <?php if (!$strmMode): ?><section class="recommend-panel" aria-labelledby="recommendHeading"><div class="recommend-panel-header"><div class="recommend-panel-titleline"><h2 id="recommendHeading">猜你想看</h2></div><a class="recommend-more" href="/watch.php">显示更多</a></div><div id="recommendList" class="recommend-list"></div></section><?php endif; ?>
 </main>
 <div id="choiceModal" class="watch-choice" hidden><div class="watch-choice-box"><h2>另一位正在观影</h2><p id="choiceText">检测到另一位已进入 WithU Watch。</p><div class="watch-choice-actions"><button id="chooseTogether" class="btn btn-primary">一起看</button><button id="chooseSolo" class="btn btn-secondary">自己看</button></div></div></div>
+<script>
+/* ============ 站点顶栏初始化（与首页/watch.php 一致） ============ */
+(function () {
+  // lucide 图标渲染（返回胶囊/更多按钮的 data-lucide 图标）
+  var lucideJs = document.createElement('script');
+  lucideJs.src = '/Style/toastify/lucide.min.js';
+  lucideJs.onload = function () {
+    if (window.lucide && typeof window.lucide.createIcons === 'function') {
+      try { window.lucide.createIcons(); } catch (err) {}
+    }
+  };
+  document.head.appendChild(lucideJs);
+
+  // 顶栏滚动吸顶：滚动 >72px 时天气/足迹出现、诗句淡出、返回胶囊显示（复刻首页吸顶行为）
+  var els = {
+    weather: document.getElementById('withuHeaderVisitorWeather'),
+    map: document.getElementById('withuMapOpenBtn'),
+    actions: document.querySelector('.withu-header-actions'),
+    capsule: document.querySelector('.withu-capsule-back')
+  };
+  var stuck = false;
+  function onScroll(){
+    var s = window.scrollY > 72;
+    if (s === stuck) return;
+    stuck = s;
+    var m = s ? 'add' : 'remove';
+    if (els.weather) els.weather.classList[m]('withu-weather-visible');
+    if (els.map) els.map.classList[m]('withu-weather-visible');
+    if (els.actions) els.actions.classList[m]('withu-actions-visible');
+    if (els.capsule && els.capsule.classList.contains('subpage-back-ready')) {
+      els.capsule.classList[m]('scroll-back-visible');
+    }
+  }
+  window.addEventListener('scroll', onScroll, { passive: true });
+  onScroll();
+})();
+</script>
 <script src="/assets/vendor/hls.min.js"></script>
 <script src="/assets/vendor/artplayer-5.4.0.js"></script>
 <script>
@@ -1151,5 +1214,6 @@ var touchStart=null;$('gesture').addEventListener('pointerdown',function(e){begi
  $('togetherExit').onclick=toggleTogether;$('chooseTogether').onclick=chooseTogether;$('chooseSolo').onclick=chooseSolo;$('mediaSearch').addEventListener('input',renderSearchResults);$('mediaSearch').addEventListener('focus',renderSearchResults);document.addEventListener('click',function(event){if(!event.target.closest('.media-search-wrap')){var results=$('mediaSearchResults');if(results)results.hidden=true;}});window.addEventListener('resize',function(){clearTimeout(refreshCastToggleVisibility.timer);refreshCastToggleVisibility.timer=setTimeout(function(){refreshCastToggleVisibility();},120);});document.querySelectorAll('[data-episode-columns]').forEach(function(btn){btn.onclick=function(){episodeColumns=Number(btn.getAttribute('data-episode-columns'))===1?1:2;episodeColumnsManual=true;updateEpisodeControls();};});document.querySelectorAll('[data-episode-order]').forEach(function(btn){btn.onclick=function(){episodeOrder=btn.getAttribute('data-episode-order')==='desc'?'desc':'asc';renderEpisodes();};});document.querySelectorAll('[data-episode-toggle="columns"]').forEach(function(btn){btn.onclick=function(){episodeColumns=episodeColumns===1?2:1;episodeColumnsManual=true;updateEpisodeControls();};});document.querySelectorAll('[data-episode-toggle="order"]').forEach(function(btn){btn.onclick=function(){episodeOrder=episodeOrder==='asc'?'desc':'asc';renderEpisodes();};});setInterval(updatePlayerTopTime,30000);setTogetherUi(false);updatePlayerTopBar();updateEpisodeControls();if(strmMode)loadStrmEpisodes();else loadEpisodes();
 function endTogether(){watchRequest('end_together',{room_code:code}).then(function(result){if(!result.success){setStatus(result.message||'结束一起看失败');return;}if(voiceActive)stopVoice();localOnly=true;roomJoined=false;setWatermarkOnline(false);setTogetherUi(false);if(timer)clearInterval(timer);if(heartbeatTimer)clearInterval(heartbeatTimer);heartbeatTimer=null;setStatus('已结束一起看，当前仅自己观看');});}
 </script>
+<script src="/assets/js/sakura.js"></script>
 </body>
 </html>

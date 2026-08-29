@@ -77,6 +77,13 @@ $themeInlineStyle = '';
 <link rel="stylesheet" href="/Style/vendor/qweather-icons/qweather-icons.css">
 <link rel="stylesheet" href="/Style/vendor/remixicon/remixicon.css">
 <link rel="stylesheet" href="/Style/css/header.css">
+<link rel="stylesheet" href="/Style/css/header-layout.css">
+<link rel="stylesheet" href="/Style/css/phosphor-icons.css">
+<link rel="stylesheet" href="/Style/css/phosphor-fill.css">
+<link rel="stylesheet" href="/Style/css/phosphor-regular.css">
+<link rel="stylesheet" href="/Style/css/phosphor-duotone.css">
+<!-- 头部交互所需的 WITHU_CONFIG（与 frontend/inc/config.php 一致） -->
+<script>window.WITHU_CONFIG = Object.assign(window.WITHU_CONFIG || {}, <?php echo $withuConfigJson; ?>);</script>
 <style>
 :root{
   --pink:#f78da7; --pink-soft:#ffe9ef;
@@ -93,6 +100,8 @@ html{scroll-behavior:smooth}
 html,body{margin:0;padding:0}
 body.watch-page{
   min-height:100vh;
+  /* 顶栏为 fixed 定位，内容需避让（与 header-layout.css 的 .header-wrap 高度三档一致） */
+  padding-top:54px;
   background:
     radial-gradient(circle at 12% 8%, rgba(126,200,227,.20), transparent 34%),
     radial-gradient(circle at 90% 18%, rgba(247,141,167,.20), transparent 34%),
@@ -103,19 +112,21 @@ body.watch-page{
   font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Hiragino Sans GB","Microsoft YaHei","Helvetica Neue",Arial,sans-serif;
   overflow-x:hidden;
 }
+@media(min-width:769px){body.watch-page{padding-top:63px}}
+@media(min-width:960px){body.watch-page{padding-top:70px}}
 body.watch-page a{color:inherit}
 .watch-loading{position:fixed;inset:0;z-index:200;display:flex;align-items:center;justify-content:center;gap:.6rem;background:var(--bg);color:var(--ink-soft);transition:opacity .3s,visibility .3s}
 .watch-loading.is-hidden{opacity:0;visibility:hidden;pointer-events:none}
 .watch-spinner{width:18px;height:18px;border:2px solid rgba(247,141,167,.3);border-top-color:var(--pink);border-radius:50%;animation:watch-spin .8s linear infinite}
 @keyframes watch-spin{to{transform:rotate(360deg)}}
 
-/* ===== 顶部品牌 + 搜索 ===== */
-.watch-search-bar{display:flex;justify-content:center;padding:1rem 2rem;background:rgba(255,255,255,.6)}
-.watch-search-bar .search-box{flex:1;max-width:480px;display:flex;align-items:center;gap:.5rem;padding:.5rem 1rem;border-radius:999px;background:rgba(255,255,255,.82);border:1px solid rgba(247,141,167,.22);box-shadow:0 6px 18px rgba(247,141,167,.08);transition:border-color .2s,box-shadow .2s}
-.watch-search-bar .search-box:focus-within{border-color:var(--pink);box-shadow:0 8px 24px rgba(247,141,167,.18)}
-.watch-search-bar .search-box .s-icon{color:var(--pink);font-size:.95rem}
-.watch-search-bar .search-box input{flex:1;border:0;outline:0;background:transparent;color:var(--ink);font-size:.92rem}
-.watch-search-bar .search-box input::placeholder{color:var(--ink-soft)}
+/* ===== 头部搜索（渲染于头部诗句之前，元素在 header.php 条件插槽中） ===== */
+.withu-header-search{display:flex;align-items:center;gap:.4rem;height:34px;padding:0 12px 0 11px;border-radius:999px;background:rgba(0,0,0,.04);border:1px solid transparent;transition:background .2s,border-color .2s,box-shadow .2s}
+.withu-header-search:focus-within{background:rgba(255,255,255,.9);border-color:var(--pink);box-shadow:0 8px 24px rgba(247,141,167,.18)}
+.withu-header-search .s-icon{color:var(--pink);font-size:.95rem;line-height:1}
+.withu-header-search input{width:150px;border:0;outline:0;background:transparent;color:var(--ink);font-size:.9rem;padding:0}
+.withu-header-search input::placeholder{color:var(--ink-soft)}
+@media(max-width:768px){.withu-header-search input{width:96px}}
 
 /* ===== 左侧液态玻璃导航 ===== */
 .side-nav{position:fixed;left:26px;z-index:50;display:flex;flex-direction:column;gap:.35rem;padding:.7rem;border-radius:22px;background:linear-gradient(135deg,rgba(255,255,255,.6),rgba(255,255,255,.28));backdrop-filter:blur(22px) saturate(170%);-webkit-backdrop-filter:blur(22px) saturate(170%);border:1px solid rgba(255,255,255,.72);box-shadow:inset 0 1px 0 rgba(255,255,255,.8),inset 1px 0 0 rgba(255,255,255,.4),inset -1px -1px 0 rgba(255,255,255,.2),0 22px 46px rgba(247,141,167,.18);top:50%;transform:translateY(-50%);transition:top .7s cubic-bezier(.34,1.56,.64,1),transform .7s cubic-bezier(.34,1.56,.64,1)}
@@ -195,8 +206,6 @@ body.watch-page a{color:inherit}
   .side-link .side-txt{display:none}
 }
 @media(max-width:760px){
-  .watch-search-bar{padding:.7rem 1rem}
-  .watch-search-bar .search-box{max-width:100%;width:100%}
   .header-links .hide-m{display:none}
   .grid{grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:.7rem}
   .rail .card{flex-basis:120px}
@@ -214,16 +223,13 @@ body.watch-page a{color:inherit}
 </head>
 <body class="watch-page">
 <?php
+$withuHeaderSearchBeforePoem = true; // 搜索框由 header.php 条件插槽渲染到诗句前（仅本页生效）
 $headerPath = __DIR__ . '/../../frontend/inc/header.php';
 if (file_exists($headerPath)) {
     include $headerPath;
 }
 ?>
 <div id="watchLoading" class="watch-loading"><span class="watch-spinner"></span><span>正在加载影视库</span></div>
-
-<div class="watch-search-bar">
-  <label class="search-box"><span class="s-icon">⌕</span><input id="watchSearch" placeholder="搜索媒体库"></label>
-</div>
 
 <div class="page">
   <nav class="side-nav" id="sideNav">
@@ -414,7 +420,82 @@ if (file_exists($headerPath)) {
     });
   });
   window.addEventListener('load',placeNav);
+
+  /* ============ 与首页一致的头部行为（lucide 图标 / 返回胶囊 / 更多面板 / 访客天气） ============ */
+  // jQuery 是 app.js / components.js 的依赖，先于二者加载
+  var jq = document.createElement('script');
+  jq.src = '/Style/jquery/jquery.min.js';
+  jq.onload = function () {
+    var appJs = document.createElement('script');
+    appJs.src = '/assets/js/app.js';
+    appJs.onload = function () {
+      // WithUApp 核心框架（含返回胶囊、移动端更多面板初始化），与首页一致
+      if (window.WithUApp && typeof window.WithUApp.init === 'function') {
+        try {
+          window.WithUApp.setConfig(window.WITHU_CONFIG || {});
+          window.WithUApp.init();
+        } catch (err) {}
+      }
+      var compJs = document.createElement('script');
+      compJs.src = '/assets/js/components.js';
+      compJs.onload = function () {
+        // 天气胶囊 + Logo 交互（与首页 index.php 的初始化一致）
+        if (window.WithUComponents) {
+          try { window.WithUComponents.HeaderVisitorWeather && window.WithUComponents.HeaderVisitorWeather.init(); } catch (err) {}
+          try { window.WithUComponents.LogoHomeIcon && window.WithUComponents.LogoHomeIcon.init(); } catch (err) {}
+        }
+      };
+      document.head.appendChild(compJs);
+    };
+    document.head.appendChild(appJs);
+  };
+  document.head.appendChild(jq);
+
+  // lucide 图标渲染（返回按钮/更多按钮的 data-lucide 图标）
+  var lucideJs = document.createElement('script');
+  lucideJs.src = '/Style/toastify/lucide.min.js';
+  lucideJs.onload = function () {
+    if (window.lucide && typeof window.lucide.createIcons === 'function') {
+      try { window.lucide.createIcons(); } catch (err) {}
+    }
+  };
+  document.head.appendChild(lucideJs);
+
+  /* ============ 顶栏滚动吸顶（复刻首页 components.js 的吸顶行为） ============
+     首页由导航岛吸顶触发天气/足迹出现、诗句淡出、返回胶囊显示；本页无导航岛，
+     以 72px（与 components.js 的 headerHeight 一致）作为等效触发点。 */
+  var watchHeaderEls = {
+    weather: document.getElementById('withuHeaderVisitorWeather'),
+    map: document.getElementById('withuMapOpenBtn'),
+    actions: document.querySelector('.withu-header-actions'),
+    capsule: document.querySelector('.withu-capsule-back')
+  };
+  var watchStuck = false;
+  function watchHeaderOnScroll(){
+    var stuck = window.scrollY > 72;
+    if (stuck === watchStuck) return;
+    watchStuck = stuck;
+    var method = stuck ? 'add' : 'remove';
+    if (watchHeaderEls.weather) watchHeaderEls.weather.classList[method]('withu-weather-visible');
+    if (watchHeaderEls.map) watchHeaderEls.map.classList[method]('withu-weather-visible');
+    if (watchHeaderEls.actions) watchHeaderEls.actions.classList[method]('withu-actions-visible');
+    if (watchHeaderEls.capsule && watchHeaderEls.capsule.classList.contains('subpage-back-ready')) {
+      watchHeaderEls.capsule.classList[method]('scroll-back-visible');
+    }
+  }
+  window.addEventListener('scroll', watchHeaderOnScroll, { passive: true });
+  watchHeaderOnScroll();
+
+  // 地图弹窗（足迹按钮 + 更多面板中的足迹地图）
+  // map.js 在 DOMContentLoaded 时自动绑定 withuMapOpenBtn，无需手动 init
+  var mapCss1 = document.createElement('link');
+  mapCss1.rel = 'stylesheet'; mapCss1.href = '/Style/css/map.css';
+  document.head.appendChild(mapCss1);
+  var mapJs = document.createElement('script');
+  mapJs.src = '/assets/js/map.js';
+  document.head.appendChild(mapJs);
 })();
 </script>
+<script src="/assets/js/sakura.js"></script>
 </body>
 </html>

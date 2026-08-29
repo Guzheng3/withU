@@ -1,0 +1,1409 @@
+/* ============================================================
+   header-layout.css —— 站点顶栏定位与交互样式
+   内容抽取自 frontend/index.php 的头部内联样式（与首页保持一致），
+   供 watch.php 等子页面复用。修改头部布局请同步两侧。
+   ============================================================ */
+
+/* ------------------------------------------------------------
+   顶栏基础定位条样式
+   自 Style/css/content.css / home.css / medium.css 同步
+   （首页经 index.css 的 @import 获得这些规则，子页面直接加载本文件）
+   高度用 px 固化：首页根字号响应式（≤768px 12px、其余 14px），
+   4.5rem/5rem 在首页分别渲染为 54px/63px/70px，此处直接对齐，
+   避免子页面根字号（16px）与首页不一致导致顶栏变高。
+   ------------------------------------------------------------ */
+.header-wrap {
+    width: 100%;
+    height: 54px;
+    display: flex;
+    align-items: center;
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 9999;
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    background: #ffffff9e;
+    color: #707070;
+    border-bottom: 1px solid #e5e5e5;
+}
+
+.header-wrap .header {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+    flex-wrap: nowrap;
+}
+
+.header-wrap .header .logo h1 {
+    font-size: 1.5rem;
+    font-family: 'Noto Serif SC', serif;
+    font-weight: 700;
+}
+
+@media (min-width: 769px) {
+    .header-wrap {
+        height: 63px;
+    }
+}
+
+@media (min-width: 960px) {
+    .header-wrap {
+        height: 70px;
+    }
+}
+
+.alogo {
+        color: #181818 !important;
+        text-shadow: 0 2px 4px rgb(0 0 0 / 15%);
+        font-weight: 900;
+        letter-spacing: 0.05em;
+        position: relative;
+        display: inline-block;
+        transition:
+            color 0.3s ease,
+            text-shadow 0.3s ease,
+            opacity 0.3s ease,
+            transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+        will-change: transform, opacity;
+    }
+
+/* Logo hover 首页图标 */
+    .alogo-home-icon {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%) scale(0.4);
+        width: 42px;
+        height: 42px;
+        border-radius: 50%;
+        background: #111;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #fff;
+        font-size: 20px;
+        opacity: 0;
+        pointer-events: none;
+        box-shadow: 0 4px 18px rgba(0,0,0,0.2);
+        transition:
+            opacity 0.25s ease,
+            transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1),
+            box-shadow 0.3s ease;
+    }
+
+.alogo.alogo--home-show {
+        color: transparent !important;
+        text-shadow: none !important;
+    }
+
+.alogo.alogo--home-show .alogo-home-icon {
+        opacity: 1;
+        transform: translate(-50%, -50%) scale(1);
+        pointer-events: auto;
+    }
+
+.alogo.alogo--home-press .alogo-home-icon {
+        transform: translate(-50%, -50%) scale(0.82);
+        box-shadow: 0 2px 8px rgba(0,0,0,0.25);
+        transition-duration: 0.1s, 0.1s, 0.1s;
+    }
+
+/* Logo 淡出效果 - 通过JS添加类控制 */
+    .alogo.withu-logo-faded {
+        opacity: 0.3;
+        transform: scale(0.92);
+    }
+
+/* Header 布局 - 保持原有居中，图标使用绝对定位 */
+    .header {
+        position: relative;
+    }
+
+/* 左侧纯文字 Logo - 只有文字 */
+    /* 左侧 Logo - 时尚杂志风格 */
+    .withu-header-left-avatar {
+        position: absolute;
+        left: 6%;
+        top: 50%;
+        transform: translateY(-50%) translateX(-20px) scale(0.9);
+        opacity: 0;
+        pointer-events: none;
+        z-index: 10;
+        /* 移除胶囊背景，回归纯粹 */
+        background: none;
+        backdrop-filter: none;
+        -webkit-backdrop-filter: none;
+        padding: 0;
+        border: none;
+        box-shadow: none;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        /* 只过渡 GPU 可加速属性 */
+        transition:
+            transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1),
+            opacity 0.3s ease;
+        will-change: transform, opacity;
+    }
+
+.withu-header-left-avatar:hover {
+        background: none;
+        box-shadow: none;
+        transform: translateY(-50%) translateX(-20px);
+    }
+
+    /* 大屏下增加最大边距限制 */
+    @media screen and (min-width: 1600px) {
+        .withu-header-left-avatar {
+            left: 100px;
+        }
+
+.withu-header-actions {
+            right: 52px !important;
+        }
+
+}
+
+    /* 右侧工具区域 - 地图 + 情侣头像 */
+    .withu-header-actions {
+        position: absolute;
+        right: 10%;
+        top: 50%;
+        transform: translateY(-50%) translateX(0) scale(1);
+        display: flex;
+        align-items: center;
+        gap: 13.14px;
+        opacity: 1;
+        pointer-events: auto;
+        z-index: 10;
+        /* 只过渡 GPU 可加速属性 */
+        transition:
+            transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1),
+            opacity 0.3s ease;
+        will-change: transform, opacity;
+    }
+
+/* === 情侣头像组 - 丝滑交互版 === */
+    .withu-couple-avatars-right {
+        display: flex;
+        align-items: center;
+        position: relative;
+        cursor: pointer;
+    }
+
+.withu-avatar-group {
+        display: flex;
+        align-items: center;
+        position: relative;
+        background: rgba(0, 0, 0, 0.04);
+        padding: 4px;
+        border-radius: 30px;
+        will-change: transform;
+        transition: transform 0.5s cubic-bezier(0.23, 1, 0.32, 1),
+            background 0.3s ease;
+    }
+
+.withu-avatar-group:hover {
+        background: rgba(0, 0, 0, 0.06);
+    }
+
+.withu-avatar-group img {
+        width: 36px;
+        height: 36px;
+        border-radius: 50%;
+        object-fit: cover;
+        border: 2px solid #fff;
+        position: relative;
+        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+        will-change: transform;
+        transition: transform 0.5s cubic-bezier(0.23, 1, 0.32, 1);
+    }
+
+.withu-avatar-group .avatar-male {
+        z-index: 2;
+    }
+
+.withu-avatar-group .avatar-female {
+        margin-left: -10px;
+        z-index: 1;
+    }
+
+/* 中间连接点 - 简约小圆点 */
+    .withu-right-heart {
+        position: absolute;
+        left: 50%;
+        top: 50%;
+        transform: translate(-50%, -50%);
+        width: 8px;
+        height: 8px;
+        background: linear-gradient(135deg, #ff94aa, #ea3a5d);
+        border-radius: 50%;
+        z-index: 5;
+        pointer-events: none;
+        box-shadow: 0 0 0 2px #fff, 0 2px 8px rgba(245, 158, 11, 0.4);
+        will-change: transform, opacity;
+        transition: transform 0.5s cubic-bezier(0.23, 1, 0.32, 1),
+            opacity 0.5s cubic-bezier(0.23, 1, 0.32, 1);
+    }
+
+/* === 悬停效果 - 整体放大 === */
+    .withu-couple-avatars-right:hover .withu-avatar-group {
+        transform: scale(1.08);
+    }
+
+.withu-couple-avatars-right:hover .withu-right-heart {
+        transform: translate(-50%, -50%) scale(1.2);
+    }
+
+/* 竖线分隔符 (位于 Avatar 和 图标之间) */
+    .withu-header-divider {
+        width: 1px;
+        height: 18px;
+        background: rgba(0, 0, 0, 0.1);
+    }
+
+/* 诗句 - 一行居中 (未滚动显示；吸顶后自动隐藏，让位给天气足迹) */
+    .withu-header-poem {
+        opacity: 1;
+        pointer-events: none;
+    }
+
+.withu-header-poem-line {
+        font-size: 15px;
+        line-height: 1;
+        letter-spacing: 1px;
+        color: #000;
+        font-family: 'KaiTi', 'STKaiti', 'Kaiti SC', 'Kaiti', serif;
+        white-space: nowrap;
+        user-select: none;
+    }
+
+.withu-header-actions.withu-actions-visible .withu-header-poem {
+        display: none;
+    }
+
+/* 天气足迹 - 吸顶时与 stuck-logo、导航岛一起出现 */
+    .withu-header-actions .withu-header-weather:not(.withu-weather-visible),
+    .withu-header-actions #withuMapOpenBtn:not(.withu-weather-visible) {
+        display: none !important;
+        pointer-events: none;
+    }
+
+.withu-header-actions .withu-header-weather.withu-weather-visible,
+    .withu-header-actions #withuMapOpenBtn.withu-weather-visible {
+        display: inline-flex !important;
+        pointer-events: auto;
+        animation: withu-weather-in 0.3s ease;
+    }
+
+@keyframes withu-weather-in {
+        from { opacity: 0; transform: translateY(4px); }
+
+}
+
+    /* 吸附时显示 - 通过JS添加类控制 - 灵动岛弹出效果 */
+    .withu-header-left-avatar.withu-avatar-visible,
+    .withu-header-actions.withu-actions-visible {
+        opacity: 1;
+        transform: translateY(-50%) translateX(0) scale(1);
+        pointer-events: auto;
+    }
+
+/* ── 子页面胶囊返回按钮（微信小程序风格） ── */
+    .withu-capsule-back {
+        position: absolute;
+        left: 6%;
+        top: 50%;
+        transform: translateY(-50%) translateX(-16px);
+        z-index: 10;
+        display: none;
+        align-items: center;
+        gap: 2px;
+        background: rgba(0, 0, 0, 0.04);
+        border: none;
+        border-radius: 100px;
+        padding: 3px 4px;
+        opacity: 0;
+        pointer-events: none;
+        transition: opacity 0.3s ease, transform 0.3s ease;
+    }
+
+.withu-capsule-back.subpage-back-ready {
+        display: flex;
+    }
+
+.withu-capsule-back.scroll-back-visible {
+        opacity: 1;
+        transform: translateY(-50%) translateX(0);
+        pointer-events: auto;
+    }
+
+.withu-capsule-back__btn {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 34px;
+        height: 34px;
+        border-radius: 50%;
+        color: #666;
+        text-decoration: none;
+        transition: all 0.25s ease;
+        font-size: 15px;
+    }
+
+.withu-capsule-back__btn:hover {
+        background: rgba(255, 255, 255, 0.85);
+        color: #333;
+        transform: scale(1.08);
+    }
+
+.withu-capsule-back__btn:active {
+        transform: scale(0.95);
+    }
+
+.withu-capsule-back__btn svg {
+        width: 18px;
+        height: 18px;
+    }
+
+/* 吸顶时左侧 logo 被胶囊替换的隐藏动画 */
+    .withu-header-left-avatar.withu-avatar-visible.scroll-logo-hidden {
+        opacity: 0;
+        transform: translateY(-50%) translateX(12px) scale(0.9);
+        pointer-events: none;
+    }
+
+/* 大屏下胶囊 left 限制 */
+    @media screen and (min-width: 1600px) {
+        .withu-capsule-back {
+            left: 100px;
+        }
+
+}
+
+    .withu-header-action-btn {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 34px;
+        height: 34px;
+        border-radius: 50%;
+        color: #666;
+        background: rgba(0, 0, 0, 0.04);
+        border: none;
+        text-decoration: none;
+        transition: all 0.25s ease;
+        font-size: 15px;
+    }
+
+.withu-header-action-btn:hover {
+        background: rgba(0, 0, 0, 0.08);
+        color: #333;
+        transform: scale(1.08);
+    }
+
+.withu-header-action-btn:active {
+        transform: scale(0.95);
+    }
+
+.withu-header-weather {
+        position: relative;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        height: 34px;
+        padding: 0 12px 0 6px;
+        border-radius: 999px;
+        color: #334155;
+        background: rgba(0, 0, 0, 0.04);
+        font-size: 12px;
+        line-height: 1;
+        white-space: nowrap;
+        user-select: none;
+        cursor: pointer;
+        transition: background 0.24s ease, transform 0.24s ease, box-shadow 0.24s ease;
+        outline: none;
+        -webkit-tap-highlight-color: transparent;
+    }
+
+.withu-header-weather:hover {
+        background: rgba(0, 0, 0, 0.08);
+    }
+
+.withu-header-weather:focus {
+        outline: none;
+    }
+
+.withu-header-weather:focus-visible {
+        box-shadow:
+            0 0 0 2px rgba(59, 130, 246, 0.18),
+            0 10px 24px rgba(15, 23, 42, 0.08);
+    }
+
+.withu-header-weather:active {
+        transform: scale(0.98);
+    }
+
+.withu-header-weather.is-loading .withu-header-weather-icon,
+    .withu-header-weather.is-loading .withu-header-weather-text {
+        display: none;
+    }
+
+.withu-header-weather:not(.is-loading) .withu-header-weather-loading {
+        display: none;
+    }
+
+.withu-header-weather-icon-wrap {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 24px;
+        height: 24px;
+        border-radius: 999px;
+        background: linear-gradient(180deg, rgba(255, 255, 255, 0.82), rgba(255, 255, 255, 0.58));
+        box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.92), 0 4px 10px rgba(15, 23, 42, 0.04);
+        flex-shrink: 0;
+    }
+
+.withu-header-weather-icon {
+        font-size: 14px;
+        color: #5f6672;
+    }
+
+.withu-header-weather-loading {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 18px;
+        height: 18px;
+        color: #64748b;
+    }
+
+.withu-header-weather-loading svg {
+        width: 16px;
+        height: 16px;
+        animation: withuHeaderWeatherSpin 0.9s linear infinite;
+    }
+
+.withu-header-weather-text {
+        display: inline-block;
+        max-width: 96px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        font-size: 13px;
+        font-weight: 600;
+        letter-spacing: -0.02em;
+        color: #334155;
+    }
+
+.withu-header-weather-panel {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 288px;
+        padding: 14px;
+        border-radius: 26px;
+        background:
+            linear-gradient(160deg, rgba(255, 255, 255, 0.38), rgba(247, 248, 250, 0.2) 58%, rgba(235, 241, 249, 0.26));
+        border: 1px solid rgba(255, 255, 255, 0.48);
+        box-shadow:
+            0 26px 60px rgba(15, 23, 42, 0.16),
+            0 8px 18px rgba(15, 23, 42, 0.08),
+            inset 0 1px 0 rgba(255, 255, 255, 0.72);
+        backdrop-filter: saturate(180%) blur(34px);
+        -webkit-backdrop-filter: saturate(180%) blur(34px);
+        opacity: 0;
+        visibility: hidden;
+        transform: translateY(-10px) scale(0.96);
+        pointer-events: none;
+        filter: blur(10px);
+        transform-origin: top right;
+        isolation: isolate;
+        transition: opacity 0.24s cubic-bezier(0.22, 1, 0.36, 1),
+            transform 0.24s cubic-bezier(0.22, 1, 0.36, 1),
+            filter 0.24s cubic-bezier(0.22, 1, 0.36, 1),
+            visibility 0.24s ease;
+        z-index: 10002;
+        overflow: hidden;
+    }
+
+.withu-header-weather-panel.is-open {
+        opacity: 1;
+        visibility: visible;
+        transform: translateY(0) scale(1);
+        pointer-events: auto;
+        filter: blur(0);
+    }
+
+.withu-header-weather-panel::before {
+        content: '';
+        position: absolute;
+        inset: 0;
+        background:
+            radial-gradient(circle at top left, rgba(255, 255, 255, 0.46), transparent 30%),
+            radial-gradient(circle at 86% 16%, rgba(147, 197, 253, 0.16), transparent 28%),
+            radial-gradient(circle at 18% 100%, rgba(251, 191, 153, 0.12), transparent 30%),
+            radial-gradient(circle at bottom right, rgba(255, 255, 255, 0.16), transparent 34%);
+        pointer-events: none;
+        z-index: 0;
+    }
+
+.withu-header-weather-panel::after {
+        content: '';
+        position: absolute;
+        inset: 1px;
+        border-radius: 25px;
+        background:
+            linear-gradient(135deg, rgba(255, 255, 255, 0.16), rgba(255, 255, 255, 0.04)),
+            linear-gradient(180deg, rgba(148, 163, 184, 0.08), rgba(255, 255, 255, 0));
+        pointer-events: none;
+        z-index: 0;
+    }
+
+.withu-header-weather-sheet {
+        position: relative;
+        z-index: 1;
+    }
+
+.withu-header-weather-hero {
+        display: grid;
+        grid-template-columns: 42px minmax(0, 1fr) auto;
+        align-items: center;
+        gap: 12px;
+        padding: 2px 2px 14px;
+    }
+
+.withu-header-weather-hero-icon {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 42px;
+        height: 42px;
+        border-radius: 15px;
+        background: linear-gradient(180deg, rgba(255, 255, 255, 0.34), rgba(255, 255, 255, 0.16));
+        border: 1px solid rgba(255, 255, 255, 0.34);
+        box-shadow:
+            inset 0 1px 0 rgba(255, 255, 255, 0.6),
+            0 8px 20px rgba(15, 23, 42, 0.06);
+        backdrop-filter: blur(18px) saturate(160%);
+        -webkit-backdrop-filter: blur(18px) saturate(160%);
+        flex-shrink: 0;
+    }
+
+.withu-header-weather-hero-icon i {
+        font-size: 24px;
+        background: linear-gradient(180deg, #667085 0%, #344054 100%);
+        -webkit-background-clip: text;
+        background-clip: text;
+        color: transparent;
+        -webkit-text-fill-color: transparent;
+        filter: drop-shadow(0 2px 6px rgba(255, 255, 255, 0.2));
+    }
+
+.withu-header-weather-hero-main {
+        min-width: 0;
+        padding-top: 0;
+    }
+
+.withu-header-weather-hero-title {
+        display: block;
+        margin-bottom: 4px;
+    }
+
+.withu-header-weather-hero-desc {
+        min-width: 0;
+        display: block;
+        font-size: 15px;
+        font-weight: 700;
+        color: #111827;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        letter-spacing: -0.02em;
+    }
+
+.withu-header-weather-hero-temp {
+        display: block;
+        padding-top: 0;
+        font-size: 28px;
+        line-height: 1;
+        font-weight: 700;
+        color: #0f172a;
+        letter-spacing: -0.05em;
+        text-align: right;
+        white-space: nowrap;
+        align-self: center;
+    }
+
+.withu-header-weather-hero-sub {
+        display: inline-flex;
+        align-items: center;
+        gap: 5px;
+        font-size: 12px;
+        color: #6b7280;
+        line-height: 1.2;
+    }
+
+.withu-header-weather-hero-sub i {
+        font-size: 13px;
+        color: #8896ab;
+    }
+
+.withu-header-weather-meta {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 8px;
+        margin-bottom: 10px;
+    }
+
+.withu-header-weather-meta-item {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        min-width: 0;
+        padding: 10px 12px;
+        border-radius: 18px;
+        background: linear-gradient(180deg, rgba(255, 255, 255, 0.22), rgba(255, 255, 255, 0.12));
+        border: 1px solid rgba(255, 255, 255, 0.34);
+        box-shadow:
+            inset 0 1px 0 rgba(255, 255, 255, 0.42),
+            0 8px 18px rgba(15, 23, 42, 0.04);
+        backdrop-filter: blur(14px) saturate(145%);
+        -webkit-backdrop-filter: blur(14px) saturate(145%);
+    }
+
+.withu-header-weather-meta-icon {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 28px;
+        height: 28px;
+        border-radius: 999px;
+        background: linear-gradient(180deg, rgba(255, 255, 255, 0.46), rgba(255, 255, 255, 0.2));
+        border: 1px solid rgba(255, 255, 255, 0.3);
+        color: #475569;
+        flex-shrink: 0;
+    }
+
+.withu-header-weather-meta-icon i {
+        font-size: 15px;
+    }
+
+.withu-header-weather-meta-copy {
+        min-width: 0;
+    }
+
+.withu-header-weather-meta-label {
+        display: block;
+        margin-bottom: 2px;
+        font-size: 10px;
+        color: #8b98ab;
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+    }
+
+.withu-header-weather-meta-value {
+        display: block;
+        font-size: 12px;
+        color: #162033;
+        font-weight: 600;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+.withu-header-weather-foot {
+        position: relative;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 12px;
+        margin-top: 4px;
+        padding: 10px 4px 2px;
+    }
+
+.withu-header-weather-foot::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 1px;
+        background: linear-gradient(90deg, rgba(255, 255, 255, 0), rgba(255, 255, 255, 0.72), rgba(255, 255, 255, 0));
+    }
+
+.withu-header-weather-updated {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        font-size: 12px;
+        color: rgba(86, 98, 116, 0.88);
+        min-width: 0;
+    }
+
+.withu-header-weather-updated i {
+        font-size: 13px;
+        color: rgba(112, 124, 141, 0.88);
+    }
+
+.withu-header-weather-note {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        padding: 6px 10px;
+        border-radius: 999px;
+        font-size: 11px;
+        font-weight: 600;
+        letter-spacing: 0.02em;
+        color: rgba(76, 88, 106, 0.84);
+        background: linear-gradient(180deg, rgba(255, 255, 255, 0.22), rgba(255, 255, 255, 0.1));
+        border: 1px solid rgba(255, 255, 255, 0.24);
+        box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.3);
+    }
+
+.withu-header-weather-note i {
+        font-size: 13px;
+        color: rgba(104, 116, 134, 0.86);
+    }
+
+    @media (max-width: 980px) {
+        .withu-header-weather-text {
+            max-width: 78px;
+        }
+
+        .withu-header-weather-panel {
+            width: 264px;
+        }
+    }
+
+    /* ============================================================
+       吸顶 Logo 多套风格系统 —— 自 index.php 内联样式同步，供子页面复用
+       （裸 .stuck-logo--* 选择器；首页内联同样存在，修改请同步两侧）
+       ============================================================ */
+    /* 吸顶 Logo 多套风格系统 (v5 · 14套)  */
+    /* 命名: .stuck-logo--{cn|en}-v{1~7}   */
+    /* ================================== */
+    .stuck-logo {
+        display: flex;
+        align-items: center;
+    }
+
+    /* ============================== */
+    /* cn-v1: 水墨风 · 黑色胶囊         */
+    /* Ma Shan Zheng + heart SVG      */
+    /* ============================== */
+    .stuck-logo--cn-v1 {
+        gap: 0;
+        background-color: rgba(0, 0, 0, 0.9);
+        padding: 6px 16px;
+        border-radius: 9999px;
+        height: 40px;
+        box-sizing: border-box;
+    }
+
+    .stuck-logo--cn-v1 .stuck-logo__name {
+        font-family: 'Ma Shan Zheng', cursive;
+        font-size: 20px;
+        font-weight: 700;
+        color: #fff;
+        padding: 0 4px;
+        line-height: 1;
+    }
+
+    .stuck-logo--cn-v1 .stuck-logo__heart {
+        display: flex;
+        align-items: center;
+        margin: 0 6px;
+        color: rgba(255, 255, 255, 0.8);
+        animation: stuckHeartPulse 2s ease-in-out infinite;
+    }
+
+    /* ============================== */
+    /* cn-v2: 狂野红 · 红色胶囊         */
+    /* Ma Shan Zheng + 囍 圆形          */
+    /* ============================== */
+    .stuck-logo--cn-v2 {
+        gap: 0;
+        background-color: #7f1d1d;
+        padding: 6px 16px;
+        border-radius: 9999px;
+        height: 40px;
+        box-sizing: border-box;
+    }
+
+    .stuck-logo--cn-v2 .stuck-logo__name {
+        font-family: 'Ma Shan Zheng', cursive;
+        font-size: 22px;
+        color: #fff;
+        padding: 0 4px;
+        line-height: 1;
+    }
+
+    .stuck-logo--cn-v2 .stuck-logo__xi {
+        color: #7f1d1d;
+        font-weight: bold;
+        font-size: 18px;
+        background: #fff;
+        width: 28px;
+        height: 28px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0 8px;
+        line-height: 1;
+        flex-shrink: 0;
+    }
+
+    /* ============================== */
+    /* cn-v3: 时尚宋体 · 黑色胶囊       */
+    /* Noto Serif SC + infinity SVG    */
+    /* ============================== */
+    .stuck-logo--cn-v3 {
+        gap: 0;
+        background-color: #000;
+        padding: 6px 16px;
+        border-radius: 9999px;
+        height: 40px;
+        box-sizing: border-box;
+    }
+
+    .stuck-logo--cn-v3 .stuck-logo__name {
+        font-family: 'Noto Serif SC', serif;
+        font-size: 18px;
+        font-weight: 700;
+        color: #fff;
+        padding: 0 4px;
+        line-height: 1;
+    }
+
+    .stuck-logo--cn-v3 .stuck-logo__icon {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 28px;
+        height: 28px;
+        border-radius: 50%;
+        background-color: rgba(255, 255, 255, 0.2);
+        margin: 0 8px;
+        flex-shrink: 0;
+        color: #fff;
+    }
+
+    /* ============================== */
+    /* cn-v4: 宋体渐变竖线 · 无胶囊     */
+    /* Noto Serif SC + gradient line   */
+    /* ============================== */
+    .stuck-logo--cn-v4 {
+        gap: 16px;
+    }
+
+    .stuck-logo--cn-v4 .stuck-logo__name {
+        font-family: 'Noto Serif SC', serif;
+        color: #0f172a;
+        font-weight: 700;
+        font-size: 20px;
+        letter-spacing: 0.1em;
+        line-height: 1;
+    }
+
+    .stuck-logo--cn-v4 .stuck-logo__divider {
+        width: 1px;
+        height: 20px;
+        background: linear-gradient(to bottom, transparent, #0f172a, transparent);
+        opacity: 0.8;
+        flex-shrink: 0;
+    }
+
+    /* ============================== */
+    /* cn-v5: 艺术风 · AND 副文字      */
+    /* Ma Shan Zheng + sub text       */
+    /* ============================== */
+    .stuck-logo--cn-v5 {
+        gap: 0;
+    }
+
+    .stuck-logo--cn-v5 .stuck-logo__name {
+        font-family: 'Ma Shan Zheng', cursive;
+        font-size: 24px;
+        color: #1e293b;
+        line-height: 1;
+    }
+
+    .stuck-logo--cn-v5 .stuck-logo__sub {
+        font-family: 'Noto Serif SC', serif;
+        font-size: 12px;
+        color: #64748b;
+        letter-spacing: 0.1em;
+        margin: 0 8px;
+        margin-top: 4px;
+    }
+
+    /* ============================== */
+    /* cn-v6: 角括号 · 伪元素装饰       */
+    /* Noto Serif SC + corner borders  */
+    /* ============================== */
+    .stuck-logo--cn-v6 {
+        gap: 0;
+    }
+
+    .stuck-logo--cn-v6 .stuck-logo__bracket {
+        position: relative;
+        padding: 8px 24px;
+    }
+
+    .stuck-logo--cn-v6 .stuck-logo__bracket::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 10px;
+        height: 10px;
+        border-top: 1px solid #0f172a;
+        border-left: 1px solid #0f172a;
+    }
+
+    .stuck-logo--cn-v6 .stuck-logo__bracket::after {
+        content: '';
+        position: absolute;
+        bottom: 0;
+        right: 0;
+        width: 10px;
+        height: 10px;
+        border-bottom: 1px solid #0f172a;
+        border-right: 1px solid #0f172a;
+    }
+
+    .stuck-logo--cn-v6 .stuck-logo__text {
+        font-family: 'Noto Serif SC', serif;
+        font-size: 20px;
+        font-weight: 700;
+        color: #0f172a;
+    }
+
+    /* ============================== */
+    /* cn-v7: 红线爱心 · 经典红绳       */
+    /* Noto Serif SC + red lines       */
+    /* ============================== */
+    .stuck-logo--cn-v7 {
+        gap: 0;
+    }
+
+    .stuck-logo--cn-v7 .stuck-logo__name {
+        font-family: 'Noto Serif SC', serif;
+        font-size: 18px;
+        font-weight: 700;
+        color: #1e293b;
+        padding: 0 8px;
+        line-height: 1;
+    }
+
+    .stuck-logo--cn-v7 .stuck-logo__redline-l {
+        width: 32px;
+        height: 1px;
+        background: linear-gradient(to right, transparent, #f87171);
+    }
+
+    .stuck-logo--cn-v7 .stuck-logo__redline-r {
+        width: 32px;
+        height: 1px;
+        background: linear-gradient(to left, transparent, #f87171);
+    }
+
+    .stuck-logo--cn-v7 .stuck-logo__heart {
+        color: #ef4444;
+        margin: 0 8px;
+        display: flex;
+        align-items: center;
+        animation: stuckHeartPulse 2s ease-in-out infinite;
+    }
+
+    /* ============================== */
+    /* en-v1: 优雅衬线 · 黑色胶囊       */
+    /* Playfair Display + heart SVG    */
+    /* ============================== */
+    .stuck-logo--en-v1 {
+        gap: 0;
+        background-color: rgba(0, 0, 0, 0.9);
+        padding: 6px 16px;
+        border-radius: 9999px;
+        height: 40px;
+        box-sizing: border-box;
+    }
+
+    .stuck-logo--en-v1 .stuck-logo__name {
+        font-family: 'Playfair Display', serif;
+        font-size: 18px;
+        letter-spacing: 0.1em;
+        color: #fff;
+        padding: 0 4px;
+        line-height: 1;
+    }
+
+    .stuck-logo--en-v1 .stuck-logo__heart {
+        display: flex;
+        align-items: center;
+        margin: 0 6px;
+        color: rgba(255, 255, 255, 0.8);
+        animation: stuckHeartPulse 2s ease-in-out infinite;
+    }
+
+    /* ============================== */
+    /* en-v2: 蓝灰胶囊 · 花体手写       */
+    /* Dancing Script + sparkles       */
+    /* ============================== */
+    .stuck-logo--en-v2 {
+        gap: 0;
+        background-color: #64748b;
+        padding: 6px 16px;
+        border-radius: 9999px;
+        height: 40px;
+        box-sizing: border-box;
+    }
+
+    .stuck-logo--en-v2 .stuck-logo__name {
+        font-family: 'Dancing Script', cursive;
+        font-size: 24px;
+        color: #fff;
+        padding: 0 4px;
+        line-height: 1;
+    }
+
+    .stuck-logo--en-v2 .stuck-logo__icon {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 28px;
+        height: 28px;
+        border-radius: 50%;
+        background-color: #fff;
+        color: #64748b;
+        margin: 0 8px;
+        flex-shrink: 0;
+    }
+
+    /* ============================== */
+    /* en-v3: 时尚黑 · 花体手写          */
+    /* Dancing Script + infinity       */
+    /* ============================== */
+    .stuck-logo--en-v3 {
+        gap: 0;
+        background-color: #000;
+        padding: 6px 16px;
+        border-radius: 9999px;
+        height: 40px;
+        box-sizing: border-box;
+    }
+
+    .stuck-logo--en-v3 .stuck-logo__name {
+        font-family: 'Dancing Script', cursive;
+        font-size: 26px;
+        color: #fff;
+        padding: 0 4px;
+        line-height: 1;
+    }
+
+    .stuck-logo--en-v3 .stuck-logo__icon {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 28px;
+        height: 28px;
+        border-radius: 50%;
+        background-color: rgba(255, 255, 255, 0.2);
+        color: #fff;
+        margin: 0 8px;
+        flex-shrink: 0;
+    }
+
+    /* ============================== */
+    /* en-v4: 渐变竖线 · 大写衬线       */
+    /* Crimson Pro + gradient line     */
+    /* ============================== */
+    .stuck-logo--en-v4 {
+        gap: 16px;
+    }
+
+    .stuck-logo--en-v4 .stuck-logo__name {
+        font-family: 'Crimson Pro', serif;
+        color: #0f172a;
+        font-weight: 700;
+        font-size: 20px;
+        letter-spacing: 0.05em;
+        text-transform: uppercase;
+        line-height: 1;
+    }
+
+    .stuck-logo--en-v4 .stuck-logo__divider {
+        width: 1px;
+        height: 20px;
+        background: linear-gradient(to bottom, transparent, #0f172a, transparent);
+        opacity: 0.8;
+        flex-shrink: 0;
+    }
+
+    /* ============================== */
+    /* en-v5: 经典衬线 · with 副文字    */
+    /* Libre Baskerville + sub text   */
+    /* ============================== */
+    .stuck-logo--en-v5 {
+        gap: 0;
+    }
+
+    .stuck-logo--en-v5 .stuck-logo__name {
+        font-family: 'Libre Baskerville', serif;
+        font-size: 22px;
+        font-weight: 600;
+        color: #1e293b;
+        line-height: 1;
+    }
+
+    .stuck-logo--en-v5 .stuck-logo__sub {
+        font-family: 'Inter', sans-serif;
+        font-size: 10px;
+        color: #94a3b8;
+        letter-spacing: 0.2em;
+        margin: 0 12px;
+        text-transform: uppercase;
+    }
+
+    /* ============================== */
+    /* en-v6: 角括号 · 大写衬线         */
+    /* Playfair Display + brackets    */
+    /* ============================== */
+    .stuck-logo--en-v6 {
+        gap: 0;
+    }
+
+    .stuck-logo--en-v6 .stuck-logo__bracket {
+        position: relative;
+        padding: 8px 24px;
+    }
+
+    .stuck-logo--en-v6 .stuck-logo__bracket::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 10px;
+        height: 10px;
+        border-top: 1px solid #0f172a;
+        border-left: 1px solid #0f172a;
+    }
+
+    .stuck-logo--en-v6 .stuck-logo__bracket::after {
+        content: '';
+        position: absolute;
+        bottom: 0;
+        right: 0;
+        width: 10px;
+        height: 10px;
+        border-bottom: 1px solid #0f172a;
+        border-right: 1px solid #0f172a;
+    }
+
+    .stuck-logo--en-v6 .stuck-logo__text {
+        font-family: 'Playfair Display', serif;
+        font-size: 20px;
+        letter-spacing: 0.05em;
+        color: #0f172a;
+        text-transform: uppercase;
+    }
+
+    /* ============================== */
+    /* en-v7: 红线爱心 · 花体手写       */
+    /* Dancing Script + red lines     */
+    /* ============================== */
+    .stuck-logo--en-v7 {
+        gap: 0;
+    }
+
+    .stuck-logo--en-v7 .stuck-logo__name {
+        font-family: 'Dancing Script', cursive;
+        font-size: 24px;
+        color: #1e293b;
+        padding: 0 8px;
+        line-height: 1;
+    }
+
+    .stuck-logo--en-v7 .stuck-logo__redline-l {
+        width: 18px;
+        height: 1px;
+        background: linear-gradient(to right, transparent, #f87171);
+    }
+
+    .stuck-logo--en-v7 .stuck-logo__redline-r {
+        width: 18px;
+        height: 1px;
+        background: linear-gradient(to left, transparent, #f87171);
+    }
+
+    .stuck-logo--en-v7 .stuck-logo__heart {
+        color: #ef4444;
+        margin: 0 8px;
+        display: flex;
+        align-items: center;
+        animation: stuckHeartPulse 2s ease-in-out infinite;
+    }
+
+    /* ============================== */
+    /* Solo Logo 系列（单人模式）      */
+    /* ============================== */
+
+    /* solo-cn-v1: 角括号 · 宋体（复用 cn-v6 风格） */
+    .stuck-logo--solo-cn-v1 {
+        gap: 0;
+    }
+    .stuck-logo--solo-cn-v1 .stuck-logo__bracket {
+        position: relative;
+        padding: 6px 20px;
+    }
+    .stuck-logo--solo-cn-v1 .stuck-logo__bracket::before {
+        content: '';
+        position: absolute;
+        top: 0; left: 0;
+        width: 10px; height: 10px;
+        border-top: 1px solid #0f172a;
+        border-left: 1px solid #0f172a;
+    }
+    .stuck-logo--solo-cn-v1 .stuck-logo__bracket::after {
+        content: '';
+        position: absolute;
+        bottom: 0; right: 0;
+        width: 10px; height: 10px;
+        border-bottom: 1px solid #0f172a;
+        border-right: 1px solid #0f172a;
+    }
+    .stuck-logo--solo-cn-v1 .stuck-logo__text {
+        font-family: 'Noto Serif SC', serif;
+        font-size: 18px;
+        font-weight: 700;
+        letter-spacing: 0.15em;
+        color: #0f172a;
+    }
+
+    /* solo-cn-v2: 深色胶囊 */
+    .stuck-logo--solo-cn-v2 {
+        gap: 0;
+        position: relative;
+    }
+    .stuck-logo--solo-cn-v2 .stuck-logo__name {
+        font-family: 'Noto Serif SC', serif;
+        font-size: 14px;
+        font-weight: 600;
+        color: #fff;
+        letter-spacing: 0.15em;
+        line-height: 1;
+        padding: 7px 18px 6px;
+        background: #0f172a;
+        border-radius: 20px;
+    }
+
+    /* solo-cn-v3: 书法 · 马善政 */
+    .stuck-logo--solo-cn-v3 {
+        gap: 0;
+    }
+    .stuck-logo--solo-cn-v3 .stuck-logo__name {
+        font-family: 'Ma Shan Zheng', cursive;
+        font-size: 22px;
+        font-weight: 400;
+        color: #1e293b;
+        letter-spacing: 0.08em;
+        line-height: 1;
+    }
+
+    /* solo-en-v1: Typewriter · 角括号（复用 en-v6 风格） */
+    .stuck-logo--solo-en-v1 {
+        gap: 0;
+    }
+    .stuck-logo--solo-en-v1 .stuck-logo__bracket {
+        position: relative;
+        padding: 8px 24px;
+    }
+    .stuck-logo--solo-en-v1 .stuck-logo__bracket::before {
+        content: '';
+        position: absolute;
+        top: 0; left: 0;
+        width: 10px; height: 10px;
+        border-top: 1px solid #0f172a;
+        border-left: 1px solid #0f172a;
+    }
+    .stuck-logo--solo-en-v1 .stuck-logo__bracket::after {
+        content: '';
+        position: absolute;
+        bottom: 0; right: 0;
+        width: 10px; height: 10px;
+        border-bottom: 1px solid #0f172a;
+        border-right: 1px solid #0f172a;
+    }
+    .stuck-logo--solo-en-v1 .stuck-logo__text {
+        font-family: 'Playfair Display', serif;
+        font-size: 20px;
+        letter-spacing: 0.05em;
+        color: #0f172a;
+        text-transform: uppercase;
+    }
+
+    /* solo-en-v2: Signature · 花体手写 */
+    .stuck-logo--solo-en-v2 {
+        position: relative;
+    }
+    .stuck-logo--solo-en-v2 .stuck-logo__name {
+        font-family: 'Dancing Script', cursive;
+        font-size: 24px;
+        font-weight: 700;
+        color: #1e293b;
+        line-height: 1;
+    }
+    .stuck-logo--solo-en-v2::after {
+        content: '';
+        position: absolute;
+        bottom: -3px;
+        left: 10%;
+        right: 10%;
+        height: 1px;
+        background: linear-gradient(90deg, transparent, #94a3b8, transparent);
+    }
+
+    /* solo-en-v3: Minimal Serif · 大写衬线+两侧线条 */
+    .stuck-logo--solo-en-v3 {
+        gap: 13.14px;
+    }
+    .stuck-logo--solo-en-v3 .stuck-logo__divider {
+        width: 28px;
+        height: 0.5px;
+        background: linear-gradient(90deg, transparent, #94a3b8 40%, #94a3b8 60%, transparent);
+        flex-shrink: 0;
+    }
+    .stuck-logo--solo-en-v3 .stuck-logo__name {
+        font-family: 'Crimson Pro', 'Libre Baskerville', Georgia, serif;
+        font-size: 16px;
+        font-weight: 600;
+        color: #0f172a;
+        text-transform: uppercase;
+        letter-spacing: 0.18em;
+        line-height: 1;
+    }
+
+    /* --- 兜底默认 --- */
+    .stuck-logo--default .stuck-logo__text {
+        font-family: 'Inter', sans-serif;
+        font-weight: 500;
+        font-size: 16px;
+        color: #333;
+        letter-spacing: 0.03em;
+    }
+
+    /* 爱心微呼吸动画 */
+    @keyframes stuckHeartPulse {
+
+        0%,
+        100% {
+            transform: scale(1);
+        }
+
+        50% {
+            transform: scale(1.15);
+        }
+    }

@@ -1,43 +1,18 @@
 <div class="header-wrap">
     <div class="header">
-        <!-- 吸顶 Logo（模板渲染：根据 $stuckLogoStyle 只输出选中的一套） -->
-                <div class="withu-capsule-back">
-            <a href="javascript:void(0);" class="withu-capsule-back__btn withu-capsule-back__prev" title="返回">
-                <i data-lucide="chevron-left"></i>
-            </a>
-            <a href="/index.php" class="withu-capsule-back__btn withu-capsule-back__home" title="首页">
-                <i data-lucide="house"></i>
-            </a>
-        </div>
         <div class="logo" style="margin-right:auto;margin-left:3%">
                         <h1><a class="alogo" href="index.php" title="withU" style="display:inline-flex;align-items:center;gap:4px"><img src="assets/images/withu-logo.png" alt="withU" style="height:2.2rem;width:auto;object-fit:contain;vertical-align:middle"></a></h1>
         </div>
-        <!-- 吸顶时显示的右侧区域: 地图 + 情侣头像 -->
+        <!-- 吸顶时显示的右侧区域: 情侣头像 + 功能入口 -->
         <div class="withu-header-actions" id="withuHeaderActions">
                             
+            <?php if (!empty($withuHeaderSearchBeforePoem)): ?>
+            <label class="search-box withu-header-search"><span class="s-icon">⌕</span><input id="watchSearch" placeholder="搜索媒体库"></label>
+            <?php endif; ?>
             <div class="withu-header-poem" id="withuHeaderPoem" aria-hidden="true">
                         <span class="withu-header-poem-line">树是梧桐树，城是南京城，一句梧桐美，种满南京城</span>
                     </div>
-<div class="withu-header-weather is-loading" id="withuHeaderVisitorWeather" title="点击查看当前天气信息" role="button" tabindex="0" aria-expanded="false">
-                    <span class="withu-header-weather-loading" id="withuHeaderVisitorWeatherLoading" aria-label="天气加载中">
-                        <i data-lucide="loader-circle"></i>
-                    </span>
-                    <span class="withu-header-weather-icon-wrap">
-                        <i class="qi-999-fill withu-header-weather-icon" id="withuHeaderVisitorWeatherIcon"></i>
-                    </span>
-                    <span class="withu-header-weather-text" id="withuHeaderVisitorWeatherText"></span>
-                </div>
-            
-                            <a href="javascript:void(0);" class="withu-header-map" id="withuMapOpenBtn" title="足迹地图">
-                    <span class="withu-header-map-icon-wrap">
-                        <i class="ph-fill ph-globe-hemisphere-west"></i>
-                    </span>
-                    <span class="withu-header-map-text">足迹</span>
-                </a>
-
-                <div class="withu-header-divider"></div>
-            
-            <div class="withu-couple-avatars-right">
+<div class="withu-couple-avatars-right">
                 <div class="withu-avatar-group">
                     <img src="<?php echo htmlspecialchars($girlAvatar ?? '/assets/images/default-avatar.svg', ENT_QUOTES, 'UTF-8'); ?>"
                         class="avatar-male" alt="She">
@@ -99,22 +74,8 @@
                     </div>
                         </div>
 
-        <!-- 功能入口：天气、地图 -->
+        <!-- 功能入口 -->
         <div class="withu-header-more-actions">
-                        <a href="javascript:void(0);" class="withu-header-more-action-item" id="withuMorePanelWeather" data-close-panel>
-                <span class="withu-header-more-action-icon">
-                    <i class="qi-999-fill" id="withuMorePanelWeatherIcon"></i>
-                </span>
-                <span class="withu-header-more-action-label" id="withuMorePanelWeatherText">天气</span>
-            </a>
-            
-                        <a href="javascript:void(0);" class="withu-header-more-action-item" id="withuMorePanelMap" data-close-panel>
-                <span class="withu-header-more-action-icon">
-                    <i class="ph-fill ph-globe-hemisphere-west"></i>
-                </span>
-                <span class="withu-header-more-action-label">足迹地图</span>
-            </a>
-
                         <?php if ($loggedIn): ?>
                         <a href="/watch.php" class="withu-header-more-action-item">
                 <span class="withu-header-more-action-icon">
@@ -160,22 +121,8 @@
                     </div>
                         </div>
 
-        <!-- 功能入口：天气、地图 -->
+        <!-- 功能入口 -->
         <div class="withu-header-more-actions">
-                        <a href="javascript:void(0);" class="withu-header-more-action-item" id="withuMorePanelWeather" data-close-panel>
-                <span class="withu-header-more-action-icon">
-                    <i class="qi-999-fill" id="withuMorePanelWeatherIcon"></i>
-                </span>
-                <span class="withu-header-more-action-label" id="withuMorePanelWeatherText">天气</span>
-            </a>
-            
-                        <a href="javascript:void(0);" class="withu-header-more-action-item" id="withuMorePanelMap" data-close-panel>
-                <span class="withu-header-more-action-icon">
-                    <i class="ph-fill ph-globe-hemisphere-west"></i>
-                </span>
-                <span class="withu-header-more-action-label">足迹地图</span>
-            </a>
-
                         <?php if ($loggedIn): ?>
                         <a href="/watch.php" class="withu-header-more-action-item">
                 <span class="withu-header-more-action-icon">

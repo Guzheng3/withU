@@ -46,7 +46,7 @@ body.admin-v3 {
     --v3-radius-xs: 6px;
 
     --v3-sidebar-w: 248px;
-    --v3-topbar-h: 60px;
+    --v3-topbar-h: 54px;
     --v3-content-max: 1440px;
 
     --v3-ease: cubic-bezier(0.22, 1, 0.36, 1);
@@ -86,19 +86,27 @@ body.admin-v3 .admin-main {
     background: transparent;
 }
 
-/* ============ 顶栏（液态玻璃） ============ */
+/* ============ 顶栏（液态玻璃，与前台 header 外壳对齐） ============ */
 body.admin-v3 .admin-appbar {
     position: sticky;
     top: 0;
     z-index: 20;
     height: var(--v3-topbar-h);
-    background: rgba(255, 255, 255, 0.68);
-    backdrop-filter: blur(20px) saturate(160%);
-    -webkit-backdrop-filter: blur(20px) saturate(160%);
-    border-bottom: 1px solid var(--v3-glass-border);
+    background: rgba(255, 255, 255, 0.62);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border-bottom: 1px solid #e5e5e5;
     box-shadow: 0 1px 0 rgba(255, 255, 255, 0.5);
     display: flex;
     align-items: center;
+}
+
+/* 顶栏高度三档：与前台 header-layout.css 的 54/63/70px 一致 */
+@media (min-width: 769px) {
+    body.admin-v3 { --v3-topbar-h: 63px; }
+}
+@media (min-width: 960px) {
+    body.admin-v3 { --v3-topbar-h: 70px; }
 }
 
 body.admin-v3 .admin-appbar-inner {
@@ -162,8 +170,8 @@ body.admin-v3 .admin-logo {
 
 body.admin-v3 .admin-logo-image {
     display: block;
-    width: 88px;
-    height: 48px;
+    width: auto;
+    height: 2.2rem;
     object-fit: contain;
     object-position: center;
 }
@@ -1173,7 +1181,7 @@ body.admin-v3 .admin-main > *:nth-child(5) { animation-delay: 0.22s; }
     body.admin-v3 .admin-appbar-actions { gap: 0.3rem; }
     body.admin-v3 .admin-user-avatar { width: 30px; height: 30px; }
     body.admin-v3 .admin-main { padding: 0.9rem 0.8rem 5.5rem; }
-    body.admin-v3 .admin-logo-image { width: 72px; height: 42px; }
+    body.admin-v3 .admin-logo-image { width: auto; height: 1.9rem; }
     body.admin-v3 .admin-page-title h1 { font-size: 1.2rem; }
 
     body.admin-v3 .admin-dashboard-stats {
