@@ -868,6 +868,7 @@ function parseWatchEventPayload(event){try{var outer=JSON.parse(event.payload||'
 
     return mediaPlayer.switchUrl(result.url).then(function(){
      if(switchId!==mediaSwitchSerial)return;
+     strmLoadedResumeKey=currentResumeKey();
      player=mediaPlayer.video;
      bindPlayerEvents(player);
      mountWatermark();
@@ -1211,6 +1212,7 @@ function sendHeartbeat(){if(localOnly||!roomJoined||!code)return;watchRequest('h
    if(desktopMpvActive){desktopMpvState.paused=true;desktopCommand('pause');}else player.pause();
   }
  }
+var strmLoadedResumeKey=''; // 最近一次实际加载成功的选集键（switchUrl 完成时更新）
 function selectMedia(id){id=Number(id);if(!Number.isFinite(id)||id<=0)return;if(mediaSwitchBusy)return;
   if(strmMode){
     var st=mediaItems.find(function(x){return Number(x.id)===id;})||currentEpisodes.find(function(x){return Number(x.id)===id;});
@@ -1218,7 +1220,7 @@ function selectMedia(id){id=Number(id);if(!Number.isFinite(id)||id<=0)return;if(
     var stName=st.episode_number?('第 '+st.episode_number+' 集'):(st.file_name||st.series_name||'');
     var stEp=Number(st.strmEpisodeId||0);
     var clickedKey='strm:'+Number(st.strmMediaId||0)+':'+stEp;
-    if(clickedKey===currentResumeKey())return;
+    if(clickedKey===strmLoadedResumeKey)return; // 仅当该集已实际加载播放时忽略重复点击
     pendingMediaId=id;loadedMediaId=null;renderEpisodes();updatePlayerTopBar();
     setSwitchLoading(true,'正在切换到 '+stName+'…');stopCurrentPlaybackForSwitch();
     setStatus('正在读取选集…');
