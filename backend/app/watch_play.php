@@ -875,8 +875,8 @@ function parseWatchEventPayload(event){try{var outer=JSON.parse(event.payload||'
      mountNetSpeed();
      var clearSwitchLoading=function(){if(switchId===mediaSwitchSerial)setSwitchLoading(false);};
      if(player){
-      player.addEventListener('loadedmetadata',clearSwitchLoading,{once:true});
-      player.addEventListener('canplay',clearSwitchLoading,{once:true});
+      if(player.readyState>=2){clearSwitchLoading();}
+      else{player.addEventListener('loadedmetadata',clearSwitchLoading,{once:true});player.addEventListener('canplay',clearSwitchLoading,{once:true});}
       if((!roomJoined||localOnly)&&playerDefaultSpeed){var defaultSpeed=Number(playerDefaultSpeed)||1;if(Math.abs(Number(player.playbackRate||1)-defaultSpeed)>.01){beginRemoteApply(800);player.playbackRate=defaultSpeed;}}
       if(position>0&&Number.isFinite(position))player.currentTime=position;
       if(shouldAutoplay){if(announceAutoplay)localAutoplayPendingUntil=Date.now()+3000;Promise.resolve(player.play()).then(function(){if(announceAutoplay)setTimeout(function(){if(switchId===mediaSwitchSerial&&!localOnly&&roomJoined&&!player.paused)sendEvent('play');},2400);}).catch(function(){if(announceAutoplay)localAutoplayPendingUntil=0;});}
@@ -1217,6 +1217,8 @@ function selectMedia(id){id=Number(id);if(!Number.isFinite(id)||id<=0)return;if(
      if(!st){window.location.href='/watch_play.php?source=strm&id='+encodeURIComponent(id);return;}
     var stName=st.episode_number?('第 '+st.episode_number+' 集'):(st.file_name||st.series_name||'');
     var stEp=Number(st.strmEpisodeId||0);
+    var clickedKey='strm:'+Number(st.strmMediaId||0)+':'+stEp;
+    if(clickedKey===currentResumeKey())return;
     pendingMediaId=id;loadedMediaId=null;renderEpisodes();updatePlayerTopBar();
     setSwitchLoading(true,'正在切换到 '+stName+'…');stopCurrentPlaybackForSwitch();
     setStatus('正在读取选集…');
