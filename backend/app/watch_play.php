@@ -250,7 +250,7 @@ body,button,input,select{font-family:'Inter','system-ui',-apple-system,BlinkMacS
   .withu-switch-loading{position:absolute;inset:0;z-index:10040;display:flex;align-items:center;justify-content:center;background:rgba(0,0,0,.46);pointer-events:auto}
   .withu-switch-loading[hidden]{display:none}
   .withu-switch-loading-box{display:flex;flex-direction:column;align-items:center;gap:.55rem;padding:1rem 1.2rem;border:1px solid rgba(255,255,255,.28);border-radius:22px;background:rgba(15,23,42,.78);box-shadow:0 12px 32px rgba(0,0,0,.3);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);color:#fff;font-size:.82rem;font-weight:700}
-  .withu-switch-loading-gif{width:132px;height:132px;object-fit:contain;display:block;mix-blend-mode:screen}
+  .withu-switch-loading-gif{width:132px;height:132px;object-fit:contain;display:block}
   @keyframes withu-switch-spin{to{transform:rotate(360deg)}}
   .player-container .art-video-player{position:relative}
   .player-container .player-watermark{position:absolute;left:.8rem;top:.75rem;z-index:10050;display:flex;align-items:center;gap:.45rem;pointer-events:none;opacity:1;visibility:visible;transform:translateZ(0)}
