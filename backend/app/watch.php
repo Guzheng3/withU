@@ -30,10 +30,18 @@ $historyRows = $db->fetchAll(
     ['min_ms' => $historyMinMs]
 );
 $recentRows = [];
+$strmHistoryIds = [];
+foreach ($historyRows as $historyRow) {
+    if ((string)($historyRow['history_source'] ?? 'library') !== 'strm') continue;
+    $id = (int)$historyRow['media_id'];
+    if ($id > 0) $strmHistoryIds[$id] = true;
+}
+// 详情接口单次可达 1~3s，串行逐条请求会拖慢整页（N+1）；改为并行批量 + 缓存
+$strmMetaMap = withu_strm_media_fetch_multi(array_keys($strmHistoryIds));
 foreach ($historyRows as $historyRow) {
     $mediaId = (int)$historyRow['media_id'];
     if ((string)($historyRow['history_source'] ?? 'library') !== 'strm') continue;
-    $meta = withu_strm_media_fetch($mediaId);
+    $meta = $strmMetaMap[$mediaId] ?? null;
     if (!$meta) continue;
     $episodeId = (int)($historyRow['history_source_episode'] ?? 0);
     $episode = null;
@@ -121,10 +129,10 @@ body.watch-page a{color:inherit}
 @keyframes watch-spin{to{transform:rotate(360deg)}}
 
 /* ===== 头部搜索（渲染于头部诗句之前，元素在 header.php 条件插槽中） ===== */
-.withu-header-search{display:flex;align-items:center;gap:.4rem;height:34px;padding:0 12px 0 11px;border-radius:999px;background:rgba(0,0,0,.04);border:1px solid transparent;transition:background .2s,border-color .2s,box-shadow .2s}
+.withu-header-search{display:flex;align-items:center;gap:.4rem;height:42px;padding:0 12px 0 11px;border-radius:999px;background:rgba(0,0,0,.04);border:1px solid transparent;transition:background .2s,border-color .2s,box-shadow .2s}
 .withu-header-search:focus-within{background:rgba(255,255,255,.9);border-color:var(--pink);box-shadow:0 8px 24px rgba(247,141,167,.18)}
-.withu-header-search .s-icon{color:var(--pink);font-size:.95rem;line-height:1}
-.withu-header-search input{width:150px;border:0;outline:0;background:transparent;color:var(--ink);font-size:.9rem;padding:0}
+.withu-header-search .s-icon{color:var(--pink);font-size:1.1rem;line-height:1}
+.withu-header-search input{width:290px;border:0;outline:0;background:transparent;color:var(--ink);font-size:.9rem;padding:0}
 .withu-header-search input::placeholder{color:var(--ink-soft)}
 @media(max-width:768px){.withu-header-search input{width:96px}}
 
@@ -188,10 +196,12 @@ body.watch-page a{color:inherit}
  .rail .cont-badge{position:absolute;right:.55rem;bottom:.55rem;z-index:2;padding:.16rem .5rem;border-radius:999px;font-size:.66rem;font-weight:700;color:#fff;background:rgba(61,48,56,.55);backdrop-filter:blur(6px);transform:translateX(8px);opacity:0;transition:opacity .25s,transform .25s}
  .rail .card:hover .cont-badge{opacity:1;transform:none}
  .rail .last-episode-badge{position:absolute;left:.55rem;bottom:2.1rem;z-index:2;padding:.16rem .5rem;border-radius:999px;font-size:.64rem;font-weight:700;color:#fff;background:rgba(61,48,56,.55);backdrop-filter:blur(6px)}
-.rail-arrow{position:absolute;top:38%;z-index:3;width:38px;height:38px;border-radius:50%;border:1px solid rgba(247,141,167,.35);background:rgba(255,255,255,.85);color:var(--pink);font-size:1.1rem;cursor:pointer;box-shadow:0 8px 20px rgba(247,141,167,.25);display:flex;align-items:center;justify-content:center;transition:background .2s,transform .2s}
+.rail-arrow{position:absolute;top:38%;z-index:3;width:38px;height:38px;border-radius:50%;border:1px solid rgba(247,141,167,.35);background:rgba(255,255,255,.85);color:var(--pink);font-size:1.1rem;cursor:pointer;box-shadow:0 8px 20px rgba(247,141,167,.25);display:flex;align-items:center;justify-content:center;transition:background .2s,transform .2s,opacity .25s,visibility .25s}
 .rail-arrow:hover{background:#fff;transform:scale(1.08)}
 .rail-arrow.prev{left:-8px}
 .rail-arrow.next{right:-8px}
+/* 箭头仅在轨道内容溢出（显示不下）且对应方向还有可滚动内容时可见 */
+.rail-arrow.is-off{opacity:0;visibility:hidden;pointer-events:none}
 
 /* ===== 空态 ===== */
 .empty{padding:2.2rem 1rem;border:1.5px dashed rgba(247,141,167,.4);border-radius:16px;color:var(--ink-soft);text-align:center;font-size:.9rem;background:rgba(255,255,255,.5)}
@@ -228,6 +238,7 @@ body.watch-page a{color:inherit}
 <?php
 $withuHeaderSearchBeforePoem = true; // 搜索框由 header.php 条件插槽渲染到诗句前（仅本页生效）
 $withuHeaderHideWeatherFootprint = true; // 本页不显示头部天气胶囊与足迹入口（header.php 条件渲染）
+$withuHeaderMediaEntryHistory = true; // 本页头部媒体入口切换为观看历史（header.php 条件渲染）
 $headerPath = __DIR__ . '/../../frontend/inc/header.php';
 if (file_exists($headerPath)) {
     include $headerPath;
@@ -243,7 +254,7 @@ if (file_exists($headerPath)) {
 
   <div class="main-col">
     <section class="section" id="recent" style="--sec-accent:var(--pink);--sec-soft:var(--pink-soft)">
-      <div class="section-head"><span class="sec-accent"></span><h2>最近播放</h2><span class="sec-note">继续上次的进度</span><a class="sec-more" href="/watch_history.php">全部历史 ›</a></div>
+      <div class="section-head"><span class="sec-accent"></span><h2>最近播放</h2><a class="sec-more" href="/watch_history.php">全部历史 ›</a></div>
       <?php if (empty($recentGroups)): ?>
         <div class="empty">还没有达到记录条件的观看历史，去看一部片吧。</div>
       <?php else: ?>
@@ -268,8 +279,6 @@ if (file_exists($headerPath)) {
     <section class="section" id="strm" style="--sec-accent:#a78bfa;--sec-soft:rgba(167,139,250,.15)">
       <div class="section-head">
          <span class="sec-accent"></span><h2>媒体库</h2>
-         <span class="sec-note">点击卡片进入一起看</span>
-        <a class="sec-more" href="/admin/strm_home.php" target="_blank">后台管理 ›</a>
       </div>
       <div class="strm-group">
         <h3 class="strm-group-title">电影</h3>
@@ -397,12 +406,23 @@ if (file_exists($headerPath)) {
     document.querySelectorAll('.section').forEach(function(s){ spy.observe(s); });
   }
 
-  /* ============ 轨道滚动 ============ */
+  /* ============ 轨道滚动（左右箭头仅在内容显示不下时出现） ============ */
   document.querySelectorAll('.rail-wrap').forEach(function(wrap){
     var rail=wrap.querySelector('.rail');
+    if(!rail) return;
     var prev=wrap.querySelector('.rail-arrow.prev'), next=wrap.querySelector('.rail-arrow.next');
+    function updateArrows(){
+      var maxScroll=rail.scrollWidth-rail.clientWidth;
+      var canScroll=maxScroll>1;
+      if(prev) prev.classList.toggle('is-off', !(canScroll && rail.scrollLeft>1));
+      if(next) next.classList.toggle('is-off', !(canScroll && rail.scrollLeft<maxScroll-1));
+    }
     if(prev) prev.addEventListener('click',function(){ rail.scrollBy({left:-600,behavior:'smooth'}); });
     if(next) next.addEventListener('click',function(){ rail.scrollBy({left:600,behavior:'smooth'}); });
+    rail.addEventListener('scroll',updateArrows,{passive:true});
+    window.addEventListener('resize',updateArrows);
+    window.addEventListener('load',updateArrows);
+    updateArrows();
   });
 
   /* ============ 图片错误 fallback ============ */
