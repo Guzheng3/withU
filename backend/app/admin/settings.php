@@ -197,6 +197,14 @@ $adminPage = 'settings';
 
 include __DIR__ . '/header.php';
 ?>
+<style>
+/* 滚动条统一为前台首页同款细滑块 */
+::-webkit-scrollbar{width:6px;height:6px}
+::-webkit-scrollbar-track{background:rgba(135,135,135,.1)}
+::-webkit-scrollbar-thumb{background:rgba(135,135,135,.4);border-radius:10px}
+::-webkit-scrollbar-thumb:hover{background:#727272}
+::-webkit-scrollbar-corner{background:unset}
+</style>
 
     <section class="admin-page-title">
         <h1>系统设置</h1>

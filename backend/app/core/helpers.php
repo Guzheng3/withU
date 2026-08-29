@@ -1172,7 +1172,7 @@ function migrate_schema_if_needed(): void {
 
     // Avoid rerunning dozens of SHOW/ALTER/CREATE statements on every PHP
     // request, including each high-frequency watch poll.
-    $schemaVersion = '20260721-02';
+    $schemaVersion = '20260829-01';
     $runtimeDir = dirname(ROOT_PATH) . DIRECTORY_SEPARATOR . 'runtime';
     $markerPath = $runtimeDir . DIRECTORY_SEPARATOR . 'schema-version';
     $lockPath = $runtimeDir . DIRECTORY_SEPARATOR . 'schema-migration.lock';
@@ -1194,6 +1194,22 @@ function migrate_schema_if_needed(): void {
     $migrationSucceeded = false;
     try {
         $db = Database::getInstance();
+
+        // 为 users 表新增 gender 字段（若不存在），并按角色约定回填存量数据（user1=男，user2=女）
+        try {
+            $db->query("
+                ALTER TABLE `users`
+                ADD COLUMN `gender` enum('male','female') DEFAULT NULL COMMENT '性别：male=男，female=女（第一账号注册时选择，受邀方自动相反）'
+            ");
+        } catch (Throwable $e) {
+            // 字段已存在或数据库不支持该写法时忽略
+        }
+        try {
+            $db->query("UPDATE `users` SET `gender` = 'male' WHERE `role` = 'user1' AND `gender` IS NULL");
+            $db->query("UPDATE `users` SET `gender` = 'female' WHERE `role` = 'user2' AND `gender` IS NULL");
+        } catch (Throwable $e) {
+            // 回填失败时忽略，注册/展示逻辑会按角色约定兜底
+        }
 
         // 为 articles 表新增 edit_mode 字段（若不存在）
         try {

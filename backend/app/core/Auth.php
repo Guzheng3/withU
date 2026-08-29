@@ -221,7 +221,7 @@ class Auth
     /**
      * 用户注册
      */
-    public function register(string $username, string $password, string $nickname, string $role = 'user1'): array
+    public function register(string $username, string $password, string $nickname, string $role = 'user1', ?string $gender = null): array
     {
         // 基础输入校验：长度与字符集限制
         $username = trim($username);
@@ -250,6 +250,16 @@ class Auth
         // 角色仅允许 user1 / user2
         if (!in_array($role, ['user1', 'user2'], true)) {
             return ['success' => false, 'message' => '角色不合法'];
+        }
+
+        // 性别：显式传入时仅允许 male / female；未传入时按角色约定推导（user1=男，user2=女）
+        if ($gender !== null) {
+            $gender = trim((string) $gender);
+            if (!in_array($gender, ['male', 'female'], true)) {
+                return ['success' => false, 'message' => '性别不合法'];
+            }
+        } else {
+            $gender = $role === 'user2' ? 'female' : 'male';
         }
 
         // 限制最多只能有两位活跃用户（情侣两人）
@@ -288,6 +298,7 @@ class Auth
             'password'   => password_hash($password, PASSWORD_DEFAULT),
             'nickname'   => $nickname,
             'role'       => $role,
+            'gender'     => $gender,
             'avatar'     => '/assets/images/default-avatar.svg',
             'status'     => 'active',
             'created_at' => date('Y-m-d H:i:s')

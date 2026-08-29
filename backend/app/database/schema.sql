@@ -7,6 +7,7 @@ CREATE TABLE IF NOT EXISTS `users` (
   `password` varchar(255) NOT NULL COMMENT '密码（加密后）',
   `nickname` varchar(50) NOT NULL COMMENT '昵称',
   `role` enum('user1','user2','admin') NOT NULL DEFAULT 'user1' COMMENT '角色',
+  `gender` enum('male','female') DEFAULT NULL COMMENT '性别：male=男，female=女（第一账号注册时选择，受邀方自动相反）',
   `qq` varchar(32) DEFAULT NULL COMMENT 'QQ 号',
   `avatar` varchar(255) DEFAULT NULL COMMENT '头像地址',
   `avatar_source` varchar(20) DEFAULT 'upload' COMMENT '头像来源',

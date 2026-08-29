@@ -88,14 +88,40 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $username = trim($_POST['username'] ?? '');
                 $password = (string) ($_POST['password'] ?? '');
                 $nickname = trim($_POST['nickname'] ?? '');
-                $role     = $activeUserCount === 0 ? 'user1' : 'user2';
 
                 if ($activeUserCount === 1 && !$inviteRow) {
                     $error = '邀请链接无效或已过期';
                 }
 
+                $gender = '';
+                $role   = '';
                 if (!$error) {
-                    $result = $auth->register($username, $password, $nickname, $role);
+                    migrate_schema_if_needed();
+                    if ($activeUserCount === 0) {
+                        // 第一个账号：注册时必须选择性别，性别决定角色槽位（男=user1，女=user2）
+                        $gender = trim((string) ($_POST['gender'] ?? ''));
+                        if (!in_array($gender, ['male', 'female'], true)) {
+                            $error = '请选择性别';
+                        } else {
+                            $role = $gender === 'male' ? 'user1' : 'user2';
+                        }
+                    } else {
+                        // 受邀注册的第二个账号：性别自动设为对方的相反性别，不可修改
+                        $inviter = $db->fetch(
+                            "SELECT role, gender FROM users WHERE id = ? AND status = 'active'",
+                            [(int)($inviteRow['inviter_id'] ?? 0)]
+                        );
+                        $inviterRole   = ($inviter['role'] ?? '') === 'user2' ? 'user2' : 'user1';
+                        $inviterGender = in_array(($inviter['gender'] ?? ''), ['male', 'female'], true)
+                            ? $inviter['gender']
+                            : ($inviterRole === 'user2' ? 'female' : 'male');
+                        $gender = $inviterGender === 'male' ? 'female' : 'male';
+                        $role   = $inviterRole === 'user1' ? 'user2' : 'user1';
+                    }
+                }
+
+                if (!$error) {
+                    $result = $auth->register($username, $password, $nickname, $role, $gender);
                     if (!empty($result['success'])) {
                         if ($activeUserCount === 1 && $inviteRow) {
                             try {
@@ -246,28 +272,28 @@ body{background:linear-gradient(135deg,#ffeef5 0%,#f4f6fb 60%,#eef2ff 100%);
       </div>
       <?php endif; ?>
       <div class="form-group">
-        <label><i class="fas fa-user-friends"></i> 角色</label>
+        <label><i class="fas fa-user-friends"></i> 性别（注册后不可修改）</label>
         <div class="role-toggle">
           <label class="role-option">
-            <input type="radio" name="role" value="user1" checked>
+            <input type="radio" name="gender" value="male" required>
             <span class="role-option-inner">
               <i class="fas fa-mars role-male-icon"></i>
               <span class="role-text-main">男生</span>
-              <span class="role-text-sub">（角色 1）</span>
+              <span class="role-text-sub">（他）</span>
             </span>
           </label>
           <label class="role-option">
-            <input type="radio" name="role" value="user2">
+            <input type="radio" name="gender" value="female">
             <span class="role-option-inner">
               <i class="fas fa-venus role-female-icon"></i>
               <span class="role-text-main">女生</span>
-              <span class="role-text-sub">（角色 2）</span>
+              <span class="role-text-sub">（她）</span>
             </span>
           </label>
         </div>
       </div>
       <?php else: ?>
-      <p class="form-hint">这是邀请注册，账号会自动加入情侣空间。</p>
+      <p class="form-hint">这是邀请注册，账号会自动加入情侣空间。你的性别由对方决定（自动设为相反性别），无需选择。</p>
       <?php endif; ?>
 
       <button type="submit" class="btn"><i class="fas fa-user-plus"></i> 注 册</button>
