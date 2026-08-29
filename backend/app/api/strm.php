@@ -239,6 +239,25 @@ function strm_resolve_internal(int $mediaId, ?int $episodeId, string $displayNam
 $action = (string)($_GET['action'] ?? 'info');
 
 // ---------- 流式代理端点 ----------
+if ($action === 'extimg') {
+    // 外部库本地图片（刮削时与 strm 同目录保存）经网关鉴权转发给浏览器
+    $imgId = (int)($_GET['id'] ?? 0);
+    $imgKind = ($_GET['kind'] ?? '') === 'backdrop' ? 'backdrop' : 'poster';
+    if ($imgId <= 0) strm_json(['code' => 400, 'msg' => '缺少 id'], 400);
+    $r = strm_curl(strm_backend_base() . '/api/external/media/' . $imgId . '/' . $imgKind, ['Accept: image/jpeg', 'X-API-Key: ' . withu_strm_config()['api_key']], 'GET');
+    while (ob_get_level() > 0) ob_end_clean();
+    if ($r['code'] !== 200 || $r['body'] === '') {
+        http_response_code(404);
+        header('Content-Type: image/gif');
+        echo base64_decode('R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7'); // 1px 透明图
+        exit;
+    }
+    header('Content-Type: image/jpeg');
+    header('Cache-Control: max-age=86400, public');
+    echo $r['body'];
+    exit;
+}
+
 if ($action === 'proxy') {
     $target = trim((string)($_GET['url'] ?? ''));
     if ($target === '' || !preg_match('#^https?://#i', $target)) strm_json(['code' => 400, 'msg' => '无效地址'], 400);

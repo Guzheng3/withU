@@ -315,7 +315,13 @@ if (!function_exists('withu_strm_localize_items')) {
                 foreach ($types as $type) {
                     $field = $type === 'backdrop' ? 'backdropUrl' : 'posterUrl';
                     $url = trim((string)($item[$field] ?? ''));
-                    if ($url === '' || !preg_match('#^https?://#i', $url)) continue; // 空/已是本地地址
+                    if ($url === '') continue;
+                    if ($url[0] === '/' && strpos($url, '/api/external/') === 0) { // 外部库相对地址（withUstrm 本地图片）→ 经网关鉴权转发
+                        $items[$i][$field] = '/api/strm.php?action=extimg&id=' . $id . '&kind=' . $type;
+                        continue;
+                    }
+                    if ($url[0] === '/') continue; // 网关自身本地地址（action=img 等），保持不变
+                    if (!preg_match('#^https?://#i', $url)) continue; // 已是本地地址
                     if (is_file(withu_strm_img_file($id, $type))) {
                         $items[$i][$field] = withu_strm_img_url($id, $type);
                     }
