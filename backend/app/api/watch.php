@@ -175,6 +175,54 @@ if ($action === 'end_together') {
     withu_json_response(['success' => true, 'mode' => 'solo', 'message' => '已结束共看，当前仅自己观看']);
 }
 
+// 首页头像区的「对方正在看」状态：无论对方是否开一起看（默认房/独看房都算），
+// 只要另一半正在播放且心跳/进度仍然新鲜就返回，供前台弹「快来和我一起看」气泡。
+if ($action === 'partner_status') {
+    $partnerRole = $user['role'] === 'user1' ? 'user2' : 'user1';
+    $partner = $db->fetch("SELECT id, nickname, role, gender FROM users WHERE role = :role AND status = 'active' LIMIT 1", ['role' => $partnerRole]);
+    if (!$partner) withu_json_response(['success' => true, 'watching' => false]);
+    // 一起看心跳约 2.5s 一次，独看只有约 10s 一次的 progress 事件，
+    // 因此在册窗口取 presence 超时的 3 倍，播放同步窗口放宽到 45s。
+    $seenWindowSec = max(20, $presenceTimeout * 3);
+    $syncWindowSec = 45;
+    $room = $db->fetch(
+        "SELECT r.* FROM watch_room_members rm
+         JOIN watch_rooms r ON r.id = rm.room_id
+         WHERE rm.user_id = :uid AND rm.left_at IS NULL
+           AND rm.last_seen_at >= DATE_SUB(:seen_now, INTERVAL {$seenWindowSec} SECOND)
+           AND r.playback_state = 'playing'
+           AND r.last_sync_at >= DATE_SUB(:sync_now, INTERVAL {$syncWindowSec} SECOND)
+         ORDER BY rm.last_seen_at DESC LIMIT 1",
+        ['uid' => (int)$partner['id'], 'seen_now' => $now, 'sync_now' => $now]
+    );
+    if (!$room) withu_json_response(['success' => true, 'watching' => false]);
+    // 自己也在同一个房间活跃观看（已在陪看）时不再提示
+    $myMember = $db->fetch(
+        "SELECT user_id FROM watch_room_members WHERE room_id = :rid AND user_id = :uid AND left_at IS NULL AND last_seen_at >= DATE_SUB(:seen_now, INTERVAL {$seenWindowSec} SECOND) LIMIT 1",
+        ['rid' => (int)$room['id'], 'uid' => (int)$user['id'], 'seen_now' => $now]
+    );
+    $merged = withu_strm_merge_room($room);
+    $partnerGender = in_array(($partner['gender'] ?? ''), ['male', 'female'], true)
+        ? $partner['gender']
+        : (($partner['role'] ?? '') === 'user2' ? 'female' : 'male');
+    withu_json_response([
+        'success' => true,
+        'watching' => true,
+        'together' => (bool)$myMember,
+        'partner' => ['id' => (int)$partner['id'], 'nickname' => (string)$partner['nickname'], 'role' => (string)$partner['role'], 'gender' => $partnerGender],
+        'room_code' => (string)$room['room_code'],
+        'media' => [
+            'media_id' => (int)$room['media_id'],
+            'source_episode' => (int)($room['source_episode'] ?? 0),
+            'series_name' => (string)($merged['series_name'] ?? ''),
+            'file_name' => (string)($merged['file_name'] ?? ''),
+            'episode_number' => (int)($merged['episode_number'] ?? 0),
+            'cover_url' => (string)($merged['cover_url'] ?? ''),
+        ],
+        'play_url' => '/watch_play.php?source=strm&id=' . (int)$room['media_id'] . '&episode=' . (int)($room['source_episode'] ?? 0),
+    ]);
+}
+
 $code = trim((string)($_GET['room'] ?? $_POST['room_code'] ?? $body['room_code'] ?? $code));
 if ($code === '') withu_json_response(['success' => false, 'message' => '缺少房间号'], 400);
 // Heartbeats only update presence. Avoid joining media metadata on the most

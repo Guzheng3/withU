@@ -1409,3 +1409,257 @@ body.bg-grad-grid::before {
     pointer-events: none;
     z-index: -1;
 }
+
+/* ── 头像区「对方正在看」邀请气泡（消息气泡样式） ───────────────── */
+.withu-watch-bubble {
+    position: absolute;
+    bottom: calc(100% + 14px);
+    left: 50%;
+    transform: translateX(-50%);
+    width: max-content;
+    max-width: min(250px, 76vw);
+    z-index: 120;
+    cursor: pointer;
+    -webkit-tap-highlight-color: transparent;
+}
+
+.withu-watch-bubble-card {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    gap: 0.45rem;
+    background: rgba(255, 255, 255, 0.96);
+    -webkit-backdrop-filter: blur(12px);
+    backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.7);
+    border-radius: 16px 16px 16px 5px;
+    box-shadow: 0 6px 16px rgba(15, 23, 42, 0.08), 0 18px 40px rgba(15, 23, 42, 0.22);
+    padding: 0.7rem 0.8rem 0.6rem;
+    color: #0f172a;
+    text-align: left;
+    animation: withuWatchBubbleIn 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) both,
+        withuWatchBubbleFloat 2.8s ease-in-out 0.5s infinite alternate;
+}
+
+/* 气泡尾巴：指向下方头像 */
+.withu-watch-bubble-card::after {
+    content: "";
+    position: absolute;
+    bottom: -5px;
+    left: 22px;
+    width: 10px;
+    height: 10px;
+    background: inherit;
+    border: solid rgba(255, 255, 255, 0.7);
+    border-width: 0 1px 1px 0;
+    transform: rotate(45deg);
+    border-radius: 0 0 2px 0;
+}
+
+/* 右侧头像（她）出现气泡时镜像尾巴 */
+.withu-watch-bubble.is-right .withu-watch-bubble-card {
+    border-radius: 16px 16px 5px 16px;
+}
+.withu-watch-bubble.is-right .withu-watch-bubble-card::after {
+    left: auto;
+    right: 22px;
+    border-radius: 0 0 2px 0;
+}
+
+.withu-watch-bubble-head {
+    display: flex;
+    align-items: center;
+    gap: 0.45rem;
+    min-width: 0;
+}
+
+.withu-watch-bubble-cover {
+    width: 34px;
+    height: 34px;
+    flex: none;
+    border-radius: 9px;
+    object-fit: cover;
+    background: #e2e8f0;
+    box-shadow: inset 0 0 0 1px rgba(15, 23, 42, 0.06);
+}
+
+.withu-watch-bubble-live {
+    display: flex;
+    align-items: center;
+    gap: 0.3rem;
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    color: #e11d48;
+    white-space: nowrap;
+}
+
+.withu-watch-bubble-live::before {
+    content: "";
+    width: 7px;
+    height: 7px;
+    flex: none;
+    border-radius: 50%;
+    background: #f43f5e;
+    box-shadow: 0 0 0 0 rgba(244, 63, 94, 0.45);
+    animation: withuWatchBubblePulse 1.6s ease-out infinite;
+}
+
+.withu-watch-bubble-text {
+    margin: 0;
+    font-size: 0.84rem;
+    line-height: 1.55;
+    font-weight: 500;
+    color: #0f172a;
+    overflow-wrap: anywhere;
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+.withu-watch-bubble-text b {
+    font-weight: 700;
+    color: #e11d48;
+}
+
+.withu-watch-bubble-foot {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.5rem;
+}
+
+.withu-watch-bubble-cta {
+    font-size: 0.72rem;
+    font-weight: 600;
+    color: #e11d48;
+    white-space: nowrap;
+}
+
+.withu-watch-bubble-close {
+    appearance: none;
+    border: none;
+    background: rgba(15, 23, 42, 0.06);
+    color: #64748b;
+    width: 22px;
+    height: 22px;
+    flex: none;
+    margin: -22px -8px -6px 0;
+    border-radius: 50%;
+    font-size: 13px;
+    line-height: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: background 0.2s ease, color 0.2s ease;
+}
+
+.withu-watch-bubble-close:hover {
+    background: rgba(15, 23, 42, 0.12);
+    color: #0f172a;
+}
+
+/* 紧贴左侧头像（移动端防止气泡溢出屏幕） */
+@media (max-width: 768px) {
+    .withu-watch-bubble {
+        left: -0.4rem;
+        transform: none;
+    }
+    .withu-watch-bubble.is-right {
+        left: auto;
+        right: -0.4rem;
+        transform: none;
+    }
+    .withu-watch-bubble-card {
+        max-width: 62vw;
+    }
+}
+
+@keyframes withuWatchBubbleIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px) scale(0.85);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+@keyframes withuWatchBubbleFloat {
+    from {
+        transform: translateY(0);
+    }
+    to {
+        transform: translateY(-5px);
+    }
+}
+
+@keyframes withuWatchBubblePulse {
+    0% {
+        box-shadow: 0 0 0 0 rgba(244, 63, 94, 0.45);
+    }
+    70% {
+        box-shadow: 0 0 0 7px rgba(244, 63, 94, 0);
+    }
+    100% {
+        box-shadow: 0 0 0 0 rgba(244, 63, 94, 0);
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .withu-watch-bubble-card,
+    .withu-watch-bubble-live::before {
+        animation: none;
+    }
+}
+
+/* 覆盖 .bg-img .middle img 的头像尺寸规则（含 !important 媒体查询变体），封面缩略图固定小尺寸 */
+.withu-watch-bubble .withu-watch-bubble-card .withu-watch-bubble-cover {
+    width: 34px !important;
+    height: 34px !important;
+    border-radius: 9px !important;
+    border: none !important;
+    margin: 0 !important;
+    object-fit: cover;
+    box-shadow: inset 0 0 0 1px rgba(15, 23, 42, 0.06);
+}
+
+/* 隔离主题里 .bg-img .middle .img-male span 等标签样式对气泡文字的劫持 */
+.withu-watch-bubble .withu-watch-bubble-card span.withu-watch-bubble-live,
+.withu-watch-bubble .withu-watch-bubble-card span.withu-watch-bubble-cta {
+    display: inline-flex !important;
+    align-items: center;
+    background: none !important;
+    border: none !important;
+    border-radius: 0 !important;
+    box-shadow: none !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    text-align: left !important;
+    font-family: 'Noto Serif SC', 'Inter', system-ui, sans-serif !important;
+    text-shadow: none !important;
+}
+.withu-watch-bubble .withu-watch-bubble-card span.withu-watch-bubble-live {
+    font-size: 12px !important;
+    font-weight: 700 !important;
+    color: #e11d48 !important;
+    white-space: nowrap !important;
+}
+.withu-watch-bubble .withu-watch-bubble-card span.withu-watch-bubble-cta {
+    font-size: 12px !important;
+    font-weight: 600 !important;
+    color: #e11d48 !important;
+    white-space: nowrap !important;
+}
+.withu-watch-bubble .withu-watch-bubble-card .withu-watch-bubble-text {
+    font-family: 'Noto Serif SC', 'Inter', system-ui, sans-serif;
+    font-size: 13.5px;
+    margin: 0;
+}
+.withu-watch-bubble .withu-watch-bubble-card .withu-watch-bubble-text b {
+    font-weight: 700;
+    color: #e11d48;
+}

@@ -304,6 +304,10 @@ try {
 <script src="assets/js/app.js"></script>
 <script src="/assets/js/withu-location.js"></script>
 <script src="/assets/js/head-avatar-location.js"></script>
+<?php if (!empty($loggedIn)): ?>
+<!-- 对方正在看邀请气泡（头像区） -->
+<script src="/assets/js/head-avatar-watch-bubble.js"></script>
+<?php endif; ?>
 <script src="assets/js/components.js"></script>
 
 <!-- 礼花效果已迁移到 components.js 的 ConfettiEffect 模块 -->
