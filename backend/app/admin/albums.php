@@ -264,6 +264,21 @@ include __DIR__ . '/header.php';
             </p>
         </div>
     <?php else: ?>
+        <?php
+        // 前台相册 code 映射（frontend/services/map-all.json）：
+        // 与前台同名即视为同一相册，「前台查看」直达前台相册详情页；
+        // 未匹配到（纯后台新建相册，前台暂无该相册）则回退到前台相册列表页
+        $frontAlbumCodes = [];
+        $frontMapFile = dirname(__DIR__, 3) . '/frontend/services/map-all.json';
+        if (is_file($frontMapFile)) {
+            $frontMap = json_decode((string) file_get_contents($frontMapFile), true);
+            foreach ((is_array($frontMap) ? ($frontMap['albums'] ?? []) : []) as $__fa) {
+                if (!empty($__fa['code']) && !empty($__fa['name'])) {
+                    $frontAlbumCodes[(string) $__fa['name']] = (string) $__fa['code'];
+                }
+            }
+        }
+        ?>
         <section class="admin-grid admin-album-grid">
             <?php foreach ($albums as $album): ?>
                 <?php
@@ -275,6 +290,10 @@ include __DIR__ . '/header.php';
                 $creatorName = !empty($album['creator_nickname'])
                     ? $album['creator_nickname']
                     : (!empty($album['creator_username']) ? $album['creator_username'] : '未知用户');
+                $frontAlbumCode = $frontAlbumCodes[(string) $album['name']] ?? null;
+                $frontViewUrl = $frontAlbumCode
+                    ? '/album-detail.php?code=' . rawurlencode($frontAlbumCode)
+                    : '/albums.php';
                 ?>
                 <article class="admin-card admin-album-card">
                     <div class="admin-album-card-media">
@@ -314,7 +333,7 @@ include __DIR__ . '/header.php';
                     </div>
 
                     <div class="admin-album-card-actions">
-                        <a href="/album.php?id=<?php echo $album['id']; ?>" target="_blank" class="btn btn-secondary">
+                        <a href="<?php echo $frontViewUrl; ?>" target="_blank" class="btn btn-secondary">
                             <i class="fas fa-eye"></i>
                             <span>前台查看</span>
                         </a>

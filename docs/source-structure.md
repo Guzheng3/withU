@@ -30,13 +30,9 @@
 
 | 文件 | 用途 |
 | --- | --- |
-| `index.php` | 前台首页（点滴记录/聚合数据展示） |
 | `login.php` | 登录 / 注册页面（`login.php.bak` 为其备份） |
 | `logout.php` | 登出 |
 | `install.php` | 安装向导（数据库初始化） |
-| `sitemap.php` | Sitemap XML 生成器 |
-| `album.php` | 相册详情页 |
-| `albums.php` | 相册列表页 |
 | `article.php` | 文章详情页（含评论/聊天创作） |
 | `articles.php` | 文章列表页 |
 | `messages.php` | 留言墙页面 |
@@ -125,7 +121,7 @@
 | `config/database.php` | 数据库连接配置（安装向导生成，不入库） |
 | `database/schema.sql` | 主站完整建表语句 |
 | `database/ip2region.xdb` | IP 归属地数据库文件（Ip2Region） |
-| `views/header.php` / `footer.php` / `home.php` | 公共视图模板（页头/页脚/首页布局） |
+| `views/header.php` / `footer.php` | 公共视图模板（页头/页脚） |
 | `.installed` | 安装完成标记 |
 
 **数据库主要表**（来自 `schema.sql`）：`users`、`albums`、`album_images`、`album_image_uploads`、`album_videos`、`album_permissions`、`articles`、`article_blocks`、`article_segments`、`article_permissions`、`article_contributions`、`article_edit_logs`、`comments`、`messages`、`likes`、`content_likes`、`events`、`travel_plans`、`weather_cache`、`couple_invites`、`trusted_devices`、`login_attempts`、`comment_attempts`、`message_attempts`、`comment_ip_blacklist`、`moderation_events`、`settings`、`watch_rooms`、`watch_room_members`、`watch_events`、`watch_history` 等。
@@ -301,7 +297,7 @@
 | `_external/` | 外部站点资源快照（withuadmin 后台资源、QQ 头像、wiki 等） |
 | `ext/` | 字体文件（Dancing Script、JetBrains Mono 等 woff2） |
 | `music/` | 音乐 LRC 歌词文件 |
-| `services/` | 前端 JSON 数据：`map-all.json`（地图）、`weather.json`（天气）、`music-player-data.json`（播放器数据） |
+| `services/` | 前端 JSON 数据：`map-all.json`（地图）、`weather.json`（天气）、`music-player-data.json`（播放器数据）；`photo-list.php`（相册照片列表接口：MySQL 同名相册 → `album-photos.json` 缓存 → Lovefolder 扫描 三级数据源）、`album-photos.json`（各相册照片清单缓存） |
 
 ---
 

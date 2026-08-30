@@ -1,5 +1,69 @@
 <?php require __DIR__ . '/inc/auth.php'; ?>
 <?php require __DIR__ . '/inc/config.php'; ?>
+<?php
+// 按 code 解析公开相册（services/map-all.json），未命中则回落到私密解锁壳
+$__albumCode = isset($_GET['code']) ? trim((string) $_GET['code']) : '';
+$__albumMeta = null;
+if ($__albumCode !== '') {
+    $__mapFile = __DIR__ . '/services/map-all.json';
+    if (is_file($__mapFile)) {
+        $__map = json_decode((string) file_get_contents($__mapFile), true);
+        $__albumList = is_array($__map) ? ($__map['albums'] ?? []) : [];
+        foreach ($__albumList as $__a) {
+            if (isset($__a['code']) && (string) $__a['code'] === $__albumCode) {
+                // 封面优先使用本地存在的缩略图，其次保留 map-all 原地址
+                $__cover = (string) ($__a['thumb'] ?? '');
+                if ($__cover === '' || !is_file(__DIR__ . '/' . ltrim($__cover, '/'))) {
+                    $__cover = (string) ($__a['image'] ?? '');
+                }
+                if ($__cover !== '' && !preg_match('#^https?://#i', $__cover) && strpos($__cover, '/') !== 0) {
+                    $__cover = '/' . $__cover;
+                }
+                $__albumMeta = [
+                    'name'   => (string) ($__a['name'] ?? '相册'),
+                    'date'   => (string) ($__a['date'] ?? ''),
+                    'city'   => (string) ($__a['city'] ?? ''),
+                    'coords' => (array) ($__a['coords'] ?? []),
+                    'desc'   => (string) ($__a['desc'] ?? ''),
+                    'cover'  => $__cover,
+                    'code'   => $__albumCode,
+                ];
+                break;
+            }
+        }
+    }
+}
+
+if (!function_exists('__withu_album_date_cn')) {
+    // 2026-04-16 → 2026年4月16日
+    function __withu_album_date_cn($d) {
+        $p = explode('-', (string) $d);
+        if (count($p) >= 3) {
+            return intval($p[0]) . '年' . intval($p[1]) . '月' . intval($p[2]) . '日';
+        }
+        return (string) $d;
+    }
+}
+
+if (!function_exists('__withu_album_ago')) {
+    // 粗粒度相对时间：天 / 个月 / 年
+    function __withu_album_ago($d) {
+        $ts = strtotime((string) $d);
+        if (!$ts) return '';
+        $diff = max(0, time() - $ts);
+        $day = 86400;
+        if ($diff < $day) return '今天';
+        if ($diff < 30 * $day) return floor($diff / $day) . '天前';
+        if ($diff < 365 * $day) return floor($diff / (30 * $day)) . '个月前';
+        return floor($diff / (365 * $day)) . '年前';
+    }
+}
+
+// 创建者信息（公开相册头部展示用）
+$__cfg = json_decode($withuConfigJson ?? '{}', true);
+$__albumAuthorName = (string) ($__cfg['maleName'] ?? ($__cfg['boy'] ?? 'Ki.'));
+$__albumAuthorAvatar = (string) ($__cfg['maleAvatar'] ?? '');
+?>
 
 <meta name="x-withu-license-instance" content="858ee1d099b9">
 
@@ -8,14 +72,14 @@
 <meta name="description" content="withU 是一个适合记录恋爱日常与纪念时刻的情侣小站，支持相册、时间轴、点滴文章、留言互动和邀请页面，让每一段关系都能拥有自己的专属回忆空间。">
 <meta name="keywords" content="情侣网站,恋爱记录,祝福留言,情侣相册,恋爱清单,爱情纪念,情侣头像框,祝福语句,情侣互动,爱情相册,情侣事件记录,情侣留言,爱情故事,情感交流,用户互动,祝福卡片,音乐分享,甜蜜瞬间,情侣活动,爱情动态,withU">
 <meta name="robots" content="index, follow">
-<link rel="canonical" href="/album-detail.php?code=20240430110842">
+<link rel="canonical" href="/album-detail.php?code=<?php echo $__albumMeta ? rawurlencode($__albumMeta['code']) : '20240430110842'; ?>">
 
 <!-- Open Graph (Facebook/微信/QQ) -->
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="withU Demo">
-<meta property="og:title" content="withU Demo">
+<meta property="og:title" content="<?php echo $__albumMeta ? htmlspecialchars($__albumMeta['name'], ENT_QUOTES, 'UTF-8') : 'withU Demo'; ?>">
 <meta property="og:description" content="withU 是一个适合记录恋爱日常与纪念时刻的情侣小站，支持相册、时间轴、点滴文章、留言互动和邀请页面，让每一段关系都能拥有自己的专属回忆空间。">
-<meta property="og:url" content="/album-detail.php?code=20240430110842">
+<meta property="og:url" content="/album-detail.php?code=<?php echo $__albumMeta ? rawurlencode($__albumMeta['code']) : '20240430110842'; ?>">
 <meta property="og:image" content="withU">
 
 <!-- Twitter Card -->
@@ -3052,6 +3116,117 @@
 
 
 <div id="pjax-container">
+<?php if ($__albumMeta): ?>
+<title><?php echo htmlspecialchars($__albumMeta['name'], ENT_QUOTES, 'UTF-8'); ?> — withU Demo</title>
+<link rel="stylesheet" href="/Style/css/photo.css">
+
+    <!-- 相册头部（公开相册详情） -->
+    <div class="withu-new-photo-head-wrapper">
+        <header class="withu-new-photo-head-hero-header">
+            <img class="withu-new-photo-head-hero-img lazy" data-src="<?php echo htmlspecialchars($__albumMeta['cover'], ENT_QUOTES, 'UTF-8'); ?>" alt="<?php echo htmlspecialchars($__albumMeta['name'], ENT_QUOTES, 'UTF-8'); ?>" referrerpolicy="no-referrer">
+            <div class="withu-new-photo-head-hero-gradient"></div>
+
+            <div class="withu-new-photo-head-hero-footer">
+                <!-- 上层：标题 + 描述 -->
+                <div class="withu-new-photo-head-title-area">
+                    <h1 class="withu-new-photo-head-title"><?php echo htmlspecialchars($__albumMeta['name'], ENT_QUOTES, 'UTF-8'); ?></h1>
+                    <?php if ($__albumMeta['desc'] !== ''): ?>
+                    <p class="withu-new-photo-head-desc"><?php echo htmlspecialchars($__albumMeta['desc'], ENT_QUOTES, 'UTF-8'); ?></p>
+                    <?php endif; ?>
+                </div>
+
+                <!-- 下层：信息标签栏 -->
+                <div class="withu-new-photo-head-info-bar">
+                    <div class="withu-new-photo-head-info-left">
+                        <div class="withu-new-photo-head-watermark">
+                            <span class="withu-new-photo-head-watermark-dot"></span>
+                            ALBUM REF. <?php echo htmlspecialchars($__albumMeta['code'], ENT_QUOTES, 'UTF-8'); ?>
+                        </div>
+                        <div class="withu-new-photo-head-chips-group">
+                            <div class="withu-new-photo-head-chip" data-like-target="album" data-like-id="<?php echo htmlspecialchars($__albumMeta['code'], ENT_QUOTES, 'UTF-8'); ?>" style="cursor:pointer;">
+                                <div class="withu-new-photo-head-chip-icon-bg"><i class="ph ph-heart"></i></div>
+                                <span class="withu-new-photo-head-chip-text withu-interaction-like-num" data-like-count="album:<?php echo htmlspecialchars($__albumMeta['code'], ENT_QUOTES, 'UTF-8'); ?>">0</span>
+                            </div>
+                            <?php if ($__albumAuthorAvatar !== ''): ?>
+                            <div class="withu-new-photo-head-chip">
+                                <img class="withu-new-photo-head-chip-avatar lazy" data-src="<?php echo htmlspecialchars($__albumAuthorAvatar, ENT_QUOTES, 'UTF-8'); ?>" alt="<?php echo htmlspecialchars($__albumAuthorName, ENT_QUOTES, 'UTF-8'); ?>" referrerpolicy="no-referrer">
+                                <span class="withu-new-photo-head-chip-text"><?php echo htmlspecialchars($__albumAuthorName, ENT_QUOTES, 'UTF-8'); ?></span>
+                            </div>
+                            <?php else: ?>
+                            <div class="withu-new-photo-head-chip">
+                                <div class="withu-new-photo-head-chip-icon-bg"><i class="ph ph-user"></i></div>
+                                <span class="withu-new-photo-head-chip-text"><?php echo htmlspecialchars($__albumAuthorName, ENT_QUOTES, 'UTF-8'); ?></span>
+                            </div>
+                            <?php endif; ?>
+                            <?php if ($__albumMeta['city'] !== ''): ?>
+                            <div class="withu-new-photo-head-chip withu-new-photo-head-chip-location"<?php echo !empty($__albumMeta['coords']) ? ' style="cursor:pointer" onclick="WithUMap.open({ mode: \'albums\', coords: [' . implode(',', array_map('floatval', $__albumMeta['coords'])) . '], zoom: 20 })"' : ''; ?>>
+                                <div class="withu-new-photo-head-chip-icon-bg"><i class="ph ph-map-pin"></i></div>
+                                <span class="withu-new-photo-head-chip-text"><?php echo htmlspecialchars($__albumMeta['city'], ENT_QUOTES, 'UTF-8'); ?></span>
+                            </div>
+                            <?php endif; ?>
+                        </div>
+                    </div>
+
+                    <div class="withu-new-photo-head-info-right">
+                        <div class="withu-new-photo-head-chips-group">
+                            <?php if ($__albumMeta['date'] !== ''): ?>
+                            <div class="withu-new-photo-head-chip">
+                                <div class="withu-new-photo-head-chip-icon-bg"><i class="ph ph-calendar"></i></div>
+                                <span class="withu-new-photo-head-chip-text"><?php echo htmlspecialchars(__withu_album_date_cn($__albumMeta['date']), ENT_QUOTES, 'UTF-8'); ?></span>
+                            </div>
+                            <div class="withu-new-photo-head-chip">
+                                <div class="withu-new-photo-head-chip-icon-bg"><i class="ph ph-clock"></i></div>
+                                <span class="withu-new-photo-head-chip-text"><?php echo htmlspecialchars(__withu_album_ago($__albumMeta['date']), ENT_QUOTES, 'UTF-8'); ?></span>
+                            </div>
+                            <?php endif; ?>
+                            <div class="withu-new-photo-head-chip" id="imglist-total-count" style="display:none;">
+                                <div class="withu-new-photo-head-chip-icon-bg"><i class="ph ph-camera"></i></div>
+                                <span class="withu-new-photo-head-chip-text">加载中...</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </header>
+    </div>
+
+    <!-- 瀑布流容器 -->
+    <div class="withu-new-photo">
+        <div id="imglist-grid" class="imglist-masonry-grid" data-code="<?php echo htmlspecialchars($__albumMeta['code'], ENT_QUOTES, 'UTF-8'); ?>" data-album-name="<?php echo htmlspecialchars($__albumMeta['name'], ENT_QUOTES, 'UTF-8'); ?>" data-show-info="true"
+             data-pc-min-height="360" data-pc-max-height="600"
+             data-mobile-min-height="230" data-mobile-max-height="300"></div>
+
+        <!-- 加载更多 -->
+        <div id="imglist-load-more" class="imglist-load-more" style="display:none;">
+            <button id="imglist-load-btn" class="imglist-load-btn shadow-blur">
+                <span class="btn-text"><i class="ph ph-arrow-down"></i> 加载更多</span>
+            </button>
+        </div>
+
+        <!-- 到底提示 -->
+        <div id="imglist-load-done" class="imglist-load-done" style="display:none;">
+            <span class="imglist-done-line"></span>
+            <span class="imglist-done-text">已经到底啦</span>
+            <span class="imglist-done-line"></span>
+        </div>
+
+        <!-- 首次加载中 -->
+        <div id="imglist-loading" class="imglist-loading">
+            <div class="imglist-dots">
+                <span class="imglist-dot"></span>
+                <span class="imglist-dot"></span>
+                <span class="imglist-dot"></span>
+            </div>
+        </div>
+    </div>
+
+    <!-- 右侧操作栏 -->
+    <aside class="withu-detail-vertical-rail">
+        <button class="withu-detail-rail-btn" id="rail-like-btn" data-like-target="album" data-like-id="<?php echo htmlspecialchars($__albumMeta['code'], ENT_QUOTES, 'UTF-8'); ?>">
+            <i class="ph ph-heart"></i>
+        </button>
+    </aside>
+<?php else: ?>
 <title>页面已加密 — withU Demo</title>
 <link rel="stylesheet" href="/Style/css/withu-private.css">
 <style>
@@ -3156,6 +3331,7 @@ if (typeof lucide !== 'undefined') lucide.createIcons();
 // PJAX 重复导航时，外部 script 不会重新执行，需手动重新初始化
 if (typeof window.initPrivatePage === 'function') window.initPrivatePage();
 </script>
+<?php endif; ?>
 </div><!-- /#pjax-container -->
 
 

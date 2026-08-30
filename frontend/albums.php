@@ -3538,52 +3538,6 @@
                     <div class="withu-masonry-col" data-aos="fade-up" data-aos-delay="0">
 
                         <!-- 私密相册卡片：未登录显示锁定，已登录显示正常内容 -->
-                                                    <a href="album-detail.php?code=20241223171704" class="withu-card withu-private-card">
-
-                                <!-- Header (私密相册版) -->
-                                <div class="withu-header">
-                                                                        <div class="withu-author show-gender">
-                                        <div class="withu-author__ring">
-                                            <img class="withu-author__avatar"
-                                                src="/Lovefolder/20260411043037_69d95ded97293201118237.webp"
-                                                alt="Avatar">
-                                                                                        <div
-                                                class="withu-author__badge male">
-                                                <i
-                                                    class="ph-bold ph-gender-male"></i>
-                                            </div>
-                                                                                    </div>
-                                        <div class="withu-author__text">
-                                            <span class="withu-author__name">Ki.</span>
-                                            <span class="withu-author__meta">2024-12-23</span>
-                                        </div>
-                                    </div>
-                                    <!-- 跳转按钮 -->
-                                    <div class="withu-header-action">
-                                        <i class="ph-bold ph-arrow-right"></i>
-                                    </div>
-                                </div>
-
-                                <!-- Private Content (点阵遮罩 + 指纹图标) -->
-                                <div class="withu-private-content">
-                                    <div class="withu-private-icon-box">
-                                        <i class="ph-duotone ph-fingerprint withu-private-icon"></i>
-                                    </div>
-                                    <div>
-                                        <h3 class="withu-private-title">私密相册</h3>
-                                        <span class="withu-private-desc">点击查看</span>
-                                    </div>
-                                </div>
-                            </a>
-
-                            <!-- 普通相册卡片 -->
-                        
-                    </div>
-                                    
-                    <!-- Masonry Column -->
-                    <div class="withu-masonry-col" data-aos="fade-up" data-aos-delay="0">
-
-                        <!-- 私密相册卡片：未登录显示锁定，已登录显示正常内容 -->
                                                     <div class="withu-card">
 
                                 <!-- 已解锁标识 -->
@@ -4270,52 +4224,6 @@
                     <div class="withu-masonry-col" data-aos="fade-up" data-aos-delay="0">
 
                         <!-- 私密相册卡片：未登录显示锁定，已登录显示正常内容 -->
-                                                    <a href="album-detail.php?code=20240430104348" class="withu-card withu-private-card">
-
-                                <!-- Header (私密相册版) -->
-                                <div class="withu-header">
-                                                                        <div class="withu-author show-gender">
-                                        <div class="withu-author__ring">
-                                            <img class="withu-author__avatar"
-                                                src="/Lovefolder/20260411043037_69d95ded97293201118237.webp"
-                                                alt="Avatar">
-                                                                                        <div
-                                                class="withu-author__badge male">
-                                                <i
-                                                    class="ph-bold ph-gender-male"></i>
-                                            </div>
-                                                                                    </div>
-                                        <div class="withu-author__text">
-                                            <span class="withu-author__name">Ki.</span>
-                                            <span class="withu-author__meta">2024-04-30</span>
-                                        </div>
-                                    </div>
-                                    <!-- 跳转按钮 -->
-                                    <div class="withu-header-action">
-                                        <i class="ph-bold ph-arrow-right"></i>
-                                    </div>
-                                </div>
-
-                                <!-- Private Content (点阵遮罩 + 指纹图标) -->
-                                <div class="withu-private-content">
-                                    <div class="withu-private-icon-box">
-                                        <i class="ph-duotone ph-fingerprint withu-private-icon"></i>
-                                    </div>
-                                    <div>
-                                        <h3 class="withu-private-title">私密相册</h3>
-                                        <span class="withu-private-desc">点击查看</span>
-                                    </div>
-                                </div>
-                            </a>
-
-                            <!-- 普通相册卡片 -->
-                        
-                    </div>
-                                    
-                    <!-- Masonry Column -->
-                    <div class="withu-masonry-col" data-aos="fade-up" data-aos-delay="0">
-
-                        <!-- 私密相册卡片：未登录显示锁定，已登录显示正常内容 -->
                                                     <div class="withu-card">
 
                                 <!-- 已解锁标识 -->
@@ -4537,52 +4445,6 @@
                                 </div>
 
                             </div>
-                        
-                    </div>
-                                    
-                    <!-- Masonry Column -->
-                    <div class="withu-masonry-col" data-aos="fade-up" data-aos-delay="0">
-
-                        <!-- 私密相册卡片：未登录显示锁定，已登录显示正常内容 -->
-                                                    <a href="album-detail.php?code=20240430110842" class="withu-card withu-private-card">
-
-                                <!-- Header (私密相册版) -->
-                                <div class="withu-header">
-                                                                        <div class="withu-author show-gender">
-                                        <div class="withu-author__ring">
-                                            <img class="withu-author__avatar"
-                                                src="/Lovefolder/20260411043037_69d95ded97293201118237.webp"
-                                                alt="Avatar">
-                                                                                        <div
-                                                class="withu-author__badge male">
-                                                <i
-                                                    class="ph-bold ph-gender-male"></i>
-                                            </div>
-                                                                                    </div>
-                                        <div class="withu-author__text">
-                                            <span class="withu-author__name">Ki.</span>
-                                            <span class="withu-author__meta">2024-04-30</span>
-                                        </div>
-                                    </div>
-                                    <!-- 跳转按钮 -->
-                                    <div class="withu-header-action">
-                                        <i class="ph-bold ph-arrow-right"></i>
-                                    </div>
-                                </div>
-
-                                <!-- Private Content (点阵遮罩 + 指纹图标) -->
-                                <div class="withu-private-content">
-                                    <div class="withu-private-icon-box">
-                                        <i class="ph-duotone ph-fingerprint withu-private-icon"></i>
-                                    </div>
-                                    <div>
-                                        <h3 class="withu-private-title">私密相册</h3>
-                                        <span class="withu-private-desc">点击查看</span>
-                                    </div>
-                                </div>
-                            </a>
-
-                            <!-- 普通相册卡片 -->
                         
                     </div>
                                     
@@ -4966,6 +4828,64 @@
 <script src="/assets/js/clipboard.js"></script>
 <script src="/assets/js/tooltip.js"></script>
 <script src="/Style/js/view-image.min.js"></script>
+<script>
+/* 图片查看器增强：鼠标滚轮缩放（仅作用于 ViewImage 弹层，不影响页面其它区域） */
+(function () {
+    if (window.WithuViewImageWheelZoom) return;
+    window.WithuViewImageWheelZoom = true;
+
+    var MIN_SCALE = 0.5, MAX_SCALE = 8;
+
+    function activeImg() {
+        var viewer = document.querySelector('.view-image');
+        return viewer ? viewer.querySelector('.view-image-lead img') : null;
+    }
+
+    function apply(img) {
+        img.style.transform = 'translate(' + (img._vx || 0) + 'px,' + (img._vy || 0) + 'px) scale(' + img._vs + ')';
+    }
+
+    document.addEventListener('wheel', function (e) {
+        var img = activeImg();
+        if (!img) return;
+        e.preventDefault();
+        if (img._vs === undefined) { img._vs = 1; img._vx = 0; img._vy = 0; }
+
+        var delta = e.deltaY * (e.deltaMode === 1 ? 16 : (e.deltaMode === 2 ? 100 : 1));
+        var next = Math.min(MAX_SCALE, Math.max(MIN_SCALE, img._vs * Math.exp(-delta * 0.0022)));
+        if (next === img._vs) return;
+
+        img._vs = next;
+        if (next <= 1) { img._vx = 0; img._vy = 0; }
+        img.style.transition = 'transform .12s ease-out';
+        img.style.cursor = next > 1 ? 'grab' : '';
+        apply(img);
+    }, { passive: false });
+
+    /* 放大后可按住图片拖动查看局部；图片本身点击无动作，不会误触关闭 */
+    document.addEventListener('pointerdown', function (e) {
+        var img = activeImg();
+        if (!img || e.target !== img || (img._vs || 1) <= 1) return;
+        e.preventDefault();
+        var ox = e.clientX - (img._vx || 0), oy = e.clientY - (img._vy || 0);
+        img.style.transition = 'none';
+        img.style.cursor = 'grabbing';
+
+        function onMove(ev) {
+            img._vx = ev.clientX - ox;
+            img._vy = ev.clientY - oy;
+            apply(img);
+        }
+        function onUp() {
+            img.style.cursor = 'grab';
+            window.removeEventListener('pointermove', onMove);
+            window.removeEventListener('pointerup', onUp);
+        }
+        window.addEventListener('pointermove', onMove);
+        window.addEventListener('pointerup', onUp);
+    });
+})();
+</script>
 <script src="/Style/LoveListStyle/carousel.umd.js"></script>
 <script src="/Style/LoveListStyle/carousel.thumbs.umd.js"></script>
 <script src="/Style/LoveListStyle/fancybox.umd.js"></script>
