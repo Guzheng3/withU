@@ -274,7 +274,7 @@ try {
 
     // x 轴刻度标签（最多 8 个，两端必显示）
     if ($n > 0) {
-        $xEvery = max(1, (int) ceil($n / 8));
+        $xEvery = max(1, (int) ceil($n / 6));
         $waShownX = [];
         foreach ($waSeries as $i => $p) {
             if ($i % $xEvery === 0 || $i === $n - 1) { $waShownX[$i] = $p['label']; }
@@ -848,7 +848,7 @@ include __DIR__ . '/header.php';
                                     <span class="wa-rank-name" title="<?php echo e($r['src']); ?>"><?php echo e($r['src'] !== '' ? $r['src'] : '直接访问'); ?></span>
                                     <span class="wa-rank-num"><?php echo number_format((int) $r['cnt']); ?><em><?php echo $waSrcSum > 0 ? round($r['cnt'] / $waSrcSum * 100) : 0; ?>%</em></span>
                                 </div>
-                                <div class="wa-rank-bar"><span style="width:<?php echo round($r['cnt'] / $waSrcMax * 100, 1); ?>%;"></span></div>
+                                <div class="wa-rank-bar"><span style="width:<?php echo $r['cnt'] > 0 ? max(2.5, round($r['cnt'] / $waSrcMax * 100, 1)) : 0; ?>%;"></span></div>
                             </li>
                         <?php endforeach; ?>
                     <?php endif; ?>
@@ -873,7 +873,7 @@ include __DIR__ . '/header.php';
                                     <span class="wa-rank-name" title="<?php echo e($waUrl); ?>"><?php echo e(mb_strlen($waUrl) > 40 ? mb_substr($waUrl, 0, 40) . '…' : $waUrl); ?></span>
                                     <span class="wa-rank-num"><?php echo number_format((int) $r['cnt']); ?><em><?php echo $waPageSum > 0 ? round($r['cnt'] / $waPageSum * 100) : 0; ?>%</em></span>
                                 </div>
-                                <div class="wa-rank-bar"><span style="width:<?php echo round($r['cnt'] / $waPageMax * 100, 1); ?>%;"></span></div>
+                                <div class="wa-rank-bar"><span style="width:<?php echo $r['cnt'] > 0 ? max(2.5, round($r['cnt'] / $waPageMax * 100, 1)) : 0; ?>%;"></span></div>
                             </li>
                         <?php endforeach; ?>
                     <?php endif; ?>
@@ -961,7 +961,7 @@ include __DIR__ . '/header.php';
                         <span class="wa-spider-name"><?php echo $def['name']; ?></span>
                     </div>
                     <div class="wa-spider-count"><?php echo number_format($spiderCounts[$def['key']]); ?></div>
-                    <div class="wa-spider-bar"><span style="width:<?php echo round($spiderCounts[$def['key']] / $waSpiderMax * 100, 1); ?>%;background:<?php echo $def['color']; ?>"></span></div>
+                    <div class="wa-spider-bar"><span style="width:<?php echo $spiderCounts[$def['key']] > 0 ? max(2.5, round($spiderCounts[$def['key']] / $waSpiderMax * 100, 1)) : 0; ?>%;background:<?php echo $def['color']; ?>"></span></div>
                 </div>
             <?php endforeach; ?>
             <?php if ($spiderOther > 0): ?>
@@ -971,7 +971,7 @@ include __DIR__ . '/header.php';
                         <span class="wa-spider-name">其他蜘蛛</span>
                     </div>
                     <div class="wa-spider-count"><?php echo number_format($spiderOther); ?></div>
-                    <div class="wa-spider-bar"><span style="width:<?php echo round($spiderOther / $waSpiderMax * 100, 1); ?>%;background:#64748b"></span></div>
+                    <div class="wa-spider-bar"><span style="width:<?php echo max(2.5, round($spiderOther / $waSpiderMax * 100, 1)); ?>%;background:#64748b"></span></div>
                 </div>
             <?php endif; ?>
         </div>

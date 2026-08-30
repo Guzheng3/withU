@@ -2194,11 +2194,6 @@ body.admin-v3 .wa-cell-url {
         grid-template-columns: repeat(2, minmax(0, 1fr));
     }
 
-    body.admin-v3 .wa-tile:nth-child(3) {
-        border-left: none;
-        border-top: none;
-    }
-
     body.admin-v3 .wa-tile:nth-child(n+3) {
         border-top: 1px solid var(--v3-border-light);
     }
