@@ -75,6 +75,274 @@ try {
     $browserStats = $browserRows ?: [];
 } catch (Throwable $e) { $deviceStats = []; $browserStats = []; }
 
+// ============ 流量统计（百度统计风格）+ 蜘蛛统计 ============
+// 趋势与指标取自 site_visits（每日 PV/UV 聚合）与 visitor_logs（访问明细，含完整 UA），
+// 蜘蛛通过 User-Agent 识别。查询失败时保持仪表盘其余部分可用。
+$statsRangeDefs = [
+    'today'     => '今天',
+    'yesterday' => '昨天',
+    '7d'        => '最近 7 天',
+    '30d'       => '最近 30 天',
+];
+$statsRangeKey = isset($_GET['range']) && isset($statsRangeDefs[(string) $_GET['range']])
+    ? (string) $_GET['range']
+    : '7d';
+
+$statsTodayTs = strtotime($today);
+$statsEndTs   = $statsTodayTs;
+$statsStartTs = $statsTodayTs;
+if ($statsRangeKey === 'yesterday') {
+    $statsStartTs = $statsEndTs = $statsTodayTs - 86400;
+} elseif ($statsRangeKey === '7d') {
+    $statsStartTs = $statsTodayTs - 6 * 86400;
+} elseif ($statsRangeKey === '30d') {
+    $statsStartTs = $statsTodayTs - 29 * 86400;
+}
+$statsDays  = (int) round(($statsEndTs - $statsStartTs) / 86400) + 1;
+$statsStart = date('Y-m-d', $statsStartTs);
+$statsEnd   = date('Y-m-d', $statsEndTs);
+// 环比：紧邻的等长上一周期
+$statsPrevEndTs   = $statsStartTs - 86400;
+$statsPrevStartTs = $statsPrevEndTs - ($statsDays - 1) * 86400;
+$statsPrevStart   = date('Y-m-d', $statsPrevStartTs);
+$statsPrevEnd     = date('Y-m-d', $statsPrevEndTs);
+
+// 蜘蛛定义（UA 关键字，全部小写；多关键字用 | 分隔配合 REGEXP）
+$spiderDefs = [
+    ['key' => 'baidu',  'name' => '百度蜘蛛', 'icon' => 'ti-brand-baidu',  'color' => '#2932e1', 'pattern' => 'baiduspider'],
+    ['key' => 'google', 'name' => '谷歌蜘蛛', 'icon' => 'ti-brand-google', 'color' => '#4285f4', 'pattern' => 'googlebot'],
+    ['key' => 'bing',   'name' => '必应蜘蛛', 'icon' => 'ti-brand-bing',   'color' => '#0f766e', 'pattern' => 'bingbot|msnbot'],
+    ['key' => 'sogou',  'name' => '搜狗蜘蛛', 'icon' => 'ti-world',        'color' => '#ff6a00', 'pattern' => 'sogou'],
+    ['key' => 'haosou', 'name' => '360 蜘蛛', 'icon' => 'ti-shield',       'color' => '#00b358', 'pattern' => '360spider|haosouspider'],
+    ['key' => 'yisou',  'name' => '神马蜘蛛', 'icon' => 'ti-horse',        'color' => '#f59e0b', 'pattern' => 'yisouspider'],
+    ['key' => 'byte',   'name' => '字节蜘蛛', 'icon' => 'ti-robot',        'color' => '#ef4444', 'pattern' => 'bytespider'],
+];
+$waSpiderAllPattern    = 'bot|crawl|slurp|spider';
+$waSpiderKnownPattern  = implode('|', array_map(function ($d) { return $d['pattern']; }, $spiderDefs));
+
+// 将 UA 归属到蜘蛛名称（用于明细表展示）
+$waSpiderName = function ($ua) use ($spiderDefs) {
+    $lower = strtolower((string) $ua);
+    foreach ($spiderDefs as $def) {
+        foreach (explode('|', $def['pattern']) as $p) {
+            if ($p !== '' && strpos($lower, $p) !== false) {
+                return $def['name'];
+            }
+        }
+    }
+    return '其他蜘蛛';
+};
+
+// 环比：返回 ['dir' => up/down/flat, 'pct' => 绝对百分比|null]
+$waTrend = function ($cur, $prev) {
+    $cur = (float) $cur;
+    $prev = (float) $prev;
+    if ($prev <= 0) {
+        return ['dir' => $cur > 0 ? 'up' : 'flat', 'pct' => null];
+    }
+    $pct = round(($cur - $prev) / $prev * 100, 1);
+    if ($pct == 0) return ['dir' => 'flat', 'pct' => 0.0];
+    return ['dir' => $pct > 0 ? 'up' : 'down', 'pct' => abs($pct)];
+};
+
+// 默认值（查询失败时兜底）
+$waMetrics  = ['pv' => 0, 'uv' => 0, 'spider' => 0, 'pages' => 0, 'avg' => 0.0];
+$waPrev     = ['pv' => 0, 'uv' => 0, 'spider' => 0, 'pages' => 0, 'avg' => 0.0];
+$waSeries   = [];
+$waXLabels  = [];   // ['pos' => 百分比, 'text' => 文案]
+$waYLabels  = [];   // ['pos' => 百分比, 'text' => 文案]
+$waSvg      = ['grid' => [], 'area' => '', 'linePv' => '', 'lineUv' => '', 'dotsPv' => [], 'dotsUv' => []];
+$waYMax     = 0;
+$waSourceTop = [];
+$waPageTop   = [];
+$spiderCounts = array_fill_keys(array_map(function ($d) { return $d['key']; }, $spiderDefs), 0);
+$spiderOther  = 0;
+$spiderTotal  = 0;
+$spiderRecent = [];
+
+try {
+    // 区间与上一周期指标
+    $curRow = $db->fetch(
+        "SELECT COALESCE(SUM(page_views),0) AS pv, COALESCE(SUM(unique_visitors),0) AS uv
+         FROM site_visits WHERE visit_date BETWEEN ? AND ?",
+        [$statsStart, $statsEnd]
+    ) ?: [];
+    $prevRow = $db->fetch(
+        "SELECT COALESCE(SUM(page_views),0) AS pv, COALESCE(SUM(unique_visitors),0) AS uv
+         FROM site_visits WHERE visit_date BETWEEN ? AND ?",
+        [$statsPrevStart, $statsPrevEnd]
+    ) ?: [];
+
+    $curAgg = $db->fetch(
+        "SELECT COUNT(*) AS hits,
+                COUNT(DISTINCT page_url) AS pages,
+                SUM(LOWER(user_agent) REGEXP ?) AS spider
+         FROM visitor_logs WHERE visit_date BETWEEN ? AND ?",
+        [$waSpiderAllPattern, $statsStart, $statsEnd]
+    ) ?: [];
+    $prevAgg = $db->fetch(
+        "SELECT COUNT(DISTINCT page_url) AS pages,
+                SUM(LOWER(user_agent) REGEXP ?) AS spider
+         FROM visitor_logs WHERE visit_date BETWEEN ? AND ?",
+        [$waSpiderAllPattern, $statsPrevStart, $statsPrevEnd]
+    ) ?: [];
+
+    $waMetrics['pv']     = (int) ($curRow['pv'] ?? 0);
+    $waMetrics['uv']     = (int) ($curRow['uv'] ?? 0);
+    $waMetrics['spider'] = (int) ($curAgg['spider'] ?? 0);
+    $waMetrics['pages']  = (int) ($curAgg['pages'] ?? 0);
+    $waMetrics['avg']    = $waMetrics['uv'] > 0 ? round($waMetrics['pv'] / $waMetrics['uv'], 1) : 0.0;
+
+    $waPrev['pv']     = (int) ($prevRow['pv'] ?? 0);
+    $waPrev['uv']     = (int) ($prevRow['uv'] ?? 0);
+    $waPrev['spider'] = (int) ($prevAgg['spider'] ?? 0);
+    $waPrev['pages']  = (int) ($prevAgg['pages'] ?? 0);
+    $waPrev['avg']    = $waPrev['uv'] > 0 ? round($waPrev['pv'] / $waPrev['uv'], 1) : 0.0;
+
+    // 趋势序列：今天/昨天按小时，其余按天
+    if ($statsRangeKey === 'today' || $statsRangeKey === 'yesterday') {
+        $hourMap = [];
+        $hourRows = $db->fetchAll(
+            "SELECT HOUR(visit_time) AS h, COUNT(*) AS pv, COUNT(DISTINCT ip_hash) AS uv
+             FROM visitor_logs WHERE visit_date = ? GROUP BY h",
+            [$statsStart]
+        ) ?: [];
+        foreach ($hourRows as $r) { $hourMap[(int) $r['h']] = $r; }
+        for ($h = 0; $h < 24; $h++) {
+            $waSeries[] = [
+                'label' => sprintf('%02d:00', $h),
+                'pv'    => (int) ($hourMap[$h]['pv'] ?? 0),
+                'uv'    => (int) ($hourMap[$h]['uv'] ?? 0),
+            ];
+        }
+    } else {
+        $dayMap = [];
+        $dayRows = $db->fetchAll(
+            "SELECT visit_date, page_views AS pv, unique_visitors AS uv
+             FROM site_visits WHERE visit_date BETWEEN ? AND ?",
+            [$statsStart, $statsEnd]
+        ) ?: [];
+        foreach ($dayRows as $r) { $dayMap[date('Y-m-d', strtotime($r['visit_date']))] = $r; }
+        for ($ts = $statsStartTs; $ts <= $statsEndTs; $ts += 86400) {
+            $d = date('Y-m-d', $ts);
+            $waSeries[] = [
+                'label' => date('n/j', $ts),
+                'pv'    => (int) ($dayMap[$d]['pv'] ?? 0),
+                'uv'    => (int) ($dayMap[$d]['uv'] ?? 0),
+            ];
+        }
+    }
+
+    // 生成 SVG 几何（viewBox 0 0 1000 220，上下各留 10px）
+    $waSvgW = 1000; $waSvgH = 220; $waPad = 10;
+    $waMaxVal = 0;
+    foreach ($waSeries as $p) { $waMaxVal = max($waMaxVal, $p['pv'], $p['uv']); }
+    $waStep = pow(10, floor(log10(max(1, $waMaxVal))));
+    $waYMax = ceil((max(1, $waMaxVal) * 1.15) / $waStep) * $waStep;
+    $waYMax = max(4, (int) $waYMax);
+
+    $waY = function ($v) use ($waYMax, $waSvgH, $waPad) {
+        return $waSvgH - $waPad - ($waYMax > 0 ? ($v / $waYMax) : 0) * ($waSvgH - 2 * $waPad);
+    };
+    $waX = function ($i, $n) use ($waSvgW) {
+        return $n > 1 ? $i / ($n - 1) * $waSvgW : $waSvgW / 2;
+    };
+
+    $n = count($waSeries);
+    // 网格线与 y 轴标签（4 等分）
+    for ($g = 0; $g <= 4; $g++) {
+        $v = $waYMax * $g / 4;
+        $y = $waY($v);
+        $waSvg['grid'][] = ['y' => round($y, 1), 'bottom' => $g === 0];
+        $waYLabels[] = ['pos' => round($y / $waSvgH * 100, 2), 'text' => (string) round($v)];
+    }
+
+    if ($n > 0) {
+        $ptsPv = []; $ptsUv = [];
+        foreach ($waSeries as $i => $p) {
+            $ptsPv[] = round($waX($i, $n), 1) . ',' . round($waY($p['pv']), 1);
+            $ptsUv[] = round($waX($i, $n), 1) . ',' . round($waY($p['uv']), 1);
+        }
+        $waSvg['linePv'] = implode(' ', $ptsPv);
+        $waSvg['lineUv'] = implode(' ', $ptsUv);
+        $waSvg['area']   = '0,' . $waY(0) . ' ' . implode(' ', $ptsPv) . ' ' . $waSvgW . ',' . $waY(0);
+        foreach ($waSeries as $i => $p) {
+            $waSvg['dotsPv'][] = ['x' => round($waX($i, $n) / $waSvgW * 100, 2), 'y' => round($waY($p['pv']) / $waSvgH * 100, 2)];
+            $waSvg['dotsUv'][] = ['x' => round($waX($i, $n) / $waSvgW * 100, 2), 'y' => round($waY($p['uv']) / $waSvgH * 100, 2)];
+        }
+    }
+
+    // x 轴刻度标签（最多 8 个，两端必显示）
+    if ($n > 0) {
+        $xEvery = max(1, (int) ceil($n / 8));
+        $waShownX = [];
+        foreach ($waSeries as $i => $p) {
+            if ($i % $xEvery === 0 || $i === $n - 1) { $waShownX[$i] = $p['label']; }
+        }
+        $xPos = function ($i) use ($n) {
+            return $n > 1 ? $i / ($n - 1) * 100 : 50;
+        };
+        foreach ($waShownX as $i => $text) {
+            $align = 'center';
+            $pos   = $xPos($i);
+            if ($pos <= 0) { $align = 'left'; }
+            elseif ($pos >= 100) { $align = 'right'; }
+            $waXLabels[] = ['pos' => round($pos, 2), 'text' => (string) $text, 'align' => $align];
+        }
+    }
+
+    // 访问来源 TOP（referrer 取 host）
+    $waSourceTop = $db->fetchAll(
+        "SELECT SUBSTRING_INDEX(SUBSTRING_INDEX(referrer, '/', 3), '/', -1) AS src, COUNT(*) AS cnt
+         FROM visitor_logs WHERE visit_date BETWEEN ? AND ?
+         GROUP BY src ORDER BY cnt DESC LIMIT 8",
+        [$statsStart, $statsEnd]
+    ) ?: [];
+
+    // 受访页面 TOP
+    $waPageTop = $db->fetchAll(
+        "SELECT page_url, COUNT(*) AS cnt
+         FROM visitor_logs WHERE visit_date BETWEEN ? AND ?
+         GROUP BY page_url ORDER BY cnt DESC LIMIT 8",
+        [$statsStart, $statsEnd]
+    ) ?: [];
+
+    // 蜘蛛分布（一条 SQL 汇总各蜘蛛计数）
+    $spiderCase = [];
+    foreach ($spiderDefs as $def) {
+        $spiderCase[] = "SUM(LOWER(user_agent) REGEXP '" . $def['pattern'] . "') AS " . $def['key'];
+    }
+    $spiderAgg = $db->fetch(
+        "SELECT " . implode(', ', $spiderCase) . ",
+                SUM(LOWER(user_agent) REGEXP ?) AS all_cnt,
+                SUM(LOWER(user_agent) REGEXP ? AND LOWER(user_agent) NOT REGEXP ?) AS other_cnt
+         FROM visitor_logs WHERE visit_date BETWEEN ? AND ?",
+        [$waSpiderAllPattern, $waSpiderAllPattern, $waSpiderKnownPattern, $statsStart, $statsEnd]
+    ) ?: [];
+    foreach ($spiderDefs as $def) {
+        $spiderCounts[$def['key']] = (int) ($spiderAgg[$def['key']] ?? 0);
+    }
+    $spiderOther = (int) ($spiderAgg['other_cnt'] ?? 0);
+    $spiderTotal = (int) ($spiderAgg['all_cnt'] ?? 0);
+
+    // 最近蜘蛛抓取记录
+    $spiderRecent = $db->fetchAll(
+        "SELECT visit_time, ip_address, page_url, user_agent
+         FROM visitor_logs
+         WHERE visit_date BETWEEN ? AND ? AND LOWER(user_agent) REGEXP ?
+         ORDER BY visit_time DESC LIMIT 10",
+        [$statsStart, $statsEnd, $waSpiderAllPattern]
+    ) ?: [];
+} catch (Throwable $e) {
+    // 统计失败时保持默认空数据，仪表盘其余部分不受影响
+}
+
+// 传递给图表脚本的点数据
+$waChartJson = json_encode(
+    ['points' => $waSeries, 'yMax' => $waYMax],
+    JSON_UNESCAPED_UNICODE | JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT
+);
+
 // ffmpeg 状态检测（统一放在仪表盘），用于提示视频相关能力
 // 状态：
 // - embedded/ok: 已检测到可执行的内置或系统 ffmpeg
@@ -448,6 +716,287 @@ include __DIR__ . '/header.php';
                 <div class="admin-stat-label">总访问 · <?php echo $totalVisitors; ?> 访客</div>
             </div>
         </div>
+    </section>
+
+    <?php
+    // 当前范围说明文字（用于趋势图副标题）
+    $waRangeText = $statsRangeDefs[$statsRangeKey];
+    if ($statsRangeKey === 'today' || $statsRangeKey === 'yesterday') {
+        $waRangeText .= '（' . $statsStart . '）';
+    } else {
+        $waRangeText .= '（' . $statsStart . ' ~ ' . $statsEnd . '）';
+    }
+
+    $waTiles = [
+        ['name' => '浏览量',   'key' => 'pv',     'value' => number_format($waMetrics['pv'])],
+        ['name' => '独立访客', 'key' => 'uv',     'value' => number_format($waMetrics['uv'])],
+        ['name' => '蜘蛛访问', 'key' => 'spider', 'value' => number_format($waMetrics['spider'])],
+        ['name' => '受访页面', 'key' => 'pages',  'value' => number_format($waMetrics['pages'])],
+        ['name' => '人均浏览', 'key' => 'avg',    'value' => $waMetrics['avg']],
+    ];
+    $waSpiderMax = 1;
+    foreach ($spiderCounts as $c) { $waSpiderMax = max($waSpiderMax, (int) $c); }
+    ?>
+
+    <!-- ============ 百度统计风格 · 流量统计 ============ -->
+    <section class="admin-card wa-section" id="waAnalytics">
+        <div class="wa-toolbar">
+            <div class="admin-card-title">
+                <i class="ti ti-chart-area-line"></i>流量统计
+                <button type="button" class="admin-help-toggle" title="查看说明" aria-label="查看说明" aria-expanded="false"><i class="ti ti-info-circle"></i></button>
+            </div>
+            <div class="wa-range">
+                <?php foreach ($statsRangeDefs as $waKey => $waLabel): ?>
+                    <a class="wa-range-item <?php echo $statsRangeKey === $waKey ? 'active' : ''; ?>" href="?range=<?php echo $waKey; ?>"><?php echo $waLabel; ?></a>
+                <?php endforeach; ?>
+            </div>
+        </div>
+        <div class="admin-card-help">
+            <div class="admin-card-subtitle">口径与百度统计概览一致：浏览量（PV）为页面打开次数，独立访客（UV）按访问者去重；趋势图在「今天 / 昨天」按小时展示、其余按天展示，指标下方为与上一等长周期的环比。</div>
+        </div>
+
+        <div class="wa-tiles">
+            <?php foreach ($waTiles as $tile): ?>
+                <?php $tr = $waTrend($waMetrics[$tile['key']], $waPrev[$tile['key']]); ?>
+                <div class="wa-tile">
+                    <div class="wa-tile-name"><?php echo $tile['name']; ?></div>
+                    <div class="wa-tile-value"><?php echo $tile['value']; ?></div>
+                    <div class="wa-tile-trend <?php echo $tr['dir']; ?>">
+                        <?php if ($tr['dir'] === 'flat'): ?>
+                            与上期持平
+                        <?php elseif ($tr['pct'] === null): ?>
+                            <i class="ti ti-sparkles"></i>上期无数据
+                        <?php else: ?>
+                            <i class="ti <?php echo $tr['dir'] === 'up' ? 'ti-caret-up-filled' : 'ti-caret-down-filled'; ?>"></i><?php echo $tr['pct']; ?>%
+                        <?php endif; ?>
+                        <?php if ($tr['pct'] !== null): ?>
+                            <span class="wa-tile-prev">上期 <?php echo $tile['key'] === 'avg' ? $waPrev['avg'] : number_format($waPrev[$tile['key']]); ?></span>
+                        <?php endif; ?>
+                    </div>
+                </div>
+            <?php endforeach; ?>
+        </div>
+
+        <div class="wa-chart-card">
+            <div class="wa-chart-head">
+                <div class="wa-chart-title">访问趋势<span class="wa-chart-sub"><?php echo $waRangeText; ?></span></div>
+                <div class="wa-legend">
+                    <span class="wa-legend-item"><span class="wa-legend-dot wa-dot-pv"></span>浏览量</span>
+                    <span class="wa-legend-item"><span class="wa-legend-dot wa-dot-uv"></span>独立访客</span>
+                </div>
+            </div>
+            <div class="wa-chart" id="waChart">
+                <div class="wa-chart-ylayer">
+                    <?php foreach ($waYLabels as $yl): ?>
+                        <span style="top:<?php echo $yl['pos']; ?>%;"><?php echo $yl['text']; ?></span>
+                    <?php endforeach; ?>
+                </div>
+                <div class="wa-chart-body" id="waChartBody">
+                    <svg class="wa-chart-svg" viewBox="0 0 1000 220" preserveAspectRatio="none" aria-hidden="true">
+                        <defs>
+                            <linearGradient id="waAreaGrad" x1="0" y1="0" x2="0" y2="1">
+                                <stop offset="0%" stop-color="rgba(79,168,224,0.20)"/>
+                                <stop offset="100%" stop-color="rgba(79,168,224,0.02)"/>
+                            </linearGradient>
+                        </defs>
+                        <?php foreach ($waSvg['grid'] as $g): ?>
+                            <line x1="0" y1="<?php echo $g['y']; ?>" x2="1000" y2="<?php echo $g['y']; ?>"
+                                  stroke="<?php echo $g['bottom'] ? '#dfe7ee' : '#eef2f6'; ?>"
+                                  stroke-width="1"
+                                  <?php echo $g['bottom'] ? '' : 'stroke-dasharray="4 6"'; ?>
+                                  vector-effect="non-scaling-stroke"/>
+                        <?php endforeach; ?>
+                        <?php if ($waSvg['area'] !== ''): ?>
+                            <polygon points="<?php echo $waSvg['area']; ?>" fill="url(#waAreaGrad)"/>
+                            <polyline points="<?php echo $waSvg['linePv']; ?>" fill="none" stroke="#4fa8e0" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round" vector-effect="non-scaling-stroke"/>
+                            <polyline points="<?php echo $waSvg['lineUv']; ?>" fill="none" stroke="#f26d9c" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round" vector-effect="non-scaling-stroke"/>
+                        <?php endif; ?>
+                    </svg>
+                    <div class="wa-guide" id="waGuide" hidden></div>
+                    <div class="wa-hover-dot wa-hover-dot-pv" id="waDotPv" hidden></div>
+                    <div class="wa-hover-dot wa-hover-dot-uv" id="waDotUv" hidden></div>
+                    <div class="wa-tooltip" id="waTooltip" hidden>
+                        <div class="wa-tooltip-label" id="waTipLabel"></div>
+                        <div class="wa-tooltip-row"><span class="wa-legend-dot wa-dot-pv"></span>浏览量 <b id="waTipPv"></b></div>
+                        <div class="wa-tooltip-row"><span class="wa-legend-dot wa-dot-uv"></span>独立访客 <b id="waTipUv"></b></div>
+                    </div>
+                </div>
+                <div class="wa-chart-x">
+                    <?php foreach ($waXLabels as $xl): ?>
+                        <span class="wa-xlabel wa-xlabel-<?php echo $xl['align']; ?>" style="left:<?php echo $xl['pos']; ?>%;"><?php echo $xl['text']; ?></span>
+                    <?php endforeach; ?>
+                </div>
+            </div>
+        </div>
+
+        <div class="wa-tops">
+            <div class="wa-top">
+                <div class="wa-subhead">访问来源 TOP</div>
+                <ul class="wa-rank">
+                    <?php if (empty($waSourceTop)): ?>
+                        <li class="wa-empty">当前范围暂无来源数据。</li>
+                    <?php else: ?>
+                        <?php
+                        $waSrcMax = 1;
+                        foreach ($waSourceTop as $r) { $waSrcMax = max($waSrcMax, (int) $r['cnt']); }
+                        $waSrcSum = 0;
+                        foreach ($waSourceTop as $r) { $waSrcSum += (int) $r['cnt']; }
+                        ?>
+                        <?php foreach ($waSourceTop as $r): ?>
+                            <li>
+                                <div class="wa-rank-row">
+                                    <span class="wa-rank-name" title="<?php echo e($r['src']); ?>"><?php echo e($r['src'] !== '' ? $r['src'] : '直接访问'); ?></span>
+                                    <span class="wa-rank-num"><?php echo number_format((int) $r['cnt']); ?><em><?php echo $waSrcSum > 0 ? round($r['cnt'] / $waSrcSum * 100) : 0; ?>%</em></span>
+                                </div>
+                                <div class="wa-rank-bar"><span style="width:<?php echo round($r['cnt'] / $waSrcMax * 100, 1); ?>%;"></span></div>
+                            </li>
+                        <?php endforeach; ?>
+                    <?php endif; ?>
+                </ul>
+            </div>
+            <div class="wa-top">
+                <div class="wa-subhead">受访页面 TOP</div>
+                <ul class="wa-rank">
+                    <?php if (empty($waPageTop)): ?>
+                        <li class="wa-empty">当前范围暂无页面数据。</li>
+                    <?php else: ?>
+                        <?php
+                        $waPageMax = 1;
+                        foreach ($waPageTop as $r) { $waPageMax = max($waPageMax, (int) $r['cnt']); }
+                        $waPageSum = 0;
+                        foreach ($waPageTop as $r) { $waPageSum += (int) $r['cnt']; }
+                        ?>
+                        <?php foreach ($waPageTop as $r): ?>
+                            <?php $waUrl = (string) $r['page_url']; ?>
+                            <li>
+                                <div class="wa-rank-row">
+                                    <span class="wa-rank-name" title="<?php echo e($waUrl); ?>"><?php echo e(mb_strlen($waUrl) > 40 ? mb_substr($waUrl, 0, 40) . '…' : $waUrl); ?></span>
+                                    <span class="wa-rank-num"><?php echo number_format((int) $r['cnt']); ?><em><?php echo $waPageSum > 0 ? round($r['cnt'] / $waPageSum * 100) : 0; ?>%</em></span>
+                                </div>
+                                <div class="wa-rank-bar"><span style="width:<?php echo round($r['cnt'] / $waPageMax * 100, 1); ?>%;"></span></div>
+                            </li>
+                        <?php endforeach; ?>
+                    <?php endif; ?>
+                </ul>
+            </div>
+        </div>
+    </section>
+
+    <script id="waChartData" type="application/json"><?php echo $waChartJson; ?></script>
+    <script>
+    (function () {
+        var dataEl = document.getElementById('waChartData');
+        var body = document.getElementById('waChartBody');
+        if (!dataEl || !body) return;
+        var chart;
+        try { chart = JSON.parse(dataEl.textContent || '{}'); } catch (err) { return; }
+        var points = chart.points || [];
+        var yMax = Math.max(1, chart.yMax || 1);
+        var guide = document.getElementById('waGuide');
+        var dotPv = document.getElementById('waDotPv');
+        var dotUv = document.getElementById('waDotUv');
+        var tip = document.getElementById('waTooltip');
+        var tipLabel = document.getElementById('waTipLabel');
+        var tipPv = document.getElementById('waTipPv');
+        var tipUv = document.getElementById('waTipUv');
+        if (!points.length || !guide || !dotPv || !dotUv || !tip) return;
+
+        // 与 SVG 几何一致：viewBox 220 高，上下各留 10px
+        function yPct(v) { return (1 - (v / yMax) * (200 / 220)) * 100; }
+        function xPct(i) { return points.length > 1 ? (i / (points.length - 1)) * 100 : 50; }
+
+        var active = -1;
+        function show(i) {
+            active = i;
+            var p = points[i];
+            var x = xPct(i);
+            guide.hidden = false;
+            guide.style.left = x + '%';
+            dotPv.hidden = false; dotPv.style.left = x + '%'; dotPv.style.top = yPct(p.pv) + '%';
+            dotUv.hidden = false; dotUv.style.left = x + '%'; dotUv.style.top = yPct(p.uv) + '%';
+            tipLabel.textContent = p.label;
+            tipPv.textContent = p.pv;
+            tipUv.textContent = p.uv;
+            tip.hidden = false;
+            var tipW = tip.offsetWidth || 140;
+            var leftPct = Math.min(96, Math.max(4, x));
+            tip.style.left = leftPct + '%';
+            tip.style.top = Math.max(yPct(p.pv), yPct(p.uv)) + '%';
+            tip.style.transform = 'translate(' + (leftPct > 50 ? '-108%' : '8%') + ', -110%)';
+        }
+        function hide() {
+            active = -1;
+            guide.hidden = true; dotPv.hidden = true; dotUv.hidden = true; tip.hidden = true;
+        }
+        body.addEventListener('mousemove', function (ev) {
+            var rect = body.getBoundingClientRect();
+            if (!rect.width) return;
+            var ratio = (ev.clientX - rect.left) / rect.width;
+            var i = Math.round(ratio * (points.length - 1));
+            i = Math.max(0, Math.min(points.length - 1, i));
+            if (i !== active) show(i);
+        });
+        body.addEventListener('mouseleave', hide);
+    })();
+    </script>
+
+    <!-- ============ 蜘蛛统计 ============ -->
+    <section class="admin-card wa-section" id="waSpider">
+        <div class="wa-toolbar">
+            <div class="admin-card-title">
+                <i class="ti ti-spider"></i>蜘蛛统计
+                <button type="button" class="admin-help-toggle" title="查看说明" aria-label="查看说明" aria-expanded="false"><i class="ti ti-info-circle"></i></button>
+            </div>
+            <div class="wa-spider-total">当前范围共 <b><?php echo number_format($spiderTotal); ?></b> 次抓取</div>
+        </div>
+        <div class="admin-card-help">
+            <div class="admin-card-subtitle">依据访问记录的 User-Agent 识别搜索引擎蜘蛛并分类汇总。蜘蛛大多不执行页面 JS，若长期记录为 0 属正常现象；识别范围覆盖百度、谷歌、必应、搜狗、360、神马与字节。</div>
+        </div>
+
+        <div class="wa-spider-grid">
+            <?php foreach ($spiderDefs as $def): ?>
+                <div class="wa-spider">
+                    <div class="wa-spider-head">
+                        <i class="ti <?php echo $def['icon']; ?>" style="color:<?php echo $def['color']; ?>"></i>
+                        <span class="wa-spider-name"><?php echo $def['name']; ?></span>
+                    </div>
+                    <div class="wa-spider-count"><?php echo number_format($spiderCounts[$def['key']]); ?></div>
+                    <div class="wa-spider-bar"><span style="width:<?php echo round($spiderCounts[$def['key']] / $waSpiderMax * 100, 1); ?>%;background:<?php echo $def['color']; ?>"></span></div>
+                </div>
+            <?php endforeach; ?>
+            <?php if ($spiderOther > 0): ?>
+                <div class="wa-spider">
+                    <div class="wa-spider-head">
+                        <i class="ti ti-spider" style="color:#64748b"></i>
+                        <span class="wa-spider-name">其他蜘蛛</span>
+                    </div>
+                    <div class="wa-spider-count"><?php echo number_format($spiderOther); ?></div>
+                    <div class="wa-spider-bar"><span style="width:<?php echo round($spiderOther / $waSpiderMax * 100, 1); ?>%;background:#64748b"></span></div>
+                </div>
+            <?php endif; ?>
+        </div>
+
+        <div class="wa-subhead">最近抓取记录</div>
+        <table class="wa-table">
+            <thead>
+                <tr><th>时间</th><th>蜘蛛</th><th>来源 IP</th><th>抓取页面</th></tr>
+            </thead>
+            <tbody>
+                <?php if (empty($spiderRecent)): ?>
+                    <tr><td colspan="4" class="wa-empty">当前范围暂未捕捉到蜘蛛访问。</td></tr>
+                <?php else: ?>
+                    <?php foreach ($spiderRecent as $sr): ?>
+                        <?php $waSpiderUrl = (string) $sr['page_url']; ?>
+                        <tr>
+                            <td class="wa-nowrap"><?php echo e(date('m-d H:i:s', strtotime($sr['visit_time']))); ?></td>
+                            <td class="wa-nowrap"><?php echo e($waSpiderName($sr['user_agent'])); ?></td>
+                            <td class="wa-nowrap"><?php echo e($sr['ip_address']); ?></td>
+                            <td class="wa-cell-url" title="<?php echo e($waSpiderUrl); ?>"><?php echo e(mb_strlen($waSpiderUrl) > 46 ? mb_substr($waSpiderUrl, 0, 46) . '…' : $waSpiderUrl); ?></td>
+                        </tr>
+                    <?php endforeach; ?>
+                <?php endif; ?>
+            </tbody>
+        </table>
     </section>
 
     <section class="admin-dashboard-panels">
