@@ -252,6 +252,7 @@ body,button,input,select{font-family:'Inter','system-ui',-apple-system,BlinkMacS
   .withu-switch-loading-box{display:flex;flex-direction:column;align-items:center;gap:.55rem;padding:0;border:0;background:transparent;box-shadow:none;color:#fff;font-size:.82rem;font-weight:700;text-shadow:0 1px 4px rgba(0,0,0,.65)}
   .withu-switch-loading-gif{width:132px;height:132px;object-fit:contain;display:block}
   .withu-art-loading-img{width:120px;height:120px;max-width:34vw;max-height:34vw;object-fit:contain;display:block;filter:drop-shadow(0 8px 22px rgba(0,0,0,.5))}
+  .player-container.withu-switch-loading-on .art-loading{display:none!important}
   @keyframes withu-switch-spin{to{transform:rotate(360deg)}}
   .player-container .art-video-player{position:relative}
   .player-container .player-watermark{position:absolute;left:.8rem;top:.75rem;z-index:10050;display:flex;align-items:center;gap:.45rem;pointer-events:none;opacity:1;visibility:visible;transform:translateZ(0)}
@@ -288,7 +289,7 @@ body,button,input,select{font-family:'Inter','system-ui',-apple-system,BlinkMacS
   .withu-danmaku-inline-input::placeholder{color:rgba(255,255,255,.62)}
   .withu-danmaku-inline-send{flex:0 0 auto;height:24px;padding:0 .56rem;border:0;border-radius:999px;background:rgba(236,72,153,.86);color:#fff;font-size:.72rem;font-weight:800;cursor:pointer;transition:transform 120ms var(--withu-ease-out),background 120ms var(--withu-ease-out)}
   .withu-danmaku-inline-send:hover{background:rgba(236,72,153,1)}
-  .withu-danmaku-layer{position:absolute;left:0;right:0;top:10%;height:46%;z-index:10024;overflow:hidden;pointer-events:none}
+  .withu-danmaku-layer{position:absolute;left:0;right:0;top:10%;height:46%;z-index:10024;overflow:hidden;pointer-events:none;container-type:inline-size}
   .withu-danmaku-item{position:absolute;right:-25%;max-width:min(52%,520px);padding:.28rem .68rem;border:1px solid rgba(255,255,255,.34);border-radius:999px;background:rgba(15,23,42,.55);color:#fff;font-size:.84rem;line-height:1.35;text-shadow:0 1px 3px rgba(0,0,0,.32);white-space:nowrap;box-shadow:0 8px 22px rgba(0,0,0,.22);backdrop-filter:blur(12px) saturate(150%);-webkit-backdrop-filter:blur(12px) saturate(150%);animation:withu-danmaku-fly 12s linear forwards}
   .withu-danmaku-item.is-mine{background:rgba(236,72,153,.62);border-color:rgba(255,255,255,.48)}
   .withu-side-chat-panel{position:absolute;right:.7rem;top:4.25rem;bottom:4.6rem;z-index:10065;display:flex;flex-direction:column;width:min(320px,36%);min-width:240px;border:1px solid rgba(255,255,255,.36);border-radius:16px;background:rgba(15,23,42,.68);box-shadow:0 18px 55px rgba(0,0,0,.42),inset 0 1px 0 rgba(255,255,255,.18);backdrop-filter:blur(24px) saturate(170%);-webkit-backdrop-filter:blur(24px) saturate(170%);opacity:0;pointer-events:none;transform:translateX(18px) scale(.985);transform-origin:right center;transition:opacity 220ms var(--withu-ease-out),transform 220ms var(--withu-ease-out)}
@@ -413,7 +414,7 @@ body,button,input,select{font-family:'Inter','system-ui',-apple-system,BlinkMacS
   @media(prefers-reduced-motion:reduce){*,*::before,*::after{scroll-behavior:auto!important;transition-duration:.01ms!important;animation-duration:.01ms!important;animation-iteration-count:1!important}.withu-episode-overlay,.withu-chat-panel,.withu-side-chat-panel{transform:none!important}.withu-danmaku-item{left:50%!important;right:auto!important;top:14%!important;transform:translateX(-50%)!important;animation:none!important;opacity:1}}
   @media(prefers-reduced-transparency:reduce){.player-top,.player-stage,.episode-panel,.media-detail,.recommend-panel,.withu-chat-panel,.withu-side-chat-panel,.withu-danmaku-inline-form,.episode-launcher-pill,.withu-voice-control,.withu-side-chat-control,.art-video-player .art-bottom .art-controls{backdrop-filter:none!important;-webkit-backdrop-filter:none!important}.withu-chat-panel,.withu-side-chat-panel,.withu-danmaku-inline-form,.episode-launcher-pill,.withu-voice-control,.withu-side-chat-control{background:rgba(15,23,42,.94)!important}}
   @media(prefers-contrast:more){.player-top,.player-stage,.episode-panel,.media-detail,.recommend-panel,.withu-chat-panel,.withu-side-chat-panel,.withu-danmaku-inline-form,.episode-launcher-pill,.withu-voice-control,.withu-side-chat-control{border-color:currentColor!important}.withu-danmaku-inline-input,.withu-side-chat-input{font-weight:700}}
-  @keyframes withu-danmaku-fly{from{transform:translateX(0);opacity:0}6%,92%{opacity:1}to{transform:translateX(calc(-100vw - 120%));opacity:0}}
+  @keyframes withu-danmaku-fly{from{transform:translateX(0);opacity:0}6%,92%{opacity:1}to{transform:translateX(min(calc(-100vw - 120%),calc(-130cqw)));opacity:0}}
   @keyframes withu-episode-title-marquee{0%,18%{transform:translateX(0)}48%,68%{transform:translateX(calc(-1 * var(--withu-marquee-distance,0px)))}100%{transform:translateX(0)}}
   @media(max-width:780px){.withu-side-chat-panel{left:.55rem;right:.55rem;top:3.8rem;bottom:4.25rem;width:auto;min-width:0}}
   @media(max-width:720px){.withu-danmaku-inline-form{width:min(210px,38vw);min-width:142px}.withu-danmaku-inline-send{padding:0 .46rem}}
@@ -814,7 +815,7 @@ function parseWatchEventPayload(event){try{var outer=JSON.parse(event.payload||'
  episodeOverlay.addEventListener('mouseenter',clearEpisodeClose);episodeOverlay.addEventListener('mouseleave',scheduleEpisodeClose);document.addEventListener('pointermove',handleEpisodePointerMove);document.addEventListener('click',function(event){if(episodeOverlay.classList.contains('is-open')&&!event.target.closest('#episodeOverlay,.episode-launcher'))toggleEpisodeOverlay(false);if(speedMenu&&!speedMenu.hidden&&!speedMenu.contains(event.target)&&!(speedControl&&speedControl.contains(event.target)))toggleSpeedMenu(false);if(chatPanel&&!chatPanel.hidden&&!chatPanel.contains(event.target)&&!(chatControl&&chatControl.contains(event.target)))toggleChatPanel(false);if(sideChatPanel&&!sideChatPanel.hidden&&!sideChatPanel.contains(event.target)&&!(sideChatControl&&sideChatControl.contains(event.target)))scheduleSideChatClose();});
   document.addEventListener('keydown',function(event){if(event.key==='Escape')closePlayerPopups();if(event.key==='Tab'&&!event.shiftKey&&togetherControlsEnabled()){event.preventDefault();toggleSideChatPanel();}});
  window.addEventListener('resize',function(){schedulePlayerLayout();refreshEpisodeMarquees();if(episodeOverlay.classList.contains('is-open'))positionEpisodeOverlay();if(speedMenu&&!speedMenu.hidden)positionPopupAboveControl(speedMenu,speedControl,8);if(chatPanel&&!chatPanel.hidden)positionPopupAboveControl(chatPanel,chatControl,8);});
-  function setSwitchLoading(active,label){var node=$('switchLoading');if(!node){node=document.createElement('div');node.id='switchLoading';node.className='withu-switch-loading';node.hidden=true;node.setAttribute('aria-live','polite');node.innerHTML='<div class="withu-switch-loading-box"><img class="withu-switch-loading-gif" src="/Style/img/switch-loading.gif" alt="" aria-hidden="true"><span id="switchLoadingText">正在切换选集…</span></div>';var container=$('playerContainer');if(container)container.appendChild(node);}applyPlayerLoadBackground();var text=$('switchLoadingText');if(text&&label)text.textContent=label;node.hidden=!active;node.setAttribute('aria-busy',active?'true':'false');if(!active)mediaSwitchBusy=false;}
+  function setSwitchLoading(active,label){var node=$('switchLoading');if(!node){node=document.createElement('div');node.id='switchLoading';node.className='withu-switch-loading';node.hidden=true;node.setAttribute('aria-live','polite');node.innerHTML='<div class="withu-switch-loading-box"><img class="withu-switch-loading-gif" src="/Style/img/switch-loading.gif" alt="" aria-hidden="true"><span id="switchLoadingText">正在切换选集…</span></div>';var container=$('playerContainer');if(container)container.appendChild(node);}applyPlayerLoadBackground();var text=$('switchLoadingText');if(text&&label)text.textContent=label;node.hidden=!active;node.setAttribute('aria-busy',active?'true':'false');var stage=$('playerContainer');if(stage)stage.classList.toggle('withu-switch-loading-on',!!active);if(!active)mediaSwitchBusy=false;}
   function stopCurrentPlaybackForSwitch(){
    mediaSwitchSerial++;
    if(playbackSourceController){playbackSourceController.abort();playbackSourceController=null;}
@@ -838,6 +839,25 @@ function parseWatchEventPayload(event){try{var outer=JSON.parse(event.payload||'
   }
   function currentStrmResolveUrl(){var base=Number(strmMediaId||0),ep=0,item=findMediaItem(pendingMediaId)||currentEpisodes.find(function(x){return Number(x.id)===Number(pendingMediaId);});if(item){base=Number(item.strmMediaId||base);ep=Number(item.strmEpisodeId||0);}if(base<=0)return '';var url='/api/strm.php?action=resolve&id='+base;if(ep>0)url+='&episode='+ep;return url;}
   function refreshPlaybackSource(){if(!mediaPlayer){setStatus('播放器尚未就绪');return;}var url=currentStrmResolveUrl();if(!url){setStatus('当前没有可刷新的播放源');return;}var item=findMediaItem(pendingMediaId)||currentEpisodes.find(function(x){return Number(x.id)===Number(pendingMediaId);})||{};var name=item.episode_number?'第 '+item.episode_number+' 集':(item.file_name||'当前选集');setSwitchLoading(true,'正在刷新直链…');setStatus('正在重新获取直链…');setPlayerSource(url,name,false,true,undefined,false);}
+  // 自动播放增强：只有浏览器策略拦截（NotAllowedError）才放弃；加载竞态等其他错误
+  // （如 play() 被 load()/pause() 打断的 AbortError）在数据就绪后自动重试，最多 4 次。
+  function withuAutoPlay(switchId,announceAutoplay){
+   var video=player,attempts=0;
+   if(!video||desktopMpvActive)return;
+   var giveUp=function(){if(announceAutoplay)localAutoplayPendingUntil=0;};
+   var announcePlay=function(){if(announceAutoplay)setTimeout(function(){if(switchId===mediaSwitchSerial&&!localOnly&&roomJoined&&!player.paused)sendEvent('play');},2400);};
+   var attempt=function(){
+    if(switchId!==mediaSwitchSerial||desktopMpvActive||!video.paused||video.ended)return;
+    attempts++;
+    Promise.resolve().then(function(){return video.play();}).then(announcePlay).catch(function(error){
+     if(switchId!==mediaSwitchSerial)return;
+     if((error&&error.name==='NotAllowedError')||attempts>=4)return giveUp();
+     var retry=function(){setTimeout(function(){if(switchId===mediaSwitchSerial)attempt();},240);};
+     if(video.readyState>=2)retry();else video.addEventListener('canplay',function(){if(switchId===mediaSwitchSerial)retry();},{once:true});
+    });
+   };
+   if(video.readyState>=2)attempt();else video.addEventListener('canplay',function(){if(switchId===mediaSwitchSerial)attempt();},{once:true});
+  }
    function setPlayerSource(url,name,forcedType,preservePosition,autoplayOverride,announceAutoplay){
    var switchId=++mediaSwitchSerial;
    if(playbackSourceController)playbackSourceController.abort();
@@ -867,6 +887,7 @@ function parseWatchEventPayload(event){try{var outer=JSON.parse(event.payload||'
      return;
     }
 
+    if(player&&!player.paused){try{player.pause();}catch(e){}} // 先行暂停：避免 Artplayer 在 canplay 内部恢复播放被打断或被拦截时挂起 switchUrl，恢复交给 withuAutoPlay
     return mediaPlayer.switchUrl(result.url).then(function(){
      if(switchId!==mediaSwitchSerial)return;
      strmLoadedResumeKey=currentResumeKey();
@@ -881,7 +902,7 @@ function parseWatchEventPayload(event){try{var outer=JSON.parse(event.payload||'
       else{player.addEventListener('loadedmetadata',clearSwitchLoading,{once:true});player.addEventListener('canplay',clearSwitchLoading,{once:true});}
       if((!roomJoined||localOnly)&&playerDefaultSpeed){var defaultSpeed=Number(playerDefaultSpeed)||1;if(Math.abs(Number(player.playbackRate||1)-defaultSpeed)>.01){beginRemoteApply(800);player.playbackRate=defaultSpeed;}}
       if(position>0&&Number.isFinite(position))player.currentTime=position;
-      if(shouldAutoplay){if(announceAutoplay)localAutoplayPendingUntil=Date.now()+3000;Promise.resolve(player.play()).then(function(){if(announceAutoplay)setTimeout(function(){if(switchId===mediaSwitchSerial&&!localOnly&&roomJoined&&!player.paused)sendEvent('play');},2400);}).catch(function(){if(announceAutoplay)localAutoplayPendingUntil=0;});}
+      if(shouldAutoplay){if(announceAutoplay)localAutoplayPendingUntil=Date.now()+3000;withuAutoPlay(switchId,announceAutoplay);}
      }
     });
    }).catch(function(error){
@@ -1222,6 +1243,7 @@ function selectMedia(id){id=Number(id);if(!Number.isFinite(id)||id<=0)return;if(
     var stEp=Number(st.strmEpisodeId||0);
     var clickedKey='strm:'+Number(st.strmMediaId||0)+':'+stEp;
     if(clickedKey===strmLoadedResumeKey)return; // 仅当该集已实际加载播放时忽略重复点击
+    localAutoplayRequest=watchAutoplayEnabled; // strm 分支同样走设置开关的本地自动播放（原缺失导致首播不自动播放）
     pendingMediaId=id;loadedMediaId=null;renderEpisodes();updatePlayerTopBar();
     setSwitchLoading(true,'正在切换到 '+stName+'…');stopCurrentPlaybackForSwitch();
     setStatus('正在读取选集…');
