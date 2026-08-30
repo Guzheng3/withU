@@ -1355,3 +1355,285 @@ body.admin-v3 .player-settings-form > .player-settings-actions {
     line-height: 1.5;
     margin: 0 0 0.5rem 0;
 }
+
+/* ============ 系统设置页组件 ============ */
+
+/* 卡片标题图标（仅标题直属图标，不含帮助按钮内图标） */
+body.admin-v3 .admin-card-title > i.ti {
+    margin-right: 0.35rem;
+    font-size: 1rem;
+    color: var(--v3-pink);
+    vertical-align: -2px;
+}
+
+/* 配色预览条（覆盖 theme.css 的玻璃底样式，贴合 v3 白卡） */
+body.admin-v3 .theme-preview-strip {
+    gap: 0.45rem;
+    padding: 0.4rem;
+    border: 1px solid var(--v3-border);
+    border-radius: 10px;
+    background: var(--v3-surface-soft);
+    box-shadow: none;
+}
+
+body.admin-v3 .theme-preview-strip span {
+    min-height: 38px;
+    border-radius: 7px;
+    border: 1px solid rgba(15, 23, 42, 0.06);
+}
+
+/* 自定义强调色：一行 = 名称 + 小色块 + HEX 输入 */
+body.admin-v3 .theme-color-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 0.55rem;
+}
+
+body.admin-v3 .theme-color-grid label {
+    display: grid;
+    grid-template-columns: 3.4em 44px minmax(0, 1fr);
+    align-items: center;
+    gap: 0.6rem;
+    color: var(--v3-text-2);
+    font-size: 0.82rem;
+    font-weight: 550;
+}
+
+body.admin-v3 .theme-color-name { white-space: nowrap; }
+
+body.admin-v3 .theme-color-grid input[type="color"] {
+    width: 44px;
+    height: 32px;
+    padding: 0;
+    border: 1px solid var(--v3-border);
+    border-radius: 8px;
+    background: var(--v3-surface);
+    cursor: pointer;
+}
+
+body.admin-v3 .theme-color-grid input[type="color"]::-webkit-color-swatch-wrapper { padding: 3px; }
+body.admin-v3 .theme-color-grid input[type="color"]::-webkit-color-swatch { border: none; border-radius: 5px; }
+body.admin-v3 .theme-color-grid input[type="color"]::-moz-color-swatch { border: none; border-radius: 5px; }
+
+body.admin-v3 .theme-hex-input {
+    width: 100%;
+    min-width: 0;
+    padding: 0.5rem 0.65rem;
+    border: 1px solid rgba(148, 163, 184, 0.55);
+    border-radius: 0.65rem;
+    background: var(--v3-surface);
+    color: var(--v3-text);
+    font-size: 0.84rem;
+    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    letter-spacing: 0.02em;
+}
+
+body.admin-v3 .theme-hex-input:focus {
+    outline: none;
+    border-color: var(--v3-pink);
+    box-shadow: 0 0 0 3px rgba(242, 109, 156, 0.16);
+}
+
+/* 固定项信息行（显示模式 / 后台界面模式等不可切换项） */
+body.admin-v3 .settings-static-list {
+    display: grid;
+    gap: 0.5rem;
+}
+
+body.admin-v3 .settings-static-item {
+    display: flex;
+    align-items: baseline;
+    gap: 0.6rem;
+    padding: 0.6rem 0.75rem;
+    border: 1px solid var(--v3-border-light);
+    border-radius: 0.7rem;
+    background: var(--v3-surface-soft);
+}
+
+body.admin-v3 .settings-static-name {
+    flex: none;
+    font-size: 0.82rem;
+    font-weight: 600;
+    color: var(--v3-text);
+}
+
+body.admin-v3 .settings-static-value {
+    font-size: 0.78rem;
+    color: var(--v3-text-2);
+    min-width: 0;
+}
+
+body.admin-v3 .settings-static-value small {
+    display: block;
+    margin-top: 2px;
+    font-size: 0.74rem;
+    color: var(--v3-text-3);
+    line-height: 1.45;
+}
+
+/* 底部吸附保存栏 */
+body.admin-v3 .settings-savebar {
+    position: sticky;
+    bottom: 0.9rem;
+    z-index: 40;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 0.75rem 1rem;
+    margin-top: 1rem;
+    padding: 0.7rem 0.7rem 0.7rem 1.1rem;
+    border: 1px solid var(--v3-border);
+    border-radius: var(--v3-radius);
+    background: var(--v3-glass-strong);
+    backdrop-filter: blur(16px) saturate(160%);
+    -webkit-backdrop-filter: blur(16px) saturate(160%);
+    box-shadow: var(--v3-shadow);
+}
+
+body.admin-v3 .settings-savebar-note {
+    margin: 0;
+    font-size: 0.76rem;
+    color: var(--v3-text-3);
+    line-height: 1.5;
+    min-width: 0;
+}
+
+@media (max-width: 767px) {
+    body.admin-v3 .settings-savebar .btn { flex: 1 1 100%; }
+    /* 移动端吸附时避开固定底部导航（约 58px + 安全区） */
+    body.admin-v3 .settings-savebar { bottom: calc(66px + env(safe-area-inset-bottom)); }
+}
+/* ============ 系统设置：单列 + 顶部分段导航 ============ */
+body.admin-v3 .settings-tabs {
+    position: sticky;
+    top: var(--v3-topbar-h);
+    z-index: 15;
+    display: flex;
+    align-items: center;
+    gap: 0.3rem;
+    max-width: var(--v3-content-max);
+    margin-bottom: 0.9rem;
+    padding: 0.3rem;
+    border: 1px solid var(--v3-border);
+    border-radius: var(--v3-radius);
+    background: var(--v3-glass-strong);
+    backdrop-filter: blur(16px) saturate(160%);
+    -webkit-backdrop-filter: blur(16px) saturate(160%);
+    box-shadow: var(--v3-shadow-sm);
+    overflow-x: auto;
+    scrollbar-width: none;
+}
+
+body.admin-v3 .settings-tabs::-webkit-scrollbar { display: none; }
+
+body.admin-v3 .settings-tab {
+    flex: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    min-height: 42px;
+    padding: 0 0.95rem;
+    border: 1px solid transparent;
+    border-radius: calc(var(--v3-radius) - 4.14px);
+    background: transparent;
+    color: var(--v3-text-2);
+    font-family: inherit;
+    font-size: 0.84rem;
+    font-weight: 550;
+    cursor: pointer;
+    white-space: nowrap;
+    transition: background-color 0.2s var(--v3-ease), color 0.2s var(--v3-ease),
+        border-color 0.2s var(--v3-ease);
+}
+
+body.admin-v3 .settings-tab i { font-size: 15px; }
+
+body.admin-v3 .settings-tab:hover { color: var(--v3-text); background: var(--v3-surface-soft); }
+
+body.admin-v3 .settings-tab.is-active {
+    color: var(--v3-pink-deep);
+    background: var(--v3-pink-glass);
+    border-color: rgba(242, 109, 156, 0.28);
+    font-weight: 600;
+}
+
+body.admin-v3 .settings-tab:focus-visible {
+    outline: 2px solid var(--v3-pink);
+    outline-offset: 2px;
+}
+
+/* 窄列页面：标题、提示条、表单整体居中成 900px 一列，不再顶着左边 */
+body.admin-narrow .admin-main > * {
+    max-width: var(--v3-content-max);
+    margin-left: auto;
+    margin-right: auto;
+}
+
+/* 设置页固定单列：覆盖 admin-grid 的两列断点，并限制表单行宽 */
+body.admin-v3 .admin-grid.settings-panel,
+body.admin-v3 .admin-grid.admin-grid-single {
+    grid-template-columns: minmax(0, 1fr);
+    max-width: var(--v3-content-max);
+}
+
+/* admin-grid 的 display:grid 会压过 UA 的 [hidden]，需显式关掉 */
+body.admin-v3 .settings-panel[hidden] { display: none; }
+
+/* 锚点跳转（侧栏"主题与外观"入口）时给顶栏和分段导航留出空间 */
+body.admin-v3 .settings-panel { scroll-margin-top: calc(var(--v3-topbar-h) + 4.5rem); }
+
+body.admin-v3 .settings-savebar { max-width: var(--v3-content-max); }
+
+@media (max-width: 580px) {
+    body.admin-v3 .settings-tab {
+        min-height: 40px;
+        padding: 0 0.8rem;
+        font-size: 0.8rem;
+    }
+}
+
+/* 恋爱开始时间：年月日 · 时分秒 一行（原样式只挂在 body.admin-v2 前缀下，v3 页面从未生效） */
+body.admin-v3 .settings-date-time-row {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr)) auto repeat(3, minmax(0, 1fr));
+    gap: 0.65rem;
+    align-items: end;
+}
+
+body.admin-v3 .settings-date-time-row > label {
+    display: grid;
+    gap: 0.25rem;
+    min-width: 0;
+}
+
+body.admin-v3 .settings-date-time-row > label > span {
+    color: var(--v3-text-3);
+    font-size: 0.7rem;
+    text-align: center;
+}
+
+body.admin-v3 .settings-date-time-row > i {
+    padding-bottom: 0.75rem;
+    color: var(--v3-text-3);
+    font-style: normal;
+}
+
+body.admin-v3 .settings-date-time-row input {
+    width: 100%;
+    min-height: 42px;
+    box-sizing: border-box;
+    padding: 0.55rem 0.6rem;
+    border: 1px solid rgba(148, 163, 184, 0.6);
+    border-radius: 0.65rem;
+    background: var(--v3-surface);
+    color: var(--v3-text);
+    font: inherit;
+    text-align: center;
+}
+
+@media (max-width: 680px) {
+    body.admin-v3 .settings-date-time-row { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+    body.admin-v3 .settings-date-time-row > i { display: none; }
+}
+

@@ -26,6 +26,7 @@ if (function_exists('migrate_schema_if_needed')) {
 }
 
 $adminPage = 'tools_stats';
+$adminNarrow = true;
 
 // 每次批处理的最大条数，避免超时（用于相册缩略图补齐相关操作）
 $batchLimit = 100;
@@ -919,7 +920,7 @@ include __DIR__ . '/header.php';
     </div>
 <?php endif; ?>
 
-<section class="admin-grid">
+<section class="admin-grid admin-grid-single">
     <div class="admin-card">
         <div class="admin-card-header">
             <div>
@@ -1013,28 +1014,28 @@ include __DIR__ . '/header.php';
         </p>
     </div>
 
-    <div class=”admin-card”>
-        <div class=”admin-card-header”>
+    <div class="admin-card">
+        <div class="admin-card-header">
             <div>
-                <div class=”admin-card-title”>
+                <div class="admin-card-title">
                     相册图片：补齐缩略图 / WebP
-                    <button type=”button” class=”admin-help-toggle” title=”查看说明” aria-label=”查看说明” aria-expanded=”false”><i class=”ti ti-info-circle”></i></button>
+                    <button type="button" class="admin-help-toggle" title="查看说明" aria-label="查看说明" aria-expanded="false"><i class="ti ti-info-circle"></i></button>
                 </div>
             </div>
         </div>
-        <div class=”admin-card-help”>
-            <div class=”admin-card-subtitle”>
-                为旧相册中尚未生成缩略图的图片补齐 thumbs 与 WebP，并在生成成功后为其写入 thumbnail_path（不会处理已标记为”不压缩”的相册和图片）。
+        <div class="admin-card-help">
+            <div class="admin-card-subtitle">
+                为旧相册中尚未生成缩略图的图片补齐 thumbs 与 WebP，并在生成成功后为其写入 thumbnail_path（不会处理已标记为“不压缩”的相册和图片）。
             </div>
             <p>
                 每次最多处理 <?php echo (int)$batchLimit; ?> 张图片。建议在非高峰时间多次执行，直到没有明显变化为止。
             </p>
         </div>
-        <form method=”POST”>
+        <form method="POST">
             <?php echo csrf_field(); ?>
-            <input type=”hidden” name=”mode” value=”album_thumbs”>
-            <button type=”submit” class=”btn btn-primary”>
-                <i class=”fas fa-magic”></i>
+            <input type="hidden" name="mode" value="album_thumbs">
+            <button type="submit" class="btn btn-primary">
+                <i class="fas fa-magic"></i>
                 <span>执行一次相册图片补齐</span>
             </button>
         </form>

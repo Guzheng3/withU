@@ -67,6 +67,7 @@ $presenceTimeout = (int)($settings['watch_presence_timeout_sec'] ?? 8);
 $heartbeatInterval = (int)($settings['watch_heartbeat_interval_ms'] ?? 2500);
 $autoplay = ($settings['watch_autoplay_enabled'] ?? '1') === '1';
 $adminPage = 'together_settings';
+$adminNarrow = true;
 include __DIR__ . '/header.php';
 ?>
 
@@ -80,7 +81,7 @@ include __DIR__ . '/header.php';
 
 <form method="post">
     <?php echo csrf_field(); ?>
-    <section class="admin-grid admin-together-grid">
+    <section class="admin-grid admin-grid-single">
         <div class="admin-card">
             <div class="admin-card-header">
                 <div>

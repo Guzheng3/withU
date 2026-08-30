@@ -194,6 +194,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 }
 
 $adminPage = 'settings';
+$adminNarrow = true;
+
+// 分段定位：?section=theme 来自侧栏"主题与外观"入口，其余默认"基础信息"
+$activeTab = (($_GET['section'] ?? '') === 'theme') ? 'theme' : 'basic';
+$settingsTabs = [
+    'basic'    => ['icon' => 'ti-settings',    'label' => '基础信息'],
+    'together' => ['icon' => 'ti-users',       'label' => '一起看'],
+    'theme'    => ['icon' => 'ti-palette',     'label' => '主题外观'],
+    'upload'   => ['icon' => 'ti-upload',      'label' => '上传与其他'],
+    'site'     => ['icon' => 'ti-info-circle', 'label' => '站点信息'],
+];
 
 include __DIR__ . '/header.php';
 ?>
@@ -232,12 +243,27 @@ include __DIR__ . '/header.php';
     <form method="POST" enctype="multipart/form-data" novalidate>
         <?php echo csrf_field(); ?>
 
-        <section class="admin-grid" style="margin-bottom:0.75rem;">
+        <nav class="settings-tabs" role="tablist" aria-label="设置分段">
+            <?php foreach ($settingsTabs as $tabKey => $tabMeta): ?>
+                <button
+                    type="button"
+                    class="settings-tab<?php echo $activeTab === $tabKey ? ' is-active' : ''; ?>"
+                    role="tab"
+                    id="tab-<?php echo $tabKey; ?>"
+                    aria-controls="<?php echo $tabKey; ?>-settings"
+                    aria-selected="<?php echo $activeTab === $tabKey ? 'true' : 'false'; ?>"
+                    tabindex="<?php echo $activeTab === $tabKey ? 0 : -1; ?>">
+                    <i class="ti <?php echo $tabMeta['icon']; ?>" aria-hidden="true"></i><?php echo $tabMeta['label']; ?>
+                </button>
+            <?php endforeach; ?>
+        </nav>
+
+        <section class="admin-grid settings-panel" id="basic-settings" role="tabpanel" aria-labelledby="tab-basic" <?php echo $activeTab === 'basic' ? '' : 'hidden'; ?> style="margin-bottom:0.75rem;">
             <div class="admin-card">
                 <div class="admin-card-header">
                     <div>
                         <div class="admin-card-title">
-                        基础信息
+                        <i class="ti ti-settings" aria-hidden="true"></i>基础信息
                         <button type="button" class="admin-help-toggle" title="查看说明" aria-label="查看说明" aria-expanded="false"><i class="ti ti-info-circle"></i></button>
                     </div>
                 </div>
@@ -319,7 +345,7 @@ include __DIR__ . '/header.php';
                 <div class="admin-card-header">
                     <div>
                         <div class="admin-card-title">
-                        恋爱与首页
+                        <i class="ti ti-heart" aria-hidden="true"></i>恋爱与首页
                         <button type="button" class="admin-help-toggle" title="查看说明" aria-label="查看说明" aria-expanded="false"><i class="ti ti-info-circle"></i></button>
                     </div>
                 </div>
@@ -398,14 +424,14 @@ include __DIR__ . '/header.php';
         $watchHeartbeatValue = (int)($settingsData['watch_heartbeat_interval_ms'] ?? 2500);
         $watchAutoplayValue = $settingsData['watch_autoplay_enabled'] ?? '1';
         ?>
-        <section class="admin-grid" id="together-settings" style="margin-bottom:0.75rem;">
+        <section class="admin-grid settings-panel" id="together-settings" role="tabpanel" aria-labelledby="tab-together" <?php echo $activeTab === 'together' ? '' : 'hidden'; ?> style="margin-bottom:0.75rem;">
             <div class="admin-card">
-                <div class="admin-card-header"><div><div class="admin-card-title">一起看 <button type="button" class="admin-help-toggle" title="查看说明" aria-label="查看说明" aria-expanded="false"><i class="ti ti-info-circle"></i></button></div></div></div><div class="admin-card-help"><div class="admin-card-subtitle">同步、在线状态和自动播放</div></div>
+                <div class="admin-card-header"><div><div class="admin-card-title"><i class="ti ti-users" aria-hidden="true"></i>一起看 <button type="button" class="admin-help-toggle" title="查看说明" aria-label="查看说明" aria-expanded="false"><i class="ti ti-info-circle"></i></button></div></div></div><div class="admin-card-help"><div class="admin-card-subtitle">同步、在线状态和自动播放</div></div>
                 <div class="form-group" style="margin-bottom:.65rem;"><label style="display:block;font-size:.85rem;margin-bottom:.25rem;">状态轮询间隔（毫秒）</label><input type="number" name="settings[watch_poll_interval_ms]" min="300" max="3000" value="<?php echo $watchPollIntervalValue; ?>" style="width:100%;padding:.55rem .75rem;border-radius:.75rem;border:1px solid rgba(148,163,184,.6);font-size:.9rem;"><div style="margin-top:.2rem;font-size:.78rem;color:var(--text-light);">默认 500ms，只读取房间状态，不会因此修改播放进度。</div></div>
                 <div class="form-group" style="margin-bottom:.65rem;"><label style="display:block;font-size:.85rem;margin-bottom:.25rem;">偏差校正阈值（毫秒）</label><input type="number" name="settings[watch_sync_threshold_ms]" min="500" max="5000" value="<?php echo $watchSyncThresholdValue; ?>" style="width:100%;padding:.55rem .75rem;border-radius:.75rem;border:1px solid rgba(148,163,184,.6);font-size:.9rem;"><div style="margin-top:.2rem;font-size:.78rem;color:var(--text-light);">小偏差使用短暂倍速追赶，大偏差才直接跳转。</div></div>
             </div>
             <div class="admin-card">
-                <div class="admin-card-header"><div><div class="admin-card-title">一起看体验 <button type="button" class="admin-help-toggle" title="查看说明" aria-label="查看说明" aria-expanded="false"><i class="ti ti-info-circle"></i></button></div></div></div><div class="admin-card-help"><div class="admin-card-subtitle">在线判定、心跳与进入播放</div></div>
+                <div class="admin-card-header"><div><div class="admin-card-title"><i class="ti ti-player-play" aria-hidden="true"></i>一起看体验 <button type="button" class="admin-help-toggle" title="查看说明" aria-label="查看说明" aria-expanded="false"><i class="ti ti-info-circle"></i></button></div></div></div><div class="admin-card-help"><div class="admin-card-subtitle">在线判定、心跳与进入播放</div></div>
                 <div class="form-group" style="margin-bottom:.65rem;"><label style="display:block;font-size:.85rem;margin-bottom:.25rem;">在线判定时间（秒）</label><input type="number" name="settings[watch_presence_timeout_sec]" min="3" max="30" value="<?php echo $watchPresenceTimeoutValue; ?>" style="width:100%;padding:.55rem .75rem;border-radius:.75rem;border:1px solid rgba(148,163,184,.6);font-size:.9rem;"></div>
                 <div class="form-group" style="margin-bottom:.65rem;"><label style="display:block;font-size:.85rem;margin-bottom:.25rem;">心跳间隔（毫秒）</label><input type="number" name="settings[watch_heartbeat_interval_ms]" min="1000" max="10000" value="<?php echo $watchHeartbeatValue; ?>" style="width:100%;padding:.55rem .75rem;border-radius:.75rem;border:1px solid rgba(148,163,184,.6);font-size:.9rem;"></div>
                 <label class="switch"><input type="checkbox" name="settings[watch_autoplay_enabled]" value="1" <?php echo $watchAutoplayValue === '1' ? 'checked' : ''; ?>><span class="switch-track"><span class="switch-thumb"></span></span><span class="switch-label">首次打开、换集和换剧默认自动播放</span></label>
@@ -416,18 +442,19 @@ include __DIR__ . '/header.php';
         $themePresetValue = $settingsData['theme_preset'] ?? 'sakura';
         if ($themePresetValue === 'pastel-couple') $themePresetValue = 'sakura';
         $themeModeValue = 'light';
-        $themeCustomPrimary = $settingsData['theme_custom_primary'] ?? '#F5B6C8';
-        $themeCustomSecondary = $settingsData['theme_custom_secondary'] ?? '#B9E3D0';
-        $themeCustomAccent = $settingsData['theme_custom_accent'] ?? '#B8DDF2';
+        // 空字符串也算未自定义；?? 不处理空串，空值进入取色器会回退成黑色色块
+        $themeCustomPrimary = trim((string)($settingsData['theme_custom_primary'] ?? '')) ?: '#F5B6C8';
+        $themeCustomSecondary = trim((string)($settingsData['theme_custom_secondary'] ?? '')) ?: '#B9E3D0';
+        $themeCustomAccent = trim((string)($settingsData['theme_custom_accent'] ?? '')) ?: '#B8DDF2';
         // 后台界面固定使用透粉玻璃（apple）模式，物理移除 current 模式
         $adminUiModeValue = 'apple';
         ?>
-        <section class="admin-grid" id="theme-settings" style="margin-bottom:0.75rem;">
+        <section class="admin-grid settings-panel" id="theme-settings" role="tabpanel" aria-labelledby="tab-theme" <?php echo $activeTab === 'theme' ? '' : 'hidden'; ?> style="margin-bottom:0.75rem;">
             <div class="admin-card">
                 <div class="admin-card-header">
                     <div>
                         <div class="admin-card-title">
-                        主题与外观
+                        <i class="ti ti-palette" aria-hidden="true"></i>主题与外观
                         <button type="button" class="admin-help-toggle" title="查看说明" aria-label="查看说明" aria-expanded="false"><i class="ti ti-info-circle"></i></button>
                     </div>
                 </div>
@@ -444,25 +471,21 @@ include __DIR__ . '/header.php';
                     </select>
                 </div>
                 <div class="form-group" style="margin-bottom:0.75rem;">
-                    <label style="display:block;font-size:0.85rem;margin-bottom:0.25rem;">显示模式</label>
+                    <label style="display:block;font-size:0.85rem;margin-bottom:0.25rem;">配色预览</label>
                     <input type="hidden" name="settings[theme_mode]" value="light">
-                    <div class="settings-light-mode-note">白天模式</div>
-                </div>
-                <div class="theme-preview-strip" id="themePreviewStrip" aria-label="主题预览">
-                    <span></span><span></span><span></span><span></span>
+                    <div class="theme-preview-strip" id="themePreviewStrip" aria-label="主题预览">
+                        <span></span><span></span><span></span><span></span>
+                    </div>
                 </div>
                 <hr style="border:none;border-top:1px dashed rgba(148,163,184,0.5);margin:0.9rem 0;">
-                <div class="form-group">
-                    <label style="display:block;font-size:0.85rem;margin-bottom:0.35rem;">后台界面模式</label>
-                    <div class="admin-ui-choice-grid">
-                        <label class="admin-ui-choice is-selected">
-                            <input type="hidden" name="settings[admin_ui_mode]" value="apple">
-                            <span class="admin-ui-choice-preview admin-ui-choice-preview-apple"></span>
-                            <span>
-                                <strong>透粉玻璃</strong>
-                                <small>Apple 风格侧栏、浮层和浅粉液态玻璃材质。</small>
-                            </span>
-                        </label>
+                <div class="settings-static-list">
+                    <div class="settings-static-item">
+                        <span class="settings-static-name">显示模式</span>
+                        <span class="settings-static-value">白天模式<small>浅色主题保持清爽明亮，图片和视频不会被滤镜改变。</small></span>
+                    </div>
+                    <div class="settings-static-item">
+                        <span class="settings-static-name">后台界面模式</span>
+                        <span class="settings-static-value">透粉玻璃<small>Apple 风格侧栏、浮层和浅粉液态玻璃材质。</small></span>
                     </div>
                 </div>
             </div>
@@ -470,7 +493,7 @@ include __DIR__ . '/header.php';
                 <div class="admin-card-header">
                     <div>
                         <div class="admin-card-title">
-                        自定义强调色
+                        <i class="ti ti-droplet" aria-hidden="true"></i>自定义强调色
                         <button type="button" class="admin-help-toggle" title="查看说明" aria-label="查看说明" aria-expanded="false"><i class="ti ti-info-circle"></i></button>
                     </div>
                 </div>
@@ -479,20 +502,20 @@ include __DIR__ . '/header.php';
                 <div class="admin-card-subtitle">留空则使用预设主题颜色</div>
             </div>
                 <div class="theme-color-grid">
-                    <label>主色<input type="color" data-theme-picker="primary" value="<?php echo e($themeCustomPrimary); ?>"><input class="theme-hex-input" type="text" name="settings[theme_custom_primary]" value="<?php echo e($settingsData['theme_custom_primary'] ?? ''); ?>" placeholder="#F5B6C8" maxlength="7"></label>
-                    <label>辅助色<input type="color" data-theme-picker="secondary" value="<?php echo e($themeCustomSecondary); ?>"><input class="theme-hex-input" type="text" name="settings[theme_custom_secondary]" value="<?php echo e($settingsData['theme_custom_secondary'] ?? ''); ?>" placeholder="#B9E3D0" maxlength="7"></label>
-                    <label>强调色<input type="color" data-theme-picker="accent" value="<?php echo e($themeCustomAccent); ?>"><input class="theme-hex-input" type="text" name="settings[theme_custom_accent]" value="<?php echo e($settingsData['theme_custom_accent'] ?? ''); ?>" placeholder="#B8DDF2" maxlength="7"></label>
+                    <label><span class="theme-color-name">主色</span><input type="color" data-theme-picker="primary" value="<?php echo e($themeCustomPrimary); ?>" aria-label="选择主色"><input class="theme-hex-input" type="text" name="settings[theme_custom_primary]" value="<?php echo e($settingsData['theme_custom_primary'] ?? ''); ?>" placeholder="留空用预设" maxlength="7"></label>
+                    <label><span class="theme-color-name">辅助色</span><input type="color" data-theme-picker="secondary" value="<?php echo e($themeCustomSecondary); ?>" aria-label="选择辅助色"><input class="theme-hex-input" type="text" name="settings[theme_custom_secondary]" value="<?php echo e($settingsData['theme_custom_secondary'] ?? ''); ?>" placeholder="留空用预设" maxlength="7"></label>
+                    <label><span class="theme-color-name">强调色</span><input type="color" data-theme-picker="accent" value="<?php echo e($themeCustomAccent); ?>" aria-label="选择强调色"><input class="theme-hex-input" type="text" name="settings[theme_custom_accent]" value="<?php echo e($settingsData['theme_custom_accent'] ?? ''); ?>" placeholder="留空用预设" maxlength="7"></label>
                 </div>
-                    <p style="margin:.75rem 0 0;font-size:.78rem;color:var(--text-light);">浅色主题保持清爽明亮，图片和视频不会被滤镜改变。</p>
+                    <p style="margin:.75rem 0 0;font-size:.78rem;color:var(--text-light);">留空时使用左侧预设配色；填写 6 位 HEX（如 #F5B6C8）后，主站、后台和播放器将使用自定义颜色。</p>
             </div>
         </section>
 
-        <section class="admin-grid">
+        <section class="admin-grid settings-panel" id="upload-settings" role="tabpanel" aria-labelledby="tab-upload" <?php echo $activeTab === 'upload' ? '' : 'hidden'; ?> style="margin-bottom:0.75rem;">
             <div class="admin-card">
                 <div class="admin-card-header">
                     <div>
                         <div class="admin-card-title">
-                        上传与其他
+                        <i class="ti ti-upload" aria-hidden="true"></i>上传与其他
                         <button type="button" class="admin-help-toggle" title="查看说明" aria-label="查看说明" aria-expanded="false"><i class="ti ti-info-circle"></i></button>
                     </div>
                 </div>
@@ -564,20 +587,6 @@ include __DIR__ . '/header.php';
                 </div>
 
                 <div class="form-group" style="margin-bottom:0.75rem;">
-                    <label style="display:block;font-size:0.85rem;margin-bottom:0.25rem;">AI 安全与媒体识别</label>
-                    <?php $aiModeration = $settingsData['ai_moderation_enabled'] ?? '0'; ?>
-                    <label class="switch"><input type="checkbox" name="settings[ai_moderation_enabled]" value="1" <?php echo $aiModeration === '1' ? 'checked' : ''; ?>><span class="switch-track"><span class="switch-thumb"></span></span><span class="switch-label">启用 AI 辅助审核（规则审核始终保留）</span></label>
-                    <input type="url" name="settings[ai_api_endpoint]" value="<?php echo e($settingsData['ai_api_endpoint'] ?? ''); ?>" placeholder="AI 兼容接口地址，可留空" style="width:100%;margin-top:.55rem;padding:.55rem .75rem;border-radius:.75rem;border:1px solid rgba(148,163,184,.6);font-size:.9rem;">
-                    <input type="password" name="settings[ai_api_key]" value="<?php echo e($settingsData['ai_api_key'] ?? ''); ?>" placeholder="AI API Key，可留空" style="width:100%;margin-top:.55rem;padding:.55rem .75rem;border-radius:.75rem;border:1px solid rgba(148,163,184,.6);font-size:.9rem;">
-                    <?php $currentModel = $settingsData['ai_model'] ?? 'deepseek-chat'; $modelOptions = ['deepseek-chat' => 'DeepSeek V3 / deepseek-chat', 'deepseek-reasoner' => 'DeepSeek R1 / deepseek-reasoner', 'gpt-4o-mini' => 'GPT-4o-mini', 'gpt-4o' => 'GPT-4o', 'gpt-4.1' => 'GPT-4.1', 'gpt-4.1-mini' => 'GPT-4.1-mini', 'gpt-4.1-nano' => 'GPT-4.1-nano', 'o3-mini' => 'o3-mini', 'o4-mini' => 'o4-mini', 'claude-sonnet-4-20250514' => 'Claude Sonnet 4', 'claude-3-5-sonnet-20241022' => 'Claude 3.5 Sonnet', 'gemini-2.5-pro' => 'Gemini 2.5 Pro', 'gemini-2.0-flash' => 'Gemini 2.0 Flash']; ?>
-<select name="settings[ai_model]" style="width:100%;margin-top:.55rem;padding:.55rem .75rem;border-radius:.75rem;border:1px solid rgba(148,163,184,.6);font-size:.9rem;background:#fff;color:inherit;-webkit-appearance:none;appearance:none;background-image:url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%23666' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E\");background-repeat:no-repeat;background-position:right .75rem center;background-size:.75rem;padding-right:2rem;">
-    <?php foreach ($modelOptions as $modelValue => $modelLabel): ?>
-    <option value="<?php echo e($modelValue); ?>" <?php echo $currentModel === $modelValue ? 'selected' : ''; ?>><?php echo e($modelLabel); ?></option>
-    <?php endforeach; ?>
-</select>
-                </div>
-
-                <div class="form-group" style="margin-bottom:0.75rem;">
                     <label style="display:block;font-size:0.85rem;margin-bottom:0.25rem;">单文件最大上传大小（MB）</label>
                     <?php
                     $maxUploadSizeMb = $settingsData['max_upload_size_mb'] ?? '';
@@ -633,6 +642,40 @@ include __DIR__ . '/header.php';
                         开启后，视频上传不再受“单文件最大上传大小（MB）”限制，仅受服务器 <code>upload_max_filesize</code> 与 <code>post_max_size</code> 控制。图片等其它上传仍按上面的站点限制执行。
                     </p>
                 </div>
+            </div>
+
+        </section>
+
+        <section class="admin-grid settings-panel" id="site-settings" role="tabpanel" aria-labelledby="tab-site" <?php echo $activeTab === 'site' ? '' : 'hidden'; ?>>
+            <div class="admin-card">
+                <div class="admin-card-header">
+                    <div>
+                        <div class="admin-card-title">
+                        <i class="ti ti-robot" aria-hidden="true"></i>AI 与站点信息
+                        <button type="button" class="admin-help-toggle" title="查看说明" aria-label="查看说明" aria-expanded="false"><i class="ti ti-info-circle"></i></button>
+                    </div>
+                </div>
+            </div>
+            <div class="admin-card-help">
+                <div class="admin-card-subtitle">AI 辅助审核、底部版权备案与统计代码</div>
+                <p>
+                    这里是不常改动的站点信息。确认无误后，点击底部吸附的“保存设置”按钮提交全部设置。
+                </p>
+            </div>
+
+                <div class="form-group" style="margin-bottom:0.75rem;">
+                    <label style="display:block;font-size:0.85rem;margin-bottom:0.25rem;">AI 安全与媒体识别</label>
+                    <?php $aiModeration = $settingsData['ai_moderation_enabled'] ?? '0'; ?>
+                    <label class="switch"><input type="checkbox" name="settings[ai_moderation_enabled]" value="1" <?php echo $aiModeration === '1' ? 'checked' : ''; ?>><span class="switch-track"><span class="switch-thumb"></span></span><span class="switch-label">启用 AI 辅助审核（规则审核始终保留）</span></label>
+                    <input type="url" name="settings[ai_api_endpoint]" value="<?php echo e($settingsData['ai_api_endpoint'] ?? ''); ?>" placeholder="AI 兼容接口地址，可留空" style="width:100%;margin-top:.55rem;padding:.55rem .75rem;border-radius:.75rem;border:1px solid rgba(148,163,184,.6);font-size:.9rem;">
+                    <input type="password" name="settings[ai_api_key]" value="<?php echo e($settingsData['ai_api_key'] ?? ''); ?>" placeholder="AI API Key，可留空" style="width:100%;margin-top:.55rem;padding:.55rem .75rem;border-radius:.75rem;border:1px solid rgba(148,163,184,.6);font-size:.9rem;">
+                    <?php $currentModel = $settingsData['ai_model'] ?? 'deepseek-chat'; $modelOptions = ['deepseek-chat' => 'DeepSeek V3 / deepseek-chat', 'deepseek-reasoner' => 'DeepSeek R1 / deepseek-reasoner', 'gpt-4o-mini' => 'GPT-4o-mini', 'gpt-4o' => 'GPT-4o', 'gpt-4.1' => 'GPT-4.1', 'gpt-4.1-mini' => 'GPT-4.1-mini', 'gpt-4.1-nano' => 'GPT-4.1-nano', 'o3-mini' => 'o3-mini', 'o4-mini' => 'o4-mini', 'claude-sonnet-4-20250514' => 'Claude Sonnet 4', 'claude-3-5-sonnet-20241022' => 'Claude 3.5 Sonnet', 'gemini-2.5-pro' => 'Gemini 2.5 Pro', 'gemini-2.0-flash' => 'Gemini 2.0 Flash']; ?>
+<select name="settings[ai_model]" style="width:100%;margin-top:.55rem;padding:.55rem .75rem;border-radius:.75rem;border:1px solid rgba(148,163,184,.6);font-size:.9rem;background:#fff;color:inherit;-webkit-appearance:none;appearance:none;background-image:url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%23666' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E\");background-repeat:no-repeat;background-position:right .75rem center;background-size:.75rem;padding-right:2rem;">
+    <?php foreach ($modelOptions as $modelValue => $modelLabel): ?>
+    <option value="<?php echo e($modelValue); ?>" <?php echo $currentModel === $modelValue ? 'selected' : ''; ?>><?php echo e($modelLabel); ?></option>
+    <?php endforeach; ?>
+</select>
+                </div>
 
                 <div class="form-group" style="margin-bottom:0.75rem;">
                     <label style="display:block;font-size:0.85rem;margin-bottom:0.25rem;">网站底部版权信息</label>
@@ -672,33 +715,15 @@ include __DIR__ . '/header.php';
                     </div>
                 </div>
             </div>
+        </section>
 
-            <div class="admin-card">
-                <div class="admin-card-header">
-                    <div>
-                        <div class="admin-card-title">
-                        保存设置
-                        <button type="button" class="admin-help-toggle" title="查看说明" aria-label="查看说明" aria-expanded="false"><i class="ti ti-info-circle"></i></button>
-                    </div>
-                </div>
-            </div>
-            <div class="admin-card-help">
-                <div class="admin-card-subtitle">确认无误后保存</div>
-                <p>
-                    保存后，新设置会立即生效。涉及首页大图等资源的修改，可能需要刷新前台页面才能看到最新效果。
-                </p>
-            </div>
-
-            <button type="submit" class="btn btn-primary" style="width:100%;justify-content:center;">
+        <div class="settings-savebar">
+            <button type="submit" class="btn btn-primary">
                 <i class="fas fa-save"></i>
                 <span>保存设置</span>
             </button>
-
-                <div style="margin-top:0.5rem;font-size:0.78rem;color:var(--text-light);text-align:center;">
-                    如果保存设置后出现异常，可以使用底部“旧版后台”入口回到旧设置页面排查。
-                </div>
-            </div>
-        </section>
+            <p class="settings-savebar-note">保存后新设置立即生效；如出现异常，可使用页面底部“旧版后台”入口回到旧设置页排查。</p>
+        </div>
     </form>
 
     <script>
@@ -757,17 +782,85 @@ include __DIR__ . '/header.php';
                 if (loveDateFields[cursor]) loveDateFields[cursor].focus();
             });
         });
-        document.querySelectorAll('.theme-color-grid label').forEach(function (label) {
+        document.querySelectorAll('.theme-color-grid label').forEach(function (label, index) {
             var color = label.querySelector('input[type="color"]');
             var hex = label.querySelector('.theme-hex-input');
             if (!color || !hex) return;
-            color.addEventListener('input', function () { hex.value = color.value.toUpperCase(); });
+            // 自定义颜色变化时同步刷新上方的配色预览条（主色/辅助色/强调色对应前三格）
+            function applyCustomPreview() {
+                if (preview && preview.children[index]) preview.children[index].style.background = color.value;
+            }
+            color.addEventListener('input', function () { hex.value = color.value.toUpperCase(); applyCustomPreview(); });
             hex.addEventListener('input', function () {
                 if (/^#[0-9a-f]{6}$/i.test(hex.value)) color.value = hex.value;
+                applyCustomPreview();
             });
         });
         // 后台界面模式已固定为 apple，无需切换逻辑
         renderPreview();
+    }());
+
+    // 设置分段 Tab：锚点 > section 参数 > 上次停留分段
+    (function () {
+        var tablist = document.querySelector('.settings-tabs');
+        if (!tablist) return;
+        var tabs = Array.prototype.slice.call(tablist.querySelectorAll('.settings-tab'));
+        var panels = tabs.map(function (tab) { return document.getElementById(tab.getAttribute('aria-controls')); }).filter(Boolean);
+        if (!tabs.length || !panels.length) return;
+        var storageKey = 'withu_settings_tab';
+
+        function activate(id, moveFocus) {
+            var matched = false;
+            tabs.forEach(function (tab) {
+                var on = tab.getAttribute('aria-controls') === id;
+                if (on) matched = true;
+                tab.classList.toggle('is-active', on);
+                tab.setAttribute('aria-selected', on ? 'true' : 'false');
+                tab.setAttribute('tabindex', on ? '0' : '-1');
+            });
+            if (!matched) return;
+            panels.forEach(function (panel) { panel.hidden = panel.id !== id; });
+            if (moveFocus) {
+                tabs.forEach(function (tab) { if (tab.classList.contains('is-active')) tab.focus(); });
+            }
+            try { sessionStorage.setItem(storageKey, id); } catch (e) {}
+        }
+
+        tabs.forEach(function (tab, index) {
+            tab.addEventListener('click', function () {
+                if (!tab.classList.contains('is-active')) activate(tab.getAttribute('aria-controls'), false);
+                // 切换后回到分段导航处，避免停留在长面板中部
+                var form = tablist.closest('form');
+                if (!form) return;
+                var topbarH = parseInt(getComputedStyle(document.body).getPropertyValue('--v3-topbar-h'), 10) || 54;
+                var targetTop = form.getBoundingClientRect().top + window.pageYOffset - topbarH - 8;
+                if (window.pageYOffset > targetTop) {
+                    window.scrollTo({ top: Math.max(targetTop, 0), behavior: 'smooth' });
+                }
+            });
+            tab.addEventListener('keydown', function (event) {
+                if (event.key !== 'ArrowLeft' && event.key !== 'ArrowRight') return;
+                event.preventDefault();
+                var delta = event.key === 'ArrowRight' ? 1 : tabs.length - 1;
+                var next = tabs[(index + delta) % tabs.length];
+                activate(next.getAttribute('aria-controls'), true);
+            });
+        });
+
+        var initialId = null;
+        tabs.forEach(function (tab) { if (tab.classList.contains('is-active')) initialId = tab.getAttribute('aria-controls'); });
+        var hashId = window.location.hash.replace('#', '');
+        var sectionParam = new URLSearchParams(window.location.search).get('section');
+        var hashMatched = panels.some(function (panel) { return panel.id === hashId; });
+        if (hashMatched) {
+            initialId = hashId;
+        } else if (!sectionParam) {
+            try {
+                var saved = sessionStorage.getItem(storageKey);
+                if (saved && panels.some(function (panel) { return panel.id === saved; })) initialId = saved;
+            } catch (e) {}
+        }
+        if (initialId) activate(initialId, false);
     }());
 
     // 位置搜索自动完成

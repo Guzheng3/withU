@@ -126,6 +126,7 @@ $savedKey = (string)($settings['strm_api_key'] ?? '');
 $formKey = $_POST['strm_api_key'] ?? '';
 
 $adminPage = 'strm_settings';
+$adminNarrow = true;
 include __DIR__ . '/header.php';
 ?>
 
@@ -152,7 +153,7 @@ include __DIR__ . '/header.php';
     </div>
 <?php endif; ?>
 
-<section class="admin-grid">
+<section class="admin-grid admin-grid-single">
     <div class="admin-card">
         <div class="admin-card-header"><div><div class="admin-card-title">连接配置 <button type="button" class="admin-help-toggle" title="查看说明" aria-label="查看说明" aria-expanded="false"><i class="ti ti-info-circle"></i></button></div></div></div>
         <div class="admin-card-help"><div class="admin-card-subtitle">服务地址、外部接口鉴权</div></div>

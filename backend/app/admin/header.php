@@ -54,16 +54,16 @@ foreach (($themeConfig['colors'] ?? []) as $themeName => $themeValue) {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>管理后台 - <?php echo e(SITE_NAME); ?></title>
 <link rel="stylesheet" href="/admin-assets/css/style.css?v=withu-logo-20260718">
-	<link rel="stylesheet" href="/admin-assets/css/admin_v3.css?v=20260825">
+	<link rel="stylesheet" href="/admin-assets/css/admin_v3.css?v=20260830-analytics">
 	<link rel="stylesheet" href="/admin-assets/css/admin_v2.css?v=ui-polish-3">
 	<link rel="stylesheet" href="/admin-assets/css/theme.css?v=withu-theme-20260724-1">
-	<link rel="stylesheet" href="/admin-assets/css/admin_pages.css?v=ui-polish-2">
+	<link rel="stylesheet" href="/admin-assets/css/admin_pages.css?v=player-single-col">
 <!-- Tabler Icons（本地） -->
 		<link rel="stylesheet" href="/admin-assets/vendor/tabler-icons/tabler-icons.min.css">
 		<!-- Font Awesome 备用（本地） -->
 		<link rel="stylesheet" href="/admin-assets/vendor/fontawesome/css/all.min.css">
 </head>
-<body class="admin-v3 admin-ui-<?php echo e($adminUiMode); ?>">
+<body class="admin-v3 admin-ui-<?php echo e($adminUiMode); ?><?php echo !empty($adminNarrow) ? ' admin-narrow' : ''; ?>">
 <div class="admin-drawer-backdrop" aria-hidden="true"></div>
 <aside class="admin-drawer" id="admin-drawer" aria-label="后台导航">
     <div class="admin-drawer-header">
