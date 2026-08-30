@@ -1,3 +1,36 @@
+<?php
+/**
+ * 头像区状态徽标：性别与上线时间同步后台用户数据（users.gender / users.last_login_at）
+ */
+if (!function_exists('withu_head_online_state')) {
+    function withu_head_online_state($lastLoginAt) {
+        if (empty($lastLoginAt)) {
+            return ['offline', '离线'];
+        }
+        $diff = time() - strtotime((string)$lastLoginAt);
+        if ($diff < 600) {
+            return ['online', '在线'];
+        }
+        if ($diff < 3600) {
+            return ['away', floor($diff / 60) . ' 分钟前'];
+        }
+        if ($diff < 86400) {
+            return ['away', floor($diff / 3600) . ' 小时前'];
+        }
+        if ($diff < 2592000) {
+            return ['away', floor($diff / 86400) . ' 天前'];
+        }
+        return ['offline', '离线'];
+    }
+}
+
+// 性别缺失时按头像区默认（左男右女）兜底
+$withuBoyGender = ($boyGender ?? null) === 'female' ? 'female' : 'male';
+$withuGirlGender = ($girlGender ?? null) === 'male' ? 'male' : 'female';
+list($withuBoyState, $withuBoyStateText) = withu_head_online_state($boyLastLogin ?? null);
+list($withuGirlState, $withuGirlStateText) = withu_head_online_state($girlLastLogin ?? null);
+$withuStateIcons = ['online' => 'wifi', 'away' => 'clock', 'offline' => 'wifi-off'];
+?>
 <div class="bg-wrap central limg" data-avatar-swap="1">
     <div class="bg-img">
         <div class="middle Blurkg">
@@ -7,12 +40,12 @@
                     <img draggable="false" class="aiv_touxiang" data-src="<?php echo $boyAvatar ?? '/assets/images/default-avatar.svg'; ?>">
                     <div class="withu-head-avatar-mask">
                         <div class="withu-head-avatar-top withu-head-avatar-anim-item">
-                            <div class="withu-head-avatar-gender-icon" data-gender="male"><i data-lucide="mars"></i></div>
+                            <div class="withu-head-avatar-gender-icon" data-gender="<?php echo $withuBoyGender; ?>"><i data-lucide="<?php echo $withuBoyGender === 'female' ? 'venus' : 'mars'; ?>"></i></div>
                         </div>
                         <div class="withu-head-avatar-middle withu-head-avatar-anim-item">
-                            <div class="withu-head-avatar-status-text withu-head-avatar-status-away">
-                                <i data-lucide="clock" class="withu-head-avatar-icon-away"></i>
-                                <em>2小时前</em>
+                            <div class="withu-head-avatar-status-text withu-head-avatar-status-<?php echo $withuBoyState; ?>">
+                                <i data-lucide="<?php echo $withuStateIcons[$withuBoyState]; ?>" class="withu-head-avatar-icon-<?php echo $withuBoyState; ?>"></i>
+                                <em><?php echo htmlspecialchars($withuBoyStateText, ENT_QUOTES, 'UTF-8'); ?></em>
                             </div>
                             <div class="withu-head-avatar-divider"></div>
                         </div>
@@ -47,12 +80,12 @@
                     <img draggable="false" class="aiv_touxiang" data-src="<?php echo $girlAvatar ?? '/assets/images/default-avatar.svg'; ?>">
                     <div class="withu-head-avatar-mask">
                         <div class="withu-head-avatar-top withu-head-avatar-anim-item">
-                            <div class="withu-head-avatar-gender-icon" data-gender="female"><i data-lucide="venus"></i></div>
+                            <div class="withu-head-avatar-gender-icon" data-gender="<?php echo $withuGirlGender; ?>"><i data-lucide="<?php echo $withuGirlGender === 'male' ? 'mars' : 'venus'; ?>"></i></div>
                         </div>
                         <div class="withu-head-avatar-middle withu-head-avatar-anim-item">
-                            <div class="withu-head-avatar-status-text withu-head-avatar-status-offline">
-                                <i data-lucide="wifi-off" class="withu-head-avatar-icon-offline"></i>
-                                <em>离线</em>
+                            <div class="withu-head-avatar-status-text withu-head-avatar-status-<?php echo $withuGirlState; ?>">
+                                <i data-lucide="<?php echo $withuStateIcons[$withuGirlState]; ?>" class="withu-head-avatar-icon-<?php echo $withuGirlState; ?>"></i>
+                                <em><?php echo htmlspecialchars($withuGirlStateText, ENT_QUOTES, 'UTF-8'); ?></em>
                             </div>
                             <div class="withu-head-avatar-divider"></div>
                         </div>

@@ -30,6 +30,12 @@ try {
     $boyAvatar = $user1['avatar'] ?? '/assets/images/default-avatar.svg';
     $girlAvatar = $user2['avatar'] ?? '/assets/images/default-avatar.svg';
 
+    // 性别与最近上线时间（头像区徽标用），老库缺列时保持 null
+    $boyGender = in_array($user1['gender'] ?? '', ['male', 'female'], true) ? $user1['gender'] : null;
+    $girlGender = in_array($user2['gender'] ?? '', ['male', 'female'], true) ? $user2['gender'] : null;
+    $boyLastLogin = $user1['last_login_at'] ?? null;
+    $girlLastLogin = $user2['last_login_at'] ?? null;
+
     // 读取情侣坐标（从 map-all.json）
     $boyCoords = [116.39, 39.90];
     $girlCoords = [116.39, 39.90];
