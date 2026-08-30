@@ -168,6 +168,21 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $content = clean_wangeditor_html($content);
     }
 
+    // Markdown 兜底：正常情况下前端已在提交前把 Markdown 转成 HTML；
+    // 仅当前端渲染库不可用（content_format=markdown）时，用官方 Parsedown（ParsedownMarkdown）在服务端转换。
+    // 注意：项目内旧的 core/Parsedown.php 为改过的 1.8.0-beta，会丢弃行内 HTML（如作者标记），故兜底不用它
+    if (($_POST['content_format'] ?? '') === 'markdown' && $content !== '') {
+        require_once __DIR__ . '/../core/ParsedownMarkdown.php';
+        if (class_exists('ParsedownMarkdown')) {
+            try {
+                $parsedown = new ParsedownMarkdown();
+                $content = (string) $parsedown->text($content);
+            } catch (Exception $e) {
+                // 转换失败则保持原文，不影响发文主流程
+            }
+        }
+    }
+
     if ($title === '' || $content === '') {
         $error = '请填写标题和内容';
     } else {
@@ -436,7 +451,7 @@ include __DIR__ . '/header.php';
         </div>
 
         <div class="form-group" style="margin-bottom:0.75rem;">
-            <label style="display:block;font-size:0.85rem;margin-bottom:0.25rem;">内容 *（富文本编辑，自动插入 HTML）</label>
+            <label style="display:block;font-size:0.85rem;margin-bottom:0.25rem;">内容 *（富文本 / Markdown 双模式 · 实时预览 · 无缝互转）</label>
 
             <?php
             // 计算当前情侣中的男主 / 女主，用于标记按钮和统计
@@ -461,12 +476,18 @@ include __DIR__ . '/header.php';
             ?>
 
             <div class="md-toolbar" id="mdToolbar">
+                <div class="md-toolbar-left">
+                    <span class="md-toolbar-hint">富文本与 Markdown 可随时互转，内容不丢失</span>
+                </div>
                 <div class="md-toolbar-right">
                     <button type="button" id="editorModeVisual" class="editor-mode-btn active">
                         <i class="fas fa-eye"></i> 可视化
                     </button>
+                    <button type="button" id="editorModeMarkdown" class="editor-mode-btn">
+                        <i class="fab fa-markdown"></i> Markdown
+                    </button>
                     <button type="button" id="editorModeCode" class="editor-mode-btn">
-                        <i class="fas fa-code"></i> 代码
+                        <i class="fas fa-code"></i> HTML
                     </button>
                 </div>
             </div>
@@ -484,6 +505,37 @@ include __DIR__ . '/header.php';
                 <button type="button" data-snippet="download">下载按钮</button>
             </div>
 
+            <!-- Markdown 编辑器（左书写 / 右实时渲染预览，与富文本无缝互转） -->
+            <div id="markdownEditorWrapper" style="display:none;">
+                <div class="code-snippet-toolbar" id="mdQuickToolbar" style="display:none;">
+                    <button type="button" data-md="h2">H2</button>
+                    <button type="button" data-md="h3">H3</button>
+                    <button type="button" data-md="h4">H4</button>
+                    <button type="button" data-md="bold"><b>B</b></button>
+                    <button type="button" data-md="italic"><i>I</i></button>
+                    <button type="button" data-md="strike"><s>S</s></button>
+                    <button type="button" data-md="inlinecode">&lt;/&gt;</button>
+                    <button type="button" data-md="quote">引用</button>
+                    <button type="button" data-md="ul">• 列表</button>
+                    <button type="button" data-md="ol">1. 列表</button>
+                    <button type="button" data-md="codeblock">代码块</button>
+                    <button type="button" data-md="link">链接</button>
+                    <button type="button" data-md="image">图片</button>
+                    <button type="button" data-md="hr">分割线</button>
+                    <button type="button" data-md="note">提示块</button>
+                    <button type="button" data-md="warning">警告块</button>
+                    <button type="button" data-md="success">成功块</button>
+                    <button type="button" data-md="download">下载按钮</button>
+                </div>
+                <div class="md-split">
+                    <textarea
+                        id="articleMarkdownEditor"
+                        placeholder="在这里书写 Markdown，右侧实时预览渲染效果……"></textarea>
+                    <div class="md-preview-pane" id="markdownPreview"></div>
+                </div>
+                <p class="md-hint">左侧书写 Markdown，右侧实时渲染预览；切换「可视化」会自动双向转换。发布时统一存储 HTML，前台展示不受影响。</p>
+            </div>
+
             <!-- 男女主标记快捷按钮（独立于 wangEditor 菜单） -->
             <div class="author-mark-toolbar">
                 <button type="button" id="btnMarkMale">标记为男主</button>
@@ -498,6 +550,9 @@ include __DIR__ . '/header.php';
 
             <!-- 本次创建过程中上传过的文件相对路径（JSON 数组，由前端 JS 填充） -->
             <input type="hidden" name="new_uploads" id="newUploadsField" value="">
+
+            <!-- 内容格式标记：正常总是 html（前端已转换）；前端 Markdown 渲染库缺失时为 markdown，由服务端 Parsedown 兜底 -->
+            <input type="hidden" name="content_format" id="contentFormatField" value="html">
 
             <!-- wangEditor 容器（可视化编辑器：上方为菜单，下方为正文） -->
             <div id="articleEditorWrapper" style="width:100%;border-radius:0.75rem;border:1px solid rgba(148,163,184,0.7);overflow:visible;background:#ffffff;">
@@ -573,6 +628,10 @@ include __DIR__ . '/header.php';
     <!-- wangEditor 脚本（本地） -->
     <script src="/admin-assets/js/wangeditor.min.js"></script>
 
+    <!-- Markdown 渲染（marked）与 HTML→Markdown 转换（turndown），均本地内置 -->
+    <script src="/admin-assets/js/marked.min.js"></script>
+    <script src="/admin-assets/js/turndown.js"></script>
+
     <script>
     // 若前台通用的 showToast 尚未定义，则在后台提供一个兼容版本，使用与前台一致的样式
     if (typeof window.showToast !== 'function') {
@@ -624,9 +683,15 @@ include __DIR__ . '/header.php';
         const codeEditor = document.getElementById('articleCodeEditor');
         const textarea = document.getElementById('articleContent');
         const uploadsField = document.getElementById('newUploadsField');
+        const contentFormatField = document.getElementById('contentFormatField');
         const visualBtn = document.getElementById('editorModeVisual');
+        const markdownBtn = document.getElementById('editorModeMarkdown');
         const codeBtn = document.getElementById('editorModeCode');
         const codeSnippetToolbar = document.getElementById('codeSnippetToolbar');
+        const markdownWrapper = document.getElementById('markdownEditorWrapper');
+        const mdEditor = document.getElementById('articleMarkdownEditor');
+        const markdownPreview = document.getElementById('markdownPreview');
+        const mdQuickToolbar = document.getElementById('mdQuickToolbar');
         const btnMarkMale = document.getElementById('btnMarkMale');
         const btnMarkFemale = document.getElementById('btnMarkFemale');
         const btnUnmarkAuthor = document.getElementById('btnUnmarkAuthor');
@@ -818,43 +883,242 @@ include __DIR__ . '/header.php';
             } catch (e) {}
         });
 
-        // 编辑器模式管理（visual: wangEditor；code: 代码 textarea）
-        let currentMode = 'visual'; // 'visual' 或 'code'
+        // ------------------------
+        // 三模式管理：visual（wangEditor 富文本）/ markdown（左书写右实时预览）/ code（HTML 源码）
+        // 切换时以当前模式的“权威内容”为准，统一经 HTML 中转，双向无缝转换
+        // ------------------------
+        let currentMode = 'visual'; // 'visual' | 'markdown' | 'code'
+        let turndownService = null;
+        let mdFallbackNotified = false;
 
-        function switchToVisual() {
-            if (currentMode === 'visual') return;
-            // 从代码编辑器同步内容到 wangEditor
-            weEditor.txt.html(codeEditor.value || '');
-            editorWrapper.style.display = 'block';
-            codeEditor.style.display = 'none';
-            visualBtn.classList.add('active');
-            codeBtn.classList.remove('active');
-            if (codeSnippetToolbar) {
-                codeSnippetToolbar.style.display = 'none';
-            }
-            currentMode = 'visual';
+        function createTurndownService() {
+            var td = new TurndownService({
+                headingStyle: 'atx',
+                codeBlockStyle: 'fenced',
+                bulletListMarker: '-',
+                emDelimiter: '*',
+                strongDelimiter: '**'
+            });
+            // 注意：turndown 的字符串/数组 filter 只按标签名匹配，不支持选择器，
+            // 且内置规则先于 keep 匹配，因此作者标记用函数 keep、变体引用块用 addRule 覆盖内置规则
+            td.keep(function (node) {
+                if (node.nodeType !== 1) return false;
+                var tag = node.nodeName.toLowerCase();
+                if (['audio', 'video', 'source', 'iframe', 'center', 'desc', 'quote', 'embed', 'object'].indexOf(tag) > -1) {
+                    return true;
+                }
+                if (tag === 'span' && node.hasAttribute('data-author')) {
+                    return true;
+                }
+                return false;
+            });
+            // 带样式变体的引用块（提示/警告/成功块）：整体保留 HTML，避免丢类名
+            td.addRule('variantBlockquote', {
+                filter: function (node) {
+                    return node.nodeName === 'BLOCKQUOTE'
+                        && /(^|\s)(bq-note|bq-warning|bq-success)(\s|$)/.test(node.className || '');
+                },
+                replacement: function (content, node) {
+                    return '\n\n' + node.outerHTML + '\n\n';
+                }
+            });
+            td.addRule('strikethrough', {
+                filter: ['del', 's', 'strike'],
+                replacement: function (content) { return '~~' + content + '~~'; }
+            });
+            td.addRule('horizontalRule', {
+                filter: 'hr',
+                replacement: function () { return '\n\n---\n\n'; }
+            });
+            return td;
         }
 
-        function switchToCode() {
-            if (currentMode === 'code') return;
-            // 从 wangEditor 同步内容到代码编辑器
-            codeEditor.value = weEditor.txt.html();
-            editorWrapper.style.display = 'none';
-            codeEditor.style.display = 'block';
-            visualBtn.classList.remove('active');
-            codeBtn.classList.add('active');
-            if (codeSnippetToolbar) {
-                codeSnippetToolbar.style.display = 'flex';
+        // Markdown → HTML（返回 null 表示渲染库不可用，调用方走兜底）
+        function mdToHtml(md) {
+            if (!window.marked || typeof window.marked.parse !== 'function') return null;
+            try {
+                return window.marked.parse(md || '', { gfm: true, breaks: true, async: false });
+            } catch (e) {
+                return '';
             }
-            currentMode = 'code';
         }
 
-        // 绑定切换按钮事件
+        // HTML → Markdown（返回 null 表示转换库不可用，调用方走兜底）
+        function htmlToMd(html) {
+            if (!window.TurndownService) return null;
+            try {
+                if (!turndownService) turndownService = createTurndownService();
+                return turndownService.turndown(html || '');
+            } catch (e) {
+                return null;
+            }
+        }
+
+        function renderMarkdownPreview() {
+            if (!markdownPreview || !mdEditor) return;
+            var html = mdToHtml(mdEditor.value);
+            markdownPreview.innerHTML = (html === null) ? '' : html;
+        }
+
+        // 取某一模式当前内容并统一转为 HTML
+        function getModeHtml(mode) {
+            if (mode === 'visual') return weEditor.txt.html() || '';
+            if (mode === 'markdown' && mdEditor) {
+                var html = mdToHtml(mdEditor.value);
+                return (html === null) ? (mdEditor.value || '') : html;
+            }
+            return codeEditor.value || '';
+        }
+
+        function applyMode(mode, html) {
+            editorWrapper.style.display = (mode === 'visual') ? 'block' : 'none';
+            if (markdownWrapper) markdownWrapper.style.display = (mode === 'markdown') ? 'block' : 'none';
+            codeEditor.style.display = (mode === 'code') ? 'block' : 'none';
+            if (codeSnippetToolbar) codeSnippetToolbar.style.display = (mode === 'code') ? 'flex' : 'none';
+            if (mdQuickToolbar) mdQuickToolbar.style.display = (mode === 'markdown') ? 'flex' : 'none';
+
+            visualBtn.classList.toggle('active', mode === 'visual');
+            if (markdownBtn) markdownBtn.classList.toggle('active', mode === 'markdown');
+            codeBtn.classList.toggle('active', mode === 'code');
+
+            if (mode === 'visual') {
+                weEditor.txt.html(html || '');
+            } else if (mode === 'markdown' && mdEditor) {
+                var md = htmlToMd(html);
+                if (md === null) {
+                    // 转换库缺失：按原文保留（Markdown 兼容内嵌 HTML），仅提示一次
+                    md = html || '';
+                    if (!mdFallbackNotified) {
+                        window.showToast('HTML 转 Markdown 组件未加载，已按原文保留（Markdown 兼容内嵌 HTML）', 'info');
+                        mdFallbackNotified = true;
+                    }
+                }
+                mdEditor.value = md;
+                renderMarkdownPreview();
+            } else {
+                codeEditor.value = html || '';
+            }
+        }
+
+        function switchToMode(next) {
+            if (next === currentMode) return;
+            if (next === 'markdown' && !window.marked) {
+                window.showToast('Markdown 渲染组件未加载，请刷新页面重试', 'error');
+                return;
+            }
+            var html = getModeHtml(currentMode);
+            currentMode = next;
+            applyMode(next, html);
+        }
+
         if (visualBtn) {
-            visualBtn.addEventListener('click', switchToVisual);
+            visualBtn.addEventListener('click', function () { switchToMode('visual'); });
+        }
+        if (markdownBtn) {
+            markdownBtn.addEventListener('click', function () { switchToMode('markdown'); });
         }
         if (codeBtn) {
-            codeBtn.addEventListener('click', switchToCode);
+            codeBtn.addEventListener('click', function () { switchToMode('code'); });
+        }
+
+        // Markdown 实时预览（输入防抖）
+        if (mdEditor) {
+            var previewTimer = null;
+            mdEditor.addEventListener('input', function () {
+                if (previewTimer) clearTimeout(previewTimer);
+                previewTimer = setTimeout(renderMarkdownPreview, 120);
+            });
+        }
+
+        // ---- Markdown 光标 / 选区工具 ----
+        function mdWrap(open, close, placeholder) {
+            var start = mdEditor.selectionStart, end = mdEditor.selectionEnd;
+            var text = mdEditor.value;
+            var sel = text.substring(start, end) || (placeholder || '');
+            mdEditor.value = text.substring(0, start) + open + sel + close + text.substring(end);
+            mdEditor.selectionStart = start + open.length;
+            mdEditor.selectionEnd = start + open.length + sel.length;
+            mdEditor.focus();
+            renderMarkdownPreview();
+        }
+
+        function mdInsert(snippet) {
+            var start = mdEditor.selectionStart, end = mdEditor.selectionEnd;
+            var text = mdEditor.value;
+            mdEditor.value = text.substring(0, start) + snippet + text.substring(end);
+            var pos = start + snippet.length;
+            mdEditor.selectionStart = pos;
+            mdEditor.selectionEnd = pos;
+            mdEditor.focus();
+            renderMarkdownPreview();
+        }
+
+        function mdPrefixLines(prefix, placeholder) {
+            var start = mdEditor.selectionStart, end = mdEditor.selectionEnd;
+            var text = mdEditor.value;
+            var lineStart = text.lastIndexOf('\n', start - 1) + 1;
+            var seg = text.substring(lineStart, end);
+            var lines = (seg === '') ? [placeholder || ''] : seg.split('\n');
+            var out = lines.map(function (l) { return (l.trim() === '') ? l : prefix + l; }).join('\n');
+            mdEditor.value = text.substring(0, lineStart) + out + text.substring(end);
+            mdEditor.selectionStart = lineStart;
+            mdEditor.selectionEnd = lineStart + out.length;
+            mdEditor.focus();
+            renderMarkdownPreview();
+        }
+
+        // Markdown 快捷插入工具栏（标题 / 行内样式 / 列表 / 引用块变体 / 下载按钮）
+        if (mdQuickToolbar && mdEditor) {
+            mdQuickToolbar.addEventListener('click', function (e) {
+                var btn = e.target.closest('button[data-md]');
+                if (!btn) return;
+                var type = btn.getAttribute('data-md');
+                switch (type) {
+                    case 'h2': mdPrefixLines('## ', '在这里输入标题'); break;
+                    case 'h3': mdPrefixLines('### ', '在这里输入小标题'); break;
+                    case 'h4': mdPrefixLines('#### ', '在这里输入小节标题'); break;
+                    case 'bold': mdWrap('**', '**', '粗体文字'); break;
+                    case 'italic': mdWrap('*', '*', '斜体文字'); break;
+                    case 'strike': mdWrap('~~', '~~', '删除文字'); break;
+                    case 'inlinecode': mdWrap('`', '`', '代码'); break;
+                    case 'quote': mdPrefixLines('> ', '在这里输入引用内容'); break;
+                    case 'ul': mdPrefixLines('- ', '列表项'); break;
+                    case 'ol': mdPrefixLines('1. ', '列表项'); break;
+                    case 'codeblock': mdInsert('\n```\n// 在这里粘贴代码\n```\n'); break;
+                    case 'link': mdWrap('[', '](https://)', '链接文字'); break;
+                    case 'image': mdInsert('![图片描述](图片地址)'); break;
+                    case 'hr': mdInsert('\n\n---\n\n'); break;
+                    case 'note': mdInsert('\n<blockquote class="bq-note">在这里输入提示内容</blockquote>\n'); break;
+                    case 'warning': mdInsert('\n<blockquote class="bq-warning">在这里输入警告内容</blockquote>\n'); break;
+                    case 'success': mdInsert('\n<blockquote class="bq-success">在这里输入成功提示</blockquote>\n'); break;
+                    case 'download': mdInsert('\n<p><a class="btn-download" href="#" target="_blank" rel="noopener"><i class="fas fa-download"></i> 下载附件</a></p>\n'); break;
+                }
+            });
+        }
+
+        // Markdown 模式下的男女主标记：用内嵌 HTML 包裹选中文本（前台与可视化模式同样识别）
+        function mdWrapAuthor(role) {
+            if (mdEditor.selectionStart === mdEditor.selectionEnd) {
+                window.showToast('请先选中要标记的文字', 'info');
+                return;
+            }
+            mdWrap('<span data-author="' + role + '">', '</span>', '');
+        }
+
+        function mdUnmarkSelection() {
+            var start = mdEditor.selectionStart, end = mdEditor.selectionEnd;
+            if (start === end) {
+                window.showToast('请先选中要取消标记的文字', 'info');
+                return;
+            }
+            var text = mdEditor.value;
+            var seg = text.substring(start, end);
+            var cleaned = seg.replace(/<span data-author="(?:male|female)">([\s\S]*?)<\/span>/g, '$1');
+            mdEditor.value = text.substring(0, start) + cleaned + text.substring(end);
+            mdEditor.selectionStart = start;
+            mdEditor.selectionEnd = start + cleaned.length;
+            mdEditor.focus();
+            renderMarkdownPreview();
         }
 
         // 代码编辑器插入函数（仅代码模式）
@@ -897,7 +1161,7 @@ include __DIR__ . '/header.php';
                 }
                 if (!snippet) return;
                 if (currentMode !== 'code') {
-                    switchToCode();
+                    switchToMode('code');
                 }
                 insertCodeSnippet(snippet);
             });
@@ -1119,19 +1383,31 @@ include __DIR__ . '/header.php';
             });
         }
 
-        // 男女主标记按钮绑定（作用于当前可视化内容）
+        // 男女主标记按钮绑定（可视化模式作用于选区；Markdown 模式用内嵌 HTML 包裹）
         if (btnMarkMale) {
             btnMarkMale.addEventListener('click', function () {
+                if (currentMode === 'markdown' && mdEditor) {
+                    mdWrapAuthor('male');
+                    return;
+                }
                 markSelectionAuthor('male');
             });
         }
         if (btnMarkFemale) {
             btnMarkFemale.addEventListener('click', function () {
+                if (currentMode === 'markdown' && mdEditor) {
+                    mdWrapAuthor('female');
+                    return;
+                }
                 markSelectionAuthor('female');
             });
         }
         if (btnUnmarkAuthor) {
             btnUnmarkAuthor.addEventListener('click', function () {
+                if (currentMode === 'markdown' && mdEditor) {
+                    mdUnmarkSelection();
+                    return;
+                }
                 clearSelectionAuthor();
             });
         }
@@ -1141,11 +1417,27 @@ include __DIR__ . '/header.php';
         if (form) {
             form.addEventListener('submit', function () {
                 // 根据当前模式同步内容到隐藏的textarea
+                var value = '';
+                var format = 'html';
                 if (currentMode === 'visual') {
                     // 可视化模式：直接使用 wangEditor 提供的 HTML，避免带上内部容器结构
-                    textarea.value = weEditor.txt.html();
+                    value = weEditor.txt.html();
+                } else if (currentMode === 'markdown' && mdEditor) {
+                    // Markdown 模式：提交前转换为与富文本一致的 HTML 存储，前台展示不受影响
+                    var html = mdToHtml(mdEditor.value);
+                    if (html === null) {
+                        // 前端渲染库缺失：上传 Markdown 原文，由服务端 Parsedown 兜底转换
+                        value = mdEditor.value;
+                        format = 'markdown';
+                    } else {
+                        value = html;
+                    }
                 } else {
-                    textarea.value = codeEditor.value;
+                    value = codeEditor.value;
+                }
+                textarea.value = value || '';
+                if (contentFormatField) {
+                    contentFormatField.value = format;
                 }
 
                 // 在提交前，将本次上传过的文件相对路径写入隐藏字段
@@ -1166,12 +1458,237 @@ include __DIR__ . '/header.php';
 <?php include __DIR__ . '/footer.php'; ?>
 
 <style>
-/* 模式切换工具栏布局（仅保留可视化/代码按钮） */
+/* 模式切换工具栏布局（可视化 / Markdown / HTML） */
 .md-toolbar {
     display: flex;
-    justify-content: flex-end;
-    gap: 0.25rem;
+    justify-content: space-between;
+    align-items: center;
+    gap: 0.5rem;
+    flex-wrap: wrap;
     margin-bottom: 0.5rem;
+}
+
+.md-toolbar-hint {
+    font-size: 0.75rem;
+    color: #94a3b8;
+}
+
+/* Markdown 分栏：左书写 / 右实时预览 */
+.md-split {
+    display: flex;
+    align-items: stretch;
+    gap: 0.75rem;
+}
+
+#articleMarkdownEditor {
+    flex: 1 1 0;
+    min-width: 0;
+    min-height: 360px;
+    padding: 0.65rem 0.8rem;
+    border-radius: 0.75rem;
+    border: 1px solid rgba(148, 163, 184, 0.7);
+    background: #ffffff;
+    color: #0f172a;
+    font-size: 0.85rem;
+    line-height: 1.7;
+    font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New', monospace;
+    resize: vertical;
+    overflow: auto;
+}
+
+.md-preview-pane {
+    flex: 1 1 0;
+    min-width: 0;
+    min-height: 360px;
+    max-height: 560px;
+    overflow: auto;
+    padding: 0.9rem 1rem;
+    border-radius: 0.75rem;
+    border: 1px dashed rgba(148, 163, 184, 0.7);
+    background: #f8fafc;
+}
+
+.md-hint {
+    margin: 0.4rem 0 0;
+    font-size: 0.75rem;
+    color: #94a3b8;
+    line-height: 1.5;
+}
+
+@media (max-width: 768px) {
+    .md-split {
+        flex-direction: column;
+        gap: 0.5rem;
+    }
+
+    #articleMarkdownEditor {
+        min-height: 200px;
+    }
+
+    .md-preview-pane {
+        min-height: 180px;
+        max-height: 320px;
+    }
+}
+
+/* Markdown 预览排版（尽量贴近前台文章展示效果） */
+#markdownPreview {
+    font-size: 0.9rem;
+    line-height: 1.75;
+    color: #334155;
+    word-break: break-word;
+}
+
+#markdownPreview:empty::before {
+    content: "开始输入后，这里会实时显示渲染效果";
+    color: #94a3b8;
+    font-size: 0.85rem;
+}
+
+#markdownPreview h2,
+#markdownPreview h3,
+#markdownPreview h4 {
+    margin: 1.1em 0 0.5em;
+    font-weight: 700;
+    color: #0f172a;
+    line-height: 1.4;
+}
+
+#markdownPreview h2 {
+    font-size: 1.25rem;
+    padding-left: 0.6rem;
+    border-left: 4px solid #667eea;
+}
+
+#markdownPreview h3 {
+    font-size: 1.1rem;
+}
+
+#markdownPreview h4 {
+    font-size: 1rem;
+}
+
+#markdownPreview p {
+    margin: 0.6em 0;
+}
+
+#markdownPreview ul,
+#markdownPreview ol {
+    margin: 0.6em 0;
+    padding-left: 1.5em;
+}
+
+#markdownPreview li {
+    margin: 0.25em 0;
+}
+
+#markdownPreview blockquote {
+    margin: 0.8em 0;
+    padding: 0.6em 0.9em;
+    border-left: 4px solid #cbd5e1;
+    background: #ffffff;
+    border-radius: 0.5rem;
+    color: #475569;
+}
+
+#markdownPreview blockquote.bq-note {
+    border-left-color: #3b82f6;
+    background: rgba(59, 130, 246, 0.06);
+}
+
+#markdownPreview blockquote.bq-warning {
+    border-left-color: #f59e0b;
+    background: rgba(245, 158, 11, 0.08);
+}
+
+#markdownPreview blockquote.bq-success {
+    border-left-color: #10b981;
+    background: rgba(16, 185, 129, 0.07);
+}
+
+#markdownPreview a {
+    color: #6366f1;
+    text-decoration: underline;
+    word-break: break-all;
+}
+
+#markdownPreview img {
+    max-width: 100%;
+    border-radius: 0.5rem;
+}
+
+#markdownPreview code {
+    background: rgba(148, 163, 184, 0.2);
+    border-radius: 0.25rem;
+    padding: 0.1em 0.35em;
+    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    font-size: 0.85em;
+}
+
+#markdownPreview pre {
+    background: #1e293b;
+    color: #e2e8f0;
+    padding: 0.8rem 1rem;
+    border-radius: 0.6rem;
+    overflow: auto;
+}
+
+#markdownPreview pre code {
+    background: transparent;
+    color: inherit;
+    padding: 0;
+}
+
+#markdownPreview hr {
+    border: none;
+    border-top: 1px dashed rgba(148, 163, 184, 0.8);
+    margin: 1.2em 0;
+}
+
+#markdownPreview center {
+    text-align: center;
+}
+
+#markdownPreview del,
+#markdownPreview s {
+    color: #94a3b8;
+}
+
+#markdownPreview table {
+    border-collapse: collapse;
+    width: 100%;
+    margin: 0.8em 0;
+}
+
+#markdownPreview th,
+#markdownPreview td {
+    border: 1px solid rgba(148, 163, 184, 0.6);
+    padding: 0.4em 0.6em;
+}
+
+#markdownPreview .btn-download {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 0.45rem 1rem;
+    border-radius: 999px;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: #ffffff;
+    text-decoration: none;
+    font-size: 0.85rem;
+}
+
+/* 预览中的男女主标记（与可视化编辑器一致） */
+#markdownPreview span[data-author="male"] {
+    background: rgba(129, 140, 248, 0.18);
+    border-radius: 0.25rem;
+    padding: 0 0.12em;
+}
+
+#markdownPreview span[data-author="female"] {
+    background: rgba(244, 114, 182, 0.18);
+    border-radius: 0.25rem;
+    padding: 0 0.12em;
 }
 
 /* 编辑器模式切换按钮 */
