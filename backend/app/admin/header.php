@@ -28,18 +28,18 @@ $adminPageMeta = [
     'albums' => ['title' => '相册管理', 'section' => '内容管理'],
     'messages' => ['title' => '留言管理', 'section' => '内容管理'],
     'events' => ['title' => '纪念事件', 'section' => '内容管理'],
-    'map' => ['title' => '地图与足迹', 'section' => '情侣空间'],
+    'map' => ['title' => '地图与足迹', 'section' => '内容管理'],
     'together_settings' => ['title' => '一起看设置', 'section' => '影视与播放'],
     'player_settings' => ['title' => '播放器设置', 'section' => '影视与播放'],
     'player_art' => ['title' => '播放器设置', 'section' => '影视与播放'],
     'strm_settings' => ['title' => 'withUstrm 媒体库', 'section' => '影视与播放'],
-    'moderation' => ['title' => '安全审核', 'section' => '系统管理'],
-    'devices' => ['title' => '信任设备', 'section' => '系统管理'],
-    'settings' => ['title' => $adminSection === 'theme' ? '主题与外观' : '系统设置', 'section' => '系统管理'],
-    'profile' => ['title' => '个人资料', 'section' => '账号与协作'],
-    'invites' => ['title' => '邀请另一半', 'section' => '账号与协作'],
-    'comment_ip_blacklist' => ['title' => '评论黑名单', 'section' => '系统管理'],
-    'tools_stats' => ['title' => '图片工具', 'section' => '工具'],
+    'profile' => ['title' => '个人资料', 'section' => '账号'],
+    'invites' => ['title' => '邀请另一半', 'section' => '账号'],
+    'settings' => ['title' => $adminSection === 'theme' ? '主题与外观' : '系统设置', 'section' => '设置'],
+    'moderation' => ['title' => '安全审核', 'section' => '高级设置'],
+    'devices' => ['title' => '信任设备', 'section' => '高级设置'],
+    'comment_ip_blacklist' => ['title' => '评论黑名单', 'section' => '高级设置'],
+    'tools_stats' => ['title' => '图片工具', 'section' => '高级设置'],
 ];
 $activeAdminMeta = $adminPageMeta[$adminPage] ?? ['title' => '管理后台', 'section' => '总览'];
 $themeInlineStyle = '';
@@ -54,7 +54,7 @@ foreach (($themeConfig['colors'] ?? []) as $themeName => $themeValue) {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>管理后台 - <?php echo e(SITE_NAME); ?></title>
 <link rel="stylesheet" href="/admin-assets/css/style.css?v=withu-logo-20260718">
-	<link rel="stylesheet" href="/admin-assets/css/admin_v3.css?v=20260830-analytics">
+	<link rel="stylesheet" href="/admin-assets/css/admin_v3.css?v=20260830-quick-restore">
 	<link rel="stylesheet" href="/admin-assets/css/admin_v2.css?v=ui-polish-3">
 	<link rel="stylesheet" href="/admin-assets/css/theme.css?v=withu-theme-20260724-1">
 	<link rel="stylesheet" href="/admin-assets/css/admin_pages.css?v=player-single-col">
@@ -97,7 +97,6 @@ foreach (($themeConfig['colors'] ?? []) as $themeName => $themeValue) {
         <a href="/admin/events.php" class="admin-drawer-link <?php echo $adminPage === 'events' ? 'admin-drawer-link-active' : ''; ?>">
             <i class="ti ti-calendar-event"></i><span>纪念事件</span>
         </a>
-
         <a href="/admin/map.php" class="admin-drawer-link <?php echo $adminPage === 'map' ? 'admin-drawer-link-active' : ''; ?>">
             <i class="ti ti-map-pin"></i><span>地图与足迹</span>
         </a>
@@ -113,13 +112,23 @@ foreach (($themeConfig['colors'] ?? []) as $themeName => $themeValue) {
             <i class="ti ti-server-2"></i><span>withUstrm 媒体库</span>
         </a>
 
-        <div class="admin-drawer-section-title">系统管理</div>
+        <div class="admin-drawer-section-title">账号</div>
+        <a href="/admin/profile.php" class="admin-drawer-link <?php echo $adminPage === 'profile' ? 'admin-drawer-link-active' : ''; ?>">
+            <i class="ti ti-user"></i><span>个人资料</span>
+        </a>
+        <a href="/admin/invites.php" class="admin-drawer-link <?php echo $adminPage === 'invites' ? 'admin-drawer-link-active' : ''; ?>">
+            <i class="ti ti-user-plus"></i><span>邀请另一半</span>
+        </a>
+
+        <div class="admin-drawer-section-title">设置</div>
         <a href="/admin/settings.php?section=general" class="admin-drawer-link <?php echo $adminPage === 'settings' && $adminSection !== 'theme' ? 'admin-drawer-link-active' : ''; ?>">
             <i class="ti ti-settings"></i><span>系统设置</span>
         </a>
         <a href="/admin/settings.php?section=theme#theme-settings" class="admin-drawer-link <?php echo $adminPage === 'settings' && $adminSection === 'theme' ? 'admin-drawer-link-active' : ''; ?>">
             <i class="ti ti-palette"></i><span>主题与外观</span>
         </a>
+
+        <div class="admin-drawer-section-title">高级设置</div>
         <a href="/admin/moderation.php" class="admin-drawer-link <?php echo $adminPage === 'moderation' ? 'admin-drawer-link-active' : ''; ?>">
             <i class="ti ti-shield"></i><span>安全审核</span>
         </a>
@@ -129,14 +138,6 @@ foreach (($themeConfig['colors'] ?? []) as $themeName => $themeValue) {
         <a href="/admin/comment_ip_blacklist.php" class="admin-drawer-link <?php echo $adminPage === 'comment_ip_blacklist' ? 'admin-drawer-link-active' : ''; ?>">
             <i class="ti ti-user-x"></i><span>评论黑名单</span>
         </a>
-
-        <div class="admin-drawer-section-title">账号与工具</div>
-        <a href="/admin/profile.php" class="admin-drawer-link <?php echo $adminPage === 'profile' ? 'admin-drawer-link-active' : ''; ?>">
-            <i class="ti ti-user"></i><span>个人资料</span>
-        </a>
-        <a href="/admin/invites.php" class="admin-drawer-link <?php echo $adminPage === 'invites' ? 'admin-drawer-link-active' : ''; ?>">
-            <i class="ti ti-user-plus"></i><span>邀请另一半</span>
-        </a>
         <?php $toolsTab = $_GET['tab'] ?? ''; ?>
         <a href="/admin/tools_image_stats.php?tab=optimize" class="admin-drawer-link <?php echo ($adminPage === 'tools_stats' && $toolsTab === 'optimize') ? 'admin-drawer-link-active' : ''; ?>">
             <i class="ti ti-arrows-diagonal"></i><span>图片补齐</span>
@@ -144,13 +145,13 @@ foreach (($themeConfig['colors'] ?? []) as $themeName => $themeValue) {
         <a href="/admin/tools_image_stats.php" class="admin-drawer-link <?php echo ($adminPage === 'tools_stats' && $toolsTab !== 'optimize') ? 'admin-drawer-link-active' : ''; ?>">
             <i class="ti ti-chart-bar"></i><span>图片统计</span>
         </a>
-        <a href="/logout.php" class="admin-drawer-link admin-drawer-link-danger" onclick="return confirm('确定要退出登录吗？');">
-            <i class="ti ti-logout"></i><span>退出登录</span>
-        </a>
     </div>
 
     <div class="admin-drawer-footer">
-        <div>当前用户：<?php echo e($currentUser['nickname'] ?? $currentUser['username']); ?></div>
+        <div class="admin-drawer-footer-user">当前用户：<?php echo e($currentUser['nickname'] ?? $currentUser['username']); ?></div>
+        <a href="/logout.php" class="admin-drawer-logout" onclick="return confirm('确定要退出登录吗？');">
+            <i class="ti ti-logout"></i><span>退出登录</span>
+        </a>
     </div>
 </aside>
 

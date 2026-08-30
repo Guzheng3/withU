@@ -363,24 +363,50 @@ body.admin-v3 .admin-drawer-link-active::before {
     background: linear-gradient(180deg, var(--v3-pink), var(--v3-blue));
 }
 
-body.admin-v3 .admin-drawer-link-danger {
-    margin-top: 0.75rem;
-    color: var(--v3-danger);
-}
-
-body.admin-v3 .admin-drawer-link-danger i { color: var(--v3-danger); }
-
-body.admin-v3 .admin-drawer-link-danger:hover {
-    background: rgba(239, 68, 68, 0.06);
-    transform: translateX(0);
-}
-
 body.admin-v3 .admin-drawer-footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.75rem;
     padding: 0.85rem 1.35rem;
     border-top: 1px solid var(--v3-border-light);
     font-size: 0.78rem;
     color: var(--v3-text-2);
     background: var(--v3-surface-soft);
+}
+
+body.admin-v3 .admin-drawer-footer-user {
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+body.admin-v3 .admin-drawer-logout {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.3rem;
+    flex-shrink: 0;
+    min-height: 30px;
+    padding: 0.28rem 0.7rem;
+    border-radius: var(--v3-radius-sm);
+    border: 1px solid rgba(239, 68, 68, 0.22);
+    color: var(--v3-danger);
+    font-size: 0.76rem;
+    font-weight: 600;
+    white-space: nowrap;
+    transition: background-color 0.2s var(--v3-ease), border-color 0.2s var(--v3-ease),
+        transform 0.2s var(--v3-ease);
+}
+
+body.admin-v3 .admin-drawer-logout i {
+    font-size: 0.95rem;
+}
+
+body.admin-v3 .admin-drawer-logout:hover {
+    background: rgba(239, 68, 68, 0.06);
+    border-color: rgba(239, 68, 68, 0.35);
+    transform: translateX(1px);
 }
 
 /* ============ 底部移动导航 ============ */
@@ -1291,6 +1317,59 @@ body.admin-v3 .admin-dashboard-panel ul li:last-child {
     border-bottom: none;
 }
 
+/* 快捷设置条目（图标 + 双行文本 + 进入按钮） */
+body.admin-v3 .admin-dashboard-panel .quick-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+body.admin-v3 .admin-dashboard-panel .quick-list li {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.6rem 0.4rem;
+    border-radius: var(--v3-radius-sm);
+    transition: background-color 0.15s var(--v3-ease);
+}
+
+body.admin-v3 .admin-dashboard-panel .quick-list li:hover {
+    background: var(--v3-surface-soft);
+}
+
+body.admin-v3 .admin-dashboard-panel .quick-list .quick-icon {
+    flex: 0 0 auto;
+    width: 34px;
+    height: 34px;
+    border-radius: 9px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 17px;
+}
+
+body.admin-v3 .admin-dashboard-panel .quick-list .quick-text {
+    flex: 1 1 auto;
+    min-width: 0;
+}
+
+body.admin-v3 .admin-dashboard-panel .quick-list .quick-title {
+    font-size: 0.9rem;
+    font-weight: 550;
+    color: var(--v3-text);
+}
+
+body.admin-v3 .admin-dashboard-panel .quick-list .quick-desc {
+    font-size: 0.76rem;
+    color: var(--v3-text-3);
+    margin-top: 1px;
+}
+
+body.admin-v3 .admin-dashboard-panel .quick-list .quick-go {
+    flex: 0 0 auto;
+    white-space: nowrap;
+}
+
 /* 播放器设置页：单列布局，卡片与字段纵向排列 */
 body.admin-v3 .player-settings-title {
     margin-bottom: 1rem;
@@ -1683,6 +1762,24 @@ body.admin-v3 .settings-date-time-row input {
 
 body.admin-v3 .wa-section {
     margin-bottom: 1.5rem;
+}
+
+/* 统计区内的普通列表（域名分布 / 最近访问） */
+body.admin-v3 .wa-plain-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+body.admin-v3 .wa-plain-list li {
+    padding: 0.55rem 0;
+    border-bottom: 1px solid var(--v3-border-light);
+    font-size: 0.88rem;
+    color: var(--v3-text);
+}
+
+body.admin-v3 .wa-plain-list li:last-child {
+    border-bottom: none;
 }
 
 /* 工具栏：标题 + 日期范围 */

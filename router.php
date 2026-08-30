@@ -53,6 +53,11 @@ if (strpos($path, '/admin-assets/') === 0) {
     if (serveStatic($appRoot . $rewritten, $mimeTypes)) return true;
 }
 
+// ── 后台上传媒体 /uploads/ → backend/app/uploads（不存在则走后续前台路由） ──
+if (strpos($path, '/uploads/') === 0) {
+    if (serveStatic($appRoot . $path, $mimeTypes)) return true;
+}
+
 // ── 后台 PHP 路径 ────────────────────────
 $isBackend = strpos($path, '/admin') === 0
     || $path === '/login.php' || $path === '/logout.php'

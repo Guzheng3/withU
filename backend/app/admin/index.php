@@ -596,6 +596,75 @@ include __DIR__ . '/header.php';
         </div>
     </div>
 
+    <!-- ============ 访问详细数据弹窗（域名分布 / 最近访问） ============ -->
+    <div class="admin-modal-backdrop" id="statsDetailBackdrop">
+        <div class="admin-modal" style="max-width:480px;">
+            <div class="admin-modal-header">访问详细数据</div>
+            <div class="admin-modal-body" style="max-height:72vh;overflow:auto;">
+                <div class="wa-subhead">域名分布 <span style="font-weight:400;color:var(--v3-text-3);">今日 <?php echo $today; ?></span></div>
+                <?php if (!empty($domainStats)): ?>
+                    <ul class="wa-plain-list">
+                        <?php foreach ($domainStats as $ds): ?>
+                        <li style="display:flex;justify-content:space-between;align-items:center;">
+                            <span style="font-family:monospace;font-size:0.82rem;"><?php echo e($ds['domain'] ?: '(未知)'); ?></span>
+                            <strong><?php echo (int)$ds['cnt']; ?> 次</strong>
+                        </li>
+                        <?php endforeach; ?>
+                    </ul>
+                <?php else: ?>
+                    <p style="font-size:0.85rem;color:var(--v3-text-3);">暂无今日访问数据。</p>
+                <?php endif; ?>
+
+                <div class="wa-subhead" style="margin-top:1.25rem;">最近访问 <span style="font-weight:400;color:var(--v3-text-3);">最近 10 条记录</span></div>
+                <?php if (!empty($recentVisitors)): ?>
+                    <ul class="wa-plain-list">
+                        <?php foreach ($recentVisitors as $rv): ?>
+                        <li>
+                            <div style="display:flex;justify-content:space-between;align-items:center;gap:0.5rem;">
+                                <div style="min-width:0;">
+                                    <div style="font-family:monospace;font-size:0.78rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;" title="<?php echo e($rv['ip_address']); ?>">
+                                        <?php echo e($rv['ip_address']); ?>
+                                    </div>
+                                    <div style="color:var(--v3-text-3);font-size:0.72rem;margin-top:1px;">
+                                        <?php echo e($rv['domain'] ?: ''); ?> · <?php echo e($rv['ua_browser'] ?: '未知浏览器'); ?> · <?php echo e($rv['ua_os'] ?: '未知系统'); ?>
+                                    </div>
+                                </div>
+                                <span style="color:var(--v3-text-3);font-size:0.72rem;white-space:nowrap;"><?php echo e(date('H:i:s', strtotime($rv['visit_time']))); ?></span>
+                            </div>
+                        </li>
+                        <?php endforeach; ?>
+                    </ul>
+                <?php else: ?>
+                    <p style="font-size:0.85rem;color:var(--v3-text-3);">暂无访问记录。</p>
+                <?php endif; ?>
+            </div>
+            <div class="admin-modal-actions">
+                <button type="button" class="btn btn-secondary" data-stats-details="close">关闭</button>
+            </div>
+        </div>
+    </div>
+    <script>
+    (function () {
+        function initStatsDetailModal() {
+            var backdrop = document.getElementById('statsDetailBackdrop');
+            if (!backdrop) return;
+            document.querySelectorAll('[data-stats-details="open"]').forEach(function (btn) {
+                btn.addEventListener('click', function () { backdrop.classList.add('active'); });
+            });
+            var closeBtn = backdrop.querySelector('[data-stats-details="close"]');
+            if (closeBtn) closeBtn.addEventListener('click', function () { backdrop.classList.remove('active'); });
+            backdrop.addEventListener('click', function (e) {
+                if (e.target === backdrop) backdrop.classList.remove('active');
+            });
+        }
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', initStatsDetailModal);
+        } else {
+            initStatsDetailModal();
+        }
+    })();
+    </script>
+
     <section class="admin-dashboard-stats" style="margin-bottom: 1.5rem;">
         <div class="admin-dashboard-stat-card">
             <div class="admin-card-header">
@@ -738,6 +807,64 @@ include __DIR__ . '/header.php';
     foreach ($spiderCounts as $c) { $waSpiderMax = max($waSpiderMax, (int) $c); }
     ?>
 
+    <section class="admin-dashboard-panels" style="margin-bottom: 1.5rem;grid-template-columns: 1fr;">
+        <div class="admin-dashboard-panel">
+            <div class="admin-card-header">
+                <div>
+                    <div class="admin-card-title">
+                        快捷设置
+                        <button type="button" class="admin-help-toggle" title="查看说明" aria-label="查看说明" aria-expanded="false"><i class="ti ti-info-circle"></i></button>
+                    </div>
+                </div>
+            </div>
+            <div class="admin-card-help">
+                <div class="admin-card-subtitle">常用设置与个人信息入口</div>
+            </div>
+            <ul class="quick-list">
+                <li>
+                    <span class="quick-icon" style="background:rgba(79,168,224,0.12);color:#2b7fb8;"><i class="ti ti-settings"></i></span>
+                    <div class="quick-text">
+                        <div class="quick-title">网站设置</div>
+                        <div class="quick-desc">修改站点标题、描述、首页大图、备案信息</div>
+                    </div>
+                    <a href="/admin/settings.php" class="btn btn-secondary btn-sm quick-go">
+                        <span>进入</span><i class="ti ti-chevron-right"></i>
+                    </a>
+                </li>
+                <li>
+                    <span class="quick-icon" style="background:rgba(63,189,139,0.12);color:#1f8f66;"><i class="ti ti-user"></i></span>
+                    <div class="quick-text">
+                        <div class="quick-title">个人资料</div>
+                        <div class="quick-desc">修改昵称、头像、QQ 头像来源与登录密码</div>
+                    </div>
+                    <a href="/admin/profile.php" class="btn btn-secondary btn-sm quick-go">
+                        <span>进入</span><i class="ti ti-chevron-right"></i>
+                    </a>
+                </li>
+                <li>
+                    <span class="quick-icon" style="background:rgba(167,139,250,0.14);color:#7c5cd6;"><i class="ti ti-messages"></i></span>
+                    <div class="quick-text">
+                        <div class="quick-title">留言管理</div>
+                        <div class="quick-desc">查看和删除前台的留言内容</div>
+                    </div>
+                    <a href="/admin/messages.php" class="btn btn-secondary btn-sm quick-go">
+                        <span>进入</span><i class="ti ti-chevron-right"></i>
+                    </a>
+                </li>
+                <li>
+                    <span class="quick-icon" style="background:rgba(244,63,94,0.10);color:#c2335a;"><i class="ti ti-shield"></i></span>
+                    <div class="quick-text">
+                        <div class="quick-title">IP 黑名单</div>
+                        <div class="quick-desc">统一管理被禁止评论与留言的 IP</div>
+                    </div>
+                    <a href="/admin/comment_ip_blacklist.php" class="btn btn-secondary btn-sm quick-go">
+                        <span>进入</span><i class="ti ti-chevron-right"></i>
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </section>
+
     <!-- ============ 百度统计风格 · 流量统计 ============ -->
     <section class="admin-card wa-section" id="waAnalytics">
         <div class="wa-toolbar">
@@ -745,10 +872,15 @@ include __DIR__ . '/header.php';
                 <i class="ti ti-chart-area-line"></i>流量统计
                 <button type="button" class="admin-help-toggle" title="查看说明" aria-label="查看说明" aria-expanded="false"><i class="ti ti-info-circle"></i></button>
             </div>
-            <div class="wa-range">
-                <?php foreach ($statsRangeDefs as $waKey => $waLabel): ?>
-                    <a class="wa-range-item <?php echo $statsRangeKey === $waKey ? 'active' : ''; ?>" href="?range=<?php echo $waKey; ?>"><?php echo $waLabel; ?></a>
-                <?php endforeach; ?>
+            <div style="display:flex;align-items:center;gap:0.5rem;flex-wrap:wrap;justify-content:flex-end;">
+                <button type="button" class="btn btn-secondary btn-sm" data-stats-details="open" style="white-space:nowrap;">
+                    <i class="ti ti-list-details"></i><span>详细数据</span>
+                </button>
+                <div class="wa-range">
+                    <?php foreach ($statsRangeDefs as $waKey => $waLabel): ?>
+                        <a class="wa-range-item <?php echo $statsRangeKey === $waKey ? 'active' : ''; ?>" href="?range=<?php echo $waKey; ?>"><?php echo $waLabel; ?></a>
+                    <?php endforeach; ?>
+                </div>
             </div>
         </div>
         <div class="admin-card-help">
@@ -997,175 +1129,6 @@ include __DIR__ . '/header.php';
                 <?php endif; ?>
             </tbody>
         </table>
-    </section>
-
-    <section class="admin-dashboard-panels">
-        <div class="admin-dashboard-panel">
-            <div class="admin-card-header">
-                <div>
-                    <div class="admin-card-title">
-                        快捷设置
-                        <button type="button" class="admin-help-toggle" title="查看说明" aria-label="查看说明" aria-expanded="false"><i class="ti ti-info-circle"></i></button>
-                    </div>
-                </div>
-            </div>
-            <div class="admin-card-help">
-                <div class="admin-card-subtitle">常用设置与个人信息入口</div>
-            </div>
-            <ul>
-                <li>
-                    <div style="display:flex;justify-content:space-between;align-items:center;gap:0.5rem;">
-                        <div>
-                            <div style="font-size:0.9rem;font-weight:500;">网站设置</div>
-                            <div style="font-size:0.78rem;color:var(--v3-text-3);">修改站点标题、描述、首页大图、备案信息</div>
-                        </div>
-                        <a href="/admin/settings.php" class="btn btn-secondary btn-sm" style="white-space:nowrap;">
-                            <span>进入</span><i class="ti ti-chevron-right"></i>
-                        </a>
-                    </div>
-                </li>
-                <li>
-                    <div style="display:flex;justify-content:space-between;align-items:center;gap:0.5rem;">
-                        <div>
-                            <div style="font-size:0.9rem;font-weight:500;">个人资料</div>
-                            <div style="font-size:0.78rem;color:var(--v3-text-3);">修改昵称、头像、QQ 头像来源与登录密码</div>
-                        </div>
-                        <a href="/admin/profile.php" class="btn btn-secondary btn-sm" style="white-space:nowrap;">
-                            <span>进入</span><i class="ti ti-chevron-right"></i>
-                        </a>
-                    </div>
-                </li>
-                <li>
-                    <div style="display:flex;justify-content:space-between;align-items:center;gap:0.5rem;">
-                        <div>
-                            <div style="font-size:0.9rem;font-weight:500;">留言管理</div>
-                            <div style="font-size:0.78rem;color:var(--v3-text-3);">查看和删除前台的留言内容</div>
-                        </div>
-                        <a href="/admin/messages.php" class="btn btn-secondary btn-sm" style="white-space:nowrap;">
-                            <span>进入</span><i class="ti ti-chevron-right"></i>
-                        </a>
-                    </div>
-                </li>
-                <li>
-                    <div style="display:flex;justify-content:space-between;align-items:center;gap:0.5rem;">
-                        <div>
-                            <div style="font-size:0.9rem;font-weight:500;">IP 黑名单</div>
-                            <div style="font-size:0.78rem;color:var(--v3-text-3);">统一管理被禁止评论与留言的 IP</div>
-                        </div>
-                        <a href="/admin/comment_ip_blacklist.php" class="btn btn-secondary btn-sm" style="white-space:nowrap;">
-                            <span>进入</span><i class="ti ti-chevron-right"></i>
-                        </a>
-                    </div>
-                </li>
-            </ul>
-        </div>
-
-        <div class="admin-dashboard-panel">
-            <div class="admin-card-header">
-                <div>
-                    <div class="admin-card-title">
-                        图片概览
-                        <button type="button" class="admin-help-toggle" title="查看说明" aria-label="查看说明" aria-expanded="false"><i class="ti ti-info-circle"></i></button>
-                    </div>
-                </div>
-                <a href="/admin/tools_image_stats.php" class="btn btn-secondary btn-sm">
-                    <span>详情</span><i class="ti ti-chevron-right"></i>
-                </a>
-            </div>
-            <div class="admin-card-help">
-                <div class="admin-card-subtitle">最近相册图片的体积与加载估算</div>
-            </div>
-            <?php if ($albumImageStats['count'] > 0): ?>
-                <?php
-                $count      = $albumImageStats['count'];
-                $totalBytes = $albumImageStats['total_bytes'];
-                $avgBytes   = $albumImageStats['avg_bytes'];
-                $avgKb      = round($avgBytes / 1024, 1);
-                $totalMb    = round($totalBytes / 1024 / 1024, 1);
-                $sceneCount = 30;
-                $sceneMb    = round($avgBytes * $sceneCount / 1024 / 1024, 2);
-                ?>
-                <ul>
-                    <li style="padding:0.45rem 0;">
-                        最近采样图片：<strong><?php echo $count; ?></strong> 张，总体积约 <strong><?php echo $totalMb; ?> MB</strong>
-                    </li>
-                    <li style="padding:0.45rem 0;">
-                        平均单张大小：约 <strong><?php echo $avgKb; ?> KB</strong>
-                    </li>
-                    <li style="padding:0.45rem 0;">
-                        场景估算：一次加载 <strong><?php echo $sceneCount; ?></strong> 张图 ≈ <strong><?php echo $sceneMb; ?> MB</strong>
-                        <div style="font-size:0.78rem;color:var(--v3-text-3);margin-top:0.2rem;">
-                            实际流量会因 WebP 与缩略图启用而更低，仅供参考。
-                        </div>
-                    </li>
-                </ul>
-            <?php else: ?>
-                <p style="font-size:0.85rem;color:var(--v3-text-3);">暂时还没有足够的相册图片用于统计。</p>
-            <?php endif; ?>
-        </div>
-
-        <!-- 域名分布 -->
-        <div class="admin-dashboard-panel">
-            <div class="admin-card-header">
-                <div>
-                    <div class="admin-card-title">
-                        域名分布
-                        <button type="button" class="admin-help-toggle" title="查看说明" aria-label="查看说明" aria-expanded="false"><i class="ti ti-info-circle"></i></button>
-                    </div>
-                </div>
-            </div>
-            <div class="admin-card-help">
-                <div class="admin-card-subtitle">今日 <?php echo $today; ?> 各域名访问量</div>
-            </div>
-            <?php if (!empty($domainStats)): ?>
-                <ul>
-                    <?php foreach ($domainStats as $ds): ?>
-                    <li style="display:flex;justify-content:space-between;align-items:center;">
-                        <span style="font-family:monospace;font-size:0.82rem;"><?php echo e($ds['domain'] ?: '(未知)'); ?></span>
-                        <strong><?php echo (int)$ds['cnt']; ?> 次</strong>
-                    </li>
-                    <?php endforeach; ?>
-                </ul>
-            <?php else: ?>
-                <p style="font-size:0.85rem;color:var(--v3-text-3);">暂无今日访问数据。</p>
-            <?php endif; ?>
-        </div>
-
-        <!-- 最近访问 -->
-        <div class="admin-dashboard-panel">
-            <div class="admin-card-header">
-                <div>
-                    <div class="admin-card-title">
-                        最近访问
-                        <button type="button" class="admin-help-toggle" title="查看说明" aria-label="查看说明" aria-expanded="false"><i class="ti ti-info-circle"></i></button>
-                    </div>
-                </div>
-            </div>
-            <div class="admin-card-help">
-                <div class="admin-card-subtitle">最近 10 条访问记录</div>
-            </div>
-            <?php if (!empty($recentVisitors)): ?>
-                <ul>
-                    <?php foreach ($recentVisitors as $rv): ?>
-                    <li style="padding:0.4rem 0;">
-                        <div style="display:flex;justify-content:space-between;align-items:center;gap:0.5rem;">
-                            <div style="min-width:0;">
-                                <div style="font-family:monospace;font-size:0.78rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;" title="<?php echo e($rv['ip_address']); ?>">
-                                    <?php echo e($rv['ip_address']); ?>
-                                </div>
-                                <div style="color:var(--v3-text-3);font-size:0.72rem;margin-top:1px;">
-                                    <?php echo e($rv['domain'] ?: ''); ?> · <?php echo e($rv['ua_browser'] ?: '未知浏览器'); ?> · <?php echo e($rv['ua_os'] ?: '未知系统'); ?>
-                                </div>
-                            </div>
-                            <span style="color:var(--v3-text-3);font-size:0.72rem;white-space:nowrap;"><?php echo e(date('H:i:s', strtotime($rv['visit_time']))); ?></span>
-                        </div>
-                    </li>
-                    <?php endforeach; ?>
-                </ul>
-            <?php else: ?>
-                <p style="font-size:0.85rem;color:var(--v3-text-3);">暂无访问记录。</p>
-            <?php endif; ?>
-        </div>
     </section>
 
 <?php include __DIR__ . '/footer.php'; ?>

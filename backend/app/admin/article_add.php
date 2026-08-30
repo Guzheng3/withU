@@ -481,7 +481,7 @@ include __DIR__ . '/header.php';
                 </div>
                 <div class="md-toolbar-right">
                     <button type="button" id="editorModeVisual" class="editor-mode-btn active">
-                        <i class="fas fa-eye"></i> 可视化
+                        <i class="fas fa-eye"></i> 富文本
                     </button>
                     <button type="button" id="editorModeMarkdown" class="editor-mode-btn">
                         <i class="fab fa-markdown"></i> Markdown
@@ -533,7 +533,7 @@ include __DIR__ . '/header.php';
                         placeholder="在这里书写 Markdown，右侧实时预览渲染效果……"></textarea>
                     <div class="md-preview-pane" id="markdownPreview"></div>
                 </div>
-                <p class="md-hint">左侧书写 Markdown，右侧实时渲染预览；切换「可视化」会自动双向转换。发布时统一存储 HTML，前台展示不受影响。</p>
+                <p class="md-hint">左侧书写 Markdown，右侧实时渲染预览，预览区可直接编辑并自动同步回左侧；快捷按钮插入的提示文字选中后输入即覆盖。切换「富文本」会自动双向转换，发布时统一存储 HTML，前台展示不受影响。</p>
             </div>
 
             <!-- 男女主标记快捷按钮（独立于 wangEditor 菜单） -->
@@ -586,10 +586,10 @@ include __DIR__ . '/header.php';
                 <span class="switch-track">
                     <span class="switch-thumb"></span>
                 </span>
-                <span class="switch-label">允许另一半在后台编辑这篇文章</span>
+                <span class="switch-label">允许恋人在后台编辑这篇文章</span>
             </label>
             <p style="margin:0.25rem 0 0;font-size:0.78rem;color:var(--text-light);">
-                关闭后，另一半将无法在后台编辑或删除这篇文章，但前台阅读不受影响。
+                关闭后，恋人将无法在后台编辑或删除这篇文章，但前台阅读不受影响。
             </p>
         </div>
 
@@ -922,6 +922,13 @@ include __DIR__ . '/header.php';
                     return '\n\n' + node.outerHTML + '\n\n';
                 }
             });
+            // wangEditor 空内容时 txt.html() 会带出隐藏的占位结构，转换时直接丢弃
+            td.addRule('wangEditorChrome', {
+                filter: function (node) {
+                    return node.nodeType === 1 && node.classList && node.classList.contains('placeholder');
+                },
+                replacement: function () { return ''; }
+            });
             td.addRule('strikethrough', {
                 filter: ['del', 's', 'strike'],
                 replacement: function (content) { return '~~' + content + '~~'; }
@@ -1030,6 +1037,21 @@ include __DIR__ . '/header.php';
             });
         }
 
+        // 预览区可直接编辑：改动经 HTML→Markdown 转换后同步回左侧输入框（不回渲染预览，避免光标跳动）
+        if (markdownPreview && mdEditor) {
+            markdownPreview.contentEditable = (window.marked && window.TurndownService) ? 'true' : 'false';
+            var previewSyncTimer = null;
+            markdownPreview.addEventListener('input', function () {
+                if (previewSyncTimer) clearTimeout(previewSyncTimer);
+                previewSyncTimer = setTimeout(function () {
+                    var md = htmlToMd(markdownPreview.innerHTML);
+                    if (md !== null) {
+                        mdEditor.value = md;
+                    }
+                }, 250);
+            });
+        }
+
         // ---- Markdown 光标 / 选区工具 ----
         function mdWrap(open, close, placeholder) {
             var start = mdEditor.selectionStart, end = mdEditor.selectionEnd;
@@ -1042,11 +1064,22 @@ include __DIR__ . '/header.php';
             renderMarkdownPreview();
         }
 
-        function mdInsert(snippet) {
+        function mdInsert(snippet, placeholder) {
             var start = mdEditor.selectionStart, end = mdEditor.selectionEnd;
             var text = mdEditor.value;
             mdEditor.value = text.substring(0, start) + snippet + text.substring(end);
             var pos = start + snippet.length;
+            // 带提示文字的片段：只选中提示部分，正式输入直接覆盖，前缀结构保留
+            if (placeholder) {
+                var idx = snippet.indexOf(placeholder);
+                if (idx > -1) {
+                    mdEditor.selectionStart = start + idx;
+                    mdEditor.selectionEnd = start + idx + placeholder.length;
+                    mdEditor.focus();
+                    renderMarkdownPreview();
+                    return;
+                }
+            }
             mdEditor.selectionStart = pos;
             mdEditor.selectionEnd = pos;
             mdEditor.focus();
@@ -1058,11 +1091,16 @@ include __DIR__ . '/header.php';
             var text = mdEditor.value;
             var lineStart = text.lastIndexOf('\n', start - 1) + 1;
             var seg = text.substring(lineStart, end);
-            var lines = (seg === '') ? [placeholder || ''] : seg.split('\n');
+            var onlyPlaceholder = (seg.trim() === '');
+            var lines = onlyPlaceholder ? [placeholder || ''] : seg.split('\n');
             var out = lines.map(function (l) { return (l.trim() === '') ? l : prefix + l; }).join('\n');
             mdEditor.value = text.substring(0, lineStart) + out + text.substring(end);
             mdEditor.selectionStart = lineStart;
             mdEditor.selectionEnd = lineStart + out.length;
+            // 空行插入占位提示时，跳过前缀只选中提示文字，输入即覆盖（## 等前缀保留）
+            if (onlyPlaceholder && placeholder) {
+                mdEditor.selectionStart = lineStart + prefix.length;
+            }
             mdEditor.focus();
             renderMarkdownPreview();
         }
@@ -1084,14 +1122,14 @@ include __DIR__ . '/header.php';
                     case 'quote': mdPrefixLines('> ', '在这里输入引用内容'); break;
                     case 'ul': mdPrefixLines('- ', '列表项'); break;
                     case 'ol': mdPrefixLines('1. ', '列表项'); break;
-                    case 'codeblock': mdInsert('\n```\n// 在这里粘贴代码\n```\n'); break;
+                    case 'codeblock': mdInsert('\n```\n// 在这里粘贴代码\n```\n', '// 在这里粘贴代码'); break;
                     case 'link': mdWrap('[', '](https://)', '链接文字'); break;
-                    case 'image': mdInsert('![图片描述](图片地址)'); break;
+                    case 'image': mdInsert('![图片描述](图片地址)', '图片描述'); break;
                     case 'hr': mdInsert('\n\n---\n\n'); break;
-                    case 'note': mdInsert('\n<blockquote class="bq-note">在这里输入提示内容</blockquote>\n'); break;
-                    case 'warning': mdInsert('\n<blockquote class="bq-warning">在这里输入警告内容</blockquote>\n'); break;
-                    case 'success': mdInsert('\n<blockquote class="bq-success">在这里输入成功提示</blockquote>\n'); break;
-                    case 'download': mdInsert('\n<p><a class="btn-download" href="#" target="_blank" rel="noopener"><i class="fas fa-download"></i> 下载附件</a></p>\n'); break;
+                    case 'note': mdInsert('\n<blockquote class="bq-note">在这里输入提示内容</blockquote>\n', '在这里输入提示内容'); break;
+                    case 'warning': mdInsert('\n<blockquote class="bq-warning">在这里输入警告内容</blockquote>\n', '在这里输入警告内容'); break;
+                    case 'success': mdInsert('\n<blockquote class="bq-success">在这里输入成功提示</blockquote>\n', '在这里输入成功提示'); break;
+                    case 'download': mdInsert('\n<p><a class="btn-download" href="#" target="_blank" rel="noopener"><i class="fas fa-download"></i> 下载附件</a></p>\n', '下载附件'); break;
                 }
             });
         }
@@ -1506,6 +1544,15 @@ include __DIR__ . '/header.php';
     border-radius: 0.75rem;
     border: 1px dashed rgba(148, 163, 184, 0.7);
     background: #f8fafc;
+    cursor: text;
+}
+
+/* 预览区可直接编辑：聚焦时边框转为实线示意编辑态 */
+.md-preview-pane:focus {
+    outline: none;
+    border-style: solid;
+    border-color: rgba(102, 126, 234, 0.55);
+    background: #ffffff;
 }
 
 .md-hint {
@@ -1718,6 +1765,17 @@ include __DIR__ . '/header.php';
     border-color: #667eea;
     color: #ffffff;
     box-shadow: 0 2px 8px rgba(102, 126, 234, 0.3);
+}
+
+/* 选中态悬停/按压反馈：可视化等已选中按钮悬停时轻微提亮，按下时缩小下沉 */
+.editor-mode-btn.active:hover {
+    filter: brightness(1.07);
+    box-shadow: 0 3px 12px rgba(102, 126, 234, 0.42);
+}
+
+.editor-mode-btn:active {
+    transform: scale(0.95);
+    box-shadow: 0 1px 3px rgba(102, 126, 234, 0.25);
 }
 
 .editor-mode-btn i {
