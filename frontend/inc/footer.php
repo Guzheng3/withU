@@ -72,11 +72,12 @@ foreach (preg_split('/[\r\n,，;；]+/u', $withuBeianRaw) as $withuBeianItem) {
         if (preg_match('/^([\x{4e00}-\x{9fa5}])ICP/u', $withuBeianItem, $withuBeianMatch)) {
             $withuAuthority = $withuIcpAuthorities[$withuBeianMatch[1]] ?? '';
         }
+        // 查询链接直达综合查询页，根路径只是系统门户首页
         $withuBeianBadges[] = [
             'icon' => 'ICP.svg',
             'class' => 'bg-blue',
             'text' => $withuBeianItem,
-            'href' => 'https://beian.miit.gov.cn/',
+            'href' => 'https://beian.miit.gov.cn/#/Integrated/index',
             'title' => $withuAuthority !== '' ? $withuAuthority . ' 备案查询' : '工信部 ICP 备案查询',
         ];
     }
