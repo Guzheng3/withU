@@ -181,7 +181,7 @@ include __DIR__ . '/header.php';
     </section>
 
     <?php if (isset($_GET['success'])): ?>
-        <div class="admin-card" style="margin-bottom:0.75rem;background:rgba(34,197,94,0.05);border:1px solid rgba(34,197,94,0.35);">
+        <div class="admin-card" style="margin-bottom:0.75rem;background:linear-gradient(rgba(34,197,94,0.06),rgba(34,197,94,0.06)),var(--v3-glass);border:1px solid rgba(34,197,94,0.35);">
             <div style="display:flex;align-items:center;gap:0.5rem;color:#15803d;font-size:0.9rem;">
                 <i class="fas fa-check-circle"></i>
                 <span><?php echo e($_GET['success']); ?></span>
@@ -190,7 +190,7 @@ include __DIR__ . '/header.php';
     <?php endif; ?>
 
     <?php if (isset($_GET['error'])): ?>
-        <div class="admin-card" style="margin-bottom:0.75rem;background:rgba(248,113,113,0.05);border:1px solid rgba(248,113,113,0.35);">
+        <div class="admin-card" style="margin-bottom:0.75rem;background:linear-gradient(rgba(248,113,113,0.06),rgba(248,113,113,0.06)),var(--v3-glass);border:1px solid rgba(248,113,113,0.35);">
             <div style="display:flex;align-items:center;gap:0.5rem;color:#b91c1c;font-size:0.9rem;">
                 <i class="fas fa-exclamation-circle"></i>
                 <span><?php echo e($_GET['error']); ?></span>
@@ -267,7 +267,7 @@ include __DIR__ . '/header.php';
                     </div>
 
                     <div style="display:flex;gap:0.5rem;flex-wrap:wrap;">
-                        <a href="/article.php?id=<?php echo $article['id']; ?>" target="_blank" class="btn btn-secondary">
+                        <a href="/page.php?id=<?php echo $article['id']; ?>" target="_blank" class="btn btn-secondary">
                             <i class="fas fa-eye"></i>
                             <span>前台查看</span>
                         </a>

@@ -346,7 +346,7 @@ $__albumAuthorAvatar = (string) ($__cfg['maleAvatar'] ?? '');
 
 <!-- 礼花效果已迁移到 components.js 的 ConfettiEffect 模块 -->
 
-<script src="/assets/js/pjax.js"></script><script>if(window.WithUPjax&typeof window.WithUPjax.init==="function")window.WithUPjax.init();</script>
+<script src="/assets/js/pjax.js"></script><script>if(window.WithUPjax&&typeof window.WithUPjax.init==="function")window.WithUPjax.init();</script>
 <style>
     #loader-wrapper {
         position: fixed;
@@ -3545,7 +3545,7 @@ if (typeof window.initPrivatePage === 'function') window.initPrivatePage();
     <link rel="stylesheet" href="/assets/fonts/pacifico.css">
 
 <script src="/Style/vendor/confetti/confetti.browser.min.js"></script>
-<script src="/assets/js/page-messages.js"></script>
+<script src="/assets/js/page-messages.js?v=20260831"></script>
 <script src="/Style/toastify/lucide.min.js"></script>
 <script src="/Style/toastify/toastify.js"></script>
 <script>if(typeof lucide!=='undefined')lucide.createIcons();</script>
@@ -3553,6 +3553,7 @@ if (typeof window.initPrivatePage === 'function') window.initPrivatePage();
 <script src="/assets/js/clipboard.js"></script>
 <script src="/assets/js/tooltip.js"></script>
 <script src="/Style/js/view-image.min.js"></script>
+<script src="/assets/js/webp-default.js?v=20260830"></script>
 <script src="/Style/LoveListStyle/carousel.umd.js"></script>
 <script src="/Style/LoveListStyle/carousel.thumbs.umd.js"></script>
 <script src="/Style/LoveListStyle/fancybox.umd.js"></script>

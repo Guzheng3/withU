@@ -39,6 +39,10 @@ $albumCount   = (int) ($albumCountRow['c'] ?? 0);
 $eventCount   = (int) ($eventCountRow['c'] ?? 0);
 $messageCount = (int) ($messageCountRow['c'] ?? 0);
 
+// 情侣空间共两个账号：活跃用户满 2 人即代表伴侣已注册，仪表盘不再展示邀请入口
+$activeUserCount   = (int) ($db->fetch("SELECT COUNT(*) AS c FROM users WHERE status = 'active'")['c'] ?? 0);
+$partnerRegistered = $activeUserCount >= 2;
+
 // 访问统计
 $todayVisitRow = $db->fetch("SELECT page_views, unique_visitors FROM site_visits WHERE visit_date = ?", [$today]);
 $todayViews    = (int) ($todayVisitRow['page_views'] ?? 0);
@@ -821,6 +825,18 @@ include __DIR__ . '/header.php';
                 <div class="admin-card-subtitle">常用设置与个人信息入口</div>
             </div>
             <ul class="quick-list">
+                <?php if (!$partnerRegistered): ?>
+                <li>
+                    <span class="quick-icon" style="background:rgba(244,114,182,0.14);color:#d6336c;"><i class="ti ti-user-plus"></i></span>
+                    <div class="quick-text">
+                        <div class="quick-title">邀请伴侣</div>
+                        <div class="quick-desc">生成一次性邀请链接，对方注册后加入小站</div>
+                    </div>
+                    <a href="/admin/invites.php" class="btn btn-secondary btn-sm quick-go">
+                        <span>进入</span><i class="ti ti-chevron-right"></i>
+                    </a>
+                </li>
+                <?php endif; ?>
                 <li>
                     <span class="quick-icon" style="background:rgba(79,168,224,0.12);color:#2b7fb8;"><i class="ti ti-settings"></i></span>
                     <div class="quick-text">
@@ -1130,5 +1146,33 @@ include __DIR__ . '/header.php';
             </tbody>
         </table>
     </section>
+
+    <script>
+    // 仪表盘统计卡片/快捷设置面板不是 .admin-card 容器，admin_v2.js 的说明折叠
+    // 只绑定 .admin-card 内的开关；这里为其余容器的说明开关补齐相同行为
+    (function () {
+        function initDashboardHelpToggles() {
+            document.querySelectorAll('.admin-dashboard-stat-card .admin-help-toggle, .admin-dashboard-panel .admin-help-toggle').forEach(function (btn) {
+                if (btn.closest('.admin-card')) return; // 已由 admin_v2.js 处理，避免双重绑定
+                btn.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    var container = btn.closest('.admin-dashboard-stat-card') || btn.closest('.admin-dashboard-panel');
+                    if (!container) return;
+                    var help = container.querySelector('.admin-card-help');
+                    if (!help) return;
+                    var open = help.classList.toggle('open');
+                    btn.setAttribute('aria-expanded', open ? 'true' : 'false');
+                    btn.title = open ? '收起说明' : '查看说明';
+                });
+            });
+        }
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', initDashboardHelpToggles);
+        } else {
+            initDashboardHelpToggles();
+        }
+    })();
+    </script>
 
 <?php include __DIR__ . '/footer.php'; ?>

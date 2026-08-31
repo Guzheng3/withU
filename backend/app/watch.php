@@ -254,7 +254,7 @@ if (file_exists($headerPath)) {
 
   <div class="main-col">
     <section class="section" id="recent" style="--sec-accent:var(--pink);--sec-soft:var(--pink-soft)">
-      <div class="section-head"><span class="sec-accent"></span><h2>最近播放</h2><a class="sec-more" href="/watch_history.php">全部历史 ›</a></div>
+      <div class="section-head"><span class="sec-accent"></span><h2>最近播放</h2><a class="sec-more" href="/watch_history.php?from=<?php echo urlencode($_SERVER['REQUEST_URI']); ?>">全部历史 ›</a></div>
       <?php if (empty($recentGroups)): ?>
         <div class="empty">还没有达到记录条件的观看历史，去看一部片吧。</div>
       <?php else: ?>

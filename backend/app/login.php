@@ -12,16 +12,6 @@ require_once __DIR__ . '/core/helpers.php';
 $auth = new Auth();
 $db   = Database::getInstance();
 
-// Turnstile 当前配置
-$turnstileEnabled = (string) get_setting('turnstile_enabled', '0') === '1';
-$turnstileSiteKey = '';
-if ($turnstileEnabled) {
-    $turnstileSiteKey = (string) get_setting('turnstile_site_key', '');
-    if ($turnstileSiteKey === '') {
-        $turnstileEnabled = false;
-    }
-}
-
 // 已登录则直接回到首页
 if ($auth->isLoggedIn()) {
     redirect('/');
@@ -56,11 +46,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $token = $_POST['_token'] ?? '';
     if (!csrf_verify($token)) {
         $error = '表单已过期，请刷新页面后重试';
-    } elseif ($turnstileEnabled) {
-        $tsToken = $_POST['cf-turnstile-response'] ?? '';
-        if (!verify_turnstile((string)$tsToken)) {
-            $error = '验证未通过，请完成安全验证后再试';
-        }
     }
 
     if (!$error) {
@@ -85,12 +70,20 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             if (!$registerEnabled) {
                 $error = $activeUserCount === 1 ? '请使用情侣邀请链接注册第二个账号' : '当前已注册满两位用户，已关闭注册';
             } else {
-                $username = trim($_POST['username'] ?? '');
+                $qq       = trim((string) ($_POST['qq'] ?? ''));
+                $username = $qq; // QQ 号即登录账号
                 $password = (string) ($_POST['password'] ?? '');
-                $nickname = trim($_POST['nickname'] ?? '');
+                $confirm  = (string) ($_POST['password_confirm'] ?? '');
+                $nickname = trim((string) ($_POST['nickname'] ?? ''));
 
                 if ($activeUserCount === 1 && !$inviteRow) {
                     $error = '邀请链接无效或已过期';
+                } elseif ($qq === '' || $password === '' || $confirm === '' || $nickname === '') {
+                    $error = '请填写所有必填项';
+                } elseif (!preg_match('/^[1-9][0-9]{4,10}$/', $qq)) {
+                    $error = 'QQ 号格式不正确（应为 5~11 位数字）';
+                } elseif ($password !== $confirm) {
+                    $error = '两次输入的密码不一致';
                 }
 
                 $gender = '';
@@ -121,7 +114,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 }
 
                 if (!$error) {
-                    $result = $auth->register($username, $password, $nickname, $role, $gender);
+                    $result = $auth->register($username, $password, $nickname, $role, $gender, $qq);
                     if (!empty($result['success'])) {
                         if ($activeUserCount === 1 && $inviteRow) {
                             try {
@@ -142,6 +135,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
     }
 }
+// 提交失败后停留在原表单并回填已填内容（密码不回填）
+$lastAction   = (string) ($_POST['action'] ?? '');
+$oldLoginName = $lastAction === 'login' ? trim((string) ($_POST['username'] ?? '')) : '';
+$oldQq        = $lastAction === 'register' ? trim((string) ($_POST['qq'] ?? '')) : '';
+$oldNickname  = $lastAction === 'register' ? trim((string) ($_POST['nickname'] ?? '')) : '';
+$activeTab    = ($lastAction === 'register' && $error !== '') ? 'register' : 'login';
+
 $themeConfig = withu_theme_config();
 $themeInlineStyle = '';
 foreach (($themeConfig['colors'] ?? []) as $themeName => $themeValue) $themeInlineStyle .= '--withu-custom-' . $themeName . ':' . $themeValue . ';';
@@ -153,9 +153,6 @@ foreach (($themeConfig['colors'] ?? []) as $themeName => $themeValue) $themeInli
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>登录 - <?php echo e(SITE_NAME); ?></title>
 <link rel="stylesheet" href="/admin-assets/vendor/fontawesome/css/all.min.css">
-<?php if ($turnstileEnabled && $turnstileSiteKey): ?>
-<script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
-<?php endif; ?>
 <style>
 :root{--brand:#e75480;--brand-dark:#c23b64;}
 *{box-sizing:border-box;}
@@ -177,12 +174,14 @@ body{background:linear-gradient(135deg,#ffeef5 0%,#f4f6fb 60%,#eef2ff 100%);
 .login-tip{margin-top:14px;font-size:12px;color:#999;text-align:center;line-height:1.7;}
 .login-err{background:#fff1f1;color:#c0392b;border:1px solid #ffd6d6;padding:9px 12px;border-radius:8px;font-size:13px;margin-bottom:14px;display:block;}
 .login-success{background:#f0faf0;color:#27ae60;border:1px solid #d5f5d5;padding:9px 12px;border-radius:8px;font-size:13px;margin-bottom:14px;display:block;}
-.auth-divider{display:flex;align-items:center;margin:20px 0;color:#bbb;font-size:13px;gap:12px;}
-.auth-divider::before,.auth-divider::after{content:'';flex:1;height:1px;background:#e8e8e8;}
-.auth-tabs{display:flex;gap:8px;margin-bottom:16px;}
-.auth-tabs .tab-btn{flex:1;padding:8px;border:1.5px solid #e3e6f0;border-radius:10px;background:#fff;cursor:pointer;font-size:13px;color:#888;transition:.2s;font-family:inherit;}
-.auth-tabs .tab-btn.active{border-color:var(--brand);color:var(--brand);background:#fff5f8;font-weight:600;}
-.auth-tabs .tab-btn:hover{border-color:var(--brand);}
+.auth-tabs{display:flex;gap:4px;margin-bottom:18px;background:#f6f7fb;padding:4px;border-radius:12px;}
+.auth-tabs .tab-btn{flex:1;padding:9px 0;border:none;border-radius:9px;background:transparent;cursor:pointer;font-size:14px;color:#888;transition:.2s;font-family:inherit;font-weight:600;}
+.auth-tabs .tab-btn:hover:not(.active){color:var(--brand);}
+.auth-tabs .tab-btn.active{background:linear-gradient(135deg,var(--brand),var(--brand-dark));color:#fff;box-shadow:0 3px 10px rgba(231,84,128,.3);}
+.label-row{display:flex;align-items:center;justify-content:space-between;}
+.qq-avatar-preview{width:22px;height:22px;border-radius:50%;object-fit:cover;border:1.5px solid #f3c1d3;display:none;}
+.field-error{color:#c0392b;font-size:12px;margin-top:5px;display:none;}
+.input-error{border-color:#e74c3c !important;box-shadow:0 0 0 3px rgba(231,76,60,.1) !important;}
 .role-toggle{display:flex;gap:10px;}
 .role-toggle .role-option{flex:1;cursor:pointer;}
 .role-toggle .role-option input{display:none;}
@@ -197,7 +196,6 @@ body{background:linear-gradient(135deg,#ffeef5 0%,#f4f6fb 60%,#eef2ff 100%);
 .auth-footer{text-align:center;margin-top:16px;padding-top:16px;border-top:1px solid #f0f0f0;}
 .auth-footer a{color:#999;text-decoration:none;font-size:13px;transition:.2s;}
 .auth-footer a:hover{color:var(--brand);}
-.turnstile-group{display:flex;justify-content:center;}
 .form-group-hidden{display:none;}
 </style>
 </head>
@@ -205,7 +203,7 @@ body{background:linear-gradient(135deg,#ffeef5 0%,#f4f6fb 60%,#eef2ff 100%);
 <div class="login-card">
   <div class="login-head">
     <h3>💗 withU</h3>
-    <p>登录你的账号，记录你们的点点滴滴</p>
+    <p id="authSubtitle">登录你的账号，记录你们的点点滴滴</p>
   </div>
   <div class="login-body">
 
@@ -217,60 +215,59 @@ body{background:linear-gradient(135deg,#ffeef5 0%,#f4f6fb 60%,#eef2ff 100%);
     <div class="login-success"><i class="fas fa-check-circle"></i> <?php echo e($success); ?></div>
     <?php endif; ?>
 
+    <?php if ($registerEnabled): ?>
+    <div class="auth-tabs" role="tablist">
+      <button type="button" class="tab-btn<?php echo $activeTab === 'login' ? ' active' : ''; ?>" data-tab="login" onclick="toggleForm('login')">登 录</button>
+      <button type="button" class="tab-btn<?php echo $activeTab === 'register' ? ' active' : ''; ?>" data-tab="register" onclick="toggleForm('register')">注 册</button>
+    </div>
+    <?php endif; ?>
+
     <!-- 登录表单 -->
-    <form method="POST" action="/login.php" id="loginForm" novalidate>
+    <form method="POST" action="/login.php" id="loginForm" style="display:<?php echo $activeTab === 'login' ? 'block' : 'none'; ?>;">
       <?php echo csrf_field(); ?>
       <input type="hidden" name="action" value="login">
 
       <div class="form-group">
-        <label><i class="fas fa-user"></i> 用户名</label>
-        <input type="text" name="username" autofocus>
+        <label><i class="fab fa-qq"></i> QQ号</label>
+        <input type="text" name="username" inputmode="numeric" maxlength="11" autocomplete="username" value="<?php echo e($oldLoginName); ?>" autofocus>
       </div>
 
       <div class="form-group">
         <label><i class="fas fa-lock"></i> 密码</label>
-        <input type="password" name="password">
+        <input type="password" name="password" autocomplete="current-password">
       </div>
-
-      <?php if ($turnstileEnabled && $turnstileSiteKey): ?>
-      <div class="form-group turnstile-group">
-        <div class="cf-turnstile" data-sitekey="<?php echo e($turnstileSiteKey); ?>"></div>
-      </div>
-      <?php endif; ?>
 
       <button type="submit" class="btn"><i class="fas fa-sign-in-alt"></i> 登 录</button>
     </form>
 
     <?php if ($registerEnabled): ?>
-    <div class="auth-divider"><span>或</span></div>
-
-    <div class="auth-tabs">
-      <button class="tab-btn active" data-tab="register" onclick="toggleForm('register')">注册新账号</button>
-    </div>
-
-    <form method="POST" action="/login.php" id="registerForm" style="display:none;" novalidate>
+    <form method="POST" action="/login.php" id="registerForm" style="display:<?php echo $activeTab === 'register' ? 'block' : 'none'; ?>;">
       <?php echo csrf_field(); ?>
       <input type="hidden" name="action" value="register">
       <input type="hidden" name="invite_token" value="<?php echo e($inviteToken); ?>">
 
-      <?php if ($activeUserCount === 0): ?>
       <div class="form-group">
-        <label><i class="fas fa-user"></i> 用户名</label>
-        <input type="text" name="username">
+        <label class="label-row">
+          <span><i class="fab fa-qq"></i> QQ号</span>
+          <img class="qq-avatar-preview" id="qqAvatarPreview" alt="QQ 头像预览">
+        </label>
+        <input type="text" name="qq" inputmode="numeric" maxlength="11" placeholder="QQ 号即登录账号" value="<?php echo e($oldQq); ?>" required>
       </div>
       <div class="form-group">
         <label><i class="fas fa-user-tag"></i> 昵称</label>
-        <input type="text" name="nickname">
+        <input type="text" name="nickname" maxlength="32" placeholder="填写 QQ 号后可自动获取" value="<?php echo e($oldNickname); ?>" required>
       </div>
       <div class="form-group">
         <label><i class="fas fa-lock"></i> 密码</label>
-        <input type="password" name="password">
+        <input type="password" name="password" minlength="8" placeholder="至少 8 位" autocomplete="new-password" required>
       </div>
-      <?php if ($turnstileEnabled && $turnstileSiteKey): ?>
-      <div class="form-group turnstile-group">
-        <div class="cf-turnstile" data-sitekey="<?php echo e($turnstileSiteKey); ?>"></div>
+      <div class="form-group">
+        <label><i class="fas fa-check-double"></i> 确认密码</label>
+        <input type="password" name="password_confirm" minlength="8" placeholder="再输入一次密码" autocomplete="new-password" id="passwordConfirm" required>
+        <div class="field-error" id="confirmError">两次输入的密码不一致</div>
       </div>
-      <?php endif; ?>
+
+      <?php if ($activeUserCount === 0): ?>
       <div class="form-group">
         <label><i class="fas fa-user-friends"></i> 性别（注册后不可修改）</label>
         <div class="role-toggle">
@@ -307,12 +304,67 @@ body{background:linear-gradient(135deg,#ffeef5 0%,#f4f6fb 60%,#eef2ff 100%);
 </div>
 
 <script>
+var AUTH_SUBTITLES = {
+  login: '登录你的账号，记录你们的点点滴滴',
+  register: '创建你们的账号，开启情侣空间'
+};
+
 function toggleForm(tab) {
-  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-  document.querySelector('[data-tab="'+tab+'"]').classList.add('active');
+  var registerForm = document.getElementById('registerForm');
+  if (!registerForm) return; // 注册关闭时只有登录表单
+  document.querySelectorAll('.tab-btn').forEach(function (b) {
+    b.classList.toggle('active', b.dataset.tab === tab);
+  });
   document.getElementById('loginForm').style.display = tab === 'login' ? 'block' : 'none';
-  document.getElementById('registerForm').style.display = tab === 'register' ? 'block' : 'none';
+  registerForm.style.display = tab === 'register' ? 'block' : 'none';
+  var sub = document.getElementById('authSubtitle');
+  if (sub && AUTH_SUBTITLES[tab]) sub.textContent = AUTH_SUBTITLES[tab];
 }
+
+(function () {
+  var registerForm = document.getElementById('registerForm');
+  if (!registerForm) return;
+  var qqInput      = registerForm.querySelector('input[name="qq"]');
+  var nicknameInput = registerForm.querySelector('input[name="nickname"]');
+  var preview      = document.getElementById('qqAvatarPreview');
+  var confirmInput = document.getElementById('passwordConfirm');
+  var confirmError = document.getElementById('confirmError');
+  var fetchedQq    = '';
+
+  // 填完 QQ 号后自动带出头像与昵称（昵称仅在未填写时填充）
+  qqInput.addEventListener('change', function () {
+    var qq = qqInput.value.trim();
+    if (!/^[1-9][0-9]{4,10}$/.test(qq) || qq === fetchedQq) return;
+    fetchedQq = qq;
+    fetch('/api/qq_profile.php?qq=' + encodeURIComponent(qq), { credentials: 'same-origin' })
+      .then(function (r) { return r.json(); })
+      .then(function (d) {
+        if (!d || !d.success) return;
+        if (d.avatar_url && preview) {
+          preview.src = d.avatar_url;
+          preview.style.display = 'inline-block';
+        }
+        if (d.nickname && nicknameInput && !nicknameInput.value.trim()) {
+          nicknameInput.value = d.nickname;
+        }
+      })
+      .catch(function () { /* 获取失败不影响注册 */ });
+  });
+
+  function validateConfirm() {
+    var mismatch = confirmInput.value !== '' && confirmInput.value !== registerForm.querySelector('input[name="password"]').value;
+    confirmInput.classList.toggle('input-error', mismatch);
+    confirmError.style.display = mismatch ? 'block' : 'none';
+    return !mismatch;
+  }
+  confirmInput.addEventListener('input', validateConfirm);
+  registerForm.querySelector('input[name="password"]').addEventListener('input', function () {
+    if (confirmInput.value !== '') validateConfirm();
+  });
+  registerForm.addEventListener('submit', function (ev) {
+    if (!validateConfirm()) ev.preventDefault();
+  });
+})();
 </script>
 </body>
 </html>

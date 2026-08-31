@@ -42,35 +42,111 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $settingsData['home_banner_image'] = '';
     }
 
-    // 处理首页大图上传（新目录 hero_covers，避免命中广告拦截规则）
-    if (isset($_FILES['home_banner_image']) && $_FILES['home_banner_image']['error'] === UPLOAD_ERR_OK) {
-        $upload = uploadFile($_FILES['home_banner_image'], 'hero_covers');
-        if (!empty($upload['success'])) {
-            // 删除旧的大图文件（无论是 URL 还是相对路径）
-            if (!empty($settingsData['home_banner_image'])) {
-                $oldPath = $settingsData['home_banner_image'];
-                if (strpos($oldPath, UPLOAD_URL) === 0) {
-                    $oldPath = str_replace(UPLOAD_URL, '', $oldPath);
+    // 首页大图多图管理：home_banner_images 存 JSON 数组，
+    // 待上传文件在列表中用占位符占位，按上传成功顺序依次替换
+    $bannerUploadToken = '__WITHU_UPLOAD__';
+    if (array_key_exists('home_banner_images', $_POST['settings'])) {
+        $newBannerList = [];
+        $bannerJsonRaw = trim((string)$_POST['settings']['home_banner_images']);
+        if ($bannerJsonRaw !== '') {
+            $bannerParsed = json_decode($bannerJsonRaw, true);
+            if (is_array($bannerParsed)) {
+                foreach ($bannerParsed as $bannerEntry) {
+                    if (!is_string($bannerEntry)) continue;
+                    $bannerEntry = trim(preg_replace('/[\x00-\x1F\x7F]/', '', $bannerEntry));
+                    if ($bannerEntry === '' || mb_strlen($bannerEntry) > 2048) continue;
+                    // 待上传占位符原样保留；其余统一为可直接展示的地址（外链/根路径原样，相对路径补站点根前缀）
+                    $newBannerList[] = $bannerEntry === $bannerUploadToken
+                        ? $bannerEntry
+                        : withu_normalize_banner_entry($bannerEntry);
                 }
-                deleteFile($oldPath);
             }
-            // 只保存相对路径，便于站点迁移
-            $_POST['settings']['home_banner_image'] = $upload['path'];
-        } else {
-            $error = $upload['message'] ?? '首页大图上传失败';
+            if (count($newBannerList) > 20) {
+                $newBannerList = array_slice($newBannerList, 0, 20);
+            }
         }
+
+        // 处理多图上传（目录 hero_covers，避免命中广告拦截规则）
+        if (isset($_FILES['home_banner_images']) && is_array($_FILES['home_banner_images']['name'])) {
+            $bannerFileCount = count($_FILES['home_banner_images']['name']);
+            for ($bannerIndex = 0; $bannerIndex < $bannerFileCount; $bannerIndex++) {
+                $bannerFileError = $_FILES['home_banner_images']['error'][$bannerIndex] ?? UPLOAD_ERR_NO_FILE;
+                if ($bannerFileError === UPLOAD_ERR_NO_FILE) continue;
+                $bannerFileName = (string)($_FILES['home_banner_images']['name'][$bannerIndex] ?? '图片');
+                if ($bannerFileError !== UPLOAD_ERR_OK) {
+                    $error = '图片「' . $bannerFileName . '」上传失败，请重试。';
+                    break;
+                }
+                $bannerUpload = uploadFile([
+                    'name'     => $_FILES['home_banner_images']['name'][$bannerIndex],
+                    'type'     => $_FILES['home_banner_images']['type'][$bannerIndex],
+                    'tmp_name' => $_FILES['home_banner_images']['tmp_name'][$bannerIndex],
+                    'error'    => $_FILES['home_banner_images']['error'][$bannerIndex],
+                    'size'     => $_FILES['home_banner_images']['size'][$bannerIndex],
+                ], 'hero_covers');
+                if (empty($bannerUpload['success'])) {
+                    $error = '图片「' . $bannerFileName . '」上传失败：' . ($bannerUpload['message'] ?? '未知错误');
+                    break;
+                }
+                // 只保存相对路径，便于站点迁移；按占位符位置插入，保持轮播顺序
+                $bannerStored = '/uploads/' . ltrim($bannerUpload['path'], '/');
+                $tokenIndex = array_search($bannerUploadToken, $newBannerList, true);
+                if ($tokenIndex !== false) {
+                    $newBannerList[$tokenIndex] = $bannerStored;
+                } else {
+                    $newBannerList[] = $bannerStored;
+                }
+            }
+        }
+
+        // 孤儿文件清理：旧列表中被移除的本地上传文件删除（banners/ 旧目录由上方既有逻辑负责）
+        $oldBannerList = [];
+        if (!empty($settingsData['home_banner_images'])) {
+            $oldBannerParsed = json_decode($settingsData['home_banner_images'], true);
+            if (is_array($oldBannerParsed)) {
+                foreach ($oldBannerParsed as $oldBannerEntry) {
+                    if (is_string($oldBannerEntry) && trim($oldBannerEntry) !== '') {
+                        $oldBannerList[] = trim($oldBannerEntry);
+                    }
+                }
+            }
+        }
+        if (!$oldBannerList && !empty($settingsData['home_banner_image'])) {
+            // 兼容旧单图数据：多图列表尚未保存过时，旧单图视为列表成员
+            $oldBannerList[] = $settingsData['home_banner_image'];
+        }
+        foreach ($oldBannerList as $oldBannerEntry) {
+            if (in_array($oldBannerEntry, $newBannerList, true)) continue;
+            $oldBannerRel = $oldBannerEntry;
+            if (strpos($oldBannerRel, UPLOAD_URL) === 0) {
+                $oldBannerRel = str_replace(UPLOAD_URL, '', $oldBannerRel);
+            }
+            $oldBannerRel = ltrim($oldBannerRel, '/');
+            if (strpos($oldBannerRel, 'uploads/') === 0) {
+                $oldBannerRel = substr($oldBannerRel, strlen('uploads/'));
+            }
+            if (strpos($oldBannerRel, 'http://') === 0 || strpos($oldBannerRel, 'https://') === 0 || strpos($oldBannerRel, '//') === 0) continue;
+            if (strpos($oldBannerRel, 'hero_covers/') !== 0 && strpos($oldBannerRel, 'banners/') !== 0) continue;
+            if (in_array('/uploads/' . $oldBannerRel, $newBannerList, true) || in_array($oldBannerRel, $newBannerList, true)) continue;
+            deleteFile($oldBannerRel);
+        }
+
+        // 保存多图列表，并同步旧单图设置为列表首项（空列表时清空，前台无大图）
+        $_POST['settings']['home_banner_images'] = json_encode($newBannerList, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
+        $_POST['settings']['home_banner_image'] = $newBannerList[0] ?? '';
     }
 
     if (!$error && !empty($_POST['settings']) && is_array($_POST['settings'])) {
         // 规范化布尔开关：未勾选时明确写入 '0'
         $booleanKeys = [
             'image_optimize_enabled',
+            'front_webp_default',
             'video_upload_ignore_site_limit',
-            'turnstile_enabled',
             'front_animation_enabled',
             'backend_animation_enabled',
             'ai_moderation_enabled',
             'watch_autoplay_enabled',
+            'player_auto_next_enabled',
         ];
         foreach ($booleanKeys as $boolKey) {
             if (!isset($_POST['settings'][$boolKey])) {
@@ -128,17 +204,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             }
         }
 
-        // Turnstile：启用时必须同时填写 Site Key 与 Secret Key
-        if (!$error && isset($_POST['settings']['turnstile_enabled']) && $_POST['settings']['turnstile_enabled'] === '1') {
-            $tsSiteKey   = trim((string)($_POST['settings']['turnstile_site_key'] ?? ''));
-            $tsSecretKey = trim((string)($_POST['settings']['turnstile_secret_key'] ?? ''));
-            if ($tsSiteKey === '' || $tsSecretKey === '') {
-                $error = '启用 Turnstile 前，请先填写完整的 Site Key 和 Secret Key。';
-            } else {
-                $_POST['settings']['turnstile_site_key']   = $tsSiteKey;
-                $_POST['settings']['turnstile_secret_key'] = $tsSecretKey;
-            }
-        }
     }
 
     if (!$error && !empty($_POST['settings']) && is_array($_POST['settings'])) {
@@ -196,14 +261,27 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 $adminPage = 'settings';
 $adminNarrow = true;
 
-// 分段定位：?section=theme 来自侧栏"主题与外观"入口，其余默认"基础信息"
-$activeTab = (($_GET['section'] ?? '') === 'theme') ? 'theme' : 'basic';
+// 分段定位：?section=theme / ?section=advanced 兼容旧链接/书签直达，其余默认"基础信息"
+// 高级设置是独立视图：分段导航不放系统设置分段，改为安全审核等独立功能页的入口；
+// 该视图没有可保存表单项，底部吸附保存栏随之隐藏；侧边栏入口 ?section=advanced 直达该视图
+$sectionParam = (string)($_GET['section'] ?? '');
+$activeTab = in_array($sectionParam, ['theme', 'advanced'], true) ? $sectionParam : 'basic';
 $settingsTabs = [
     'basic'    => ['icon' => 'ti-settings',    'label' => '基础信息'],
     'together' => ['icon' => 'ti-users',       'label' => '一起看'],
     'theme'    => ['icon' => 'ti-palette',     'label' => '主题外观'],
     'upload'   => ['icon' => 'ti-upload',      'label' => '上传与其他'],
     'site'     => ['icon' => 'ti-info-circle', 'label' => '站点信息'],
+    'advanced' => ['icon' => 'ti-shield',      'label' => '高级设置'],
+];
+
+// 高级设置视图的分段导航与下方入口卡片共用一份独立功能页数据
+$advancedEntries = [
+    ['href' => '/admin/moderation.php',                     'icon' => 'ti-shield',          'label' => '安全审核',  'desc' => '规则拦截、待复核和 AI 辅助审核记录'],
+    ['href' => '/admin/devices.php',                        'icon' => 'ti-device-mobile',   'label' => '信任设备',  'desc' => '已信任的登录设备管理与解绑'],
+    ['href' => '/admin/comment_ip_blacklist.php',           'icon' => 'ti-user-x',          'label' => '评论黑名单', 'desc' => '禁止发表评论或留言的 IP 黑名单'],
+    ['href' => '/admin/tools_image_stats.php?tab=optimize', 'icon' => 'ti-arrows-diagonal', 'label' => '图片补齐',  'desc' => '为旧数据一键补齐缩略图 / WebP / 视频转码'],
+    ['href' => '/admin/tools_image_stats.php',              'icon' => 'ti-chart-bar',       'label' => '图片统计',  'desc' => '图片体积与压缩占比一览'],
 ];
 
 include __DIR__ . '/header.php';
@@ -215,11 +293,45 @@ include __DIR__ . '/header.php';
 ::-webkit-scrollbar-thumb{background:rgba(135,135,135,.4);border-radius:10px}
 ::-webkit-scrollbar-thumb:hover{background:#727272}
 ::-webkit-scrollbar-corner{background:unset}
+
+/* 首页大图多图管理 */
+.banner-image-list{display:grid;grid-template-columns:repeat(auto-fill,minmax(108px,1fr));gap:.5rem}
+.banner-image-item{position:relative;border-radius:.75rem;overflow:hidden;border:1px solid rgba(148,163,184,.45);background:rgba(148,163,184,.12);aspect-ratio:16/9}
+.banner-image-item img{width:100%;height:100%;object-fit:cover;display:block;cursor:zoom-in}
+.banner-image-item.is-pending img{opacity:.88}
+.banner-image-badge{position:absolute;top:4px;left:4px;font-size:.62rem;line-height:1;padding:.22rem .4rem;border-radius:.4rem;background:rgba(15,23,42,.62);color:#fff;pointer-events:none}
+.banner-image-badge.banner-image-badge-example{background:rgba(244,114,182,.85)}
+.banner-image-actions{position:absolute;bottom:4px;right:4px;display:flex;gap:.25rem}
+.banner-image-btn{width:22px;height:22px;display:inline-flex;align-items:center;justify-content:center;border:none;border-radius:.45rem;background:rgba(15,23,42,.55);color:#fff;font-size:.72rem;cursor:pointer;padding:0}
+.banner-image-btn:hover{background:rgba(15,23,42,.82)}
+.banner-image-btn[disabled]{opacity:.35;cursor:default}
+.banner-image-btn.banner-image-btn-danger:hover{background:#dc2626}
+.banner-add-btn{display:inline-flex;align-items:center;gap:.3rem;padding:.45rem .8rem;border-radius:.6rem;border:1px dashed rgba(148,163,184,.7);background:rgba(148,163,184,.12);font-size:.82rem;cursor:pointer;color:inherit}
+.banner-add-btn:hover{background:rgba(148,163,184,.25)}
+.banner-add-btn i{font-size:.9rem}
+
+/* 首页大图展开预览 */
+.banner-lightbox{position:fixed;inset:0;z-index:100000;display:flex;align-items:center;justify-content:center;background:rgba(10,12,20,.88);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px)}
+.banner-lightbox[hidden]{display:none}
+.banner-lightbox img{max-width:min(92vw,1200px);max-height:86vh;border-radius:.75rem;box-shadow:0 24px 80px rgba(0,0,0,.5);object-fit:contain}
+.banner-lightbox-close{position:absolute;top:14px;right:14px;width:38px;height:38px;display:flex;align-items:center;justify-content:center;border:none;border-radius:50%;background:rgba(255,255,255,.14);color:#fff;font-size:1.05rem;cursor:pointer}
+.banner-lightbox-close:hover{background:rgba(255,255,255,.28)}
+.banner-lightbox-nav{position:absolute;top:50%;transform:translateY(-50%);width:40px;height:40px;display:flex;align-items:center;justify-content:center;border:none;border-radius:50%;background:rgba(255,255,255,.14);color:#fff;font-size:1.2rem;cursor:pointer}
+.banner-lightbox-nav:hover{background:rgba(255,255,255,.28)}
+.banner-lightbox-prev{left:18px}
+.banner-lightbox-next{right:18px}
+.banner-lightbox-nav[hidden]{display:none}
+.banner-lightbox-count{position:absolute;bottom:16px;left:50%;transform:translateX(-50%);color:rgba(255,255,255,.85);font-size:.8rem;letter-spacing:.05em}
 </style>
 
     <section class="admin-page-title">
-        <h1>系统设置</h1>
-        <p>管理站点基础信息、首页展示和备案信息</p>
+        <?php if ($activeTab === 'advanced'): ?>
+            <h1>高级设置</h1>
+            <p>安全审核、图片统计等独立功能入口</p>
+        <?php else: ?>
+            <h1>系统设置</h1>
+            <p>管理站点基础信息、首页展示和备案信息</p>
+        <?php endif; ?>
     </section>
 
     <?php if ($error): ?>
@@ -243,6 +355,17 @@ include __DIR__ . '/header.php';
     <form method="POST" enctype="multipart/form-data" novalidate>
         <?php echo csrf_field(); ?>
 
+        <?php if ($activeTab === 'advanced'): ?>
+        <?php // 高级设置视图：分段导航放安全审核等独立功能入口（站内跳转链接），而非系统设置分段 ?>
+        <nav class="settings-tabs" aria-label="高级功能入口">
+            <?php foreach ($advancedEntries as $entry): ?>
+                <a class="settings-tab" href="<?php echo e($entry['href']); ?>">
+                    <i class="ti <?php echo $entry['icon']; ?>" aria-hidden="true"></i><?php echo $entry['label']; ?>
+                </a>
+            <?php endforeach; ?>
+        </nav>
+        <?php else: ?>
+        <?php // 设置分段导航：系统设置各分段（高级设置经侧边栏 ?section=advanced 进入独立视图） ?>
         <nav class="settings-tabs" role="tablist" aria-label="设置分段">
             <?php foreach ($settingsTabs as $tabKey => $tabMeta): ?>
                 <button
@@ -257,6 +380,7 @@ include __DIR__ . '/header.php';
                 </button>
             <?php endforeach; ?>
         </nav>
+        <?php endif; ?>
 
         <section class="admin-grid settings-panel" id="basic-settings" role="tabpanel" aria-labelledby="tab-basic" <?php echo $activeTab === 'basic' ? '' : 'hidden'; ?> style="margin-bottom:0.75rem;">
             <div class="admin-card">
@@ -269,7 +393,7 @@ include __DIR__ . '/header.php';
                 </div>
             </div>
             <div class="admin-card-help">
-                <div class="admin-card-subtitle">站点标题与描述、登录安全</div>
+                <div class="admin-card-subtitle">站点标题、描述与天气设置</div>
             </div>
 
                 <div class="form-group" style="margin-bottom:0.75rem;">
@@ -289,56 +413,38 @@ include __DIR__ . '/header.php';
                         style="width:100%;min-height:80px;padding:0.55rem 0.75rem;border-radius:0.75rem;border:1px solid rgba(148,163,184,0.6);font-size:0.9rem;resize:vertical;"><?php echo e($siteDescriptionValue); ?></textarea>
                 </div>
 
-                <hr style="border:none;border-top:1px dashed rgba(148,163,184,0.5);margin:0.75rem 0;">
+                <div class="form-group" style="margin-bottom:0.75rem;">
+                    <label style="display:block;font-size:0.85rem;margin-bottom:0.25rem;">天气 API Key（高德）</label>
+                    <input type="text" name="settings[amap_weather_key]" value="<?php echo e($settingsData['amap_weather_key'] ?? ''); ?>" placeholder="高德 Web服务 Key，用于天气查询，可留空" style="width:100%;padding:.55rem .75rem;border-radius:.75rem;border:1px solid rgba(148,163,184,.6);font-size:.9rem;">
+                    <small style="color:#888;">使用高德地图同款 Key 即可，留空则使用 IP 定位天气</small>
+                </div>
 
-                <div class="form-group" style="margin-bottom:0.5rem;">
-                    <label style="display:block;font-size:0.85rem;margin-bottom:0.25rem;">Cloudflare Turnstile 登录验证</label>
+                <div class="form-group" style="margin-bottom:0.75rem;">
+                    <label style="display:block;font-size:0.85rem;margin-bottom:0.25rem;">天气定位</label>
                     <?php
-                    $turnstileEnabled   = $settingsData['turnstile_enabled'] ?? '0';
-                    $turnstileSiteKey   = $settingsData['turnstile_site_key'] ?? '';
-                    $turnstileSecretKey = $settingsData['turnstile_secret_key'] ?? '';
+                    $locLat  = $settingsData['weather_loc_lat'] ?? '';
+                    $locLng  = $settingsData['weather_loc_lng'] ?? '';
+                    $locName = $settingsData['weather_loc_name'] ?? '';
+                    $hasLoc  = $locLat !== '' && $locLng !== '';
                     ?>
-                    <label class="switch">
-                        <input
-                            type="checkbox"
-                            name="settings[turnstile_enabled]"
-                            value="1"
-                            <?php echo $turnstileEnabled === '1' ? 'checked' : ''; ?>>
-                        <span class="switch-track">
-                            <span class="switch-thumb"></span>
-                        </span>
-                        <span class="switch-label">启用 Cloudflare Turnstile 登录验证</span>
-                    </label>
-                    <p style="margin:0.25rem 0 0;font-size:0.78rem;color:var(--text-light);">
-                        启用后，登录 / 注册时需要通过 Turnstile 验证，建议配合 Cloudflare 保护站点安全。
-                    </p>
-                    <p style="margin:0.25rem 0 0;font-size:0.78rem;color:var(--text-light);">
-                        启用 Cloudflare Turnstile 后，可以在很大程度上提升登录安全性，有效防止脚本暴力尝试登录。但由于 Cloudflare 在中国大陆的访问速度和稳定性不友好，请在确认当前网络环境能够正常访问 Cloudflare 后再开启此功能，否则可能会导致登录页验证码无法加载，从而无法正常登录后台。
-                    </p>
-                </div>
-
-                <div class="form-group" style="margin-bottom:0.5rem;">
-                    <label style="display:block;font-size:0.85rem;margin-bottom:0.25rem;">Turnstile Site Key</label>
-                    <input
-                        type="text"
-                        name="settings[turnstile_site_key]"
-                        value="<?php echo e($turnstileSiteKey); ?>"
-                        placeholder="在 Cloudflare Turnstile 控制台中获取"
-                        style="width:100%;padding:0.55rem 0.75rem;border-radius:0.75rem;border:1px solid rgba(148,163,184,0.6);font-size:0.9rem;">
-                </div>
-
-                <div class="form-group">
-                    <label style="display:block;font-size:0.85rem;margin-bottom:0.25rem;">Turnstile Secret Key</label>
-                    <input
-                        type="text"
-                        name="settings[turnstile_secret_key]"
-                        value="<?php echo e($turnstileSecretKey); ?>"
-                        placeholder="在 Cloudflare Turnstile 控制台中获取（请妥善保管）"
-                        style="width:100%;padding:0.55rem 0.75rem;border-radius:0.75rem;border:1px solid rgba(148,163,184,0.6);font-size:0.9rem;">
-                    <div style="margin-top:0.2rem;font-size:0.78rem;color:var(--text-light);">
-                        Secret Key 仅用于服务器端验证，切勿公开。若不启用 Turnstile，可留空。
+                    <div style="position:relative;">
+                        <input type="text" id="weather_loc_search" placeholder="搜索城市或地址..." value="<?php echo e($locName); ?>" autocomplete="off"
+                               style="width:100%;padding:.55rem .75rem;border-radius:.75rem;border:1px solid rgba(148,163,184,.6);font-size:.9rem;">
+                        <div id="weather_loc_results" style="display:none;position:absolute;top:100%;left:0;right:0;z-index:100;background:#fff;border:1px solid rgba(148,163,184,.3);border-radius:.75rem;max-height:240px;overflow-y:auto;box-shadow:0 8px 24px rgba(0,0,0,.12);"></div>
                     </div>
+                    <input type="hidden" name="settings[weather_loc_lat]" id="weather_loc_lat" value="<?php echo e($locLat); ?>">
+                    <input type="hidden" name="settings[weather_loc_lng]" id="weather_loc_lng" value="<?php echo e($locLng); ?>">
+                    <input type="hidden" name="settings[weather_loc_name]" id="weather_loc_name" value="<?php echo e($locName); ?>">
+                    <div id="weather_loc_selected" style="margin-top:.35rem;font-size:.8rem;color:<?php echo $hasLoc ? '#16a34a' : '#888'; ?>;">
+                        <?php if ($hasLoc): ?>
+                            ✅ 已选择：<?php echo e($locName); ?>（<?php echo e($locLat); ?>, <?php echo e($locLng); ?>）
+                        <?php else: ?>
+                            未选择位置，天气将使用默认数据
+                        <?php endif; ?>
+                    </div>
+                    <small style="color:#888;">搜索并选择城市，天气和地图将使用此位置</small>
                 </div>
+
             </div>
 
             <div class="admin-card">
@@ -386,33 +492,65 @@ include __DIR__ . '/header.php';
                 </div>
 
                 <div class="form-group" style="margin-bottom:0.75rem;">
-                    <label style="display:block;font-size:0.85rem;margin-bottom:0.25rem;">首页大图地址</label>
-                    <?php
-                    $hasHomeBannerSetting = array_key_exists('home_banner_image', $settingsData);
-                    // 若尚未保存过该设置，则展示静态默认图路径，避免依赖 uploads 目录
-                    $homeBannerSetting = $hasHomeBannerSetting ? $settingsData['home_banner_image'] : '/assets/images/default_hero.jpg';
-                    ?>
-                    <input
-                        type="text"
-                        name="settings[home_banner_image]"
-                        value="<?php echo e($homeBannerSetting); ?>"
-                        placeholder="图片 URL / 外链图片地址"
-                        style="width:100%;padding:0.55rem 0.75rem;border-radius:0.75rem;border:1px solid rgba(148,163,184,0.6);font-size:0.9rem;">
-                    <div style="margin-top:0.2rem;font-size:0.78rem;color:var(--text-light);">
-                        如果同时上传了图片，将优先使用上传的新图片。
-                    </div>
-                </div>
-
-                <div class="form-group">
-                    <label style="display:block;font-size:0.85rem;margin-bottom:0.25rem;">首页大图上传</label>
-                    <input type="file" name="home_banner_image" accept="image/*" style="font-size:0.85rem;">
+                    <label style="display:block;font-size:0.85rem;margin-bottom:0.25rem;">首页大图（支持多张轮播）</label>
                     <?php
                     $bannerMaxBytes = get_max_upload_size_bytes();
                     $bannerMaxMb    = round($bannerMaxBytes / 1024 / 1024, 1);
+
+                    // 多图列表：优先读取已保存的 JSON；否则把当前单图（或默认大图）作为示例图片导入
+                    $isLegacyBannerImport = false;
+                    $homeBannerListSaved = array_key_exists('home_banner_images', $settingsData) ? (string)$settingsData['home_banner_images'] : '';
+                    if ($homeBannerListSaved !== '') {
+                        $homeBannerList = json_decode($homeBannerListSaved, true);
+                        if (!is_array($homeBannerList)) $homeBannerList = [];
+                        $homeBannerList = array_values(array_filter($homeBannerList, function ($v) {
+                            return is_string($v) && trim($v) !== '';
+                        }));
+                    } else {
+                        $isLegacyBannerImport = true;
+                        // 尚未保存过多图设置：把当前前台首页轮播使用的内置默认图作为示例导入
+                        $homeBannerList = withu_home_carousel_defaults();
+                    }
+
+                    // 存储值（相对路径 / URL）与展示地址分开：相对路径在前台补全 uploads 前缀
+                    $homeBannerListJson = json_encode($homeBannerList, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
+                    $homeBannerViews = array_map(function ($entry) {
+                        if (strpos($entry, 'http://') === 0 || strpos($entry, 'https://') === 0 || strpos($entry, '//') === 0 || strpos($entry, '/') === 0) {
+                            return $entry;
+                        }
+                        return UPLOAD_URL . $entry;
+                    }, $homeBannerList);
+                    $homeBannerViewsJson = json_encode($homeBannerViews, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
                     ?>
-                    <div style="margin-top:0.2rem;font-size:0.78rem;color:var(--text-light);">
-                        建议使用横向大图，宽度不小于 1200 像素，单文件最大约 <?php echo $bannerMaxMb; ?>MB。
+                    <p style="margin:0 0 0.5rem;font-size:0.78rem;color:var(--text-light);">
+                        此处与前台首页轮播对接：添加多张图片后，首页大图将按下方顺序自动轮播；点击缩略图可展开预览。
+                    </p>
+                    <?php if ($isLegacyBannerImport && !empty($homeBannerList)): ?>
+                    <div style="display:flex;align-items:flex-start;gap:0.4rem;margin:0 0 0.55rem;padding:0.5rem 0.65rem;border-radius:0.6rem;background:rgba(244,114,182,0.07);border:1px dashed rgba(244,114,182,0.4);font-size:0.78rem;line-height:1.55;color:var(--text-light);">
+                        <i class="ti ti-info-circle" aria-hidden="true" style="flex-shrink:0;margin-top:0.1rem;color:#ec4899;"></i>
+                        <span>这些图不是在这里上传的：尚未保存过首页大图设置时，系统会把前台首页轮播当前正在使用的内置默认大图（共 <?php echo count($homeBannerList); ?> 张，来自站内相册 Lovefolder 目录）自动导入为编辑起点，即标有「示例」角标的图片。可随意删减、替换或排序，点「保存设置」后才会固化为正式配置。</span>
                     </div>
+                    <?php endif; ?>
+                    <div class="banner-image-list" id="bannerImageList" data-views="<?php echo e($homeBannerViewsJson); ?>"<?php echo $isLegacyBannerImport && !empty($homeBannerList) ? ' data-legacy-example="1"' : ''; ?>></div>
+                    <div style="display:flex;gap:0.4rem;flex-wrap:wrap;margin-top:0.5rem;">
+                        <button type="button" id="bannerPickBtn" class="banner-add-btn"><i class="ti ti-upload" aria-hidden="true"></i>本地上传</button>
+                        <input type="file" id="bannerFileInput" name="home_banner_images[]" accept="image/*" multiple hidden>
+                        <input type="text" id="bannerUrlInput" placeholder="或粘贴图片地址（URL）后点添加" style="flex:1 1 190px;min-width:0;padding:0.45rem 0.6rem;border-radius:0.6rem;border:1px solid rgba(148,163,184,0.6);font-size:0.82rem;">
+                        <button type="button" id="bannerAddUrlBtn" class="banner-add-btn"><i class="ti ti-plus" aria-hidden="true"></i>添加</button>
+                    </div>
+                    <input type="hidden" name="settings[home_banner_images]" id="bannerImagesInput" value="<?php echo e($homeBannerListJson); ?>">
+                    <div style="margin-top:0.35rem;font-size:0.78rem;color:var(--text-light);">
+                        最多 20 张，可用箭头调整轮播顺序；建议横向大图、宽度不小于 1200 像素，单文件最大约 <?php echo $bannerMaxMb; ?>MB。上传的图片保存在 uploads/hero_covers，从列表移除并保存后会自动删除对应文件；清空全部图片则前台不显示大图。
+                    </div>
+                </div>
+
+                <!-- 首页大图展开预览遮罩 -->
+                <div class="banner-lightbox" id="bannerLightbox" hidden>
+                    <button type="button" class="banner-lightbox-close" id="bannerLightboxClose" aria-label="关闭预览"><i class="ti ti-x" aria-hidden="true"></i></button>
+                    <button type="button" class="banner-lightbox-nav banner-lightbox-prev" id="bannerLightboxPrev" aria-label="上一张"><i class="ti ti-chevron-left" aria-hidden="true"></i></button>
+                    <img id="bannerLightboxImg" alt="大图预览">
+                    <button type="button" class="banner-lightbox-nav banner-lightbox-next" id="bannerLightboxNext" aria-label="下一张"><i class="ti ti-chevron-right" aria-hidden="true"></i></button>
+                    <div class="banner-lightbox-count" id="bannerLightboxCount"></div>
                 </div>
             </div>
         </section>
@@ -423,6 +561,7 @@ include __DIR__ . '/header.php';
         $watchPresenceTimeoutValue = (int)($settingsData['watch_presence_timeout_sec'] ?? 8);
         $watchHeartbeatValue = (int)($settingsData['watch_heartbeat_interval_ms'] ?? 2500);
         $watchAutoplayValue = $settingsData['watch_autoplay_enabled'] ?? '1';
+        $playerAutoNextValue = $settingsData['player_auto_next_enabled'] ?? '1';
         ?>
         <section class="admin-grid settings-panel" id="together-settings" role="tabpanel" aria-labelledby="tab-together" <?php echo $activeTab === 'together' ? '' : 'hidden'; ?> style="margin-bottom:0.75rem;">
             <div class="admin-card">
@@ -434,7 +573,10 @@ include __DIR__ . '/header.php';
                 <div class="admin-card-header"><div><div class="admin-card-title"><i class="ti ti-player-play" aria-hidden="true"></i>一起看体验 <button type="button" class="admin-help-toggle" title="查看说明" aria-label="查看说明" aria-expanded="false"><i class="ti ti-info-circle"></i></button></div></div></div><div class="admin-card-help"><div class="admin-card-subtitle">在线判定、心跳与进入播放</div></div>
                 <div class="form-group" style="margin-bottom:.65rem;"><label style="display:block;font-size:.85rem;margin-bottom:.25rem;">在线判定时间（秒）</label><input type="number" name="settings[watch_presence_timeout_sec]" min="3" max="30" value="<?php echo $watchPresenceTimeoutValue; ?>" style="width:100%;padding:.55rem .75rem;border-radius:.75rem;border:1px solid rgba(148,163,184,.6);font-size:.9rem;"></div>
                 <div class="form-group" style="margin-bottom:.65rem;"><label style="display:block;font-size:.85rem;margin-bottom:.25rem;">心跳间隔（毫秒）</label><input type="number" name="settings[watch_heartbeat_interval_ms]" min="1000" max="10000" value="<?php echo $watchHeartbeatValue; ?>" style="width:100%;padding:.55rem .75rem;border-radius:.75rem;border:1px solid rgba(148,163,184,.6);font-size:.9rem;"></div>
-                <label class="switch"><input type="checkbox" name="settings[watch_autoplay_enabled]" value="1" <?php echo $watchAutoplayValue === '1' ? 'checked' : ''; ?>><span class="switch-track"><span class="switch-thumb"></span></span><span class="switch-label">首次打开、换集和换剧默认自动播放</span></label>
+                <label class="switch"><input type="checkbox" name="settings[watch_autoplay_enabled]" value="1" <?php echo $watchAutoplayValue === '1' ? 'checked' : ''; ?>><span class="switch-track"><span class="switch-thumb"></span></span><span class="switch-label">换集 / 换剧自动播放</span></label>
+                <p style="margin:0.25rem 0 0;font-size:0.78rem;color:var(--text-light);">切换选集、换剧或首次进入播放页时自动开始播放。</p>
+                <label class="switch" style="margin-top:.65rem"><input type="checkbox" name="settings[player_auto_next_enabled]" value="1" <?php echo $playerAutoNextValue === '1' ? 'checked' : ''; ?>><span class="switch-track"><span class="switch-thumb"></span></span><span class="switch-label">自动下一集</span></label>
+                <p style="margin:0.25rem 0 0;font-size:0.78rem;color:var(--text-light);">当前一集播放结束后，自动切换并播放下一集。</p>
             </div>
         </section>
 
@@ -521,14 +663,16 @@ include __DIR__ . '/header.php';
                 </div>
             </div>
             <div class="admin-card-help">
-                <div class="admin-card-subtitle">上传限制、图片压缩、备案号等信息</div>
+                <div class="admin-card-subtitle">上传限制、WebP 副本与前台加载策略、备案号等信息</div>
             </div>
 
                 <div class="form-group" style="margin-bottom:0.75rem;">
-                    <label style="display:block;font-size:0.85rem;margin-bottom:0.25rem;">图片压缩与 WebP 优化</label>
+                    <label style="display:block;font-size:0.85rem;margin-bottom:0.25rem;">WebP 副本与前台加载策略</label>
                     <?php
-                    // 默认开启图片压缩与 WebP 优化
+                    // 默认开启 WebP 副本生成（上传不再压缩原图）
                     $imageOptimizeEnabled = $settingsData['image_optimize_enabled'] ?? '1';
+                    // 前台默认加载 WebP 副本（关闭后前台默认加载原图）
+                    $frontWebpDefault = $settingsData['front_webp_default'] ?? '1';
                     ?>
                     <label class="switch">
                         <input
@@ -539,11 +683,26 @@ include __DIR__ . '/header.php';
                         <span class="switch-track">
                             <span class="switch-thumb"></span>
                         </span>
-                        <span class="switch-label">启用图片压缩与 WebP 优化（推荐）</span>
+                        <span class="switch-label">上传时生成 WebP 副本（推荐）</span>
                     </label>
                     <p style="margin:0.25rem 0 0;font-size:0.78rem;color:var(--text-light);">
-                        开启后，新上传的图片会自动按比例缩小（长边约 2560 像素）并进行适度压缩，同时为 JPEG/PNG 生成一份 WebP 副本，用于前台优先加载以减轻带宽压力。
+                        上传不再压缩或缩小图片，原图按原始画质完整保留；仅在支持时为 JPEG/PNG 额外生成一份同名 .webp 副本（相册图片同时生成缩略图），供前台加速加载。
                         仅对之后上传的图片生效，已有图片不受影响。
+                    </p>
+                    <label class="switch" style="margin-top:.55rem">
+                        <input
+                            type="checkbox"
+                            name="settings[front_webp_default]"
+                            value="1"
+                            <?php echo $frontWebpDefault === '1' ? 'checked' : ''; ?>>
+                        <span class="switch-track">
+                            <span class="switch-thumb"></span>
+                        </span>
+                        <span class="switch-label">前台默认加载 WebP 副本（推荐）</span>
+                    </label>
+                    <p style="margin:0.25rem 0 0;font-size:0.78rem;color:var(--text-light);">
+                        开启后，相册、文章、日记、纪念事件等前台图片默认加载 WebP 副本，并在查看大图时提供「查看原图」入口；关闭后前台默认直接加载原图。
+                        没有生成 WebP 副本的图片会自动加载原图，不受此开关影响。
                     </p>
                 </div>
 
@@ -552,38 +711,6 @@ include __DIR__ . '/header.php';
                     <?php $frontAnimation = $settingsData['front_animation_enabled'] ?? '1'; $backendAnimation = $settingsData['backend_animation_enabled'] ?? '0'; ?>
                     <label class="switch"><input type="checkbox" name="settings[front_animation_enabled]" value="1" <?php echo $frontAnimation === '1' ? 'checked' : ''; ?>><span class="switch-track"><span class="switch-thumb"></span></span><span class="switch-label">前台花瓣、光影与转场</span></label>
                     <label class="switch" style="margin-top:.45rem"><input type="checkbox" name="settings[backend_animation_enabled]" value="1" <?php echo $backendAnimation === '1' ? 'checked' : ''; ?>><span class="switch-track"><span class="switch-thumb"></span></span><span class="switch-label">后台动效</span></label>
-                </div>
-
-                <div class="form-group" style="margin-bottom:0.75rem;">
-                    <label style="display:block;font-size:0.85rem;margin-bottom:0.25rem;">天气 API Key（高德）</label>
-                    <input type="text" name="settings[amap_weather_key]" value="<?php echo e($settingsData['amap_weather_key'] ?? ''); ?>" placeholder="高德 Web服务 Key，用于天气查询，可留空" style="width:100%;padding:.55rem .75rem;border-radius:.75rem;border:1px solid rgba(148,163,184,.6);font-size:.9rem;">
-                    <small style="color:#888;">使用高德地图同款 Key 即可，留空则使用 IP 定位天气</small>
-                </div>
-
-                <div class="form-group" style="margin-bottom:0.75rem;">
-                    <label style="display:block;font-size:0.85rem;margin-bottom:0.25rem;">天气定位</label>
-                    <?php
-                    $locLat  = $settingsData['weather_loc_lat'] ?? '';
-                    $locLng  = $settingsData['weather_loc_lng'] ?? '';
-                    $locName = $settingsData['weather_loc_name'] ?? '';
-                    $hasLoc  = $locLat !== '' && $locLng !== '';
-                    ?>
-                    <div style="position:relative;">
-                        <input type="text" id="weather_loc_search" placeholder="搜索城市或地址..." value="<?php echo e($locName); ?>" autocomplete="off"
-                               style="width:100%;padding:.55rem .75rem;border-radius:.75rem;border:1px solid rgba(148,163,184,.6);font-size:.9rem;">
-                        <div id="weather_loc_results" style="display:none;position:absolute;top:100%;left:0;right:0;z-index:100;background:#fff;border:1px solid rgba(148,163,184,.3);border-radius:.75rem;max-height:240px;overflow-y:auto;box-shadow:0 8px 24px rgba(0,0,0,.12);"></div>
-                    </div>
-                    <input type="hidden" name="settings[weather_loc_lat]" id="weather_loc_lat" value="<?php echo e($locLat); ?>">
-                    <input type="hidden" name="settings[weather_loc_lng]" id="weather_loc_lng" value="<?php echo e($locLng); ?>">
-                    <input type="hidden" name="settings[weather_loc_name]" id="weather_loc_name" value="<?php echo e($locName); ?>">
-                    <div id="weather_loc_selected" style="margin-top:.35rem;font-size:.8rem;color:<?php echo $hasLoc ? '#16a34a' : '#888'; ?>;">
-                        <?php if ($hasLoc): ?>
-                            ✅ 已选择：<?php echo e($locName); ?>（<?php echo e($locLat); ?>, <?php echo e($locLng); ?>）
-                        <?php else: ?>
-                            未选择位置，天气将使用默认数据
-                        <?php endif; ?>
-                    </div>
-                    <small style="color:#888;">搜索并选择城市，天气和地图将使用此位置</small>
                 </div>
 
                 <div class="form-group" style="margin-bottom:0.75rem;">
@@ -670,7 +797,7 @@ include __DIR__ . '/header.php';
                     <input type="url" name="settings[ai_api_endpoint]" value="<?php echo e($settingsData['ai_api_endpoint'] ?? ''); ?>" placeholder="AI 兼容接口地址，可留空" style="width:100%;margin-top:.55rem;padding:.55rem .75rem;border-radius:.75rem;border:1px solid rgba(148,163,184,.6);font-size:.9rem;">
                     <input type="password" name="settings[ai_api_key]" value="<?php echo e($settingsData['ai_api_key'] ?? ''); ?>" placeholder="AI API Key，可留空" style="width:100%;margin-top:.55rem;padding:.55rem .75rem;border-radius:.75rem;border:1px solid rgba(148,163,184,.6);font-size:.9rem;">
                     <?php $currentModel = $settingsData['ai_model'] ?? 'deepseek-chat'; $modelOptions = ['deepseek-chat' => 'DeepSeek V3 / deepseek-chat', 'deepseek-reasoner' => 'DeepSeek R1 / deepseek-reasoner', 'gpt-4o-mini' => 'GPT-4o-mini', 'gpt-4o' => 'GPT-4o', 'gpt-4.1' => 'GPT-4.1', 'gpt-4.1-mini' => 'GPT-4.1-mini', 'gpt-4.1-nano' => 'GPT-4.1-nano', 'o3-mini' => 'o3-mini', 'o4-mini' => 'o4-mini', 'claude-sonnet-4-20250514' => 'Claude Sonnet 4', 'claude-3-5-sonnet-20241022' => 'Claude 3.5 Sonnet', 'gemini-2.5-pro' => 'Gemini 2.5 Pro', 'gemini-2.0-flash' => 'Gemini 2.0 Flash']; ?>
-<select name="settings[ai_model]" style="width:100%;margin-top:.55rem;padding:.55rem .75rem;border-radius:.75rem;border:1px solid rgba(148,163,184,.6);font-size:.9rem;background:#fff;color:inherit;-webkit-appearance:none;appearance:none;background-image:url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%23666' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E\");background-repeat:no-repeat;background-position:right .75rem center;background-size:.75rem;padding-right:2rem;">
+<select name="settings[ai_model]" style="width:100%;margin-top:.55rem;padding:.55rem .75rem;border-radius:.75rem;border:1px solid rgba(148,163,184,.6);font-size:.9rem;background:#fff;color:inherit;-webkit-appearance:none;appearance:none;background-image:url('data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 width=%2712%27 height=%2712%27 viewBox=%270 0 24 24%27 fill=%27none%27 stroke=%27%23666%27 stroke-width=%272%27 stroke-linecap=%27round%27 stroke-linejoin=%27round%27%3E%3Cpolyline points=%276 9 12 15 18 9%27%3E%3C/polyline%3E%3C/svg%3E');background-repeat:no-repeat;background-position:right .75rem center;background-size:.75rem;padding-right:2rem;">
     <?php foreach ($modelOptions as $modelValue => $modelLabel): ?>
     <option value="<?php echo e($modelValue); ?>" <?php echo $currentModel === $modelValue ? 'selected' : ''; ?>><?php echo e($modelLabel); ?></option>
     <?php endforeach; ?>
@@ -717,7 +844,33 @@ include __DIR__ . '/header.php';
             </div>
         </section>
 
-        <div class="settings-savebar">
+        <?php // 高级设置分段：安全审核等独立功能页的入口汇总（无表单项，隐藏底部保存栏） ?>
+        <section class="admin-grid settings-panel" id="advanced-settings" role="tabpanel" aria-labelledby="tab-advanced" <?php echo $activeTab === 'advanced' ? '' : 'hidden'; ?> style="margin-bottom:0.75rem;">
+            <div class="admin-card">
+                <div class="admin-card-header">
+                    <div>
+                        <div class="admin-card-title">
+                            <i class="ti ti-shield" aria-hidden="true"></i>安全与高级工具
+                            <button type="button" class="admin-help-toggle" title="查看说明" aria-label="查看说明" aria-expanded="false"><i class="ti ti-info-circle"></i></button>
+                        </div>
+                    </div>
+                </div>
+                <div class="admin-card-help">
+                    <div class="admin-card-subtitle">安全审核、信任设备与图片工具等独立页面入口</div>
+                </div>
+                <nav class="settings-advanced-list">
+                    <?php foreach ($advancedEntries as $entry): ?>
+                    <a class="settings-advanced-item" href="<?php echo e($entry['href']); ?>">
+                        <i class="ti <?php echo $entry['icon']; ?>" aria-hidden="true"></i>
+                        <span class="settings-advanced-body"><strong><?php echo $entry['label']; ?></strong><small><?php echo $entry['desc']; ?></small></span>
+                        <i class="ti ti-chevron-right settings-advanced-go" aria-hidden="true"></i>
+                    </a>
+                    <?php endforeach; ?>
+                </nav>
+            </div>
+        </section>
+
+        <div class="settings-savebar"<?php echo $activeTab === 'advanced' ? ' hidden' : ''; ?>>
             <button type="submit" class="btn btn-primary">
                 <i class="fas fa-save"></i>
                 <span>保存设置</span>
@@ -808,6 +961,7 @@ include __DIR__ . '/header.php';
         var panels = tabs.map(function (tab) { return document.getElementById(tab.getAttribute('aria-controls')); }).filter(Boolean);
         if (!tabs.length || !panels.length) return;
         var storageKey = 'withu_settings_tab';
+        var savebar = document.querySelector('.settings-savebar');
 
         function activate(id, moveFocus) {
             var matched = false;
@@ -820,8 +974,16 @@ include __DIR__ . '/header.php';
             });
             if (!matched) return;
             panels.forEach(function (panel) { panel.hidden = panel.id !== id; });
+            // 高级设置分段只有页面入口、没有可保存项，吸附保存栏随之隐藏
+            if (savebar) savebar.hidden = (id === 'advanced-settings');
             if (moveFocus) {
                 tabs.forEach(function (tab) { if (tab.classList.contains('is-active')) tab.focus(); });
+            }
+            // 选中 Tab 超出分段导航可视宽度时（窄屏/最后一段），仅横向滚动导航使其可见
+            var activeTab = tablist.querySelector('.settings-tab.is-active');
+            if (activeTab && tablist.scrollWidth > tablist.clientWidth) {
+                var target = activeTab.offsetLeft - (tablist.clientWidth - activeTab.offsetWidth) / 2;
+                tablist.scrollLeft = Math.max(0, Math.min(target, tablist.scrollWidth - tablist.clientWidth));
             }
             try { sessionStorage.setItem(storageKey, id); } catch (e) {}
         }
@@ -861,6 +1023,218 @@ include __DIR__ . '/header.php';
             } catch (e) {}
         }
         if (initialId) activate(initialId, false);
+    }());
+
+    // 首页大图多图管理：增删、排序、待上传本地预览、展开预览
+    (function () {
+        var listEl = document.getElementById('bannerImageList');
+        var inputEl = document.getElementById('bannerImagesInput');
+        var fileInput = document.getElementById('bannerFileInput');
+        var pickBtn = document.getElementById('bannerPickBtn');
+        var urlInput = document.getElementById('bannerUrlInput');
+        var addUrlBtn = document.getElementById('bannerAddUrlBtn');
+        var lightbox = document.getElementById('bannerLightbox');
+        if (!listEl || !inputEl || !fileInput) return;
+
+        var UPLOAD_TOKEN = '__WITHU_UPLOAD__';
+        var MAX_ITEMS = 20;
+        var isLegacyExample = listEl.getAttribute('data-legacy-example') === '1';
+        // state：url=存储值（待上传为占位符），view=预览地址，pending=待上传 File，
+        // example=由系统导入的内置默认图（非用户上传，渲染时标「示例」角标）
+        var state = [];
+
+        try {
+            var initialStored = JSON.parse(inputEl.value || '[]');
+            var initialViews = JSON.parse(listEl.getAttribute('data-views') || '[]');
+            if (Array.isArray(initialStored)) {
+                initialStored.forEach(function (url, index) {
+                    if (typeof url !== 'string' || url.trim() === '') return;
+                    state.push({ url: url, view: initialViews[index] || url, pending: null, objectUrl: '', example: isLegacyExample });
+                });
+            }
+        } catch (e) {}
+
+        function syncInput() {
+            inputEl.value = JSON.stringify(state.map(function (item) {
+                return item.pending ? UPLOAD_TOKEN : item.url;
+            }));
+        }
+
+        // 待上传文件与列表保持同序：移除或排序后重建 file input
+        function rebuildFileInput() {
+            var dt = new DataTransfer();
+            state.forEach(function (item) {
+                if (item.pending) dt.items.add(item.pending);
+            });
+            fileInput.files = dt.files;
+        }
+
+        function render() {
+            listEl.innerHTML = '';
+            state.forEach(function (item, index) {
+                var card = document.createElement('div');
+                card.className = 'banner-image-item' + (item.pending ? ' is-pending' : '');
+
+                var img = document.createElement('img');
+                img.src = item.view;
+                img.alt = '首页大图 ' + (index + 1);
+                img.title = '点击展开预览';
+                img.addEventListener('click', function () { openLightbox(index); });
+                card.appendChild(img);
+
+                if (item.example && !item.pending) {
+                    var exampleBadge = document.createElement('span');
+                    exampleBadge.className = 'banner-image-badge banner-image-badge-example';
+                    exampleBadge.textContent = '示例';
+                    card.appendChild(exampleBadge);
+                }
+                if (item.pending) {
+                    var pendingBadge = document.createElement('span');
+                    pendingBadge.className = 'banner-image-badge';
+                    pendingBadge.textContent = '待上传';
+                    card.appendChild(pendingBadge);
+                }
+
+                var actions = document.createElement('div');
+                actions.className = 'banner-image-actions';
+
+                function makeBtn(icon, label, disabled, onClick, extraClass) {
+                    var btn = document.createElement('button');
+                    btn.type = 'button';
+                    btn.className = 'banner-image-btn' + (extraClass ? ' ' + extraClass : '');
+                    btn.setAttribute('aria-label', label);
+                    btn.title = label;
+                    btn.innerHTML = '<i class="ti ' + icon + '" aria-hidden="true"></i>';
+                    if (disabled) btn.disabled = true;
+                    else btn.addEventListener('click', onClick);
+                    return btn;
+                }
+
+                actions.appendChild(makeBtn('ti-chevron-left', '前移', index === 0, function () { move(index, -1); }));
+                actions.appendChild(makeBtn('ti-chevron-right', '后移', index === state.length - 1, function () { move(index, 1); }));
+                actions.appendChild(makeBtn('ti-trash', '移除', false, function () { remove(index); }, 'banner-image-btn-danger'));
+                card.appendChild(actions);
+                listEl.appendChild(card);
+            });
+            syncInput();
+        }
+
+        function move(index, delta) {
+            var target = index + delta;
+            if (target < 0 || target >= state.length) return;
+            var swapped = state[index];
+            state[index] = state[target];
+            state[target] = swapped;
+            rebuildFileInput();
+            render();
+        }
+
+        function remove(index) {
+            var item = state[index];
+            if (!item) return;
+            if (item.objectUrl) URL.revokeObjectURL(item.objectUrl);
+            state.splice(index, 1);
+            rebuildFileInput();
+            render();
+        }
+
+        if (pickBtn) pickBtn.addEventListener('click', function () { fileInput.click(); });
+        fileInput.addEventListener('change', function () {
+            Array.prototype.slice.call(fileInput.files || []).forEach(function (file) {
+                if (state.length >= MAX_ITEMS) return;
+                var objectUrl = URL.createObjectURL(file);
+                state.push({ url: UPLOAD_TOKEN, view: objectUrl, pending: file, objectUrl: objectUrl });
+            });
+            render();
+        });
+
+        function addUrl() {
+            if (!urlInput) return;
+            var url = urlInput.value.trim();
+            if (!url) return;
+            // 无协议时：形如域名的补 https://，否则视为站点根路径
+            if (!/^https?:\/\//i.test(url) && url.indexOf('//') !== 0 && url.charAt(0) !== '/') {
+                url = /^[^/]+\.[^/]/.test(url) ? 'https://' + url : '/' + url;
+            }
+            var exists = state.some(function (item) { return !item.pending && item.url === url; });
+            if (exists) {
+                urlInput.value = '';
+                return;
+            }
+            if (state.length >= MAX_ITEMS) return;
+            state.push({ url: url, view: url, pending: null, objectUrl: '' });
+            urlInput.value = '';
+            render();
+        }
+        if (addUrlBtn) addUrlBtn.addEventListener('click', addUrl);
+        if (urlInput) urlInput.addEventListener('keydown', function (event) {
+            if (event.key === 'Enter') {
+                event.preventDefault();
+                addUrl();
+            }
+        });
+
+        // 展开预览
+        var lbImg = document.getElementById('bannerLightboxImg');
+        var lbCount = document.getElementById('bannerLightboxCount');
+        var lbPrev = document.getElementById('bannerLightboxPrev');
+        var lbNext = document.getElementById('bannerLightboxNext');
+        var lbClose = document.getElementById('bannerLightboxClose');
+        var lbIndex = 0;
+        var lbKeyDownBound = false;
+
+        function lbKeyHandler(event) {
+            if (event.key === 'Escape') closeLightbox();
+            else if (event.key === 'ArrowLeft') lbStep(-1);
+            else if (event.key === 'ArrowRight') lbStep(1);
+        }
+
+        function updateLightbox() {
+            if (!lightbox || !lbImg) return;
+            var item = state[lbIndex];
+            if (!item) { closeLightbox(); return; }
+            lbImg.src = item.view;
+            if (lbCount) lbCount.textContent = state.length > 1 ? (lbIndex + 1) + ' / ' + state.length : '';
+            if (lbPrev) lbPrev.hidden = state.length < 2;
+            if (lbNext) lbNext.hidden = state.length < 2;
+        }
+
+        function openLightbox(index) {
+            if (!lightbox) return;
+            lbIndex = index;
+            updateLightbox();
+            lightbox.hidden = false;
+            document.documentElement.style.overflow = 'hidden';
+            if (!lbKeyDownBound) {
+                lbKeyDownBound = true;
+                document.addEventListener('keydown', lbKeyHandler);
+            }
+        }
+
+        function closeLightbox() {
+            if (!lightbox) return;
+            lightbox.hidden = true;
+            document.documentElement.style.overflow = '';
+            if (lbKeyDownBound) {
+                lbKeyDownBound = false;
+                document.removeEventListener('keydown', lbKeyHandler);
+            }
+        }
+
+        function lbStep(delta) {
+            if (state.length < 2) return;
+            lbIndex = (lbIndex + delta + state.length) % state.length;
+            updateLightbox();
+        }
+
+        if (lbClose) lbClose.addEventListener('click', closeLightbox);
+        if (lbPrev) lbPrev.addEventListener('click', function () { lbStep(-1); });
+        if (lbNext) lbNext.addEventListener('click', function () { lbStep(1); });
+        if (lightbox) lightbox.addEventListener('click', function (event) {
+            if (event.target === lightbox) closeLightbox();
+        });
+
+        render();
     }());
 
     // 位置搜索自动完成

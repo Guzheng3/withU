@@ -88,39 +88,75 @@ if ($headerDb) {
 
 // 首页顶部大图：默认从设置表读取；如果外部已经传入 $homeBannerImage（例如相册详情页），则不再覆盖
 if (!isset($homeBannerImage)) {
-    $homeBannerImage = '';
+    // 多图轮播：home_banner_images 存 JSON 数组，非空时前台按顺序轮播
+    $homeBannerImages = [];
     if ($headerDb) {
         try {
-            $row = $headerDb->fetch("SELECT value FROM settings WHERE `key` = 'home_banner_image'");
-            if ($row) {
-                // 只要存在这一条设置记录，就不再使用默认图片；
-                // 用户可以通过清空该设置来实现“无大图”效果
-                if (!empty($row['value'])) {
-                    $homeBannerImage = $row['value'];
+            $row = $headerDb->fetch("SELECT value FROM settings WHERE `key` = 'home_banner_images'");
+            if ($row && !empty($row['value'])) {
+                $bannerListParsed = json_decode($row['value'], true);
+                if (is_array($bannerListParsed)) {
+                    foreach ($bannerListParsed as $bannerListEntry) {
+                        if (is_string($bannerListEntry) && trim($bannerListEntry) !== '') {
+                            $homeBannerImages[] = trim($bannerListEntry);
+                        }
+                    }
                 }
-            } else {
-                // 完全没有 home_banner_image 记录时（全新安装且未保存设置），使用预设默认大图（静态资源）
-                $homeBannerImage = '/assets/images/default_hero.jpg';
             }
         } catch (Exception $e) {
-            // 忽略顶部图片读取失败的异常
+            // 忽略多图设置读取失败的异常
         }
     }
 
-    // 新版：根据不同形式的路径补全为可直接在前端使用的地址
-    if ($homeBannerImage !== '') {
-        // 已经是绝对 URL 或协议相对 URL，原样使用
-        if (strpos($homeBannerImage, 'http://') === 0 ||
-            strpos($homeBannerImage, 'https://') === 0 ||
-            strpos($homeBannerImage, '//') === 0) {
-            // do nothing
-        // 以 / 开头：视为站点根路径，例如 /assets/images/default_hero.jpg
-        } elseif (strpos($homeBannerImage, '/') === 0) {
-            // 保留为根路径，前端将相对当前域名加载
-            // 如有需要，也可以改为 BASE_URL . $homeBannerImage
-        // 其它情况：视为 uploads 下面的相对路径
-        } else {
-            $homeBannerImage = UPLOAD_URL . ltrim($homeBannerImage, '/');
+    // 根据不同形式的路径补全为可直接在前端使用的地址（与单图规则一致）
+    $homeBannerImages = array_map(function ($bannerEntry) {
+        if (strpos($bannerEntry, 'http://') === 0 ||
+            strpos($bannerEntry, 'https://') === 0 ||
+            strpos($bannerEntry, '//') === 0 ||
+            strpos($bannerEntry, '/') === 0) {
+            return $bannerEntry;
+        }
+        return UPLOAD_URL . $bannerEntry;
+    }, $homeBannerImages);
+
+    if (!empty($homeBannerImages)) {
+        // 兼容仍读取单图变量的场景：取第一张
+        $homeBannerImage = $homeBannerImages[0];
+    } else {
+        $homeBannerImage = '';
+        if ($headerDb) {
+            try {
+                $row = $headerDb->fetch("SELECT value FROM settings WHERE `key` = 'home_banner_image'");
+                if ($row) {
+                    // 只要存在这一条设置记录，就不再使用默认图片；
+                    // 用户可以通过清空该设置来实现“无大图”效果
+                    if (!empty($row['value'])) {
+                        $homeBannerImage = $row['value'];
+                    }
+                } else {
+                    // 完全没有 home_banner_image 记录时（全新安装且未保存设置），使用预设默认大图（静态资源）
+                    $homeBannerImage = '/assets/images/default_hero.jpg';
+                }
+            } catch (Exception $e) {
+                // 忽略顶部图片读取失败的异常
+            }
+        }
+
+        // 新版：根据不同形式的路径补全为可直接在前端使用的地址
+        if ($homeBannerImage !== '') {
+            // 已经是绝对 URL 或协议相对 URL，原样使用
+            if (strpos($homeBannerImage, 'http://') === 0 ||
+                strpos($homeBannerImage, 'https://') === 0 ||
+                strpos($homeBannerImage, '//') === 0) {
+                // do nothing
+            // 以 / 开头：视为站点根路径，例如 /assets/images/default_hero.jpg
+            } elseif (strpos($homeBannerImage, '/') === 0) {
+                // 保留为根路径，前端将相对当前域名加载
+                // 如有需要，也可以改为 BASE_URL . $homeBannerImage
+            // 其它情况：视为 uploads 下面的相对路径
+            } else {
+                $homeBannerImage = UPLOAD_URL . ltrim($homeBannerImage, '/');
+            }
         }
     }
 }
@@ -128,6 +164,7 @@ if (!isset($homeBannerImage)) {
 // 情侣主页使用专属浪漫背景，其他页面继续使用各自的背景配置
 if (!empty($isWithuHomePage) && $headerUser1 && $headerUser2) {
     $homeBannerImage = '';
+    $homeBannerImages = [];
 }
 
 // 页面标题：如果未设置，则只显示网站标题；如果设置了，则显示"页面标题 - 网站标题"
@@ -221,7 +258,7 @@ if ($headerDb && (string)get_setting('front_animation_enabled', '1') !== '1') {
     </div>
 
     <header class="main-header">
-        <div class="header-background"<?php if (!empty($homeBannerImage)): ?> data-bg="<?php echo e($homeBannerImage); ?>"<?php endif; ?>>
+        <div class="header-background"<?php if (!empty($homeBannerImages) && count($homeBannerImages) > 1): ?> data-bgs="<?php echo e(json_encode($homeBannerImages, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE)); ?>"<?php elseif (!empty($homeBannerImage)): ?> data-bg="<?php echo e($homeBannerImage); ?>"<?php endif; ?>>
             <div class="header-overlay"></div>
             <div class="header-content">
                 <?php if (!empty($isAlbumDetail)): ?>

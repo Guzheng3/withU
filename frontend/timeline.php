@@ -285,7 +285,7 @@
 
 <!-- 礼花效果已迁移到 components.js 的 ConfettiEffect 模块 -->
 
-<script src="/assets/js/pjax.js"></script><script>if(window.WithUPjax&typeof window.WithUPjax.init==="function")window.WithUPjax.init();</script>
+<script src="/assets/js/pjax.js"></script><script>if(window.WithUPjax&&typeof window.WithUPjax.init==="function")window.WithUPjax.init();</script>
 <style>
     #loader-wrapper {
         position: fixed;
@@ -3481,6 +3481,7 @@ window.TIMELINE_AUTHORS['female'] = window.TIMELINE_AUTHORS[2];
 <script src="/assets/js/clipboard.js"></script>
 <script src="/assets/js/tooltip.js"></script>
 <script src="/Style/js/view-image.min.js"></script>
+<script src="/assets/js/webp-default.js?v=20260830"></script>
 <script src="/Style/LoveListStyle/carousel.umd.js"></script>
 <script src="/Style/LoveListStyle/carousel.thumbs.umd.js"></script>
 <script src="/Style/LoveListStyle/fancybox.umd.js"></script>

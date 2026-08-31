@@ -184,11 +184,11 @@ include __DIR__ . '/header.php';
                 </p>
             </div>
 
-            <div style="display:flex;gap:.5rem;flex-wrap:wrap;margin-top:.9rem;">
+            <div class="admin-page-actions" style="margin-top:.9rem;">
                 <button type="button" class="btn" id="strm-probe-btn" style="justify-content:center;">
                     <i class="ti ti-plug-connected"></i><span>测试连接</span>
                 </button>
-                <button type="submit" class="btn btn-primary" style="justify-content:center;flex:1;min-width:140px;">
+                <button type="submit" class="btn btn-primary">
                     <i class="fas fa-save"></i><span>保存设置</span>
                 </button>
             </div>

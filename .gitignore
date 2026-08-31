@@ -94,5 +94,8 @@ backend/strm/.build-cache/
 # ZCode 工作区状态
 /.zcode/
 
+# AI 本地任务/截图/QA 工作数据
+/.pm/
+
 # Python 缓存
 __pycache__/

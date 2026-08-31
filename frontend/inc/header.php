@@ -48,7 +48,7 @@
                             <?php if ($loggedIn): ?>
                 <?php if (!empty($withuHeaderMediaEntryHistory)): ?>
                 <!-- 本页头部入口切换为观看历史（watch.php / watch_play.php 设置 $withuHeaderMediaEntryHistory） -->
-                <a href="/watch_history.php" class="withu-header-map" data-entry="media" title="观看历史">
+                <a href="/watch_history.php?from=<?php echo urlencode($_SERVER['REQUEST_URI']); ?>" class="withu-header-map" data-entry="media" title="观看历史">
                     <span class="withu-header-map-icon-wrap">
                         <i class="ph-fill ph-clock-counter-clockwise"></i>
                     </span>

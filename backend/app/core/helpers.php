@@ -144,37 +144,19 @@ function uploadFile($file, $subDir = '') {
         $relativePath = ltrim($relativePath, '/');
         $shouldOptimize = true;
 
-        // 当前请求级别的“跳过图片压缩”标记（如相册管理页一次性上传时临时关闭）
+        // 当前请求级别的“跳过派生文件生成”标记（如相册管理页一次性上传时临时关闭）
         if (!empty($GLOBALS['YC_SKIP_IMAGE_OPTIMIZE'])) {
             $shouldOptimize = false;
         }
 
-        // 针对相册支持“保留原始画质”的开关（仅影响主图压缩，不影响缩略图与 WebP 生成）
-        if (strpos($relativePath, 'albums/') === 0 && class_exists('Database')) {
-            try {
-                $parts = explode('/', $relativePath);
-                // 结构类似 albums/{albumId}/filename
-                if (isset($parts[1]) && ctype_digit($parts[1])) {
-                    $albumId = (int) $parts[1];
-                    $db = Database::getInstance();
-                    $row = $db->fetch("SELECT keep_original_quality FROM albums WHERE id = :id LIMIT 1", ['id' => $albumId]);
-                    if ($row && !empty($row['keep_original_quality'])) {
-                        $shouldOptimize = false;
-                    }
-                }
-            } catch (Throwable $e) {
-                // 查询异常时保持默认压缩行为
-            }
-        }
-
-        // 图片压缩与缩略图 / WebP 生成（仅在设置开启且允许压缩时进行）
+        // WebP 副本 / 相册缩略图生成（原图不做压缩改写，失败不影响上传主流程）
         if ($shouldOptimize) {
             try {
                 if (function_exists('optimize_uploaded_image')) {
                     optimize_uploaded_image($filepath);
                 }
             } catch (Throwable $e) {
-                // 压缩失败不影响上传主流程
+                // 派生文件生成失败不影响上传主流程
             }
         }
 
@@ -291,58 +273,13 @@ if (!function_exists('withu_player_logo_bg_style')) {
 }
 
 /**
- * Cloudflare Turnstile 验证
- */
-function verify_turnstile(string $token): bool {
-    $enabled = (string) get_setting('turnstile_enabled', '0') === '1';
-    if (!$enabled) {
-        return true;
-    }
-
-    $siteKey   = (string) get_setting('turnstile_site_key', '');
-    $secretKey = (string) get_setting('turnstile_secret_key', '');
-    if ($secretKey === '' || $token === '') {
-        return false;
-    }
-
-    $postData = [
-        'secret'   => $secretKey,
-        'response' => $token,
-    ];
-    if (!empty($_SERVER['REMOTE_ADDR'])) {
-        $postData['remoteip'] = $_SERVER['REMOTE_ADDR'];
-    }
-
-    $ch = curl_init('https://challenges.cloudflare.com/turnstile/v0/siteverify');
-    curl_setopt_array($ch, [
-        CURLOPT_POST           => true,
-        CURLOPT_POSTFIELDS     => http_build_query($postData),
-        CURLOPT_RETURNTRANSFER => true,
-        CURLOPT_TIMEOUT        => 5,
-    ]);
-
-    $result = curl_exec($ch);
-    if ($result === false) {
-        
-        return false;
-    }
-    
-
-    $data = json_decode($result, true);
-    if (!is_array($data)) {
-        return false;
-    }
-
-    return !empty($data['success']);
-}
-
-/**
- * 对上传后的图片进行压缩与尺寸优化
- * - 控制最大长边（如 2560px）
- * - 同时为相册图片生成专用缩略图（thumbs 子目录，长边约 480px）
+ * 上传图片的派生文件处理（不压缩原图）
+ * - 原图保持原样：不缩放、不重新编码、不损失画质
+ * - 为 JPEG/PNG 生成同名 .webp 副本（前台默认加载的加速版本）
+ * - 为相册图片额外生成专用缩略图（thumbs 子目录，长边约 640px）
  */
 function optimize_uploaded_image(string $absolutePath): void {
-    // 开关：settings.image_optimize_enabled = '1' 时启用（默认开启）
+    // 开关：settings.image_optimize_enabled = '1' 时生成 WebP 副本（默认开启）
     $enabled = get_setting('image_optimize_enabled', '1');
     if ((string)$enabled !== '1') {
         return;
@@ -362,7 +299,7 @@ function optimize_uploaded_image(string $absolutePath): void {
         return;
     }
 
-    // 通过相对路径判断所属目录，用于为首页大图等特殊目录定制压缩策略
+    // 通过相对路径判断所属目录，用于为相册图片生成缩略图
     $relativePath = '';
     if (defined('UPLOAD_DIR')) {
         $uploadRoot = rtrim(UPLOAD_DIR, DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR;
@@ -371,93 +308,38 @@ function optimize_uploaded_image(string $absolutePath): void {
         }
     }
 
-    // 主图默认最大长边
-    $maxLongEdge   = 2560;
-    $jpegQuality   = 82;
-    $webpQuality   = 82;
-
-    // 首页大图（hero_covers）采用更温和的压缩策略：
-    // 不主动缩小分辨率，仅做较高质量重压缩，避免首页大图出现明显损失。
-    if ($relativePath !== '' && strpos($relativePath, 'hero_covers/') === 0) {
-        $maxLongEdge = 0;   // 0 表示不限制长边，仅依据原图尺寸
-        $jpegQuality = 88;
-        $webpQuality = 88;
-    }
-
     $srcW = (int)$info[0];
     $srcH = (int)$info[1];
     if ($srcW <= 0 || $srcH <= 0) {
         return;
     }
 
-    $scale = 1.0;
-    $longEdge = max($srcW, $srcH);
-    if ($maxLongEdge > 0 && $longEdge > $maxLongEdge) {
-        $scale = $maxLongEdge / $longEdge;
-    }
+    $pathInfo      = pathinfo($absolutePath);
+    $webpSupported = function_exists('imagewebp');
+    $srcImg        = null;
 
-    $dstW = (int)round($srcW * $scale);
-    $dstH = (int)round($srcH * $scale);
-
-    // 使用 GD 做基础压缩，尽量保持简单稳定
-    switch ($mime) {
-        case 'image/jpeg':
-            $srcImg = @imagecreatefromjpeg($absolutePath);
-            break;
-        case 'image/png':
-            $srcImg = @imagecreatefrompng($absolutePath);
-            break;
-        case 'image/webp':
-            if (function_exists('imagecreatefromwebp')) {
-                $srcImg = @imagecreatefromwebp($absolutePath);
-            } else {
-                $srcImg = null;
+    // ── WebP 副本：原图不做任何压缩改写，仅额外生成一份同名 .webp ──
+    // 仅 JPEG/PNG 需要副本（原图本身是 WebP 时无需再生成）
+    if ($webpSupported && in_array($mime, ['image/jpeg', 'image/png'], true)
+        && !empty($pathInfo['dirname']) && !empty($pathInfo['filename'])) {
+        $srcImg = ($mime === 'image/jpeg')
+            ? @imagecreatefromjpeg($absolutePath)
+            : @imagecreatefrompng($absolutePath);
+        if ($srcImg) {
+            if ($mime === 'image/png') {
+                // 保持透明通道
+                imagealphablending($srcImg, false);
+                imagesavealpha($srcImg, true);
             }
-            break;
-        default:
-            $srcImg = null;
-    }
-    if (!$srcImg) {
-        return;
-    }
-
-    // 若无需缩放，仅重写压缩质量
-    if ($scale === 1.0) {
-        $dstImg = $srcImg;
-    } else {
-        $dstImg = imagecreatetruecolor($dstW, $dstH);
-        imagecopyresampled($dstImg, $srcImg, 0, 0, 0, 0, $dstW, $dstH, $srcW, $srcH);
-    }
-
-    // 统一质量策略：JPEG/WebP 质量稍微调高，兼顾画质与体积
-    if ($mime === 'image/jpeg') {
-        @imagejpeg($dstImg, $absolutePath, $jpegQuality);
-    } elseif ($mime === 'image/png') {
-        // PNG 使用压缩级别（0-9），这里取中间值，并尝试保持透明
-        imagealphablending($dstImg, false);
-        imagesavealpha($dstImg, true);
-        @imagepng($dstImg, $absolutePath, 6);
-    } elseif ($mime === 'image/webp' && function_exists('imagewebp')) {
-        @imagewebp($dstImg, $absolutePath, $webpQuality);
-    }
-
-    // WebP 副本：与图片压缩开关保持一致（统一由 image_optimize_enabled 控制）
-    $webpEnabled = $enabled;
-    if ((string)$webpEnabled === '1' && function_exists('imagewebp')) {
-        if (in_array($mime, ['image/jpeg', 'image/png'], true)) {
-            $pathInfo = pathinfo($absolutePath);
-            if (!empty($pathInfo['dirname']) && !empty($pathInfo['filename'])) {
-                $webpPath = $pathInfo['dirname'] . DIRECTORY_SEPARATOR . $pathInfo['filename'] . '.webp';
-                @imagewebp($dstImg, $webpPath, $webpQuality);
-            }
+            $webpPath = $pathInfo['dirname'] . DIRECTORY_SEPARATOR . $pathInfo['filename'] . '.webp';
+            @imagewebp($srcImg, $webpPath, 82);
         }
     }
 
-    // 为相册图片额外生成缩略图：/uploads/albums/{id}/thumbs/{filename}
+    // ── 为相册图片额外生成缩略图：/uploads/albums/{id}/thumbs/{filename} ──
     // - 仅在图片位于 uploads/albums/ 目录下时启用
-    // - 长边约 480px，用于瀑布流 / 列表等场景，减轻前端加载压力
+    // - 长边约 640px，用于瀑布流 / 列表等场景，减轻前端加载压力（不影响原图）
     if ($relativePath !== '' && strpos($relativePath, 'albums/') === 0) {
-        // 缩略图略微放大长边，提高在桌面端瀑布流中的清晰度
         $thumbMaxLongEdge = 640;
         $longEdge         = max($srcW, $srcH);
         $thumbScale       = 1.0;
@@ -477,14 +359,14 @@ function optimize_uploaded_image(string $absolutePath): void {
             @mkdir($thumbDir, 0755, true);
         }
 
-        // 当无需缩放时，直接复制压缩后的主图作为缩略图，避免额外开销
+        // 当无需缩放时，直接复制原图作为缩略图，避免额外开销
         if ($thumbScale === 1.0) {
             if (is_file($absolutePath)) {
                 @copy($absolutePath, $thumbPath);
             }
 
             // 为缩略图生成 WebP 副本（仅在启用且支持时）
-            if ((string)$webpEnabled === '1' && function_exists('imagewebp')) {
+            if ($webpSupported) {
                 $pi = pathinfo($thumbPath);
                 if (!empty($pi['dirname']) && !empty($pi['filename'])) {
                     $ext = strtolower($pi['extension'] ?? '');
@@ -505,43 +387,61 @@ function optimize_uploaded_image(string $absolutePath): void {
                 }
             }
         } else {
-            $thumbImg = imagecreatetruecolor($thumbW, $thumbH);
-
-            if ($mime === 'image/png') {
-                imagealphablending($thumbImg, false);
-                imagesavealpha($thumbImg, true);
-            }
-
-            imagecopyresampled($thumbImg, $srcImg, 0, 0, 0, 0, $thumbW, $thumbH, $srcW, $srcH);
-
-            if ($mime === 'image/jpeg') {
-                @imagejpeg($thumbImg, $thumbPath, 80);
-            } elseif ($mime === 'image/png') {
-                @imagepng($thumbImg, $thumbPath, 6);
-            } elseif ($mime === 'image/webp' && function_exists('imagewebp')) {
-                @imagewebp($thumbImg, $thumbPath, 75);
-            }
-
-            // 为缩略图生成 WebP 副本（仅在启用且支持时）
-            if ((string)$webpEnabled === '1' && function_exists('imagewebp')) {
-                $pi = pathinfo($thumbPath);
-                if (!empty($pi['dirname']) && !empty($pi['filename'])) {
-                    $ext = strtolower($pi['extension'] ?? '');
-                    if ($ext !== 'webp') {
-                        $thumbWebpPath = $pi['dirname'] . DIRECTORY_SEPARATOR . $pi['filename'] . '.webp';
-                        @imagewebp($thumbImg, $thumbWebpPath, 82);
-                    }
+            // JPEG/PNG 的 WebP 副本阶段已解码原图；其余情况在此补齐解码
+            if (!$srcImg) {
+                switch ($mime) {
+                    case 'image/jpeg':
+                        $srcImg = @imagecreatefromjpeg($absolutePath);
+                        break;
+                    case 'image/png':
+                        $srcImg = @imagecreatefrompng($absolutePath);
+                        break;
+                    case 'image/webp':
+                        $srcImg = function_exists('imagecreatefromwebp') ? @imagecreatefromwebp($absolutePath) : null;
+                        break;
+                    default:
+                        $srcImg = null;
                 }
             }
 
-            imagedestroy($thumbImg);
+            if ($srcImg) {
+                $thumbImg = imagecreatetruecolor($thumbW, $thumbH);
+
+                if ($mime === 'image/png') {
+                    imagealphablending($thumbImg, false);
+                    imagesavealpha($thumbImg, true);
+                }
+
+                imagecopyresampled($thumbImg, $srcImg, 0, 0, 0, 0, $thumbW, $thumbH, $srcW, $srcH);
+
+                if ($mime === 'image/jpeg') {
+                    @imagejpeg($thumbImg, $thumbPath, 80);
+                } elseif ($mime === 'image/png') {
+                    @imagepng($thumbImg, $thumbPath, 6);
+                } elseif ($mime === 'image/webp' && $webpSupported) {
+                    @imagewebp($thumbImg, $thumbPath, 75);
+                }
+
+                // 为缩略图生成 WebP 副本（仅在启用且支持时）
+                if ($webpSupported) {
+                    $pi = pathinfo($thumbPath);
+                    if (!empty($pi['dirname']) && !empty($pi['filename'])) {
+                        $ext = strtolower($pi['extension'] ?? '');
+                        if ($ext !== 'webp') {
+                            $thumbWebpPath = $pi['dirname'] . DIRECTORY_SEPARATOR . $pi['filename'] . '.webp';
+                            @imagewebp($thumbImg, $thumbWebpPath, 82);
+                        }
+                    }
+                }
+
+                imagedestroy($thumbImg);
+            }
         }
     }
 
-    if ($dstImg !== $srcImg) {
-        imagedestroy($dstImg);
+    if ($srcImg) {
+        imagedestroy($srcImg);
     }
-    imagedestroy($srcImg);
 }
 
 /**
@@ -1172,7 +1072,7 @@ function migrate_schema_if_needed(): void {
 
     // Avoid rerunning dozens of SHOW/ALTER/CREATE statements on every PHP
     // request, including each high-frequency watch poll.
-    $schemaVersion = '20260829-01';
+    $schemaVersion = '20260831-01';
     $runtimeDir = dirname(ROOT_PATH) . DIRECTORY_SEPARATOR . 'runtime';
     $markerPath = $runtimeDir . DIRECTORY_SEPARATOR . 'schema-version';
     $lockPath = $runtimeDir . DIRECTORY_SEPARATOR . 'schema-migration.lock';
@@ -1575,7 +1475,20 @@ function migrate_withu_v1($db): void {
             `created_at` datetime NOT NULL,
             PRIMARY KEY (`id`), UNIQUE KEY `uk_like_actor_target` (`actor_key`,`target_type`,`target_id`),
             KEY `idx_like_target` (`target_type`,`target_id`)
-        ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='游客与情侣点赞';"
+        ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='游客与情侣点赞';",
+        "CREATE TABLE IF NOT EXISTS `password_reset_tokens` (
+            `id` int(11) NOT NULL AUTO_INCREMENT,
+            `user_id` int(11) NOT NULL,
+            `token_hash` varchar(64) NOT NULL,
+            `status` varchar(20) NOT NULL DEFAULT 'pending',
+            `expires_at` datetime NOT NULL,
+            `used_at` datetime DEFAULT NULL,
+            `requested_ip` varchar(45) DEFAULT NULL,
+            `created_at` datetime NOT NULL,
+            PRIMARY KEY (`id`),
+            UNIQUE KEY `uk_reset_token` (`token_hash`),
+            KEY `idx_reset_user_status` (`user_id`,`status`)
+        ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='登录密码改密链接令牌';"
     ];
 
     foreach ($tables as $sql) {
@@ -1654,4 +1567,35 @@ function migrate_withu_v1($db): void {
             ]);
         } catch (Throwable $e) { /* 设置表尚未可用时忽略 */ }
     }
+}
+
+/**
+ * 首页轮播大图内置默认列表（与旧版 index.php 硬编码一致），
+ * 供前台渲染兜底与后台「首页大图」示例导入共用
+ */
+function withu_home_carousel_defaults(): array {
+    return [
+        '/Lovefolder/20260408044247_69d56c47870ec497937320.webp',
+        '/Lovefolder/20260408044246_69d56c468eddf735445232.webp',
+        '/Lovefolder/20260408044242_69d56c4212ab5344890628.webp',
+        '/Lovefolder/20260408044237_69d56c3dcde96349173286.webp',
+        '/Lovefolder/20260408044237_69d56c3d97f46162328378.webp',
+        '/Lovefolder/20260408044229_69d56c35d59a9841528398.webp',
+        '/Lovefolder/20260408044228_69d56c34b1c8f984679558.webp',
+        '/Lovefolder/20260408044228_69d56c34421f3439264035.webp',
+    ];
+}
+
+/**
+ * 首页大图条目规范化：外链与根路径原样返回，相对路径补为站点根路径
+ */
+function withu_normalize_banner_entry(string $entry): string {
+    $entry = trim($entry);
+    if ($entry === '') {
+        return '';
+    }
+    if (preg_match('/^https?:\/\//i', $entry) || strpos($entry, '//') === 0 || strpos($entry, '/') === 0) {
+        return $entry;
+    }
+    return '/' . $entry;
 }

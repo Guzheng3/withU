@@ -281,7 +281,7 @@
 
 <!-- 礼花效果已迁移到 components.js 的 ConfettiEffect 模块 -->
 
-<script src="/assets/js/pjax.js"></script><script>if(window.WithUPjax&typeof window.WithUPjax.init==="function")window.WithUPjax.init();</script>
+<script src="/assets/js/pjax.js"></script><script>if(window.WithUPjax&&typeof window.WithUPjax.init==="function")window.WithUPjax.init();</script>
 <style>
     #loader-wrapper {
         position: fixed;

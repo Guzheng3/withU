@@ -11,6 +11,17 @@ $auth = new Auth();
 $user = withu_require_couple_user($auth);
 $db = Database::getInstance();
 $historyMinMs = withu_watch_history_min_ms();
+
+// 返回目标：?from= 指定来源页则回来源；仅接受以单个 / 开头的站内路径（防开放跳转），缺省回影视馆
+$backTarget = '/watch.php';
+$fromRaw = isset($_GET['from']) ? (string)$_GET['from'] : '';
+if ($fromRaw !== '') {
+    $fromPath = preg_replace('/[\x00-\x1F\x7F]/', '', str_replace('\\', '/', $fromRaw));
+    if ($fromPath !== '' && $fromPath[0] === '/' && substr($fromPath, 1, 1) !== '/' && mb_strlen($fromPath) <= 500) {
+        $backTarget = $fromPath;
+    }
+}
+
 $historyRows = $db->fetchAll(
     "SELECT wh.*, COALESCE(wr.source, 'library') AS history_source, COALESCE(wr.source_episode, 0) AS history_source_episode
      FROM watch_history wh
@@ -720,8 +731,8 @@ body.watch-history-page button,body.watch-history-page select{font-family:inheri
       </div>
       <?php endif; ?>
     </div>
-    <a class="watch-history-home" href="/watch.php" aria-label="返回影视馆">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5"/><path d="M12 19l-7-7 7-7"/></svg>返回影视馆
+    <a class="watch-history-home" href="<?php echo e($backTarget); ?>" aria-label="返回">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5"/><path d="M12 19l-7-7 7-7"/></svg>返回
     </a>
   </header>
 
@@ -729,6 +740,19 @@ body.watch-history-page button,body.watch-history-page select{font-family:inheri
   <button id="historyLoadMore" class="wh-load-more" type="button" hidden>加载更多</button>
 </main>
 <script>
+// 返回兜底：URL 未带 from 时，若来源是本站其他页面（非登录/本页），回跳改为来源地址
+(function () {
+  var back = document.querySelector('.watch-history-home');
+  if (!back) return;
+  if (new URLSearchParams(location.search).has('from')) return;
+  try {
+    if (!document.referrer) return;
+    var ref = new URL(document.referrer);
+    if (ref.origin !== location.origin || ref.pathname === location.pathname) return;
+    if (ref.pathname === '/login.php' || ref.pathname === '/logout.php') return;
+    back.setAttribute('href', ref.pathname + ref.search);
+  } catch (e) {}
+}());
 (function(){
   var list=document.getElementById('historyList');
   var loadMore=document.getElementById('historyLoadMore');

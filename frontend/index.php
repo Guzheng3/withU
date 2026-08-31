@@ -7,6 +7,34 @@ mb_http_output('UTF-8');
 require __DIR__ . '/inc/auth.php';
 require __DIR__ . '/inc/config.php';
 
+// 首页大图轮播：后台「基础信息 → 首页大图」配置多张后按顺序轮播；
+// 尚未保存过多图设置时（无 home_banner_images 记录），使用内置默认列表兜底
+if (!function_exists('withu_normalize_banner_entry')) {
+    require_once __DIR__ . '/../backend/app/core/helpers.php';
+}
+$homeCarouselImages = null;
+try {
+    if (isset($db) && is_object($db)) {
+        $bannerRow = $db->fetch("SELECT value FROM settings WHERE `key` = 'home_banner_images'");
+        if ($bannerRow && isset($bannerRow['value']) && trim((string)$bannerRow['value']) !== '') {
+            $bannerParsedList = json_decode($bannerRow['value'], true);
+            if (is_array($bannerParsedList)) {
+                $homeCarouselImages = [];
+                foreach ($bannerParsedList as $bannerEntry) {
+                    if (is_string($bannerEntry) && trim($bannerEntry) !== '') {
+                        $homeCarouselImages[] = withu_normalize_banner_entry($bannerEntry);
+                    }
+                }
+            }
+        }
+    }
+} catch (Throwable $e) {
+    // 设置读取失败时保持默认列表
+}
+if (!is_array($homeCarouselImages)) {
+    $homeCarouselImages = withu_home_carousel_defaults();
+}
+
 // 访问统计（使用已有的 $db 连接）
 $todayViews = 0;
 $todayVisitors = 0;
@@ -312,7 +340,7 @@ try {
 
 <!-- 礼花效果已迁移到 components.js 的 ConfettiEffect 模块 -->
 
-<script src="assets/js/pjax.js"></script><script>if(window.WithUPjax&typeof window.WithUPjax.init==="function")window.WithUPjax.init();</script>
+<script src="assets/js/pjax.js"></script><script>if(window.WithUPjax&&typeof window.WithUPjax.init==="function")window.WithUPjax.init();</script>
 <style>
     #loader-wrapper {
         position: fixed;
@@ -2944,30 +2972,11 @@ try {
 <?php include __DIR__ . '/inc/header.php'; ?>
 <div id="homePage" class="wrap" data-Fullscreen>
     <ul class="list mask_black">
-                    <li class="item active">
-                <img class="lazy CarouselImage" data-src="Lovefolder/20260408044247_69d56c47870ec497937320.webp" draggable="false">
-            </li>
-                    <li class="item">
-                <img class="lazy CarouselImage" data-src="Lovefolder/20260408044246_69d56c468eddf735445232.webp" draggable="false">
-            </li>
-                    <li class="item">
-                <img class="lazy CarouselImage" data-src="Lovefolder/20260408044242_69d56c4212ab5344890628.webp" draggable="false">
-            </li>
-                    <li class="item">
-                <img class="lazy CarouselImage" data-src="Lovefolder/20260408044237_69d56c3dcde96349173286.webp" draggable="false">
-            </li>
-                    <li class="item">
-                <img class="lazy CarouselImage" data-src="Lovefolder/20260408044237_69d56c3d97f46162328378.webp" draggable="false">
-            </li>
-                    <li class="item">
-                <img class="lazy CarouselImage" data-src="Lovefolder/20260408044229_69d56c35d59a9841528398.webp" draggable="false">
-            </li>
-                    <li class="item">
-                <img class="lazy CarouselImage" data-src="Lovefolder/20260408044228_69d56c34b1c8f984679558.webp" draggable="false">
-            </li>
-                    <li class="item">
-                <img class="lazy CarouselImage" data-src="Lovefolder/20260408044228_69d56c34421f3439264035.webp" draggable="false">
-            </li>
+                <?php foreach ($homeCarouselImages as $homeCarouselIndex => $homeCarouselImg): ?>
+                <li class="item<?php echo $homeCarouselIndex === 0 ? ' active' : ''; ?>">
+                    <img class="lazy CarouselImage" data-src="<?php echo e($homeCarouselImg); ?>" draggable="false">
+                </li>
+                <?php endforeach; ?>
             </ul>
 
     <?php include __DIR__ . '/inc/head-avatars.php'; ?>
@@ -2987,14 +2996,9 @@ try {
     </svg>
 
     <ul class="pointList">
-                    <li class="point active" data-index="0"></li>
-                    <li class="point " data-index="1"></li>
-                    <li class="point " data-index="2"></li>
-                    <li class="point " data-index="3"></li>
-                    <li class="point " data-index="4"></li>
-                    <li class="point " data-index="5"></li>
-                    <li class="point " data-index="6"></li>
-                    <li class="point " data-index="7"></li>
+                <?php foreach ($homeCarouselImages as $homeCarouselIndex => $homeCarouselImg): ?>
+                <li class="point<?php echo $homeCarouselIndex === 0 ? ' active' : ''; ?>" data-index="<?php echo $homeCarouselIndex; ?>"></li>
+                <?php endforeach; ?>
             </ul>
 </div>
 
@@ -5302,6 +5306,7 @@ try {
 <script src="assets/js/clipboard.js"></script>
 <script src="assets/js/tooltip.js"></script>
 <script src="Style/js/view-image.min.js"></script>
+<script src="/assets/js/webp-default.js?v=20260830"></script>
 <script src="Style/LoveListStyle/carousel.umd.js"></script>
 <script src="Style/LoveListStyle/carousel.thumbs.umd.js"></script>
 <script src="Style/LoveListStyle/fancybox.umd.js"></script>

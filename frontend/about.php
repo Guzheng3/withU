@@ -282,7 +282,7 @@
 
 <!-- 礼花效果已迁移到 components.js 的 ConfettiEffect 模块 -->
 
-<script src="/assets/js/pjax.js"></script><script>if(window.WithUPjax&typeof window.WithUPjax.init==="function")window.WithUPjax.init();</script>
+<script src="/assets/js/pjax.js"></script><script>if(window.WithUPjax&&typeof window.WithUPjax.init==="function")window.WithUPjax.init();</script>
 <style>
     #loader-wrapper {
         position: fixed;
@@ -3404,7 +3404,7 @@
     <link rel="stylesheet" href="/assets/fonts/pacifico.css">
 
 <script src="/Style/vendor/confetti/confetti.browser.min.js"></script>
-<script src="/assets/js/page-messages.js"></script>
+<script src="/assets/js/page-messages.js?v=20260831"></script>
 <script src="/Style/toastify/lucide.min.js"></script>
 <script src="/Style/toastify/toastify.js"></script>
 <script>if(typeof lucide!=='undefined')lucide.createIcons();</script>

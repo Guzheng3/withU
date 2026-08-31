@@ -33,7 +33,7 @@ $album = $db->fetch(
 );
 
 if (!$album) {
-    header('Location: /albums.php');
+    header('Location: /admin/albums.php?error=' . urlencode('相册不存在或已被删除'));
     exit;
 }
 

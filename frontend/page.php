@@ -281,7 +281,7 @@
 
 <!-- 礼花效果已迁移到 components.js 的 ConfettiEffect 模块 -->
 
-<script src="/assets/js/pjax.js"></script><script>if(window.WithUPjax&typeof window.WithUPjax.init==="function")window.WithUPjax.init();</script>
+<script src="/assets/js/pjax.js"></script><script>if(window.WithUPjax&&typeof window.WithUPjax.init==="function")window.WithUPjax.init();</script>
 <style>
     #loader-wrapper {
         position: fixed;
@@ -3316,7 +3316,7 @@
 <center>
 <a href=" https://www.bilibili.com/" target="_blank">前往 bilibili </a>
 
-<a href="/imglist.php?code=20240507224441">查看我们的相册</a>
+<a href="/album-detail.php?code=20240507224441">查看我们的相册</a>
 </center>
 
 <audio id="music" src data-id="0046EF1a1yhW8E" data-type="tencent"></audio>
@@ -3335,7 +3335,7 @@
 <h4>人生天地间，忽如远行客，世间的一切无非是十里长亭一杯酒，折下柳枝，依依挥手。</h4>
 <p>曾看到一句话“命运就像是齿轮，在一无所知的时候把我们的人生轨迹重叠到一起，却又在紧密相连时把我们硬生生拆开。”人生天地间，忽如远行客，世间的一切无非是十里长亭一杯酒，折下柳枝，依依挥手。人总是很难在青春时认识青春，只有走过了青春，才能认识青春。所以，无论你现在是正在经历着，亦或是已经经历过，都不必为了去寻找那个答案而变得小心翼翼。</p>
 
-<video id="withUPlayerVideo"  controls><source src="https://classpic.kikiw.cn/video/fengjing.mp4" type="video/mp4"/></video>
+<video id="withUPlayerVideo" class="withu-player-video"  controls><source src="https://classpic.kikiw.cn/video/fengjing.mp4" type="video/mp4"/></video>
 
 <h5>在这秋意渐浓黄昏下的落日余晖中，抬起头看看天边的落日与云彩吧，他都为我们而脸红。</h5>
 
@@ -3614,7 +3614,7 @@
     <link rel="stylesheet" href="/assets/fonts/pacifico.css">
 
 <script src="/Style/vendor/confetti/confetti.browser.min.js"></script>
-<script src="/assets/js/page-messages.js"></script>
+<script src="/assets/js/page-messages.js?v=20260831"></script>
 <script src="/Style/toastify/lucide.min.js"></script>
 <script src="/Style/toastify/toastify.js"></script>
 <script>if(typeof lucide!=='undefined')lucide.createIcons();</script>
@@ -3622,6 +3622,7 @@
 <script src="/assets/js/clipboard.js"></script>
 <script src="/assets/js/tooltip.js"></script>
 <script src="/Style/js/view-image.min.js"></script>
+<script src="/assets/js/webp-default.js?v=20260830"></script>
 <script src="/Style/LoveListStyle/carousel.umd.js"></script>
 <script src="/Style/LoveListStyle/carousel.thumbs.umd.js"></script>
 <script src="/Style/LoveListStyle/fancybox.umd.js"></script>

@@ -61,13 +61,15 @@ if (strpos($path, '/uploads/') === 0) {
 // ── 后台 PHP 路径 ────────────────────────
 $isBackend = strpos($path, '/admin') === 0
     || $path === '/login.php' || $path === '/logout.php'
+    || $path === '/password_reset.php'
     || $path === '/install.php' || strpos($path, '/install') === 0
     // 影视库与播放页位于 backend/app，需要显式路由到后台目录
-    || preg_match('#^/(watch|watch_play|watch_history|player|cz_player)\.php$#', $path) === 1;
+    || preg_match('#^/(watch|watch_play|watch_history|player|cz_player|events|travel)\.php$#', $path) === 1;
 
 if ($isBackend) {
     if ($path === '/login.php' && requirePhp($appRoot . '/login.php')) return true;
     if ($path === '/logout.php' && requirePhp($appRoot . '/logout.php')) return true;
+    if ($path === '/password_reset.php' && requirePhp($appRoot . '/password_reset.php')) return true;
     if ($path === '/install.php' && requirePhp($appRoot . '/install.php')) return true;
 
     // /admin/ 或 /admin/xxx

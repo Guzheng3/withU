@@ -32,10 +32,10 @@ $adminPageMeta = [
     'together_settings' => ['title' => '一起看设置', 'section' => '影视与播放'],
     'player_settings' => ['title' => '播放器设置', 'section' => '影视与播放'],
     'player_art' => ['title' => '播放器设置', 'section' => '影视与播放'],
-    'strm_settings' => ['title' => 'withUstrm 媒体库', 'section' => '影视与播放'],
-    'profile' => ['title' => '个人资料', 'section' => '账号'],
-    'invites' => ['title' => '邀请另一半', 'section' => '账号'],
-    'settings' => ['title' => $adminSection === 'theme' ? '主题与外观' : '系统设置', 'section' => '设置'],
+    'strm_settings' => ['title' => 'withUstrm', 'section' => '影视与播放'],
+    'profile' => ['title' => '个人资料', 'section' => '设置'],
+    'invites' => ['title' => '邀请伴侣', 'section' => '账号'],
+    'settings' => ['title' => $adminSection === 'theme' ? '主题与外观' : ($adminSection === 'advanced' ? '高级设置' : '系统设置'), 'section' => '设置'],
     'moderation' => ['title' => '安全审核', 'section' => '高级设置'],
     'devices' => ['title' => '信任设备', 'section' => '高级设置'],
     'comment_ip_blacklist' => ['title' => '评论黑名单', 'section' => '高级设置'],
@@ -54,10 +54,10 @@ foreach (($themeConfig['colors'] ?? []) as $themeName => $themeValue) {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>管理后台 - <?php echo e(SITE_NAME); ?></title>
 <link rel="stylesheet" href="/admin-assets/css/style.css?v=withu-logo-20260718">
-	<link rel="stylesheet" href="/admin-assets/css/admin_v3.css?v=20260830-quick-restore">
+	<link rel="stylesheet" href="/admin-assets/css/admin_v3.css?v=20260831-admin-album-layout">
 	<link rel="stylesheet" href="/admin-assets/css/admin_v2.css?v=ui-polish-3">
 	<link rel="stylesheet" href="/admin-assets/css/theme.css?v=withu-theme-20260724-1">
-	<link rel="stylesheet" href="/admin-assets/css/admin_pages.css?v=player-single-col">
+	<link rel="stylesheet" href="/admin-assets/css/admin_pages.css?v=player-art-polish-1">
 <!-- Tabler Icons（本地） -->
 		<link rel="stylesheet" href="/admin-assets/vendor/tabler-icons/tabler-icons.min.css">
 		<!-- Font Awesome 备用（本地） -->
@@ -109,41 +109,18 @@ foreach (($themeConfig['colors'] ?? []) as $themeName => $themeValue) {
             <i class="ti ti-player-play"></i><span>播放器设置</span>
         </a>
         <a href="/admin/strm_settings.php" class="admin-drawer-link <?php echo $adminPage === 'strm_settings' ? 'admin-drawer-link-active' : ''; ?>">
-            <i class="ti ti-server-2"></i><span>withUstrm 媒体库</span>
-        </a>
-
-        <div class="admin-drawer-section-title">账号</div>
-        <a href="/admin/profile.php" class="admin-drawer-link <?php echo $adminPage === 'profile' ? 'admin-drawer-link-active' : ''; ?>">
-            <i class="ti ti-user"></i><span>个人资料</span>
-        </a>
-        <a href="/admin/invites.php" class="admin-drawer-link <?php echo $adminPage === 'invites' ? 'admin-drawer-link-active' : ''; ?>">
-            <i class="ti ti-user-plus"></i><span>邀请另一半</span>
+            <i class="ti ti-server-2"></i><span>withUstrm</span>
         </a>
 
         <div class="admin-drawer-section-title">设置</div>
-        <a href="/admin/settings.php?section=general" class="admin-drawer-link <?php echo $adminPage === 'settings' && $adminSection !== 'theme' ? 'admin-drawer-link-active' : ''; ?>">
+        <a href="/admin/settings.php?section=general" class="admin-drawer-link <?php echo ($adminPage === 'settings' && $adminSection !== 'advanced') ? 'admin-drawer-link-active' : ''; ?>">
             <i class="ti ti-settings"></i><span>系统设置</span>
         </a>
-        <a href="/admin/settings.php?section=theme#theme-settings" class="admin-drawer-link <?php echo $adminPage === 'settings' && $adminSection === 'theme' ? 'admin-drawer-link-active' : ''; ?>">
-            <i class="ti ti-palette"></i><span>主题与外观</span>
+        <a href="/admin/profile.php" class="admin-drawer-link <?php echo $adminPage === 'profile' ? 'admin-drawer-link-active' : ''; ?>">
+            <i class="ti ti-user"></i><span>账号设置</span>
         </a>
-
-        <div class="admin-drawer-section-title">高级设置</div>
-        <a href="/admin/moderation.php" class="admin-drawer-link <?php echo $adminPage === 'moderation' ? 'admin-drawer-link-active' : ''; ?>">
-            <i class="ti ti-shield"></i><span>安全审核</span>
-        </a>
-        <a href="/admin/devices.php" class="admin-drawer-link <?php echo $adminPage === 'devices' ? 'admin-drawer-link-active' : ''; ?>">
-            <i class="ti ti-device-mobile"></i><span>信任设备</span>
-        </a>
-        <a href="/admin/comment_ip_blacklist.php" class="admin-drawer-link <?php echo $adminPage === 'comment_ip_blacklist' ? 'admin-drawer-link-active' : ''; ?>">
-            <i class="ti ti-user-x"></i><span>评论黑名单</span>
-        </a>
-        <?php $toolsTab = $_GET['tab'] ?? ''; ?>
-        <a href="/admin/tools_image_stats.php?tab=optimize" class="admin-drawer-link <?php echo ($adminPage === 'tools_stats' && $toolsTab === 'optimize') ? 'admin-drawer-link-active' : ''; ?>">
-            <i class="ti ti-arrows-diagonal"></i><span>图片补齐</span>
-        </a>
-        <a href="/admin/tools_image_stats.php" class="admin-drawer-link <?php echo ($adminPage === 'tools_stats' && $toolsTab !== 'optimize') ? 'admin-drawer-link-active' : ''; ?>">
-            <i class="ti ti-chart-bar"></i><span>图片统计</span>
+        <a href="/admin/settings.php?section=advanced" class="admin-drawer-link <?php echo ($adminPage === 'settings' && $adminSection === 'advanced') || in_array($adminPage, ['moderation', 'devices', 'comment_ip_blacklist', 'tools_stats'], true) ? 'admin-drawer-link-active' : ''; ?>">
+            <i class="ti ti-adjustments"></i><span>高级设置</span>
         </a>
     </div>
 

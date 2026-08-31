@@ -119,6 +119,15 @@ $adminPage = 'messages';
 
 include __DIR__ . '/header.php';
 ?>
+    <style>
+    /* 留言页：卡片说明信息（留言总数、时间/IP/归属地）默认展开显示，不再折叠 */
+    body.admin-v3 .admin-card-help {
+        display: block;
+    }
+    body.admin-v3 .admin-help-toggle {
+        display: none;
+    }
+    </style>
 
     <section class="admin-page-title">
         <h1>留言管理</h1>
@@ -195,7 +204,7 @@ include __DIR__ . '/header.php';
                         <?php echo nl2br(e($message['content'])); ?>
                     </div>
 
-                    <div style="margin-top:0.75rem;display:flex;gap:0.5rem;flex-wrap:wrap;justify-content:flex-end;">
+                    <div style="margin-top:0.75rem;display:flex;gap:0.5rem;flex-wrap:wrap;">
                         <?php if ($ipText): ?>
                             <form method="POST" data-confirm="确定要拉黑该 IP 吗？此 IP 将无法再留言与评论。">
                                 <?php echo csrf_field(); ?>
@@ -206,7 +215,7 @@ include __DIR__ . '/header.php';
                                 </button>
                             </form>
                         <?php endif; ?>
-                        <form method="POST" data-confirm="确定要删除这条留言吗？">
+                        <form method="POST" data-confirm="确定要删除这条留言吗？" style="margin-left:auto;">
                             <?php echo csrf_field(); ?>
                             <input type="hidden" name="delete_id" value="<?php echo $message['id']; ?>">
                             <button type="submit" class="btn btn-secondary" style="background:#fee2e2;color:#b91c1c;border:1px solid rgba(248,113,113,0.6);">

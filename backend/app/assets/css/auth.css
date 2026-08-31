@@ -61,32 +61,6 @@
     margin-bottom: 1.5rem;
 }
 
-.turnstile-group {
-    text-align: center;
-    width: 100%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
-
-.turnstile-group .cf-turnstile {
-    display: inline-block;
-    max-width: 100%;
-    transform-origin: center center;
-}
-
-/* 小屏幕下缩放 Turnstile 验证码 */
-@media (max-width: 340px) {
-    .turnstile-group .cf-turnstile {
-        transform: scale(0.9);
-    }
-}
-
-/* 确保 Turnstile iframe 不超出容器 */
-.turnstile-group .cf-turnstile iframe {
-    max-width: 100% !important;
-}
-
 .form-group label {
     display: block;
     margin-bottom: 0.5rem;

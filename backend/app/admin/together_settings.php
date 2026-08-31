@@ -72,7 +72,7 @@ include __DIR__ . '/header.php';
 ?>
 
 <section class="admin-page-title">
-    <h1>一起看</h1>
+    <h1>一起看设置</h1>
     <p>统一管理同步、在线状态和进入播放行为；网页端与桌面端读取同一套配置。</p>
 </section>
 
@@ -85,9 +85,14 @@ include __DIR__ . '/header.php';
         <div class="admin-card">
             <div class="admin-card-header">
                 <div>
-                    <div class="admin-card-title">同步节奏</div>
-                    <div class="admin-card-subtitle">双方平等写入状态，只有达到阈值才校正。</div>
+                    <div class="admin-card-title">
+                        <i class="ti ti-users" aria-hidden="true"></i>同步节奏
+                        <button type="button" class="admin-help-toggle" title="查看说明" aria-label="查看说明" aria-expanded="false"><i class="ti ti-info-circle"></i></button>
+                    </div>
                 </div>
+            </div>
+            <div class="admin-card-help">
+                <div class="admin-card-subtitle">双方平等写入状态，只有达到阈值才校正。</div>
             </div>
             <label class="admin-field">
                 状态轮询间隔（毫秒）
@@ -104,9 +109,14 @@ include __DIR__ . '/header.php';
         <div class="admin-card">
             <div class="admin-card-header">
                 <div>
-                    <div class="admin-card-title">在线与进入体验</div>
-                    <div class="admin-card-subtitle">控制在线显示、心跳和换集后的播放行为。</div>
+                    <div class="admin-card-title">
+                        <i class="ti ti-player-play" aria-hidden="true"></i>在线与进入体验
+                        <button type="button" class="admin-help-toggle" title="查看说明" aria-label="查看说明" aria-expanded="false"><i class="ti ti-info-circle"></i></button>
+                    </div>
                 </div>
+            </div>
+            <div class="admin-card-help">
+                <div class="admin-card-subtitle">控制在线显示、心跳和换集后的播放行为。</div>
             </div>
             <label class="admin-field">
                 在线判定时间（秒）
@@ -126,9 +136,12 @@ include __DIR__ . '/header.php';
         </div>
     </section>
 
-    <div class="admin-page-actions">
-        <button class="btn btn-primary" type="submit">保存一起看设置</button>
-        <a class="btn btn-secondary" href="/admin/player_art.php">打开播放器设置</a>
+    <div class="settings-savebar">
+        <button type="submit" class="btn btn-primary">
+            <i class="fas fa-save"></i>
+            <span>保存设置</span>
+        </button>
+        <p class="settings-savebar-note">保存后立即生效；网页端与桌面端读取同一套配置，播放器行为另见<a href="/admin/player_art.php" style="color:var(--v3-pink-deep);">播放器设置</a>。</p>
     </div>
 </form>
 

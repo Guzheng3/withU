@@ -1140,6 +1140,15 @@
                 : '--';
             const descText = String(data.desc || '天气');
             this._textEl.textContent = `${descText} ${tempText}`;
+
+            // 对接后台「天气定位」：设置了固定位置（名称与经纬度齐全）时，
+            // 面板位置直接显示后台保存的名称，避免展示 IP 兜底的城市名
+            const cfg = window.WITHU_CONFIG || {};
+            const fixedLocName = typeof cfg.weatherLocName === 'string' ? cfg.weatherLocName.trim() : '';
+            if (fixedLocName !== '' && cfg.weatherLocLat && cfg.weatherLocLng) {
+                data.city = fixedLocName;
+            }
+
             this._renderPanel(data);
         },
 

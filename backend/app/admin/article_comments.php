@@ -104,7 +104,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['delete_id'])) {
             exit;
         }
 
-        // 简单实现：物理删除评论记录
+        // 物理删除评论记录；其下的回复提升为顶层评论，避免产生不再渲染、无法管理的孤儿回复
+        $db->update(
+            'comments',
+            ['parent_id' => null],
+            'parent_id = :pid',
+            ['pid' => $deleteId]
+        );
         $db->delete('comments', 'id = :id', ['id' => $deleteId]);
         header('Location: article_comments.php?article_id=' . $articleId . '&success=' . urlencode('评论已删除'));
         exit;

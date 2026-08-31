@@ -1,23 +1,17 @@
 <?php
 /**
  * 留言列表接口
- * 从 map-all.json 读取留言数据，支持分页和回复查询
+ * 从数据库 messages 表读取留言（库不可用时回读 map-all.json 冻结快照），支持分页和回复查询
  */
 header('Content-Type: application/json; charset=utf-8');
 
-$mapFile = __DIR__ . '/map-all.json';
-if (!file_exists($mapFile)) {
-    echo json_encode(['code' => 200, 'data' => ['items' => [], 'pagination' => ['has_more' => false]]]);
-    exit;
-}
+require_once __DIR__ . '/message-common.php';
 
-$data = json_decode(file_get_contents($mapFile), true);
-if (!$data) {
-    echo json_encode(['code' => 200, 'data' => ['items' => [], 'pagination' => ['has_more' => false]]]);
-    exit;
+$all = withu_message_fetch_all();
+if ($all === null) {
+    // 数据库不可用：回读迁移前的 JSON 快照，保持站点可用
+    $all = withu_message_json_fallback();
 }
-
-$all = $data['messages'] ?? [];
 
 $action = $_GET['action'] ?? 'list';
 
@@ -25,20 +19,12 @@ $action = $_GET['action'] ?? 'list';
 if ($action === 'replies') {
     $parentId = $_GET['parent_id'] ?? '';
     $parent = null;
+    $replies = [];
     foreach ($all as $x) {
         if ((string)$x['id'] === (string)$parentId) {
             $parent = $x;
-            break;
         }
-    }
-    $replies = [];
-    foreach ($all as $x) {
         if ((string)($x['parentId'] ?? '') === (string)$parentId) {
-            $replyCount = 0;
-            foreach ($all as $y) {
-                if ((string)($y['parentId'] ?? '') === (string)$x['id']) $replyCount++;
-            }
-            $x['replyCount'] = $replyCount;
             $replies[] = $x;
         }
     }
@@ -57,17 +43,11 @@ foreach ($all as $x) {
     }
 }
 // 按 id 降序
-usort($tops, function($a, $b) { return (int)$b['id'] - (int)$a['id']; });
+usort($tops, function ($a, $b) {
+    return (int)$b['id'] - (int)$a['id'];
+});
 
 $items = array_slice($tops, $offset, $limit);
-foreach ($items as &$item) {
-    $replyCount = 0;
-    foreach ($all as $y) {
-        if ((string)($y['parentId'] ?? '') === (string)$item['id']) $replyCount++;
-    }
-    $item['replyCount'] = $replyCount;
-}
-unset($item);
 
 echo json_encode([
     'code' => 200,
@@ -75,4 +55,4 @@ echo json_encode([
         'items' => $items,
         'pagination' => ['has_more' => ($offset + $limit) < count($tops)]
     ]
-]);
+], JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);

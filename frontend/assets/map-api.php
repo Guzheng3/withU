@@ -1,12 +1,14 @@
 <?php
 /**
  * 地图 API 接口
- * 相册数据从数据库读取，其他数据从 map-all.json 读取
+ * 相册、留言数据从数据库读取，其他数据从 map-all.json 读取
  * 支持 module=album_photos 查询相册照片
  */
 header('Content-Type: application/json; charset=utf-8');
 
-// 加载基础数据（lovers, milestones, events, messages, moments）
+require_once __DIR__ . '/../services/message-common.php';
+
+// 加载基础数据（lovers, milestones, events, moments）
 $mapFile = __DIR__ . '/../services/map-all.json';
 $mapData = [];
 if (file_exists($mapFile)) {
@@ -80,6 +82,12 @@ try {
     $albums = $mapData['albums'] ?? [];
 }
 
-// 合并数据：相册用数据库的，其他用 JSON 的
-$result = array_merge($mapData, ['albums' => $albums]);
+// 留言：统一从数据库读取；库不可用时回读 map-all.json 冻结快照
+$messages = withu_message_fetch_all();
+if ($messages === null) {
+    $messages = withu_message_json_fallback();
+}
+
+// 合并数据：相册、留言用数据库的，其他用 JSON 的
+$result = array_merge($mapData, ['albums' => $albums], ['messages' => $messages]);
 echo json_encode($result, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);

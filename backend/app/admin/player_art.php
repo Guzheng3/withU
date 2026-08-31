@@ -128,7 +128,7 @@ $autoNext = withu_art_setting($settings, 'player_auto_next_enabled', '1') === '1
 $logoPreviewUrl = $logoImage !== '' ? upload_url($logoImage) : '/assets/images/withu-logo.png';
 $logoBgStyle = withu_player_logo_bg_style($logoBgPreset, $logoBgColor);
 ?>
-<section class="admin-page-title player-settings-title">
+<section class="admin-page-title">
     <h1>播放器设置</h1>
     <p>管理播放器品牌、播放行为与加载提示。</p>
 </section>
@@ -142,10 +142,15 @@ $logoBgStyle = withu_player_logo_bg_style($logoBgPreset, $logoBgColor);
     <section class="admin-card player-settings-card player-brand-card">
         <div class="admin-card-header">
             <div>
-                <div class="admin-card-title">界面展示</div>
-                <div class="admin-card-subtitle">标题、台标与右键菜单。</div>
+                <div class="admin-card-title">
+                    <i class="ti ti-palette" aria-hidden="true"></i>界面展示
+                    <button type="button" class="admin-help-toggle" title="查看说明" aria-label="查看说明" aria-expanded="false"><i class="ti ti-info-circle"></i></button>
+                </div>
             </div>
-                    </div>
+        </div>
+        <div class="admin-card-help">
+            <div class="admin-card-subtitle">标题、台标与右键菜单。</div>
+        </div>
 
         <div class="player-settings-grid player-brand-fields">
             <label>播放器名称
@@ -194,7 +199,10 @@ $logoBgStyle = withu_player_logo_bg_style($logoBgPreset, $logoBgColor);
                 </select>
             </label>
             <label>自定义背景色
-                <input type="color" name="MIZHI[logo_bg_color]" value="<?php echo e($logoBgColor); ?>" data-logo-color>
+                <span class="player-color-field">
+                    <input type="color" name="MIZHI[logo_bg_color]" value="<?php echo e($logoBgColor); ?>" data-logo-color>
+                    <input class="player-color-text" value="<?php echo e($logoBgColor); ?>" aria-label="自定义背景色值" readonly>
+                </span>
             </label>
         </div>
 
@@ -208,10 +216,15 @@ $logoBgStyle = withu_player_logo_bg_style($logoBgPreset, $logoBgColor);
     <section class="admin-card player-settings-card player-behavior-card">
         <div class="admin-card-header">
             <div>
-                <div class="admin-card-title">播放控制</div>
-                <div class="admin-card-subtitle">倍速、自动播放与异常提示。</div>
+                <div class="admin-card-title">
+                    <i class="ti ti-adjustments-horizontal" aria-hidden="true"></i>播放控制
+                    <button type="button" class="admin-help-toggle" title="查看说明" aria-label="查看说明" aria-expanded="false"><i class="ti ti-info-circle"></i></button>
+                </div>
             </div>
-                    </div>
+        </div>
+        <div class="admin-card-help">
+            <div class="admin-card-subtitle">倍速、自动播放与异常提示。</div>
+        </div>
 
         <div class="player-settings-grid">
             <label>默认倍速
@@ -225,18 +238,18 @@ $logoBgStyle = withu_player_logo_bg_style($logoBgPreset, $logoBgColor);
                 <input type="number" min="0" max="60" name="MIZHI[waittime]" value="<?php echo (int)withu_art_setting($settings, 'art_player_waittime'); ?>">
                 <small>0 秒不等待。</small>
             </label>
-            <label>加载背景
+            <label class="player-field-wide">加载背景
                 <input type="text" inputmode="url" autocomplete="url" name="MIZHI[load_bg]" value="<?php echo e(withu_art_setting($settings, 'art_player_load_bg')); ?>">
                 <small>支持本地或在线图片。</small>
             </label>
-            <label class="player-toggle-field">
-                <span>
-                    <strong>自动下一集</strong>
-                    <small>当前集结束后自动切换到下一集。</small>
-                </span>
-                <input type="checkbox" name="MIZHI[auto_next]" value="1" <?php echo $autoNext ? 'checked' : ''; ?>>
-                <span class="player-toggle-track"><span></span></span>
-            </label>
+            <div class="player-field-wide player-switch-row">
+                <label class="switch">
+                    <input type="checkbox" name="MIZHI[auto_next]" value="1" <?php echo $autoNext ? 'checked' : ''; ?>>
+                    <span class="switch-track"><span class="switch-thumb"></span></span>
+                    <span class="switch-label">自动下一集</span>
+                </label>
+                <p class="player-switch-note">当前集结束后自动切换到下一集。</p>
+            </div>
             <label>失败提示文字
                 <input name="MIZHI[errzdytext]" value="<?php echo e(withu_art_setting($settings, 'art_player_errzdytext')); ?>">
             </label>
@@ -246,12 +259,12 @@ $logoBgStyle = withu_player_logo_bg_style($logoBgPreset, $logoBgColor);
         </div>
     </section>
 
-    <div class="player-settings-actions">
-        <div>
-            <button class="btn btn-primary" type="submit"><i class="fas fa-check"></i>保存设置</button>
-            <button class="btn btn-secondary" type="submit" name="action" value="reset" onclick="return confirm('确定恢复播放器默认设置吗？');"><i class="fas fa-rotate-left"></i>恢复默认</button>
+    <div class="settings-savebar">
+        <div class="player-savebar-actions">
+            <button class="btn btn-primary" type="submit"><i class="fas fa-save"></i><span>保存设置</span></button>
+            <button class="btn btn-secondary" type="submit" name="action" value="reset" onclick="return confirm('确定恢复播放器默认设置吗？');"><i class="fas fa-rotate-left"></i><span>恢复默认</span></button>
         </div>
-        <span>保存后立即生效。</span>
+        <p class="settings-savebar-note">保存后立即生效。</p>
     </div>
 </form>
 <script>
@@ -267,10 +280,12 @@ $logoBgStyle = withu_player_logo_bg_style($logoBgPreset, $logoBgColor);
     const reset = document.querySelector('input[name="reset_player_logo"]');
     const defaultLogo = preview.dataset.defaultLogo;
     const defaultBackground = preview.dataset.defaultBackground;
+    const hexText = color?.closest('.player-color-field')?.querySelector('.player-color-text');
 
     const updateBackground = () => {
         const option = preset?.options[preset.selectedIndex];
         stage.style.background = preset?.value === 'custom' ? (color.value || '#f5b6c8') : (option?.dataset.style || defaultBackground);
+        if (hexText) hexText.value = color.value;
     };
 
     preset?.addEventListener('change', updateBackground);

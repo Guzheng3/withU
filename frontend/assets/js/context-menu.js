@@ -683,9 +683,6 @@
                     }
                 ]
             },
-                    
-                ]
-            },
             (function() {
                 var goBack = {
                     id: 'go-back',

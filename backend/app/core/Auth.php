@@ -23,6 +23,17 @@ class Auth
         if (function_exists('migrate_schema_if_needed')) {
             migrate_schema_if_needed();
         }
+
+        // 历史缺陷：恢复信任设备时曾把设备行 id 误存为 user_id。
+        // 作废无版本标记的旧会话，让其经信任设备 Cookie 重新恢复正确身份。
+        if ($this->isLoggedIn() && ($_SESSION['auth_version'] ?? 0) < 2) {
+            $_SESSION = [];
+            if (session_status() === PHP_SESSION_ACTIVE) {
+                session_destroy();
+            }
+            session_start();
+        }
+
         $this->restoreTrustedDevice();
     }
 
@@ -40,7 +51,7 @@ class Auth
 
         try {
             $row = $this->db->fetch(
-                "SELECT d.*, u.username, u.nickname, u.role, u.avatar
+                "SELECT u.id AS user_id, u.username, u.nickname, u.role, u.avatar, d.id AS device_id
                  FROM trusted_devices d
                  JOIN users u ON u.id = d.user_id
                  WHERE d.device_token_hash = :token
@@ -54,11 +65,17 @@ class Auth
                 return;
             }
 
-            $this->setSessionUser($row);
+            $this->setSessionUser([
+                'id'       => (int)$row['user_id'],
+                'username' => $row['username'],
+                'nickname' => $row['nickname'],
+                'role'     => $row['role'],
+                'avatar'   => $row['avatar'] ?? null,
+            ]);
             $this->db->update('trusted_devices', [
                 'last_seen_at' => date('Y-m-d H:i:s'),
                 'last_ip'      => function_exists('getClientIp') ? getClientIp() : ($_SERVER['REMOTE_ADDR'] ?? null),
-            ], 'id = :id', ['id' => (int)$row['id']]);
+            ], 'id = :id', ['id' => (int)$row['device_id']]);
         } catch (Throwable $e) {
             // 旧库尚未迁移或设备记录异常时，回退到普通登录。
         }
@@ -66,6 +83,7 @@ class Auth
 
     private function setSessionUser(array $user): void
     {
+        $_SESSION['auth_version'] = 2;
         $_SESSION['user_id']   = (int)$user['id'];
         $_SESSION['username']  = $user['username'];
         $_SESSION['nickname']  = $user['nickname'];
@@ -207,9 +225,7 @@ class Auth
             }
 
             $this->setSessionUser($user);
-            try {
-                $this->db->update('users', ['last_login_at' => date('Y-m-d H:i:s')], 'id = :id', ['id' => (int)$user['id']]);
-            } catch (Throwable $e) { /* 老库字段缺失时忽略 */ }
+            $this->touchLastLogin((int)$user['id']);
             $this->rememberTrustedDevice($user);
             return true;
         }
@@ -218,15 +234,24 @@ class Auth
         return false;
     }
 
+    /** 刷新最近活跃时间（前台在线徽标以此判定：10 分钟内视为在线）。 */
+    public function touchLastLogin(int $userId): void
+    {
+        try {
+            $this->db->update('users', ['last_login_at' => date('Y-m-d H:i:s')], 'id = :id', ['id' => $userId]);
+        } catch (Throwable $e) { /* 老库字段缺失时忽略 */ }
+    }
+
     /**
      * 用户注册
      */
-    public function register(string $username, string $password, string $nickname, string $role = 'user1', ?string $gender = null): array
+    public function register(string $username, string $password, string $nickname, string $role = 'user1', ?string $gender = null, ?string $qq = null): array
     {
         // 基础输入校验：长度与字符集限制
         $username = trim($username);
         $nickname = trim($nickname);
         $role     = trim($role);
+        $qq       = $qq === null ? null : trim($qq);
 
         if ($username === '' || $password === '' || $nickname === '') {
             return ['success' => false, 'message' => '请填写所有必填项'];
@@ -262,6 +287,15 @@ class Auth
             $gender = $role === 'user2' ? 'female' : 'male';
         }
 
+        // QQ 号：5~11 位数字且首位不为 0；填写后直接启用 QQ 头像
+        if ($qq !== null && $qq !== '') {
+            if (!preg_match('/^[1-9][0-9]{4,10}$/', $qq)) {
+                return ['success' => false, 'message' => 'QQ 号格式不正确（应为 5~11 位数字）'];
+            }
+        } else {
+            $qq = null;
+        }
+
         // 限制最多只能有两位活跃用户（情侣两人）
         $countRow = $this->db->fetch(
             "SELECT COUNT(*) AS c FROM users WHERE status = 'active'"
@@ -278,7 +312,7 @@ class Auth
         );
 
         if ($existing) {
-            return ['success' => false, 'message' => '用户名已存在'];
+            return ['success' => false, 'message' => $qq !== null ? '该 QQ 号已注册' : '用户名已存在'];
         }
 
         // 检查角色是否已被使用（user1 / user2 只能各有一人）
@@ -303,6 +337,12 @@ class Auth
             'status'     => 'active',
             'created_at' => date('Y-m-d H:i:s')
         ];
+
+        if ($qq !== null) {
+            // 注册即绑定 QQ 号，头像默认走官方 QQ 头像接口（与个人资料页 avatar_source=qq 的规则一致）
+            $data['qq']     = $qq;
+            $data['avatar'] = 'https://q1.qlogo.cn/g?b=qq&nk=' . urlencode($qq) . '&s=640';
+        }
 
         $userId = $this->db->insert('users', $data);
 
@@ -493,7 +533,7 @@ class Auth
             // 检查并自动创建 avatar_source 字段（记录头像来源：上传/QQ）
             $row = $this->db->fetch("SHOW COLUMNS FROM `users` LIKE 'avatar_source'");
             if (!$row) {
-                $this->db->query("ALTER TABLE `users` ADD COLUMN `avatar_source` varchar(20) DEFAULT 'upload' COMMENT '头像来源'");
+                $this->db->query("ALTER TABLE `users` ADD COLUMN `avatar_source` varchar(20) DEFAULT 'qq' COMMENT '头像来源'");
             }
         } catch (Exception $e) {
             // 兼容环境中无权限 ALTER TABLE 时，不中断主流程，仅放弃自动修复

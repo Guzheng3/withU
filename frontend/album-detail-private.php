@@ -3367,6 +3367,7 @@ if (typeof window.initPrivatePage === 'function') window.initPrivatePage();
 <script src="/assets/js/clipboard.js?wm=4c668768&v=1.0.74"></script>
 <script src="/assets/js/tooltip.js?wm=4c668768&v=1.0.74"></script>
 <script src="/Style/js/view-image.min.js?wm=4c668768&v=1.0.74"></script>
+<script src="/assets/js/webp-default.js?v=20260830"></script>
 <script src="/Style/LoveListStyle/carousel.umd.js?wm=4c668768&v=1.0.74"></script>
 <script src="/Style/LoveListStyle/carousel.thumbs.umd.js?wm=4c668768&v=1.0.74"></script>
 <script src="/Style/LoveListStyle/fancybox.umd.js?wm=4c668768&v=1.0.74"></script>

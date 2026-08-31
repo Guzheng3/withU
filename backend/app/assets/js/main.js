@@ -637,8 +637,15 @@ function initImageErrorFallback() {
  * 然后在 canvas 上做从模糊到清晰的线性过渡。
  */
 function initHeaderBannerLazyLoad() {
-    const banner = document.querySelector('.header-background[data-bg]');
+    const banner = document.querySelector('.header-background[data-bg], .header-background[data-bgs]');
     if (!banner) return;
+
+    // 多图轮播：data-bgs 存 JSON 数组，交给轮播初始化处理
+    const multiRaw = banner.getAttribute('data-bgs');
+    if (multiRaw) {
+        initHeaderBannerCarousel(banner, multiRaw);
+        return;
+    }
 
     const url = banner.getAttribute('data-bg');
     if (!url) return;
@@ -808,6 +815,198 @@ function initHeaderBannerLazyLoad() {
     // 页面脚本初始化后就立即开始通过 fetch 后台加载大图，
     // 不依赖 window.load，也不会阻塞加载动画的结束。
     startFetch();
+}
+
+/**
+ * 首页大图多图轮播（canvas 版）：
+ * 后台配置多张图片后，按顺序自动轮播；首图沿用“模糊→清晰”过渡，
+ * 之后每张停留数秒，通过 canvas 交叉淡入淡出切换到下一张。
+ */
+function initHeaderBannerCarousel(banner, raw) {
+    let urls = [];
+    try {
+        const parsed = JSON.parse(raw);
+        if (Array.isArray(parsed)) {
+            urls = parsed.filter(function (item) {
+                return typeof item === 'string' && item !== '';
+            });
+        }
+    } catch (e) {
+        return;
+    }
+
+    if (!urls.length) return;
+    if (urls.length < 2) {
+        // 只有一张时退回单图加载逻辑，保持原有首屏体验
+        banner.removeAttribute('data-bgs');
+        banner.setAttribute('data-bg', urls[0]);
+        initHeaderBannerLazyLoad();
+        return;
+    }
+
+    // 创建 canvas，用来承载最终画面（与单图方案同一套样式与过渡）
+    let canvas = banner.querySelector('.header-image-canvas');
+    if (!canvas) {
+        canvas = document.createElement('canvas');
+        canvas.className = 'header-image-canvas';
+        const overlay = banner.querySelector('.header-overlay');
+        if (overlay && overlay.parentNode === banner) {
+            banner.insertBefore(canvas, overlay);
+        } else {
+            banner.insertBefore(canvas, banner.firstChild);
+        }
+    }
+
+    const ctx = canvas.getContext('2d');
+    if (!ctx) return;
+
+    const SLIDE_INTERVAL = 6000;   // 每张停留时间（ms）
+    const FADE_DURATION = 1200;    // 交叉淡入淡出时长（ms）
+    const reducedMotion = window.matchMedia
+        && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    let currentIndex = 0;
+    let currentImg = null;
+    let fading = false;
+    let slideTimer = null;
+
+    function loadImage(url) {
+        return new Promise(function (resolve, reject) {
+            const img = new Image();
+            img.decoding = 'async';
+            img.onload = function () {
+                if (img.naturalWidth && img.naturalHeight) resolve(img);
+                else reject(new Error('empty image'));
+            };
+            img.onerror = function () { reject(new Error('load failed')); };
+            img.src = url;
+        });
+    }
+
+    // 预加载缓存：失败结果缓存为 null，轮到该图时自动跳过
+    const preloadCache = {};
+    function preloadAt(index) {
+        const key = urls[index % urls.length];
+        if (!key) return Promise.resolve(null);
+        if (!(key in preloadCache)) {
+            preloadCache[key] = loadImage(key).catch(function () { return null; });
+        }
+        return preloadCache[key];
+    }
+
+    function drawCoverImage(img) {
+        if (!img || !img.naturalWidth || !img.naturalHeight) return;
+
+        const dpr = window.devicePixelRatio || 1;
+        const rect = banner.getBoundingClientRect();
+        const targetWidth = Math.max(1, Math.round(rect.width * dpr));
+        const targetHeight = Math.max(1, Math.round(rect.height * dpr));
+
+        if (canvas.width !== targetWidth || canvas.height !== targetHeight) {
+            canvas.width = targetWidth;
+            canvas.height = targetHeight;
+        }
+        canvas.style.width = rect.width + 'px';
+        canvas.style.height = rect.height + 'px';
+
+        const imgRatio = img.naturalWidth / img.naturalHeight;
+        const targetRatio = targetWidth / targetHeight;
+
+        let drawWidth, drawHeight;
+        if (imgRatio > targetRatio) {
+            drawHeight = targetHeight;
+            drawWidth = drawHeight * imgRatio;
+        } else {
+            drawWidth = targetWidth;
+            drawHeight = drawWidth / imgRatio;
+        }
+
+        const dx = (targetWidth - drawWidth) / 2;
+        const dy = (targetHeight - drawHeight) / 2;
+
+        ctx.clearRect(0, 0, targetWidth, targetHeight);
+        ctx.drawImage(img, dx, dy, drawWidth, drawHeight);
+    }
+
+    function drawCrossfade(fromImg, toImg, progress) {
+        drawCoverImage(fromImg);
+        ctx.globalAlpha = progress;
+        drawCoverImage(toImg);
+        ctx.globalAlpha = 1;
+    }
+
+    function scheduleNext() {
+        if (slideTimer) clearTimeout(slideTimer);
+        slideTimer = setTimeout(function () {
+            if (document.hidden) {
+                // 页面不可见时顺延一个周期，避免后台空转
+                scheduleNext();
+                return;
+            }
+            const nextIndex = (currentIndex + 1) % urls.length;
+            preloadAt(nextIndex);
+            showSlide(nextIndex);
+        }, SLIDE_INTERVAL);
+    }
+
+    function showSlide(index) {
+        if (fading) {
+            scheduleNext();
+            return;
+        }
+        preloadAt(index).then(function (nextImg) {
+            if (!nextImg || nextImg === currentImg) {
+                // 下一张不可用时跳过，等待下个周期
+                currentIndex = index;
+                scheduleNext();
+                return;
+            }
+            if (reducedMotion || !currentImg) {
+                drawCoverImage(nextImg);
+                currentImg = nextImg;
+                currentIndex = index;
+                scheduleNext();
+                return;
+            }
+            fading = true;
+            const startTime = performance.now();
+            function frame(now) {
+                const progress = Math.min(1, (now - startTime) / FADE_DURATION);
+                drawCrossfade(currentImg, nextImg, progress);
+                if (progress < 1) {
+                    requestAnimationFrame(frame);
+                    return;
+                }
+                currentImg = nextImg;
+                currentIndex = index;
+                fading = false;
+                scheduleNext();
+            }
+            requestAnimationFrame(frame);
+        });
+    }
+
+    document.addEventListener('visibilitychange', function () {
+        if (!document.hidden && currentImg) {
+            // 重新可见时重置计时，立刻进入正常轮播节奏
+            scheduleNext();
+        }
+    });
+
+    window.addEventListener('resize', function () {
+        if (!currentImg) return;
+        drawCoverImage(currentImg);
+    });
+
+    // 首图加载完成后绘制并做模糊→清晰过渡，同时预取下一张
+    preloadAt(0).then(function (firstImg) {
+        if (!firstImg) return;
+        currentImg = firstImg;
+        drawCoverImage(currentImg);
+        canvas.classList.add('header-image-canvas-loaded');
+        preloadAt(1);
+        scheduleNext();
+    });
 }
 
 /**

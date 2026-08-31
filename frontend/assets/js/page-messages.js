@@ -49,14 +49,14 @@
         return name;
     }
 
-    var _defaultAvatar = '/_qqavatar?qq=10000&s=100';
+    var _defaultAvatar = '/_qqavatar.php?qq=10000&s=100';
 
     function getAvatarUrl(qq) {
         if (qq === 'anon') {
             var list = WithUConfig.anonAvatars || [];
             return list.length ? list[Math.floor(Math.random() * list.length)] : _defaultAvatar;
         }
-        return '/_qqavatar?qq=' + qq + '&s=100';
+        return '/_qqavatar.php?qq=' + qq + '&s=100';
     }
 
     // 滚动锁定（复用 head.php 中定义的全局 withuScrollLock/withuScrollUnlock）
