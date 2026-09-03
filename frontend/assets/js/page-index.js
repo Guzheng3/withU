@@ -23,7 +23,8 @@
                 days: document.getElementById('withu-day-counter-days'),
                 hours: document.getElementById('withu-day-counter-hours'),
                 minutes: document.getElementById('withu-day-counter-minutes'),
-                seconds: document.getElementById('withu-day-counter-seconds')
+                seconds: document.getElementById('withu-day-counter-seconds'),
+                startDate: document.getElementById('withu-day-start-date-display')
             };
 
             if (!this._els.days) return;
@@ -32,8 +33,23 @@
             const startTime = config.startTime;
             if (startTime) {
                 this._startDate = new Date(startTime);
+                this._syncStartDateLabel();
                 this._tick();
                 TimerManager.setInterval('indexCountdown', () => this._tick(), 1000);
+            }
+        },
+
+        /**
+         * 让「Together Since」起始日文案与倒计时使用同一后端时间源，
+         * 避免后端修改 love_date 后卡片日期与倒计时不一致
+         */
+        _syncStartDateLabel() {
+            if (!this._els.startDate || !this._startDate) return;
+            const pad = (n) => String(n).padStart(2, '0');
+            const d = this._startDate;
+            const text = `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())} ${pad(d.getHours())}:${pad(d.getMinutes())}`;
+            if (this._els.startDate.innerText !== text) {
+                this._els.startDate.innerText = text;
             }
         },
 
@@ -74,16 +90,45 @@
         _updateValue(el, newValue) {
             if (!el) return;
             const newStr = newValue.toString();
-            if (el.innerText !== newStr) {
-                el.innerText = newStr;
-                // 用 rAF 双帧技巧重置动画，避免 void el.offsetWidth 强制回流
-                el.classList.remove('withu-day-anim-active');
-                requestAnimationFrame(() => {
-                    requestAnimationFrame(() => {
-                        el.classList.add('withu-day-anim-active');
-                    });
-                });
+            if (el.textContent === newStr) return;
+
+            // 用户偏好减少动态：直接静默更新，不做滚动动画
+            if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+                this._setText(el, newStr);
+                return;
             }
+
+            // 首次包裹滚动容器（overflow: hidden 裁剪从下方滚入的数字）
+            let wrap = el.parentElement;
+            if (!wrap || !wrap.classList.contains('withu-day-timer-roll')) {
+                wrap = document.createElement('span');
+                wrap.className = 'withu-day-timer-roll';
+                el.parentNode.insertBefore(wrap, el);
+                wrap.appendChild(el);
+            }
+
+            // 旧数字向上滚出（绝对定位叠加，不占布局流）
+            const exitEl = el.cloneNode(false);
+            exitEl.removeAttribute('id');
+            exitEl.setAttribute('aria-hidden', 'true');
+            exitEl.textContent = el.textContent;
+            exitEl.classList.add('withu-day-roll-exit');
+            wrap.appendChild(exitEl);
+
+            // 新数字从下方滚入
+            el.textContent = newStr;
+            el.classList.remove('withu-day-roll-in');
+            requestAnimationFrame(() => {
+                requestAnimationFrame(() => {
+                    el.classList.add('withu-day-roll-in');
+                });
+            });
+
+            // 动画结束后清理离场元素（不依赖 animationend）
+            window.setTimeout(() => {
+                if (exitEl.parentNode) exitEl.parentNode.removeChild(exitEl);
+                el.classList.remove('withu-day-roll-in');
+            }, 420);
         }
     };
 

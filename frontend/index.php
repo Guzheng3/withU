@@ -67,15 +67,15 @@ try {
 
 <!-- Open Graph (Facebook/微信/QQ) -->
 <meta property="og:type" content="website">
-<meta property="og:site_name" content="withU">
-<meta property="og:title" content="withU">
+<meta property="og:site_name" content="<?php echo htmlspecialchars($withuSiteTitle, ENT_QUOTES, 'UTF-8'); ?>">
+<meta property="og:title" content="<?php echo htmlspecialchars($withuSiteTitle, ENT_QUOTES, 'UTF-8'); ?>">
 <meta property="og:description" content="withU 是一个适合记录恋爱日常与纪念时刻的情侣小站，支持相册、时间轴、点滴文章、留言互动和邀请页面，让每一段关系都能拥有自己的专属回忆空间。">
 <meta property="og:url" content="/index.php">
 <meta property="og:image" content="withU">
 
 <!-- Twitter Card -->
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="withU">
+<meta name="twitter:title" content="<?php echo htmlspecialchars($withuSiteTitle, ENT_QUOTES, 'UTF-8'); ?>">
 <meta name="twitter:description" content="withU 是一个适合记录恋爱日常与纪念时刻的情侣小站，支持相册、时间轴、点滴文章、留言互动和邀请页面，让每一段关系都能拥有自己的专属回忆空间。">
 <meta name="twitter:image" content="withU">
 
@@ -3085,7 +3085,7 @@ try {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>withU Demo</title>
+    <title><?php echo htmlspecialchars($withuSiteTitle, ENT_QUOTES, 'UTF-8'); ?></title>
 
 </head>
 
@@ -3122,7 +3122,7 @@ try {
                             <div class="withu-day-date-text-group">
                                 <span class="withu-day-date-label-small">Together Since</span>
                                 <span class="withu-day-date-value-clean"
-                                    id="withu-day-start-date-display">2023-07-19 00:00</span>
+                                    id="withu-day-start-date-display"><?php echo htmlspecialchars($withuStartDateDisplay, ENT_QUOTES, 'UTF-8'); ?></span>
                             </div>
                         </div>
                     </div>

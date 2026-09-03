@@ -257,9 +257,9 @@ class Auth
             return ['success' => false, 'message' => '请填写所有必填项'];
         }
 
-        // 用户名：限制为 3~32 位的字母、数字、下划线
-        if (!preg_match('/^[a-zA-Z0-9_]{3,32}$/', $username)) {
-            return ['success' => false, 'message' => '用户名格式不合法（仅允许字母、数字和下划线，长度 3~32 位）'];
+        // 用户名：限制为 3~32 位的字母、数字（用于登录）
+        if (!preg_match('/^[a-zA-Z0-9]{3,32}$/', $username)) {
+            return ['success' => false, 'message' => '用户名格式不合法（仅允许字母和数字，长度 3~32 位）'];
         }
 
         // 昵称：控制在 1~32 个字符以内（UTF-8 长度）
@@ -312,7 +312,7 @@ class Auth
         );
 
         if ($existing) {
-            return ['success' => false, 'message' => $qq !== null ? '该 QQ 号已注册' : '用户名已存在'];
+            return ['success' => false, 'message' => '用户名已存在'];
         }
 
         // 检查角色是否已被使用（user1 / user2 只能各有一人）

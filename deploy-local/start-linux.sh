@@ -54,13 +54,12 @@ MYSQL="mysql --protocol=tcp -h 127.0.0.1 -P $MYSQL_PORT -u root"
 if ! $MYSQL -e "USE couple_website" >/dev/null 2>&1; then
   log "初始化 couple_website 库（导入 database/schema.sql）..."
   $MYSQL -e "CREATE DATABASE IF NOT EXISTS couple_website CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;"
-  $MYSQL couple_website < "$ROOT/database/schema.sql" || { log "ERROR: schema.sql 导入失败"; exit 1; }
+  $MYSQL couple_website < "$ROOT/backend/app/database/schema.sql" || { log "ERROR: schema.sql 导入失败"; exit 1; }
   log "couple_website 初始化完成"
 fi
 if ! $MYSQL -e "USE withu_media" >/dev/null 2>&1; then
   log "初始化 withu_media 库..."
   $MYSQL -e "CREATE DATABASE IF NOT EXISTS withu_media CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci; CREATE USER IF NOT EXISTS 'withu'@'127.0.0.1' IDENTIFIED BY 'withu_dev'; GRANT ALL ON withu_media.* TO 'withu'@'127.0.0.1'; CREATE USER IF NOT EXISTS 'withu'@'localhost' IDENTIFIED BY 'withu_dev'; GRANT ALL ON withu_media.* TO 'withu'@'localhost'; FLUSH PRIVILEGES;"
-  php "$ROOT/scripts/migrate_media_db.php" 2>/dev/null || true
   log "withu_media 初始化完成"
 fi
 if [ ! -f "$ROOT/config/config.php" ]; then

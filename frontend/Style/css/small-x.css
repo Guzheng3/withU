@@ -539,10 +539,25 @@ div#homePage[data-Fullscreen] .bg-wrap.central.limg {
   transform: none !important;
 }
 
-/* 3. 隐藏情侣头像、分隔线、更多按钮 */
+/* 3. 隐藏情侣头像、分隔线；移动端更多按钮用于收纳次要入口 */
 .withu-couple-avatars-right,
-.withu-header-divider,
+.withu-header-divider {
+  display: none !important;
+}
+
+/* 3.1 移动端展示「更多」按钮 */
 .withu-header-more-btn {
+  display: flex !important;
+}
+
+/* 3.2 移动端隐藏内联的观影/历史、管理、登录入口，改由「更多」面板承载，避免与左侧 logo 重叠 */
+.withu-header-actions a.withu-header-map[data-entry] {
+  display: none !important;
+}
+
+/* 3.3 移动端隐藏天气、足迹，全部功能由「更多」面板承载 */
+#withuHeaderActions .withu-header-weather,
+#withuHeaderActions #withuMapOpenBtn {
   display: none !important;
 }
 
@@ -559,8 +574,9 @@ div#homePage[data-Fullscreen] .bg-wrap.central.limg {
   pointer-events: none !important;
 }
 
-/* 5. 移动端天气地图始终显示 */
+/* 5. 移动端操作区右对齐，与 logo 保持安全间距（天气/足迹/观影/管理/登录均已收纳入「更多」面板） */
 .withu-header-actions {
+  right: 16px !important;
   opacity: 1 !important;
   pointer-events: auto !important;
   transform: translateY(-50%) !important;

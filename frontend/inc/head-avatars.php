@@ -57,7 +57,7 @@ $withuStateIcons = ['online' => 'wifi', 'away' => 'clock', 'offline' => 'wifi-of
                         </div>
                     </div>
                 </div>
-                <span class="shadow-blur"><?php echo htmlspecialchars($boyName ?? '他', ENT_QUOTES, 'UTF-8'); ?></span>
+                <span class="shadow-blur"><?php echo htmlspecialchars($boyName ?? 'Ki.', ENT_QUOTES, 'UTF-8'); ?></span>
             </div>
             <div class="love-icon">
                 <div class="love-info-wrapper">
@@ -97,7 +97,7 @@ $withuStateIcons = ['online' => 'wifi', 'away' => 'clock', 'offline' => 'wifi-of
                         </div>
                     </div>
                 </div>
-                <span class="shadow-blur"><?php echo htmlspecialchars($girlName ?? '她', ENT_QUOTES, 'UTF-8'); ?></span>
+                <span class="shadow-blur"><?php echo htmlspecialchars($girlName ?? 'Really', ENT_QUOTES, 'UTF-8'); ?></span>
             </div>
         </div>
     </div>

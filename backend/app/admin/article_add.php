@@ -451,7 +451,7 @@ include __DIR__ . '/header.php';
         </div>
 
         <div class="form-group" style="margin-bottom:0.75rem;">
-            <label style="display:block;font-size:0.85rem;margin-bottom:0.25rem;">内容 *（富文本 / Markdown 双模式 · 实时预览 · 无缝互转）</label>
+            <label style="display:block;font-size:0.85rem;margin-bottom:0.25rem;">内容 *（自定义标签书写 · 点击快捷按钮插入 · 实时预览）</label>
 
             <?php
             // 计算当前情侣中的男主 / 女主，用于标记按钮和统计
@@ -475,73 +475,86 @@ include __DIR__ . '/header.php';
             $initialContent = $_POST['content'] ?? '';
             ?>
 
-            <div class="md-toolbar" id="mdToolbar">
-                <div class="md-toolbar-left">
-                    <span class="md-toolbar-hint">富文本与 Markdown 可随时互转，内容不丢失</span>
+            <!-- 自定义标签快捷插入工具栏 -->
+            <div class="withu-tag-toolbar" id="withuTagToolbar">
+                <div class="withu-tag-group">
+                    <span class="withu-tag-group-title">标题</span>
+                    <button type="button" class="withu-tag-btn" data-tag="h1">H1</button>
+                    <button type="button" class="withu-tag-btn" data-tag="h2">H2</button>
+                    <button type="button" class="withu-tag-btn" data-tag="h3">H3</button>
+                    <button type="button" class="withu-tag-btn" data-tag="h4">H4</button>
+                    <button type="button" class="withu-tag-btn" data-tag="h5">H5</button>
+                    <button type="button" class="withu-tag-btn" data-tag="h6">H6</button>
                 </div>
-                <div class="md-toolbar-right">
-                    <button type="button" id="editorModeVisual" class="editor-mode-btn active">
-                        <i class="fas fa-eye"></i> 富文本
-                    </button>
-                    <button type="button" id="editorModeMarkdown" class="editor-mode-btn">
-                        <i class="fab fa-markdown"></i> Markdown
-                    </button>
-                    <button type="button" id="editorModeCode" class="editor-mode-btn">
-                        <i class="fas fa-code"></i> HTML
-                    </button>
+                <div class="withu-tag-group">
+                    <span class="withu-tag-group-title">文字</span>
+                    <button type="button" class="withu-tag-btn" data-tag="p">段落</button>
+                    <button type="button" class="withu-tag-btn" data-tag="center">居中</button>
+                    <button type="button" class="withu-tag-btn" data-tag="b"><b>B</b></button>
+                    <button type="button" class="withu-tag-btn" data-tag="i"><i>I</i></button>
+                    <button type="button" class="withu-tag-btn" data-tag="s"><s>S</s></button>
+                    <button type="button" class="withu-tag-btn" data-tag="code">&lt;/&gt;</button>
+                    <button type="button" class="withu-tag-btn" data-tag="a">链接</button>
+                    <button type="button" class="withu-tag-btn" data-tag="hr">分割线</button>
+                </div>
+                <div class="withu-tag-group">
+                    <span class="withu-tag-group-title">引用</span>
+                    <button type="button" class="withu-tag-btn" data-tag="quote">引言</button>
+                    <button type="button" class="withu-tag-btn" data-tag="desc">导语</button>
+                    <button type="button" class="withu-tag-btn" data-tag="blockquote">引用块</button>
+                    <button type="button" class="withu-tag-btn" data-tag="colorcard">高亮卡</button>
+                </div>
+                <div class="withu-tag-group">
+                    <span class="withu-tag-group-title">媒体</span>
+                    <button type="button" class="withu-tag-btn" data-tag="img">图片</button>
+                    <button type="button" class="withu-tag-btn" data-tag="video">视频</button>
+                    <button type="button" class="withu-tag-btn" data-tag="iframe">嵌入</button>
+                </div>
+                <div class="withu-tag-group">
+                    <span class="withu-tag-group-title">音乐</span>
+                    <button type="button" class="withu-tag-btn" data-tag="music-netease">网易云</button>
+                    <button type="button" class="withu-tag-btn" data-tag="music-tencent">QQ音乐</button>
+                    <button type="button" class="withu-tag-btn" data-tag="music-custom">自定义</button>
+                </div>
+                <div class="withu-tag-group">
+                    <span class="withu-tag-group-title">代码</span>
+                    <button type="button" class="withu-tag-btn" data-tag="codeblock">代码块</button>
+                </div>
+                <div class="withu-tag-group">
+                    <span class="withu-tag-group-title">列表</span>
+                    <button type="button" class="withu-tag-btn" data-tag="ul">• 列表</button>
+                    <button type="button" class="withu-tag-btn" data-tag="ol">1. 列表</button>
+                    <button type="button" class="withu-tag-btn" data-tag="table">表格</button>
                 </div>
             </div>
 
-            <!-- 代码模式下的快捷插入按钮（如 H2/H3/H4 标题模板、引用块变体、代码块、下载按钮） -->
-            <div class="code-snippet-toolbar" id="codeSnippetToolbar" style="display:none;">
-                <button type="button" data-snippet="h2">H2 标题</button>
-                <button type="button" data-snippet="h3">H3 标题</button>
-                <button type="button" data-snippet="h4">H4 标题</button>
-                <button type="button" data-snippet="blockquote">普通引用</button>
-                <button type="button" data-snippet="blockquote-note">提示块</button>
-                <button type="button" data-snippet="blockquote-warning">警告块</button>
-                <button type="button" data-snippet="blockquote-success">成功块</button>
-                <button type="button" data-snippet="code">代码块</button>
-                <button type="button" data-snippet="download">下载按钮</button>
+            <!-- 男女主标记 + 上传 -->
+            <div class="withu-tag-toolbar" style="margin-top:0.5rem;">
+                <div class="withu-tag-group">
+                    <span class="withu-tag-group-title">作者标记</span>
+                    <button type="button" class="withu-tag-btn withu-tag-btn-author" id="btnMarkMale">标记为男主</button>
+                    <button type="button" class="withu-tag-btn withu-tag-btn-author" id="btnMarkFemale">标记为女主</button>
+                    <button type="button" class="withu-tag-btn withu-tag-btn-author" id="btnUnmarkAuthor">取消标记</button>
+                </div>
+                <div class="withu-tag-group">
+                    <span class="withu-tag-group-title">上传</span>
+                    <button type="button" class="withu-tag-btn withu-tag-btn-upload" id="btnUploadImage"><i class="fas fa-image"></i> 上传图片</button>
+                    <button type="button" class="withu-tag-btn withu-tag-btn-upload" id="btnUploadVideo"><i class="fas fa-video"></i> 上传视频</button>
+                    <input type="file" id="uploadImageInput" accept="image/*" style="display:none;">
+                    <input type="file" id="uploadVideoInput" accept="video/*" style="display:none;">
+                </div>
             </div>
 
-            <!-- Markdown 编辑器（左书写 / 右实时渲染预览，与富文本无缝互转） -->
-            <div id="markdownEditorWrapper" style="display:none;">
-                <div class="code-snippet-toolbar" id="mdQuickToolbar" style="display:none;">
-                    <button type="button" data-md="h2">H2</button>
-                    <button type="button" data-md="h3">H3</button>
-                    <button type="button" data-md="h4">H4</button>
-                    <button type="button" data-md="bold"><b>B</b></button>
-                    <button type="button" data-md="italic"><i>I</i></button>
-                    <button type="button" data-md="strike"><s>S</s></button>
-                    <button type="button" data-md="inlinecode">&lt;/&gt;</button>
-                    <button type="button" data-md="quote">引用</button>
-                    <button type="button" data-md="ul">• 列表</button>
-                    <button type="button" data-md="ol">1. 列表</button>
-                    <button type="button" data-md="codeblock">代码块</button>
-                    <button type="button" data-md="link">链接</button>
-                    <button type="button" data-md="image">图片</button>
-                    <button type="button" data-md="hr">分割线</button>
-                    <button type="button" data-md="note">提示块</button>
-                    <button type="button" data-md="warning">警告块</button>
-                    <button type="button" data-md="success">成功块</button>
-                    <button type="button" data-md="download">下载按钮</button>
-                </div>
-                <div class="md-split">
-                    <textarea
-                        id="articleMarkdownEditor"
-                        placeholder="在这里书写 Markdown，右侧实时预览渲染效果……"></textarea>
-                    <div class="md-preview-pane" id="markdownPreview"></div>
-                </div>
-                <p class="md-hint">左侧书写 Markdown，右侧实时渲染预览，预览区可直接编辑并自动同步回左侧；快捷按钮插入的提示文字选中后输入即覆盖。切换「富文本」会自动双向转换，发布时统一存储 HTML，前台展示不受影响。</p>
+            <!-- 源码编辑 + 实时预览 分栏 -->
+            <div class="withu-split">
+                <textarea
+                    id="articleSourceEditor"
+                    placeholder="在这里书写 HTML（用上方按钮快速插入标签）……"
+                    spellcheck="false"><?php echo e($initialContent); ?></textarea>
+                <div class="withu-preview-pane" id="articlePreview"></div>
             </div>
+            <p class="withu-editor-hint">左侧书写 HTML，右侧实时渲染预览；按钮插入的占位文字选中后直接输入即可覆盖。发布时统一按 HTML 存储，前台展示不受影响。</p>
 
-            <!-- 男女主标记快捷按钮（独立于 wangEditor 菜单） -->
-            <div class="author-mark-toolbar">
-                <button type="button" id="btnMarkMale">标记为男主</button>
-                <button type="button" id="btnMarkFemale">标记为女主</button>
-                <button type="button" id="btnUnmarkAuthor">取消标记</button>
-            </div>
             <!-- 实际提交用的隐藏 textarea，JS 在提交前同步编辑器的 HTML -->
             <textarea
                 name="content"
@@ -551,19 +564,8 @@ include __DIR__ . '/header.php';
             <!-- 本次创建过程中上传过的文件相对路径（JSON 数组，由前端 JS 填充） -->
             <input type="hidden" name="new_uploads" id="newUploadsField" value="">
 
-            <!-- 内容格式标记：正常总是 html（前端已转换）；前端 Markdown 渲染库缺失时为 markdown，由服务端 Parsedown 兜底 -->
+            <!-- 内容格式标记：恒为 html -->
             <input type="hidden" name="content_format" id="contentFormatField" value="html">
-
-            <!-- wangEditor 容器（可视化编辑器：上方为菜单，下方为正文） -->
-            <div id="articleEditorWrapper" style="width:100%;border-radius:0.75rem;border:1px solid rgba(148,163,184,0.7);overflow:visible;background:#ffffff;">
-                <div id="editorToolbar"></div>
-                <div id="articleEditor" style="min-height:260px;"><?php echo $initialContent; ?></div>
-            </div>
-            
-            <!-- 代码编辑器（保留原有代码模式，用于查看 / 微调 HTML） -->
-            <textarea
-                id="articleCodeEditor"
-                style="display:none;width:100%;min-height:260px;padding:0.65rem 0.8rem;border-radius:0.75rem;border:1px solid rgba(148,163,184,0.7);font-size:0.85rem;line-height:1.5;background:#1e293b;color:#e2e8f0;font-family:ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,'Liberation Mono','Courier New',monospace;resize:vertical;overflow:auto;"><?php echo e($initialContent); ?></textarea>
         </div>
 
         <div class="form-group" style="margin-bottom:0.75rem;">
@@ -625,13 +627,6 @@ include __DIR__ . '/header.php';
         </div>
     </form>
 
-    <!-- wangEditor 脚本（本地） -->
-    <script src="/admin-assets/js/wangeditor.min.js"></script>
-
-    <!-- Markdown 渲染（marked）与 HTML→Markdown 转换（turndown），均本地内置 -->
-    <script src="/admin-assets/js/marked.min.js"></script>
-    <script src="/admin-assets/js/turndown.js"></script>
-
     <script>
     // 若前台通用的 showToast 尚未定义，则在后台提供一个兼容版本，使用与前台一致的样式
     if (typeof window.showToast !== 'function') {
@@ -675,40 +670,32 @@ include __DIR__ . '/header.php';
     }
 
     window.CO_CURRENT_AUTHOR_ROLE = <?php echo json_encode($currentAuthorRoleKey, JSON_UNESCAPED_UNICODE); ?>;
-    const WANG_CSRF_TOKEN = <?php echo json_encode(csrf_token(), JSON_UNESCAPED_UNICODE); ?>;
+    const WITHU_CSRF_TOKEN = <?php echo json_encode(csrf_token(), JSON_UNESCAPED_UNICODE); ?>;
+
     (function () {
-        const editorWrapper = document.getElementById('articleEditorWrapper');
-        const toolbarContainer = document.getElementById('editorToolbar');
-        const editorContainer = document.getElementById('articleEditor');
-        const codeEditor = document.getElementById('articleCodeEditor');
+        const sourceEditor = document.getElementById('articleSourceEditor');
+        const preview = document.getElementById('articlePreview');
         const textarea = document.getElementById('articleContent');
         const uploadsField = document.getElementById('newUploadsField');
         const contentFormatField = document.getElementById('contentFormatField');
-        const visualBtn = document.getElementById('editorModeVisual');
-        const markdownBtn = document.getElementById('editorModeMarkdown');
-        const codeBtn = document.getElementById('editorModeCode');
-        const codeSnippetToolbar = document.getElementById('codeSnippetToolbar');
-        const markdownWrapper = document.getElementById('markdownEditorWrapper');
-        const mdEditor = document.getElementById('articleMarkdownEditor');
-        const markdownPreview = document.getElementById('markdownPreview');
-        const mdQuickToolbar = document.getElementById('mdQuickToolbar');
+        const tagToolbar = document.getElementById('withuTagToolbar');
         const btnMarkMale = document.getElementById('btnMarkMale');
         const btnMarkFemale = document.getElementById('btnMarkFemale');
         const btnUnmarkAuthor = document.getElementById('btnUnmarkAuthor');
-        
-        if (!editorWrapper || !toolbarContainer || !editorContainer || !codeEditor || !textarea) return;
+        const btnUploadImage = document.getElementById('btnUploadImage');
+        const btnUploadVideo = document.getElementById('btnUploadVideo');
+        const uploadImageInput = document.getElementById('uploadImageInput');
+        const uploadVideoInput = document.getElementById('uploadVideoInput');
 
-        // 防止重复初始化（某些情况下脚本可能被执行两次）
-        if (editorContainer.getAttribute('data-we-inited') === '1') {
-            return;
-        }
-        editorContainer.setAttribute('data-we-inited', '1');
+        if (!sourceEditor || !textarea) return;
+        // 防止重复初始化
+        if (sourceEditor.getAttribute('data-withu-inited') === '1') return;
+        sourceEditor.setAttribute('data-withu-inited', '1');
 
-        // 记录本次新建文章过程中成功上传过的文件相对路径（相对于 uploads/）
+        // 记录本次编辑过程中成功上传过的文件相对路径（相对于 uploads/）
         const newUploads = [];
         function normalizeUploadPath(url) {
             if (!url || typeof url !== 'string') return null;
-            // 去掉协议与域名部分
             var p = url.replace(/^https?:\/\/[^/]+/i, '');
             p = p.replace(/^\/+/, '');
             var idx = p.indexOf('uploads/');
@@ -720,770 +707,221 @@ include __DIR__ . '/header.php';
         function recordUploadPath(url) {
             var rel = normalizeUploadPath(url);
             if (!rel) return;
-            if (newUploads.indexOf(rel) === -1) {
-                newUploads.push(rel);
-            }
+            if (newUploads.indexOf(rel) === -1) newUploads.push(rel);
         }
 
-        // ------------------------
-        // 初始化 wangEditor
-        // ------------------------
-        const E = window.wangEditor;
-        // 使用 toolbar + text 双容器模式，避免多余的包裹结构
-        const weEditor = new E(toolbarContainer, editorContainer);
-
-        // 基础配置：同步内容到隐藏 textarea
-        weEditor.config.zIndex = 10;
-        weEditor.config.uploadImgServer = '/api/upload_image.php';
-        // 新建文章阶段尚未有 article_id，这里仅传 CSRF，实际文件仍暂存于 uploads/articles 根目录；
-        // 后续在文章编辑阶段上传的图片 / 视频会按文章 ID 自动分目录。
-        weEditor.config.uploadImgParams = {
-            _token: WANG_CSRF_TOKEN
+        // 自定义标签模板：insert 为整段模板，sel 为插入后自动选中的占位文字；wrap 为选中/占位包裹
+        const TAGS = {
+            h1: { insert: '<h1>标题</h1>', sel: '标题' },
+            h2: { insert: '<h2>小标题</h2>', sel: '小标题' },
+            h3: { insert: '<h3>小标题</h3>', sel: '小标题' },
+            h4: { insert: '<h4>小节标题</h4>', sel: '小节标题' },
+            h5: { insert: '<h5>小标题</h5>', sel: '小标题' },
+            h6: { insert: '<h6>脚注标题</h6>', sel: '脚注标题' },
+            p: { insert: '<p>段落文字</p>', sel: '段落文字' },
+            center: { insert: '<center>居中文字</center>', sel: '居中文字' },
+            hr: { insert: '<hr>' },
+            b: { wrap: ['<b>', '</b>'], ph: '加粗文字' },
+            i: { wrap: ['<i>', '</i>'], ph: '斜体文字' },
+            s: { wrap: ['<s>', '</s>'], ph: '删除文字' },
+            code: { wrap: ['<code>', '</code>'], ph: '行内代码' },
+            a: { insert: '<a href="https://" target="_blank">链接文字</a>', sel: '链接文字' },
+            quote: { insert: '<quote>引言</quote>', sel: '引言' },
+            desc: { insert: '<desc>导语或说明</desc>', sel: '导语或说明' },
+            blockquote: { insert: '<blockquote>引用内容</blockquote>', sel: '引用内容' },
+            colorcard: { insert: '<div class="color-card shadow-blur">高亮文字</div>', sel: '高亮文字' },
+            img: { insert: '<img alt="图片描述" src="图片地址">', sel: '图片地址' },
+            video: { insert: '<video id="withUPlayerVideo" class="withu-player-video" controls><source src="视频地址" type="video/mp4"></video>', sel: '视频地址' },
+            iframe: { insert: '<iframe src="https://" allowfullscreen="true"></iframe>' },
+            'music-netease': { insert: '<audio id="music" src data-id="歌曲ID" data-type="netease"></audio>', sel: '歌曲ID' },
+            'music-tencent': { insert: '<audio id="music" src data-id="歌曲ID" data-type="tencent"></audio>', sel: '歌曲ID' },
+            'music-custom': { insert: '<audio id="music" src="" data-type="custom" data-name="歌名" data-author="歌手" data-cover="封面地址" data-url="音频地址"></audio>', sel: '歌名' },
+            codeblock: { insert: '<pre><button id="btn">Copy</button><code contenteditable="false" class="language-html" id="copy"><xmp>在这里粘贴代码</xmp></code></pre>', sel: '在这里粘贴代码' },
+            ul: { insert: '<ul>\n<li>列表项</li>\n<li>列表项</li>\n</ul>', sel: '列表项' },
+            ol: { insert: '<ol>\n<li>列表项</li>\n<li>列表项</li>\n</ol>', sel: '列表项' },
+            table: { insert: '<table border="1">\n<thead><tr><th>表头1</th><th>表头2</th></tr></thead>\n<tbody><tr><td>内容</td><td>内容</td></tr></tbody>\n</table>', sel: '表头1' }
         };
-        weEditor.config.uploadVideoServer = '/api/upload_video.php';
-        weEditor.config.uploadVideoParams = {
-            _token: WANG_CSRF_TOKEN
-        };
-        // 图片上传：记录成功插入的路径，便于新建文章时清理未引用文件
-        weEditor.config.uploadImgHooks = {
-            customInsert: function (insertImgFn, result) {
-                try {
-                    if (!result) return;
-                    if (typeof result.errno !== 'undefined' && result.errno !== 0) {
-                        var errMsg = result.message || '图片上传失败，请稍后重试';
-                        window.showToast(errMsg, 'error');
-                        return;
-                    }
-                    var url = '';
-                    if (result.data) {
-                        if (Array.isArray(result.data) && result.data.length > 0) {
-                            url = result.data[0];
-                        } else if (typeof result.data === 'object' && result.data.url) {
-                            url = result.data.url;
-                        }
-                    }
-                    if (url) {
-                        recordUploadPath(url);
-                        insertImgFn(url);
-                    }
-                } catch (e) {}
-            },
-            fail: function (xhr, editor, res) {
-                try {
-                    var msg = (res && res.message) ? res.message : '';
-                    if (!msg && xhr && xhr.responseText) {
-                        try {
-                            var parsed = JSON.parse(xhr.responseText);
-                            if (parsed && parsed.message) msg = parsed.message;
-                        } catch (e) {}
-                    }
-                    if (!msg) {
-                        msg = '图片上传失败，请稍后重试';
-                    }
-                    window.showToast(msg, 'error');
-                } catch (e) {}
-            },
-            error: function (xhr, editor, res) {
-                try {
-                    var msg = (res && res.message) ? res.message : '';
-                    if (!msg && xhr && xhr.responseText) {
-                        try {
-                            var parsed = JSON.parse(xhr.responseText);
-                            if (parsed && parsed.message) msg = parsed.message;
-                        } catch (e) {}
-                    }
-                    if (!msg) {
-                        msg = '图片上传失败，请稍后重试';
-                    }
-                    window.showToast(msg, 'error');
-                } catch (e) {}
-            }
-        };
-        // 适配当前后端返回结构：{ errno:0, data:[url] }
-        weEditor.config.uploadVideoHooks = {
-            customInsert: function (insertVideoFn, result) {
-                try {
-                    if (!result) return;
-                    // 后端约定：errno != 0 表示失败，需要提示 message
-                    if (typeof result.errno !== 'undefined' && result.errno !== 0) {
-                        var errMsg = result.message || '视频上传失败，请稍后重试';
-                        window.showToast(errMsg, 'error');
-                        return;
-                    }
-                    var url = '';
-                    if (result.data) {
-                        if (Array.isArray(result.data) && result.data.length > 0) {
-                            url = result.data[0];
-                        } else if (typeof result.data === 'object' && result.data.url) {
-                            url = result.data.url;
-                        }
-                    }
-                    if (url) {
-                        recordUploadPath(url);
-                        insertVideoFn(url);
-                    }
-                } catch (e) {}
-            },
-            // 上传失败/出错时使用站内通知样式提示
-            fail: function (xhr, editor, res) {
-                try {
-                    var msg = (res && res.message) ? res.message : '';
-                    if (!msg && xhr && xhr.responseText) {
-                        try {
-                            var parsed = JSON.parse(xhr.responseText);
-                            if (parsed && parsed.message) {
-                                msg = parsed.message;
-                            }
-                        } catch (e) {}
-                    }
-                    if (!msg) {
-                        msg = '视频上传失败。可能是文件过大：可以在“系统设置 → 上传与其他 → 单文件最大上传大小（MB）”中调整，或开启“视频上传仅受服务器限制”开关；也可能是服务器上传大小限制导致，请压缩后重试或联系管理员。';
-                    }
-                    window.showToast(msg, 'error');
-                } catch (e) {}
-            },
-            error: function (xhr, editor, res) {
-                try {
-                    var msg = (res && res.message) ? res.message : '';
-                    if (!msg && xhr && xhr.responseText) {
-                        try {
-                            var parsed = JSON.parse(xhr.responseText);
-                            if (parsed && parsed.message) {
-                                msg = parsed.message;
-                            }
-                        } catch (e) {}
-                    }
-                    if (!msg) {
-                        msg = '视频上传失败。可能是文件过大：可以在“系统设置 → 上传与其他 → 单文件最大上传大小（MB）”中调整，或开启“视频上传仅受服务器限制”开关；也可能是服务器上传大小限制导致，请压缩后重试或联系管理员。';
-                    }
-                    window.showToast(msg, 'error');
-                } catch (e) {}
-            }
-        };
-        // 禁用「网络图片」入口，避免外链失败带来的困惑
-        weEditor.config.showLinkImg = false;
-        weEditor.config.onchange = function (html) {
-            textarea.value = html;
-        };
-        weEditor.create();
-        // 初始化内容（优先 textarea，再回退到容器初始 HTML）
-        weEditor.txt.html(textarea.value || editorContainer.innerHTML || '');
-        
-        // 兼容性处理：点击编辑区域任意空白处时，将光标移动到内容末尾
-        editorContainer.addEventListener('click', function () {
-            try {
-                var textElem = editorContainer.querySelector('.w-e-text');
-                if (!textElem) return;
-                var range = document.createRange();
-                range.selectNodeContents(textElem);
-                range.collapse(false); // 光标到末尾
-                var sel = window.getSelection();
-                sel.removeAllRanges();
-                sel.addRange(range);
-            } catch (e) {}
-        });
 
-        // ------------------------
-        // 三模式管理：visual（wangEditor 富文本）/ markdown（左书写右实时预览）/ code（HTML 源码）
-        // 切换时以当前模式的“权威内容”为准，统一经 HTML 中转，双向无缝转换
-        // ------------------------
-        let currentMode = 'visual'; // 'visual' | 'markdown' | 'code'
-        let turndownService = null;
-        let mdFallbackNotified = false;
-
-        function createTurndownService() {
-            var td = new TurndownService({
-                headingStyle: 'atx',
-                codeBlockStyle: 'fenced',
-                bulletListMarker: '-',
-                emDelimiter: '*',
-                strongDelimiter: '**'
-            });
-            // 注意：turndown 的字符串/数组 filter 只按标签名匹配，不支持选择器，
-            // 且内置规则先于 keep 匹配，因此作者标记用函数 keep、变体引用块用 addRule 覆盖内置规则
-            td.keep(function (node) {
-                if (node.nodeType !== 1) return false;
-                var tag = node.nodeName.toLowerCase();
-                if (['audio', 'video', 'source', 'iframe', 'center', 'desc', 'quote', 'embed', 'object'].indexOf(tag) > -1) {
-                    return true;
-                }
-                if (tag === 'span' && node.hasAttribute('data-author')) {
-                    return true;
-                }
-                return false;
-            });
-            // 带样式变体的引用块（提示/警告/成功块）：整体保留 HTML，避免丢类名
-            td.addRule('variantBlockquote', {
-                filter: function (node) {
-                    return node.nodeName === 'BLOCKQUOTE'
-                        && /(^|\s)(bq-note|bq-warning|bq-success)(\s|$)/.test(node.className || '');
-                },
-                replacement: function (content, node) {
-                    return '\n\n' + node.outerHTML + '\n\n';
-                }
-            });
-            // wangEditor 空内容时 txt.html() 会带出隐藏的占位结构，转换时直接丢弃
-            td.addRule('wangEditorChrome', {
-                filter: function (node) {
-                    return node.nodeType === 1 && node.classList && node.classList.contains('placeholder');
-                },
-                replacement: function () { return ''; }
-            });
-            td.addRule('strikethrough', {
-                filter: ['del', 's', 'strike'],
-                replacement: function (content) { return '~~' + content + '~~'; }
-            });
-            td.addRule('horizontalRule', {
-                filter: 'hr',
-                replacement: function () { return '\n\n---\n\n'; }
-            });
-            return td;
-        }
-
-        // Markdown → HTML（返回 null 表示渲染库不可用，调用方走兜底）
-        function mdToHtml(md) {
-            if (!window.marked || typeof window.marked.parse !== 'function') return null;
-            try {
-                return window.marked.parse(md || '', { gfm: true, breaks: true, async: false });
-            } catch (e) {
-                return '';
-            }
-        }
-
-        // HTML → Markdown（返回 null 表示转换库不可用，调用方走兜底）
-        function htmlToMd(html) {
-            if (!window.TurndownService) return null;
-            try {
-                if (!turndownService) turndownService = createTurndownService();
-                return turndownService.turndown(html || '');
-            } catch (e) {
-                return null;
-            }
-        }
-
-        function renderMarkdownPreview() {
-            if (!markdownPreview || !mdEditor) return;
-            var html = mdToHtml(mdEditor.value);
-            markdownPreview.innerHTML = (html === null) ? '' : html;
-        }
-
-        // 取某一模式当前内容并统一转为 HTML
-        function getModeHtml(mode) {
-            if (mode === 'visual') return weEditor.txt.html() || '';
-            if (mode === 'markdown' && mdEditor) {
-                var html = mdToHtml(mdEditor.value);
-                return (html === null) ? (mdEditor.value || '') : html;
-            }
-            return codeEditor.value || '';
-        }
-
-        function applyMode(mode, html) {
-            editorWrapper.style.display = (mode === 'visual') ? 'block' : 'none';
-            if (markdownWrapper) markdownWrapper.style.display = (mode === 'markdown') ? 'block' : 'none';
-            codeEditor.style.display = (mode === 'code') ? 'block' : 'none';
-            if (codeSnippetToolbar) codeSnippetToolbar.style.display = (mode === 'code') ? 'flex' : 'none';
-            if (mdQuickToolbar) mdQuickToolbar.style.display = (mode === 'markdown') ? 'flex' : 'none';
-
-            visualBtn.classList.toggle('active', mode === 'visual');
-            if (markdownBtn) markdownBtn.classList.toggle('active', mode === 'markdown');
-            codeBtn.classList.toggle('active', mode === 'code');
-
-            if (mode === 'visual') {
-                weEditor.txt.html(html || '');
-            } else if (mode === 'markdown' && mdEditor) {
-                var md = htmlToMd(html);
-                if (md === null) {
-                    // 转换库缺失：按原文保留（Markdown 兼容内嵌 HTML），仅提示一次
-                    md = html || '';
-                    if (!mdFallbackNotified) {
-                        window.showToast('HTML 转 Markdown 组件未加载，已按原文保留（Markdown 兼容内嵌 HTML）', 'info');
-                        mdFallbackNotified = true;
-                    }
-                }
-                mdEditor.value = md;
-                renderMarkdownPreview();
-            } else {
-                codeEditor.value = html || '';
-            }
-        }
-
-        function switchToMode(next) {
-            if (next === currentMode) return;
-            if (next === 'markdown' && !window.marked) {
-                window.showToast('Markdown 渲染组件未加载，请刷新页面重试', 'error');
-                return;
-            }
-            var html = getModeHtml(currentMode);
-            currentMode = next;
-            applyMode(next, html);
-        }
-
-        if (visualBtn) {
-            visualBtn.addEventListener('click', function () { switchToMode('visual'); });
-        }
-        if (markdownBtn) {
-            markdownBtn.addEventListener('click', function () { switchToMode('markdown'); });
-        }
-        if (codeBtn) {
-            codeBtn.addEventListener('click', function () { switchToMode('code'); });
-        }
-
-        // Markdown 实时预览（输入防抖）
-        if (mdEditor) {
-            var previewTimer = null;
-            mdEditor.addEventListener('input', function () {
-                if (previewTimer) clearTimeout(previewTimer);
-                previewTimer = setTimeout(renderMarkdownPreview, 120);
-            });
-        }
-
-        // 预览区可直接编辑：改动经 HTML→Markdown 转换后同步回左侧输入框（不回渲染预览，避免光标跳动）
-        if (markdownPreview && mdEditor) {
-            markdownPreview.contentEditable = (window.marked && window.TurndownService) ? 'true' : 'false';
-            var previewSyncTimer = null;
-            markdownPreview.addEventListener('input', function () {
-                if (previewSyncTimer) clearTimeout(previewSyncTimer);
-                previewSyncTimer = setTimeout(function () {
-                    var md = htmlToMd(markdownPreview.innerHTML);
-                    if (md !== null) {
-                        mdEditor.value = md;
-                    }
-                }, 250);
-            });
-        }
-
-        // ---- Markdown 光标 / 选区工具 ----
-        function mdWrap(open, close, placeholder) {
-            var start = mdEditor.selectionStart, end = mdEditor.selectionEnd;
-            var text = mdEditor.value;
-            var sel = text.substring(start, end) || (placeholder || '');
-            mdEditor.value = text.substring(0, start) + open + sel + close + text.substring(end);
-            mdEditor.selectionStart = start + open.length;
-            mdEditor.selectionEnd = start + open.length + sel.length;
-            mdEditor.focus();
-            renderMarkdownPreview();
-        }
-
-        function mdInsert(snippet, placeholder) {
-            var start = mdEditor.selectionStart, end = mdEditor.selectionEnd;
-            var text = mdEditor.value;
-            mdEditor.value = text.substring(0, start) + snippet + text.substring(end);
-            var pos = start + snippet.length;
-            // 带提示文字的片段：只选中提示部分，正式输入直接覆盖，前缀结构保留
-            if (placeholder) {
-                var idx = snippet.indexOf(placeholder);
+        function insertBlock(snippet, sel) {
+            const start = sourceEditor.selectionStart;
+            const end = sourceEditor.selectionEnd;
+            const val = sourceEditor.value;
+            sourceEditor.value = val.substring(0, start) + snippet + val.substring(end);
+            if (sel) {
+                const idx = snippet.indexOf(sel);
                 if (idx > -1) {
-                    mdEditor.selectionStart = start + idx;
-                    mdEditor.selectionEnd = start + idx + placeholder.length;
-                    mdEditor.focus();
-                    renderMarkdownPreview();
-                    return;
-                }
-            }
-            mdEditor.selectionStart = pos;
-            mdEditor.selectionEnd = pos;
-            mdEditor.focus();
-            renderMarkdownPreview();
-        }
-
-        function mdPrefixLines(prefix, placeholder) {
-            var start = mdEditor.selectionStart, end = mdEditor.selectionEnd;
-            var text = mdEditor.value;
-            var lineStart = text.lastIndexOf('\n', start - 1) + 1;
-            var seg = text.substring(lineStart, end);
-            var onlyPlaceholder = (seg.trim() === '');
-            var lines = onlyPlaceholder ? [placeholder || ''] : seg.split('\n');
-            var out = lines.map(function (l) { return (l.trim() === '') ? l : prefix + l; }).join('\n');
-            mdEditor.value = text.substring(0, lineStart) + out + text.substring(end);
-            mdEditor.selectionStart = lineStart;
-            mdEditor.selectionEnd = lineStart + out.length;
-            // 空行插入占位提示时，跳过前缀只选中提示文字，输入即覆盖（## 等前缀保留）
-            if (onlyPlaceholder && placeholder) {
-                mdEditor.selectionStart = lineStart + prefix.length;
-            }
-            mdEditor.focus();
-            renderMarkdownPreview();
-        }
-
-        // Markdown 快捷插入工具栏（标题 / 行内样式 / 列表 / 引用块变体 / 下载按钮）
-        if (mdQuickToolbar && mdEditor) {
-            mdQuickToolbar.addEventListener('click', function (e) {
-                var btn = e.target.closest('button[data-md]');
-                if (!btn) return;
-                var type = btn.getAttribute('data-md');
-                switch (type) {
-                    case 'h2': mdPrefixLines('## ', '在这里输入标题'); break;
-                    case 'h3': mdPrefixLines('### ', '在这里输入小标题'); break;
-                    case 'h4': mdPrefixLines('#### ', '在这里输入小节标题'); break;
-                    case 'bold': mdWrap('**', '**', '粗体文字'); break;
-                    case 'italic': mdWrap('*', '*', '斜体文字'); break;
-                    case 'strike': mdWrap('~~', '~~', '删除文字'); break;
-                    case 'inlinecode': mdWrap('`', '`', '代码'); break;
-                    case 'quote': mdPrefixLines('> ', '在这里输入引用内容'); break;
-                    case 'ul': mdPrefixLines('- ', '列表项'); break;
-                    case 'ol': mdPrefixLines('1. ', '列表项'); break;
-                    case 'codeblock': mdInsert('\n```\n// 在这里粘贴代码\n```\n', '// 在这里粘贴代码'); break;
-                    case 'link': mdWrap('[', '](https://)', '链接文字'); break;
-                    case 'image': mdInsert('![图片描述](图片地址)', '图片描述'); break;
-                    case 'hr': mdInsert('\n\n---\n\n'); break;
-                    case 'note': mdInsert('\n<blockquote class="bq-note">在这里输入提示内容</blockquote>\n', '在这里输入提示内容'); break;
-                    case 'warning': mdInsert('\n<blockquote class="bq-warning">在这里输入警告内容</blockquote>\n', '在这里输入警告内容'); break;
-                    case 'success': mdInsert('\n<blockquote class="bq-success">在这里输入成功提示</blockquote>\n', '在这里输入成功提示'); break;
-                    case 'download': mdInsert('\n<p><a class="btn-download" href="#" target="_blank" rel="noopener"><i class="fas fa-download"></i> 下载附件</a></p>\n', '下载附件'); break;
-                }
-            });
-        }
-
-        // Markdown 模式下的男女主标记：用内嵌 HTML 包裹选中文本（前台与可视化模式同样识别）
-        function mdWrapAuthor(role) {
-            if (mdEditor.selectionStart === mdEditor.selectionEnd) {
-                window.showToast('请先选中要标记的文字', 'info');
-                return;
-            }
-            mdWrap('<span data-author="' + role + '">', '</span>', '');
-        }
-
-        function mdUnmarkSelection() {
-            var start = mdEditor.selectionStart, end = mdEditor.selectionEnd;
-            if (start === end) {
-                window.showToast('请先选中要取消标记的文字', 'info');
-                return;
-            }
-            var text = mdEditor.value;
-            var seg = text.substring(start, end);
-            var cleaned = seg.replace(/<span data-author="(?:male|female)">([\s\S]*?)<\/span>/g, '$1');
-            mdEditor.value = text.substring(0, start) + cleaned + text.substring(end);
-            mdEditor.selectionStart = start;
-            mdEditor.selectionEnd = start + cleaned.length;
-            mdEditor.focus();
-            renderMarkdownPreview();
-        }
-
-        // 代码编辑器插入函数（仅代码模式）
-        function insertCodeSnippet(snippet) {
-            const start = codeEditor.selectionStart;
-            const end = codeEditor.selectionEnd;
-            const text = codeEditor.value;
-            codeEditor.value = text.substring(0, start) + snippet + text.substring(end);
-            const newPos = start + snippet.length;
-            codeEditor.selectionStart = newPos;
-            codeEditor.selectionEnd = newPos;
-            codeEditor.focus();
-        }
-
-        // 代码模式下：绑定插入 H2/H3/H4 标题模板、各种引用块、代码块和下载按钮
-        if (codeSnippetToolbar) {
-            codeSnippetToolbar.addEventListener('click', function (e) {
-                const btn = e.target.closest('button[data-snippet]');
-                if (!btn) return;
-                const type = btn.getAttribute('data-snippet');
-                let snippet = '';
-                if (type === 'h2') {
-                    snippet = '<h2 class="h-title">在这里输入标题</h2>\n';
-                } else if (type === 'h3') {
-                    snippet = '<h3 class="h-title">在这里输入小标题</h3>\n';
-                } else if (type === 'h4') {
-                    snippet = '<h4 class="h-title">在这里输入小节标题</h4>\n';
-                } else if (type === 'blockquote') {
-                    snippet = '<blockquote>在这里输入引用内容</blockquote>\n';
-                } else if (type === 'blockquote-note') {
-                    snippet = '<blockquote class="bq-note">在这里输入提示内容</blockquote>\n';
-                } else if (type === 'blockquote-warning') {
-                    snippet = '<blockquote class="bq-warning">在这里输入警告内容</blockquote>\n';
-                } else if (type === 'blockquote-success') {
-                    snippet = '<blockquote class="bq-success">在这里输入成功提示</blockquote>\n';
-                } else if (type === 'code') {
-                    snippet = '<pre><code>// 在这里粘贴代码\n</code></pre>\n';
-                } else if (type === 'download') {
-                    snippet = '<p><a class="btn-download" href="#" target="_blank" rel="noopener"><i class="fas fa-download"></i> 下载附件</a></p>\n';
-                }
-                if (!snippet) return;
-                if (currentMode !== 'code') {
-                    switchToMode('code');
-                }
-                insertCodeSnippet(snippet);
-            });
-        }
-
-        // 原有的编辑器功能（依然使用 data-author 标记，作用于 HTML 片段）
-        const editor = editorContainer;
-        let lastRange = null;
-
-        function saveSelection() {
-            const sel = window.getSelection();
-            if (!sel || sel.rangeCount === 0) return;
-            const range = sel.getRangeAt(0);
-            if (!editor.contains(range.commonAncestorContainer)) return;
-            if (range.collapsed) return;
-            // 记录最近一次在编辑器内的非空选区
-            lastRange = range.cloneRange();
-        }
-
-        editor.addEventListener('mouseup', saveSelection);
-        editor.addEventListener('keyup', saveSelection);
-
-        function getCurrentAuthor() {
-            const autoBox = document.querySelector('input[name="enable_auto_author"]');
-            const autoOn = autoBox && autoBox.checked;
-            if (!autoOn) return '';
-            const roleKey = window.CO_CURRENT_AUTHOR_ROLE || '';
-            if (roleKey === 'male' || roleKey === 'female') {
-                return roleKey;
-            }
-            return '';
-        }
-
-        function withAuthor(snippet) {
-            // 极简、稳定：若设置了当前作者，则直接用 span[data-author] 包裹整个片段
-            const author = getCurrentAuthor();
-            if (!author) return snippet;
-            return '<span data-author="' + author + '">' + snippet + '</span>';
-        }
-
-        function insertSnippet(snippet) {
-            editor.focus();
-            const finalSnippet = withAuthor(snippet);
-            const sel = window.getSelection();
-            if (!sel || sel.rangeCount === 0) {
-                editor.insertAdjacentHTML('beforeend', finalSnippet);
-                return;
-            }
-            const range = sel.getRangeAt(0);
-            // 若选区不在编辑器内，则将光标移动到编辑器末尾
-            if (!editor.contains(range.commonAncestorContainer)) {
-                const newRange = document.createRange();
-                newRange.selectNodeContents(editor);
-                newRange.collapse(false);
-                sel.removeAllRanges();
-                sel.addRange(newRange);
-            }
-            const useRange = sel.getRangeAt(0);
-            useRange.deleteContents();
-            const fragment = useRange.createContextualFragment(finalSnippet);
-            const lastNode = fragment.lastChild;
-            useRange.insertNode(fragment);
-            // 将光标移动到插入内容之后
-            if (lastNode) {
-                const newRange2 = document.createRange();
-                newRange2.setStartAfter(lastNode);
-                newRange2.collapse(true);
-                sel.removeAllRanges();
-                sel.addRange(newRange2);
-            }
-        }
-
-        function markSelectionAuthor(author) {
-            if (!author) return;
-            const sel = window.getSelection();
-            let range = null;
-
-            if (sel && sel.rangeCount > 0) {
-                const current = sel.getRangeAt(0);
-                if (editor.contains(current.commonAncestorContainer) && !current.collapsed) {
-                    range = current;
-                }
-            }
-
-            // 若当前选区不可用，则尝试使用最近一次记录的选区
-            if (!range && lastRange) {
-                range = lastRange.cloneRange();
-                if (sel) {
-                    sel.removeAllRanges();
-                    sel.addRange(range);
-                }
-            }
-
-            // 情况一：有有效选区，按原逻辑包裹选中文本
-            if (range && !range.collapsed && editor.contains(range.commonAncestorContainer)) {
-                // 提前清理选区内部已有的 data-author span，避免重叠 / 套娃
-                const contents = range.extractContents();
-                const walker = document.createTreeWalker(contents, NodeFilter.SHOW_ELEMENT, null);
-                const toUnwrap = [];
-                while (true) {
-                    const node = walker.nextNode();
-                    if (!node) break;
-                    if (node.nodeType === 1 && node.matches('span[data-author]')) {
-                        toUnwrap.push(node);
-                    }
-                }
-                toUnwrap.forEach(function (node) {
-                    const parent = node.parentNode;
-                    if (!parent) return;
-                    while (node.firstChild) {
-                        parent.insertBefore(node.firstChild, node);
-                    }
-                    parent.removeChild(node);
-                });
-
-                const wrapper = document.createElement('span');
-                wrapper.setAttribute('data-author', author);
-                wrapper.appendChild(contents);
-                range.insertNode(wrapper);
-
-                // 在标记块后面插入一个零宽字符，让光标落在一个“干净”的文本节点里
-                const placeholder = document.createTextNode('\u200b');
-                if (wrapper.parentNode) {
-                    wrapper.parentNode.insertBefore(placeholder, wrapper.nextSibling);
-                }
-
-                // 将光标移动到占位文本之后，避免后续输入继续落在 span 内
-                const newRange = document.createRange();
-                newRange.setStart(placeholder, 1);
-                newRange.collapse(true);
-                sel.removeAllRanges();
-                sel.addRange(newRange);
-
-                // 本次标记完成后清空 lastRange，避免错误复用旧选区
-                lastRange = null;
-                return;
-            }
-
-            // 情况二：没有有效选区（光标在空白处）——插入一个带作者标记的空段落
-            editor.focus();
-            const insertSel = window.getSelection();
-            let insertRange = null;
-
-            if (insertSel && insertSel.rangeCount > 0) {
-                const current = insertSel.getRangeAt(0);
-                if (editor.contains(current.commonAncestorContainer)) {
-                    insertRange = current;
-                }
-            }
-
-            if (!insertRange) {
-                insertRange = document.createRange();
-                insertRange.selectNodeContents(editor);
-                insertRange.collapse(false);
-            }
-
-            const span = document.createElement('span');
-            span.setAttribute('data-author', author);
-            const zw = document.createTextNode('\u200b');
-            span.appendChild(zw);
-
-            const p = document.createElement('p');
-            p.appendChild(span);
-
-            insertRange.insertNode(p);
-
-            const caretRange = document.createRange();
-            caretRange.setStart(zw, 1);
-            caretRange.collapse(true);
-            insertSel.removeAllRanges();
-            insertSel.addRange(caretRange);
-
-            lastRange = null;
-        }
-
-        function clearSelectionAuthor() {
-            const sel = window.getSelection();
-            if (!sel || sel.rangeCount === 0) {
-                if (lastRange) {
-                    sel.addRange(lastRange.cloneRange());
+                    sourceEditor.selectionStart = start + idx;
+                    sourceEditor.selectionEnd = start + idx + sel.length;
                 } else {
-                    return;
-                }
-            }
-            const range = sel.getRangeAt(0);
-            if (!editor.contains(range.commonAncestorContainer)) return;
-
-            const isCollapsed = range.collapsed;
-            let targetNodes = [];
-
-            if (isCollapsed) {
-                let node = range.startContainer;
-                if (node.nodeType === 3) {
-                    node = node.parentNode;
-                }
-                if (node && node.nodeType === 1 && node.matches('span[data-author]')) {
-                    targetNodes.push(node);
+                    sourceEditor.selectionStart = sourceEditor.selectionEnd = start + snippet.length;
                 }
             } else {
-                const contents = range.extractContents();
-                const walker = document.createTreeWalker(contents, NodeFilter.SHOW_ELEMENT, null);
-                while (true) {
-                    const node = walker.nextNode();
-                    if (!node) break;
-                    if (node.nodeType === 1 && node.matches('span[data-author]')) {
-                        targetNodes.push(node);
-                    }
-                }
-                range.insertNode(contents);
+                sourceEditor.selectionStart = sourceEditor.selectionEnd = start + snippet.length;
             }
-
-            targetNodes.forEach(function (node) {
-                const parent = node.parentNode;
-                if (!parent) return;
-                while (node.firstChild) {
-                    parent.insertBefore(node.firstChild, node);
-                }
-                parent.removeChild(node);
-            });
+            sourceEditor.focus();
+            sync();
+            renderPreview();
         }
 
-        // 男女主标记按钮绑定（可视化模式作用于选区；Markdown 模式用内嵌 HTML 包裹）
-        if (btnMarkMale) {
-            btnMarkMale.addEventListener('click', function () {
-                if (currentMode === 'markdown' && mdEditor) {
-                    mdWrapAuthor('male');
-                    return;
-                }
-                markSelectionAuthor('male');
-            });
+        function wrapSelection(open, close, ph) {
+            const start = sourceEditor.selectionStart;
+            const end = sourceEditor.selectionEnd;
+            const val = sourceEditor.value;
+            const sel = val.substring(start, end);
+            const text = sel !== '' ? sel : (ph || '');
+            const out = open + text + close;
+            sourceEditor.value = val.substring(0, start) + out + val.substring(end);
+            sourceEditor.selectionStart = start + open.length;
+            sourceEditor.selectionEnd = start + open.length + text.length;
+            sourceEditor.focus();
+            sync();
+            renderPreview();
         }
-        if (btnMarkFemale) {
-            btnMarkFemale.addEventListener('click', function () {
-                if (currentMode === 'markdown' && mdEditor) {
-                    mdWrapAuthor('female');
-                    return;
-                }
-                markSelectionAuthor('female');
-            });
+
+        function applyTag(key) {
+            const def = TAGS[key];
+            if (!def) return;
+            if (def.wrap) {
+                wrapSelection(def.wrap[0], def.wrap[1], def.ph);
+            } else if (def.insert) {
+                insertBlock(def.insert, def.sel);
+            }
         }
-        if (btnUnmarkAuthor) {
-            btnUnmarkAuthor.addEventListener('click', function () {
-                if (currentMode === 'markdown' && mdEditor) {
-                    mdUnmarkSelection();
-                    return;
-                }
-                clearSelectionAuthor();
+
+        function sync() {
+            textarea.value = sourceEditor.value;
+            if (contentFormatField) contentFormatField.value = 'html';
+        }
+
+        function renderPreview() {
+            if (preview) preview.innerHTML = sourceEditor.value || '';
+        }
+
+        let previewTimer = null;
+        sourceEditor.addEventListener('input', function () {
+            sync();
+            clearTimeout(previewTimer);
+            previewTimer = setTimeout(renderPreview, 120);
+        });
+        sync();
+        renderPreview();
+
+        // 工具栏按钮：插入对应标签模板
+        if (tagToolbar) {
+            tagToolbar.addEventListener('click', function (e) {
+                const btn = e.target.closest('[data-tag]');
+                if (!btn) return;
+                e.preventDefault();
+                applyTag(btn.getAttribute('data-tag'));
             });
         }
 
-        // 在表单提交前，将编辑器内容同步到隐藏 textarea
-        const form = document.querySelector('form.admin-card');
+        // 作者标记：将选中文字包裹为 <span data-author="male|female">
+        function markAuthor(role) {
+            const start = sourceEditor.selectionStart;
+            const end = sourceEditor.selectionEnd;
+            const val = sourceEditor.value;
+            const sel = val.substring(start, end);
+            if (sel === '') {
+                window.showToast('请先选中要标记的文字', 'error');
+                return;
+            }
+            const out = '<span data-author="' + role + '">' + sel + '</span>';
+            sourceEditor.value = val.substring(0, start) + out + val.substring(end);
+            sourceEditor.selectionStart = start;
+            sourceEditor.selectionEnd = start + out.length;
+            sourceEditor.focus();
+            sync();
+            renderPreview();
+        }
+
+        function unmarkAuthor() {
+            const start = sourceEditor.selectionStart;
+            const end = sourceEditor.selectionEnd;
+            const val = sourceEditor.value;
+            const sel = val.substring(start, end);
+            if (sel === '') {
+                window.showToast('请先选中要取消标记的文字', 'error');
+                return;
+            }
+            const cleaned = sel.replace(/<span[^>]*data-author=["'](?:male|female)["'][^>]*>([\s\S]*?)<\/span>/gi, '$1');
+            sourceEditor.value = val.substring(0, start) + cleaned + val.substring(end);
+            sourceEditor.focus();
+            sync();
+            renderPreview();
+        }
+
+        if (btnMarkMale) btnMarkMale.addEventListener('click', function () { markAuthor('male'); });
+        if (btnMarkFemale) btnMarkFemale.addEventListener('click', function () { markAuthor('female'); });
+        if (btnUnmarkAuthor) btnUnmarkAuthor.addEventListener('click', unmarkAuthor);
+
+        // 上传图片 / 视频：成功后插入对应标签并记录文件路径
+        function uploadFile(input, kind) {
+            if (!input || !input.files || !input.files.length) return;
+            const file = input.files[0];
+            if (!file) return;
+            const fd = new FormData();
+            fd.append('file', file);
+            fd.append('_token', WITHU_CSRF_TOKEN);
+            const endpoint = kind === 'image' ? '/api/upload_image.php' : '/api/upload_video.php';
+            const btn = kind === 'image' ? btnUploadImage : btnUploadVideo;
+            if (btn) btn.disabled = true;
+            window.showToast('正在上传' + (kind === 'image' ? '图片' : '视频') + '……', 'info');
+            fetch(endpoint, {
+                method: 'POST',
+                body: fd,
+                headers: { 'X-Requested-With': 'XMLHttpRequest' }
+            })
+                .then(function (resp) { return resp.json(); })
+                .then(function (result) {
+                    if (btn) btn.disabled = false;
+                    if (result && typeof result.errno !== 'undefined' && result.errno !== 0) {
+                        window.showToast(result.message || '上传失败，请稍后重试', 'error');
+                        return;
+                    }
+                    let url = '';
+                    if (result && result.data) {
+                        if (Array.isArray(result.data) && result.data.length > 0) {
+                            url = result.data[0];
+                        } else if (typeof result.data === 'object' && result.data.url) {
+                            url = result.data.url;
+                        }
+                    }
+                    if (!url) {
+                        window.showToast('上传失败，请稍后重试', 'error');
+                        return;
+                    }
+                    recordUploadPath(url);
+                    if (kind === 'image') {
+                        insertBlock('<img alt="" src="' + url + '">', '');
+                    } else {
+                        insertBlock('<video id="withUPlayerVideo" class="withu-player-video" controls src="' + url + '"></video>', '');
+                    }
+                    window.showToast('上传成功', 'success');
+                })
+                .catch(function () {
+                    if (btn) btn.disabled = false;
+                    window.showToast('上传失败，请稍后重试', 'error');
+                })
+                .finally(function () {
+                    input.value = '';
+                });
+        }
+
+        if (btnUploadImage && uploadImageInput) btnUploadImage.addEventListener('click', function () { uploadImageInput.click(); });
+        if (btnUploadVideo && uploadVideoInput) btnUploadVideo.addEventListener('click', function () { uploadVideoInput.click(); });
+        if (uploadImageInput) uploadImageInput.addEventListener('change', function () { uploadFile(uploadImageInput, 'image'); });
+        if (uploadVideoInput) uploadVideoInput.addEventListener('change', function () { uploadFile(uploadVideoInput, 'video'); });
+
+        // 提交前把源码同步进隐藏 textarea，并回填上传文件列表
+        const form = textarea.closest('form');
         if (form) {
             form.addEventListener('submit', function () {
-                // 根据当前模式同步内容到隐藏的textarea
-                var value = '';
-                var format = 'html';
-                if (currentMode === 'visual') {
-                    // 可视化模式：直接使用 wangEditor 提供的 HTML，避免带上内部容器结构
-                    value = weEditor.txt.html();
-                } else if (currentMode === 'markdown' && mdEditor) {
-                    // Markdown 模式：提交前转换为与富文本一致的 HTML 存储，前台展示不受影响
-                    var html = mdToHtml(mdEditor.value);
-                    if (html === null) {
-                        // 前端渲染库缺失：上传 Markdown 原文，由服务端 Parsedown 兜底转换
-                        value = mdEditor.value;
-                        format = 'markdown';
-                    } else {
-                        value = html;
-                    }
-                } else {
-                    value = codeEditor.value;
-                }
-                textarea.value = value || '';
-                if (contentFormatField) {
-                    contentFormatField.value = format;
-                }
-
-                // 在提交前，将本次上传过的文件相对路径写入隐藏字段
+                textarea.value = sourceEditor.value;
+                if (contentFormatField) contentFormatField.value = 'html';
                 if (uploadsField) {
                     if (newUploads.length) {
-                        // 去重后写入 JSON，便于服务端解析
-                        var dedup = Array.from(new Set(newUploads));
-                        uploadsField.value = JSON.stringify(dedup);
+                        uploadsField.value = JSON.stringify(Array.from(new Set(newUploads)));
                     } else {
                         uploadsField.value = '';
                     }
@@ -1496,29 +934,79 @@ include __DIR__ . '/header.php';
 <?php include __DIR__ . '/footer.php'; ?>
 
 <style>
-/* 模式切换工具栏布局（可视化 / Markdown / HTML） */
-.md-toolbar {
+/* 自定义标签快捷插入工具栏 */
+.withu-tag-toolbar {
     display: flex;
-    justify-content: space-between;
-    align-items: center;
-    gap: 0.5rem;
     flex-wrap: wrap;
+    gap: 0.4rem 0.9rem;
+    padding: 0.5rem 0.7rem;
+    border-radius: 0.75rem;
+    border: 1px solid rgba(148, 163, 184, 0.35);
+    background: #f8fafc;
     margin-bottom: 0.5rem;
 }
 
-.md-toolbar-hint {
-    font-size: 0.75rem;
-    color: #94a3b8;
+.withu-tag-group {
+    display: inline-flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.3rem;
 }
 
-/* Markdown 分栏：左书写 / 右实时预览 */
-.md-split {
+.withu-tag-group-title {
+    font-size: 0.72rem;
+    color: #94a3b8;
+    margin-right: 0.15rem;
+    white-space: nowrap;
+}
+
+.withu-tag-btn {
+    padding: 0.22rem 0.5rem;
+    font-size: 0.78rem;
+    line-height: 1.3;
+    border-radius: 0.45rem;
+    border: 1px solid rgba(148, 163, 184, 0.55);
+    background: #ffffff;
+    color: #334155;
+    cursor: pointer;
+    transition: all .15s ease;
+    white-space: nowrap;
+}
+
+.withu-tag-btn:hover {
+    border-color: #667eea;
+    color: #667eea;
+    background: #eef2ff;
+}
+
+.withu-tag-btn-author {
+    border-color: rgba(16, 185, 129, 0.5);
+    color: #047857;
+}
+
+.withu-tag-btn-author:hover {
+    border-color: #10b981;
+    background: #ecfdf5;
+}
+
+.withu-tag-btn-upload {
+    border-color: rgba(102, 126, 234, 0.5);
+    color: #4338ca;
+}
+
+.withu-tag-btn-upload:hover {
+    border-color: #667eea;
+    background: #eef2ff;
+}
+
+/* 源码编辑 + 实时预览 分栏 */
+.withu-split {
     display: flex;
     align-items: stretch;
     gap: 0.75rem;
 }
 
-#articleMarkdownEditor {
+#articleSourceEditor {
     flex: 1 1 0;
     min-width: 0;
     min-height: 360px;
@@ -1532,9 +1020,11 @@ include __DIR__ . '/header.php';
     font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New', monospace;
     resize: vertical;
     overflow: auto;
+    white-space: pre-wrap;
+    word-break: break-word;
 }
 
-.md-preview-pane {
+.withu-preview-pane {
     flex: 1 1 0;
     min-width: 0;
     min-height: 360px;
@@ -1543,366 +1033,124 @@ include __DIR__ . '/header.php';
     padding: 0.9rem 1rem;
     border-radius: 0.75rem;
     border: 1px dashed rgba(148, 163, 184, 0.7);
-    background: #f8fafc;
-    cursor: text;
-}
-
-/* 预览区可直接编辑：聚焦时边框转为实线示意编辑态 */
-.md-preview-pane:focus {
-    outline: none;
-    border-style: solid;
-    border-color: rgba(102, 126, 234, 0.55);
     background: #ffffff;
-}
-
-.md-hint {
-    margin: 0.4rem 0 0;
-    font-size: 0.75rem;
-    color: #94a3b8;
-    line-height: 1.5;
-}
-
-@media (max-width: 768px) {
-    .md-split {
-        flex-direction: column;
-        gap: 0.5rem;
-    }
-
-    #articleMarkdownEditor {
-        min-height: 200px;
-    }
-
-    .md-preview-pane {
-        min-height: 180px;
-        max-height: 320px;
-    }
-}
-
-/* Markdown 预览排版（尽量贴近前台文章展示效果） */
-#markdownPreview {
     font-size: 0.9rem;
     line-height: 1.75;
     color: #334155;
     word-break: break-word;
 }
 
-#markdownPreview:empty::before {
-    content: "开始输入后，这里会实时显示渲染效果";
+.withu-preview-pane:empty::before {
+    content: "点击上方按钮或开始书写后，这里会实时显示渲染效果";
     color: #94a3b8;
     font-size: 0.85rem;
 }
 
-#markdownPreview h2,
-#markdownPreview h3,
-#markdownPreview h4 {
+.withu-editor-hint {
+    margin: 0.4rem 0 0;
+    font-size: 0.75rem;
+    color: #94a3b8;
+    line-height: 1.5;
+}
+
+/* 预览排版：贴近前台 withu 文章展示效果 */
+#articlePreview h1,
+#articlePreview h2,
+#articlePreview h3,
+#articlePreview h4,
+#articlePreview h5,
+#articlePreview h6 {
     margin: 1.1em 0 0.5em;
     font-weight: 700;
     color: #0f172a;
     line-height: 1.4;
 }
 
-#markdownPreview h2 {
-    font-size: 1.25rem;
-    padding-left: 0.6rem;
-    border-left: 4px solid #667eea;
-}
+#articlePreview h1 { font-size: 1.5rem; }
+#articlePreview h2 { font-size: 1.3rem; padding-left: 0.6rem; border-left: 4px solid #667eea; }
+#articlePreview h3 { font-size: 1.15rem; }
+#articlePreview h4 { font-size: 1rem; }
+#articlePreview p { margin: 0.6em 0; }
+#articlePreview img { max-width: 100%; border-radius: 0.6rem; }
 
-#markdownPreview h3 {
-    font-size: 1.1rem;
-}
-
-#markdownPreview h4 {
-    font-size: 1rem;
-}
-
-#markdownPreview p {
-    margin: 0.6em 0;
-}
-
-#markdownPreview ul,
-#markdownPreview ol {
-    margin: 0.6em 0;
-    padding-left: 1.5em;
-}
-
-#markdownPreview li {
-    margin: 0.25em 0;
-}
-
-#markdownPreview blockquote {
+#articlePreview blockquote {
     margin: 0.8em 0;
-    padding: 0.6em 0.9em;
-    border-left: 4px solid #cbd5e1;
-    background: #ffffff;
-    border-radius: 0.5rem;
+    padding: 0.6em 1em;
+    border-left: 4px solid rgba(102, 126, 234, 0.6);
+    background: #f8fafc;
+    border-radius: 0 0.5rem 0.5rem 0;
     color: #475569;
 }
 
-#markdownPreview blockquote.bq-note {
-    border-left-color: #3b82f6;
-    background: rgba(59, 130, 246, 0.06);
+#articlePreview quote {
+    display: block;
+    margin: 0.8em 0;
+    padding: 0.5em 1em;
+    border-left: 4px solid #f59e0b;
+    background: #fffbeb;
+    color: #92400e;
+    border-radius: 0 0.5rem 0.5rem 0;
+    font-style: italic;
 }
 
-#markdownPreview blockquote.bq-warning {
-    border-left-color: #f59e0b;
-    background: rgba(245, 158, 11, 0.08);
+#articlePreview desc {
+    display: block;
+    margin: 0.6em 0;
+    color: #64748b;
+    font-size: 0.9em;
+    line-height: 1.6;
 }
 
-#markdownPreview blockquote.bq-success {
-    border-left-color: #10b981;
-    background: rgba(16, 185, 129, 0.07);
+#articlePreview center { display: block; text-align: center; }
+
+#articlePreview .color-card {
+    display: inline-block;
+    margin: 0.4em 0;
+    padding: 0.5em 1em;
+    border-radius: 0.75rem;
+    color: #fff;
+    background: linear-gradient(135deg, #667eea, #764ba2);
+    box-shadow: 0 8px 20px rgba(118, 75, 162, 0.25);
 }
 
-#markdownPreview a {
-    color: #6366f1;
-    text-decoration: underline;
-    word-break: break-all;
-}
+#articlePreview table { border-collapse: collapse; width: 100%; margin: 0.8em 0; }
+#articlePreview th, #articlePreview td { border: 1px solid #e2e8f0; padding: 0.4em 0.6em; font-size: 0.85em; }
+#articlePreview th { background: #f1f5f9; }
+#articlePreview ul, #articlePreview ol { margin: 0.6em 0; padding-left: 1.5em; }
+#articlePreview hr { border: none; border-top: 1px solid #e2e8f0; margin: 1em 0; }
 
-#markdownPreview img {
-    max-width: 100%;
-    border-radius: 0.5rem;
-}
-
-#markdownPreview code {
-    background: rgba(148, 163, 184, 0.2);
-    border-radius: 0.25rem;
-    padding: 0.1em 0.35em;
-    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
-    font-size: 0.85em;
-}
-
-#markdownPreview pre {
+#articlePreview pre {
     background: #1e293b;
     color: #e2e8f0;
-    padding: 0.8rem 1rem;
+    padding: 0.8em 1em;
     border-radius: 0.6rem;
     overflow: auto;
-}
-
-#markdownPreview pre code {
-    background: transparent;
-    color: inherit;
-    padding: 0;
-}
-
-#markdownPreview hr {
-    border: none;
-    border-top: 1px dashed rgba(148, 163, 184, 0.8);
-    margin: 1.2em 0;
-}
-
-#markdownPreview center {
-    text-align: center;
-}
-
-#markdownPreview del,
-#markdownPreview s {
-    color: #94a3b8;
-}
-
-#markdownPreview table {
-    border-collapse: collapse;
-    width: 100%;
     margin: 0.8em 0;
 }
 
-#markdownPreview th,
-#markdownPreview td {
-    border: 1px solid rgba(148, 163, 184, 0.6);
-    padding: 0.4em 0.6em;
+#articlePreview pre code {
+    font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+    font-size: 0.8em;
 }
 
-#markdownPreview .btn-download {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.4rem;
-    padding: 0.45rem 1rem;
-    border-radius: 999px;
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    color: #ffffff;
-    text-decoration: none;
-    font-size: 0.85rem;
+#articlePreview span[data-author="male"],
+#articlePreview span[data-author="female"] {
+    border-bottom: 2px dashed #10b981;
 }
 
-/* 预览中的男女主标记（与可视化编辑器一致） */
-#markdownPreview span[data-author="male"] {
-    background: rgba(129, 140, 248, 0.18);
-    border-radius: 0.25rem;
-    padding: 0 0.12em;
-}
-
-#markdownPreview span[data-author="female"] {
-    background: rgba(244, 114, 182, 0.18);
-    border-radius: 0.25rem;
-    padding: 0 0.12em;
-}
-
-/* 编辑器模式切换按钮 */
-.editor-mode-btn {
-    padding: 0.4rem 0.75rem;
-    border: 1px solid rgba(148, 163, 184, 0.4);
-    background: #ffffff;
-    color: #64748b;
-    border-radius: 0.5rem;
-    font-size: 0.8rem;
-    font-weight: 500;
-    cursor: pointer;
-    transition: all 0.2s ease;
-    display: inline-flex;
-    align-items: center;
-    gap: 0.35rem;
-}
-
-.editor-mode-btn:hover {
-    background: #f8fafc;
-    border-color: rgba(148, 163, 184, 0.6);
-    color: #475569;
-}
-
-.editor-mode-btn.active {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    border-color: #667eea;
-    color: #ffffff;
-    box-shadow: 0 2px 8px rgba(102, 126, 234, 0.3);
-}
-
-/* 选中态悬停/按压反馈：可视化等已选中按钮悬停时轻微提亮，按下时缩小下沉 */
-.editor-mode-btn.active:hover {
-    filter: brightness(1.07);
-    box-shadow: 0 3px 12px rgba(102, 126, 234, 0.42);
-}
-
-.editor-mode-btn:active {
-    transform: scale(0.95);
-    box-shadow: 0 1px 3px rgba(102, 126, 234, 0.25);
-}
-
-.editor-mode-btn i {
-    font-size: 0.75rem;
-}
-
-/* 男女主标记按钮区域 */
-.author-mark-toolbar {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.35rem;
-    margin-bottom: 0.5rem;
-}
-
-.author-mark-toolbar button {
-    padding: 0.3rem 0.7rem;
-    border-radius: 999px;
-    border: 1px solid rgba(148,163,184,0.7);
-    background: #ffffff;
-    font-size: 0.78rem;
-    cursor: pointer;
-}
-
-.author-mark-toolbar button:hover {
-    background: #f8fafc;
-}
-
-/* 代码模式下的快捷插入按钮工具栏 */
-.code-snippet-toolbar {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.35rem;
-    margin: 0.4rem 0 0.5rem;
-}
-
-.code-snippet-toolbar button {
-    padding: 0.3rem 0.7rem;
-    border-radius: 999px;
-    border: 1px solid rgba(148,163,184,0.7);
-    background: #ffffff;
-    font-size: 0.78rem;
-    cursor: pointer;
-}
-
-.code-snippet-toolbar button:hover {
-    background: #f8fafc;
-}
-
-/* 代码编辑器滚动条美化 */
-#articleCodeEditor::-webkit-scrollbar {
-    width: 8px;
-    height: 8px;
-}
-
-#articleCodeEditor::-webkit-scrollbar-track {
-    background: #0f172a;
-    border-radius: 4px;
-}
-
-#articleCodeEditor::-webkit-scrollbar-thumb {
-    background: #475569;
-    border-radius: 4px;
-}
-
-#articleCodeEditor::-webkit-scrollbar-thumb:hover {
-    background: #64748b;
-}
-
-/* 原有样式 */
-#articleEditor span[data-author="male"] {
-    background: rgba(129, 140, 248, 0.18);
-    border-radius: 0.25rem;
-    padding: 0 0.12em;
-    position: relative;
-    display: inline;
-}
-
-#articleEditor span[data-author="female"] {
-    background: rgba(244, 114, 182, 0.18);
-    border-radius: 0.25rem;
-    padding: 0 0.12em;
-    position: relative;
-    display: inline;
-}
-
-#articleEditor span[data-author="male"]::after,
-#articleEditor span[data-author="female"]::after {
-    position: absolute;
-    bottom: 100%;
-    left: 0; /* 改为左对齐，而不是居中 */
-    transform: translateY(-0.1rem) scale(0.92);
-    font-size: 0.75rem;
-    line-height: 1.2;
-    padding: 0.12rem 0.4rem;
-    border-radius: 999px;
-    color: #f9fafb;
-    white-space: nowrap;
-    opacity: 0;
-    pointer-events: none;
-}
-
-#articleEditor span[data-author="male"]:hover::after {
-    content: "男主写的";
-    background: rgba(59, 130, 246, 0.96);
-    animation: co-bubble-in 0.26s cubic-bezier(0.16, 0.84, 0.44, 1) forwards;
-}
-
-#articleEditor span[data-author="female"]:hover::after {
-    content: "女主写的";
-    background: rgba(236, 72, 153, 0.96);
-    animation: co-bubble-in 0.26s cubic-bezier(0.16, 0.84, 0.44, 1) forwards;
-}
-
-@keyframes co-bubble-in {
-    0% {
-        opacity: 0;
-        transform: translateY(-0.1rem) scale(0.9);
+@media (max-width: 768px) {
+    .withu-split {
+        flex-direction: column;
+        gap: 0.5rem;
     }
-    100% {
-        opacity: 1;
-        transform: translateY(-0.22rem) scale(1);
-    }
-}
 
-/* 提示编辑行为的鼠标样式 */
-#articleEditor,
-.co-block-editor {
-    cursor: text;
+    #articleSourceEditor {
+        min-height: 200px;
+    }
+
+    .withu-preview-pane {
+        min-height: 180px;
+        max-height: 320px;
+    }
 }
 </style>

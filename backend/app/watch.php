@@ -204,7 +204,7 @@ body.watch-page a{color:inherit}
 .rail-arrow.is-off{opacity:0;visibility:hidden;pointer-events:none}
 
 /* ===== 空态 ===== */
-.empty{padding:2.2rem 1rem;border:1.5px dashed rgba(247,141,167,.4);border-radius:16px;color:var(--ink-soft);text-align:center;font-size:.9rem;background:rgba(255,255,255,.5)}
+.empty{padding:2.2rem 1rem;border:1.5px dashed rgba(247,141,167,.4);border-radius:13.14px;color:var(--ink-soft);text-align:center;font-size:.9rem;background:rgba(255,255,255,.5)}
 
 /* ===== cz / 豆瓣 徽标 ===== */
 .src-badge{display:inline-flex;align-items:center;justify-content:center;min-width:2rem;height:1.3rem;padding:0 .5rem;border-radius:6px;background:linear-gradient(135deg,#0ea5e9,#6366f1);color:#fff;font-size:.72rem;font-weight:900;letter-spacing:.05em}

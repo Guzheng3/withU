@@ -1,5 +1,5 @@
 <?php
-/** 内容安全：规则先行，AI 只做辅助，所有拦截都保留后台记录。 */
+/** 内容安全：规则拦截，所有拦截都保留后台记录。 */
 function withu_moderate_text($db, string $targetType, int $targetId, string $content): array
 {
     $normalized = trim(preg_replace('/\s+/u', ' ', $content));
@@ -27,7 +27,7 @@ function withu_moderate_text($db, string $targetType, int $targetId, string $con
     try {
         $logId = (int)$db->insert('moderation_events', [
             'target_type' => $targetType, 'target_id' => $targetId ?: null, 'content' => $normalized,
-            'rule_result' => $ruleResult, 'ai_result' => null, 'risk_score' => $score,
+            'rule_result' => $ruleResult, 'risk_score' => $score,
             'reasons' => json_encode($reasons, JSON_UNESCAPED_UNICODE), 'review_status' => $reviewStatus, 'created_at' => withu_now(),
         ]);
     } catch (Throwable $e) {}

@@ -3046,7 +3046,7 @@
 <!-- 情侣头像点击效果已迁移到 components.js 的 AvatarInteraction 模块 -->
 
 <div id="pjax-container">
-<title>withU Demo</title>
+<title><?php echo htmlspecialchars($withuSiteTitle, ENT_QUOTES, 'UTF-8'); ?></title>
 <link rel="stylesheet" href="/Style/css/withu-private.css?wm=4c668768&v=1.0.74">
 <style>
 /* 关键内联样式：防止 PJAX 切换时 CSS 未加载导致的无样式闪烁 */

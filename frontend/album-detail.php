@@ -76,15 +76,15 @@ $__albumAuthorAvatar = (string) ($__cfg['maleAvatar'] ?? '');
 
 <!-- Open Graph (Facebook/微信/QQ) -->
 <meta property="og:type" content="website">
-<meta property="og:site_name" content="withU Demo">
-<meta property="og:title" content="<?php echo $__albumMeta ? htmlspecialchars($__albumMeta['name'], ENT_QUOTES, 'UTF-8') : 'withU Demo'; ?>">
+<meta property="og:site_name" content="<?php echo htmlspecialchars($withuSiteTitle, ENT_QUOTES, 'UTF-8'); ?>">
+<meta property="og:title" content="<?php echo $__albumMeta ? htmlspecialchars($__albumMeta['name'], ENT_QUOTES, 'UTF-8') : htmlspecialchars($withuSiteTitle, ENT_QUOTES, 'UTF-8'); ?>">
 <meta property="og:description" content="withU 是一个适合记录恋爱日常与纪念时刻的情侣小站，支持相册、时间轴、点滴文章、留言互动和邀请页面，让每一段关系都能拥有自己的专属回忆空间。">
 <meta property="og:url" content="/album-detail.php?code=<?php echo $__albumMeta ? rawurlencode($__albumMeta['code']) : '20240430110842'; ?>">
 <meta property="og:image" content="withU">
 
 <!-- Twitter Card -->
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="withU Demo">
+<meta name="twitter:title" content="<?php echo htmlspecialchars($withuSiteTitle, ENT_QUOTES, 'UTF-8'); ?>">
 <meta name="twitter:description" content="withU 是一个适合记录恋爱日常与纪念时刻的情侣小站，支持相册、时间轴、点滴文章、留言互动和邀请页面，让每一段关系都能拥有自己的专属回忆空间。">
 <meta name="twitter:image" content="withU">
 
@@ -3117,7 +3117,7 @@ $__albumAuthorAvatar = (string) ($__cfg['maleAvatar'] ?? '');
 
 <div id="pjax-container">
 <?php if ($__albumMeta): ?>
-<title><?php echo htmlspecialchars($__albumMeta['name'], ENT_QUOTES, 'UTF-8'); ?> — withU Demo</title>
+<title><?php echo htmlspecialchars($__albumMeta['name'], ENT_QUOTES, 'UTF-8'); ?> — <?php echo htmlspecialchars($withuSiteTitle, ENT_QUOTES, 'UTF-8'); ?></title>
 <link rel="stylesheet" href="/Style/css/photo.css">
 
     <!-- 相册头部（公开相册详情） -->
@@ -3227,7 +3227,7 @@ $__albumAuthorAvatar = (string) ($__cfg['maleAvatar'] ?? '');
         </button>
     </aside>
 <?php else: ?>
-<title>页面已加密 — withU Demo</title>
+<title>页面已加密 — <?php echo htmlspecialchars($withuSiteTitle, ENT_QUOTES, 'UTF-8'); ?></title>
 <link rel="stylesheet" href="/Style/css/withu-private.css">
 <style>
 /* 关键内联样式：防止 PJAX 切换时 CSS 未加载导致的无样式闪烁 */
@@ -3272,7 +3272,7 @@ html.withu-private-mode .row.central.nav_k,html.withu-private-mode #homePage,htm
             <div class="withu-private-badge-container">
                 <span class="withu-private-badge">恋爱相册</span>
             </div>
-            <h1 class="withu-private-title">withU Demo</h1>
+            <h1 class="withu-private-title"><?php echo htmlspecialchars($withuSiteTitle, ENT_QUOTES, 'UTF-8'); ?></h1>
             <p class="withu-private-subtitle">
                 <span class="withu-private-divider-left"></span>
                 <span>相伴的第<span class="withu-private-highlight">1,115</span>天</span>

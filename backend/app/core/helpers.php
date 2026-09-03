@@ -1072,7 +1072,7 @@ function migrate_schema_if_needed(): void {
 
     // Avoid rerunning dozens of SHOW/ALTER/CREATE statements on every PHP
     // request, including each high-frequency watch poll.
-    $schemaVersion = '20260831-01';
+    $schemaVersion = '20260831-02';
     $runtimeDir = dirname(ROOT_PATH) . DIRECTORY_SEPARATOR . 'runtime';
     $markerPath = $runtimeDir . DIRECTORY_SEPARATOR . 'schema-version';
     $lockPath = $runtimeDir . DIRECTORY_SEPARATOR . 'schema-migration.lock';
@@ -1444,7 +1444,6 @@ function migrate_withu_v1($db): void {
             `target_id` bigint(20) DEFAULT NULL,
             `content` text DEFAULT NULL,
             `rule_result` varchar(20) NOT NULL DEFAULT 'allow',
-            `ai_result` varchar(20) DEFAULT NULL,
             `risk_score` decimal(5,2) DEFAULT NULL,
             `reasons` text DEFAULT NULL,
             `review_status` varchar(20) NOT NULL DEFAULT 'pending',
@@ -1462,13 +1461,6 @@ function migrate_withu_v1($db): void {
             `payload` text NOT NULL, `expires_at` datetime NOT NULL, `created_at` datetime NOT NULL,
             PRIMARY KEY (`id`), UNIQUE KEY `uk_weather_cache_key` (`cache_key`)
         ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='天气缓存';",
-        "CREATE TABLE IF NOT EXISTS `travel_plans` (
-            `id` int(11) NOT NULL AUTO_INCREMENT, `creator_id` int(11) NOT NULL,
-            `destination` varchar(255) NOT NULL, `start_date` date DEFAULT NULL, `end_date` date DEFAULT NULL,
-            `prompt` text DEFAULT NULL, `plan_payload` text NOT NULL, `ai_source` varchar(30) DEFAULT NULL,
-            `created_at` datetime NOT NULL, `updated_at` datetime NOT NULL,
-            PRIMARY KEY (`id`), KEY `idx_travel_creator` (`creator_id`,`created_at`)
-        ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='AI旅行计划';",
         "CREATE TABLE IF NOT EXISTS `content_likes` (
             `id` bigint(20) NOT NULL AUTO_INCREMENT, `actor_key` varchar(64) NOT NULL,
             `target_type` varchar(20) NOT NULL, `target_id` int(11) NOT NULL,
@@ -1518,6 +1510,17 @@ function migrate_withu_v1($db): void {
         } catch (Throwable $e) { /* 字段已经存在或无权限时忽略 */ }
     }
 
+    // 物理清理已废弃的 AI 相关数据：代码已无任何引用，此处仅对旧库做幂等删除
+    // （新库本就没有 travel_plans 表 / ai_result 列，DROP 会自然跳过）
+    try {
+        $db->query("DROP TABLE IF EXISTS `travel_plans`");
+    } catch (Throwable $e) { /* 表不存在或无权限时忽略 */ }
+    try {
+        if ($db->fetch("SHOW COLUMNS FROM `moderation_events` LIKE 'ai_result'")) {
+            $db->query("ALTER TABLE `moderation_events` DROP COLUMN `ai_result`");
+        }
+    } catch (Throwable $e) { /* 列不存在或无权限时忽略 */ }
+
     // Match the high-frequency watch queries: room presence is filtered by
     // room, left_at and last_seen_at rather than by user first.
     $indexes = [
@@ -1542,10 +1545,6 @@ function migrate_withu_v1($db): void {
     $settings = [
         ['front_animation_enabled', '1', '前台花瓣与转场动效开关'],
         ['backend_animation_enabled', '0', '后台动效开关'],
-        ['ai_moderation_enabled', '0', 'AI内容审核开关'],
-        ['ai_api_endpoint', 'https://api.deepseek.com/chat/completions', 'DeepSeek兼容接口地址'],
-        ['ai_api_key', '', 'AI接口密钥'],
-        ['ai_model', 'deepseek-chat', 'AI模型名称'],
         ['theme_preset', 'sakura', '主站与后台主题预设'],
         ['theme_mode', 'light', '主题显示模式：固定白天模式'],
         ['theme_custom_primary', '', '自定义主题主色'],

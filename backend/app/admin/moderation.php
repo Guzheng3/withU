@@ -1,7 +1,10 @@
 <?php
 header('Content-Type: text/html; charset=UTF-8');
 require_once __DIR__ . '/../config/config.php'; require_once __DIR__ . '/../core/Database.php'; require_once __DIR__ . '/../core/Auth.php'; require_once __DIR__ . '/../core/helpers.php'; require_once __DIR__ . '/../core/withu.php';
-$auth=new Auth();$user=withu_require_couple_user($auth);$db=Database::getInstance();$message='';
-if($_SERVER['REQUEST_METHOD']==='POST'){require_csrf();$id=(int)($_POST['id']??0);$action=$_POST['action']??'';if($id>0&&in_array($action,['approved','blocked','ignored'],true)){$db->update('moderation_events',['review_status'=>$action,'reviewed_by'=>$user['id'],'reviewed_at'=>withu_now(),'review_note'=>trim((string)($_POST['note']??''))],'id=:id',['id'=>$id]);$message='审核状态已更新';}}
-$rows=$db->fetchAll('SELECT * FROM moderation_events ORDER BY created_at DESC LIMIT 200');$adminPage='moderation';include __DIR__.'/header.php';
-?><section class="admin-page-title"><h1>安全审核记录</h1><p>规则拦截、待复核和 AI 辅助结果都在这里保留。</p></section><?php if($message):?><div class="admin-card" style="color:#15803d;margin-bottom:1rem"><?php echo e($message);?></div><?php endif;?><section class="admin-card"><table class="admin-table"><thead><tr><th>时间</th><th>类型</th><th>风险</th><th>原因</th><th>内容</th><th>状态</th><th>处理</th></tr></thead><tbody><?php if (empty($rows)): ?><tr><td colspan="7" style="text-align:center;color:var(--v3-text-3);padding:1.25rem 0;">暂无审核记录，规则拦截与 AI 辅助结果产生后会展示在这里。</td></tr><?php endif; ?><?php foreach($rows as $row):?><tr><td><?php echo e($row['created_at']);?></td><td><?php echo e($row['target_type']);?></td><td><?php echo e($row['risk_score']);?></td><td><?php echo e(implode('、',(array)json_decode((string)$row['reasons'],true)));?></td><td style="max-width:300px;word-break:break-all"><?php echo e($row['content']);?></td><td><?php echo e($row['review_status']);?></td><td><form method="post" style="display:flex;gap:.25rem;flex-wrap:wrap"><?php echo csrf_field();?><input type="hidden" name="id" value="<?php echo (int)$row['id'];?>"><button name="action" value="approved" class="btn btn-secondary">通过</button><button name="action" value="blocked" class="btn btn-secondary">拦截</button><button name="action" value="ignored" class="btn btn-secondary">忽略</button></form></td></tr><?php endforeach;?></tbody></table></section><?php include __DIR__.'/footer.php';?>
+$auth = new Auth();
+$currentUser = withu_require_couple_user($auth);
+$db = Database::getInstance();
+$adminPage = 'moderation';
+require_once __DIR__ . '/_advanced/moderation.php';
+include __DIR__ . '/header.php';
+?><section class="admin-page-title"><h1>安全审核记录</h1><p>规则拦截、待复核结果都在这里保留。</p></section><?php echo withu_advanced_moderation_panel(); ?><?php include __DIR__ . '/footer.php'; ?>

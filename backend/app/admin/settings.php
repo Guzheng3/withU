@@ -32,6 +32,15 @@ if (isset($_GET['success']) && $_GET['success'] === '1') {
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     require_csrf();
 
+    // 高级设置内联功能动作（安全审核/信任设备/评论黑名单/图片工具）由各自面板片段处理，
+    // 这里跳过系统设置本身的保存逻辑，避免误写 settings 表或触发 PRG 跳转。
+    $advancedActionPost = isset($_POST['single_id']) || isset($_POST['bulk_submit'])
+        || isset($_POST['delete_id']) || isset($_POST['add_ip'])
+        || isset($_POST['mode'])
+        || (isset($_POST['action']) && in_array((string)$_POST['action'], ['approved', 'blocked', 'ignored'], true));
+
+    if (!$advancedActionPost) {
+
     // 如果已有首页大图并使用旧目录 banners，则删除旧文件并清空设置，让用户重新上传
     if (!empty($settingsData['home_banner_image']) && strpos($settingsData['home_banner_image'], '/banners/') !== false) {
         if (strpos($settingsData['home_banner_image'], UPLOAD_URL) === 0) {
@@ -144,7 +153,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             'video_upload_ignore_site_limit',
             'front_animation_enabled',
             'backend_animation_enabled',
-            'ai_moderation_enabled',
             'watch_autoplay_enabled',
             'player_auto_next_enabled',
         ];
@@ -256,14 +264,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     foreach ($settings as $setting) {
         $settingsData[$setting['key']] = $setting['value'];
     }
+
+    } // if (!$advancedActionPost)
 }
 
 $adminPage = 'settings';
 $adminNarrow = true;
 
 // 分段定位：?section=theme / ?section=advanced 兼容旧链接/书签直达，其余默认"基础信息"
-// 高级设置是独立视图：分段导航不放系统设置分段，改为安全审核等独立功能页的入口；
-// 该视图没有可保存表单项，底部吸附保存栏随之隐藏；侧边栏入口 ?section=advanced 直达该视图
+// ?section=advanced 为独立视图：顶部展示高级功能入口 tab（安全审核等 5 项），
+// 点击原地切换并压栈（pushState，支持前进/后退），该视图无表单项、底部吸附保存栏隐藏
 $sectionParam = (string)($_GET['section'] ?? '');
 $activeTab = in_array($sectionParam, ['theme', 'advanced'], true) ? $sectionParam : 'basic';
 $settingsTabs = [
@@ -275,14 +285,35 @@ $settingsTabs = [
     'advanced' => ['icon' => 'ti-shield',      'label' => '高级设置'],
 ];
 
-// 高级设置视图的分段导航与下方入口卡片共用一份独立功能页数据
+// 高级设置独立功能的入口数据（key 用于 tab 定位 / 压栈 URL ?tab=）
 $advancedEntries = [
-    ['href' => '/admin/moderation.php',                     'icon' => 'ti-shield',          'label' => '安全审核',  'desc' => '规则拦截、待复核和 AI 辅助审核记录'],
-    ['href' => '/admin/devices.php',                        'icon' => 'ti-device-mobile',   'label' => '信任设备',  'desc' => '已信任的登录设备管理与解绑'],
-    ['href' => '/admin/comment_ip_blacklist.php',           'icon' => 'ti-user-x',          'label' => '评论黑名单', 'desc' => '禁止发表评论或留言的 IP 黑名单'],
-    ['href' => '/admin/tools_image_stats.php?tab=optimize', 'icon' => 'ti-arrows-diagonal', 'label' => '图片补齐',  'desc' => '为旧数据一键补齐缩略图 / WebP / 视频转码'],
-    ['href' => '/admin/tools_image_stats.php',              'icon' => 'ti-chart-bar',       'label' => '图片统计',  'desc' => '图片体积与压缩占比一览'],
+    ['key' => 'moderation', 'href' => '/admin/moderation.php',                     'icon' => 'ti-shield',          'label' => '安全审核',  'desc' => '规则拦截、待复核审核记录'],
+    ['key' => 'devices',    'href' => '/admin/devices.php',                        'icon' => 'ti-device-mobile',   'label' => '信任设备',  'desc' => '已信任的登录设备管理与解绑'],
+    ['key' => 'blacklist',  'href' => '/admin/comment_ip_blacklist.php',           'icon' => 'ti-user-x',          'label' => '评论黑名单', 'desc' => '禁止发表评论或留言的 IP 黑名单'],
+    ['key' => 'optimize',   'href' => '/admin/tools_image_stats.php?tab=optimize', 'icon' => 'ti-arrows-diagonal', 'label' => '图片补齐',  'desc' => '为旧数据一键补齐缩略图 / WebP / 视频转码'],
+    ['key' => 'stats',      'href' => '/admin/tools_image_stats.php',              'icon' => 'ti-chart-bar',       'label' => '图片统计',  'desc' => '图片体积与压缩占比一览'],
 ];
+$advancedKeys = array_column($advancedEntries, 'key');
+$advancedActiveKey = (string)($_GET['tab'] ?? '');
+if (!in_array($advancedActiveKey, $advancedKeys, true)) {
+    $advancedActiveKey = $advancedKeys[0] ?? '';
+}
+
+// tab -> 面板映射：图片补齐 / 图片统计共用同一个「图片工具」面板（原工具页本就包含统计与补齐两部分）
+$advancedPanelMap = [
+    'moderation' => 'moderation',
+    'devices'    => 'devices',
+    'blacklist'  => 'blacklist',
+    'optimize'   => 'tools',
+    'stats'      => 'tools',
+];
+$advancedActivePanelKey = $advancedPanelMap[$advancedActiveKey] ?? 'moderation';
+
+// 高级设置内联片段（函数定义）：独立页与 settings.php 高级设置面板共用
+require_once __DIR__ . '/_advanced/moderation.php';
+require_once __DIR__ . '/_advanced/devices.php';
+require_once __DIR__ . '/_advanced/comment_ip_blacklist.php';
+require_once __DIR__ . '/_advanced/tools_image_stats.php';
 
 include __DIR__ . '/header.php';
 ?>
@@ -356,16 +387,24 @@ include __DIR__ . '/header.php';
         <?php echo csrf_field(); ?>
 
         <?php if ($activeTab === 'advanced'): ?>
-        <?php // 高级设置视图：分段导航放安全审核等独立功能入口（站内跳转链接），而非系统设置分段 ?>
-        <nav class="settings-tabs" aria-label="高级功能入口">
+        <?php // 高级设置视图：顶部为 5 个独立功能入口 tab（原地切换、压栈保留 tab 栏） ?>
+        <nav class="settings-tabs" role="tablist" aria-label="高级功能">
             <?php foreach ($advancedEntries as $entry): ?>
-                <a class="settings-tab" href="<?php echo e($entry['href']); ?>">
+                <button
+                    type="button"
+                    class="settings-tab<?php echo $advancedActiveKey === $entry['key'] ? ' is-active' : ''; ?>"
+                    role="tab"
+                    id="advtab-<?php echo $entry['key']; ?>"
+                    aria-controls="advpanel-<?php echo $advancedPanelMap[$entry['key']]; ?>"
+                    aria-selected="<?php echo $advancedActiveKey === $entry['key'] ? 'true' : 'false'; ?>"
+                    tabindex="<?php echo $advancedActiveKey === $entry['key'] ? 0 : -1; ?>"
+                    data-adv-tab="<?php echo $entry['key']; ?>">
                     <i class="ti <?php echo $entry['icon']; ?>" aria-hidden="true"></i><?php echo $entry['label']; ?>
-                </a>
+                </button>
             <?php endforeach; ?>
         </nav>
         <?php else: ?>
-        <?php // 设置分段导航：系统设置各分段（高级设置经侧边栏 ?section=advanced 进入独立视图） ?>
+        <?php // 系统设置分段导航：基础信息 / 一起看 / 主题外观 / 上传 / 站点信息 / 高级设置（高级设置直达独立入口汇总） ?>
         <nav class="settings-tabs" role="tablist" aria-label="设置分段">
             <?php foreach ($settingsTabs as $tabKey => $tabMeta): ?>
                 <button
@@ -778,31 +817,17 @@ include __DIR__ . '/header.php';
                 <div class="admin-card-header">
                     <div>
                         <div class="admin-card-title">
-                        <i class="ti ti-robot" aria-hidden="true"></i>AI 与站点信息
+                        <i class="ti ti-info-circle" aria-hidden="true"></i>站点信息
                         <button type="button" class="admin-help-toggle" title="查看说明" aria-label="查看说明" aria-expanded="false"><i class="ti ti-info-circle"></i></button>
                     </div>
                 </div>
             </div>
             <div class="admin-card-help">
-                <div class="admin-card-subtitle">AI 辅助审核、底部版权备案与统计代码</div>
+                <div class="admin-card-subtitle">底部版权备案与统计代码</div>
                 <p>
                     这里是不常改动的站点信息。确认无误后，点击底部吸附的“保存设置”按钮提交全部设置。
                 </p>
             </div>
-
-                <div class="form-group" style="margin-bottom:0.75rem;">
-                    <label style="display:block;font-size:0.85rem;margin-bottom:0.25rem;">AI 安全与媒体识别</label>
-                    <?php $aiModeration = $settingsData['ai_moderation_enabled'] ?? '0'; ?>
-                    <label class="switch"><input type="checkbox" name="settings[ai_moderation_enabled]" value="1" <?php echo $aiModeration === '1' ? 'checked' : ''; ?>><span class="switch-track"><span class="switch-thumb"></span></span><span class="switch-label">启用 AI 辅助审核（规则审核始终保留）</span></label>
-                    <input type="url" name="settings[ai_api_endpoint]" value="<?php echo e($settingsData['ai_api_endpoint'] ?? ''); ?>" placeholder="AI 兼容接口地址，可留空" style="width:100%;margin-top:.55rem;padding:.55rem .75rem;border-radius:.75rem;border:1px solid rgba(148,163,184,.6);font-size:.9rem;">
-                    <input type="password" name="settings[ai_api_key]" value="<?php echo e($settingsData['ai_api_key'] ?? ''); ?>" placeholder="AI API Key，可留空" style="width:100%;margin-top:.55rem;padding:.55rem .75rem;border-radius:.75rem;border:1px solid rgba(148,163,184,.6);font-size:.9rem;">
-                    <?php $currentModel = $settingsData['ai_model'] ?? 'deepseek-chat'; $modelOptions = ['deepseek-chat' => 'DeepSeek V3 / deepseek-chat', 'deepseek-reasoner' => 'DeepSeek R1 / deepseek-reasoner', 'gpt-4o-mini' => 'GPT-4o-mini', 'gpt-4o' => 'GPT-4o', 'gpt-4.1' => 'GPT-4.1', 'gpt-4.1-mini' => 'GPT-4.1-mini', 'gpt-4.1-nano' => 'GPT-4.1-nano', 'o3-mini' => 'o3-mini', 'o4-mini' => 'o4-mini', 'claude-sonnet-4-20250514' => 'Claude Sonnet 4', 'claude-3-5-sonnet-20241022' => 'Claude 3.5 Sonnet', 'gemini-2.5-pro' => 'Gemini 2.5 Pro', 'gemini-2.0-flash' => 'Gemini 2.0 Flash']; ?>
-<select name="settings[ai_model]" style="width:100%;margin-top:.55rem;padding:.55rem .75rem;border-radius:.75rem;border:1px solid rgba(148,163,184,.6);font-size:.9rem;background:#fff;color:inherit;-webkit-appearance:none;appearance:none;background-image:url('data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 width=%2712%27 height=%2712%27 viewBox=%270 0 24 24%27 fill=%27none%27 stroke=%27%23666%27 stroke-width=%272%27 stroke-linecap=%27round%27 stroke-linejoin=%27round%27%3E%3Cpolyline points=%276 9 12 15 18 9%27%3E%3C/polyline%3E%3C/svg%3E');background-repeat:no-repeat;background-position:right .75rem center;background-size:.75rem;padding-right:2rem;">
-    <?php foreach ($modelOptions as $modelValue => $modelLabel): ?>
-    <option value="<?php echo e($modelValue); ?>" <?php echo $currentModel === $modelValue ? 'selected' : ''; ?>><?php echo e($modelLabel); ?></option>
-    <?php endforeach; ?>
-</select>
-                </div>
 
                 <div class="form-group" style="margin-bottom:0.75rem;">
                     <label style="display:block;font-size:0.85rem;margin-bottom:0.25rem;">网站底部版权信息</label>
@@ -844,8 +869,32 @@ include __DIR__ . '/header.php';
             </div>
         </section>
 
+        <?php if ($activeTab === 'advanced'): ?>
+        <?php // 高级设置视图：每个独立功能内联渲染对应代码（图片补齐 / 图片统计共用同一图片工具面板） ?>
+        <?php $advancedPanels = [
+            'moderation' => ['label' => '安全审核'],
+            'devices'    => ['label' => '信任设备'],
+            'blacklist'  => ['label' => '评论黑名单'],
+            'tools'      => ['label' => '图片工具'],
+        ]; ?>
+        <?php foreach ($advancedPanels as $panelKey => $panelMeta): ?>
+        <section class="admin-grid settings-panel" id="advpanel-<?php echo $panelKey; ?>" role="tabpanel" <?php echo $panelKey === $advancedActivePanelKey ? '' : 'hidden'; ?> style="margin-bottom:0.75rem;">
+            <?php
+            if ($panelKey === 'moderation') {
+                echo withu_advanced_moderation_panel();
+            } elseif ($panelKey === 'devices') {
+                echo withu_advanced_devices_panel();
+            } elseif ($panelKey === 'blacklist') {
+                echo withu_advanced_blacklist_panel();
+            } else {
+                echo withu_advanced_tools_panel();
+            }
+            ?>
+        </section>
+        <?php endforeach; ?>
+        <?php else: ?>
         <?php // 高级设置分段：安全审核等独立功能页的入口汇总（无表单项，隐藏底部保存栏） ?>
-        <section class="admin-grid settings-panel" id="advanced-settings" role="tabpanel" aria-labelledby="tab-advanced" <?php echo $activeTab === 'advanced' ? '' : 'hidden'; ?> style="margin-bottom:0.75rem;">
+        <section class="admin-grid settings-panel" id="advanced-settings" role="tabpanel" aria-labelledby="tab-advanced" hidden style="margin-bottom:0.75rem;">
             <div class="admin-card">
                 <div class="admin-card-header">
                     <div>
@@ -869,6 +918,7 @@ include __DIR__ . '/header.php';
                 </nav>
             </div>
         </section>
+        <?php endif; ?>
 
         <div class="settings-savebar"<?php echo $activeTab === 'advanced' ? ' hidden' : ''; ?>>
             <button type="submit" class="btn btn-primary">
@@ -957,6 +1007,7 @@ include __DIR__ . '/header.php';
     (function () {
         var tablist = document.querySelector('.settings-tabs');
         if (!tablist) return;
+        if (tablist.querySelector('[data-adv-tab]')) return; // 高级设置视图走独立的压栈切换逻辑
         var tabs = Array.prototype.slice.call(tablist.querySelectorAll('.settings-tab'));
         var panels = tabs.map(function (tab) { return document.getElementById(tab.getAttribute('aria-controls')); }).filter(Boolean);
         if (!tabs.length || !panels.length) return;
@@ -1023,6 +1074,102 @@ include __DIR__ . '/header.php';
             } catch (e) {}
         }
         if (initialId) activate(initialId, false);
+    }());
+
+    // 高级设置视图 Tab：原地切换 + pushState 压栈（浏览器前进/后退回退到上一个 tab）
+    (function () {
+        var tablist = document.querySelector('.settings-tabs[aria-label="高级功能"]');
+        if (!tablist) return;
+        var tabs = Array.prototype.slice.call(tablist.querySelectorAll('[data-adv-tab]'));
+        if (!tabs.length) return;
+        var keys = tabs.map(function (tab) { return tab.getAttribute('data-adv-tab'); });
+        // 面板与 tab 可能多对一（图片补齐 / 图片统计共用同一个图片工具面板），先按 aria-controls 去重收集
+        var panelIds = [];
+        tabs.forEach(function (tab) {
+            var id = tab.getAttribute('aria-controls');
+            if (id && panelIds.indexOf(id) === -1) panelIds.push(id);
+        });
+        var panels = panelIds.map(function (id) { return document.getElementById(id); }).filter(function (el) { return !!el; });
+        var storageKey = 'withu_adv_tab';
+
+        function activate(key, moveFocus) {
+            var matched = false;
+            tabs.forEach(function (tab) {
+                var on = tab.getAttribute('data-adv-tab') === key;
+                if (on) matched = true;
+                tab.classList.toggle('is-active', on);
+                tab.setAttribute('aria-selected', on ? 'true' : 'false');
+                tab.setAttribute('tabindex', on ? '0' : '-1');
+            });
+            if (!matched) return;
+            panels.forEach(function (panel) { panel.hidden = true; });
+            var activeTab = tablist.querySelector('.settings-tab.is-active');
+            if (activeTab) {
+                var panel = document.getElementById(activeTab.getAttribute('aria-controls'));
+                if (panel) panel.hidden = false;
+            }
+            if (moveFocus) {
+                var activeTab = tablist.querySelector('.settings-tab.is-active');
+                if (activeTab) activeTab.focus();
+            }
+            var active = tablist.querySelector('.settings-tab.is-active');
+            if (active && tablist.scrollWidth > tablist.clientWidth) {
+                var target = active.offsetLeft - (tablist.clientWidth - active.offsetWidth) / 2;
+                tablist.scrollLeft = Math.max(0, Math.min(target, tablist.scrollWidth - tablist.clientWidth));
+            }
+            try { sessionStorage.setItem(storageKey, key); } catch (e) {}
+        }
+
+        function urlKey() {
+            var raw = new URLSearchParams(window.location.search).get('tab');
+            return (raw && keys.indexOf(raw) !== -1) ? raw : null;
+        }
+
+        function push(key) {
+            activate(key, false);
+            var url = new URL(window.location.href);
+            url.searchParams.set('section', 'advanced');
+            url.searchParams.set('tab', key);
+            history.pushState({ withuAdvTab: key }, '', url.toString());
+        }
+
+        tabs.forEach(function (tab, index) {
+            tab.addEventListener('click', function () {
+                var key = tab.getAttribute('data-adv-tab');
+                if (tab.classList.contains('is-active')) return;
+                push(key);
+                // 切换后回到分段导航处，避免停留在面板中部
+                var form = tablist.closest('form');
+                if (!form) return;
+                var topbarH = parseInt(getComputedStyle(document.body).getPropertyValue('--v3-topbar-h'), 10) || 54;
+                var targetTop = form.getBoundingClientRect().top + window.pageYOffset - topbarH - 8;
+                if (window.pageYOffset > targetTop) {
+                    window.scrollTo({ top: Math.max(targetTop, 0), behavior: 'smooth' });
+                }
+            });
+            tab.addEventListener('keydown', function (event) {
+                if (event.key !== 'ArrowLeft' && event.key !== 'ArrowRight') return;
+                event.preventDefault();
+                var delta = event.key === 'ArrowRight' ? 1 : keys.length - 1;
+                push(keys[(index + delta) % keys.length]);
+                var active = tablist.querySelector('.settings-tab.is-active');
+                if (active) active.focus();
+            });
+        });
+
+        window.addEventListener('popstate', function (event) {
+            var key = (event.state && event.state.withuAdvTab) ? event.state.withuAdvTab : (urlKey() || keys[0]);
+            activate(key, false);
+        });
+
+        var initial = urlKey();
+        if (!initial) {
+            try {
+                var saved = sessionStorage.getItem(storageKey);
+                if (saved && keys.indexOf(saved) !== -1) initial = saved;
+            } catch (e) {}
+        }
+        activate(initial || keys[0], false);
     }());
 
     // 首页大图多图管理：增删、排序、待上传本地预览、展开预览

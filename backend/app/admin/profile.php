@@ -338,11 +338,12 @@ include __DIR__ . '/header.php';
                 style="width:100%;padding:0.55rem 0.75rem;border-radius:0.75rem;border:1px solid rgba(148,163,184,0.7);font-size:0.9rem;">
         </div>
 
-        <div style="display:flex;gap:0.75rem;flex-wrap:wrap;">
+        <div class="settings-savebar">
             <button type="submit" class="btn btn-primary">
                 <i class="fas fa-save"></i>
                 <span>保存修改</span>
             </button>
+            <p class="settings-savebar-note">保存后立即生效。</p>
         </div>
     </form>
 

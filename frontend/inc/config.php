@@ -8,6 +8,12 @@
 // 默认静态配置（数据库不可用时兜底）
 $withuConfigJson = '{"title":"withU","boy":"Ki.","girl":"Really","startTime":"2023-07-19 00:00:00","version":"2.2.5","pcCarouselHeight":"80vh","mobileCarouselHeight":"50vh","pcPhotoCoverHeight":"80vh","mobilePhotoCoverHeight":"60vh","pcImgMaxHeight":"450px","mobileImgMaxHeight":"260px","maleName":"Ki.","maleAvatar":"/Lovefolder/20260411043037_69d95ded97293201118237.webp","femaleName":"Really","femaleAvatar":"/Lovefolder/20260411043046_69d95df639c33274072975.webp","siteBase":"","assetBase":"","imageErrorFallback":"/Style/img/file-placeholder.svg","owoBase":"/OwO","soloMode":false,"weatherEnabled":true,"weatherToken":"d4210665334edba618aecc1829a5e734701e2b824c5aebd4ff8859d7a2536721","weatherType":"qweather","amapKey":"","weatherLocMode":"auto","weatherLocCity":"","weatherLocLat":null,"weatherLocLng":null,"weatherLocName":"","soloOwnerGeo":{"lat":21.915454,"lng":110.856708},"boyCoords":[116.39,39.90],"girlCoords":[116.39,39.90],"bannedChars":"操屌","endpoints":{"mapApi":"/assets/map-api.php","weatherNow":"/services/weather.php","interaction":"/services/interaction.php","accessBeacon":"/services/access-beacon.php","messageList":"/services/message-list.php","messageSubmit":"/services/message.php","infoService":"/services/info-service.php","weatherApi":"/services/weather.php"}}';
 
+// 站点标题（供页面 <title> 等使用；数据库可用时取 settings.site_title，否则用默认值）
+$withuSiteTitle = 'withU';
+
+// 首页「Together Since」起始日展示文案（数据库不可用时兜底）
+$withuStartDateDisplay = '2023-07-19 00:00';
+
 try {
     $rootPath = dirname(__DIR__, 2) . '/backend/app';
     if (!is_file($rootPath . '/config/database.php') || !is_file($rootPath . '/.installed')) {
@@ -25,8 +31,8 @@ try {
         if ($role === 'user2' && !$user2) $user2 = $u;
     }
 
-    $boyName = $user1['nickname'] ?? '他';
-    $girlName = $user2['nickname'] ?? '她';
+    $boyName = $user1['nickname'] ?? 'Ki.';
+    $girlName = $user2['nickname'] ?? 'Really';
     $boyAvatar = $user1['avatar'] ?? '/assets/images/default-avatar.svg';
     $girlAvatar = $user2['avatar'] ?? '/assets/images/default-avatar.svg';
 
@@ -52,10 +58,22 @@ try {
     }
 
     $loveDateRow = $db->fetch("SELECT value FROM settings WHERE `key`='love_date'");
-    $startTime = ($loveDateRow && !empty($loveDateRow['value'])) ? $loveDateRow['value'] . ' 00:00:00' : '2023-07-19 00:00:00';
+    // 后台 love_date 现按 "Y-m-d H:i:s" 存储，直接透传；
+    // 兼容历史仅日期 "Y-m-d" 的旧数据，补齐到 00:00:00
+    $loveDateValue = ($loveDateRow && !empty($loveDateRow['value'])) ? trim($loveDateRow['value']) : '';
+    if ($loveDateValue === '') {
+        $startTime = '2023-07-19 00:00:00';
+    } elseif (preg_match('/^\d{4}-\d{2}-\d{2}$/', $loveDateValue)) {
+        $startTime = $loveDateValue . ' 00:00:00';
+    } else {
+        $startTime = $loveDateValue;
+    }
+    // 起始日文案随 startTime 同步（精确到分钟，与卡片展示格式一致）
+    $withuStartDateDisplay = substr($startTime, 0, 16);
 
     $siteTitleRow = $db->fetch("SELECT value FROM settings WHERE `key`='site_title'");
     $siteTitle = ($siteTitleRow && !empty($siteTitleRow['value'])) ? $siteTitleRow['value'] : 'withU';
+    $withuSiteTitle = $siteTitle;
 
     $weatherKeyRow = $db->fetch("SELECT value FROM settings WHERE `key`='amap_weather_key'");
     $weatherKey = ($weatherKeyRow && !empty($weatherKeyRow['value'])) ? $weatherKeyRow['value'] : '';

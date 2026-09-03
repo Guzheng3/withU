@@ -1,5 +1,15 @@
 <div class="header-wrap">
     <div class="header">
+        <!-- 吸顶 Logo（滚动吸顶后出现，与导航岛吸顶时机一致） -->
+        <div class="withu-header-left-avatar">
+            <div class="stuck-logo stuck-logo--en-v7">
+                <span class="stuck-logo__name" data-withu-tip="<?php echo htmlspecialchars($boyName ?? 'Ki.', ENT_QUOTES, 'UTF-8'); ?>"><?php echo htmlspecialchars($boyName ?? 'Ki.', ENT_QUOTES, 'UTF-8'); ?></span>
+                <span class="stuck-logo__redline-l"></span>
+                <span class="stuck-logo__heart"><svg width="20" height="20" viewBox="0 0 256 256" fill="currentColor"><path d="M240,94c0,70-103.79,126.66-108.21,129a8,8,0,0,1-7.58,0C119.79,220.66,16,164,16,94A62.07,62.07,0,0,1,78,32c20.65,0,38.73,8.88,50,23.89C139.27,40.88,157.35,32,178,32A62.07,62.07,0,0,1,240,94Z"/></svg></span>
+                <span class="stuck-logo__redline-r"></span>
+                <span class="stuck-logo__name" data-withu-tip="<?php echo htmlspecialchars($girlName ?? 'Really', ENT_QUOTES, 'UTF-8'); ?>"><?php echo htmlspecialchars($girlName ?? 'Really', ENT_QUOTES, 'UTF-8'); ?></span>
+            </div>
+        </div>
         <div class="logo" style="margin-right:auto;margin-left:3%">
                         <h1><a class="alogo" href="index.php" title="withU" style="display:inline-flex;align-items:center;gap:4px"><img src="assets/images/withu-logo.png" alt="withU" style="height:2.2rem;width:auto;object-fit:contain;vertical-align:middle"></a></h1>
         </div>
@@ -98,11 +108,11 @@
         <!-- stuck-logo 展示 -->
         <div class="withu-header-more-identity">
                                 <div class="stuck-logo stuck-logo--en-v7">
-                        <span class="stuck-logo__name" data-withu-tip="<?php echo htmlspecialchars($boyName ?? '他', ENT_QUOTES, 'UTF-8'); ?>"><?php echo htmlspecialchars($boyName ?? '他', ENT_QUOTES, 'UTF-8'); ?></span>
+                        <span class="stuck-logo__name" data-withu-tip="<?php echo htmlspecialchars($boyName ?? 'Ki.', ENT_QUOTES, 'UTF-8'); ?>"><?php echo htmlspecialchars($boyName ?? 'Ki.', ENT_QUOTES, 'UTF-8'); ?></span>
                         <span class="stuck-logo__redline-l"></span>
                         <span class="stuck-logo__heart"><svg width="20" height="20" viewBox="0 0 256 256" fill="currentColor"><path d="M240,94c0,70-103.79,126.66-108.21,129a8,8,0,0,1-7.58,0C119.79,220.66,16,164,16,94A62.07,62.07,0,0,1,78,32c20.65,0,38.73,8.88,50,23.89C139.27,40.88,157.35,32,178,32A62.07,62.07,0,0,1,240,94Z"/></svg></span>
                         <span class="stuck-logo__redline-r"></span>
-                        <span class="stuck-logo__name" data-withu-tip="<?php echo htmlspecialchars($girlName ?? '她', ENT_QUOTES, 'UTF-8'); ?>"><?php echo htmlspecialchars($girlName ?? '她', ENT_QUOTES, 'UTF-8'); ?></span>
+                        <span class="stuck-logo__name" data-withu-tip="<?php echo htmlspecialchars($girlName ?? 'Really', ENT_QUOTES, 'UTF-8'); ?>"><?php echo htmlspecialchars($girlName ?? 'Really', ENT_QUOTES, 'UTF-8'); ?></span>
                     </div>
                         </div>
 
@@ -160,11 +170,11 @@
         <!-- stuck-logo 展示 -->
         <div class="withu-header-more-identity">
                                 <div class="stuck-logo stuck-logo--en-v7">
-                        <span class="stuck-logo__name" data-withu-tip="<?php echo htmlspecialchars($boyName ?? '他', ENT_QUOTES, 'UTF-8'); ?>"><?php echo htmlspecialchars($boyName ?? '他', ENT_QUOTES, 'UTF-8'); ?></span>
+                        <span class="stuck-logo__name" data-withu-tip="<?php echo htmlspecialchars($boyName ?? 'Ki.', ENT_QUOTES, 'UTF-8'); ?>"><?php echo htmlspecialchars($boyName ?? 'Ki.', ENT_QUOTES, 'UTF-8'); ?></span>
                         <span class="stuck-logo__redline-l"></span>
                         <span class="stuck-logo__heart"><svg width="20" height="20" viewBox="0 0 256 256" fill="currentColor"><path d="M240,94c0,70-103.79,126.66-108.21,129a8,8,0,0,1-7.58,0C119.79,220.66,16,164,16,94A62.07,62.07,0,0,1,78,32c20.65,0,38.73,8.88,50,23.89C139.27,40.88,157.35,32,178,32A62.07,62.07,0,0,1,240,94Z"/></svg></span>
                         <span class="stuck-logo__redline-r"></span>
-                        <span class="stuck-logo__name" data-withu-tip="<?php echo htmlspecialchars($girlName ?? '她', ENT_QUOTES, 'UTF-8'); ?>"><?php echo htmlspecialchars($girlName ?? '她', ENT_QUOTES, 'UTF-8'); ?></span>
+                        <span class="stuck-logo__name" data-withu-tip="<?php echo htmlspecialchars($girlName ?? 'Really', ENT_QUOTES, 'UTF-8'); ?>"><?php echo htmlspecialchars($girlName ?? 'Really', ENT_QUOTES, 'UTF-8'); ?></span>
                     </div>
                         </div>
 

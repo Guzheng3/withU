@@ -70,17 +70,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             if (!$registerEnabled) {
                 $error = $activeUserCount === 1 ? '请使用情侣邀请链接注册第二个账号' : '当前已注册满两位用户，已关闭注册';
             } else {
-                $qq       = trim((string) ($_POST['qq'] ?? ''));
-                $username = $qq; // QQ 号即登录账号
+                $username = trim((string) ($_POST['username'] ?? ''));
+                $qq       = trim((string) ($_POST['qq'] ?? '')); // QQ 号仅用于获取头像
                 $password = (string) ($_POST['password'] ?? '');
                 $confirm  = (string) ($_POST['password_confirm'] ?? '');
                 $nickname = trim((string) ($_POST['nickname'] ?? ''));
 
                 if ($activeUserCount === 1 && !$inviteRow) {
                     $error = '邀请链接无效或已过期';
-                } elseif ($qq === '' || $password === '' || $confirm === '' || $nickname === '') {
+                } elseif ($username === '' || $password === '' || $confirm === '' || $nickname === '') {
                     $error = '请填写所有必填项';
-                } elseif (!preg_match('/^[1-9][0-9]{4,10}$/', $qq)) {
+                } elseif (!preg_match('/^[a-zA-Z0-9]{3,32}$/', $username)) {
+                    $error = '用户名格式不正确（仅限字母和数字，3~32 位）';
+                } elseif ($qq !== '' && !preg_match('/^[1-9][0-9]{4,10}$/', $qq)) {
                     $error = 'QQ 号格式不正确（应为 5~11 位数字）';
                 } elseif ($password !== $confirm) {
                     $error = '两次输入的密码不一致';
@@ -138,6 +140,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 // 提交失败后停留在原表单并回填已填内容（密码不回填）
 $lastAction   = (string) ($_POST['action'] ?? '');
 $oldLoginName = $lastAction === 'login' ? trim((string) ($_POST['username'] ?? '')) : '';
+$oldUsername  = $lastAction === 'register' ? trim((string) ($_POST['username'] ?? '')) : '';
 $oldQq        = $lastAction === 'register' ? trim((string) ($_POST['qq'] ?? '')) : '';
 $oldNickname  = $lastAction === 'register' ? trim((string) ($_POST['nickname'] ?? '')) : '';
 $activeTab    = ($lastAction === 'register' && $error !== '') ? 'register' : 'login';
@@ -228,8 +231,8 @@ body{background:linear-gradient(135deg,#ffeef5 0%,#f4f6fb 60%,#eef2ff 100%);
       <input type="hidden" name="action" value="login">
 
       <div class="form-group">
-        <label><i class="fab fa-qq"></i> QQ号</label>
-        <input type="text" name="username" inputmode="numeric" maxlength="11" autocomplete="username" value="<?php echo e($oldLoginName); ?>" autofocus>
+        <label><i class="fas fa-user"></i> 用户名</label>
+        <input type="text" name="username" maxlength="32" autocomplete="username" value="<?php echo e($oldLoginName); ?>" autofocus>
       </div>
 
       <div class="form-group">
@@ -247,11 +250,15 @@ body{background:linear-gradient(135deg,#ffeef5 0%,#f4f6fb 60%,#eef2ff 100%);
       <input type="hidden" name="invite_token" value="<?php echo e($inviteToken); ?>">
 
       <div class="form-group">
+        <label><i class="fas fa-user"></i> 用户名</label>
+        <input type="text" name="username" maxlength="32" placeholder="字母和数字，3~32 位，用于登录" value="<?php echo e($oldUsername); ?>" autocomplete="username" required>
+      </div>
+      <div class="form-group">
         <label class="label-row">
-          <span><i class="fab fa-qq"></i> QQ号</span>
+          <span><i class="fab fa-qq"></i> QQ号（可选，用于获取头像）</span>
           <img class="qq-avatar-preview" id="qqAvatarPreview" alt="QQ 头像预览">
         </label>
-        <input type="text" name="qq" inputmode="numeric" maxlength="11" placeholder="QQ 号即登录账号" value="<?php echo e($oldQq); ?>" required>
+        <input type="text" name="qq" inputmode="numeric" maxlength="11" placeholder="选填，仅用于获取头像" value="<?php echo e($oldQq); ?>">
       </div>
       <div class="form-group">
         <label><i class="fas fa-user-tag"></i> 昵称</label>
