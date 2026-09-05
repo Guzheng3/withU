@@ -8,6 +8,38 @@ $uri  = $_SERVER['REQUEST_URI'];
 $path = parse_url($uri, PHP_URL_PATH);
 $path = rawurldecode($path);
 
+// [TEMP-DEBUG] entry-level access + error logging - remove after debugging
+ini_set('log_errors', '1');
+ini_set('error_log', __DIR__ . '/debug_php_errors.log');
+file_put_contents(__DIR__ . '/debug_router.log', sprintf(
+    "[%s] %s %s cl=%s\n",
+    date('H:i:s'),
+    $_SERVER['REQUEST_METHOD'] ?? '?',
+    $uri,
+    $_SERVER['CONTENT_LENGTH'] ?? '-'
+), FILE_APPEND);
+// [/TEMP-DEBUG]
+
+// PHP's built-in server closes HTML responses with EOF. Some SSH tunnels do
+// not forward that half-close, so give browsers an explicit response length.
+ob_start(function (string $output): string {
+    if (headers_sent()) {
+        return $output;
+    }
+
+    $hasLength = false;
+    foreach (headers_list() as $header) {
+        if (stripos($header, 'Content-Length:') === 0) {
+            $hasLength = true;
+            break;
+        }
+    }
+    if (!$hasLength) {
+        header('Content-Length: ' . strlen($output), true);
+    }
+    return $output;
+});
+
 $base = __DIR__;
 $frontRoot = $base . '/frontend';
 $appRoot   = $base . '/backend/app';

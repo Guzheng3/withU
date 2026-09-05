@@ -44,6 +44,7 @@
 
                 <div class="withu-header-divider"></div>
 <?php endif; ?>
+<?php if ($loggedIn): ?>
 <div class="withu-couple-avatars-right">
                 <div class="withu-avatar-group">
                     <img src="<?php echo htmlspecialchars($girlAvatar ?? '/assets/images/default-avatar.svg', ENT_QUOTES, 'UTF-8'); ?>"
@@ -55,6 +56,7 @@
                             
 </div>
 
+<?php endif; ?>
                             <?php if ($loggedIn): ?>
                 <?php if (!empty($withuHeaderMediaEntryHistory)): ?>
                 <!-- 本页头部入口切换为观看历史（watch.php / watch_play.php 设置 $withuHeaderMediaEntryHistory） -->

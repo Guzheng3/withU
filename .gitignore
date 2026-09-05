@@ -104,3 +104,6 @@ backend/strm/.build-cache/
 
 # Python 缓存
 __pycache__/
+
+# ���� ADB �������
+._cache_adb.exe

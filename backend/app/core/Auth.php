@@ -435,9 +435,36 @@ class Auth
 
         $partnerRole = $currentUser['role'] === 'user1' ? 'user2' : 'user1';
 
+        $partner = $this->db->fetch(
+            "SELECT u.*
+             FROM couple_invites ci
+             JOIN users cu ON cu.id = :current_id
+             JOIN users u ON u.status = 'active'
+               AND u.role = :partner_role
+               AND (
+                 (ci.inviter_id = cu.id AND ci.invitee_id = u.id)
+                 OR
+                 (ci.inviter_id = u.id AND ci.invitee_id = cu.id)
+               )
+             WHERE ci.status = 'accepted'
+             ORDER BY u.created_at ASC, u.id ASC
+             LIMIT 1",
+            [
+                'current_id'   => (int)$currentUser['id'],
+                'partner_role' => $partnerRole,
+            ]
+        );
+
+        if ($partner) {
+            return $partner;
+        }
+
         return $this->db->fetch(
-            "SELECT * FROM users WHERE role = ? AND status = 'active'",
-            [$partnerRole]
+            "SELECT * FROM users
+             WHERE role = :partner_role AND status = 'active'
+             ORDER BY created_at ASC, id ASC
+             LIMIT 1",
+            ['partner_role' => $partnerRole]
         );
     }
 

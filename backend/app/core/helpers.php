@@ -1072,7 +1072,7 @@ function migrate_schema_if_needed(): void {
 
     // Avoid rerunning dozens of SHOW/ALTER/CREATE statements on every PHP
     // request, including each high-frequency watch poll.
-    $schemaVersion = '20260831-02';
+    $schemaVersion = '20260905-01';
     $runtimeDir = dirname(ROOT_PATH) . DIRECTORY_SEPARATOR . 'runtime';
     $markerPath = $runtimeDir . DIRECTORY_SEPARATOR . 'schema-version';
     $lockPath = $runtimeDir . DIRECTORY_SEPARATOR . 'schema-migration.lock';
@@ -1353,6 +1353,26 @@ function migrate_withu_v1($db): void {
     $done = true;
 
     $tables = [
+        "CREATE TABLE IF NOT EXISTS `timetables` (
+            `id` int(11) NOT NULL AUTO_INCREMENT,
+            `user_id` int(11) NOT NULL COMMENT 'User ID',
+            `content` mediumtext NOT NULL COMMENT 'Timetable transfer package JSON',
+            `content_hash` char(64) NOT NULL COMMENT 'SHA-256 content hash',
+            `updated_at` datetime NOT NULL COMMENT 'Last update time',
+            PRIMARY KEY (`id`),
+            UNIQUE KEY `uniq_user` (`user_id`),
+            KEY `idx_content_hash` (`content_hash`)
+        ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='Couple timetable sharing'",
+        "CREATE TABLE IF NOT EXISTS `user_settings` (
+            `id` int(11) NOT NULL AUTO_INCREMENT,
+            `user_id` int(11) NOT NULL COMMENT 'User ID',
+            `content` mediumtext NOT NULL COMMENT 'Personal app settings JSON',
+            `content_hash` char(64) NOT NULL COMMENT 'SHA-256 content hash',
+            `updated_at` datetime NOT NULL COMMENT 'Last update time',
+            PRIMARY KEY (`id`),
+            UNIQUE KEY `uniq_user_settings_user` (`user_id`),
+            KEY `idx_user_settings_hash` (`content_hash`)
+        ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='Personal app settings backup'",
         "CREATE TABLE IF NOT EXISTS `couple_invites` (
             `id` int(11) NOT NULL AUTO_INCREMENT,
             `inviter_id` int(11) NOT NULL,

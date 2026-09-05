@@ -17,7 +17,7 @@ function killByPort(port, name){
   });
   return pids.size;
 }
-killByPort(1314,'withu php');
+killByPort(3314,'withu php');
 killByPort(8081,'withUstrm 后端');
 killByPort(3112,'withUstrm bridge');
 // MariaDB 优雅关闭
