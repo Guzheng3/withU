@@ -9,7 +9,7 @@
             <span>概览</span>
         </a>
         <a href="/admin/articles.php"
-           class="admin-tab-item <?php echo in_array($adminPage, ['articles', 'albums', 'messages', 'events', 'map'], true) ? 'admin-tab-item-active' : ''; ?>">
+           class="admin-tab-item <?php echo in_array($adminPage, ['articles', 'albums', 'messages', 'events', 'map', 'timetable_settings'], true) ? 'admin-tab-item-active' : ''; ?>">
             <i class="ti ti-stack"></i>
             <span>内容</span>
         </a>

@@ -11,26 +11,6 @@ require_once __DIR__ . '/../core/withu.php';
 
 migrate_schema_if_needed();
 
-// [TEMP-DEBUG] request/error tracing - remove after debugging
-file_put_contents(__DIR__ . '/../../../debug_timetable.log', sprintf(
-    "[%s] %s action=%s ct=%s cl=%s\n",
-    date('H:i:s'),
-    $_SERVER['REQUEST_METHOD'] ?? '?',
-    $_GET['action'] ?? $_POST['action'] ?? '',
-    $_SERVER['CONTENT_TYPE'] ?? '-',
-    $_SERVER['CONTENT_LENGTH'] ?? '-'
-), FILE_APPEND);
-register_shutdown_function(function () {
-    $e = error_get_last();
-    file_put_contents(__DIR__ . '/../../../debug_timetable.log', sprintf(
-        "[%s] done status=%s last_err=%s\n",
-        date('H:i:s'),
-        http_response_code() ?: '-',
-        $e ? ($e['type'] . ' ' . $e['message'] . ' @' . $e['line']) : 'none'
-    ), FILE_APPEND);
-});
-// [/TEMP-DEBUG]
-
 $auth = new Auth();
 $db = Database::getInstance();
 $action = (string)($_GET['action'] ?? $_POST['action'] ?? 'bootstrap');

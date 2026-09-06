@@ -1,0 +1,465 @@
+/* ============================================================
+ * withU 首页课表模块（与轻屿课表 App 周视图一致）
+ * 布局参数对照 mikcb timetable_screen.dart：
+ *   表头高 40 / 节次行高 68 / 时间列宽 34 / 课程卡圆角 8
+ *   今日强调色 #3482FF（HyperOS 主题 primary）
+ * ============================================================ */
+
+.withu-tt-card {
+    position: relative;
+    background: #ffffff;
+    border-radius: 1.5rem;
+    box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.04), 0 25px 50px -12px rgba(0, 0, 0, 0.18);
+    padding: 20px 20px 24px;
+    overflow: hidden;
+    user-select: none;
+}
+
+/* 登录后才能看到（服务端已 gate）；未登录或数据未就绪时隐藏 */
+.withu-tt-card.is-hidden {
+    display: none;
+}
+
+/* ---------- 切换双方课表的分段控件（放在 section 头部右侧） ---------- */
+.withu-tt-tabs {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    background: rgba(0, 0, 0, 0.055);
+    border-radius: 999px;
+    padding: 3px;
+}
+
+.withu-tt-tab {
+    appearance: none;
+    border: 0;
+    background: transparent;
+    color: rgba(0, 0, 0, 0.55);
+    font-size: 12px;
+    font-weight: 600;
+    line-height: 1;
+    padding: 7px 14px;
+    border-radius: 999px;
+    cursor: pointer;
+    transition: background 0.18s ease, color 0.18s ease, box-shadow 0.18s ease;
+    max-width: 120px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.withu-tt-tab:hover {
+    color: rgba(0, 0, 0, 0.75);
+}
+
+.withu-tt-tab.is-active {
+    background: #3482ff;
+    color: #ffffff;
+    box-shadow: 0 2px 6px -1px rgba(52, 130, 255, 0.5);
+}
+
+.withu-tt-tab.is-disabled {
+    opacity: 0.45;
+    cursor: default;
+}
+
+/* ---------- 加载 / 空状态 ---------- */
+.withu-tt-loading {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    min-height: 180px;
+    color: rgba(0, 0, 0, 0.45);
+    font-size: 13px;
+}
+
+.withu-tt-spinner {
+    width: 18px;
+    height: 18px;
+    border: 2px solid rgba(0, 0, 0, 0.12);
+    border-top-color: #3482ff;
+    border-radius: 50%;
+    animation: withu-tt-spin 0.8s linear infinite;
+}
+
+@keyframes withu-tt-spin {
+    to { transform: rotate(360deg); }
+}
+
+.withu-tt-empty {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    min-height: 220px;
+    color: rgba(0, 0, 0, 0.45);
+    font-size: 13px;
+    text-align: center;
+    padding: 0 24px;
+    line-height: 1.6;
+}
+
+.withu-tt-empty-icon {
+    font-size: 34px;
+    color: rgba(0, 0, 0, 0.18);
+}
+
+/* ---------- 周视图骨架 ---------- */
+.withu-tt-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    position: relative;
+}
+
+/* 周导航：左右圆钮悬浮在网格两侧，回本周胶囊浮在右上 */
+.withu-tt-nav {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    width: 36px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 3;
+}
+
+.withu-tt-nav.is-prev { left: -14px; }
+.withu-tt-nav.is-next { right: -14px; }
+
+.withu-tt-nav button {
+    appearance: none;
+    border: 0;
+    width: 34px;
+    height: 34px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.92);
+    color: rgba(0, 0, 0, 0.65);
+    font-size: 15px;
+    line-height: 1;
+    cursor: pointer;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.14);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background 0.15s ease, color 0.15s ease, transform 0.15s ease;
+}
+
+.withu-tt-nav button:hover {
+    background: #3482ff;
+    color: #fff;
+    transform: scale(1.06);
+}
+
+.withu-tt-nav button:active {
+    transform: scale(0.94);
+}
+
+.withu-tt-back-week {
+    position: absolute;
+    top: -4px;
+    right: 0;
+    z-index: 3;
+    appearance: none;
+    border: 0;
+    background: rgba(52, 130, 255, 0.1);
+    color: #3482ff;
+    font-size: 11px;
+    font-weight: 700;
+    padding: 6px 12px;
+    border-radius: 999px;
+    cursor: pointer;
+    transition: opacity 0.2s ease, background 0.15s ease;
+}
+
+.withu-tt-back-week:hover {
+    background: rgba(52, 130, 255, 0.18);
+}
+
+/* 星期表头：左侧周次格 + 7 个天格（高 40） */
+.withu-tt-header {
+    display: flex;
+    align-items: stretch;
+    position: relative;
+}
+
+.withu-tt-header-week {
+    width: 34px;
+    flex: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 4px 2px 4px 6px;
+    font-size: 11px;
+    font-weight: 800;
+    color: rgba(0, 0, 0, 0.8);
+    cursor: pointer;
+    border-radius: 10px;
+}
+
+.withu-tt-header-week:hover {
+    background: rgba(0, 0, 0, 0.05);
+}
+
+.withu-tt-header-days {
+    flex: 1;
+    display: flex;
+}
+
+.withu-tt-header-day {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 2px;
+    padding: 3px 0;
+    position: relative;
+    min-width: 0;
+}
+
+.withu-tt-header-day__label {
+    font-size: 10px;
+    font-weight: 600;
+    color: rgba(0, 0, 0, 0.72);
+    line-height: 1.1;
+}
+
+.withu-tt-header-day__date {
+    font-size: 8.5px;
+    color: rgba(0, 0, 0, 0.42);
+    line-height: 1.1;
+}
+
+.withu-tt-header-day.is-today::after {
+    content: '';
+    position: absolute;
+    left: 20%;
+    right: 20%;
+    bottom: 0;
+    height: 2px;
+    border-radius: 999px;
+    background: rgba(52, 130, 255, 0.35);
+}
+
+.withu-tt-header-day.is-today .withu-tt-header-day__label {
+    color: #3482ff;
+    font-weight: 800;
+}
+
+.withu-tt-header-day.is-today .withu-tt-header-day__date {
+    color: rgba(52, 130, 255, 0.78);
+}
+
+/* 表体：时间列 + 7 个日列 */
+.withu-tt-body-row {
+    display: flex;
+}
+
+.withu-tt-time-col {
+    width: 34px;
+    flex: none;
+}
+
+.withu-tt-time-cell {
+    height: 68px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 1px;
+}
+
+.withu-tt-time-cell__num {
+    font-size: 10px;
+    font-weight: 700;
+    color: rgba(0, 0, 0, 0.8);
+    line-height: 1.05;
+}
+
+.withu-tt-time-cell__time {
+    font-size: 7.5px;
+    color: rgba(0, 0, 0, 0.42);
+    line-height: 1.05;
+}
+
+.withu-tt-day-col {
+    flex: 1;
+    min-width: 0;
+    position: relative;
+    margin-left: 2px;
+}
+
+/* 行分隔线（对齐 App 的 HyperOS dividerLine） */
+.withu-tt-day-col::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-image: linear-gradient(to bottom, rgba(0, 0, 0, 0.055) 1px, transparent 1px);
+    background-size: 100% 68px;
+    pointer-events: none;
+}
+
+.withu-tt-day-col::after {
+    content: '';
+    position: absolute;
+    inset: 0 0 0 -2px;
+    border-left: 1px solid rgba(0, 0, 0, 0.055);
+    pointer-events: none;
+}
+
+/* ---------- 课程卡片（compact 卡：圆角 8、渐变、白字） ---------- */
+.withu-tt-course {
+    position: absolute;
+    left: 0;
+    right: 0;
+    border-radius: 8px;
+    overflow: hidden;
+    cursor: pointer;
+    box-sizing: border-box;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: filter 0.12s ease, transform 0.12s ease;
+}
+
+.withu-tt-course:hover {
+    filter: brightness(1.08);
+    transform: scale(1.015);
+    z-index: 4;
+}
+
+.withu-tt-course__inner {
+    width: 100%;
+    height: 100%;
+    padding: 6px 4px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 2px;
+    overflow: hidden;
+}
+
+.withu-tt-course__name {
+    font-size: 9px;
+    font-weight: 700;
+    line-height: 1.15;
+    text-align: center;
+    word-break: break-all;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+.withu-tt-course__sub {
+    font-size: 8px;
+    line-height: 1.1;
+    text-align: center;
+    opacity: 0.92;
+    max-width: 100%;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.withu-tt-course__sub.is-teacher {
+    opacity: 0.85;
+}
+
+/* 同日冲突课：背景压暗（App timetableConflictCourseOpacity=0.7，由渐变透明度实现），
+   名称上方加「冲突」小字，右上角红色角标 */
+.withu-tt-course__over {
+    font-size: 7px;
+    line-height: 1.05;
+    text-align: center;
+    opacity: 0.85;
+}
+
+.withu-tt-course__badge {
+    position: absolute;
+    top: 6px;
+    right: 6px;
+    padding: 2px 6px;
+    border-radius: 999px;
+    background: #e53935;
+    color: #fff;
+    font-size: 9px;
+    font-weight: 700;
+    line-height: 1.2;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.16);
+}
+
+/* ---------- 课程详情弹层 ---------- */
+.withu-tt-pop {
+    position: fixed;
+    z-index: 9999;
+    background: rgba(30, 30, 30, 0.55);
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+    border-radius: 16px;
+    color: #fff;
+    padding: 14px 16px;
+    width: 260px;
+    box-shadow: 0 20px 50px -12px rgba(0, 0, 0, 0.45);
+    animation: withu-tt-pop-in 0.16s ease;
+}
+
+@keyframes withu-tt-pop-in {
+    from { opacity: 0; transform: translateY(6px) scale(0.97); }
+    to   { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+.withu-tt-pop__title {
+    font-size: 14px;
+    font-weight: 700;
+    line-height: 1.3;
+    margin-bottom: 8px;
+    word-break: break-all;
+}
+
+.withu-tt-pop__row {
+    display: flex;
+    align-items: flex-start;
+    gap: 6px;
+    font-size: 12px;
+    line-height: 1.45;
+    color: rgba(255, 255, 255, 0.85);
+    margin-top: 4px;
+}
+
+.withu-tt-pop__row i {
+    font-size: 13px;
+    color: rgba(255, 255, 255, 0.6);
+    margin-top: 1px;
+}
+
+/* ---------- 桌面端放大约 1.3 倍（保持 App 视觉比例，避免字过小） ---------- */
+@media (min-width: 768px) {
+    .withu-tt-header-week { font-size: 13px; }
+    .withu-tt-header-day__label { font-size: 13px; }
+    .withu-tt-header-day__date { font-size: 11px; }
+    .withu-tt-time-cell__num { font-size: 13px; }
+    .withu-tt-time-cell__time { font-size: 9.5px; }
+    .withu-tt-course__name { font-size: 12px; }
+    .withu-tt-course__sub { font-size: 10.5px; }
+    .withu-tt-course__over { font-size: 9px; }
+    .withu-tt-course__badge { top: 8px; right: 8px; font-size: 11px; }
+}
+
+/* 超窄屏（<380px）时间列收窄，标题字号同步压缩 */
+@media (max-width: 379px) {
+    .withu-tt-card { padding: 14px 12px 18px; }
+    .withu-tt-time-col,
+    .withu-tt-header-week { width: 30px; }
+    .withu-tt-nav.is-prev { left: -10px; }
+    .withu-tt-nav.is-next { right: -10px; }
+}
+
+/* 跟随站内 AOS 进入动画时先隐藏，避免闪现 */
+.withu-tt-card[data-aos] {
+    opacity: 0;
+}

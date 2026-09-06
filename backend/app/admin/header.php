@@ -29,6 +29,7 @@ $adminPageMeta = [
     'messages' => ['title' => '留言管理', 'section' => '内容管理'],
     'events' => ['title' => '纪念事件', 'section' => '内容管理'],
     'map' => ['title' => '地图与足迹', 'section' => '内容管理'],
+    'timetable_settings' => ['title' => '课表设置', 'section' => '内容管理'],
     'together_settings' => ['title' => '一起看设置', 'section' => '影视与播放'],
     'player_settings' => ['title' => '播放器设置', 'section' => '影视与播放'],
     'player_art' => ['title' => '播放器设置', 'section' => '影视与播放'],
@@ -99,6 +100,9 @@ foreach (($themeConfig['colors'] ?? []) as $themeName => $themeValue) {
         </a>
         <a href="/admin/map.php" class="admin-drawer-link <?php echo $adminPage === 'map' ? 'admin-drawer-link-active' : ''; ?>">
             <i class="ti ti-map-pin"></i><span>地图与足迹</span>
+        </a>
+        <a href="/admin/timetable_settings.php" class="admin-drawer-link <?php echo $adminPage === 'timetable_settings' ? 'admin-drawer-link-active' : ''; ?>">
+            <i class="ti ti-calendar-time"></i><span>课表设置</span>
         </a>
 
         <div class="admin-drawer-section-title">影视与播放</div>
