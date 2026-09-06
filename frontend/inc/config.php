@@ -43,16 +43,43 @@ try {
     $girlLastLogin = $user2['last_login_at'] ?? null;
 
     // 读取情侣坐标（从 map-all.json）
+    // 优先按头像文件名 / 昵称匹配 lovers，避免 lovers 数组顺序与 boy/girl 顺序不一致时位置挂反
     $boyCoords = [116.39, 39.90];
     $girlCoords = [116.39, 39.90];
+    $boyCoordsMatched = false;
+    $girlCoordsMatched = false;
+    $boyAvatarFile = strtolower(pathinfo(parse_url((string)$boyAvatar, PHP_URL_PATH) ?? '', PATHINFO_BASENAME));
+    $girlAvatarFile = strtolower(pathinfo(parse_url((string)$girlAvatar, PHP_URL_PATH) ?? '', PATHINFO_BASENAME));
     $mapFile = __DIR__ . '/../services/map-all.json';
     if (file_exists($mapFile)) {
         $mapData = json_decode(file_get_contents($mapFile), true);
         $lovers = $mapData['lovers'] ?? [];
-        if (isset($lovers[0]['coords'])) {
+        foreach ($lovers as $lover) {
+            $loverCoords = $lover['coords'] ?? null;
+            if (!is_array($loverCoords) || count($loverCoords) < 2) {
+                continue;
+            }
+            $loverName = trim((string)($lover['name'] ?? ''));
+            $loverAvatarFile = strtolower(pathinfo(parse_url((string)($lover['avatar'] ?? ''), PHP_URL_PATH) ?? '', PATHINFO_BASENAME));
+            $byAvatar = $loverAvatarFile !== '' && $loverAvatarFile === $boyAvatarFile;
+            $byName = $loverName !== '' && $loverName === trim((string)$boyName);
+            if (!$boyCoordsMatched && ($byAvatar || $byName)) {
+                $boyCoords = array_slice($loverCoords, 0, 2);
+                $boyCoordsMatched = true;
+                continue;
+            }
+            $byAvatar = $loverAvatarFile !== '' && $loverAvatarFile === $girlAvatarFile;
+            $byName = $loverName !== '' && $loverName === trim((string)$girlName);
+            if (!$girlCoordsMatched && ($byAvatar || $byName)) {
+                $girlCoords = array_slice($loverCoords, 0, 2);
+                $girlCoordsMatched = true;
+            }
+        }
+        // 头像与昵称都未匹配上时按旧的顺序兜底（lovers[0] -> boy, lovers[1] -> girl）
+        if (!$boyCoordsMatched && isset($lovers[0]['coords'])) {
             $boyCoords = $lovers[0]['coords'];
         }
-        if (isset($lovers[1]['coords'])) {
+        if (!$girlCoordsMatched && isset($lovers[1]['coords'])) {
             $girlCoords = $lovers[1]['coords'];
         }
     }
@@ -106,6 +133,7 @@ try {
         'siteBase' => '', 'assetBase' => '',
         'imageErrorFallback' => '/Style/img/file-placeholder.svg',
         'owoBase' => '/OwO', 'soloMode' => false,
+        'loggedIn' => (bool)($loggedIn ?? false),
         'weatherEnabled' => true,
         'weatherToken' => $weatherKey ?: 'd4210665334edba618aecc1829a5e734701e2b824c5aebd4ff8859d7a2536721',
         'weatherType' => $weatherKey ? 'amap' : 'qweather',
@@ -121,6 +149,7 @@ try {
         'bannedChars' => '操屌',
         'endpoints' => [
             'mapApi' => '/assets/map-api.php', 'weatherNow' => '/services/weather.php',
+            'locationBeacon' => '/services/location-beacon.php',
             'interaction' => '/services/interaction.php', 'accessBeacon' => '/services/access-beacon.php',
             'messageList' => '/services/message-list.php', 'messageSubmit' => '/services/message.php',
             'infoService' => '/services/info-service.php', 'weatherApi' => '/services/weather.php',

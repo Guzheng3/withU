@@ -109,7 +109,51 @@ if (!defined('WITHU_MESSAGE_COMMON')) {
     }
 
     /**
+     * 当前访问者是否已登录（后端 Auth）。
+     * 用于留言读取的可见性过滤：游客只允许看到 is_public=1 的公开留言。
+     */
+    function withu_message_viewer_is_logged_in(): bool
+    {
+        static $state = null;
+        if ($state !== null) return $state;
+        $state = false;
+        try {
+            $rootPath = dirname(__DIR__, 2) . '/backend/app';
+            if (!is_file($rootPath . '/config/database.php') || !is_file($rootPath . '/.installed')) {
+                return $state;
+            }
+            require_once $rootPath . '/config/config.php';
+            require_once $rootPath . '/core/Database.php';
+            require_once $rootPath . '/core/Auth.php';
+            $auth = new Auth();
+            $state = $auth->isLoggedIn();
+        } catch (Throwable $e) {
+            // 登录态不可用时按未登录处理
+        }
+        return $state;
+    }
+
+    /**
+     * messages 表是否存在 is_public 字段（老库可能没有该字段，缺失时不加过滤条件）。
+     */
+    function withu_message_has_is_public($db): bool
+    {
+        static $res = null;
+        if ($res !== null) return $res;
+        $res = false;
+        if (!$db) return $res;
+        try {
+            $row = $db->fetch("SHOW COLUMNS FROM `messages` LIKE 'is_public'");
+            $res = !empty($row);
+        } catch (Throwable $e) {
+            $res = false;
+        }
+        return $res;
+    }
+
+    /**
      * 从数据库读取全部已发布留言（前端结构），附带每条的回复数；库不可用时返回 null。
+     * 游客只返回公开留言（is_public=1），情侣私密留言需登录后可见。
      */
     function withu_message_fetch_all(): ?array
     {
@@ -117,8 +161,11 @@ if (!defined('WITHU_MESSAGE_COMMON')) {
         if (!$db) return null;
         try {
             withu_message_ensure_schema($db);
+            $onlyPublic = !withu_message_viewer_is_logged_in() && withu_message_has_is_public($db);
             $rows = $db->fetchAll(
-                "SELECT * FROM messages WHERE status = 'published' ORDER BY id ASC"
+                "SELECT * FROM messages WHERE status = 'published'"
+                . ($onlyPublic ? " AND is_public = 1" : '')
+                . " ORDER BY id ASC"
             );
         } catch (Throwable $e) {
             return null;

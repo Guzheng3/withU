@@ -15,6 +15,21 @@ header('Cache-Control: no-cache');
 
 require_once __DIR__ . '/../inc/config.php';
 
+// 登录态（后端 Auth）：加密相册的照片只对已登录情侣可见
+$photolistLoggedIn = false;
+try {
+    $photolistRoot = dirname(__DIR__, 2) . '/backend/app';
+    if (is_file($photolistRoot . '/config/database.php') && is_file($photolistRoot . '/.installed')) {
+        require_once $photolistRoot . '/config/config.php';
+        require_once $photolistRoot . '/core/Database.php';
+        require_once $photolistRoot . '/core/Auth.php';
+        $photolistAuth = new Auth();
+        $photolistLoggedIn = $photolistAuth->isLoggedIn();
+    }
+} catch (Throwable $e) {
+    // 登录态不可用时按未登录处理（加密相册一律不可见）
+}
+
 $code    = isset($_GET['code']) ? trim((string) $_GET['code']) : '';
 $page    = max(1, (int) ($_GET['page'] ?? 1));
 $perPage = (int) ($_GET['per_page'] ?? 20);
@@ -98,8 +113,13 @@ try {
         if (is_file($helpersFile)) {
             require_once $helpersFile;
         }
-        $row = $db->fetch("SELECT id, name FROM albums WHERE name = :name LIMIT 1", ['name' => (string) ($albumRow['name'] ?? '')]);
+        $row = $db->fetch("SELECT id, name, is_encrypted FROM albums WHERE name = :name LIMIT 1", ['name' => (string) ($albumRow['name'] ?? '')]);
         if ($row) {
+            // 加密相册：未登录直接拒绝，不返回任何照片与路径
+            if ((int) ($row['is_encrypted'] ?? 0) === 1 && !$photolistLoggedIn) {
+                echo json_encode(['code' => 403, 'msg' => '该相册仅对情侣可见，请先登录'], JSON_UNESCAPED_UNICODE);
+                exit;
+            }
             $aid = (int) $row['id'];
             // 图片（后传的在前，尽量携带上传者信息）
             $imgs = $db->fetchAll(

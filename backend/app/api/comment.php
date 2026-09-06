@@ -84,6 +84,23 @@ if ($articleId) {
     }
 }
 
+// 加密内容的评论仅限已登录用户：游客看不到内容，也不允许对其评论
+$targetEncrypted = false;
+try {
+    if ($articleId) {
+        $encRow = $db->fetch("SELECT is_encrypted FROM articles WHERE id = :id LIMIT 1", ['id' => $articleId]);
+        $targetEncrypted = $encRow && !empty($encRow['is_encrypted']);
+    } elseif ($albumId) {
+        $encRow = $db->fetch("SELECT is_encrypted FROM albums WHERE id = :id LIMIT 1", ['id' => $albumId]);
+        $targetEncrypted = $encRow && !empty($encRow['is_encrypted']);
+    }
+} catch (Throwable $e) {
+    // 老库缺少 is_encrypted 字段时按未加密处理（此类库中也不存在加密内容）
+}
+if ($targetEncrypted && !$currentUser) {
+    jsonResponse(['success' => false, 'message' => '该内容仅对情侣可见，请先登录后再评论'], 403);
+}
+
 // 简单节流：限制同一用户/会话/IP 短时间内频繁评论
 $now = time();
 $ip  = function_exists('getClientIp') ? getClientIp() : ($_SERVER['REMOTE_ADDR'] ?? '0.0.0.0');

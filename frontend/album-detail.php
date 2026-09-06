@@ -340,8 +340,8 @@ $__albumAuthorAvatar = (string) ($__cfg['maleAvatar'] ?? '');
             });
     </script>
 <script src="/assets/js/app.js"></script>
-<script src="/assets/js/withu-location.js"></script>
-<script src="/assets/js/head-avatar-location.js"></script>
+<script src="/assets/js/withu-location.js?v=20260906e"></script>
+<script src="/assets/js/head-avatar-location.js?v=20260906"></script>
 <script src="/assets/js/components.js"></script>
 
 <!-- 礼花效果已迁移到 components.js 的 ConfettiEffect 模块 -->

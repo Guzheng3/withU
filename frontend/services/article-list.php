@@ -14,6 +14,21 @@ header('Cache-Control: no-cache');
 
 require_once __DIR__ . '/../inc/config.php';
 
+// 登录态（后端 Auth）：加密文章（is_encrypted=1）对游客整体隐藏
+$articleListLoggedIn = false;
+try {
+    $articleListRoot = dirname(__DIR__, 2) . '/backend/app';
+    if (is_file($articleListRoot . '/config/database.php') && is_file($articleListRoot . '/.installed')) {
+        require_once $articleListRoot . '/config/config.php';
+        require_once $articleListRoot . '/core/Database.php';
+        require_once $articleListRoot . '/core/Auth.php';
+        $articleListAuth = new Auth();
+        $articleListLoggedIn = $articleListAuth->isLoggedIn();
+    }
+} catch (Throwable $e) {
+    // 登录态不可用时按未登录处理（只返回公开文章）
+}
+
 $page    = max(1, (int) ($_GET['page'] ?? 1));
 $perPage = (int) ($_GET['per_page'] ?? 12);
 if ($perPage <= 0) { $perPage = 12; }
@@ -61,18 +76,43 @@ if (!function_exists('articlelist_avatar_url')) {
     }
 }
 
-$totalRow = $db->fetch("SELECT COUNT(*) AS c FROM articles WHERE status = 'published'");
+// 游客过滤：加密文章整体隐藏（列表与总数口径一致）
+// 极老数据库可能没有 is_encrypted 字段，查询失败时回退为不过滤（此类库中也不存在加密文章）
+$articleListWhere = "a.status = 'published'" . ($articleListLoggedIn ? '' : " AND (a.is_encrypted = 0 OR a.is_encrypted IS NULL)");
+$articleListWhereFallback = "a.status = 'published'";
+
+$totalRow = null;
+try {
+    $totalRow = $db->fetch("SELECT COUNT(*) AS c FROM articles a WHERE {$articleListWhere}");
+} catch (Throwable $e) {
+    $articleListWhere = $articleListWhereFallback;
+    $totalRow = $db->fetch("SELECT COUNT(*) AS c FROM articles a WHERE {$articleListWhere}");
+}
 $total    = $totalRow ? (int) $totalRow['c'] : 0;
 
-$rows = $db->fetchAll(
-    "SELECT a.id, a.type, a.title, a.content, a.is_encrypted, a.views, a.created_at,
-            u.nickname AS author_name, u.avatar AS author_avatar, u.gender AS author_gender
-     FROM articles a
-     LEFT JOIN users u ON u.id = a.user_id
-     WHERE a.status = 'published'
-     ORDER BY a.created_at DESC, a.id DESC
-     LIMIT {$perPage} OFFSET " . (($page - 1) * $perPage)
-);
+$rows = [];
+try {
+    $rows = $db->fetchAll(
+        "SELECT a.id, a.type, a.title, a.content, a.is_encrypted, a.views, a.created_at,
+                u.nickname AS author_name, u.avatar AS author_avatar, u.gender AS author_gender
+         FROM articles a
+         LEFT JOIN users u ON u.id = a.user_id
+         WHERE {$articleListWhere}
+         ORDER BY a.created_at DESC, a.id DESC
+         LIMIT {$perPage} OFFSET " . (($page - 1) * $perPage)
+    );
+} catch (Throwable $e) {
+    // 与总数查询同口径的兜底：去掉加密字段条件重试一次
+    $rows = $db->fetchAll(
+        "SELECT a.id, a.type, a.title, a.content, a.is_encrypted, a.views, a.created_at,
+                u.nickname AS author_name, u.avatar AS author_avatar, u.gender AS author_gender
+         FROM articles a
+         LEFT JOIN users u ON u.id = a.user_id
+         WHERE {$articleListWhereFallback}
+         ORDER BY a.created_at DESC, a.id DESC
+         LIMIT {$perPage} OFFSET " . (($page - 1) * $perPage)
+    );
+}
 
 // 恋爱 DAY 计数基准：后台设置 love_date，缺省回落到站点配置 startTime
 $loveStart = '';

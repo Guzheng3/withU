@@ -8,18 +8,6 @@ $uri  = $_SERVER['REQUEST_URI'];
 $path = parse_url($uri, PHP_URL_PATH);
 $path = rawurldecode($path);
 
-// [TEMP-DEBUG] entry-level access + error logging - remove after debugging
-ini_set('log_errors', '1');
-ini_set('error_log', __DIR__ . '/debug_php_errors.log');
-file_put_contents(__DIR__ . '/debug_router.log', sprintf(
-    "[%s] %s %s cl=%s\n",
-    date('H:i:s'),
-    $_SERVER['REQUEST_METHOD'] ?? '?',
-    $uri,
-    $_SERVER['CONTENT_LENGTH'] ?? '-'
-), FILE_APPEND);
-// [/TEMP-DEBUG]
-
 // PHP's built-in server closes HTML responses with EOF. Some SSH tunnels do
 // not forward that half-close, so give browsers an explicit response length.
 ob_start(function (string $output): string {
@@ -157,6 +145,15 @@ if (strpos($path, '/ext/') === 0) {
     $extFile = $frontRoot . '/_external' . substr($path, 4);
     if (serveStatic($extFile, $mimeTypes)) return true;
     if (requirePhp($extFile)) return true;
+}
+
+// ── 数据快照文件：仅供服务端 PHP 读取，禁止直接下载 ─────────
+$privateDataFiles = ['/services/map-all.json', '/services/album-photos.json'];
+if (in_array($path, $privateDataFiles, true)) {
+    http_response_code(404);
+    header('Content-Type: text/html; charset=UTF-8');
+    echo '<!DOCTYPE html><html><head><meta charset="UTF-8"><title>404</title></head><body><h1>404</h1><p>页面未找到: ' . htmlspecialchars($path, ENT_QUOTES, 'UTF-8') . '</p></body></html>';
+    return true;
 }
 
 // ── 前台静态资源 ─────────────────────────

@@ -272,10 +272,11 @@ foreach ($albums as $album) {
     $items[] = [
         'id'           => $aid,
         'user_id'      => (int) ($album['user_id'] ?? 0),
-        'name'         => (string) ($album['name'] ?? ''),
+        // 加密相册对未登录游客隐藏真实名称与描述（与首页 home.php 口径一致）
+        'name'         => ($isEncrypted && !$currentUser) ? '加密相册' : (string) ($album['name'] ?? ''),
         'is_encrypted' => $isEncrypted ? 1 : 0,
         'created_at'   => (string) ($album['created_at'] ?? date('Y-m-d H:i:s')),
-        'description'  => (string) ($album['description'] ?? ''),
+        'description'  => ($isEncrypted && !$currentUser) ? '' : (string) ($album['description'] ?? ''),
         'image_count'  => $imageCount,
         'nickname'     => (string) ($album['nickname'] ?? ''),
         'avatar'       => (string) ($album['avatar'] ?? ''),

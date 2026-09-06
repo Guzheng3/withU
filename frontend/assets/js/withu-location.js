@@ -1,6 +1,8 @@
 /**
- * 浏览器定位服务
- * 获取用户位置，用于天气和地图真实数据
+ * 浏览器定位服务（高德定位）
+ * 通过高德 Geolocation 插件获取用户位置（浏览器定位优先，失败回退高德 IP 定位），
+ * 用于天气和地图真实数据；已登录用户会把坐标上报到 location-beacon，
+ * 供首页展示双方实时位置与实时天气。
  */
 (function () {
     'use strict';
@@ -8,6 +10,9 @@
     var _cachedGeo = null;
     var _requesting = false;
     var _listeners = [];
+
+    var REPORT_INTERVAL_MS = 10 * 60 * 1000; // 距上次上报超过 10 分钟才再次上报
+    var REPORT_MOVE_M = 150;                 // 或位移超过 150 米
 
     // 尝试从 localStorage 读取缓存
     function loadCache() {
@@ -37,91 +42,230 @@
         });
     }
 
-    // 通过坐标反查城市名（使用 QWeather API 浏览器端直接调用）
+    // 通过坐标反查城市名（使用本地 AMap SDK 逆地理编码；QWeather 旧版 geoapi 已停用）
     function reverseGeocode(lat, lng) {
-        var key = (window.WITHU_CONFIG && window.WITHU_CONFIG.weatherToken) || '';
-        if (!key) return Promise.resolve('');
-
-        return fetch('https://geoapi.qweather.com/v2/city/lookup?location=' + lng + ',' + lat + '&key=' + key + '&number=1', {
-            method: 'GET'
-        })
-        .then(function (r) { return r.json(); })
-        .then(function (data) {
-            if (data && data.code === '200' && data.location && data.location.length > 0) {
-                return data.location[0].name || '';
+        return new Promise(function (resolve) {
+            function run() {
+                try {
+                    AMap.plugin('AMap.Geocoder', function () {
+                        try {
+                            var geocoder = new AMap.Geocoder({ extensions: 'base' });
+                            geocoder.getAddress([lng, lat], function (status, result) {
+                                if (status === 'complete' && result.regeocode) {
+                                    var comp = result.regeocode.addressComponent || {};
+                                    var cityPart = comp.city || comp.province || '';
+                                    var townPart = comp.township || comp.district || '';
+                                    if (townPart) townPart = townPart.replace(/街道$/, '');
+                                    var name = townPart ? cityPart + ' · ' + townPart : cityPart;
+                                    resolve(name || '');
+                                    return;
+                                }
+                                resolve('');
+                            });
+                        } catch (e) { resolve(''); }
+                    });
+                } catch (e) { resolve(''); }
             }
-            return '';
-        })
-        .catch(function () { return ''; });
+            if (window.AMap) {
+                run();
+                return;
+            }
+            if (window.WithUAMapLoader) {
+                window.WithUAMapLoader.ensure(function (ok) {
+                    ok ? run() : resolve('');
+                });
+                return;
+            }
+            resolve('');
+        });
     }
 
-    // 请求浏览器定位
-    function requestLocation() {
-        if (_requesting) return;
-        if (!navigator.geolocation) {
-            console.warn('[WithULocation] 浏览器不支持定位');
+    // 两点间距（米，近似）
+    function distanceM(lat1, lng1, lat2, lng2) {
+        var dLat = (lat1 - lat2) * 111320;
+        var dLng = (lng1 - lng2) * 111320 * Math.cos(lat1 * Math.PI / 180);
+        return Math.sqrt(dLat * dLat + dLng * dLng);
+    }
+
+    // 已登录用户上报坐标（限频：10 分钟或移动 150 米以上）
+    function reportIfNeed(lat, lng, acc) {
+        var cfg = window.WITHU_CONFIG;
+        if (!cfg || !cfg.loggedIn) return;
+        var beacon = (cfg.endpoints && cfg.endpoints.locationBeacon) || '/services/location-beacon.php';
+        try {
+            var raw = localStorage.getItem('withu_geo_last_report');
+            var last = raw ? JSON.parse(raw) : null;
+            var now = Date.now();
+            if (last && last.lat && (now - last.ts < REPORT_INTERVAL_MS) &&
+                distanceM(lat, lng, last.lat, last.lng) < REPORT_MOVE_M) {
+                return;
+            }
+        } catch (e) {}
+
+        var body = new URLSearchParams();
+        body.set('lat', lat);
+        body.set('lng', lng);
+        body.set('acc', acc || 0);
+        fetch(beacon, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/x-www-form-urlencoded', 'Accept': 'application/json' },
+            body: body.toString(),
+            credentials: 'same-origin',
+        }).then(function (r) { return r.json().catch(function () { return null; }); })
+          .then(function (data) {
+              if (data && data.code === 200) {
+                  try {
+                      localStorage.setItem('withu_geo_last_report', JSON.stringify({ ts: Date.now(), lat: lat, lng: lng }));
+                  } catch (e) {}
+              }
+          })
+          .catch(function () {});
+    }
+
+    function handlePosition(lng, lat, acc) {
+        _requesting = false;
+        var geo = { lat: lat, lng: lng, ts: Date.now() };
+        _cachedGeo = geo;
+        saveCache(geo);
+
+        // 反查城市名
+        reverseGeocode(geo.lat, geo.lng).then(function (city) {
+            geo.city = city;
+            _cachedGeo = geo;
+            saveCache(geo);
+            notifyListeners(geo);
+            window.dispatchEvent(new CustomEvent('withu:location-ready', { detail: geo }));
+        });
+
+        // 已登录用户上报实时位置
+        reportIfNeed(lat, lng, acc);
+
+        notifyListeners(geo);
+        window.dispatchEvent(new CustomEvent('withu:location-ready', { detail: geo }));
+    }
+
+    var _ipFallbackTried = false;
+
+    // 使用本地缓存的位置兜底
+    function useCachedGeo() {
+        var cached = loadCache();
+        if (cached) {
+            _cachedGeo = cached;
+            notifyListeners(cached);
+            window.dispatchEvent(new CustomEvent('withu:location-ready', { detail: cached }));
+        }
+    }
+
+    function locateFail(reason) {
+        _requesting = false;
+        console.warn('[WithULocation] 高德定位失败: ' + reason);
+        // IP 定位兜底：解析来访 IP 的城市级位置（成功后随登录一起上报）
+        if (!_ipFallbackTried) {
+            _ipFallbackTried = true;
+            var cfg = window.WITHU_CONFIG;
+            var beacon = (cfg && cfg.endpoints && cfg.endpoints.locationBeacon) || '/services/location-beacon.php';
+            fetch(beacon + '?action=ip', { headers: { 'Accept': 'application/json' }, cache: 'no-store' })
+                .then(function (r) { return r.json(); })
+                .then(function (data) {
+                    if (data && data.code === 200 && data.data && data.data.lng) {
+                        handlePosition(data.data.lng, data.data.lat, 30000);
+                    } else {
+                        useCachedGeo();
+                    }
+                })
+                .catch(function () { useCachedGeo(); });
             return;
         }
+        useCachedGeo();
+    }
 
-        _requesting = true;
-
-        // 检查权限
-        var checkThenRequest = function () {
-            navigator.geolocation.getCurrentPosition(
-                function (position) {
-                    _requesting = false;
-                    var geo = {
-                        lat: position.coords.latitude,
-                        lng: position.coords.longitude,
-                        ts: Date.now()
-                    };
-                    _cachedGeo = geo;
-                    saveCache(geo);
-
-                    // 反查城市名
-                    reverseGeocode(geo.lat, geo.lng).then(function (city) {
-                        geo.city = city;
-                        _cachedGeo = geo;
-                        saveCache(geo);
-                        notifyListeners(geo);
-                        window.dispatchEvent(new CustomEvent('withu:location-ready', { detail: geo }));
-                    });
-
-                    notifyListeners(geo);
-                    window.dispatchEvent(new CustomEvent('withu:location-ready', { detail: geo }));
-                },
-                function (err) {
-                    _requesting = false;
-                    console.warn('[WithULocation] 定位失败: ' + (err.message || err.code));
-                    // 使用缓存
-                    var cached = loadCache();
-                    if (cached) {
-                        _cachedGeo = cached;
-                        notifyListeners(cached);
-                        window.dispatchEvent(new CustomEvent('withu:location-ready', { detail: cached }));
+    // WGS-84（浏览器原生定位）-> 高德 GCJ-02 坐标
+    function toAmapCoords(lng, lat, acc) {
+        var done = function (a, b) { handlePosition(a, b, acc); };
+        var convert = function () {
+            try {
+                AMap.convertFrom([lng, lat], 'gps', function (status, result) {
+                    if (status === 'complete' && result && result.info === 'ok' && result.locations && result.locations.length) {
+                        var p = result.locations[0];
+                        done(p.lng, p.lat);
+                    } else {
+                        done(lng, lat);
                     }
-                },
-                {
-                    enableHighAccuracy: false,
-                    timeout: 10000,
-                    maximumAge: 300000 // 5分钟缓存
-                }
-            );
+                });
+            } catch (e) { done(lng, lat); }
         };
-
-        if (navigator.permissions && typeof navigator.permissions.query === 'function') {
-            navigator.permissions.query({ name: 'geolocation' }).then(function (result) {
-                if (result.state === 'denied') {
-                    _requesting = false;
-                    console.warn('[WithULocation] 定位权限被拒绝');
-                    return;
-                }
-                checkThenRequest();
-            }).catch(function () {
-                checkThenRequest();
+        if (window.AMap) {
+            convert();
+        } else if (window.WithUAMapLoader) {
+            window.WithUAMapLoader.ensure(function (ok) {
+                ok ? convert() : done(lng, lat);
             });
         } else {
-            checkThenRequest();
+            done(lng, lat);
+        }
+    }
+
+    // 浏览器原生定位：触发系统授权弹窗，获取真实位置
+    function locateByBrowser() {
+        navigator.geolocation.getCurrentPosition(
+            function (position) {
+                toAmapCoords(position.coords.longitude, position.coords.latitude, position.coords.accuracy || 0);
+            },
+            function (err) {
+                console.warn('[WithULocation] 浏览器定位失败(' + (err.code || '') + '): ' + (err.message || '') + '，回退高德定位');
+                locateByAmapPlugin();
+            },
+            {
+                enableHighAccuracy: true,
+                timeout: 10000,
+                maximumAge: 300000
+            }
+        );
+    }
+
+    // 高德 Geolocation 插件定位（浏览器定位失败时的回退，含高德 IP 定位兜底）
+    function locateByAmapPlugin() {
+        try {
+            AMap.plugin('AMap.Geolocation', function () {
+                try {
+                    var geolocation = new AMap.Geolocation({
+                        enableHighAccuracy: true,
+                        timeout: 10000,
+                        maximumAge: 300000,
+                        convert: true,        // 非高德坐标自动转换为高德坐标
+                        GeoLocationFirst: true // 优先浏览器定位，获取真实位置
+                    });
+                    // AMap 2.0 插件用 getCurrentPosition(status, result)，1.4.x 用 getLocation
+                    var call = typeof geolocation.getCurrentPosition === 'function'
+                        ? function (cb) { geolocation.getCurrentPosition(cb); }
+                        : function (cb) { geolocation.getLocation(cb); };
+                    call(function (status, result) {
+                        if (status === 'complete' && result && result.position) {
+                            handlePosition(result.position.lng, result.position.lat, result.accuracy || 0);
+                        } else {
+                            locateFail((result && result.message) || status || 'unknown');
+                        }
+                    });
+                } catch (e) { locateFail(e.message); }
+            });
+        } catch (e) { locateFail(e.message); }
+    }
+
+    // 请求定位：优先浏览器原生（弹权限、真实位置），失败回退高德
+    function requestLocation() {
+        if (_requesting) return;
+        _requesting = true;
+
+        if (navigator.geolocation) {
+            locateByBrowser();
+        } else if (window.AMap) {
+            locateByAmapPlugin();
+        } else if (window.WithUAMapLoader) {
+            window.WithUAMapLoader.ensure(function (ok) {
+                ok ? locateByAmapPlugin() : locateFail('AMap SDK 加载失败');
+            });
+        } else {
+            locateFail('浏览器不支持定位');
         }
     }
 

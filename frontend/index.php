@@ -113,6 +113,7 @@ try {
 <link rel="stylesheet" href="Style/css/tooltip.css">
 <link rel="stylesheet" href="Style/css/interaction.css">
 <link rel="stylesheet" href="Style/css/withu-home-style.css">
+<link rel="stylesheet" href="Style/css/timetable.css?v=20260906">
 <link rel="stylesheet" href="Style/css/withu-detail.css">
 <link rel="stylesheet" href="Style/css/mobile-nav.css">
 <link rel="stylesheet" href="Style/css/header.css">
@@ -330,8 +331,8 @@ try {
             });
     </script>
 <script src="assets/js/app.js"></script>
-<script src="/assets/js/withu-location.js"></script>
-<script src="/assets/js/head-avatar-location.js"></script>
+<script src="/assets/js/withu-location.js?v=20260906e"></script>
+<script src="/assets/js/head-avatar-location.js?v=20260906b"></script>
 <?php if (!empty($loggedIn)): ?>
 <!-- 对方正在看邀请气泡（头像区） -->
 <script src="/assets/js/head-avatar-watch-bubble.js"></script>
@@ -3508,6 +3509,30 @@ try {
                     </div>                </div>
             </section>
 
+            <!-- 课表 Module（与轻屿课表 App 周视图一致，仅登录可见；数据由 page-timetable.js 拉取） -->
+            <?php if (!empty($loggedIn)): ?>
+            <section id="timetable-section" class="withu-section" style="display:none;">
+                <div class="withu-section-header withu-section-header--blue" data-aos="fade-up" data-aos-delay="0">
+                    <div class="withu-section-header__left">
+                        <h2 class="withu-section-title withu-section-title-color-blue withu-flex-center">
+                            <div class="withu-section-icon-box withu-section-icon-box--blue">
+                                <i class="ph-fill ph-calendar-blank withu-icon-md-white"></i>
+                            </div>
+                            <span>课表</span>
+                        </h2>
+                    </div>
+                    <div class="withu-section-header__right" id="withu-tt-tabs"></div>
+                </div>
+                <div class="withu-tt-card" id="withu-tt-card" data-aos="fade-up" data-aos-delay="50">
+                    <div class="withu-tt-loading" id="withu-tt-loading">
+                        <div class="withu-tt-spinner"></div>
+                        <span>课表加载中…</span>
+                    </div>
+                    <div class="withu-tt-body" id="withu-tt-body"></div>
+                </div>
+            </section>
+            <?php endif; ?>
+
                         <section id="events" class="withu-section">
                 <div class="withu-section-header withu-section-header--rose" data-aos="fade-up" data-aos-delay="0">
                     <div class="withu-section-header__left">
@@ -5311,7 +5336,8 @@ try {
 <script src="Style/LoveListStyle/carousel.thumbs.umd.js"></script>
 <script src="Style/LoveListStyle/fancybox.umd.js"></script>
 <script src="assets/js/page-lovelist.js"></script>
-<script src="assets/js/page-index.js"></script>
+<script src="assets/js/page-index.js?v=20260906"></script>
+<script src="assets/js/page-timetable.js?v=20260906-2"></script>
 <script src="assets/js/page-detail.js"></script>
 <script src="assets/js/page-album-detail.js"></script>
 <script src="assets/js/html2canvas.min.js"></script>

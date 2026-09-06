@@ -666,9 +666,36 @@
             const slot = cardEl.getAttribute('data-weather-slot') || '1';
             u.searchParams.set('mode', 'couple');
             u.searchParams.set('slot', slot);
+            // 坐标优先级：实时定位上报 > 卡片头像匹配的 map 坐标 > 后台配置坐标
+            const lover = this._getCardLover(cardEl);
+            const liveCoords = (window.WithULiveGeo && window.WithULiveGeo.slotCoords(slot)) || null;
+            const coords = liveCoords || (lover && lover.coords) || this._getLoverCoords(slot);
+            if (coords && coords.length >= 2) {
+                u.searchParams.set('lng', coords[0]);
+                u.searchParams.set('lat', coords[1]);
+            }
+            const nameEl = cardEl.querySelector('.withu-home-weather-username');
+            const name = liveCoords
+                ? ((nameEl && nameEl.textContent) || '')
+                : ((lover && lover.name) || (nameEl && nameEl.textContent) || '');
+            if (name) u.searchParams.set('name', String(name).trim());
+            // 实时坐标下地标不再可靠，交由逆地理编码显示实际位置
+            if (!liveCoords && lover && lover.label) u.searchParams.set('label', lover.label);
             const wt = (window.WITHU_CONFIG && window.WITHU_CONFIG.weatherToken) || '';
             if (wt) u.searchParams.set('_wt', wt);
             return u.toString();
+        },
+
+        // 通过卡片头像文件名匹配 map-all.json 中的lover（头像与坐标一一对应，不受昵称影响）
+        _getCardLover(cardEl) {
+            const mapCfg = window.WITHU_MAP_CONFIG || {};
+            const lovers = Array.isArray(mapCfg.lovers) ? mapCfg.lovers : [];
+            if (!lovers.length) return null;
+            const img = cardEl.querySelector('.withu-home-weather-avatar');
+            const src = img ? (img.getAttribute('src') || '') : '';
+            const file = src.split('/').pop().split('?')[0];
+            if (!file) return null;
+            return lovers.find(l => String(l.avatar || '').split('/').pop().split('?')[0] === file) || null;
         },
 
         _getRelativeTime(iso) {
@@ -688,7 +715,7 @@
 
         async _fetchNow(cardEl) {
             const url = this._buildUrl(cardEl);
-            const resp = await fetch(url, { headers: { 'Accept': 'application/json' } });
+            const resp = await fetch(url, { headers: { 'Accept': 'application/json' }, cache: 'no-store' });
             if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
             const data = await resp.json().catch(() => null);
             if (!data || data.code !== 200 || !data.data) throw new Error(data ? `Err: ${data.code}` : 'No Data');
@@ -697,7 +724,7 @@
 
         // 逆地理编码获取具体位置
         _reverseGeocodeLocation(lng, lat, callback) {
-            if (window.AMap) {
+            const run = () => {
                 try {
                     AMap.plugin('AMap.Geocoder', function () {
                         try {
@@ -717,6 +744,13 @@
                         } catch (e) { callback(null); }
                     });
                 } catch (e) { callback(null); }
+            };
+            if (window.AMap) {
+                run();
+            } else if (window.WithUAMapLoader) {
+                window.WithUAMapLoader.ensure(function (ok) {
+                    ok ? run() : callback(null);
+                });
             } else {
                 callback(null);
             }
@@ -731,8 +765,7 @@
             return null;
         },
 
-        _renderCard(cardEl, payload) {
-            const timeTag = cardEl.querySelector('.withu-home-weather-time-tag');
+        _renderCard(cardEl, payload) {            const timeTag = cardEl.querySelector('.withu-home-weather-time-tag');
             if (timeTag) timeTag.textContent = this._getRelativeTime(payload.obsTime);
 
             const tempEl = cardEl.querySelector('.withu-home-weather-text-temp');
@@ -760,7 +793,10 @@
             const cityEl = cardEl.querySelector('.withu-home-weather-text-city');
             if (cityEl) {
                 const slot = parseInt(cardEl.getAttribute('data-weather-slot') || '1', 10);
-                const coords = this._getLoverCoords(slot);
+                const lover = this._getCardLover(cardEl);
+                const coords = (window.WithULiveGeo && window.WithULiveGeo.slotCoords(slot))
+                    || (lover && lover.coords)
+                    || this._getLoverCoords(slot);
                 const self = this;
                 if (coords && coords.length >= 2) {
                     this._reverseGeocodeLocation(coords[0], coords[1], function (locName) {
@@ -792,6 +828,20 @@
         },
 
         async _refreshAll() {
+            // 等待地图数据（lovers 坐标/头像）就绪后再请求，最多等 5 秒
+            if (window.WITHU_MAP_DATA_READY && !this._mapDataWaited) {
+                this._mapDataWaited = true;
+                try {
+                    await Promise.race([
+                        window.WITHU_MAP_DATA_READY,
+                        new Promise(resolve => setTimeout(resolve, 5000)),
+                    ]);
+                } catch (e) { /* 地图数据失败时仍按配置坐标请求 */ }
+            }
+            // 刷新双方实时定位（60s 内缓存，不重复请求）
+            if (window.WithULiveGeo) {
+                try { await window.WithULiveGeo.refresh(); } catch (e) { /* 失败时按配置坐标请求 */ }
+            }
             const weatherCards = document.querySelectorAll('.withu-home-weather-card');
             await Promise.all(Array.from(weatherCards).map(card => this._updateCard(card)));
         }
