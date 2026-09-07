@@ -13,6 +13,15 @@
     const WithUConfig = window.WITHU_CONFIG || {};
     const imageErrorFallback = WithUConfig.imageErrorFallback || ((WithUConfig.assetBase || '') + 'Style/img/file-placeholder.svg');
 
+    function applyPageBackgroundVars() {
+        const blur = Math.min(40, Math.max(0, Number(WithUConfig.pageBackgroundBlur) || 0));
+        const frost = Math.min(100, Math.max(0, Number(WithUConfig.pageBackgroundFrost) || 0));
+        document.documentElement.style.setProperty('--withu-page-bg-blur', blur + 'px');
+        document.documentElement.style.setProperty('--withu-page-bg-frost', String(frost / 100));
+    }
+    applyPageBackgroundVars();
+    window.withuApplyPageBackgroundVars = applyPageBackgroundVars;
+
     // ============================================
     // 工具函数模块
     // ============================================

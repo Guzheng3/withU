@@ -6,6 +6,8 @@
 html {
     scroll-behavior: smooth;
     overflow-x: hidden;
+    --withu-page-bg-blur: 0px;
+    --withu-page-bg-frost: 0;
 }
 
 body {
@@ -4544,19 +4546,32 @@ body.bg-pdot-cross {
 }
 
 body.bg-pdot-vignette {
+    position: relative;
+    z-index: 0;
     background-color: #ffffff !important;
-    background-image: radial-gradient(#f2f2f2 1px, #ffffff00 1px) !important;
-    background-size: 10px 10px !important;
+    background-image: none !important;
 }
 
 body.bg-pdot-vignette::before {
     content: "";
     position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-image: radial-gradient(circle at center, transparent 0%, #fff 80%);
+    inset: -80px;
+    background:
+        radial-gradient(#f2f2f2 1px, transparent 1px),
+        radial-gradient(circle at center, transparent 0%, #fff 84%);
+    background-size: 10px 10px, 100% 100%;
+    filter: blur(var(--withu-page-bg-blur));
+    -webkit-filter: blur(var(--withu-page-bg-blur));
+    pointer-events: none;
+    z-index: -1;
+}
+
+body.bg-pdot-vignette::after {
+    content: "";
+    position: fixed;
+    inset: 0;
+    background: #ffffff;
+    opacity: var(--withu-page-bg-frost);
     pointer-events: none;
     z-index: -1;
 }

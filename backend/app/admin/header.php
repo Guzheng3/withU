@@ -30,6 +30,7 @@ $adminPageMeta = [
     'events' => ['title' => '纪念事件', 'section' => '内容管理'],
     'map' => ['title' => '地图与足迹', 'section' => '内容管理'],
     'timetable_settings' => ['title' => '课表设置', 'section' => '内容管理'],
+    'remote_update' => ['title' => '远程更新', 'section' => '设置'],
     'together_settings' => ['title' => '一起看设置', 'section' => '影视与播放'],
     'player_settings' => ['title' => '播放器设置', 'section' => '影视与播放'],
     'player_art' => ['title' => '播放器设置', 'section' => '影视与播放'],
@@ -122,6 +123,9 @@ foreach (($themeConfig['colors'] ?? []) as $themeName => $themeValue) {
         </a>
         <a href="/admin/profile.php" class="admin-drawer-link <?php echo $adminPage === 'profile' ? 'admin-drawer-link-active' : ''; ?>">
             <i class="ti ti-user"></i><span>账号设置</span>
+        </a>
+        <a href="/admin/remote_update.php" class="admin-drawer-link <?php echo $adminPage === 'remote_update' ? 'admin-drawer-link-active' : ''; ?>">
+            <i class="ti ti-cloud-download"></i><span>远程更新</span>
         </a>
         <a href="/admin/settings.php?section=advanced" class="admin-drawer-link <?php echo ($adminPage === 'settings' && $adminSection === 'advanced') || in_array($adminPage, ['moderation', 'devices', 'comment_ip_blacklist', 'tools_stats'], true) ? 'admin-drawer-link-active' : ''; ?>">
             <i class="ti ti-adjustments"></i><span>高级设置</span>

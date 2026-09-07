@@ -9,6 +9,7 @@
 
     const TT_ACCENT = '#3482FF';
     const DAY_LABELS = ['周一', '周二', '周三', '周四', '周五', '周六', '周日'];
+    const BG_STORAGE_KEY = 'withu_timetable_page_background_v1';
 
     /** 周一为一周起始：把 date 归到所在周的周一 00:00 */
     function startOfWeek(date) {
@@ -254,6 +255,11 @@
         _els: null,
         _timetables: { mine: null, partner: null },
         _pointer: null,
+        _bgLocal: null,
+        _bgBtnHandler: null,
+        _bgPopEl: null,
+        _bgOutsideHandler: null,
+        _bgKeyHandler: null,
 
         init() {
             if (this._inited) return;
@@ -266,14 +272,176 @@
                 loading: document.getElementById('withu-tt-loading'),
                 body: document.getElementById('withu-tt-body'),
                 tabs: document.getElementById('withu-tt-tabs'),
+                bgActions: document.querySelector('.withu-tt-header-actions'),
+                bgBtn: document.getElementById('withu-tt-bg-btn'),
             };
             if (!this._els.body) return;
 
             this._inited = true;
+            this._initPageBackground();
             this._fetchAndRender();
         },
 
+        _initPageBackground() {
+            if (!this._els.bgBtn) return;
+
+            let saved = null;
+            try {
+                saved = JSON.parse(window.localStorage.getItem(BG_STORAGE_KEY) || 'null');
+            } catch (_) {
+                saved = null;
+            }
+            if (saved && typeof saved === 'object' && isFinite(Number(saved.blur)) && isFinite(Number(saved.frost))) {
+                this._bgLocal = {
+                    blur: clampInt(saved.blur, 0, 40, 0),
+                    frost: clampInt(saved.frost, 0, 100, 0),
+                };
+            } else {
+                this._bgLocal = null;
+            }
+
+            this._bgBtnHandler = (event) => {
+                event.stopPropagation();
+                this._toggleBgPopover();
+            };
+            this._els.bgBtn.addEventListener('click', this._bgBtnHandler);
+            this._applyPageBackground();
+        },
+
+        _globalPageBackground() {
+            const config = window.WITHU_CONFIG || {};
+            return {
+                blur: clampInt(config.pageBackgroundBlur, 0, 40, 0),
+                frost: clampInt(config.pageBackgroundFrost, 0, 100, 0),
+            };
+        },
+
+        _applyPageBackground() {
+            const value = this._bgLocal || this._globalPageBackground();
+            document.documentElement.style.setProperty('--withu-page-bg-blur', value.blur + 'px');
+            document.documentElement.style.setProperty('--withu-page-bg-frost', String(value.frost / 100));
+        },
+
+        _persistPageBackground() {
+            try {
+                if (this._bgLocal) {
+                    window.localStorage.setItem(BG_STORAGE_KEY, JSON.stringify(this._bgLocal));
+                } else {
+                    window.localStorage.removeItem(BG_STORAGE_KEY);
+                }
+            } catch (_) {
+                // Private browsing and storage quota failures can both leave the
+                // override in memory; the page still works for the current view.
+            }
+        },
+
+        _toggleBgPopover() {
+            if (this._bgPopEl) {
+                this._closeBgPopover();
+            } else {
+                this._openBgPopover();
+            }
+        },
+
+        _openBgPopover() {
+            if (!this._els.bgActions || this._bgPopEl) return;
+            const pop = document.createElement('div');
+            pop.className = 'withu-tt-bg-popover';
+            pop.setAttribute('role', 'dialog');
+            pop.setAttribute('aria-label', '调整页面背景');
+            pop.innerHTML =
+                '<div class="withu-tt-bg-popover__header">' +
+                '  <span class="withu-tt-bg-popover__title">页面背景</span>' +
+                '  <button type="button" class="withu-tt-bg-popover__close" aria-label="关闭"><i class="ph-bold ph-x"></i></button>' +
+                '</div>' +
+                '<div class="withu-tt-bg-field">' +
+                '  <div class="withu-tt-bg-field__top"><label class="withu-tt-bg-field__label" for="withu-tt-bg-blur">高斯模糊</label><output class="withu-tt-bg-field__value" data-bg-value="blur">0px</output></div>' +
+                '  <input id="withu-tt-bg-blur" type="range" min="0" max="40" step="1" data-bg-key="blur">' +
+                '</div>' +
+                '<div class="withu-tt-bg-field">' +
+                '  <div class="withu-tt-bg-field__top"><label class="withu-tt-bg-field__label" for="withu-tt-bg-frost">磨砂亮度</label><output class="withu-tt-bg-field__value" data-bg-value="frost">0%</output></div>' +
+                '  <input id="withu-tt-bg-frost" type="range" min="0" max="100" step="1" data-bg-key="frost">' +
+                '</div>' +
+                '<button type="button" class="withu-tt-bg-reset"><i class="ph-bold ph-arrow-counter-clockwise"></i><span>恢复全局</span></button>';
+
+            this._els.bgActions.appendChild(pop);
+            this._bgPopEl = pop;
+            this._els.bgBtn.setAttribute('aria-expanded', 'true');
+            this._syncBgPopover();
+
+            pop.querySelector('.withu-tt-bg-popover__close').addEventListener('click', () => this._closeBgPopover());
+            pop.querySelector('.withu-tt-bg-reset').addEventListener('click', () => {
+                this._bgLocal = null;
+                this._persistPageBackground();
+                this._applyPageBackground();
+                this._syncBgPopover();
+            });
+            pop.querySelectorAll('input[type="range"]').forEach((input) => {
+                input.addEventListener('input', () => {
+                    const value = this._bgLocal || this._globalPageBackground();
+                    const key = input.getAttribute('data-bg-key');
+                    if (key === 'blur') value.blur = clampInt(input.value, 0, 40, 0);
+                    if (key === 'frost') value.frost = clampInt(input.value, 0, 100, 0);
+                    this._bgLocal = value;
+                    this._persistPageBackground();
+                    this._applyPageBackground();
+                    this._syncBgPopover();
+                });
+            });
+
+            this._bgOutsideHandler = (event) => {
+                if (!this._bgPopEl) return;
+                if (!this._bgPopEl.contains(event.target) && !this._els.bgBtn.contains(event.target)) {
+                    this._closeBgPopover();
+                }
+            };
+            this._bgKeyHandler = (event) => {
+                if (event.key === 'Escape') this._closeBgPopover();
+            };
+            document.addEventListener('click', this._bgOutsideHandler, true);
+            document.addEventListener('keydown', this._bgKeyHandler);
+        },
+
+        _closeBgPopover() {
+            if (!this._bgPopEl) return;
+            this._bgPopEl.remove();
+            this._bgPopEl = null;
+            if (this._els && this._els.bgBtn) this._els.bgBtn.setAttribute('aria-expanded', 'false');
+            if (this._bgOutsideHandler) {
+                document.removeEventListener('click', this._bgOutsideHandler, true);
+                this._bgOutsideHandler = null;
+            }
+            if (this._bgKeyHandler) {
+                document.removeEventListener('keydown', this._bgKeyHandler);
+                this._bgKeyHandler = null;
+            }
+        },
+
+        _syncBgPopover() {
+            if (!this._bgPopEl) return;
+            const value = this._bgLocal || this._globalPageBackground();
+            const blurInput = this._bgPopEl.querySelector('input[data-bg-key="blur"]');
+            const frostInput = this._bgPopEl.querySelector('input[data-bg-key="frost"]');
+            if (blurInput) blurInput.value = value.blur;
+            if (frostInput) frostInput.value = value.frost;
+            const blurOutput = this._bgPopEl.querySelector('output[data-bg-value="blur"]');
+            const frostOutput = this._bgPopEl.querySelector('output[data-bg-value="frost"]');
+            if (blurOutput) blurOutput.textContent = value.blur + 'px';
+            if (frostOutput) frostOutput.textContent = value.frost + '%';
+        },
+
+        _destroyPageBackground() {
+            this._closeBgPopover();
+            if (this._els && this._els.bgBtn && this._bgBtnHandler) {
+                this._els.bgBtn.removeEventListener('click', this._bgBtnHandler);
+            }
+            this._bgBtnHandler = null;
+            this._bgLocal = null;
+            this._applyPageBackground();
+        },
+
         destroy() {
+            this._destroyPageBackground();
             this._inited = false;
             this._payload = null;
             this._els = null;

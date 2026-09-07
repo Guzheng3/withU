@@ -113,7 +113,7 @@ try {
 <link rel="stylesheet" href="Style/css/tooltip.css">
 <link rel="stylesheet" href="Style/css/interaction.css">
 <link rel="stylesheet" href="Style/css/withu-home-style.css">
-<link rel="stylesheet" href="Style/css/timetable.css?v=20260906">
+<link rel="stylesheet" href="Style/css/timetable.css?v=20260907">
 <link rel="stylesheet" href="Style/css/withu-detail.css">
 <link rel="stylesheet" href="Style/css/mobile-nav.css">
 <link rel="stylesheet" href="Style/css/header.css">
@@ -3521,7 +3521,12 @@ try {
                             <span>课表</span>
                         </h2>
                     </div>
-                    <div class="withu-section-header__right" id="withu-tt-tabs"></div>
+                    <div class="withu-section-header__right withu-tt-header-actions">
+                        <button type="button" class="withu-tt-bg-btn" id="withu-tt-bg-btn" aria-label="调整页面背景" aria-expanded="false">
+                            <i class="ph-bold ph-sliders-horizontal"></i>
+                        </button>
+                        <div class="withu-tt-tabs" id="withu-tt-tabs"></div>
+                    </div>
                 </div>
                 <div class="withu-tt-card" id="withu-tt-card" data-aos="fade-up" data-aos-delay="50">
                     <div class="withu-tt-loading" id="withu-tt-loading">
@@ -5337,7 +5342,7 @@ try {
 <script src="Style/LoveListStyle/fancybox.umd.js"></script>
 <script src="assets/js/page-lovelist.js"></script>
 <script src="assets/js/page-index.js?v=20260906"></script>
-<script src="assets/js/page-timetable.js?v=20260906-2"></script>
+<script src="assets/js/page-timetable.js?v=20260907-2"></script>
 <script src="assets/js/page-detail.js"></script>
 <script src="assets/js/page-album-detail.js"></script>
 <script src="assets/js/html2canvas.min.js"></script>

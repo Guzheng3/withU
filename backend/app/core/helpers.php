@@ -1072,7 +1072,7 @@ function migrate_schema_if_needed(): void {
 
     // Avoid rerunning dozens of SHOW/ALTER/CREATE statements on every PHP
     // request, including each high-frequency watch poll.
-    $schemaVersion = '20260905-01';
+    $schemaVersion = '20260907-01';
     $runtimeDir = dirname(ROOT_PATH) . DIRECTORY_SEPARATOR . 'runtime';
     $markerPath = $runtimeDir . DIRECTORY_SEPARATOR . 'schema-version';
     $lockPath = $runtimeDir . DIRECTORY_SEPARATOR . 'schema-migration.lock';
@@ -1363,6 +1363,21 @@ function migrate_withu_v1($db): void {
             UNIQUE KEY `uniq_user` (`user_id`),
             KEY `idx_content_hash` (`content_hash`)
         ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='Couple timetable sharing'",
+        "CREATE TABLE IF NOT EXISTS `remote_updates` (
+            `id` int(11) NOT NULL AUTO_INCREMENT,
+            `version` varchar(32) NOT NULL,
+            `title` varchar(120) NOT NULL DEFAULT '版本更新',
+            `body` text,
+            `apk_url` varchar(512) NOT NULL,
+            `sha256` char(64) NOT NULL,
+            `size_bytes` bigint(20) unsigned NOT NULL DEFAULT 0,
+            `force_update` tinyint(1) NOT NULL DEFAULT 0,
+            `enabled` tinyint(1) NOT NULL DEFAULT 0,
+            `published_at` datetime DEFAULT NULL,
+            `updated_at` datetime NOT NULL,
+            PRIMARY KEY (`id`),
+            KEY `idx_enabled_id` (`enabled`,`id`)
+        ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='Remote app updates'",
         "CREATE TABLE IF NOT EXISTS `user_settings` (
             `id` int(11) NOT NULL AUTO_INCREMENT,
             `user_id` int(11) NOT NULL COMMENT 'User ID',
@@ -1578,6 +1593,8 @@ function migrate_withu_v1($db): void {
         ['watch_autoplay_enabled', '1', '一起看与个人观看默认自动播放'],
         ['player_default_speed', '1', '播放器默认倍速'],
         ['player_auto_next_enabled', '1', '播放器结束后自动播放下一集'],
+        ['page_bg_blur_px', '0', '页面背景高斯模糊强度（像素）'],
+        ['page_bg_frost_percent', '0', '页面背景磨砂亮度（百分比）'],
     ];
     foreach ($settings as $setting) {
         try {

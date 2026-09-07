@@ -202,6 +202,22 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             }
         }
 
+        $pageBackgroundRanges = [
+            'page_bg_blur_px' => [0, 40, '页面背景高斯模糊必须在 0 到 40 像素之间'],
+            'page_bg_frost_percent' => [0, 100, '页面背景磨砂亮度必须在 0% 到 100% 之间'],
+        ];
+        if (!$error) {
+            foreach ($pageBackgroundRanges as $pageBackgroundKey => $pageBackgroundRule) {
+                if (!array_key_exists($pageBackgroundKey, $_POST['settings'])) continue;
+                $pageBackgroundValue = (int)$_POST['settings'][$pageBackgroundKey];
+                if ($pageBackgroundValue < $pageBackgroundRule[0] || $pageBackgroundValue > $pageBackgroundRule[1]) {
+                    $error = $pageBackgroundRule[2];
+                    break;
+                }
+                $_POST['settings'][$pageBackgroundKey] = (string)$pageBackgroundValue;
+            }
+        }
+
         // 上传大小设置单独校验（单位：MB，范围 1~50）
         if (isset($_POST['settings']['max_upload_size_mb'])) {
             $maxUploadMb = (int) $_POST['settings']['max_upload_size_mb'];
@@ -622,6 +638,8 @@ include __DIR__ . '/header.php';
         <?php
         $themePresetValue = $settingsData['theme_preset'] ?? 'sakura';
         if ($themePresetValue === 'pastel-couple') $themePresetValue = 'sakura';
+        $pageBackgroundBlurValue = max(0, min(40, (int)($settingsData['page_bg_blur_px'] ?? 0)));
+        $pageBackgroundFrostValue = max(0, min(100, (int)($settingsData['page_bg_frost_percent'] ?? 0)));
         $themeModeValue = 'light';
         // 空字符串也算未自定义；?? 不处理空串，空值进入取色器会回退成黑色色块
         $themeCustomPrimary = trim((string)($settingsData['theme_custom_primary'] ?? '')) ?: '#F5B6C8';
@@ -688,6 +706,33 @@ include __DIR__ . '/header.php';
                     <label><span class="theme-color-name">强调色</span><input type="color" data-theme-picker="accent" value="<?php echo e($themeCustomAccent); ?>" aria-label="选择强调色"><input class="theme-hex-input" type="text" name="settings[theme_custom_accent]" value="<?php echo e($settingsData['theme_custom_accent'] ?? ''); ?>" placeholder="留空用预设" maxlength="7"></label>
                 </div>
                     <p style="margin:.75rem 0 0;font-size:.78rem;color:var(--text-light);">留空时使用左侧预设配色；填写 6 位 HEX（如 #F5B6C8）后，主站、后台和播放器将使用自定义颜色。</p>
+            </div>
+            <div class="admin-card">
+                <div class="admin-card-header">
+                    <div>
+                        <div class="admin-card-title">
+                            <i class="ti ti-photo" aria-hidden="true"></i>页面背景
+                            <button type="button" class="admin-help-toggle" title="查看说明" aria-label="查看说明" aria-expanded="false"><i class="ti ti-info-circle"></i></button>
+                        </div>
+                    </div>
+                </div>
+                <div class="admin-card-help">
+                    <div class="admin-card-subtitle">全局页面底层洒点背景的高斯模糊与磨砂亮度</div>
+                </div>
+                <div class="form-group" style="margin-bottom:1rem;">
+                    <div style="display:flex;align-items:center;justify-content:space-between;gap:.75rem;margin-bottom:.35rem;">
+                        <label style="font-size:.85rem;font-weight:600;">高斯模糊</label>
+                        <output id="pageBgBlurValue" class="admin-range-value"><?php echo $pageBackgroundBlurValue; ?> px</output>
+                    </div>
+                    <input type="range" id="pageBgBlurInput" name="settings[page_bg_blur_px]" min="0" max="40" step="1" value="<?php echo $pageBackgroundBlurValue; ?>" data-range-output="pageBgBlurValue" data-unit=" px" style="width:100%;accent-color:#F5B6C8;">
+                </div>
+                <div class="form-group">
+                    <div style="display:flex;align-items:center;justify-content:space-between;gap:.75rem;margin-bottom:.35rem;">
+                        <label style="font-size:.85rem;font-weight:600;">磨砂亮度</label>
+                        <output id="pageBgFrostValue" class="admin-range-value"><?php echo $pageBackgroundFrostValue; ?>%</output>
+                    </div>
+                    <input type="range" id="pageBgFrostInput" name="settings[page_bg_frost_percent]" min="0" max="100" step="1" value="<?php echo $pageBackgroundFrostValue; ?>" data-range-output="pageBgFrostValue" data-unit="%" style="width:100%;accent-color:#B9E3D0;">
+                </div>
             </div>
         </section>
 
@@ -931,6 +976,16 @@ include __DIR__ . '/header.php';
 
     <script>
     (function () {
+        var rangeInputs = Array.prototype.slice.call(document.querySelectorAll('input[type="range"][data-range-output]'));
+        function syncRangeValue(input) {
+            var output = document.getElementById(input.getAttribute('data-range-output'));
+            if (output) output.textContent = input.value + (input.getAttribute('data-unit') || '');
+        }
+        rangeInputs.forEach(function (input) {
+            syncRangeValue(input);
+            input.addEventListener('input', function () { syncRangeValue(input); });
+        });
+
         var preset = document.getElementById('themePreset');
         var mode = null;
         var preview = document.getElementById('themePreviewStrip');
