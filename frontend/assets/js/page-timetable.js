@@ -260,6 +260,8 @@
         _bgPopEl: null,
         _bgOutsideHandler: null,
         _bgKeyHandler: null,
+        _historyModalEl: null,
+        _historyBtnHandler: null,
 
         init() {
             if (this._inited) return;
@@ -274,12 +276,110 @@
                 tabs: document.getElementById('withu-tt-tabs'),
                 bgActions: document.querySelector('.withu-tt-header-actions'),
                 bgBtn: document.getElementById('withu-tt-bg-btn'),
+                historyBtn: document.getElementById('withu-tt-history-btn'),
             };
             if (!this._els.body) return;
 
             this._inited = true;
             this._initPageBackground();
+            this._initHistory();
             this._fetchAndRender();
+        },
+
+        _initHistory() {
+            if (!this._els.historyBtn) return;
+            this._historyBtnHandler = () => this._openHistoryModal();
+            this._els.historyBtn.addEventListener('click', this._historyBtnHandler);
+        },
+
+        _closeHistoryModal() {
+            if (this._historyModalEl) {
+                this._historyModalEl.remove();
+                this._historyModalEl = null;
+            }
+        },
+
+        _historyEntryMeta(entry) {
+            const parts = [String(entry.changeType || 'save')];
+            if (entry.profileName) parts.push(entry.profileName);
+            parts.push((entry.courseCount || 0) + ' 节课');
+            if (entry.currentWeek) parts.push('第 ' + entry.currentWeek + ' 周');
+            if (entry.createdAt) parts.push(String(entry.createdAt).replace('T', ' ').slice(0, 16));
+            return parts.join(' · ');
+        },
+
+        async _openHistoryModal() {
+            this._closeHistoryModal();
+            const base = (window.WITHU_CONFIG && window.WITHU_CONFIG.siteBase) || '';
+            const overlay = document.createElement('div');
+            overlay.className = 'withu-tt-history-overlay';
+            overlay.innerHTML =
+                '<div class="withu-tt-history-modal" role="dialog" aria-label="修改记录">' +
+                '  <div class="withu-tt-history-header"><b>修改记录</b>' +
+                '    <button type="button" class="withu-tt-history-close" aria-label="关闭"><i class="ph-bold ph-x"></i></button>' +
+                '  </div>' +
+                '  <div class="withu-tt-history-list"><div class="withu-tt-history-state">加载中…</div></div>' +
+                '</div>';
+            document.body.appendChild(overlay);
+            this._historyModalEl = overlay;
+            overlay.addEventListener('click', (event) => {
+                if (event.target === overlay) this._closeHistoryModal();
+            });
+            overlay.querySelector('.withu-tt-history-close').addEventListener('click', () => this._closeHistoryModal());
+
+            const list = overlay.querySelector('.withu-tt-history-list');
+            try {
+                const res = await fetch(base + 'api/timetable.php?action=history', {
+                    headers: { 'Accept': 'application/json' },
+                    credentials: 'same-origin',
+                });
+                const data = await res.json();
+                if (!res.ok || data.success !== true) throw new Error(data.message || '历史记录加载失败');
+                const rows = Array.isArray(data.history) ? data.history : [];
+                if (!rows.length) {
+                    list.innerHTML = '<div class="withu-tt-history-state">暂无修改记录</div>';
+                    return;
+                }
+                list.innerHTML = rows.map((entry) =>
+                    '<button type="button" class="withu-tt-history-item" data-id="' + Number(entry.id) + '">' +
+                    '  <span class="withu-tt-history-item__title">' + escapeHtml(entry.profileName || '课表') + '</span>' +
+                    '  <span class="withu-tt-history-item__meta">' + escapeHtml(this._historyEntryMeta(entry)) + '</span>' +
+                    '  <i class="ph-bold ph-arrow-counter-clockwise"></i>' +
+                    '</button>'
+                ).join('');
+                list.querySelectorAll('.withu-tt-history-item').forEach((button) => {
+                    button.addEventListener('click', () => this._rollbackHistory(Number(button.dataset.id), overlay));
+                });
+            } catch (error) {
+                list.innerHTML = '<div class="withu-tt-history-state">' + escapeHtml(error.message || '历史记录加载失败') + '</div>';
+            }
+        },
+
+        async _rollbackHistory(historyId, overlay) {
+            if (!window.confirm('恢复到这份修改前的课表？')) return;
+            const base = (window.WITHU_CONFIG && window.WITHU_CONFIG.siteBase) || '';
+            const button = overlay.querySelector('.withu-tt-history-item[data-id="' + historyId + '"]');
+            if (button) button.disabled = true;
+            try {
+                const res = await fetch(base + 'api/timetable.php?action=rollback', {
+                    method: 'POST',
+                    headers: {
+                        'Accept': 'application/json',
+                        'Content-Type': 'application/json',
+                        'X-CSRF-Token': this._payload.csrf_token,
+                    },
+                    credentials: 'same-origin',
+                    body: JSON.stringify({ historyId, _token: this._payload.csrf_token }),
+                });
+                const data = await res.json();
+                if (!res.ok || data.success !== true) throw new Error(data.message || '回退失败');
+                this._closeHistoryModal();
+                await this._fetchAndRender();
+                if (window.Toastify) Toastify({ text: '课表已回退', duration: 2000, gravity: 'top', position: 'center' }).showToast();
+            } catch (error) {
+                if (button) button.disabled = false;
+                if (window.Toastify) Toastify({ text: error.message || '回退失败', duration: 2400, gravity: 'top', position: 'center' }).showToast();
+            }
         },
 
         _initPageBackground() {
@@ -442,6 +542,7 @@
 
         destroy() {
             this._destroyPageBackground();
+            this._closeHistoryModal();
             this._inited = false;
             this._payload = null;
             this._els = null;

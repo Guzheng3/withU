@@ -1072,7 +1072,7 @@ function migrate_schema_if_needed(): void {
 
     // Avoid rerunning dozens of SHOW/ALTER/CREATE statements on every PHP
     // request, including each high-frequency watch poll.
-    $schemaVersion = '20260907-01';
+    $schemaVersion = '20260908-02';
     $runtimeDir = dirname(ROOT_PATH) . DIRECTORY_SEPARATOR . 'runtime';
     $markerPath = $runtimeDir . DIRECTORY_SEPARATOR . 'schema-version';
     $lockPath = $runtimeDir . DIRECTORY_SEPARATOR . 'schema-migration.lock';
@@ -1363,6 +1363,21 @@ function migrate_withu_v1($db): void {
             UNIQUE KEY `uniq_user` (`user_id`),
             KEY `idx_content_hash` (`content_hash`)
         ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='Couple timetable sharing'",
+        "CREATE TABLE IF NOT EXISTS `timetable_history` (
+            `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
+            `user_id` int(11) NOT NULL COMMENT 'User ID',
+            `content` mediumtext NULL COMMENT 'Pre-change timetable package JSON',
+            `content_hash` char(64) NOT NULL COMMENT 'SHA-256 pre-change content hash',
+            `change_type` varchar(32) NOT NULL DEFAULT 'save' COMMENT 'Change source',
+            `profile_name` varchar(190) NOT NULL DEFAULT '' COMMENT 'Profile name when captured',
+            `course_count` int(11) NOT NULL DEFAULT 0 COMMENT 'Course count when captured',
+            `current_week` int(11) NOT NULL DEFAULT 0 COMMENT 'Current week when captured',
+            `semester_start_date` varchar(32) NOT NULL DEFAULT '' COMMENT 'Semester start date when captured',
+            `created_at` datetime NOT NULL COMMENT 'Capture time',
+            PRIMARY KEY (`id`),
+            KEY `idx_user_id_created` (`user_id`,`created_at`),
+            KEY `idx_user_id_id` (`user_id`,`id`)
+        ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='Couple timetable modification history'",
         "CREATE TABLE IF NOT EXISTS `remote_updates` (
             `id` int(11) NOT NULL AUTO_INCREMENT,
             `version` varchar(32) NOT NULL,
@@ -1536,6 +1551,7 @@ function migrate_withu_v1($db): void {
         ['watch_rooms', 'last_sync_unix_ms', "ALTER TABLE `watch_rooms` ADD COLUMN `last_sync_unix_ms` bigint(20) unsigned NOT NULL DEFAULT 0 AFTER `last_sync_at`"],
         ['watch_rooms', 'source', "ALTER TABLE `watch_rooms` ADD COLUMN `source` varchar(10) NOT NULL DEFAULT 'library' COMMENT '媒体来源: library/strm' AFTER `media_id`"],
         ['watch_rooms', 'source_episode', "ALTER TABLE `watch_rooms` ADD COLUMN `source_episode` int(11) NOT NULL DEFAULT 0 COMMENT 'strm 分集 id' AFTER `source`"],
+        ['timetable_history', 'semester_start_date', "ALTER TABLE `timetable_history` ADD COLUMN `semester_start_date` varchar(32) NOT NULL DEFAULT '' COMMENT 'Semester start date when captured' AFTER `current_week`"],
     ];
     foreach ($columns as $column) {
         try {

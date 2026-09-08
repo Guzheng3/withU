@@ -3522,6 +3522,9 @@ try {
                         </h2>
                     </div>
                     <div class="withu-section-header__right withu-tt-header-actions">
+                        <button type="button" class="withu-tt-bg-btn" id="withu-tt-history-btn" aria-label="修改记录">
+                            <i class="ph-bold ph-clock-counter-clockwise"></i>
+                        </button>
                         <button type="button" class="withu-tt-bg-btn" id="withu-tt-bg-btn" aria-label="调整页面背景" aria-expanded="false">
                             <i class="ph-bold ph-sliders-horizontal"></i>
                         </button>
