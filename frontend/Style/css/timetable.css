@@ -561,12 +561,51 @@
     padding: 14px 16px;
     width: 260px;
     box-shadow: 0 20px 50px -12px rgba(0, 0, 0, 0.45);
-    animation: withu-tt-pop-in 0.16s ease;
+    animation: withu-tt-pop-in 0.18s cubic-bezier(0.2, 0.8, 0.3, 1);
+    will-change: transform, opacity;
 }
 
 @keyframes withu-tt-pop-in {
-    from { opacity: 0; transform: translateY(6px) scale(0.97); }
+    from { opacity: 0; transform: translateY(8px) scale(0.96); }
     to   { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+@keyframes withu-tt-pop-in-up {
+    from { opacity: 0; transform: translateY(-8px) scale(0.96); }
+    to   { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+@keyframes withu-tt-pop-out {
+    to { opacity: 0; transform: translateY(6px) scale(0.97); }
+}
+
+@keyframes withu-tt-pop-out-up {
+    to { opacity: 0; transform: translateY(-6px) scale(0.97); }
+}
+
+.withu-tt-pop--above {
+    transform-origin: bottom center;
+    animation-name: withu-tt-pop-in-up;
+}
+
+.withu-tt-pop--below {
+    transform-origin: top center;
+}
+
+.withu-tt-pop.is-closing {
+    pointer-events: none;
+    animation: withu-tt-pop-out 0.16s cubic-bezier(0.4, 0, 1, 1) forwards;
+}
+
+.withu-tt-pop--above.is-closing {
+    animation-name: withu-tt-pop-out-up;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .withu-tt-pop,
+    .withu-tt-pop.is-closing {
+        animation: none;
+    }
 }
 
 .withu-tt-pop__title {

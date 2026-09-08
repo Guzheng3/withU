@@ -720,7 +720,7 @@
             const id = el.getAttribute('data-course-id');
             const course = data.courses.find((c) => String(c.id) === id);
             if (!course) return;
-            if (this._popEl) this._popEl.remove();
+            if (this._popEl) this._hidePopover(this._popEl);
 
             const weeksText = weekDescription(course);
             const pop = document.createElement('div');
@@ -742,22 +742,40 @@
             let left = rect.left + rect.width / 2 - w / 2;
             left = Math.max(8, Math.min(vw - w - 8, left));
             let top = rect.bottom + 10;
+            const isAbove = top + 180 > window.innerHeight;
             if (top + 180 > window.innerHeight) {
                 top = Math.max(8, rect.top - 10 - pop.offsetHeight);
             }
+            pop.classList.add(isAbove ? 'withu-tt-pop--above' : 'withu-tt-pop--below');
             pop.style.left = left + 'px';
             pop.style.top = top + 'px';
 
             setTimeout(() => {
                 const dismiss = (e) => {
                     if (!pop.contains(e.target)) {
-                        pop.remove();
-                        this._popEl = null;
                         document.removeEventListener('pointerdown', dismiss, true);
+                        this._hidePopover(pop);
                     }
                 };
                 document.addEventListener('pointerdown', dismiss, true);
             }, 0);
+        },
+
+        _hidePopover(pop) {
+            if (!pop || pop.classList.contains('is-closing')) return;
+
+            const finish = () => {
+                pop.remove();
+                if (this._popEl === pop) this._popEl = null;
+            };
+            if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+                finish();
+                return;
+            }
+
+            pop.classList.add('is-closing');
+            pop.addEventListener('animationend', finish, { once: true });
+            setTimeout(finish, 200);
         },
 
         // ---------- 切周 ----------

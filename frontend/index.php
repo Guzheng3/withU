@@ -113,7 +113,7 @@ try {
 <link rel="stylesheet" href="Style/css/tooltip.css">
 <link rel="stylesheet" href="Style/css/interaction.css">
 <link rel="stylesheet" href="Style/css/withu-home-style.css">
-<link rel="stylesheet" href="Style/css/timetable.css?v=20260907">
+<link rel="stylesheet" href="Style/css/timetable.css?v=20260907-3">
 <link rel="stylesheet" href="Style/css/withu-detail.css">
 <link rel="stylesheet" href="Style/css/mobile-nav.css">
 <link rel="stylesheet" href="Style/css/header.css">
@@ -5342,7 +5342,7 @@ try {
 <script src="Style/LoveListStyle/fancybox.umd.js"></script>
 <script src="assets/js/page-lovelist.js"></script>
 <script src="assets/js/page-index.js?v=20260906"></script>
-<script src="assets/js/page-timetable.js?v=20260907-2"></script>
+<script src="assets/js/page-timetable.js?v=20260907-3"></script>
 <script src="assets/js/page-detail.js"></script>
 <script src="assets/js/page-album-detail.js"></script>
 <script src="assets/js/html2canvas.min.js"></script>

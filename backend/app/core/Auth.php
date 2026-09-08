@@ -360,6 +360,19 @@ class Auth
         }
         // 清除信任设备 Cookie，防止自动恢复登录
         if (isset($_COOKIE['withu_device'])) {
+            $rawToken = trim((string)$_COOKIE['withu_device']);
+            if (preg_match('/^[a-f0-9]{32,128}$/i', $rawToken)) {
+                try {
+                    $this->db->update(
+                        'trusted_devices',
+                        ['revoked_at' => date('Y-m-d H:i:s')],
+                        'device_token_hash = :token AND revoked_at IS NULL',
+                        ['token' => hash('sha256', $rawToken)]
+                    );
+                } catch (Throwable $e) {
+                    // 旧库未迁移时仍应完成退出登录。
+                }
+            }
             $secure = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off');
             setcookie('withu_device', '', [
                 'expires'  => time() - 3600,
@@ -455,17 +468,7 @@ class Auth
             ]
         );
 
-        if ($partner) {
-            return $partner;
-        }
-
-        return $this->db->fetch(
-            "SELECT * FROM users
-             WHERE role = :partner_role AND status = 'active'
-             ORDER BY created_at ASC, id ASC
-             LIMIT 1",
-            ['partner_role' => $partnerRole]
-        );
+        return $partner;
     }
 
     /**
