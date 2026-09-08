@@ -590,7 +590,11 @@ const server = http.createServer((req, res) => {
 
     if (!filePath && !inline) {
       if (urlPath.startsWith('/ext/')) {
-        filePath = path.join(ROOT, '_external', urlPath.slice('/ext/'.length));
+        const extRelative = urlPath.slice('/ext/'.length);
+        filePath = path.join(ROOT, 'ext', extRelative);
+        if (!fs.existsSync(filePath)) {
+          filePath = path.join(ROOT, '_external', extRelative);
+        }
       } else {
         filePath = path.join(ROOT, urlPath);
       }

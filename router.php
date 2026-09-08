@@ -142,7 +142,11 @@ if (strpos($path, '/config/') === 0 || strpos($path, '/core/') === 0) {
 
 // ── 前台 /ext/ → _external ───────────────
 if (strpos($path, '/ext/') === 0) {
-    $extFile = $frontRoot . '/_external' . substr($path, 4);
+    $extRelative = substr($path, 4);
+    $extFile = $frontRoot . '/ext/' . $extRelative;
+    if (!is_file($extFile)) {
+        $extFile = $frontRoot . '/_external/' . $extRelative;
+    }
     if (serveStatic($extFile, $mimeTypes)) return true;
     if (requirePhp($extFile)) return true;
 }

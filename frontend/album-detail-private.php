@@ -2913,30 +2913,12 @@
 
 <?php include __DIR__ . '/inc/header.php'; ?>
 <div id="homePage" class="wrap" data-Fullscreen>
-    <ul class="list mask_black">
+        <ul class="list mask_black">
                     <li class="item active">
-                <img class="lazy CarouselImage" data-src="https://love-really.kikiw.cn/Lovefolder/20260408044247_69d56c47870ec497937320.webp" draggable="false">
+                <img class="lazy CarouselImage" data-src="/Lovefolder/20260408044229_69d56c35d59a9841528398.webp" draggable="false">
             </li>
                     <li class="item">
-                <img class="lazy CarouselImage" data-src="https://love-really.kikiw.cn/Lovefolder/20260408044246_69d56c468eddf735445232.webp" draggable="false">
-            </li>
-                    <li class="item">
-                <img class="lazy CarouselImage" data-src="https://love-really.kikiw.cn/Lovefolder/20260408044242_69d56c4212ab5344890628.webp" draggable="false">
-            </li>
-                    <li class="item">
-                <img class="lazy CarouselImage" data-src="https://love-really.kikiw.cn/Lovefolder/20260408044237_69d56c3dcde96349173286.webp" draggable="false">
-            </li>
-                    <li class="item">
-                <img class="lazy CarouselImage" data-src="https://love-really.kikiw.cn/Lovefolder/20260408044237_69d56c3d97f46162328378.webp" draggable="false">
-            </li>
-                    <li class="item">
-                <img class="lazy CarouselImage" data-src="https://love-really.kikiw.cn/Lovefolder/20260408044229_69d56c35d59a9841528398.webp" draggable="false">
-            </li>
-                    <li class="item">
-                <img class="lazy CarouselImage" data-src="https://love-really.kikiw.cn/Lovefolder/20260408044228_69d56c34b1c8f984679558.webp" draggable="false">
-            </li>
-                    <li class="item">
-                <img class="lazy CarouselImage" data-src="https://love-really.kikiw.cn/Lovefolder/20260408044228_69d56c34421f3439264035.webp" draggable="false">
+                <img class="lazy CarouselImage" data-src="/Lovefolder/20260408044228_69d56c34421f3439264035.webp" draggable="false">
             </li>
             </ul>
 

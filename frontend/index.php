@@ -3510,7 +3510,7 @@ try {
             </section>
 
             <!-- 课表 Module（与轻屿课表 App 周视图一致，仅登录可见；数据由 page-timetable.js 拉取） -->
-            <?php if (!empty($loggedIn)): ?>
+            <?php if (false): // 课表前端展示暂时注释，恢复时改回 !empty($loggedIn) ?>
             <section id="timetable-section" class="withu-section" style="display:none;">
                 <div class="withu-section-header withu-section-header--blue" data-aos="fade-up" data-aos-delay="0">
                     <div class="withu-section-header__left">

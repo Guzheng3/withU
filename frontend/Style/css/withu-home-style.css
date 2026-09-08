@@ -5323,6 +5323,16 @@ body.bg-grad-grid::before {
         justify-content: space-between;
         padding-top: 1.5rem;
     }
+
+}
+
+@media (min-width: 900px) {
+    .withu-home #epilogue-random-article {
+        position: absolute;
+        left: 50%;
+        top: 38px;
+        translate: -50% -50%;
+    }
 }
 
 @media (max-width: 600px) {
