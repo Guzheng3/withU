@@ -10,7 +10,7 @@
 
 | 文件 / 目录 | 用途 |
 | --- | --- |
-| `router.php` | **统一路由入口**。前台 `frontend/` + 后台 `backend/app/` 共用此入口，跑在 1314 端口（`php -S 0.0.0.0:1314 -t . router.php`）。负责 MIME 静态资源、后台 `/admin/`、后台 API `/api/`、前台页面与目录索引的分发 |
+| `router.php` | **统一路由入口**。前台 `frontend/` + 后台 `backend/app/` 共用此入口，跑在 1314 端口（`php -S 0.0.0.0:1314 -t . router.php`）。负责 MIME 静态资源、后台 `/admin/`、后台 API `/api/`、前台页面与目录索引的分发；内置路径穿越防护（拒绝 `..`/`.` 段、反斜杠、NUL）与静态文件 realpath 白名单 |
 | `README.md` | 项目说明（功能、技术要求、安装、withUstrm 对接、FFmpeg） |
 | `DEPLOY-LINUX.md` / `DEPLOY-BAOTA.md` | Linux / 宝塔面板部署文档 |
 | `LICENSE` | MIT 许可 |
@@ -20,7 +20,7 @@
 | `backend/app/` | 后台管理、接口、认证、影视对接网关（主站 PHP） |
 | `backend/server/` | 遗留 Node 服务（已被 `router.php` + PHP 后台取代，见第四节） |
 | `backend/runtime/` | 运行时缓存（strm 海报/背景图缓存等） |
-| `config/` | 运行时生成的站点配置（不入库，含 `config.php` / `database.php`） |
+| `config/` | 本地启动脚本生成的**配置母本**（不入库）；运行时真正读取的是 `backend/app/config/`，端口差异见 [deploy-local/README.md](../deploy-local/README.md) |
 | `deploy/` | Nginx / 宝塔站点配置、Cloudflare Worker、TMDB hosts 脚本 |
 | `deploy-local/` | 本地一键启动 / 停止脚本（Linux / Windows） |
 | `docs/` | 项目文档 |
@@ -71,6 +71,8 @@
 | `player_art.php` / `player_settings.php` | 播放器设置（`player_settings.php` 302 兼容旧入口） |
 | `together_settings.php` | 一起看功能设置 |
 | `strm_settings.php` | withUstrm 媒体库对接配置页 |
+| `timetable_settings.php` | 课表回传看板（双方课表/个人设置的只读看板 + 粘贴或选择 `.json` 文件直接导入课表；顶部提供「仓库同步管理」入口） |
+| `warehouse_sync.php` | 仓库同步管理（qingyu_warehouse 解析脚本仓库：同步状态/统计、结构化同步记录与同步日志、学校与适配器列表与最近更新、一键「立即同步」） |
 | `tools_image_stats.php` | 图片体积与相册带宽统计小工具 |
 | `header.php` / `footer.php` | 后台公用头部 / 底部导航（移动端 Tabbar） |
 
@@ -110,12 +112,12 @@
 | `Searcher.class.php` | IP 定位库（Ip2Region 的 PHP 封装） |
 | `Parsedown.php` / `ParsedownMarkdown.php` | Markdown 解析库（第三方） |
 
-### 2.5 配置与数据 `config/`、`database/`、`views/`
+### 2.5 配置与数据 `backend/app/config/`、`database/`、`views/`
 
 | 文件 | 用途 |
 | --- | --- |
-| `config/config.php` | 站点配置（调试、时区、BASE_URL、上传限制、登录风控、SECRET_KEY，安装生成，不入库） |
-| `config/database.php` | 数据库连接配置（安装向导生成，不入库） |
+| `backend/app/config/config.php` | 站点配置（调试、时区、BASE_URL、上传限制、登录风控、SECRET_KEY，安装向导/启动脚本生成，不入库） |
+| `backend/app/config/database.php` | 数据库连接配置（安装向导或 `deploy-local/start-*` 生成，不入库；根目录 `config/` 只是母本） |
 | `database/schema.sql` | 主站完整建表语句 |
 | `database/ip2region.xdb` | IP 归属地数据库文件 |
 | `views/header.php` / `footer.php` | 公共视图模板（页头 / 页脚） |
@@ -157,7 +159,17 @@
 
 `app.js`（全局）、`auth-status.js`（登录态）、`chat.js`（一起看聊天/弹幕）、`components.js`、`context-menu.js`、`interaction.js`、`map.js` / `map-sdk.js`（地图足迹/高德 SDK）、`mini-map.js`、`mobile-nav.js`、`music-player.js`、`page-*.js`（各页逻辑：index、albums、album-detail、articles、detail、lovelist、messages、timeline）、`pjax.js`、`sakura.js`、`tooltip.js`、`visitor-hash.js`、`webp-default.js`（WebP 默认加载）、`withu-private.js`、`html2canvas.min.js` / `clipboard.js` 等。
 
-### 3.3 其它目录
+### 3.3 页面内联样式/脚本的抽取产物 `frontend/assets/css/`、`frontend/assets/js/`
+
+2026-09 起，十个前台页面（index / lovelist / albums / page / album-detail / album-detail-private / messages / timeline / about / articles）的内联 `<style>` / `<script>` 已抽取为独立资源文件，单文件行数从 3.4k–6.6k 降到 0.8k–3.0k：
+
+- 命名：`withu-shared-<hash8>.*`（多页共用，如 66 KB 的基础样式 `withu-shared-f1846031.css`）与 `page-<页面>-<hash8>.*`（单页专用）。hash 为内容摘要，内容变了文件名就变，天然带缓存失效。
+- 引入方式：在**原位置**替换为 `<link rel="stylesheet" href="/assets/css/...">` 或 `<script src="/assets/js/..."></script>`，执行顺序与原来完全一致（无 defer/async 改动）。
+- 不抽取的情况：块内含 `<?php`（如 `WITHU_CONFIG` 注入）、原本就带 `src`、非 JS 的 `type`、CSS 含相对 `url()`（如 `index.php` 的 4097 B 块引用 `Style/cur/hover.cur`）、JS 含相对 URL 引用。这些仍留在页面内联。
+- 维护约定：**不要**再把大段样式/脚本写回页面；新增页面级样式直接放 `frontend/assets/css/page-<页面>.css` 并引用即可（手工文件不必带 hash）。
+- 后端页面（`article.php`、`watch_history.php`、`watch_play.php` 等）仍有内联块，其中 `watch_play.php` 的样式/脚本内含 PHP 插值，需人工拆分，暂未处理。
+
+### 3.4 其它目录
 
 | 目录 | 用途 |
 | --- | --- |
@@ -173,7 +185,7 @@
 
 ## 四、遗留 Node 服务 `backend/server/`（已停用）
 
-早期基于 LikeGirl 协议的 Node 后台，已被 `router.php` + PHP 后台取代，保留仅为历史参考，不参与当前运行：
+早期基于 LikeGirl 协议的 Node 后台，已被 `router.php` + PHP 后台取代，保留仅为历史参考，不参与当前运行（详见 [`backend/server/README.md`](../backend/server/README.md)，该目录已由 `router.php` 与 Nginx 双重拒绝外部访问）：
 
 | 文件 | 用途 |
 | --- | --- |
@@ -233,3 +245,18 @@
 
 - `start-linux.sh` 启动 MariaDB 与 withU PHP（1314）；withUstrm 由独立仓库的 `install-linux.sh` 启动（8081 + 3111）。
 - 后台管理入口：`http://127.0.0.1:1314/admin/`；前台首页：`http://127.0.0.1:1314/`。
+
+---
+
+## 七、2026-09 代码整理记录
+
+| 改动 | 位置 | 说明 |
+| --- | --- | --- |
+| 路径穿越加固 | `router.php` | 拒绝含 `..`/`.` 段、反斜杠、NUL 的请求路径；静态文件改为 realpath + 目录白名单（`frontend/`、`backend/app/assets/`、`backend/app/uploads/`）。修复 `/assets/%2e%2e%2f…` 可读取 `config/database.php` 源码、`/services/%2e%2e%2fmap-all.json` 可绕过私有快照拦截的问题 |
+| 内联资源抽取 | `frontend/*.php` + `frontend/assets/{css,js}` | 见 3.3；页面行数最多减少约 75% |
+| `like.php` 可读化 | `backend/app/api/like.php` | 单行压缩改为多行结构，改前/改后用同一组请求逐条比对响应与库内状态 |
+| 迁移检查热路径 | `backend/app/core/helpers.php` | `migrate_schema_if_needed()` 的版本标记改为单次读取，省一次 `stat`（该函数本来就有标记文件短路，不会每请求跑 DDL） |
+| 遗留 Node 服务下线 | `backend/server/README.md`、`router.php`、`deploy/baota-nginx-withu.conf` | 目录内加停用说明与迁移对照；路由对 `/backend/**` 返回 404；Nginx 追加 `location ^~ /backend/server/ { deny all; }` |
+| 文档修正 | `README.md`、`docs/source-structure.md`、`deploy-local/README.md` | 运行时配置在 `backend/app/config/`（根 `config/` 仅为母本）；补充两套本地栈的端口差异与排障 |
+| `.gitignore` 清理 | `.gitignore` | 删除已不存在的 `backend/strm/**` 规则，修复乱码注释，统一换行符 |
+| 课表看板改版 + JSON 导入 | `backend/app/admin/timetable_settings.php` | 看板卡片重排（头像 + 状态徽标头部、6 格统计条、技术字段降级为次要信息、更清晰的空状态）；新增「导入课表 JSON」卡片（跨整行、目标账号切换、粘贴或选择 `.json` 文件、本地实时解析预览、CSRF 校验、2 MB 上限、覆盖前旧内容自动写入 `timetable_history`）。哈希算法与历史保留逻辑与 `api/timetable.php` 的 `action=save` 完全一致，导入结果 App 侧可读、可回滚 |

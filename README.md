@@ -42,7 +42,8 @@ withU 与 withUstrm 通过 **外部媒体库接口** 对接（`/api/external/**`
 | `backend/app/admin/strm_settings.php` | 后台「withUstrm 媒体库」对接配置页 |
 | `deploy-local/` | 脚本一键部署（Linux / WSL） |
 | `deploy/` | Nginx / 宝塔站点配置与 PHP 参数参考 |
-| `config/` | 运行时生成的站点配置（不入库） |
+| `scripts/` | 运维脚本：定时同步解析脚本仓库（`sync-warehouse.php`）、课表导入（`import-timetable.php`）、Windows 任务计划注册（`register-sync-schedule.cjs`），详见 [`docs/warehouse-sync.md`](./docs/warehouse-sync.md) |
+| `config/` | 本地启动脚本生成的**配置母本**（不入库）；运行时读取的是 `backend/app/config/`，端口与排障见 [`deploy-local/README.md`](./deploy-local/README.md) |
 
 ---
 
@@ -305,7 +306,17 @@ bash deploy-local/stop-linux.sh     # 一键停止
 php -l backend/app/watch_play.php
 ```
 
-Windows 环境可参考 `deploy-local/start-withu.cjs`（路径按本机调整）。
+Windows 环境可参考 `deploy-local/start-withu.cjs`（Windows 栈用 3307/3314，与 Linux/WSL 栈的 3306/1314 不同，详见 [`deploy-local/README.md`](./deploy-local/README.md)）。
+
+## 课表数据同步与导入（qingyu_warehouse）
+
+withU 的课表数据由轻屿课表 App（mikcb）回传，也可以直接用本站脚本导入：
+
+- **定时同步解析脚本仓库**：`php scripts/sync-warehouse.php` 按计划把 [qingyu_warehouse](https://github.com/Guzheng3/qingyu_warehouse)（教务适配/解析脚本仓库）拉取到 `runtime/qingyu-warehouse/`，日志与元信息写入 `runtime/logs/` 与 `runtime/qingyu-warehouse-meta.json`。
+- **Windows 定时**：`node scripts/register-sync-schedule.cjs` 注册每日任务计划（默认 04:00）；**Linux / WSL**：在 crontab 里加一行（见脚本注释）。
+- **课表导入**：`php scripts/import-timetable.php [--csv 文件]` 把解析脚本产出的课表 CSV 转成 App 回传同构的 JSON 包并写入 `timetables` 表（哈希去重、旧内容自动入 `timetable_history`，App 内可回滚）。
+
+完整说明见 [`docs/warehouse-sync.md`](./docs/warehouse-sync.md)。
 
 ## 安全说明
 
