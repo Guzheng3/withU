@@ -1,0 +1,12 @@
+
+                window.WITHU_CONFIG = window.WITHU_CONFIG || {};
+                window.WITHU_CONFIG.msgPageInit = true;
+                window.WITHU_CONFIG.msgTotal = 178;
+                window.WITHU_CONFIG.anonAvatars = ["/Lovefolder/20250310095445_67ce46659657a.gif","/Lovefolder/20250310095445_67ce46659745d.gif","/Lovefolder/20250310095445_67ce4665975b8.gif","/Lovefolder/20250310095445_67ce4665976a2.gif","/Lovefolder/20250310095445_67ce46659778a.gif","/Lovefolder/20250310095445_67ce466597870.gif","/Lovefolder/20250310095445_67ce46659794d.gif","/Lovefolder/20250310095445_67ce466597a45.webp","/Lovefolder/20250310095445_67ce466597b24.webp","/Lovefolder/20250310095445_67ce466597c27.webp","/Lovefolder/20250310095445_67ce466597d03.webp","/Lovefolder/20250310095445_67ce466597ddf.webp","/Lovefolder/20250310095445_67ce466597eba.webp","/Lovefolder/20250310095445_67ce466597fa1.webp","/Lovefolder/20250310095445_67ce466598093.webp","/Lovefolder/20250310095643_67ce46dbe2110.webp","/Lovefolder/20250310095643_67ce46dbe2250.webp","/Lovefolder/20250310095643_67ce46dbe234b.webp","/Lovefolder/20250310095643_67ce46dbe2448.webp","/Lovefolder/20250310095643_67ce46dbe252c.webp","/Lovefolder/20250310095643_67ce46dbe261d.webp","/Lovefolder/20250310095643_67ce46dbe2732.webp","/Lovefolder/20250310095643_67ce46dbe283d.webp","/Lovefolder/20250310095643_67ce46dbe293d.webp","/Lovefolder/20250310095643_67ce46dbe2a42.webp","/Lovefolder/20250310095643_67ce46dbe2b51.webp","/Lovefolder/20250310095643_67ce46dbe2c54.webp","/Lovefolder/20250310095643_67ce46dbe2d57.webp","/Lovefolder/20250310095643_67ce46dbe2e56.webp","/Lovefolder/20250310095643_67ce46dbe2fa8.webp","/Lovefolder/20250310095643_67ce46dbe30a6.webp","/Lovefolder/20250310095643_67ce46dbe31a4.webp","/Lovefolder/20250310095643_67ce46dbe329f.webp","/Lovefolder/20250310095643_67ce46dbe33ac.webp","/Lovefolder/20250310095643_67ce46dbe358d.webp"];
+                window.WITHU_CONFIG.endpoints = Object.assign(window.WITHU_CONFIG.endpoints || {}, {
+                    messageList: '/services/message-list.php',
+                    messageSubmit: '/services/message.php',
+                    infoService: '/services/info-service.php',
+                    weatherApi: '/services/weather.php'
+                });
+            

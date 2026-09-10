@@ -1,0 +1,138 @@
+
+            /* 滚动提示样式 */
+            .withu-scroll-hint {
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                padding: 30px 0 50px;
+            }
+
+            .withu-scroll-hint-inner {
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                gap: 16px;
+            }
+
+            /* 鼠标图标 - PC 端 */
+            .withu-scroll-mouse {
+                width: 26px;
+                height: 42px;
+                border: 2px solid rgba(0, 0, 0, 0.2);
+                border-radius: 15px;
+                position: relative;
+                display: flex;
+                justify-content: center;
+            }
+
+            .withu-scroll-wheel {
+                width: 4px;
+                height: 8px;
+                background: rgba(0, 0, 0, 0.3);
+                border-radius: 2px;
+                position: absolute;
+                top: 8px;
+                animation: scrollWheel 1.8s ease-in-out infinite;
+            }
+
+            @keyframes scrollWheel {
+                0% {
+                    opacity: 1;
+                    transform: translateY(0);
+                }
+
+                50% {
+                    opacity: 0.5;
+                    transform: translateY(10px);
+                }
+
+                100% {
+                    opacity: 0;
+                    transform: translateY(16px);
+                }
+            }
+
+            /* 手指滑动图标 - 移动端 */
+            .withu-scroll-touch {
+                display: none;
+                flex-direction: column;
+                align-items: center;
+                position: relative;
+                height: 60px;
+            }
+
+            .withu-scroll-touch-hand {
+                font-size: 28px;
+                color: rgba(0, 0, 0, 0.35);
+                animation: touchSwipe 1.8s ease-in-out infinite;
+            }
+
+            .withu-scroll-touch-trail {
+                position: absolute;
+                bottom: 0;
+                width: 2px;
+                height: 20px;
+                background: linear-gradient(to bottom, rgba(0, 0, 0, 0.15), transparent);
+                border-radius: 1px;
+                animation: touchTrail 1.8s ease-in-out infinite;
+            }
+
+            @keyframes touchSwipe {
+                0%, 100% {
+                    transform: translateY(20px);
+                    opacity: 0.3;
+                }
+                50% {
+                    transform: translateY(-5px);
+                    opacity: 1;
+                }
+            }
+
+            @keyframes touchTrail {
+                0%, 100% {
+                    opacity: 0;
+                    height: 0;
+                }
+                30%, 70% {
+                    opacity: 0.5;
+                    height: 20px;
+                }
+            }
+
+            .withu-scroll-text {
+                font-size: 13px;
+                color: rgba(0, 0, 0, 0.4);
+                font-family: 'Noto Serif SC', serif;
+                letter-spacing: 0.1em;
+            }
+
+            .withu-scroll-text-mobile {
+                display: none;
+            }
+
+            @media (max-width: 768px) {
+                .withu-scroll-hint {
+                    padding: 20px 0 40px;
+                }
+
+                .withu-scroll-mouse {
+                    display: none;
+                }
+
+                .withu-scroll-touch {
+                    display: flex;
+                }
+
+                .withu-scroll-text-pc {
+                    display: none;
+                }
+
+                .withu-scroll-text-mobile {
+                    display: block;
+                }
+
+                .withu-scroll-text {
+                    font-size: 12px;
+                }
+            }
+        

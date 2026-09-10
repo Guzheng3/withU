@@ -8,6 +8,18 @@ $uri  = $_SERVER['REQUEST_URI'];
 $path = parse_url($uri, PHP_URL_PATH);
 $path = rawurldecode($path);
 
+// ── 路径安全校验 ─────────────────────────
+// 必须在 rawurldecode 之后检查，否则 %2e%2e%2f 这类编码可以绕过；
+// 反斜杠在 Windows 上同样是路径分隔符，NUL 字节用于截断路径，一并拒绝。
+if (!is_string($path) || $path === '') {
+    withu_router_404('/');
+}
+if (strpbrk($path, "\\\0") !== false
+    || preg_match('#(?:^|/)\.{1,2}(?:/|$)#', $path) === 1) {
+    withu_router_404($path);
+    return true;
+}
+
 // PHP's built-in server closes HTML responses with EOF. Some SSH tunnels do
 // not forward that half-close, so give browsers an explicit response length.
 ob_start(function (string $output): string {
@@ -28,6 +40,12 @@ ob_start(function (string $output): string {
     return $output;
 });
 
+// ── 遗留目录 backend/：不对公网暴露（含已停用的 Node 服务） ──
+if ($path === '/backend' || strpos($path, '/backend/') === 0) {
+    withu_router_404($path);
+    return true;
+}
+
 $base = __DIR__;
 $frontRoot = $base . '/frontend';
 $appRoot   = $base . '/backend/app';
@@ -46,17 +64,57 @@ $mimeTypes = [
     'xml' => 'application/xml',
 ];
 
+/**
+ * 允许被当作静态文件直读的目录白名单（realpath 归一化后的绝对路径）。
+ * 只有前台资源目录与后台上传/静态资源目录允许 readfile，
+ * 其余目录（config/、core/、admin/、api/ …）即使被路径构造命中也不会输出源码。
+ */
+function withu_static_roots(): array {
+    static $roots = null;
+    if ($roots === null) {
+        $roots = [];
+        foreach ([__DIR__ . '/frontend', __DIR__ . '/backend/app/assets', __DIR__ . '/backend/app/uploads'] as $dir) {
+            $real = realpath($dir);
+            if ($real !== false) {
+                $roots[] = rtrim($real, DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR;
+            }
+        }
+    }
+    return $roots;
+}
+
 function serveStatic(string $file, array $mime): bool {
     if (!is_file($file)) return false;
-    $ext = pathinfo($file, PATHINFO_EXTENSION);
+    // realpath 收敛后再比对白名单，避免未归一化路径或符号链接读到敏感文件
+    $real = realpath($file);
+    if ($real === false) return false;
+    $allowed = false;
+    foreach (withu_static_roots() as $root) {
+        if (strncmp($real, $root, strlen($root)) === 0) {
+            $allowed = true;
+            break;
+        }
+    }
+    if (!$allowed) return false;
+    $ext = pathinfo($real, PATHINFO_EXTENSION);
     $ct  = $mime[$ext] ?? 'application/octet-stream';
     // 计算可读的文件大小
-    $len = filesize($file);
+    $len = filesize($real);
     header('Content-Type: ' . $ct);
     header('Content-Length: ' . $len);
     header('Cache-Control: max-age=3600, public');
-    readfile($file);
+    readfile($real);
     return true;
+}
+
+function withu_router_404(string $path): void {
+    http_response_code(404);
+    header('Content-Type: text/html; charset=UTF-8');
+    echo '<!DOCTYPE html><html><head><meta charset="UTF-8"><title>404</title>';
+    echo '<style>body{font-family:sans-serif;display:flex;align-items:center;justify-content:center;min-height:100vh;margin:0;background:#f4f6fb;color:#555;}</style>';
+    echo '</head><body><div style="text-align:center"><h1 style="color:#e75480;font-size:48px;margin:0;">404</h1>';
+    echo '<p>页面未找到: ' . htmlspecialchars($path, ENT_QUOTES, 'UTF-8') . '</p>';
+    echo '<a href="/" style="color:#e75480;">返回首页</a></div></body></html>';
 }
 
 function requirePhp(string $file): bool {
@@ -154,9 +212,7 @@ if (strpos($path, '/ext/') === 0) {
 // ── 数据快照文件：仅供服务端 PHP 读取，禁止直接下载 ─────────
 $privateDataFiles = ['/services/map-all.json', '/services/album-photos.json'];
 if (in_array($path, $privateDataFiles, true)) {
-    http_response_code(404);
-    header('Content-Type: text/html; charset=UTF-8');
-    echo '<!DOCTYPE html><html><head><meta charset="UTF-8"><title>404</title></head><body><h1>404</h1><p>页面未找到: ' . htmlspecialchars($path, ENT_QUOTES, 'UTF-8') . '</p></body></html>';
+    withu_router_404($path);
     return true;
 }
 
@@ -199,11 +255,5 @@ if (is_dir($frontFile) || $path === '/' || $path === '') {
 }
 
 // ── 404 ──────────────────────────────────
-http_response_code(404);
-header('Content-Type: text/html; charset=UTF-8');
-echo '<!DOCTYPE html><html><head><meta charset="UTF-8"><title>404</title>';
-echo '<style>body{font-family:sans-serif;display:flex;align-items:center;justify-content:center;min-height:100vh;margin:0;background:#f4f6fb;color:#555;}</style>';
-echo '</head><body><div style="text-align:center"><h1 style="color:#e75480;font-size:48px;margin:0;">404</h1>';
-echo '<p>页面未找到: ' . htmlspecialchars($path, ENT_QUOTES, 'UTF-8') . '</p>';
-echo '<a href="/" style="color:#e75480;">返回首页</a></div></body></html>';
+withu_router_404($path);
 return true;

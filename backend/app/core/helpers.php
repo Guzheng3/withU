@@ -1076,7 +1076,9 @@ function migrate_schema_if_needed(): void {
     $runtimeDir = dirname(ROOT_PATH) . DIRECTORY_SEPARATOR . 'runtime';
     $markerPath = $runtimeDir . DIRECTORY_SEPARATOR . 'schema-version';
     $lockPath = $runtimeDir . DIRECTORY_SEPARATOR . 'schema-migration.lock';
-    if (is_file($markerPath) && trim((string)@file_get_contents($markerPath)) === $schemaVersion) {
+    // 该检查每个请求都会走到：一次读取即可判定，省掉一次 stat
+    $marker = @file_get_contents($markerPath);
+    if ($marker !== false && trim($marker) === $schemaVersion) {
         return;
     }
     if (!is_dir($runtimeDir)) {

@@ -1,0 +1,9 @@
+
+/* 关键内联样式：防止 PJAX 切换时 CSS 未加载导致的无样式闪烁 */
+.withu-private-wrapper{position:fixed;top:0;left:0;width:100%;height:100vh;display:flex;align-items:center;justify-content:center;overflow:hidden;z-index:9999;background:#0f172a}
+.withu-private-wrapper .withu-private-main-card{position:relative;z-index:10;width:100%;max-width:360px;padding:2.5rem;border-radius:1.5rem;background:rgba(255,255,255,.55);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border:1px solid rgba(255,255,255,.5);box-shadow:0 20px 40px -10px rgba(0,0,0,.1);opacity:0;transform:translateY(30px)}
+.withu-private-wrapper .withu-private-bg{position:absolute;top:0;right:0;bottom:0;left:0;z-index:0}
+.withu-private-wrapper .withu-private-bg-img{width:100%;height:100%;object-fit:cover;opacity:.85;filter:blur(3px)}
+.withu-private-wrapper .withu-private-bg-overlay{position:absolute;top:0;right:0;bottom:0;left:0;background:linear-gradient(to bottom,rgba(0,0,0,.1),rgba(0,0,0,.05),rgba(0,0,0,.3))}
+html.withu-private-mode body{overflow:hidden}
+html.withu-private-mode .row.central.nav_k,html.withu-private-mode #homePage,html.withu-private-mode .footer-warp,html.withu-private-mode #footer-animal,html.withu-private-mode .div_marb_7rem-none,html.withu-private-mode .withu-mobile-nav-root,html.withu-private-mode #NavBtnList,html.withu-private-mode #isAdminIcon,html.withu-private-mode #withuFloatingActions,html.withu-private-mode .message_btn,html.withu-private-mode #scrollTopBtn,html.withu-private-mode .bg-wrap,html.withu-private-mode #loader-wrapper,html.withu-private-mode .Width_limit_10re{display:none!important}

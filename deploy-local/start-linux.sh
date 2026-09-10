@@ -19,6 +19,7 @@ is_listening() { (echo >/dev/tcp/127.0.0.1/$1) >/dev/null 2>&1; }
 
 detach() { # 脱离会话、稳定后台运行，并写 pid 文件
   local name="$1" cmd="$2" logfile="$3"
+  mkdir -p "$(dirname "$logfile")"
   nohup setsid bash -c "$cmd" >>"$logfile" 2>&1 &
   disown 2>/dev/null || true
   echo $! >"$WORKROOT/runtime/$name.pid"
@@ -105,7 +106,12 @@ else
   else
     detach withu-php "php -S 127.0.0.1:$WITHU_PORT -t '$ROOT' '$ROOT/router.php'" "$WORKROOT/runtime/withu-php.log"
     for i in $(seq 1 10); do is_listening $WITHU_PORT && break; sleep 1; done
-    log "withU PHP 就绪: http://127.0.0.1:$WITHU_PORT/"
+    if is_listening $WITHU_PORT; then
+      log "withU PHP 就绪: http://127.0.0.1:$WITHU_PORT/"
+    else
+      log "ERROR: withU PHP 未就绪（端口 $WITHU_PORT 无监听），请查看 $WORKROOT/runtime/withu-php.log"
+      exit 1
+    fi
   fi
 fi
 

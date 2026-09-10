@@ -70,18 +70,6 @@ backend/runtime/*
 # 本地部署备份
 /deploy-local/*.bak*
 
-# ===== withUstrm 内置组件构建产物 =====
-backend/strm/frontend/node_modules/
-backend/strm/frontend/.nuxt/
-backend/strm/frontend/.output/
-backend/strm/backend/build/
-backend/strm/backend/.gradle/
-backend/strm/.build-cache/
-
-
-# 本地密钥副本（勿入库）
-/backend/strm/runtime/bridge-secret.txt
-
 # AI/IDE 开发工具配置（勿入库）
 **/.monkeycode
 **/.kilocode
@@ -93,7 +81,7 @@ backend/strm/.build-cache/
 /.claude/
 /agent/
 
-# 主站本地生成配置（含 SECRET_KEY，勿入库）
+# 旧版根目录配置（运行时实际读取 backend/app/config/，此目录仅历史保留）
 /config/
 
 # ZCode 工作区状态
@@ -105,7 +93,7 @@ backend/strm/.build-cache/
 # Python 缓存
 __pycache__/
 
-# ���� ADB �������
+# 本地 ADB 缓存（勿入库）
 ._cache_adb.exe
 
 # 前台运行时缓存（天气/定位数据，不入库）

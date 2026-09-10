@@ -1,0 +1,165 @@
+
+        .NotAbout {
+            display: none;
+        }
+
+        .about_y {
+            font-size: 2rem;
+            background: #ffffff;
+            padding: 0.8rem;
+            margin-left: 1rem;
+            border-radius: 1rem;
+            color: #03A9F4;
+            position: fixed;
+            right: 1rem;
+            bottom: 7.5rem;
+            z-index: 100;
+            box-shadow: 0 3px 10px #bdb7b78c;
+            border: 1px solid #fff;
+            transition: 0.1s all;
+        }
+
+        .about_y:hover {
+            background: #03A9F4;
+            color: #ffffff;
+        }
+
+        .icon {
+            width: 1.5em;
+            height: 1.5em;
+            vertical-align: -0.3em;
+            fill: currentColor;
+            overflow: hidden;
+        }
+
+        li.cike {
+            border-bottom: 1px solid #ddd;
+        }
+
+        li {
+            list-style-type: none;
+        }
+
+        .cike:hover {
+            cursor: pointer;
+            cursor: url(/Style/cur/hover.cur), pointer;
+        }
+
+        button:disabled {
+            background: #888;
+            opacity: 0.6;
+        }
+
+        .avatar {
+            width: 2.5em;
+            height: 2.5em;
+            border-radius: 50%;
+            box-shadow: 0 2px 8px #a9a9a98c;
+            border: 2px solid #fff;
+            margin-right: 0.8rem;
+        }
+
+        .footer-warp {
+            background: #ffffff;
+            margin-top: 0;
+            border-top: 1px solid #efefef;
+            padding: 2rem 0;
+        }
+
+        .footer-warp .footer {
+            padding-bottom: 0;
+        }
+
+        .footer-warp .footer p {
+            line-height: 1.2rem;
+            margin: 0.5rem auto 0;
+        }
+
+
+        .github-badge {
+            display: inline-block;
+            border-radius: 4px;
+            text-shadow: none;
+            font-size: 12px;
+            color: #fff;
+            line-height: 15px;
+            background-color: #5d5d5d;
+            margin-bottom: 5px;
+            white-space: nowrap;
+
+        }
+
+        .footer .github-badge .badge-subject img {
+            width: 12px;
+            vertical-align: bottom;
+            margin: 0 .3rem;
+        }
+
+
+        .github-badge:hover {
+            color: #fafafa;
+        }
+
+        .github-badge .badge-subject {
+            display: inline-block;
+            background-color: #4d4d4d;
+            padding: 4px 4px 4px 6px;
+            border-top-left-radius: 4px;
+            border-bottom-left-radius: 4px;
+        }
+
+        .github-badge .badge-value {
+            display: inline-block;
+            padding: 4px 6px 4px 4px;
+            border-top-right-radius: 4px;
+            border-bottom-right-radius: 4px;
+        }
+
+        .github-badge .bg-pink {
+            /* background-image: linear-gradient(to right, #a4b7ff 0%, #ff7eb3 100%); */
+            background-image: linear-gradient(to right, #747474 0%, #ff7eb3 100%);
+        }
+
+        .github-badge .bg-DIY {
+            /* background-image: linear-gradient(to right, #00decf 0%, #e46cff 100%); */
+            background-image: linear-gradient(to right, #747474 0%, #ff7575 100%)
+        }
+
+        .github-badge .bg-DIY1 {
+            background-color: #7f7f7f;
+        }
+
+        .github-badge .bg-blue {
+            /* background-image: linear-gradient(120deg, #02f0ff 0%, #66a6ff 100%); */
+            background-image: linear-gradient(120deg, #747474 0%, #66a6ff 100%);
+        }
+
+
+        #footer-animal {
+            position: relative;
+            user-select: none;
+        }
+
+        #footer-animal:before {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            width: 100%;
+            height: 36px;
+            background: url(/Style/img/animalBg.jpg) repeat center / auto 100%;
+            box-shadow: 0 4px 7px rgba(0, 0, 0, .15);
+        }
+
+        .animal {
+            position: relative;
+            max-width: min(974px, 100vw);
+            margin: 0 auto;
+            display: block;
+        }
+
+        @media (max-width: 768px) {
+            .animal {
+                bottom: 15px;
+            }
+        }
+    
