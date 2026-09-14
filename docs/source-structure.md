@@ -71,8 +71,7 @@
 | `player_art.php` / `player_settings.php` | 播放器设置（`player_settings.php` 302 兼容旧入口） |
 | `together_settings.php` | 一起看功能设置 |
 | `strm_settings.php` | withUstrm 媒体库对接配置页 |
-| `timetable_settings.php` | 课表回传看板（双方课表/个人设置的只读看板 + 粘贴或选择 `.json` 文件直接导入课表；顶部提供「仓库同步管理」入口） |
-| `warehouse_sync.php` | 仓库同步管理（qingyu_warehouse 解析脚本仓库：同步状态/统计、结构化同步记录与同步日志、学校与适配器列表与最近更新、一键「立即同步」） |
+| `timetable_settings.php` | 课表回传看板（双方课表/个人设置的只读看板 + 粘贴或选择 `.json` 文件直接导入课表） |
 | `tools_image_stats.php` | 图片体积与相册带宽统计小工具 |
 | `header.php` / `footer.php` | 后台公用头部 / 底部导航（移动端 Tabbar） |
 

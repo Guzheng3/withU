@@ -443,11 +443,6 @@ include __DIR__ . '/header.php';
 <section class="admin-page-title">
     <h1>课表设置 · 回传看板</h1>
     <p>只读看板：课表由轻屿课表 App 修改后回传，这里查看双方最近一次回传的内容与格式健康度；编辑请在 App 内完成。</p>
-    <div style="margin-top:0.7rem;">
-        <a class="btn btn-secondary btn-sm" href="/admin/warehouse_sync.php">
-            <i class="ti ti-cloud-download" aria-hidden="true"></i>仓库同步管理
-        </a>
-    </div>
 </section>
 
 <section class="admin-grid">
