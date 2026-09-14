@@ -1,0 +1,649 @@
+/*!
+ *      _      ____ _   _ _____ _    _ _   _ ___
+ *     | |    / ___| \ | | ____| |  | | | | |_ _|
+ *     | |   | |  _|  \| |  _| | |  | | | | || |
+ *     | |___| |_| | |\  | |___| |__| | |_| || |
+ *     |_____|\____|_| \_|_____|____/ \___/|___|
+ *
+ *      ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+ *
+ * Project      : LGNewUi
+ * Author       : Ki
+ * Last Updated : 2026-03-31
+ * Description  : A private place to preserve love, memory, and the
+ *                years shared between two people.
+ *
+ * Copyright (c) 2022-2026 by Ki. All Rights Reserved.
+ *
+ * Type         : Native PHP web application built with PHP, HTML,
+ *                CSS, JavaScript, and selected third-party libraries.
+ * License      : This project is licensed for personal couple-record
+ *                use only.
+ * Restriction  : Commercial, corporate, organizational, platform,
+ *                or enterprise use is strictly prohibited.
+ * Restriction  : Redistribution, modification, repackaging, resale,
+ *                or unauthorized public deployment without explicit
+ *                written permission is strictly prohibited.
+ *
+ * Official Authorization Site:
+ * https://auth-love.kikiw.cn/
+ *
+ * Warning      : LGNewUi is an original work. Any unauthorized
+ *                copying, scraping, resale, redistribution, or
+ *                commercial use is forbidden.
+ * Notice       : Development and long-term maintenance require
+ *                substantial time and effort. Please respect the
+ *                work involved and the applicable authorization terms.
+ *
+ */
+:root {
+    --lg-font-family: 'Inter', sans-serif;
+    --lg-bg-body: #f0f2f5;
+    --lg-text-main: #111827;
+    --lg-text-sub: #9ca3af;
+    --lg-text-accent: #4b5563;
+    --lg-primary: #6fb4ff;
+    --lg-primary-light: #eff6ff;
+    --lg-radius-card: 24px;
+    --lg-radius-media: 16px;
+    --lg-grid-gap: 4px;
+}
+
+/* 布局容器 */
+.lg-page-container {
+    width: 100%;
+    max-width: 1100px;
+    margin: 20px auto;
+    padding: 0 10px;
+    box-sizing: border-box;
+}
+
+/* Masonry Grid 系统 */
+.lg-masonry-grid {
+    width: 100%;
+}
+
+.lg-masonry-col {
+    float: left;
+    width: 100%;
+    padding: 8px 0;
+    box-sizing: border-box;
+}
+
+@media (min-width: 640px) {
+    .lg-masonry-col {
+        width: 50%;
+        padding: 14px;
+    }
+}
+
+/* LG Card 组件 */
+.lg-card {
+    font-family: var(--lg-font-family);
+    background: #ffffff;
+    border-radius: var(--lg-radius-card);
+    padding: 18px;
+    box-shadow: 1px -1px 40px -10px rgba(0, 0, 0, 0.05), 0 10px 20px -10px rgba(0, 0, 0, 0.02);
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    position: relative;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    text-decoration: none;
+    color: inherit;
+}
+
+@media (min-width: 640px) {
+    .lg-card {
+        padding: 32px;
+    }
+}
+
+.lg-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.06), 0 8px 10px -6px rgba(0, 0, 0, 0.02);
+}
+
+/* Header */
+.lg-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+/* Header */
+
+/* Header - 头像区域已迁移到公共组件 .lg-author */
+
+/* Header Action */
+.lg-header-action {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background-color: #ffffff;
+    border: 1px solid #e5e7eb;
+    color: #9ca3af;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 16px;
+    cursor: pointer;
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    text-decoration: none;
+}
+
+.lg-header-action:hover {
+    background-color: #111827;
+    border-color: #111827;
+    color: #ffffff;
+    transform: translateX(2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+/* Content */
+.lg-content {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.lg-title {
+    font-family: 'Noto Serif SC', serif;
+    font-size: 16px;
+    font-weight: 700;
+    line-height: 1.5;
+    color: #1f2937;
+    margin: 0;
+}
+
+/* 相册描述 */
+.lg-desc {
+    font-size: 13px;
+    font-weight: 300;
+    line-height: 1.7;
+    color: #6b7280;
+    margin: 0;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+/* Media Grid */
+.lg-media {
+    display: grid;
+    gap: var(--lg-grid-gap);
+    border-radius: var(--lg-radius-media);
+    overflow: hidden;
+    width: 100%;
+}
+
+.lg-photo-box {
+    position: relative;
+    width: 100%;
+    overflow: hidden;
+    cursor: pointer;
+}
+
+.lg-photo-box.square {
+    aspect-ratio: 1 / 1;
+}
+
+.lg-photo {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+}
+
+.lg-photo.loaded {
+    transition: transform 0.5s cubic-bezier(0.25, 1, 0.5, 1), .7s filter linear, .7s -webkit-filter linear;
+}
+
+.lg-photo-box:hover .lg-photo {
+    transform: scale(1.1);
+}
+
+/* 文件大小标签 */
+.lg-file-size {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    padding: 4px 8px;
+    background: rgba(0, 0, 0, 0.6);
+    backdrop-filter: blur(4px);
+    color: #fff;
+    font-size: 11px;
+    font-weight: 600;
+    border-radius: 6px;
+    pointer-events: none;
+    z-index: 2;
+    opacity: 0;
+    transform: translateY(-4px);
+    transition: opacity 0.2s ease, transform 0.2s ease;
+    font-family: 'Space Mono', monospace;
+    letter-spacing: -0.5px;
+}
+
+.lg-photo-box:hover .lg-file-size {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.lg-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.4);
+    backdrop-filter: blur(4px);
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 20px;
+    font-weight: 600;
+    cursor: pointer;
+    text-decoration: none;
+    font-family: 'Space Mono', monospace;
+    letter-spacing: -0.5px;
+}
+
+.lg-overlay:hover {
+    background: rgba(0, 0, 0, 0.5);
+}
+
+/* Grid 布局类 */
+.grid-1 {
+    grid-template-columns: 1fr;
+    aspect-ratio: 16/9;
+}
+
+.grid-2 {
+    grid-template-columns: 1fr 1fr;
+    aspect-ratio: 3/2;
+}
+
+.grid-3 {
+    grid-template-columns: 1.6fr 1fr;
+    grid-template-rows: 1fr 1fr;
+    aspect-ratio: 4/3;
+}
+
+.grid-3 .lg-photo-box:nth-child(1) {
+    grid-row: span 2;
+    height: 100%;
+}
+
+.grid-4 {
+    grid-template-columns: 1fr 1fr;
+    aspect-ratio: 1 / 1;
+}
+
+.grid-5 {
+    grid-template-columns: repeat(6, 1fr);
+}
+
+.grid-5 .lg-photo-box:nth-child(1),
+.grid-5 .lg-photo-box:nth-child(2) {
+    grid-column: span 3;
+    aspect-ratio: 3/2;
+}
+
+.grid-5 .lg-photo-box:nth-child(n+3) {
+    grid-column: span 2;
+    aspect-ratio: 1/1;
+}
+
+.grid-6 {
+    grid-template-columns: repeat(3, 1fr);
+}
+
+.grid-7 {
+    grid-template-columns: repeat(3, 1fr);
+}
+
+.grid-7 .lg-photo-box:nth-child(1) {
+    grid-column: span 3;
+    aspect-ratio: 2/1;
+}
+
+.grid-7 .lg-photo-box:nth-child(n+2) {
+    aspect-ratio: 1/1;
+}
+
+.grid-8 {
+    grid-template-columns: repeat(6, 1fr);
+}
+
+.grid-8 .lg-photo-box:nth-child(1),
+.grid-8 .lg-photo-box:nth-child(2) {
+    grid-column: span 3;
+    aspect-ratio: 3/2;
+}
+
+.grid-8 .lg-photo-box:nth-child(n+3) {
+    grid-column: span 2;
+    aspect-ratio: 1/1;
+}
+
+.grid-9 {
+    grid-template-columns: repeat(3, 1fr);
+    aspect-ratio: 1 / 1;
+}
+
+/* Footer */
+.lg-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-top: 8px;
+}
+
+.lg-actions-left {
+    display: flex;
+    gap: 16px;
+}
+
+.lg-action-item {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 14px;
+    color: #9ca3af;
+    font-weight: 500;
+    cursor: pointer;
+    transition: color 0.2s ease;
+    padding: 4px 0;
+}
+
+.lg-action-item:hover {
+    color: var(--lg-primary);
+}
+
+.lg-action-item i{
+    font-size: 20px;
+}
+
+.lg-icon {
+    font-size: 20px;
+}
+
+/* Location Tag（点滴风格：浅灰背景、hover蓝色） */
+.lg-location-tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 4px 10px 4px 4px;
+    border-radius: 999px;
+    border: none;
+    background: #f3f4f6;
+    font-size: 12px;
+    font-weight: 500;
+    color: #c5c5c5;
+    cursor: pointer;
+    user-select: none;
+    transition: all 0.2s ease;
+    max-width: 180px;
+}
+
+.lg-location-tag i {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    background: #ffffff;
+    font-size: 11px;
+    color: #9ca3af;
+    flex-shrink: 0;
+    transition: all 0.2s ease;
+}
+
+.lg-location-tag span {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    flex: 1;
+    min-width: 0;
+}
+
+.lg-location-tag:hover {
+    background: #f0f9ff;
+}
+
+.lg-location-tag:hover i {
+    background: #dbeafe;
+    color: #3b82f6;
+}
+
+.lg-location-tag:hover {
+    color: #3b82f6;
+}
+
+.lg-location-tag:active {
+    transform: scale(0.95);
+}
+
+.lg-location-tag.is-empty {
+    color: #d1d5db;
+    cursor: default;
+}
+
+.lg-location-tag.is-empty i {
+    background: #f9fafb;
+    color: #e5e7eb;
+}
+
+.lg-location-tag.is-empty:hover {
+    background: #fff;
+    color: #d1d5db;
+    transform: none;
+}
+
+.lg-location-tag.is-empty:hover i {
+    background: #f9fafb;
+    color: #e5e7eb;
+}
+
+/* 私密相册（亮色风格，与点点滴滴统一） */
+.lg-private-card {
+    background: #ffffff;
+    border: none;
+    color: #44403c;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    min-height: auto;
+    position: relative;
+    cursor: pointer;
+}
+
+.lg-private-bg-circle {
+    display: none;
+}
+
+.lg-private-content {
+    z-index: 1;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    text-align: center;
+    width: 100%;
+    position: relative;
+    overflow: hidden;
+}
+
+/* 点阵遮罩背景 */
+.lg-private-content::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 0;
+    background-image: radial-gradient(#9ca3af 2px, transparent 2px);
+    background-size: 14px 14px;
+    opacity: 0.25;
+    mask-image: linear-gradient(to bottom, black 40%, transparent 100%);
+    -webkit-mask-image: linear-gradient(to bottom, black 40%, transparent 100%);
+    pointer-events: none;
+}
+
+.lg-private-icon-box {
+    width: 56px;
+    height: 56px;
+    background: rgba(255, 255, 255, 0.8);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    backdrop-filter: blur(4px);
+    transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275), background 0.3s;
+    position: relative;
+    z-index: 1;
+}
+
+.lg-private-card:hover .lg-private-icon-box {
+    transform: scale(1.1);
+    background: #fff;
+}
+
+.lg-private-icon {
+    font-size: 26px;
+    color: #6b7280;
+    transition: color 0.3s;
+}
+
+.lg-private-card:hover .lg-private-icon {
+    color: #ef4444;
+}
+
+.lg-private-title {
+    font-size: 16px;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    color: #18181b;
+    margin-bottom: 4px;
+    position: relative;
+    z-index: 1;
+}
+
+.lg-private-desc {
+    font-size: 11px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: #9ca3af;
+    font-weight: 700;
+    opacity: 0;
+    transform: translateY(5px);
+    transition: all 0.3s ease;
+    position: relative;
+    z-index: 1;
+}
+
+.lg-private-card:hover .lg-private-desc {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* 已解锁提示：胶囊样式 */
+.lg-unlocked-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 5px 14px;
+    border-radius: 99px;
+    background: #f8f9fa;
+    border: 1px solid #eceef1;
+    font-size: 11px;
+    font-weight: 500;
+    color: #9ca3af;
+    letter-spacing: 0.02em;
+    width: fit-content;
+}
+
+.lg-unlocked-badge i {
+    font-size: 13px;
+}
+
+.PhotoHide {
+    display: none;
+}
+
+/* loveImg 页面专属：日期恢复原始 Space Mono 字体 */
+.lg-card .lg-author__meta {
+    font-family: 'Space Mono', monospace;
+    font-size: 12px;
+    font-weight: 500;
+    opacity: 1;
+    color: var(--lg-text-sub);
+    letter-spacing: -0.5px;
+}
+
+.lg-photo-count {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    line-height: 1;
+    padding-left: 16px;
+    border-left: 1px solid #e5e7eb;
+    cursor: default;
+    user-select: none;
+}
+
+.lg-photo-count .num {
+    font-family: 'Space Mono', monospace;
+    font-size: 18px;
+    font-weight: 700;
+    color: #111827;
+    letter-spacing: -0.5px;
+}
+
+.lg-photo-count .label {
+    font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+    font-size: 9px;
+    color: #9ca3af;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-top: 3px;
+    font-weight: 600;
+}
+
+/* Video Icon */
+.lg-photo-box.is-video {
+    cursor: pointer;
+}
+
+.lg-video-icon {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 48px;
+    height: 48px;
+    background: rgba(0, 0, 0, 0.45);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #fff;
+    font-size: 20px;
+    transition: all 0.25s ease;
+    pointer-events: none;
+}
+
+.lg-photo-box.is-video:hover .lg-video-icon {
+    background: rgba(0, 0, 0, 0.65);
+    transform: translate(-50%, -50%) scale(1.1);
+}

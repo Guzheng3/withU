@@ -1,0 +1,17 @@
+{
+  "stats": {
+    "article:1": {
+      "like_count": 1,
+      "view_count": 0
+    },
+    "photo:2": {
+      "like_count": 0,
+      "view_count": 1
+    }
+  },
+  "likers": {
+    "article:1": [
+      "2501fd05c0467aeb9e4d95410fda1d5d"
+    ]
+  }
+}

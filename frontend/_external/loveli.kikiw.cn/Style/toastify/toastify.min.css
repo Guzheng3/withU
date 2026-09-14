@@ -1,0 +1,177 @@
+/*!
+ * Toastify js 1.12.0
+ * https://github.com/apvarun/toastify-js
+ * Refactored with iOS Animations (Explicit Exit)
+ */
+.toastify {
+    padding: 10px 20px;
+    color: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 15px;
+    box-shadow: 0 3px 6px -1px rgba(0, 0, 0, .12), 0 10px 36px -4px rgba(77, 96, 232, .3);
+    background: -webkit-linear-gradient(315deg, #73a5ff, #5477f5);
+    background: linear-gradient(135deg, #73a5ff, #5477f5);
+    position: fixed;
+    opacity: 0;
+    border-radius: 14px;
+    cursor: pointer;
+    text-decoration: none;
+    max-width: calc(50% - 20px);
+    width: fit-content;
+    z-index: 2147483647;
+    font-family: 'Inter', 'Noto Sans SC', sans-serif;
+    font-size: 14px;
+    font-weight: 500;
+    letter-spacing: 0.2px;
+    line-height: 1.5;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+/* Toast 内容布局：icon + 文字水平对齐 */
+.toast-content {
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+    flex: 1;
+}
+
+.toast-content i,
+.toast-content svg {
+    flex-shrink: 0;
+    width: 20px;
+    height: 20px;
+    margin-top: 2px;
+}
+
+.toast-content span {
+    flex: 1;
+    line-height: 1.5;
+}
+
+@media only screen and (max-width: 640px) {
+    .toastify {
+        max-width: calc(100vw - 32px);
+        margin: 0 16px;
+    }
+}
+
+/* iOS Enter Animation */
+@keyframes ios-enter {
+    0% {
+        opacity: 0;
+        transform: scale(0.9) translateY(10px);
+        filter: blur(4px);
+    }
+
+    50% {
+        opacity: 1;
+        transform: scale(1.02);
+        filter: blur(0);
+    }
+
+    100% {
+        opacity: 1;
+        transform: scale(1) translateY(0);
+        filter: blur(0);
+    }
+}
+
+/* iOS Exit Animation */
+@keyframes ios-exit {
+    0% {
+        opacity: 1;
+        transform: scale(1) translateY(0);
+        filter: blur(0);
+    }
+
+    100% {
+        opacity: 0;
+        transform: scale(0.85) translateY(-15px);
+        filter: blur(8px);
+    }
+}
+
+.toastify.on {
+    animation: ios-enter 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+    opacity: 1;
+}
+
+.toastify.off {
+    animation: ios-exit 0.4s cubic-bezier(0.36, 0.66, 0.04, 1) forwards;
+    opacity: 0;
+    pointer-events: none;
+    /* Prevent clicks during exit */
+    transition: none;
+    /* 彻底禁用过渡，防止与动画冲突 */
+}
+
+.toast-close {
+    background: 0 0;
+    border: 0;
+    color: #fff;
+    cursor: pointer;
+    font-family: inherit;
+    font-size: 1em;
+    opacity: .4;
+    padding: 0 5px
+}
+
+.toastify-right {
+    right: 15px
+}
+
+.toastify-left {
+    left: 15px
+}
+
+.toastify-top {
+    top: -150px
+}
+
+.toastify-bottom {
+    bottom: -150px
+}
+
+.toastify-rounded {
+    border-radius: 25px
+}
+
+.toastify-avatar {
+    width: 1.5em;
+    height: 1.5em;
+    margin: -7px 5px;
+    border-radius: 2px
+}
+
+.toastify-center {
+    margin-left: auto;
+    margin-right: auto;
+    left: 0;
+    right: 0;
+    max-width: fit-content;
+    max-width: -moz-fit-content
+}
+
+@media only screen and (max-width:360px) {
+
+    .toastify-left,
+    .toastify-right {
+        margin-left: auto;
+        margin-right: auto;
+        left: 0;
+        right: 0;
+        max-width: fit-content
+    }
+}
+
+/* Loading 图标旋转动画 */
+@keyframes spin-soft {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+}
+
+.animate-spin-soft {
+    animation: spin-soft 0.8s linear infinite;
+}

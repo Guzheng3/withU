@@ -1,0 +1,140 @@
+.col-sm-12 {
+  grid-column: span 12;
+}
+
+.col-sm-11 {
+  grid-column: span 11;
+}
+
+.col-sm-10 {
+  grid-column: span 10;
+}
+
+.col-sm-9 {
+  grid-column: span 9;
+}
+
+.col-sm-8 {
+  grid-column: span 8;
+}
+
+.col-sm-7 {
+  grid-column: span 7;
+}
+
+.col-sm-6 {
+  grid-column: span 6;
+}
+
+.col-sm-5 {
+  grid-column: span 5;
+}
+
+.col-sm-4 {
+  grid-column: span 4;
+}
+
+.col-sm-3 {
+  grid-column: span 3;
+}
+
+.col-sm-2 {
+  grid-column: span 2;
+}
+
+.col-sm-1 {
+  grid-column: span 1;
+}
+
+.central,
+.central.maxW95 {
+  width: 728px;
+  margin: 2rem auto;
+  padding: 1rem;
+  box-sizing: border-box;
+}
+
+
+.love_img img {
+  width: 100% !important;
+}
+
+.central.bg .row .card .inputbox {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+}
+
+.sm-x-block {
+  display: none;
+}
+
+.leva_sm_x {
+  display: none;
+}
+
+
+.leav #show_mes {
+  position: fixed;
+  bottom: 0;
+  left: 50%;
+  top: 30px;
+  transform: translate(-50%);
+  z-index: 10002;
+}
+
+
+img.lazy.img_img.col-withu-4.col-md-4.col-sm-4.col-sm-x-4 {
+  width: 100% !important;
+  aspect-ratio: 1 / 1 !important;
+}
+
+.Photo.row .PhotoCard {
+  width: 100%;
+}
+
+.Photo.row {
+  margin: auto;
+  margin-bottom: 2rem;
+}
+
+.CityHide {
+  display: none;
+}
+
+#md-view .plyr--video {
+  width: 100%;
+  height: 100%;
+}
+
+#md-view iframe {
+  width: 100%;
+  height: 500px;
+}
+
+div#ConventionPhoto {
+  height: 500px;
+  width: 100%;
+  margin: 1rem auto;
+}
+
+
+#isAdminIcon {
+  top: 30vh;
+  right: 1rem;
+  bottom: auto;
+}
+
+.avatarArea .withu-head-avatar-status-text {
+  font-size: .8rem;
+}
+.avatarArea .withu-head-avatar-gender-icon {
+  width: 24px;
+  height: 24px;
+}
+.avatarArea .withu-head-avatar-mask {
+  padding: 0.8rem 0;
+}
+.avatarArea .withu-head-avatar-divider {
+  width: 3rem;
+}

@@ -1,0 +1,121 @@
+/* --- withU 前台全局 Tooltip --- */
+.withu-tooltip {
+    position: fixed;
+    z-index: 99999;
+    padding: 6px 12px;
+    font-size: 13px;
+    font-weight: 500;
+    line-height: 1.5;
+    color: #fff;
+    background: #1e293b;
+    border-radius: 10px;
+    box-shadow: 0 12px 32px rgba(0, 0, 0, 0.22), 0 4px 12px rgba(0, 0, 0, 0.12);
+    pointer-events: none;
+    white-space: normal;
+    word-break: break-all;
+    max-width: min(420px, calc(100vw - 24px));
+    opacity: 0;
+    transform: scale(0.92);
+    transform-origin: var(--withu-tip-origin, center bottom);
+    display: none;
+    /* 默认无 transition，JS 按场景注入 */
+}
+
+/* 出现：缩放 + 淡入 */
+.withu-tooltip.is-entering {
+    transition: opacity 0.16s cubic-bezier(0.2, 0, 0, 1),
+                transform 0.16s cubic-bezier(0.2, 0, 0, 1);
+}
+
+/* 消失：淡出 + 微缩 */
+.withu-tooltip.is-leaving {
+    transition: opacity 0.12s cubic-bezier(0.4, 0, 1, 1),
+                transform 0.12s cubic-bezier(0.4, 0, 1, 1);
+    opacity: 0;
+    transform: scale(0.96);
+}
+
+/* 可见态 */
+.withu-tooltip.is-visible {
+    opacity: 1;
+    transform: scale(1);
+}
+
+@media (max-width: 768px) {
+    .withu-tooltip {
+        max-width: calc(100vw - 24px);
+        font-size: 12px;
+        padding: 8px 12px;
+    }
+}
+
+.withu-tooltip-text {
+    position: relative;
+    z-index: 10;
+}
+
+.withu-tooltip-text img:not(#qrcode-rail img) {
+    width: 20px;
+    height: 20px;
+    vertical-align: -4px;
+    margin: 0 1px;
+}
+
+/* 二维码图片不限制尺寸 */
+#qrcode-rail img,
+#qrcode-rail canvas {
+    width: 100% !important;
+    height: 100% !important;
+}
+
+/* 气泡尾巴 - SVG 圆弧 */
+.withu-tooltip-tail {
+    position: absolute;
+    width: 16px;
+    height: 8px;
+    z-index: 1;
+    overflow: visible;
+}
+
+.withu-tooltip-tail svg {
+    display: block;
+    width: 100%;
+    height: 100%;
+    fill: #1e293b;
+}
+
+/* 尾巴朝下（tooltip 在上方） */
+.withu-tooltip-tail.is-bottom {
+    bottom: -6px;
+}
+
+/* 尾巴朝上（tooltip 在下方） */
+.withu-tooltip-tail.is-top {
+    top: -6px;
+}
+
+.withu-tooltip-tail.is-top svg {
+    transform: rotate(180deg);
+}
+
+/* 尾巴朝右（tooltip 在左侧） */
+.withu-tooltip-tail.is-right {
+    right: -6px;
+    width: 8px;
+    height: 16px;
+}
+
+.withu-tooltip-tail.is-right svg {
+    transform: rotate(-90deg);
+}
+
+/* 尾巴朝左（tooltip 在右侧） */
+.withu-tooltip-tail.is-left {
+    left: -6px;
+    width: 8px;
+    height: 16px;
+}
+
+.withu-tooltip-tail.is-left svg {
+    transform: rotate(90deg);
+}

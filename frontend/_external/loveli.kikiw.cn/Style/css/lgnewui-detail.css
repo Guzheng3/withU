@@ -1,0 +1,4503 @@
+/* ========================================
+   lgnewui-detail.css
+   Localized CSS for Article Detail Page
+   All classes prefixed with lgnewui-detail-
+   ======================================== */
+
+/* ========================================
+   BASE STYLES
+   ======================================== */
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    padding: 0;
+    color: #1f2937;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+    font-weight: 400;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    /* 移除 overflow-x: hidden，改用 html 上的 overflow-x 来防止横向滚动，避免影响 sticky */
+}
+
+html {
+    scroll-behavior: smooth;
+    overflow-x: hidden;
+    /* 在 html 上设置，不影响 sticky */
+}
+
+/* Selection */
+::selection {
+    background-color: #111827;
+    color: #ffffff;
+}
+
+/* ========================================
+   MAIN CONTAINER
+   ======================================== */
+
+.lgnewui-detail-main-grid {
+    max-width: 90rem;
+    margin: 0 auto;
+    padding: 2rem 1rem;
+}
+
+@media (min-width: 640px) {
+    .lgnewui-detail-main-grid {
+        padding-left: 1.5rem;
+        padding-right: 1.5rem;
+    }
+}
+
+@media (min-width: 1024px) {
+    .lgnewui-detail-main-grid {
+        padding-top: 4rem;
+        padding-bottom: 4rem;
+        padding-left: 2rem;
+        padding-right: 2rem;
+        display: grid;
+        grid-template-columns: repeat(12, 1fr);
+        gap: 3rem;
+        align-items: start;
+        /* 让 grid 子项从顶部开始，配合 sticky */
+    }
+}
+
+/* Main Content Area */
+.lgnewui-detail-main-content {
+    width: 100%;
+}
+
+@media (min-width: 1024px) {
+    .lgnewui-detail-main-content {
+        grid-column: span 8;
+        animation: fadeInUp 0.6s ease-out forwards;
+    }
+}
+
+/* Sidebar */
+.lgnewui-detail-sidebar {
+    display: none;
+}
+
+@media (min-width: 1024px) {
+    .lgnewui-detail-sidebar {
+        display: block;
+        grid-column: span 4;
+        min-width: 0;
+        position: relative;
+        align-self: stretch;
+    }
+}
+
+/* Sidebar Sticky Content */
+.lgnewui-detail-sidebar-sticky {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+@media (min-width: 1024px) {
+    .lgnewui-detail-sidebar-sticky {
+        transition: transform 0.15s ease-out;
+        will-change: transform;
+    }
+
+    .lgnewui-detail-sidebar-sticky.is-sticky {
+        position: fixed;
+        overflow-y: auto;
+    }
+
+    .lgnewui-detail-sidebar-sticky.is-bottom {
+        position: absolute;
+        bottom: 0;
+    }
+
+    /* 隐藏滚动条 */
+    .lgnewui-detail-sidebar-sticky::-webkit-scrollbar {
+        display: none;
+    }
+    .lgnewui-detail-sidebar-sticky {
+        scrollbar-width: none;
+        -ms-overflow-style: none;
+    }
+}
+
+/* 修复 pjax-container 内 sticky 失效问题 */
+#pjax-container {
+    overflow: visible !important;
+}
+
+#pjax-container .lgnewui-detail-main-grid {
+    overflow: visible !important;
+}
+
+
+/* ========================================
+   CARD COMPONENT
+   ======================================== */
+
+.lgnewui-detail-card {
+    background: #ffffff;
+    border: 1px solid rgba(0, 0, 0, 0.04);
+    border-radius: 1rem;
+    box-shadow: 0 20px 40px -20px rgba(0, 0, 0, 0.05);
+    position: relative;
+    overflow: visible;
+}
+
+/* Card Padding Variants */
+.lgnewui-detail-card-p-sm {
+    padding: 1.5rem;
+}
+
+.lgnewui-detail-card-p-md {
+    padding: 1.5rem;
+}
+
+@media (min-width: 768px) {
+    .lgnewui-detail-card-p-md {
+        padding: 2.5rem;
+    }
+}
+
+.lgnewui-detail-card-p-lg {
+    padding: 1.5rem;
+}
+
+@media (min-width: 768px) {
+    .lgnewui-detail-card-p-lg {
+        padding: 2.5rem;
+    }
+}
+
+@media (min-width: 1024px) {
+    .lgnewui-detail-card-p-lg {
+        padding: 3rem;
+    }
+}
+
+/* ========================================
+   HEADER CARD
+   ======================================== */
+
+.lgnewui-detail-header-card {
+    margin-bottom: 2rem;
+    position: relative;
+    overflow: hidden;
+}
+
+.lgnewui-detail-header-bg {
+    position: absolute;
+    inset: 0;
+    background: #ffffff;
+}
+
+.lgnewui-detail-header-blob-container {
+    position: absolute;
+    inset: 0;
+    opacity: 0.5;
+}
+
+.lgnewui-detail-header-blob {
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(2.5rem);
+}
+
+.lgnewui-detail-blob-left {
+    top: 0;
+    left: 0;
+    width: 8rem;
+    height: 8rem;
+    background: linear-gradient(135deg, #93c5fd 0%, transparent 100%);
+}
+
+.lgnewui-detail-blob-right {
+    bottom: 0;
+    right: 0;
+    width: 10rem;
+    height: 10rem;
+    background: linear-gradient(315deg, #e9d5ff 0%, transparent 100%);
+}
+
+.lgnewui-detail-header-content {
+    position: relative;
+    z-index: 10;
+}
+
+/* Header Watermark (右上角装饰) */
+.lgnewui-detail-header-watermark {
+    position: absolute;
+    top: 1.25rem;
+    right: 1.25rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.25rem;
+    opacity: 0.08;
+    pointer-events: none;
+    user-select: none;
+    z-index: 1;
+}
+
+@media (min-width: 768px) {
+    .lgnewui-detail-header-watermark {
+        top: 1.5rem;
+        right: 1.5rem;
+    }
+}
+
+.lgnewui-detail-watermark-icon {
+    font-size: 2.5rem;
+    color: #111827;
+}
+
+@media (min-width: 768px) {
+    .lgnewui-detail-watermark-icon {
+        font-size: 3.5rem;
+    }
+}
+
+.lgnewui-detail-watermark-text {
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.15em;
+    color: #111827;
+}
+
+@media (min-width: 768px) {
+    .lgnewui-detail-watermark-text {
+        font-size: 0.75rem;
+    }
+}
+
+/* Category Badge */
+.lgnewui-detail-category-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.375rem;
+    padding: 0.3125rem 0.625rem;
+    border-radius: 9999px;
+    background: #111827;
+    color: #ffffff;
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+    text-decoration: none;
+    transition: background-color 0.2s;
+}
+
+.lgnewui-detail-category-badge:hover {
+    background: #000000;
+}
+
+.lgnewui-detail-category-badge i {
+    font-size: 0.75rem;
+}
+
+.lgnewui-detail-category-wrapper {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    margin-bottom: 1.5rem;
+}
+
+/* ========================================
+   DATE CAPSULE COMPONENT
+   深色悬浮日期胶囊 - 哑光质感
+   ======================================== */
+
+.lgnewui-detail-date-capsule {
+    display: inline-flex;
+    align-items: center;
+    background-color: #18181b;
+    border-radius: 9999px;
+    padding: 0.1rem 0.1rem 0.1rem 0.5rem;
+    box-shadow:
+        0 10px 25px -5px rgba(0, 0, 0, 0.15),
+        0 4px 6px -2px rgba(0, 0, 0, 0.08);
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    position: relative;
+    overflow: hidden;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+/* 去掉胶囊 hover 效果 */
+
+/* 噪点纹理背景 */
+.lgnewui-detail-date-capsule::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.08'/%3E%3C/svg%3E");
+    opacity: 0.5;
+    pointer-events: none;
+}
+
+/* 左侧文字区域 */
+.lgnewui-detail-date-text-wrapper {
+    display: flex;
+    align-items: center;
+    margin-right: 0.5rem;
+    position: relative;
+    z-index: 10;
+    font-size: .9rem;
+    font-weight: 700;
+    color: rgba(255, 255, 255, 0.55);
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    letter-spacing: 0.02em;
+    font-variant-numeric: tabular-nums;
+}
+
+/* Sparkle 图标 */
+.lgnewui-detail-date-icon-sparkle {
+    color: rgba(255, 255, 255, 0.4);
+    font-size: 0.75rem;
+    margin-right: 0.5rem;
+    display: inline-flex;
+    align-items: center;
+    vertical-align: middle;
+}
+
+/* 渐变分割线 */
+.lgnewui-detail-date-gradient-divider {
+    margin: 0 0.375rem;
+    width: 1px;
+    height: 1.275rem;
+    background: linear-gradient(to bottom,
+            transparent 0%,
+            rgba(255, 255, 255, 0.35) 50%,
+            transparent 100%);
+}
+
+/* 右侧日期圆圈 - 背景加亮 */
+.lgnewui-detail-date-circle {
+    background-color: #3f3f46;
+    color: #ffffff;
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    border-radius: 9999px;
+    width: 1.75rem;
+    height: 1.75rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.2);
+    position: relative;
+    z-index: 10;
+    transition: background-color 0.2s ease;
+}
+
+.lgnewui-detail-date-circle:hover {
+    background-color: #52525b;
+}
+
+/* 日期数字 */
+.lgnewui-detail-date-day-number {
+    font-size: 0.875rem;
+    font-weight: 800;
+    line-height: 1;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    letter-spacing: -0.02em;
+    font-variant-numeric: tabular-nums;
+}
+
+/* 响应式适配 */
+@media (max-width: 640px) {
+    .lgnewui-detail-date-capsule {
+        padding: 0.175rem 0.175rem 0.175rem 0.75rem;
+    }
+
+    .lgnewui-detail-date-text-wrapper {
+        font-size: 0.8125rem;
+        margin-right: 0.625rem;
+    }
+
+    .lgnewui-detail-date-circle {
+        width: 1.75rem;
+        height: 1.75rem;
+    }
+
+    .lgnewui-detail-date-day-number {
+        font-size: 0.8125rem;
+    }
+
+    .lgnewui-detail-date-gradient-divider {
+        margin: 0 0.5rem;
+        height: 0.875rem;
+    }
+}
+
+/* Title */
+.lgnewui-detail-article-title {
+    font-family: 'Crimson Pro', 'Noto Serif SC', Georgia, serif;
+    font-weight: 900;
+    color: #111827;
+    line-height: 1.15;
+    letter-spacing: -0.025em;
+    margin: 0 0 1.5rem 0;
+    max-width: 56rem;
+    font-size: 2rem;
+}
+
+@media (min-width: 640px) {
+    .lgnewui-detail-article-title {
+        font-size: 1.875rem;
+    }
+}
+
+@media (min-width: 768px) {
+    .lgnewui-detail-article-title {
+        font-size: 2.25rem;
+    }
+}
+
+@media (min-width: 1024px) {
+    .lgnewui-detail-article-title {
+        font-size: 3rem;
+    }
+}
+
+/* Date Stamp */
+.lgnewui-detail-date-stamp {
+    position: absolute;
+    top: 0;
+    right: 0;
+    padding: 1.25rem;
+    pointer-events: none;
+    user-select: none;
+    z-index: 0;
+    opacity: 0.12;
+}
+
+@media (min-width: 768px) {
+    .lgnewui-detail-date-stamp {
+        padding: 2rem;
+    }
+}
+
+/* 垂直日期布局 */
+.lgnewui-detail-date-vertical {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.125rem;
+}
+
+@media (min-width: 768px) {
+    .lgnewui-detail-date-vertical {
+        gap: 0.25rem;
+    }
+}
+
+/* 日期数字 - 最大视觉焦点 */
+.lgnewui-detail-date-day {
+    font-size: 4rem;
+    font-weight: 800;
+    color: #111827;
+    font-family: 'Libre Baskerville', Georgia, serif;
+    letter-spacing: -0.03em;
+    line-height: 0.9;
+}
+
+@media (min-width: 768px) {
+    .lgnewui-detail-date-day {
+        font-size: 6rem;
+    }
+}
+
+/* 月份 - 精致小号 */
+.lgnewui-detail-date-month {
+    font-size: 0.9375rem;
+    font-weight: 500;
+    color: #6b7280;
+    font-family: 'Libre Baskerville', Georgia, serif;
+    letter-spacing: 0.2em;
+    line-height: 1;
+    margin-top: 0.125rem;
+}
+
+@media (min-width: 768px) {
+    .lgnewui-detail-date-month {
+        font-size: 1.125rem;
+        letter-spacing: 0.25em;
+    }
+}
+
+/* 年份 - 斜体衬线风格 */
+.lgnewui-detail-date-year {
+    font-size: 0.8125rem;
+    font-weight: 400;
+    color: #9ca3af;
+    font-family: 'Libre Baskerville', Georgia, serif;
+    font-style: italic;
+    letter-spacing: 0.1em;
+    line-height: 1;
+    margin-top: 0.375rem;
+}
+
+@media (min-width: 768px) {
+    .lgnewui-detail-date-year {
+        font-size: 1rem;
+        margin-top: 0.5rem;
+    }
+}
+
+/* Author Section */
+.lgnewui-detail-author-section {
+    margin-top: 2.5rem;
+    padding-top: 2rem;
+    border-top: 1px solid #f3f4f6;
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+.lgnewui-detail-author-row {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+@media (min-width: 640px) {
+    .lgnewui-detail-author-row {
+        flex-direction: row;
+        align-items: center;
+        justify-content: space-between;
+    }
+}
+
+.lgnewui-detail-author-info {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.lgnewui-detail-author-avatar-wrapper {
+    position: relative;
+    cursor: pointer;
+    flex-shrink: 0;
+}
+
+.lgnewui-detail-author-avatar-blur {
+    position: absolute;
+    inset: 0;
+    background: #111827;
+    border-radius: 50%;
+    filter: blur(4px);
+    opacity: 0.2;
+    transition: opacity 0.2s;
+}
+
+.lgnewui-detail-author-avatar-wrapper:hover .lgnewui-detail-author-avatar-blur {
+    opacity: 0.3;
+}
+
+.lgnewui-detail-author-avatar {
+    position: relative;
+    width: 3rem;
+    height: 3rem;
+    border-radius: 50%;
+    border: 2px solid #ffffff;
+    object-fit: cover;
+}
+
+.lgnewui-detail-author-badge {
+    position: absolute;
+    bottom: 0;
+    right: -0.25rem;
+    background: #ffffff;
+    width: 1.25rem;
+    height: 1.25rem;
+    border-radius: 50%;
+    padding: 0.075rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.lgnewui-detail-author-badge i {
+    color: #3b82f6;
+    font-size: 0.875rem;
+}
+
+.lgnewui-detail-author-text {
+    display: flex;
+    flex-direction: column;
+}
+
+.lgnewui-detail-author-name {
+    font-family: 'Dancing Script', 'Noto Serif SC', cursive;
+    font-weight: 700;
+    color: #111827;
+    font-size: 1.125rem;
+    line-height: 1;
+    margin: 0;
+}
+
+.lgnewui-detail-main-content .lgnewui-detail-author-desc {
+    font-size: 0.9375rem;
+    color: #6b7280;
+    margin-top: .3rem;
+    margin-bottom: 0;
+    font-weight: 300;
+    letter-spacing: 0.025em;
+    display: flex;
+    align-items: center;
+    gap: 0.375rem;
+    line-height: 1.5;
+}
+
+.lgnewui-detail-day-stamp {
+    display: inline-flex;
+    align-items: center;
+    background-color: #18181b;
+    border-radius: 9999px;
+    padding: 0.35rem 0.875rem 0.35rem 0.75rem;
+    box-shadow:
+        0 10px 25px -5px rgba(0, 0, 0, 0.15),
+        0 4px 6px -2px rgba(0, 0, 0, 0.08);
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    position: relative;
+    overflow: hidden;
+    gap: 0.5rem;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.lgnewui-detail-day-stamp:hover {
+    transform: translateY(-1px);
+    box-shadow:
+        0 14px 28px -5px rgba(0, 0, 0, 0.18),
+        0 6px 10px -2px rgba(0, 0, 0, 0.1);
+}
+
+/* 噪点纹理背景 */
+.lgnewui-detail-day-stamp::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.08'/%3E%3C/svg%3E");
+    opacity: 0.5;
+    pointer-events: none;
+}
+
+.lgnewui-detail-day-label {
+    font-size: 0.8125rem;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: rgba(255, 255, 255, 0.5);
+    font-weight: 600;
+    position: relative;
+    z-index: 10;
+    padding-right: 0.75rem;
+    border-right: 1px solid rgba(255, 255, 255, 0.15);
+}
+
+.lgnewui-detail-day-value {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    color: #f472b6;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    font-weight: 700;
+    font-size: 0.9375rem;
+    line-height: 1;
+    position: relative;
+    z-index: 10;
+    letter-spacing: -0.01em;
+}
+
+.lgnewui-detail-day-value i {
+    font-size: 1rem;
+    animation: pulse 2s infinite;
+}
+
+/* Day Stamp 移动端适配 */
+@media (max-width: 640px) {
+    .lgnewui-detail-day-stamp {
+        padding: 0.375rem 0.875rem 0.375rem 0.75rem;
+        gap: 0.5rem;
+        /* 不铺满，自适应宽度 */
+        width: auto;
+        max-width: fit-content;
+    }
+
+    .lgnewui-detail-day-label {
+        font-size: 0.6875rem;
+        padding-right: 0.5rem;
+        letter-spacing: 0.08em;
+    }
+
+    .lgnewui-detail-day-value {
+        font-size: 0.8125rem;
+        gap: 0.25rem;
+    }
+
+    .lgnewui-detail-day-value i {
+        font-size: 0.8125rem;
+    }
+}
+
+
+@keyframes pulse {
+
+
+    0%,
+    100% {
+        opacity: 1;
+    }
+
+    50% {
+        opacity: 0.7;
+    }
+}
+
+/* Metadata Badges */
+.lgnewui-detail-metadata-row {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+.lgnewui-detail-meta-badge {
+    display: inline-flex;
+    align-items: center;
+    padding: 0.15rem 0.75rem 0.15rem 0.15rem;
+    background: #f9fafb;
+    border-radius: 9999px;
+    cursor: default;
+    transition: background-color 0.2s, color 0.2s;
+}
+
+.lgnewui-detail-meta-badge:hover {
+    background: #f3f4f6;
+}
+
+.lgnewui-detail-meta-icon-wrapper {
+    width: 1.75rem;
+    height: 1.75rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    background: #ffffff;
+    color: #9ca3af;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+    transition: color 0.2s;
+}
+
+.lgnewui-detail-meta-badge:hover .lgnewui-detail-meta-icon-wrapper {
+    color: #4b5563;
+}
+
+.lgnewui-detail-meta-icon-wrapper i {
+    font-size: 0.875rem;
+}
+
+.lgnewui-detail-meta-text {
+    margin-left: 0.375rem;
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: #9f9f9f;
+    transition: color 0.2s;
+}
+
+.lgnewui-detail-meta-badge:hover .lgnewui-detail-meta-text {
+    color: #374151;
+}
+
+/* ========================================
+   MOBILE AUTHOR CARD
+   ======================================== */
+
+.lgnewui-detail-mobile-author-card {
+    display: block;
+    padding: 1.5rem;
+    margin-bottom: 1.5rem;
+}
+
+@media (min-width: 1024px) {
+    .lgnewui-detail-mobile-author-card {
+        display: none;
+    }
+}
+
+.lgnewui-detail-mobile-author-header {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+}
+
+.lgnewui-detail-mobile-author-avatar {
+    width: 3.5rem;
+    height: 3.5rem;
+    border-radius: 50%;
+    border: 2px solid #ffffff;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+    object-fit: cover;
+}
+
+.lgnewui-detail-mobile-author-name {
+    font-size: 1.125rem;
+    font-weight: 700;
+    color: #111827;
+    font-family: 'Libre Baskerville', 'Crimson Pro', Georgia, serif;
+}
+
+.lgnewui-detail-mobile-author-check {
+    color: #3b82f6;
+    font-size: 0.875rem;
+}
+
+.lgnewui-detail-mobile-author-days {
+    font-size: 0.9375rem;
+    color: #6b7280;
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+    margin: 0;
+}
+
+.lgnewui-detail-mobile-author-days i {
+    color: #f472b6;
+}
+
+.lgnewui-detail-mobile-author-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0.75rem;
+}
+
+@media (max-width: 480px) {
+    .lgnewui-detail-mobile-author-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+.lgnewui-detail-mobile-author-item {
+    display: flex;
+    align-items: center;
+    gap: 0.625rem;
+    padding: 0.75rem;
+    background: #f9fafb;
+    border-radius: 0.75rem;
+}
+
+.lgnewui-detail-mobile-author-item i {
+    color: #9ca3af;
+}
+
+.lgnewui-detail-mobile-item-label {
+    font-size: 0.9375rem;
+    line-height: 1.25;
+    color: #9ca3af;
+    display: flex;
+    flex-direction: column;
+    gap: 0.125rem;
+    min-width: 0;
+}
+
+.lgnewui-detail-mobile-item-value {
+    font-weight: 700;
+    color: #374151;
+}
+
+/* ========================================
+   VERTICAL RAIL (Right Side Actions)
+   ======================================== */
+
+.lgnewui-detail-vertical-rail {
+    position: fixed;
+    z-index: 1000;
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    align-items: center;
+    background: rgba(255, 255, 255, .7);
+    backdrop-filter: blur(12px);
+    border: 1px solid rgba(0, 0, 0, 0.05);
+    padding: 0.75rem 0.375rem;
+    border-radius: 9999px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+    transition: all 0.3s ease;
+}
+
+@media (min-width: 1025px) {
+    .lgnewui-detail-vertical-rail {
+        right: 1.5rem;
+        top: 50%;
+        transform: translateY(-50%);
+        padding: 1rem 0.5rem;
+    }
+}
+
+@media (max-width: 1024px) {
+    .lgnewui-detail-vertical-rail {
+        right: 0.75rem;
+        bottom: 18rem;
+        background: rgba(255, 255, 255, 0.95);
+    }
+}
+
+.lgnewui-detail-rail-btn {
+    width: 2.75rem;
+    height: 2.75rem;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #6b7280;
+    transition: all 0.2s;
+    position: relative;
+    cursor: pointer;
+    background: none;
+    border: none;
+    padding: 0;
+}
+
+.lgnewui-detail-rail-btn:hover {
+    background-color: #f3f4f6;
+    color: #111827;
+}
+
+.lgnewui-detail-rail-btn.active {
+    color: #ef4444;
+}
+
+.lgnewui-detail-rail-btn.active i {
+    font-weight: bold;
+}
+
+.lgnewui-detail-rail-btn i {
+    font-size: 1.375rem;
+}
+
+/* Rail Tooltip */
+.lgnewui-detail-rail-tooltip {
+    position: absolute;
+    right: 100%;
+    margin-right: 0.75rem;
+    background: #111827;
+    color: #ffffff;
+    font-size: 0.625rem;
+    padding: 0.25rem 0.5rem;
+    border-radius: 9999px;
+    opacity: 0;
+    transition: opacity 0.2s;
+    white-space: nowrap;
+    pointer-events: none;
+}
+
+@media (min-width: 1024px) {
+    .lgnewui-detail-rail-btn:hover .lgnewui-detail-rail-tooltip {
+        opacity: 1;
+    }
+}
+
+.lgnewui-detail-rail-btn .lgnewui-detail-rail-tooltip {
+    display: none;
+}
+
+@media (min-width: 1024px) {
+    .lgnewui-detail-rail-btn .lgnewui-detail-rail-tooltip {
+        display: block;
+    }
+}
+
+/* Rail Notification Dot */
+.lgnewui-detail-rail-notification {
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 0.5rem;
+    height: 0.5rem;
+    background: #ef4444;
+    border-radius: 50%;
+    border: 1px solid #ffffff;
+}
+
+/* QR Code Popup */
+.lgnewui-detail-rail-qr-popup {
+    position: absolute;
+    right: 100%;
+    top: 50%;
+    transform: translateY(-50%);
+    margin-right: 1rem;
+    width: 8rem;
+    padding: 0.75rem;
+    background: #ffffff;
+    border-radius: 0.75rem;
+    box-shadow: 0 10px 40px -10px rgba(0, 0, 0, 0.08);
+    border: 1px solid #f3f4f6;
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.3s;
+    transform: translateY(-50%) translateX(1rem);
+    pointer-events: none;
+}
+
+.lgnewui-detail-rail-qr-wrapper:hover .lgnewui-detail-rail-qr-popup {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(-50%) translateX(0);
+    pointer-events: auto;
+}
+
+.lgnewui-detail-rail-qr-wrapper:hover .lgnewui-detail-rail-qr-popup {
+    pointer-events: auto;
+}
+
+.lgnewui-detail-rail-qr-content {
+    display: flex;
+    justify-content: center;
+}
+
+.lgnewui-detail-rail-qr-content img,
+.lgnewui-detail-rail-qr-content canvas {
+    display: block;
+    max-width: 100%;
+    height: auto;
+}
+
+.lgnewui-detail-rail-qr-label {
+    text-align: center;
+    font-size: 0.625rem;
+    color: #9ca3af;
+    margin-top: 0.5rem;
+    margin-bottom: 0;
+}
+
+/* Mobile-only rail buttons */
+@media (min-width: 1024px) {
+    .lgnewui-detail-rail-mobile-only {
+        display: none !important;
+    }
+}
+
+@media (max-width: 1023px) {
+    .lgnewui-detail-rail-mobile-only {
+        display: flex !important;
+    }
+}
+
+/* Desktop-only rail buttons */
+@media (max-width: 1023px) {
+    .lgnewui-detail-rail-desktop-only {
+        display: none !important;
+    }
+}
+
+@media (min-width: 1024px) {
+    .lgnewui-detail-rail-desktop-only {
+        display: block;
+    }
+}
+
+/* ========================================
+   ARTICLE CONTENT
+   ======================================== */
+
+.lgnewui-detail-article-card {
+    margin-bottom: 3rem;
+    position: relative;
+    overflow: hidden;
+}
+
+.lgnewui-detail-quote-icon {
+    position: absolute;
+    top: 0;
+    right: 12px;
+    color: #f3f4f6;
+    pointer-events: none;
+    user-select: none;
+    z-index: 0;
+}
+
+.lgnewui-detail-quote-icon i {
+    font-size: 6rem;
+    transform: rotate(12deg);
+    opacity: 0.5;
+}
+
+.lgnewui-detail-article-body {
+    position: relative;
+    z-index: 10;
+}
+
+/* ========================================
+   READING GUIDE
+   ======================================== */
+
+.lgnewui-detail-reading-guide {
+    width: 100%;
+    margin-bottom: 3rem;
+    user-select: none;
+    /* border-bottom: 1px solid #f9fafb; */
+    padding-bottom: 0.5rem;
+}
+
+.lgnewui-detail-reading-guide-inner {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    padding: 0.5rem 0;
+    cursor: default;
+}
+
+.lgnewui-detail-reading-guide-left {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+.lgnewui-detail-reading-guide-icon {
+    width: 1.75rem;
+    height: 1.75rem;
+    border-radius: 50%;
+    background: #f9fafb;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #9ca3af;
+    transition: all 0.5s;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+}
+
+.lgnewui-detail-reading-guide-inner:hover .lgnewui-detail-reading-guide-icon {
+    background: #111827;
+    color: #ffffff;
+}
+
+.lgnewui-detail-reading-guide-icon i {
+    font-size: 0.9375rem;
+}
+
+.lgnewui-detail-reading-guide-title {
+    font-size: 0.9375rem;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    color: #9ca3af;
+    transition: color 0.2s;
+}
+
+.lgnewui-detail-reading-guide-inner:hover .lgnewui-detail-reading-guide-title {
+    color: #4b5563;
+}
+
+.lgnewui-detail-reading-guide-spacer {
+    flex-grow: 1;
+    height: 1px;
+    background: linear-gradient(90deg, transparent 0%, #e5e7eb 20%, #d1d5db 50%, #e5e7eb 80%, transparent 100%);
+    margin: 0 1rem;
+    transition: opacity 0.2s;
+}
+
+.lgnewui-detail-reading-guide-inner:hover .lgnewui-detail-reading-guide-spacer {
+    background: linear-gradient(90deg, transparent 0%, #d1d5db 20%, #9ca3af 50%, #d1d5db 80%, transparent 100%);
+}
+
+.lgnewui-detail-reading-guide-time {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: #111827;
+}
+
+.lgnewui-detail-reading-guide-time-value {
+    font-size: 1.125rem;
+    font-weight: 700;
+    color: #111827;
+}
+
+.lgnewui-detail-reading-guide-time-label {
+    font-size: 0.9375rem;
+    color: #6b7280;
+    font-weight: 500;
+}
+
+/* ========================================
+   BOTTOM NAVIGATION (Previous/Next)
+   ======================================== */
+
+.lgnewui-detail-bottom-nav {
+    margin-top: 3rem;
+    padding-top: 2rem;
+    border-top: 1px solid #f3f4f6;
+}
+
+.lgnewui-detail-bottom-nav-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1rem;
+}
+
+@media (min-width: 640px) {
+    .lgnewui-detail-bottom-nav-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+.lgnewui-detail-nav-card {
+    display: block;
+    padding: 1rem;
+    border-radius: 1rem;
+    background: #f9fafb;
+    transition: all 0.3s;
+    text-decoration: none;
+    overflow: hidden;
+}
+
+.lgnewui-detail-nav-card:hover {
+    background: #f3f4f6;
+}
+
+.lgnewui-detail-nav-header {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.9375rem;
+    color: #9ca3af;
+    margin-bottom: 0.5rem;
+}
+
+.lgnewui-detail-nav-header i {
+    transition: transform 0.2s;
+}
+
+.lgnewui-detail-nav-card:hover .lgnewui-detail-nav-header i {
+    transform: translateX(-0.25rem);
+}
+
+.lgnewui-detail-nav-card-right .lgnewui-detail-nav-header {
+    justify-content: flex-end;
+}
+
+.lgnewui-detail-nav-card-right .lgnewui-detail-nav-header i {
+    transform: none;
+}
+
+.lgnewui-detail-nav-card-right:hover .lgnewui-detail-nav-header i {
+    transform: translateX(0.25rem);
+}
+
+.lgnewui-detail-nav-title {
+    font-size: 1rem;
+    font-weight: 500;
+    color: #1f2937;
+    margin-bottom: 0.5rem;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    line-height: 1.4;
+}
+
+@media (max-width: 480px) {
+    .lgnewui-detail-nav-title {
+        font-size: 1rem;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+        display: -webkit-box;
+        white-space: normal;
+    }
+}
+
+.lgnewui-detail-nav-card:hover .lgnewui-detail-nav-title {
+    color: #111827;
+}
+
+.lgnewui-detail-nav-footer {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.9375rem;
+    color: #9ca3af;
+}
+
+.lgnewui-detail-nav-footer img {
+    width: 1rem;
+    height: 1rem;
+    border-radius: 50%;
+}
+
+.lgnewui-detail-nav-card-right .lgnewui-detail-nav-footer {
+    justify-content: flex-end;
+}
+
+/* Placeholder Card (回到首页/查看更多) - 保持统一布局，仅颜色区分 */
+.lgnewui-detail-nav-card-placeholder {
+    background: #f1f5f9;
+}
+
+.lgnewui-detail-nav-card-placeholder:hover {
+    background: #e2e8f0;
+}
+
+.lgnewui-detail-nav-card-placeholder .lgnewui-detail-nav-title {
+    color: #64748b;
+}
+
+.lgnewui-detail-nav-card-placeholder:hover .lgnewui-detail-nav-title {
+    color: #475569;
+}
+
+/* ========================================
+   COMMENTS SECTION
+   ======================================== */
+
+.lgnewui-detail-comments-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 2rem;
+}
+
+.lgnewui-detail-comments-title {
+    font-size: 1.25rem;
+    font-weight: 700;
+    font-family: 'Libre Baskerville', 'Crimson Pro', Georgia, serif;
+    color: #111827;
+    margin: 0;
+}
+
+.lgnewui-detail-comments-count {
+    font-size: 0.9375rem;
+    font-weight: 700;
+    color: #6b7280;
+    background: #f9fafb;
+    padding: 0.25rem 0.75rem;
+    border-radius: 9999px;
+}
+
+/* Comment Form */
+.lgnewui-detail-comment-form-container {
+    margin-bottom: 2.5rem;
+    position: relative;
+}
+
+.lgnewui-detail-comment-form-card {
+    position: relative;
+    background: #ffffff;
+    border-radius: 1rem;
+    border: 1px solid #e5e7eb;
+    overflow: hidden;
+    transition: all 0.3s;
+}
+
+.lgnewui-detail-form-bg-effect {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, #404040 0%, #262626 50%, #404040 100%);
+    opacity: 0;
+    transition: opacity 0.5s;
+    pointer-events: none;
+    border-radius: 1rem;
+    z-index: 0;
+}
+
+.lgnewui-detail-reply-context {
+    position: relative;
+    z-index: 10;
+}
+
+.lgnewui-detail-reply-context.hidden {
+    display: none;
+}
+
+.lgnewui-detail-reply-bar {
+    padding: 1rem 1.5rem;
+    border-bottom: 1px solid #f3f4f6;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    background: linear-gradient(90deg, rgba(249, 250, 251, 0.8) 0%, #ffffff 100%);
+}
+
+.lgnewui-detail-reply-info {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    flex: 1;
+    min-width: 0;
+}
+
+.lgnewui-detail-reply-avatar-wrapper {
+    position: relative;
+}
+
+.lgnewui-detail-reply-avatar {
+    width: 2.5rem;
+    height: 2.5rem;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid #ffffff;
+}
+
+.lgnewui-detail-reply-arrow-badge {
+    position: absolute;
+    top: 50%;
+    right: -0.125rem;
+    width: 1rem;
+    height: 1rem;
+    background: #1f2937;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 2px solid #ffffff;
+}
+
+.lgnewui-detail-reply-arrow-badge i {
+    color: #ffffff;
+    font-size: 0.5rem;
+}
+
+.lgnewui-detail-reply-text {
+    display: flex;
+    flex-direction: column;
+}
+
+.lgnewui-detail-reply-label {
+    font-size: 0.625rem;
+    color: #9ca3af;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.lgnewui-detail-reply-username {
+    font-size: 0.875rem;
+    font-weight: 700;
+    color: #111827;
+}
+
+.lgnewui-detail-reply-close {
+    width: 2rem;
+    height: 2rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    color: #d1d5db;
+    transition: all 0.2s;
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0;
+}
+
+.lgnewui-detail-reply-close:hover {
+    color: #6b7280;
+    background: #f3f4f6;
+}
+
+.lgnewui-detail-reply-close i {
+    font-size: 0.875rem;
+}
+
+/* Form Body */
+.lgnewui-detail-form-body {
+    position: relative;
+    z-index: 10;
+    background: #ffffff;
+    transition: background-color 0.3s;
+}
+
+.lgnewui-detail-form-body.bg-transparent {
+    background: transparent;
+}
+
+.lgnewui-detail-form-textarea {
+    width: 100%;
+    padding: 1.5rem;
+    font-size: 0.9375rem;
+    line-height: 1.8;
+    color: #4b5563;
+    border: none;
+    outline: none;
+    resize: none;
+    min-height: 7.5rem;
+    background: transparent;
+    transition: color 0.3s;
+    font-family: inherit;
+}
+
+.lgnewui-detail-form-textarea::placeholder {
+    color: #d1d5db;
+}
+
+.lgnewui-detail-form-textarea.text-white {
+    color: #ffffff;
+}
+
+.lgnewui-detail-form-textarea.text-white::placeholder {
+    color: #a1a1aa;
+}
+
+.lgnewui-detail-private-watermark {
+    position: absolute;
+    right: 1.5rem;
+    bottom: 1.25rem;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.3s;
+}
+
+.lgnewui-detail-private-watermark i {
+    color: rgba(203, 213, 225, 0.6);
+    font-size: 3rem;
+}
+
+/* Form Footer */
+.lgnewui-detail-form-footer {
+    position: relative;
+    z-index: 10;
+    padding: 1rem 1.25rem;
+    border-top: 1px solid #f3f4f6;
+    transition: all 0.3s;
+}
+
+.lgnewui-detail-form-footer.bg-neutral-800 {
+    background: rgba(38, 38, 38, 0.9);
+    border-color: #404040;
+}
+
+.lgnewui-detail-identity-area {
+    transition: opacity 0.3s;
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    margin-bottom: 1rem;
+}
+
+.lgnewui-detail-identity-area.hidden {
+    display: none;
+}
+
+.lgnewui-detail-form-input-row {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+.lgnewui-detail-form-avatar {
+    width: 2.25rem;
+    height: 2.25rem;
+    border-radius: 50%;
+    background: #f3f4f6;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #9ca3af;
+    flex-shrink: 0;
+    transition: all 0.3s;
+}
+
+.lgnewui-detail-form-avatar.bg-neutral-700 {
+    background: #404040;
+    color: #d4d4d8;
+}
+
+.lgnewui-detail-form-avatar i {
+    font-size: 1.25rem;
+}
+
+.lgnewui-detail-form-input {
+    background: #f9fafb;
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: #374151;
+    border: 1px solid #f3f4f6;
+    outline: none;
+    flex: 1;
+    padding: 0.625rem 1rem;
+    border-radius: 0.75rem;
+    transition: all 0.3s;
+}
+
+.lgnewui-detail-form-input::placeholder {
+    color: #9ca3af;
+}
+
+.lgnewui-detail-form-input.bg-neutral-700 {
+    background: #404040;
+    color: #ffffff;
+    border-color: #525252;
+}
+
+.lgnewui-detail-form-input.bg-neutral-700::placeholder {
+    color: #a1a1aa;
+}
+
+.lgnewui-detail-form-input-full {
+    width: 100%;
+}
+
+.lgnewui-detail-anon-indicator {
+    opacity: 0;
+    transition: opacity 0.3s;
+    margin-bottom: 1rem;
+    display: none;
+}
+
+.lgnewui-detail-anon-indicator.hidden {
+    display: none;
+}
+
+.lgnewui-detail-anon-indicator.block {
+    display: block;
+}
+
+.lgnewui-detail-anon-indicator-content {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+.lgnewui-detail-anon-avatar {
+    width: 2.25rem;
+    height: 2.25rem;
+    border-radius: 50%;
+    background: #1f2937;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #ffffff;
+    flex-shrink: 0;
+}
+
+.lgnewui-detail-anon-avatar i {
+    font-size: 1.125rem;
+}
+
+.lgnewui-detail-anon-text {
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: #4b5563;
+}
+
+/* Form Tools */
+.lgnewui-detail-form-tools {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.lgnewui-detail-form-tools-left {
+    display: flex;
+    align-items: center;
+    gap: 0.125rem;
+}
+
+.lgnewui-detail-tool-btn {
+    width: 2.25rem;
+    height: 2.25rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    color: #d1d5db;
+    transition: all 0.2s;
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0;
+}
+
+.lgnewui-detail-tool-btn:hover {
+    color: #fbbf24;
+    background: #fef3c7;
+}
+
+.lgnewui-detail-tool-btn.bg-gray-800 {
+    background: #1f2937;
+    color: #ffffff;
+}
+
+.lgnewui-detail-tool-btn.bg-amber-100 {
+    background: #fef3c7;
+    color: #d97706;
+}
+
+.lgnewui-detail-tool-btn.bg-amber-100 i {
+    color: #f59e0b;
+}
+
+.lgnewui-detail-tool-btn.text-neutral-400 {
+    color: #a1a1aa;
+}
+
+.lgnewui-detail-tool-btn.text-neutral-400:hover {
+    color: #d4d4d8;
+}
+
+.lgnewui-detail-tool-btn:hover.bg-neutral-700 {
+    background: #404040;
+}
+
+.lgnewui-detail-tool-btn i {
+    font-size: 1.125rem;
+}
+
+.lgnewui-detail-tool-btn.ph-fill {
+    font-weight: bold;
+}
+
+.lgnewui-detail-submit-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    background: #111827;
+    color: #ffffff;
+    height: 2.5rem;
+    padding: 0 1.25rem;
+    border-radius: 9999px;
+    font-size: 0.875rem;
+    font-weight: 500;
+    transition: all 0.2s;
+    border: none;
+    cursor: pointer;
+    flex-shrink: 0;
+}
+
+.lgnewui-detail-submit-btn:hover {
+    background: #1f2937;
+}
+
+.lgnewui-detail-submit-btn i {
+    font-size: 0.75rem;
+    opacity: 0.6;
+    transition: all 0.2s;
+}
+
+.lgnewui-detail-submit-btn:hover i {
+    opacity: 1;
+    transform: translateX(0.125rem);
+}
+
+/* Emoji Picker */
+.lgnewui-detail-emoji-picker {
+    position: absolute;
+    left: 1.5rem;
+    bottom: 100%;
+    margin-bottom: 0.75rem;
+    background: #ffffff;
+    border-radius: 1rem;
+    border: 1px solid #f3f4f6;
+    padding: 0.75rem;
+    z-index: 50;
+    display: grid;
+    grid-template-columns: repeat(6, 1fr);
+    gap: 0.375rem;
+    width: 15rem;
+}
+
+.lgnewui-detail-emoji-picker.lgnewui-detail-hidden,
+.lgnewui-detail-emoji-picker.hidden {
+    display: none;
+}
+
+.lgnewui-detail-emoji-btn {
+    padding: 0.375rem;
+    transition: transform 0.2s;
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 1.125rem;
+    border-radius: 0.5rem;
+}
+
+.lgnewui-detail-emoji-btn:hover {
+    background: #f3f4f6;
+    transform: scale(1.1);
+}
+
+.lgnewui-detail-emoji-btn:active {
+    transform: scale(0.95);
+}
+
+/* Admin Toggle */
+.lgnewui-detail-admin-toggle {
+    display: flex;
+    justify-content: flex-end;
+    margin-bottom: 1.5rem;
+}
+
+.lgnewui-detail-admin-toggle-label {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    cursor: pointer;
+    font-size: 0.75rem;
+    color: #3b82f6;
+    font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+    opacity: 0.5;
+    transition: opacity 0.2s;
+}
+
+.lgnewui-detail-admin-toggle-label:hover {
+    opacity: 1;
+}
+
+.lgnewui-detail-admin-checkbox {
+    accent-color: #3b82f6;
+}
+
+/* Comment List */
+.lgnewui-detail-comment-list {
+    display: block;
+}
+
+/* Comment Thread */
+.lgnewui-detail-comment-thread {
+    position: relative;
+    padding-bottom: 2rem;
+    margin-bottom: 2rem;
+}
+
+.lgnewui-detail-comment-thread:last-child {
+    border-bottom: none;
+    margin-bottom: 0;
+    padding-bottom: 0;
+}
+
+.lgnewui-detail-comment-thread.border-b,
+.lgnewui-detail-comment-thread-border {
+    border-bottom: 1px solid #f3f4f6;
+}
+
+/* Comment Root */
+.lgnewui-detail-comment-root {
+    display: flex;
+    gap: 0.75rem;
+    /* margin-bottom: 1.5rem; */
+}
+
+@media (min-width: 640px) {
+    .lgnewui-detail-comment-root {
+        gap: 1rem;
+    }
+}
+
+.lgnewui-detail-comment-avatar-container {
+    position: relative;
+    flex-shrink: 0;
+    width: 2.5rem;
+    height: 2.5rem;
+}
+
+.lgnewui-detail-comment-avatar {
+    width: 2.5rem;
+    height: 2.5rem;
+    border-radius: 50%;
+    border: 1px solid #f3f4f6;
+    object-fit: cover;
+}
+
+.lgnewui-detail-comment-avatar-placeholder {
+    width: 2.5rem;
+    height: 2.5rem;
+    border-radius: 50%;
+    border: 1px solid #fce7f3;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #db2777;
+    font-weight: 700;
+    font-size: 0.75rem;
+    flex-shrink: 0;
+}
+
+/* Avatar placeholder variants */
+.lgnewui-detail-avatar-pink {
+    background: #fce7f3;
+    color: #db2777;
+    border-color: #fce7f3;
+}
+
+.lgnewui-detail-avatar-amber {
+    background: #fef3c7;
+    color: #d97706;
+}
+
+.lgnewui-detail-avatar-teal {
+    background: #ccfbf1;
+    color: #0d9488;
+}
+
+.lgnewui-detail-avatar-purple {
+    background: #f3e8ff;
+    color: #9333ea;
+}
+
+.lgnewui-detail-avatar-blue {
+    background: #dbeafe;
+    color: #2563eb;
+}
+
+.lgnewui-detail-avatar-orange {
+    background: #ffedd5;
+    color: #ea580c;
+}
+
+.lgnewui-detail-avatar-green {
+    background: #dcfce7;
+    color: #16a34a;
+}
+
+.lgnewui-detail-avatar-badge {
+    position: absolute;
+    bottom: -0.25rem;
+    right: -0.25rem;
+    background: #ffffff;
+    width: 1.125rem;
+    height: 1.125rem;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+}
+
+.lgnewui-detail-avatar-badge i {
+    color: #f59e0b;
+    font-size: 0.75rem;
+}
+
+.lgnewui-detail-comment-content {
+    flex: 1;
+    min-width: 0;
+}
+
+.lgnewui-detail-comment-header {
+    display: flex;
+    align-items: flex-start;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-bottom: 0.5rem;
+}
+
+.lgnewui-detail-comment-username {
+    font-size: 0.875rem;
+    font-weight: 700;
+    color: #111827;
+}
+
+.lgnewui-detail-comment-username.text-amber-600 {
+    color: #d97706;
+}
+
+.lgnewui-detail-comment-text {
+    color: #374151;
+    font-size: 0.875rem;
+    line-height: 1.625;
+    margin-bottom: 0.75rem;
+}
+
+.lgnewui-detail-comment-meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    font-size: 0.75rem;
+    color: #9ca3af;
+    margin-bottom: 0.75rem;
+}
+
+.lgnewui-detail-comment-meta-item {
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+}
+
+.lgnewui-detail-comment-meta-item i {
+    font-size: 0.75rem;
+}
+
+.lgnewui-detail-comment-actions {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    font-size: 0.8125rem;
+}
+
+.lgnewui-detail-like-btn {
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+    font-weight: 700;
+    color: #9ca3af;
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0;
+    transition: color 0.2s;
+}
+
+.lgnewui-detail-like-btn:hover {
+    color: #ef4444;
+}
+
+.lgnewui-detail-like-btn.active {
+    color: #ef4444;
+}
+
+.lgnewui-detail-like-btn.active i {
+    font-weight: bold;
+}
+
+.lgnewui-detail-reply-btn {
+    color: #6b7280;
+    font-weight: 500;
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0;
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+    transition: color 0.2s;
+}
+
+.lgnewui-detail-reply-btn:hover {
+    color: #2563eb;
+}
+
+.lgnewui-detail-reply-btn i {
+    font-size: 0.875rem;
+}
+
+/* Reply Button Badge */
+.lgnewui-detail-reply-badge {
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+    font-size: 0.625rem;
+    color: #2563eb;
+    background: #eff6ff;
+    padding: 0.125rem 0.5rem;
+    border-radius: 9999px;
+    cursor: pointer;
+    transition: background-color 0.2s;
+    border: none;
+}
+
+.lgnewui-detail-reply-badge:hover {
+    background: #dbeafe;
+}
+
+.lgnewui-detail-reply-badge i {
+    font-size: 0.625rem;
+}
+
+/* Gender Badges */
+.lgnewui-detail-badge-male {
+    background: linear-gradient(135deg, #60A5FA 0%, #3B82F6 100%);
+    color: white;
+    padding: 0.125rem 0.625rem;
+    border-radius: 0.75rem;
+    font-size: 0.6875rem;
+    font-weight: 500;
+    letter-spacing: 0.01875rem;
+    box-shadow: 0 2px 8px rgba(59, 130, 246, 0.3);
+    display: inline-flex;
+    align-items: center;
+    gap: 0.25rem;
+}
+
+.lgnewui-detail-badge-male i {
+    font-size: 0.75rem;
+}
+
+.lgnewui-detail-badge-female {
+    background: linear-gradient(135deg, #F472B6 0%, #EC4899 100%);
+    color: white;
+    padding: 0.125rem 0.625rem;
+    border-radius: 0.75rem;
+    font-size: 0.6875rem;
+    font-weight: 500;
+    letter-spacing: 0.01875rem;
+    box-shadow: 0 2px 8px rgba(236, 72, 153, 0.3);
+    display: inline-flex;
+    align-items: center;
+    gap: 0.25rem;
+}
+
+.lgnewui-detail-badge-female i {
+    font-size: 0.75rem;
+}
+
+.lgnewui-detail-badge-private {
+    font-size: 0.625rem;
+    background: #fef3c7;
+    color: #b45309;
+    padding: 0.125rem 0.375rem;
+    border-radius: 9999px;
+    font-weight: 500;
+}
+
+/* Reply Container */
+.lgnewui-detail-reply-container {
+    padding-left: 0;
+    margin-left: 0;
+    margin-top: 1.5rem;
+}
+
+.lgnewui-detail-reply-container .lgnewui-detail-comment-root {
+    margin-bottom: 1.5rem;
+}
+
+.lgnewui-detail-reply-container .lgnewui-detail-comment-root:last-child {
+    margin-bottom: 0;
+}
+
+/* Private Comment Hidden State */
+.lgnewui-detail-private-hidden {
+    padding: 1rem;
+    background: linear-gradient(90deg, rgba(254, 252, 232, 0.5) 0%, rgba(254, 245, 208, 0.3) 100%);
+    border-radius: 0.75rem;
+    border: 1px solid #fef08a;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+.lgnewui-detail-private-hidden i {
+    color: #fcd34d;
+    font-size: 1.25rem;
+}
+
+.lgnewui-detail-private-hidden-text {
+    color: #d97706;
+    font-size: 0.875rem;
+    font-weight: 500;
+}
+
+.lgnewui-detail-private-content.hidden {
+    display: none;
+}
+
+/* Load More Button */
+.lgnewui-detail-load-more-container {
+    margin-top: 2rem;
+    text-align: center;
+}
+
+.lgnewui-detail-load-more-btn {
+    background: #f9fafb;
+    color: #4b5563;
+    padding: 0.625rem 1.5rem;
+    border-radius: 9999px;
+    transition: all 0.2s;
+    font-size: 0.8125rem;
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin: 0 auto;
+    border: none;
+    cursor: pointer;
+}
+
+.lgnewui-detail-load-more-btn:hover {
+    background: #e5e7eb;
+    color: #1f2937;
+}
+
+.lgnewui-detail-load-more-btn:active {
+    transform: scale(0.95);
+}
+
+.lgnewui-detail-load-more-btn.loading {
+    pointer-events: none;
+    opacity: 0.7;
+}
+
+.lgnewui-detail-load-more-btn.loading .lgnewui-detail-btn-text {
+    opacity: 0.5;
+}
+
+.lgnewui-detail-btn-text {
+    transition: opacity 0.2s;
+}
+
+.lgnewui-detail-load-more-btn .lgnewui-detail-btn-icon {
+    transition: transform 0.2s;
+}
+
+/* Spinner */
+.lgnewui-detail-spinner {
+    display: inline-block;
+    width: 0.875rem;
+    height: 0.875rem;
+    border: 2px solid rgba(107, 114, 128, 0.2);
+    border-top-color: #6b7280;
+    border-radius: 50%;
+    animation: spin 0.6s linear infinite;
+}
+
+@keyframes spin {
+    0% {
+        transform: rotate(0deg);
+    }
+
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+.lgnewui-detail-spinner.hidden {
+    display: none;
+}
+
+/* ========================================
+   SIDEBAR
+   ======================================== */
+
+.lgnewui-detail-sidebar-sticky {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    /* 隐藏滚动条 */
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+}
+
+.lgnewui-detail-sidebar-sticky::-webkit-scrollbar {
+    display: none;
+}
+
+/* Sidebar Author Card */
+.lgnewui-detail-sidebar-author {
+    padding: 1.5rem;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.lgnewui-detail-sidebar-author-header {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+}
+
+.lgnewui-detail-sidebar-author-avatar {
+    width: 3.5rem;
+    height: 3.5rem;
+    border-radius: 50%;
+    border: 2px solid #ffffff;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+    object-fit: cover;
+}
+
+.lgnewui-detail-sidebar-author-name {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 1.125rem;
+    font-weight: 700;
+    color: #111827;
+    font-family: 'Libre Baskerville', 'Crimson Pro', Georgia, serif;
+}
+
+.lgnewui-detail-sidebar-author-check {
+    color: #3b82f6;
+    font-size: 0.875rem;
+}
+
+.lgnewui-detail-sidebar-author-days {
+    font-size: 0.8125rem;
+    color: #6b7280;
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+    margin: 0;
+}
+
+.lgnewui-detail-sidebar-author-days i {
+    color: #f472b6;
+}
+
+.lgnewui-detail-sidebar-author-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0.75rem;
+    min-width: 100%;
+}
+
+.lgnewui-detail-sidebar-author-item {
+    display: flex;
+    align-items: center;
+    gap: 0.625rem;
+    padding: 0.75rem;
+    background: #f9fafb;
+    border-radius: 0.75rem;
+    min-width: 0;
+}
+
+.lgnewui-detail-sidebar-author-item i {
+    color: #9ca3af;
+}
+
+.lgnewui-detail-sidebar-item-label {
+    font-size: 0.8125rem;
+    line-height: 1.25;
+    color: #9ca3af;
+    display: block;
+    flex-shrink: 0;
+}
+
+.lgnewui-detail-sidebar-item-value {
+    font-weight: 700;
+    color: #374151;
+    flex-shrink: 0;
+}
+
+/* Sidebar TOC */
+.lgnewui-detail-sidebar-toc {
+    padding: 1.5rem;
+    overflow: visible;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.lgnewui-detail-toc-main-title {
+    font-size: 1rem;
+    font-weight: 600;
+    color: #111827;
+    margin: 0 0 1.25rem 0;
+    letter-spacing: 0.05em;
+    position: relative;
+    padding-left: 0.75rem;
+}
+
+.lgnewui-detail-toc-main-title::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 3px;
+    height: 1rem;
+    background: linear-gradient(180deg, #3b82f6 0%, #8b5cf6 100%);
+    border-radius: 2px;
+}
+
+.lgnewui-detail-sidebar-toc-title {
+    font-size: 0.75rem;
+    font-weight: 700;
+    color: #9ca3af;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    margin: 0 0 1rem 0;
+}
+
+.lgnewui-detail-toc-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+}
+
+.lgnewui-detail-toc-link {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem 0.75rem;
+    color: #9ca3af;
+    font-size: 0.875rem;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    border-radius: 0.375rem;
+    position: relative;
+    overflow: visible;
+    text-decoration: none;
+    font-weight: 500;
+    white-space: nowrap;
+}
+
+.lgnewui-detail-toc-link:hover {
+    color: #374151;
+    background: #f9fafb;
+}
+
+.lgnewui-detail-toc-link.active {
+    color: #111827;
+    font-weight: 600;
+    background: linear-gradient(90deg, #f3f4f6, transparent);
+}
+
+.lgnewui-detail-toc-link.active::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 15%;
+    bottom: 15%;
+    width: 3px;
+    background: #111827;
+    border-radius: 0 4px 4px 0;
+}
+
+.lgnewui-detail-toc-link.active::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 15%;
+    bottom: 15%;
+    width: 3px;
+    background: #111827;
+    border-radius: 0 4px 4px 0;
+    animation: flashLine 1.2s ease-out;
+}
+
+@keyframes flashLine {
+    0% {
+        opacity: 0;
+    }
+
+    20% {
+        opacity: 0.5;
+    }
+
+    100% {
+        opacity: 0;
+    }
+}
+
+.lgnewui-detail-toc-link i {
+    flex-shrink: 0;
+    transition: color 0.2s;
+    font-size: 0.875rem;
+}
+
+.lgnewui-detail-toc-icon-default {
+    color: #d1d5db;
+}
+
+.lgnewui-detail-toc-icon-active {
+    color: #111827;
+}
+
+.lgnewui-detail-toc-link:hover i,
+.lgnewui-detail-toc-link.active i {
+    color: #111827;
+}
+
+.lgnewui-detail-toc-link-text {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    line-height: 1.625;
+    max-width: 100%;
+    flex: 1;
+    min-width: 0;
+}
+
+.lgnewui-detail-toc-link-nested {
+    margin-left: 1.5rem;
+    font-size: 0.8125rem;
+}
+
+.lgnewui-detail-toc-link-nested i {
+    font-size: 0.75rem;
+}
+
+.lgnewui-detail-toc-link-nested-2 {
+    margin-left: 3rem;
+    font-size: 0.75rem;
+}
+
+.lgnewui-detail-toc-link-nested-2 i {
+    font-size: 0.625rem;
+}
+
+/* TOC Empty State - 目录空状态（骨架屏风格） */
+.lgnewui-toc-empty {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 1.25rem 1rem 1.5rem;
+}
+
+.lgnewui-toc-skeleton {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    margin-bottom: 1.25rem;
+}
+
+.lgnewui-toc-skeleton-line {
+    height: 10px;
+    background: #f3f4f6;
+    border-radius: 5px;
+}
+
+.lgnewui-toc-empty-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem 1rem;
+    background: #fafafa;
+    border-radius: 8px;
+    font-size: 0.8125rem;
+    color: #9ca3af;
+}
+
+.lgnewui-toc-empty-badge i {
+    font-size: 1rem;
+    color: #9ca3af;
+}
+
+/* TOC Switcher Bar */
+.lgnewui-toc-switcher-bar {
+    margin-bottom: 1rem;
+    display: flex;
+    justify-content: center;
+}
+
+.lgnewui-toc-switcher-mini {
+    position: relative;
+    display: inline-flex;
+    background: #f9fafb;
+    border-radius: 9999px;
+    padding: 0.25rem;
+    gap: 0.25rem;
+    border: 1px solid #f3f4f6;
+}
+
+.lgnewui-toc-tab-mini {
+    position: relative;
+    z-index: 2;
+    display: flex;
+    align-items: center;
+    gap: 0.375rem;
+    padding: 0.375rem 1rem;
+    border-radius: 9999px;
+    font-size: 0.8125rem;
+    font-weight: 500;
+    color: #9ca3af;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    transition: color 0.2s ease;
+    white-space: nowrap;
+}
+
+.lgnewui-toc-tab-mini i {
+    font-size: 0.875rem;
+    transition: transform 0.2s ease;
+}
+
+.lgnewui-toc-tab-mini:hover {
+    color: #6b7280;
+}
+
+.lgnewui-toc-tab-mini:hover i {
+    transform: scale(1.1);
+}
+
+.lgnewui-toc-tab-mini.active {
+    color: #111827;
+}
+
+.lgnewui-toc-tab-mini.active i {
+    font-weight: 600;
+}
+
+.lgnewui-toc-tab-indicator-mini {
+    position: absolute;
+    top: 0.25rem;
+    left: 0.25rem;
+    height: calc(100% - 0.5rem);
+    background: #ffffff;
+    border-radius: 9999px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08), 0 1px 2px rgba(0, 0, 0, 0.06);
+    transition: transform 0.25s cubic-bezier(0.4, 0, 0.2, 1), width 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+    z-index: 1;
+    pointer-events: none;
+}
+
+/* TOC Prefix (Number/Tag) */
+.lgnewui-toc-prefix {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 2rem;
+    height: 1.25rem;
+    padding: 0 0.375rem;
+    background: linear-gradient(135deg, #f3f4f6 0%, #e5e7eb 100%);
+    border-radius: 0.25rem;
+    font-size: 0.6875rem;
+    font-weight: 600;
+    color: #6b7280;
+    font-family: 'SF Mono', 'Monaco', 'Inconsolata', 'Fira Code', 'Droid Sans Mono', 'Source Code Pro', monospace;
+    letter-spacing: 0.025em;
+    transition: all 0.2s ease;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+}
+
+.lgnewui-detail-toc-link:hover .lgnewui-toc-prefix {
+    background: linear-gradient(135deg, #e5e7eb 0%, #d1d5db 100%);
+    color: #374151;
+}
+
+.lgnewui-detail-toc-link.active .lgnewui-toc-prefix {
+    background: linear-gradient(135deg, #111827 0%, #374151 100%);
+    color: #ffffff;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* Responsive for TOC Switcher */
+@media (max-width: 640px) {
+    .lgnewui-toc-tab-mini {
+        padding: 0.3125rem 0.875rem;
+        font-size: 0.75rem;
+        gap: 0.3125rem;
+    }
+
+    .lgnewui-toc-tab-mini i {
+        font-size: 0.8125rem;
+    }
+
+    .lgnewui-toc-prefix {
+        min-width: 1.75rem;
+        height: 1.125rem;
+        font-size: 0.625rem;
+        padding: 0 0.3125rem;
+    }
+}
+
+/* Weather Widget */
+.lgnewui-detail-weather-widget {
+    background: #111827;
+    color: #ffffff;
+    padding: 1.5rem;
+    position: relative;
+    overflow: visible;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.lgnewui-detail-weather-bg-icon {
+    position: absolute;
+    top: 0;
+    right: 0;
+    padding: 0.75rem;
+    opacity: 0.2;
+    transition: transform 0.7s;
+}
+
+.lgnewui-detail-weather-widget:hover .lgnewui-detail-weather-bg-icon {
+    transform: scale(1.1);
+}
+
+.lgnewui-detail-weather-bg-icon i {
+    font-size: 4.375rem;
+}
+
+.lgnewui-detail-weather-content {
+    position: relative;
+    z-index: 10;
+}
+
+.lgnewui-detail-weather-location-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.375rem;
+    padding: 0.25rem 0.75rem;
+    border-radius: 9999px;
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    margin-bottom: 1.5rem;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+    white-space: nowrap;
+    flex-shrink: 0;
+}
+
+.lgnewui-detail-weather-location-badge i {
+    font-size: 0.875rem;
+    color: #ffffff;
+}
+
+.lgnewui-detail-weather-location-text {
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: rgba(255, 255, 255, 0.9);
+}
+
+.lgnewui-detail-weather-temp-row {
+    display: flex;
+    align-items: flex-end;
+    gap: 0.5rem;
+    margin-bottom: 1.5rem;
+    width: 100%;
+}
+
+.lgnewui-detail-weather-temp {
+    font-size: 3rem;
+    font-weight: 700;
+    letter-spacing: -0.05em;
+}
+
+.lgnewui-detail-weather-condition {
+    font-size: 1.125rem;
+    opacity: 0.6;
+    margin-bottom: 0.5rem;
+}
+
+.lgnewui-detail-weather-details {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0.5rem;
+    font-size: 0.8125rem;
+    opacity: 0.6;
+    width: 100%;
+}
+
+.lgnewui-detail-weather-detail-item {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    min-width: 0;
+    flex-shrink: 0;
+}
+
+.lgnewui-detail-weather-detail-item i {
+    font-size: 0.875rem;
+}
+
+/* ========================================
+   MOBILE TOC SHEET
+   ======================================== */
+
+.lgnewui-detail-sheet-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.2);
+    z-index: 1000;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s;
+}
+
+.lgnewui-detail-sheet-overlay.open {
+    opacity: 1;
+    pointer-events: auto;
+}
+
+.lgnewui-detail-mobile-sheet {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: #ffffff;
+    border-radius: 1.5rem 1.5rem 0 0;
+    padding: 1.5rem;
+    box-shadow: 0 -10px 40px rgba(0, 0, 0, 0.1);
+    z-index: 1001;
+    transform: translateY(100%);
+    transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    max-height: 70vh;
+    overflow-y: auto;
+}
+
+.lgnewui-detail-mobile-sheet.open {
+    transform: translateY(0);
+}
+
+.lgnewui-detail-mobile-sheet-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.5rem;
+}
+
+.lgnewui-detail-mobile-sheet-title {
+    font-family: 'Libre Baskerville', 'Crimson Pro', Georgia, serif;
+    font-weight: 700;
+    font-size: 1.125rem;
+    margin: 0;
+    color: #111827;
+}
+
+.lgnewui-detail-mobile-sheet-close {
+    padding: 0.5rem;
+    background: #f9fafb;
+    border-radius: 9999px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background-color 0.2s;
+    border: none;
+    cursor: pointer;
+}
+
+.lgnewui-detail-mobile-sheet-close:hover {
+    background: #f3f4f6;
+}
+
+.lgnewui-detail-mobile-sheet-close i {
+    font-size: 1rem;
+}
+
+.lgnewui-detail-mobile-sheet-nav {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+}
+
+/* Mobile TOC Switcher */
+.lgnewui-detail-mobile-sheet .lgnewui-toc-switcher-bar {
+    margin-bottom: 1.25rem;
+    padding: 0 0.25rem;
+}
+
+/* ========================================
+   TOAST
+   ======================================== */
+
+.lgnewui-detail-toast {
+    position: fixed;
+    top: 1.5rem;
+    left: 50%;
+    transform: translate(-50%, -1.25rem);
+    background: rgba(17, 24, 39, 0.95);
+    color: #ffffff;
+    padding: 0.75rem 1.5rem;
+    border-radius: 3.125rem;
+    font-size: 0.875rem;
+    opacity: 0;
+    transition: all 0.3s;
+    z-index: 1000;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+}
+
+.lgnewui-detail-toast.show {
+    opacity: 1;
+    transform: translate(-50%, 0);
+}
+
+.lgnewui-detail-toast i {
+    color: #4ade80;
+}
+
+/* ========================================
+   UTILITY CLASSES
+   ======================================== */
+
+.lgnewui-detail-hidden {
+    display: none !important;
+}
+
+.lgnewui-detail-block {
+    display: block !important;
+}
+
+.lgnewui-detail-text-amber-600 {
+    color: #d97706;
+}
+
+.lgnewui-detail-text-white {
+    color: #ffffff !important;
+}
+
+.lgnewui-detail-text-neutral-400 {
+    color: #a1a1aa !important;
+}
+
+.lgnewui-detail-text-neutral-500 {
+    color: #737373 !important;
+}
+
+.lgnewui-detail-text-neutral-200 {
+    color: #e5e5e5 !important;
+}
+
+/* Background utility classes */
+.lgnewui-detail-bg-gray-800 {
+    background: #1f2937 !important;
+}
+
+/* Button style utility */
+.lgnewui-detail-tool-btn.bg-gray-800 {
+    background: #1f2937 !important;
+    color: #ffffff !important;
+}
+
+.lgnewui-detail-tool-btn.bg-amber-100 {
+    background: #fef3c7 !important;
+}
+
+.lgnewui-detail-bg-transparent {
+    background: transparent !important;
+}
+
+.lgnewui-detail-bg-neutral-700 {
+    background: #404040 !important;
+}
+
+.lgnewui-detail-bg-neutral-800 {
+    background: rgba(38, 38, 38, 0.9) !important;
+}
+
+.lgnewui-detail-border-neutral-700 {
+    border-color: #404040 !important;
+}
+
+/* ========================================
+   ANIMATIONS
+   ======================================== */
+
+@keyframes fadeInUp {
+    0% {
+        opacity: 0;
+        transform: translateY(0.625rem);
+    }
+
+    100% {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* ========================================
+   ========================================
+   ARTICLE MAIN CONTENT STYLES (lgnewui-main)
+   ========================================
+   ======================================== */
+
+.lgnewui-main {
+    font-family: 'Crimson Pro', Georgia, serif;
+    color: #2d3748;
+    line-height: 1.8;
+    font-size: 1.15rem;
+    font-weight: 300;
+    letter-spacing: 0.01em;
+    position: relative;
+}
+
+@media (min-width: 768px) {
+    .lgnewui-main {
+        font-size: 1.1625rem;
+        line-height: 1.85;
+    }
+}
+
+/* ========================================
+   PARAGRAPHS
+   ======================================== */
+
+.lgnewui-main p {
+    margin-bottom: 1.5em;
+}
+.lgnewui-main p:last-child {
+    margin-bottom: 0;
+}
+
+/* Drop Cap for first paragraph */
+.lgnewui-main>p:first-of-type::first-letter {
+    float: left;
+    font-size: 3rem;
+    line-height: 0.9;
+    margin: 0.05em 0.12em 0 0;
+    font-family: 'Libre Baskerville', serif;
+    font-weight: 700;
+    color: #1a202c;
+}
+
+@media (min-width: 768px) {
+    .lgnewui-main>p:first-of-type::first-letter {
+        font-size: 3.75rem;
+    }
+}
+
+/* ========================================
+   HEADINGS
+   ======================================== */
+
+.lgnewui-main h1 {
+    font-weight: 700;
+    font-size: 2rem;
+    color: #1a202c;
+    margin: 1.5em 0 0.75em;
+    letter-spacing: -0.02em;
+    line-height: 1.2;
+}
+
+@media (min-width: 768px) {
+    .lgnewui-main h1 {
+        font-size: 2.5rem;
+    }
+}
+
+.lgnewui-main h2 {
+    /* font-family: 'Libre Baskerville', Georgia, serif; */
+    font-weight: 700;
+    font-size: 1.375rem;
+    color: #1a202c;
+    margin: 2em 0 0.875em;
+    position: relative;
+    letter-spacing: -0.01em;
+    line-height: 1.3;
+}
+
+@media (min-width: 768px) {
+    .lgnewui-main h2 {
+        font-size: 1.75rem;
+    }
+}
+
+.lgnewui-main h3 {
+    /* font-family: 'Libre Baskerville', Georgia, serif; */
+    font-weight: 400;
+    font-size: 1.25rem;
+    color: #2d3748;
+    margin: 1.75em 0 0.625em;
+    letter-spacing: 0;
+    line-height: 1.4;
+}
+
+@media (min-width: 768px) {
+    .lgnewui-main h3 {
+        font-size: 1.25rem;
+    }
+}
+
+.lgnewui-main h4 {
+    /* font-family: 'Libre Baskerville', Georgia, serif; */
+    font-weight: 500;
+    font-size: 1.125rem;
+    color: #2d3748;
+    margin: 1.5em 0 0.5em;
+    line-height: 1.4;
+}
+
+.lgnewui-main h5 {
+    /* font-family: 'Crimson Pro', Georgia, serif; */
+    font-weight: 400;
+    font-size: 1.0625rem;
+    color: #4a5568;
+    margin: 1.25em 0 0.5em;
+    line-height: 1.5;
+}
+
+.lgnewui-main h6 {
+    font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+    font-weight: 400;
+    font-size: 0.875rem;
+    color: #718096;
+    margin: 1em 0 0.5em;
+    letter-spacing: 0.05em;
+}
+
+/* ========================================
+   IMAGES AND FIGURES
+   ======================================== */
+
+.lgnewui-main figure {
+    margin: 2.5rem auto;
+    position: relative;
+    text-align: center;
+    max-width: 100%;
+}
+.lgnewui-main figure:last-child {
+    margin-bottom: 0;
+}
+
+.lgnewui-main figure img,
+.lgnewui-main figure video {
+    border-radius: 0.75rem;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    display: block;
+    width: 100%;
+    max-width: 100%;
+    transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.4s ease.7s, filter linear, .7s -webkit-filter linear;
+}
+
+/* Hover：放大 + 阴影加深 */
+.lgnewui-main figure:hover img,
+.lgnewui-main figure:hover video {
+    transform: scale(1.02);
+    box-shadow: 0 20px 50px -15px rgba(0, 0, 0, 0.2);
+}
+
+/* figcaption：简约现代风格 */
+.lgnewui-main figcaption {
+    display: inline-block;
+    font-size: 0.75rem;
+    color: #9ca3af;
+    margin-top: 0.875rem;
+    line-height: 1.5;
+    letter-spacing: 0.02em;
+    transition: color 0.3s ease;
+    position: relative;
+    padding-bottom: 0.375rem;
+}
+
+/* 小图标装饰 */
+.lgnewui-main figcaption::before {
+    content: '◈';
+    font-size: 0.5rem;
+    opacity: 0.6;
+    margin-right: 0.375rem;
+}
+
+/* 底部进度条：两端透明渐变 */
+.lgnewui-main figcaption::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 0;
+    height: 1px;
+    background: linear-gradient(90deg, transparent 0%, #c9cdd4 15%, #c9cdd4 85%, transparent 100%);
+    transition: width 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.lgnewui-main figure:hover figcaption {
+    color: #6b7280;
+}
+
+.lgnewui-main figure:hover figcaption::before {
+    opacity: 1;
+}
+
+.lgnewui-main figure:hover figcaption::after {
+    width: 100%;
+}
+
+/* Standalone images without figure wrapper */
+.lgnewui-main img {
+    max-width: 100%;
+    width: auto;
+    height: auto;
+    border-radius: 0.75rem;
+    display: block;
+    margin: 1.5rem auto;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+.lgnewui-main img:last-child {
+    margin-bottom: 0;
+}
+
+.lgnewui-main img:hover {
+    box-shadow: 0 8px 20px -6px rgba(0, 0, 0, 0.15);
+}
+
+/* ========================================
+   LISTS
+   ======================================== */
+
+.lgnewui-main ul {
+    padding-left: 1.5rem;
+    margin-bottom: 1.5rem;
+}
+.lgnewui-main ul:last-child {
+    margin-bottom: 0;
+}
+
+.lgnewui-main ul li {
+    margin-bottom: 0.5rem;
+    line-height: 1.8;
+}
+
+.lgnewui-main ul li::marker {
+    color: #9ca3af;
+}
+
+.lgnewui-main ol {
+    padding-left: 1.5rem;
+    margin-bottom: 1.5rem;
+}
+.lgnewui-main ol:last-child {
+    margin-bottom: 0;
+}
+
+.lgnewui-main ol li {
+    margin-bottom: 0.5rem;
+    line-height: 1.8;
+}
+
+.lgnewui-main ol li::marker {
+    color: #9ca3af;
+    font-weight: 500;
+}
+
+.lgnewui-main li strong {
+    color: #111827;
+    font-weight: 700;
+}
+
+/* ========================================
+   BLOCKQUOTES
+   ======================================== */
+
+/* 引用块样式 */
+.lgnewui-detail-main-content blockquote {
+    border-left: 2px solid #ccc;
+    position: relative;
+    padding: 1rem;
+    line-height: 1em;
+    background: #f5f5f5;
+    border-radius: 10px;
+    color: #747474;
+    display: block;
+    margin: 1rem 0;
+    text-indent: 2em;
+    border: none;
+}
+
+.lgnewui-detail-main-content blockquote::before {
+    content: '\f10d';
+    font-family: 'Font Awesome 6 Free';
+    font-weight: 900;
+    position: absolute;
+    font-size: 3rem;
+    color: #d7d6d6;
+    top: -15px;
+    left: 5px;
+    font-style: normal;
+    text-indent: 0px;
+    line-height: 1;
+}
+
+.lgnewui-detail-main-content p {
+    color: #3a3a3a;
+    line-height: 2em;
+}
+
+.lgnewui-detail-main-content blockquote p {
+    color: #8b8b8b;
+    margin: 0;
+}
+
+
+/* ========================================
+   HORIZONTAL RULE
+   ======================================== */
+
+.lgnewui-main hr {
+    border: none;
+    height: 20px;
+    background: transparent;
+    margin: 3rem auto;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.lgnewui-main hr:last-child {
+    margin-bottom: 0;
+}
+
+.lgnewui-main hr::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 50%;
+    height: 1px;
+    background: linear-gradient(to right, transparent, #ededed 10%, #ededed 90%, transparent);
+    z-index: 0;
+}
+
+.lgnewui-main hr::before {
+    content: '\f498';
+    font-family: 'remixicon' !important;
+    position: relative;
+    background: transparent;
+    color: #d1d5db;
+    font-size: 1.2rem;
+    padding: 0 0.75rem;
+    line-height: 1;
+    font-style: normal;
+    font-weight: 400;
+    display: inline-block;
+    z-index: 1;
+}
+
+/* ========================================
+   CODE BLOCKS
+   ======================================== */
+
+.lgnewui-main pre {
+    background: #1f2937;
+    color: #e5e7eb;
+    padding: 1.5rem;
+    border-radius: 0.75rem;
+    overflow-x: auto;
+    margin: 2rem 0;
+    font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+    font-size: 0.875rem;
+    line-height: 1.7;
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+}
+.lgnewui-main pre:last-child {
+    margin-bottom: 0;
+}
+
+.lgnewui-main pre code {
+    color: inherit;
+    background: transparent;
+    padding: 0;
+    font-weight: normal;
+}
+
+.lgnewui-main code {
+    background-color: rgba(226, 132, 44, 0.08);
+    color: #e2842c;
+    padding: 2px 6px;
+    border-radius: 6px;
+    font-size: 0.85em;
+    font-weight: 400;
+    margin: 0 0.1em;
+    vertical-align: baseline;
+    transition: all 0.2s ease;
+}
+
+.lgnewui-main code:hover {
+    background-color: rgba(226, 132, 44, 0.12);
+}
+
+/* ========================================
+   TABLES
+   ======================================== */
+
+.lgnewui-main table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.9rem;
+    white-space: nowrap;
+}
+
+.lgnewui-main table[border] {
+    border: none !important;
+}
+
+.lgnewui-main table th {
+    text-align: left;
+    padding: 1rem 1.5rem;
+    font-weight: 600;
+    font-size: 0.875rem;
+    color: #ffffff;
+    background-color: #111827;
+    border: none !important;
+}
+
+.lgnewui-main table th:first-child {
+    border-top-left-radius: 0.75rem;
+}
+
+.lgnewui-main table th:last-child {
+    border-top-right-radius: 0.75rem;
+}
+
+.lgnewui-main table td {
+    padding: 1rem 1.25rem;
+    color: #4b5563;
+    vertical-align: middle;
+    border: none !important;
+    font-weight: 300;
+}
+
+/* For tables without thead, make first row look like header */
+.lgnewui-main table tbody:first-child tr:first-child td,
+.lgnewui-main table tbody:first-child tr:first-child th {
+    background-color: #111827 !important;
+    color: #ffffff !important;
+    font-weight: 600 !important;
+    padding-top: 1rem !important;
+    padding-bottom: 1rem !important;
+}
+
+/* Handle th in tbody (treat as header row) */
+.lgnewui-main table tbody tr:has(th) {
+    background-color: #111827 !important;
+}
+
+.lgnewui-main table tbody tr th {
+    background-color: #111827 !important;
+    color: #ffffff !important;
+    font-weight: 600 !important;
+    padding: 1rem 1.25rem !important;
+}
+
+/* Zebra striping - skip rows with th */
+/* 使用更智能的选择器来处理 tbody 中包含 th 的情况 */
+.lgnewui-main table tbody tr:not(:has(th)) {
+    background-color: #ffffff;
+}
+
+.lgnewui-main table tbody tr:not(:has(th)):nth-of-type(even) {
+    background-color: #f9fafb;
+}
+
+/* 如果第一行是 th 行，调整后续行的斑马纹 */
+.lgnewui-main table tbody tr:has(th)~tr:nth-of-type(odd) {
+    background-color: #f9fafb;
+}
+
+.lgnewui-main table tbody tr:has(th)~tr:nth-of-type(even) {
+    background-color: #ffffff;
+}
+
+/* Hover 效果 - 确保优先级高于斑马纹 */
+.lgnewui-main table tbody tr:not(:has(th)):hover {
+    background-color: #f3f4f6 !important;
+}
+
+.lgnewui-main table td:first-child {
+    font-weight: 600;
+    color: #111827;
+}
+
+.lgnewui-main table tbody tr:last-child td:first-child {
+    border-bottom-left-radius: 0.75rem;
+}
+
+.lgnewui-main table tbody tr:last-child td:last-child {
+    border-bottom-right-radius: 0.75rem;
+}
+
+/* Fix tables without proper header */
+.lgnewui-main table>tbody>tr:first-child>td:first-child {
+    border-top-left-radius: 0.75rem !important;
+}
+
+.lgnewui-main table>tbody>tr:first-child>td:last-child {
+    border-top-right-radius: 0.75rem !important;
+}
+
+.lgnewui-table-wrapper {
+    position: relative;
+    margin: 3rem 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+}
+
+.lgnewui-table-container-wrapper {
+    position: relative;
+    width: 100%;
+}
+
+.lgnewui-table-container {
+    width: 100%;
+    overflow-x: auto;
+    overflow-y: hidden;
+    border: 1px solid #e5e7eb;
+    border-radius: 0.75rem;
+    scroll-behavior: smooth;
+    position: relative;
+}
+
+.lgnewui-table-container::-webkit-scrollbar {
+    height: 0;
+    background: transparent;
+}
+
+.lgnewui-table-container {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+}
+
+/* Custom Table Scroll Indicator - Mini Progress Bar */
+.lgnewui-table-scrollbar {
+    position: relative;
+    width: 100%;
+    height: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 0.75rem;
+}
+
+.lgnewui-table-progress-track {
+    width: 120px;
+    height: 3px;
+    background: #e5e7eb;
+    border-radius: 2px;
+    overflow: hidden;
+}
+
+.lgnewui-table-progress-bar {
+    height: 100%;
+    background: #374151;
+    border-radius: 2px;
+    transition: width 0.15s ease-out;
+    width: 0%;
+}
+
+/* Only show scrollbar container when scrollable */
+.lgnewui-table-wrapper:not(.is-scrollable) .lgnewui-table-scrollbar {
+    display: none;
+}
+
+/* Table Navigation Buttons */
+.lgnewui-table-nav-btn {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 2rem;
+    height: 2rem;
+    background: rgba(255, 255, 255, 0.95);
+    border: none;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    z-index: 10;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    transition: all 0.2s ease;
+    color: #6b7280;
+    font-size: 0.875rem;
+    backdrop-filter: blur(4px);
+}
+
+.lgnewui-table-nav-btn:hover:not(:disabled) {
+    background: rgba(255, 255, 255, 1);
+    color: #374151;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.lgnewui-table-nav-btn:active:not(:disabled) {
+    transform: translateY(-50%) scale(0.95);
+}
+
+.lgnewui-table-nav-btn:disabled {
+    background: rgba(248, 250, 252, 0.8);
+    color: #d1d5db;
+    cursor: not-allowed;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+}
+
+.lgnewui-table-nav-left {
+    left: -1rem;
+}
+
+.lgnewui-table-nav-right {
+    right: -1rem;
+}
+
+/* Hide navigation buttons when table is not scrollable */
+.lgnewui-table-wrapper:not(.is-scrollable) .lgnewui-table-nav-btn {
+    display: none;
+}
+
+@media (max-width: 768px) {
+    .lgnewui-table-nav-btn {
+        width: 1.75rem;
+        height: 1.75rem;
+        font-size: 0.75rem;
+    }
+
+    .lgnewui-table-nav-left {
+        left: -0.875rem;
+    }
+
+    .lgnewui-table-nav-right {
+        right: -0.875rem;
+    }
+
+    .lgnewui-table-scrollbar {
+        height: 36px;
+    }
+}
+
+.lgnewui-font-mono-cell {
+    font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+    font-size: 0.85em;
+    color: #6b7280;
+}
+
+/* ========================================
+   AUDIO AND VIDEO
+   ======================================== */
+
+.lgnewui-main video,
+.lgnewui-main audio {
+    width: 100%;
+    max-width: 100%;
+    border-radius: 0.75rem;
+    margin: 1.5rem 0;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+    display: block;
+    height: auto;
+    max-height: 600px;
+    object-fit: contain;
+}
+
+/* Plyr播放器样式修复 */
+.lgnewui-main .plyr {
+    border-radius: 0.75rem;
+    overflow: hidden;
+    max-height: 600px;
+}
+
+.lgnewui-main .plyr video {
+    margin: 0;
+    box-shadow: none;
+    border-radius: 0;
+    max-height: 600px;
+    object-fit: contain;
+}
+
+/* 非全屏时的 video-wrapper 限制 */
+.lgnewui-main .plyr:not(.plyr--fullscreen) .plyr__video-wrapper {
+    background: #000;
+    max-height: 600px;
+}
+
+/* 全屏模式下取消所有高度限制，确保视频铺满 */
+/* 使用原生 :fullscreen 伪类（Plyr 可能不会添加 plyr--fullscreen 类） */
+
+/* 标准语法 */
+.plyr:fullscreen,
+.plyr:fullscreen .plyr__video-wrapper,
+.plyr:fullscreen video {
+    max-height: none !important;
+    height: 100% !important;
+    width: 100% !important;
+    object-fit: contain !important;
+}
+
+/* WebKit (Safari, Chrome 旧版) */
+.plyr:-webkit-full-screen,
+.plyr:-webkit-full-screen .plyr__video-wrapper,
+.plyr:-webkit-full-screen video {
+    max-height: none !important;
+    height: 100% !important;
+    width: 100% !important;
+    object-fit: contain !important;
+}
+
+/* Firefox */
+.plyr:-moz-full-screen,
+.plyr:-moz-full-screen .plyr__video-wrapper,
+.plyr:-moz-full-screen video {
+    max-height: none !important;
+    height: 100% !important;
+    width: 100% !important;
+    object-fit: contain !important;
+}
+
+/* IE/Edge 旧版 */
+.plyr:-ms-fullscreen,
+.plyr:-ms-fullscreen .plyr__video-wrapper,
+.plyr:-ms-fullscreen video {
+    max-height: none !important;
+    height: 100% !important;
+    width: 100% !important;
+    object-fit: contain !important;
+}
+
+/* 备用：如果 Plyr 容器有 plyr--fullscreen 类 */
+.plyr.plyr--fullscreen,
+.plyr.plyr--fullscreen .plyr__video-wrapper,
+.plyr.plyr--fullscreen video {
+    max-height: none !important;
+    height: 100% !important;
+    width: 100% !important;
+    object-fit: contain !important;
+}
+
+
+
+.lgnewui-audio-player-card {
+    background: #f9fafb;
+    border-radius: 0.75rem;
+    padding: 1rem;
+    border: 1px solid #f3f4f6;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin: 1.5rem 0;
+}
+
+.lgnewui-audio-play-btn {
+    width: 3rem;
+    height: 3rem;
+    background: #111827;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #ffffff;
+    flex-shrink: 0;
+}
+
+.lgnewui-audio-play-btn i {
+    font-size: 1.25rem;
+}
+
+.lgnewui-audio-info {
+    flex: 1;
+    min-width: 0;
+}
+
+.lgnewui-audio-title {
+    font-weight: 700;
+    color: #111827;
+    font-size: 0.875rem;
+}
+
+.lgnewui-audio-meta {
+    font-size: 0.75rem;
+    color: #6b7280;
+}
+
+.lgnewui-audio-element {
+    width: 12rem;
+    height: 2rem;
+    opacity: 0.8;
+}
+
+
+
+/* ========================================
+   COLOR CARD (Highlight Box)
+   ======================================== */
+
+.lgnewui-article-body .color-card {
+    background-image: linear-gradient(to right, #29cfdd 0%, #ffafe3 100%);
+    border-radius: 12px;
+    color: #fff;
+    padding: 1rem .5rem;
+    display: flex;
+    align-items: center;
+    z-index: 10;
+    margin: 2rem 0;
+    padding-left: 2rem;
+    position: relative;
+    font-weight: 400;
+}
+
+.lgnewui-article-body .color-card::after {
+    content: "";
+    width: 4px;
+    height: 40%;
+    background: #fff;
+    display: inline-block;
+    border-radius: 1rem;
+    position: absolute;
+    left: 10px;
+}
+
+.shadow-blur {
+    position: relative;
+}
+
+.shadow-blur::before {
+    content: "";
+    display: block;
+    background: inherit;
+    filter: blur(0.5rem);
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    top: 5px;
+    left: 5px;
+    z-index: -1;
+    opacity: 0.4;
+    transform-origin: 0 0;
+    border-radius: inherit;
+    transform: scale(1, 1);
+}
+
+/* ========================================
+   LINKS
+   ======================================== */
+
+/* Enhanced Link Styles */
+.lgnewui-main a {
+    position: relative;
+    color: #007AFF;
+    text-decoration: none;
+    font-weight: inherit;
+    font-family: inherit;
+    cursor: pointer;
+    word-break: break-all;
+    transition: color 0.25s ease;
+    margin: 0 8px;
+}
+
+.lgnewui-main a::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    bottom: -2px;
+    width: 100%;
+    height: 1px;
+    background: linear-gradient(90deg, transparent 0%, rgba(105, 183, 255, 0.6) 15%, rgba(105, 183, 255, 0.6) 85%, transparent 100%);
+    transform: scaleX(0);
+    transform-origin: right;
+    transition: transform 0.6s cubic-bezier(0.6, 0.1, 0, 1);
+}
+
+.lgnewui-main a:hover {
+    color: #69b7ff;
+}
+
+.lgnewui-main a:hover::after {
+    transform: scaleX(1);
+    transform-origin: left;
+}
+
+/* Link Icon - Using Remix Icon ri-link */
+.lgnewui-main a::before {
+    content: '\eeb2';
+    font-family: 'remixicon' !important;
+    display: inline-block;
+    margin-right: 0.1em;
+    font-size: 1em;
+    color: #007AFF;
+    transition: all 0.3s ease;
+    vertical-align: baseline;
+    font-weight: 400;
+    font-style: normal;
+}
+
+.lgnewui-main a:hover::before {
+    transform: rotate(-45deg);
+    color: #69b7ff;
+}
+
+/* Active state */
+.lgnewui-main a:active {
+    transform: scale(0.98);
+}
+
+/* ========================================
+   STRONG, BOLD, ITALIC, etc.
+   ======================================== */
+
+.lgnewui-main strong,
+.lgnewui-main b {
+    color: #111827;
+    font-weight: 600;
+}
+
+/* Only italicize em tags, not i tags (which are often icons) */
+.lgnewui-main em {
+    font-style: italic;
+}
+
+/* i tags inside .lgnewui-main are not italicized by default to avoid affecting icons */
+
+/* Strikethrough */
+.lgnewui-main s,
+.lgnewui-main del {
+    color: #9ca3af;
+    text-decoration: none;
+    background-image: repeating-linear-gradient(-45deg,
+            transparent,
+            transparent 3px,
+            rgba(107, 114, 128, 0.4) 3px,
+            rgba(107, 114, 128, 0.4) 4px);
+    /* 关键属性：支持多行断裂渲染 */
+    -webkit-box-decoration-break: clone;
+    box-decoration-break: clone;
+    padding: 0 2px;
+    border-radius: 2px;
+}
+
+/* ========================================
+   NO SCROLLBAR UTILITY
+   ======================================== */
+
+.lgnewui-no-scrollbar {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+}
+
+.lgnewui-no-scrollbar::-webkit-scrollbar {
+    display: none;
+}
+
+
+/* Font Family Classes */
+.lgnewui-font-sans {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+}
+
+.lgnewui-font-serif {
+    font-family: 'Libre Baskerville', 'Crimson Pro', Georgia, serif;
+}
+
+.lgnewui-font-article {
+    font-family: 'Crimson Pro', Georgia, serif;
+}
+
+/* ========================================
+   ICON TEXT UTILITY
+   ======================================== */
+
+.lgnewui-icon-text {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35em;
+    vertical-align: middle;
+    line-height: 1;
+}
+
+/* ========================================
+   FONT SWITCHER (iOS Style)
+   ======================================== */
+
+/* Font Switcher Bar at Top of Content */
+.lgnewui-detail-font-switcher-bar {
+    width: 100%;
+}
+
+.lgnewui-detail-font-switcher-bar-inner {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 1.5rem;
+}
+
+.lgnewui-detail-font-switcher-bar-left {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: #9ca3af;
+    font-size: 0.875rem;
+    font-weight: 500;
+}
+
+.lgnewui-detail-font-switcher-bar-left i {
+    font-size: 1rem;
+}
+
+.lgnewui-detail-font-switcher-bar-label {
+    font-size: 0.875rem;
+    color: #6b7280;
+}
+
+.lgnewui-detail-font-switcher-bar-right {
+    color: #d1d5db;
+    font-size: 1rem;
+    animation: sparkleRotate 4s ease-in-out infinite;
+}
+
+@keyframes sparkleRotate {
+
+    0%,
+    100% {
+        opacity: 0.4;
+        transform: rotate(0deg);
+    }
+
+    50% {
+        opacity: 0.8;
+        transform: rotate(180deg);
+    }
+}
+
+/* Mini Font Switcher */
+.lgnewui-font-switcher-mini {
+    position: relative;
+    display: inline-flex;
+    background: #f9fafb;
+    border-radius: 9999px;
+    padding: 0.25rem;
+    gap: 0.25rem;
+}
+
+.lgnewui-font-tab-mini {
+    position: relative;
+    z-index: 2;
+    display: flex;
+    align-items: center;
+    gap: 0.375rem;
+    padding: 0.375rem 1rem;
+    border-radius: 9999px;
+    font-size: 1rem;
+    font-weight: 500;
+    color: #9ca3af;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    transition: color 0.2s ease;
+    white-space: nowrap;
+}
+
+.lgnewui-font-tab-mini i {
+    font-size: 0.875rem;
+    transition: transform 0.2s ease;
+}
+
+.lgnewui-font-tab-mini:hover {
+    color: #6b7280;
+}
+
+.lgnewui-font-tab-mini:hover i {
+    transform: scale(1.1);
+}
+
+.lgnewui-font-tab-mini.active {
+    color: #111827;
+}
+
+.lgnewui-font-tab-mini.active i {
+    font-weight: 600;
+}
+
+.lgnewui-font-tab-indicator-mini {
+    position: absolute;
+    top: 0.25rem;
+    left: 0.25rem;
+    height: calc(100% - 0.5rem);
+    background: #ffffff;
+    border-radius: 9999px;
+    transition: transform 0.25s cubic-bezier(0.4, 0, 0.2, 1), width 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+    z-index: 1;
+    pointer-events: none;
+}
+
+/* Responsive */
+@media (max-width: 640px) {
+    .lgnewui-detail-font-switcher-bar-inner {
+        gap: 1rem;
+    }
+
+    .lgnewui-detail-font-switcher-bar-left {
+        font-size: 0.8125rem;
+    }
+
+    .lgnewui-detail-font-switcher-bar-right {
+        font-size: 0.875rem;
+    }
+
+
+    .lgnewui-font-tab-mini i {
+        font-size: 0.8125rem;
+    }
+}
+
+/* Original inline font switcher (kept for compatibility) */
+.lgnewui-font-switcher {
+    display: inline-flex;
+    margin-right: 1rem;
+}
+
+.lgnewui-font-switcher-container {
+    position: relative;
+    display: inline-flex;
+    background: #f3f4f6;
+    border-radius: 9999px;
+    padding: 0.1875rem;
+    gap: 0.125rem;
+}
+
+.lgnewui-font-tab {
+    position: relative;
+    z-index: 2;
+    width: 1.75rem;
+    height: 1.75rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 9999px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: #9ca3af;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    transition: color 0.3s ease;
+    flex-shrink: 0;
+}
+
+.lgnewui-font-tab:hover {
+    color: #6b7280;
+}
+
+.lgnewui-font-tab.active {
+    color: #111827;
+}
+
+.lgnewui-font-tab-text {
+    position: relative;
+    z-index: 1;
+    line-height: 1;
+}
+
+.lgnewui-font-tab-indicator {
+    position: absolute;
+    top: 0.1875rem;
+    left: 0.1875rem;
+    width: 1.75rem;
+    height: 1.75rem;
+    background: #ffffff;
+    border-radius: 9999px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.06), 0 1px 2px rgba(0, 0, 0, 0.04);
+    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    z-index: 1;
+    pointer-events: none;
+}
+
+.lgnewui-detail-reading-guide-right {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+/* Font Classes */
+
+/* Default: Inter (applied to article body baseline) */
+.lgnewui-article-body {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+}
+
+/* Noto Serif SC — 宋体 */
+.lgnewui-article-body.font-noto {
+    font-family: 'Noto Serif SC', 'Libre Baskerville', 'Crimson Pro', Georgia, serif;
+}
+
+.lgnewui-article-body.font-noto .lgnewui-main-text,
+.lgnewui-article-body.font-noto p,
+.lgnewui-article-body.font-noto li,
+.lgnewui-article-body.font-noto blockquote,
+.lgnewui-article-body.font-noto h1,
+.lgnewui-article-body.font-noto h2,
+.lgnewui-article-body.font-noto h3,
+.lgnewui-article-body.font-noto h4,
+.lgnewui-article-body.font-noto h5,
+.lgnewui-article-body.font-noto h6,
+.lgnewui-article-body.font-noto figcaption,
+.lgnewui-article-body.font-noto td,
+.lgnewui-article-body.font-noto th,
+.lgnewui-article-body.font-noto .lgnewui-color-card,
+.lgnewui-article-body.font-noto center,
+.lgnewui-article-body.font-noto em,
+.lgnewui-article-body.font-noto strong,
+.lgnewui-article-body.font-noto b,
+.lgnewui-article-body.font-noto code {
+    font-family: 'Noto Serif SC', 'Libre Baskerville', 'Crimson Pro', Georgia, serif !important;
+}
+
+/* HarmonyOS Sans SC — 鸿蒙 */
+.lgnewui-article-body.font-harmony {
+    font-family: 'HarmonyOS-Sans', 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+}
+
+.lgnewui-article-body.font-harmony .lgnewui-main-text,
+.lgnewui-article-body.font-harmony p,
+.lgnewui-article-body.font-harmony li,
+.lgnewui-article-body.font-harmony blockquote,
+.lgnewui-article-body.font-harmony h1,
+.lgnewui-article-body.font-harmony h2,
+.lgnewui-article-body.font-harmony h3,
+.lgnewui-article-body.font-harmony h4,
+.lgnewui-article-body.font-harmony h5,
+.lgnewui-article-body.font-harmony h6,
+.lgnewui-article-body.font-harmony figcaption,
+.lgnewui-article-body.font-harmony td,
+.lgnewui-article-body.font-harmony th,
+.lgnewui-article-body.font-harmony .lgnewui-color-card,
+.lgnewui-article-body.font-harmony center,
+.lgnewui-article-body.font-harmony em,
+.lgnewui-article-body.font-harmony strong,
+.lgnewui-article-body.font-harmony b,
+.lgnewui-article-body.font-harmony code {
+    font-family: 'HarmonyOS-Sans', 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif !important;
+}
+
+/* Responsive */
+@media (max-width: 640px) {
+    .lgnewui-font-switcher {
+        margin-right: 0.5rem;
+    }
+
+    .lgnewui-font-tab {
+        width: 1.5rem;
+        height: 1.5rem;
+        font-size: 0.6875rem;
+    }
+
+    .lgnewui-font-tab-indicator {
+        width: 1.5rem;
+        height: 1.5rem;
+    }
+}
+
+
+
+/*音乐样式*/
+
+.lgnewui-detail-text .mian_music {
+    width: 300px;
+    height: auto;
+    background: #f5f5f6;
+    border-radius: 5px;
+    overflow: hidden;
+    position: relative;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) no-repeat center;
+    background-size: cover;
+    margin: 1.5rem auto;
+    /*box-shadow: 3px 4px 15px #e4e4e487;*/
+    box-shadow: 3px 4px 15px #e4e4e487, -3px 4px 15px #e4e4e487;
+}
+
+.lgnewui-detail-text .mian_music::before {
+    content: "";
+    position: absolute;
+    background: rgb(245 245 246 / 22%);
+    width: 100%;
+    height: 100%;
+    z-index: -1;
+}
+
+.lgnewui-detail-text .music_card {
+    display: flex;
+    align-items: center;
+    background: #ffffffcf;
+    backdrop-filter: saturate(2) blur(50px);
+    -webkit-backdrop-filter: saturate(2) blur(50px);
+    border-radius: 5px;
+}
+
+.lgnewui-detail-text .music_card .cover {
+    width: 25%;
+    display: block;
+    margin: 0;
+    border-radius: 0;
+    box-shadow: none;
+    border: none !important;
+    /*height: 130px;*/
+    object-fit: cover;
+    aspect-ratio: 1 / 1 !important;
+}
+
+.lgnewui-detail-text .music_card .author {
+    margin-left: 0.9rem;
+    width: calc(60% - 2rem);
+}
+
+.lgnewui-detail-text .music_card .author span {
+    display: block;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.lgnewui-detail-text .music_card .author .music_name {
+    color: #302e2e;
+    font-weight: bold;
+}
+
+.lgnewui-detail-text .music_card .author .user {
+    color: #333;
+    opacity: 0.7;
+    font-size: 0.8rem;
+}
+
+.lgnewui-detail-text .music_card .music_play {
+    width: 2rem;
+    height: 2rem;
+    position: absolute;
+    top: 50%;
+    right: 1rem;
+    transform: translateY(-50%);
+    background-image: url("../img/loading.gif");
+    background-size: 100%;
+    background-repeat: no-repeat;
+    /*transition: all 0.1s;*/
+}
+
+.lgnewui-detail-text .music_card .music_play:hover {
+    cursor: pointer;
+}
+
+/* ========================================
+   AI SUMMARY CARD — Mini Glassmorphism
+   ======================================== */
+
+.lgnewui-detail-summary-card {
+    position: relative;
+    background: linear-gradient(135deg, rgba(243, 246, 252, 0.65), rgba(237, 240, 249, 0.35));
+    /* border: 1px solid rgba(226, 232, 240, 0.6); */
+    border-radius: 14px;
+    padding: 14px 16px;
+    margin-bottom: 20px;
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    overflow: hidden;
+    font-family: 'Inter', sans-serif;
+}
+
+.lgnewui-detail-summary-glow {
+    position: absolute;
+    top: -16px;
+    right: -16px;
+    width: 80px;
+    height: 80px;
+    background: rgba(203, 218, 243, 0.4);
+    border-radius: 50%;
+    filter: blur(25px);
+    pointer-events: none;
+}
+
+.lgnewui-detail-summary-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 12px;
+    padding: 10px;
+    position: relative;
+    z-index: 10;
+    background: #fff;
+    border-radius: 30px;
+}
+
+/* .lgnewui-detail-summary-header::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    width: 100%;
+    height: 1px;
+    background: linear-gradient(to right, rgba(148, 163, 184, 0.35), transparent);
+    pointer-events: none;
+} */
+
+.lgnewui-detail-summary-title-group {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    color: #64748b;
+}
+
+.lgnewui-detail-summary-icon-box {
+    background-color: #94a3b8;
+    color: white;
+    padding: 4px;
+    border-radius: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 1px 4px rgba(100, 116, 139, 0.2);
+}
+
+.lgnewui-detail-summary-title {
+    font-family: 'Noto Serif SC', 'Crimson Pro', Georgia, serif;
+    font-weight: 600;
+    font-size: 14px;
+    letter-spacing: 0.3px;
+    color: #64748b;
+}
+
+.lgnewui-detail-summary-badge {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+    font-size: 11px;
+    font-weight: 500;
+    color: #b0b8c4;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    flex-shrink: 0;
+}
+
+.lgnewui-detail-summary-body {
+    /* background: rgba(255, 255, 255, 0.5);
+    border: 1px solid rgba(226, 232, 240, 0.45); */
+    border-radius: 10px;
+    /* padding: 12px 14px; */
+    position: relative;
+    z-index: 10;
+    transition: border-color 0.2s;
+}
+
+.lgnewui-detail-summary-body:hover {
+    border-color: rgba(203, 213, 225, 0.7);
+}
+
+.lgnewui-detail-summary-text {
+    font-family: 'Inter', sans-serif;
+    margin: 0 !important;
+    font-size: 13.5px;
+    color: #64748b !important;
+    line-height: 1.75;
+    text-align: justify;
+    padding: 0 6px;
+    font-weight: 300;
+}
+
+@media (max-width: 639px) {
+    .lgnewui-detail-summary-card {
+        padding: 12px 14px;
+        border-radius: 12px;
+    }
+
+    .lgnewui-detail-summary-text {
+        font-size: 14px;
+        line-height: 1.7;
+    }
+}
+
+/* ========================================
+   文章正文 ul/ol/li 列表样式恢复
+   作用域：严格限定在 #article-content / .lgnewui-article-body 后代
+   特异度：(0,1,0,1) > 全局 reset (0,0,0,1)，赢得过 list.css/content.css/loadinglike.css
+   注意：不使用 !important，让 TinyMCE 的 inline style="list-style-type:..."
+        （circle/square/decimal/lower-alpha/lower-roman/upper-alpha/upper-roman/lower-greek 等）
+        能继续生效
+   ======================================== */
+
+/* —— 默认 type：UL=disc / OL=decimal —— */
+#article-content ul,
+.lgnewui-article-body ul {
+    list-style-type: disc;
+    padding-left: 2em;
+    margin: 1em 0;
+}
+
+#article-content ol,
+.lgnewui-article-body ol {
+    list-style-type: decimal;
+    padding-left: 2em;
+    margin: 1em 0;
+}
+
+/* —— 嵌套层级默认 type（无 inline style 时使用） —— */
+#article-content ul ul,
+.lgnewui-article-body ul ul {
+    list-style-type: circle;
+}
+
+#article-content ul ul ul,
+.lgnewui-article-body ul ul ul {
+    list-style-type: square;
+}
+
+#article-content ol ol,
+.lgnewui-article-body ol ol {
+    list-style-type: lower-alpha;
+}
+
+#article-content ol ol ol,
+.lgnewui-article-body ol ol ol {
+    list-style-type: lower-roman;
+}
+
+/* —— li 显式继承 ul/ol 的 type，覆盖全局 li{list-style-type:none} —— */
+/* 只继承 list-style-type，不动 image/position；TinyMCE 给 li 直接打 inline 时仍由 inline 生效 */
+#article-content li,
+.lgnewui-article-body li {
+    list-style-type: inherit;
+    margin: 0.25em 0;
+}

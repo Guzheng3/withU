@@ -1,0 +1,3739 @@
+/* ============================================================
+ * LG_NewUI 留言板页面样式
+ * 包含：页面头部、加载更多、骨架屏、卡片回复徽章、
+ *       侧边抽屉（1:1 来自 fullscreen-message-v2.html demo）
+ * 卡片本体样式沿用 leav.css 中的 MessageCard
+ * ============================================================ */
+
+:root {
+    --lgmsg-primary: #007aff;
+    --lgmsg-text-main: #1d1d1f;
+    --lgmsg-text-muted: #98989d;
+    --lgmsg-radius-round: 100px;
+    --lgmsg-spring: cubic-bezier(0.32, 0.72, 0, 1);
+}
+
+/* 滚动锁定 + 滚动条宽度补偿（加在 html 上，与后台弹窗方案一致） */
+html.lg-scroll-locked {
+    overflow: hidden !important;
+    padding-right: var(--lg-scrollbar-compensate, 0px) !important;
+}
+
+html.lg-scroll-locked body {
+    overflow: hidden !important;
+}
+
+/* 全宽固定定位元素：padding-right 缩小内容区，防止跳动 */
+html.lg-scroll-locked .header-wrap,
+html.lg-scroll-locked .lgnewui-mobile-nav-root,
+html.lg-scroll-locked #NavBtnList {
+    padding-right: var(--lg-scrollbar-compensate, 0px) !important;
+}
+
+/* 右锚定固定定位元素：margin-right 将整个元素推回原位 */
+html.lg-scroll-locked .message_btn,
+html.lg-scroll-locked #lgnewuiFloatingActions {
+    margin-right: var(--lg-scrollbar-compensate, 0px) !important;
+}
+
+/* ── 留言页全局留言按钮样式覆盖（清新蓝色） ── */
+.leav .message_btn .mesly {
+    background: var(--lgmsg-primary, #007AFF);
+    border-radius: 16px;
+    padding: 0.7rem;
+    box-shadow: 0 4px 16px rgba(0, 122, 255, 0.3);
+}
+
+.leav .message_btn .mesly:hover {
+    background: #fff;
+    box-shadow: 0 4px 20px rgba(0, 122, 255, 0.35);
+}
+
+.leav .message_btn .mesly:hover svg {
+    color: var(--lgmsg-primary, #007AFF);
+    fill: var(--lgmsg-primary, #007AFF) !important;
+}
+
+/* ── @提及标签（PHP parseMessageContent 输出的 lg-msg-at） ── */
+.lg-msg-at,
+.MsgContent p .lg-msg-at,
+.lgnewui-message-msg-bubble .lg-msg-at {
+    color: var(--lgmsg-primary) !important;
+    font-weight: 500;
+    cursor: pointer;
+    padding: 1px 4px;
+    border-radius: 4px;
+    background: rgba(0, 122, 255, 0.08);
+    transition: background 0.2s ease;
+    white-space: nowrap;
+    font-size: 0.85em;
+    display: inline;
+    line-height: inherit;
+    margin: 0 2px;
+}
+
+.lg-msg-at:hover {
+    background: rgba(0, 122, 255, 0.15);
+}
+
+/* ── MsgFooter 虚线 → 渐变实线 ── */
+.Message_Wrap .MessageCard .MsgFooter {
+    border-top: none;
+    position: relative;
+}
+
+.Message_Wrap .MessageCard .MsgFooter::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 1px;
+    background: linear-gradient(to left, #f1f1f1, transparent);
+}
+
+.Message_Wrap .MessageCard:nth-child(even) .MsgFooter::before {
+    background: linear-gradient(to right, #f1f1f1, transparent);
+}
+
+/* ── 留言卡片 MsgFooter / HeightCalc 约束宽度 ── */
+.Message_Wrap .MessageCard .HeightCalc {
+    min-width: 0;
+}
+
+.Message_Wrap .MessageCard .MsgFooter {
+    min-width: 0;
+}
+
+/* ── 卡片 UserName 内 h1 与徽章对齐 + 溢出截断 ── */
+.Message_Wrap .MessageCard .UserName {
+    overflow: hidden;
+    max-width: 100%;
+}
+.Message_Wrap .MessageCard .UserName h1 {
+    display: inline-flex;
+    align-items: center;
+    gap: 0;
+    max-width: 100%;
+    overflow: hidden;
+}
+.Message_Wrap .MessageCard .UserName h1 > .lgmsg-card-name {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    min-width: 0;
+}
+.Message_Wrap .MessageCard .UserName h1 > .lgnewui-message-badge {
+    flex-shrink: 0;
+}
+.Message_Wrap .MessageCard:nth-child(even) .UserName {
+    display: flex;
+    justify-content: flex-end;
+}
+.Message_Wrap .MessageCard:nth-child(even) .UserName h1 {
+    flex-direction: row-reverse;
+}
+.Message_Wrap .MessageCard:nth-child(even) .UserName h1 > .lgnewui-message-badge {
+    margin-left: 0;
+    margin-right: 6px;
+}
+
+/* ═══════════════════════════════════════════════
+   留言徽章组件
+   ═══════════════════════════════════════════════ */
+
+.Message_Wrap .MessageCard .UserName .lgnewui-message-badge{
+        font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+}
+
+.lgnewui-message-badge {
+    display: inline-flex;
+    align-items: center;
+    height: 22px;
+    border-radius: 9999px;
+    padding-right: 10px;
+    box-sizing: border-box;
+    cursor: default;
+    user-select: none;
+    overflow: hidden;
+    font-family: inherit;
+    transition: background-color 0.2s ease;
+    flex-shrink: 0;
+    vertical-align: middle;
+    margin-left: 6px;
+}
+
+.lgnewui-message-badge-icon-box {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 22px;
+    height: 22px;
+    border-radius: 9999px;
+    margin-right: 5px;
+    flex-shrink: 0;
+    font-size: 11px;
+}
+
+.lgnewui-message-badge-text {
+    font-size: 10px;
+    font-weight: 700;
+    white-space: nowrap;
+}
+
+/* 程序开发者 */
+.lgnewui-message-badge-dev { background-color: #f1f5f9; }
+.lgnewui-message-badge-dev .lgnewui-message-badge-icon-box { background-color: #1e293b; color: #ffffff; }
+.lgnewui-message-badge-dev .lgnewui-message-badge-text { color: #334155; letter-spacing: 0.05em; }
+
+/* 管理员 */
+.lgnewui-message-badge-admin { background-color: #fffbeb; }
+.lgnewui-message-badge-admin .lgnewui-message-badge-icon-box { background: linear-gradient(to bottom right, #fbbf24, #f97316); color: #ffffff; }
+.lgnewui-message-badge-admin .lgnewui-message-badge-text { color: #b45309; letter-spacing: 0.05em; }
+
+/* 游客通用 */
+.lgnewui-message-badge-lv .lgnewui-message-badge-icon-box { font-size: 10px; }
+
+/* Lv.1 */
+.lgnewui-message-badge-lv1 { background-color: #f8fafc; }
+.lgnewui-message-badge-lv1 .lgnewui-message-badge-icon-box { background-color: #e2e8f0; color: #64748b; }
+.lgnewui-message-badge-lv1 .lgnewui-message-badge-text { color: #475569; }
+
+/* Lv.2 */
+.lgnewui-message-badge-lv2 { background-color: #ecfdf5; }
+.lgnewui-message-badge-lv2 .lgnewui-message-badge-icon-box { background-color: #a7f3d0; color: #059669; }
+.lgnewui-message-badge-lv2 .lgnewui-message-badge-text { color: #059669; }
+
+/* Lv.3 */
+.lgnewui-message-badge-lv3 { background-color: #f0f9ff; }
+.lgnewui-message-badge-lv3 .lgnewui-message-badge-icon-box { background-color: #bae6fd; color: #0284c7; }
+.lgnewui-message-badge-lv3 .lgnewui-message-badge-text { color: #0284c7; }
+
+/* Lv.4 */
+.lgnewui-message-badge-lv4 { background-color: #eef2ff; }
+.lgnewui-message-badge-lv4 .lgnewui-message-badge-icon-box { background-color: #c7d2fe; color: #4f46e5; }
+.lgnewui-message-badge-lv4 .lgnewui-message-badge-text { color: #4f46e5; }
+
+/* Lv.5 */
+.lgnewui-message-badge-lv5 { background-color: #fff7ed; }
+.lgnewui-message-badge-lv5 .lgnewui-message-badge-icon-box { background-color: #fed7aa; color: #ea580c; }
+.lgnewui-message-badge-lv5 .lgnewui-message-badge-text { color: #ea580c; }
+
+/* Lv.6 */
+.lgnewui-message-badge-lv6 { background-color: #fff1f2; }
+.lgnewui-message-badge-lv6 .lgnewui-message-badge-icon-box { background-color: #f43f5e; color: #ffffff; }
+.lgnewui-message-badge-lv6 .lgnewui-message-badge-text { color: #e11d48; }
+
+/* 流光特效（管理员 + Lv.6 满级游客） */
+.lgnewui-message-badge-shine {
+    position: relative;
+}
+.lgnewui-message-badge-shine::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 50%;
+    height: 100%;
+    background: linear-gradient(to right, transparent, rgba(255, 255, 255, 0.6), transparent);
+    transform: skewX(-20deg);
+    animation: lgnewui-badge-shine 3s infinite;
+}
+@keyframes lgnewui-badge-shine {
+    0% { left: -100%; }
+    20% { left: 200%; }
+    100% { left: 200%; }
+}
+
+/* 侧边栏抽屉内徽章：紧跟用户名 */
+.lgnewui-message-msg-info .lgnewui-message-badge {
+    height: 20px;
+    margin-left: 5px;
+}
+.lgnewui-message-msg-info .lgnewui-message-badge-icon-box {
+    width: 20px;
+    height: 20px;
+    font-size: 10px;
+}
+.lgnewui-message-msg-info .lgnewui-message-badge-text {
+    font-size: 9px;
+}
+
+/* 待审核徽章 */
+.lgnewui-message-badge-pending { background-color: #fef3c7; }
+.lgnewui-message-badge-pending .lgnewui-message-badge-icon-box { background-color: #fbbf24; color: #ffffff; }
+.lgnewui-message-badge-pending .lgnewui-message-badge-text { color: #92400e; }
+
+/* 待审核卡片半透明 */
+.MessageCard.is-pending .HeightCalc { opacity: 0.65; }
+.MessageCard.is-pending .MsgContent::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+}
+
+/* 待审核抽屉气泡半透明 */
+.lgnewui-message-msg-item.is-pending .lgnewui-message-msg-bubble { opacity: 0.65; }
+
+/* ═══════════════════════════════════════════════
+   开发者身份验证弹窗（复用后台安全码验证弹窗风格）
+   ═══════════════════════════════════════════════ */
+.lgmsg-security-overlay {
+    --lg-text-primary: #1D1D1F;
+    --lg-text-secondary: #86868B;
+    --lg-text-tertiary: #A1A1A6;
+    --lg-color-error: #FF3B30;
+    --lg-color-success: #34C759;
+    --lg-color-success-glow: rgba(52, 199, 89, 0.25);
+    --lg-overlay-bg: rgba(255, 255, 255, 0.45);
+    --lg-overlay-blur: blur(36px);
+    --lg-overlay-saturate: saturate(200%);
+    --lg-ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+    --lg-ease-out: cubic-bezier(0.25, 0.1, 0.25, 1);
+    --lg-ease-smooth: cubic-bezier(0.32, 0.72, 0, 1);
+    --lg-duration-enter: 0.6s;
+    --lg-duration-exit: 0.5s;
+}
+.lgmsg-security-overlay *,
+.lgmsg-security-overlay *::before,
+.lgmsg-security-overlay *::after {
+    box-sizing: border-box;
+    -webkit-tap-highlight-color: transparent;
+}
+.lgmsg-security-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 100010;
+    background: var(--lg-overlay-bg);
+    backdrop-filter: var(--lg-overlay-blur) var(--lg-overlay-saturate);
+    -webkit-backdrop-filter: var(--lg-overlay-blur) var(--lg-overlay-saturate);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity var(--lg-duration-enter) var(--lg-ease-smooth);
+}
+.lgmsg-security-overlay::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(circle at center, rgba(255,255,255,0.9) 0%, rgba(255,255,255,0) 100%);
+    opacity: 0.6;
+    pointer-events: none;
+}
+.lgmsg-security-overlay.lgmsg-security-is-open {
+    opacity: 1;
+    pointer-events: auto;
+}
+
+/* 弹窗主体 */
+.lgmsg-security-base {
+    position: relative;
+    z-index: 1;
+    transform: scale(0.92) translateY(20px);
+    opacity: 0;
+    transition: transform var(--lg-duration-enter) var(--lg-ease-spring),
+                opacity calc(var(--lg-duration-enter) * 0.8) var(--lg-ease-smooth);
+    will-change: transform, opacity, filter;
+    width: 420px;
+    max-width: 90vw;
+    background: #FFFFFF;
+    border-radius: 24px;
+    box-shadow: 0 20px 40px -10px rgba(0,0,0,0.06),
+                0 40px 80px -20px rgba(0,0,0,0.08);
+}
+.lgmsg-security-overlay.lgmsg-security-is-open .lgmsg-security-base {
+    transform: scale(1) translateY(0);
+    opacity: 1;
+}
+.lgmsg-security-overlay.lgmsg-security-is-closing {
+    opacity: 0;
+    transition-duration: var(--lg-duration-exit);
+}
+.lgmsg-security-overlay.lgmsg-security-is-closing .lgmsg-security-base {
+    transform: scale(0.94) translateY(-15px);
+    opacity: 0;
+    filter: blur(8px);
+    transition: transform var(--lg-duration-exit) var(--lg-ease-smooth),
+                opacity var(--lg-duration-exit) var(--lg-ease-smooth),
+                filter var(--lg-duration-exit) var(--lg-ease-smooth);
+}
+.lgmsg-security-overlay.lgmsg-security-is-closing .lgmsg-security-base.lgmsg-security-is-success {
+    transform: scale(0.96) translateY(0);
+    filter: blur(0px);
+    transition: transform 0.4s var(--lg-ease-smooth),
+                opacity 0.35s ease-out,
+                filter 0.4s var(--lg-ease-smooth);
+}
+
+/* 表单内容层 */
+.lgmsg-security-form-content {
+    position: relative;
+    padding: 40px;
+    width: 100%;
+    transition: transform 0.6s var(--lg-ease-smooth),
+                opacity 0.6s var(--lg-ease-smooth),
+                filter 0.6s var(--lg-ease-smooth);
+    will-change: transform, opacity, filter;
+}
+.lgmsg-security-base.lgmsg-security-is-success .lgmsg-security-form-content {
+    opacity: 0;
+    transform: scale(0.92) translateY(10px);
+    filter: blur(12px);
+    pointer-events: none;
+}
+
+/* 关闭按钮 */
+.lgmsg-security-close {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    color: var(--lg-text-tertiary);
+    cursor: pointer;
+    transition: all 0.2s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: transparent;
+    border: none;
+    padding: 6px;
+    border-radius: 8px;
+    font-size: 18px;
+}
+.lgmsg-security-close:hover {
+    color: var(--lg-text-primary);
+    background: rgba(0,0,0,0.04);
+    transform: scale(1.05);
+}
+
+/* 标题 & 描述 */
+.lgmsg-security-title {
+    font-size: 24px;
+    font-weight: 600;
+    margin: 0 0 10px 0;
+    color: var(--lg-text-primary);
+    letter-spacing: -0.5px;
+}
+.lgmsg-security-desc {
+    font-size: 15px;
+    color: var(--lg-text-secondary);
+    line-height: 1.6;
+    margin: 0 0 32px 0;
+}
+
+/* 输入框标签 */
+.lgmsg-security-input-label {
+    display: block;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--lg-text-primary);
+    margin-bottom: 8px;
+}
+
+/* 输入框组 */
+.lgmsg-security-input-group {
+    position: relative;
+}
+.lgmsg-security-input-icon {
+    position: absolute;
+    left: 16px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--lg-text-tertiary);
+    font-size: 20px;
+    display: flex;
+    pointer-events: none;
+    transition: color 0.3s;
+    z-index: 2;
+}
+.lgmsg-security-input-group:focus-within .lgmsg-security-input-icon {
+    color: var(--lg-text-primary);
+}
+.lgmsg-security-input-group .lgmsg-security-pw-wrap {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+.lgmsg-security-input-group .lgmsg-security-pw-input {
+    width: 100%;
+    box-sizing: border-box;
+    height: 52px;
+    padding: 0 48px 0 48px;
+    border: none;
+    border-radius: 14px;
+    font-size: 15px;
+    font-family: inherit;
+    outline: none;
+    background: #F3F4F6;
+    color: var(--lg-text-primary);
+    letter-spacing: 2px;
+    transition: background 0.3s;
+}
+.lgmsg-security-input-group .lgmsg-security-pw-input:focus {
+    background: #ECEDF0;
+}
+.lgmsg-security-input-group .lgmsg-security-pw-input::placeholder {
+    letter-spacing: 0;
+    color: var(--lg-text-tertiary);
+    font-size: 14px;
+}
+.lgmsg-security-pw-toggle {
+    position: absolute;
+    right: 14px;
+    width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    color: var(--lg-text-tertiary);
+    padding: 0;
+    border-radius: 8px;
+    transition: color 0.2s, background 0.2s, transform 0.15s ease;
+    z-index: 2;
+}
+.lgmsg-security-pw-toggle:hover {
+    color: var(--lg-text-primary);
+    background: rgba(0, 0, 0, 0.05);
+}
+.lgmsg-security-pw-toggle:focus-visible {
+    background: rgba(0, 0, 0, 0.05);
+}
+.lgmsg-security-pw-toggle:active {
+    transform: scale(0.82);
+}
+.lgmsg-security-pw-toggle svg { width: 18px; height: 18px; }
+
+/* 错误提示 */
+.lgmsg-security-error {
+    color: var(--lg-color-error);
+    font-size: 13px;
+    margin-top: 8px;
+    display: none;
+}
+@keyframes lgmsgSecurityShake {
+    0%, 100% { transform: translateX(0); }
+    20% { transform: translateX(-4px); }
+    40% { transform: translateX(4px); }
+    60% { transform: translateX(-4px); }
+    80% { transform: translateX(4px); }
+}
+.lgmsg-security-input-error-anim {
+    animation: lgmsgSecurityShake 0.4s cubic-bezier(0.36, 0.07, 0.19, 0.97) both;
+}
+
+/* 提示信息区 */
+.lgmsg-security-hash-info {
+    margin-top: 24px;
+    padding: 18px 20px;
+    background: #F5F5F7;
+    border-radius: 16px;
+    display: flex;
+    gap: 12px;
+    align-items: flex-start;
+}
+.lgmsg-security-hash-icon {
+    color: var(--lg-text-tertiary);
+    margin-top: 2px;
+    flex-shrink: 0;
+    font-size: 16px;
+    display: flex;
+}
+.lgmsg-security-hash-text {
+    font-size: 13.5px;
+    color: var(--lg-text-secondary);
+    line-height: 1.5;
+    margin: 0;
+}
+
+/* 操作按钮 */
+.lgmsg-security-actions {
+    margin-top: 36px;
+    display: flex;
+    justify-content: center;
+}
+.lgmsg-security-btn {
+    width: 100%;
+    height: 52px;
+    border-radius: 999px;
+    font-size: 16px;
+    font-weight: 600;
+    transition: all 0.3s var(--lg-ease-out);
+    position: relative;
+    border: none;
+    outline: none;
+    cursor: pointer;
+    font-family: inherit;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    overflow: hidden;
+    background: #111;
+    color: #FFF;
+    box-shadow: 0 8px 24px -6px rgba(0,0,0,0.12);
+}
+.lgmsg-security-btn:hover {
+    background: #000;
+    transform: translateY(-1px);
+    box-shadow: 0 12px 28px -8px rgba(0,0,0,0.15);
+}
+.lgmsg-security-btn:active {
+    transform: scale(0.97) translateY(0);
+}
+.lgmsg-security-btn-spinner {
+    font-size: 20px;
+    animation: lgmsgSecuritySpin 1s linear infinite;
+    display: none;
+}
+.lgmsg-security-btn-icon {
+    font-size: 18px;
+}
+.lgmsg-security-btn::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 50%;
+    height: 100%;
+    background: linear-gradient(to right, rgba(255,255,255,0) 0%, rgba(255,255,255,0.15) 50%, rgba(255,255,255,0) 100%);
+    transform: skewX(-20deg);
+    pointer-events: none;
+}
+.lgmsg-security-btn.lgmsg-security-is-loading::before {
+    animation: lgmsgSecurityShimmer 1.5s infinite;
+}
+@keyframes lgmsgSecurityShimmer { 100% { left: 200%; } }
+@keyframes lgmsgSecuritySpin { 100% { transform: rotate(360deg); } }
+.lgmsg-security-btn.lgmsg-security-is-loading {
+    pointer-events: none;
+    background: #333;
+    box-shadow: 0 4px 12px -4px rgba(0,0,0,0.1);
+    transform: scale(0.98);
+}
+
+/* 成功动画面板 */
+.lgmsg-security-success-panel {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    border-radius: 24px;
+    z-index: 10;
+    pointer-events: none;
+    overflow: hidden;
+}
+.lgmsg-security-success-aura {
+    position: absolute;
+    width: 140px;
+    height: 140px;
+    background: var(--lg-color-success);
+    filter: blur(45px);
+    border-radius: 50%;
+    opacity: 0;
+    transform: scale(0.3);
+    transition: transform 0.8s var(--lg-ease-smooth),
+                opacity 0.8s var(--lg-ease-smooth);
+    z-index: 1;
+}
+.lgmsg-security-base.lgmsg-security-is-success .lgmsg-security-success-aura {
+    opacity: 0.25;
+    transform: scale(1.5);
+    animation: lgmsgSecurityAuraPulse 2s ease-in-out infinite alternate 0.8s;
+}
+@keyframes lgmsgSecurityAuraPulse {
+    0% { transform: scale(1.5); opacity: 0.25; }
+    100% { transform: scale(1.6); opacity: 0.35; }
+}
+.lgmsg-security-success-content {
+    position: relative;
+    z-index: 2;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+.lgmsg-security-success-svg {
+    width: 76px;
+    height: 76px;
+    color: var(--lg-color-success);
+    margin-bottom: 24px;
+    filter: drop-shadow(0 8px 16px var(--lg-color-success-glow));
+}
+.lgmsg-security-success-circle {
+    stroke-dasharray: 151px;
+    stroke-dashoffset: 151px;
+    opacity: 0;
+}
+.lgmsg-security-success-check {
+    stroke-dasharray: 36px;
+    stroke-dashoffset: 36px;
+    opacity: 0;
+}
+.lgmsg-security-base.lgmsg-security-is-success .lgmsg-security-success-circle {
+    opacity: 1;
+    animation: lgmsgSecurityDrawCircle 0.6s cubic-bezier(0.65, 0, 0.35, 1) forwards;
+    animation-delay: 0.1s;
+}
+.lgmsg-security-base.lgmsg-security-is-success .lgmsg-security-success-check {
+    opacity: 1;
+    animation: lgmsgSecurityDrawCheck 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+    animation-delay: 0.45s;
+}
+@keyframes lgmsgSecurityDrawCircle { 100% { stroke-dashoffset: 0; } }
+@keyframes lgmsgSecurityDrawCheck { 100% { stroke-dashoffset: 0; } }
+
+.lgmsg-security-success-text {
+    font-size: 22px;
+    font-weight: 600;
+    color: var(--lg-text-primary);
+    letter-spacing: 1px;
+    opacity: 0;
+    transform: translateY(15px);
+    transition: opacity 0.5s ease, transform 0.6s var(--lg-ease-smooth);
+}
+.lgmsg-security-base.lgmsg-security-is-success .lgmsg-security-success-text {
+    opacity: 1;
+    transform: translateY(0);
+    transition-delay: 0.5s;
+}
+@keyframes lgmsgSecurityHapticBump {
+    0%   { transform: scale(1); }
+    40%  { transform: scale(1.03); }
+    100% { transform: scale(1); }
+}
+.lgmsg-security-trigger-bump {
+    animation: lgmsgSecurityHapticBump 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) !important;
+}
+
+/* ── 留言卡片 InfoItem 胶囊样式（单行不换行） ── */
+.Message_Wrap .MessageCard .UserInfo {
+    flex-wrap: nowrap;
+    gap: 5px;
+    overflow: hidden;
+    max-width: 100%;
+}
+
+.Message_Wrap .MessageCard .MsgFooter .InfoItem {
+    padding: 3px 8px 3px 3px !important;
+    margin-right: 0 !important;
+    margin-bottom: 0 !important;
+    font-size: 11px;
+    white-space: nowrap;
+    flex-shrink: 1;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    border-radius: 6px;
+    line-height: 1;
+    color: #8e8e93;
+    background: rgba(0, 0, 0, 0.035);
+    border: none;
+    box-shadow: none;
+    cursor: default;
+    transition: color 0.2s;
+    min-width: 0;
+    max-width: 100%;
+    overflow: hidden;
+}
+
+.Message_Wrap .MessageCard .MsgFooter .InfoItem .lgmsg-info-text {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    min-width: 0;
+    max-width: 80px;
+}
+
+/* 短文本（移动端回复数字）桌面端默认隐藏 */
+.Message_Wrap .MessageCard .MsgFooter .lgmsg-info-text-short {
+    display: none;
+}
+
+/* 有经纬度可打开地图的归属地：浅蓝色背景（卡片 + 抽屉通用） */
+.lgmsg-location-has-coords {
+    color: #3b82f6;
+    cursor: pointer;
+}
+
+.Message_Wrap .MessageCard .MsgFooter .InfoItem.lgmsg-location-has-coords {
+    background: rgba(59, 130, 246, 0.08);
+    color: #3b82f6;
+}
+
+.Message_Wrap .MessageCard .MsgFooter .InfoItem.lgmsg-location-has-coords .lgmsg-ico {
+    background: rgba(59, 130, 246, 0.12);
+    color: #3b82f6;
+}
+
+/* 图标圆角背景容器 */
+.Message_Wrap .MessageCard .MsgFooter .InfoItem .lgmsg-ico {
+    width: 10px !important;
+    height: 10px !important;
+    flex-shrink: 0;
+    stroke: currentColor;
+    fill: none;
+    stroke-width: 2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    opacity: 1;
+    padding: 3px;
+    box-sizing: content-box;
+    background: rgba(0, 0, 0, 0.05);
+    border-radius: 5px;
+}
+
+.Message_Wrap .MessageCard .MsgFooter .InfoItem i[class*="qi-"].lgmsg-ico {
+    width: auto !important;
+    height: auto !important;
+    font-size: 10px;
+    line-height: 1;
+    opacity: 1;
+    padding: 3px;
+    background: rgba(0, 0, 0, 0.05);
+    border-radius: 5px;
+}
+
+.Message_Wrap .MessageCard .MsgFooter .InfoItem svg {
+    width: 10px !important;
+    height: 10px !important;
+}
+
+.Message_Wrap .MessageCard .UserAvatar {
+    cursor: pointer;
+}
+
+.Message_Wrap .MessageCard {
+    cursor: pointer;
+}
+
+.Message_Wrap .MessageCard .UserAvatar::after {
+    content: '@';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 2;
+    background: rgba(0, 0, 0, 0.3);
+    backdrop-filter: blur(3px);
+    -webkit-backdrop-filter: blur(3px);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #fff;
+    font-size: 1.4rem;
+    font-weight: 700;
+    opacity: 0;
+    transition: opacity 0.25s ease;
+    pointer-events: none;
+}
+
+.Message_Wrap .MessageCard:hover .UserAvatar::after,
+.Message_Wrap .MessageCard .UserAvatar.lgmsg-avatar-tap::after {
+    opacity: 1;
+}
+
+
+
+/* ============================================================
+ * MessageCard 卡片回复徽章（附加到原始 leav.css 卡片上）
+ * ============================================================ */
+.MessageCard .lgmsg-reply-badge {
+    color: var(--lgmsg-primary);
+    background: rgba(0, 122, 255, 0.08);
+    transition: background 0.2s;
+    cursor: pointer;
+}
+
+.MessageCard:hover .lgmsg-reply-badge {
+    background: rgba(0, 122, 255, 0.14);
+}
+
+.MessageCard .lgmsg-reply-badge svg {
+    width: 12px;
+    height: 12px;
+}
+
+/* ── InfoItem SVG 图标尺寸 ── */
+.InfoItem .lgmsg-ico {
+    width: 14px !important;
+    height: 14px !important;
+    flex-shrink: 0;
+    vertical-align: middle;
+    /* margin-right: 4px; */
+    stroke: currentColor;
+    fill: none;
+    stroke-width: 2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+}
+
+/* ── 卡片插入动画 ── */
+@keyframes lgmsg-card-fadeIn {
+    0% {
+        opacity: 0;
+        transform: translateY(20px) scale(0.96);
+    }
+
+    100% {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+.MessageCard {
+    animation: lgmsg-card-fadeIn 0.5s var(--lgmsg-spring) both;
+}
+
+.MessageCard:nth-child(1) {
+    animation-delay: 0ms;
+}
+
+.MessageCard:nth-child(2) {
+    animation-delay: 60ms;
+}
+
+.MessageCard:nth-child(3) {
+    animation-delay: 120ms;
+}
+
+.MessageCard:nth-child(4) {
+    animation-delay: 180ms;
+}
+
+.MessageCard:nth-child(5) {
+    animation-delay: 240ms;
+}
+
+.MessageCard:nth-child(6) {
+    animation-delay: 300ms;
+}
+
+.MessageCard:nth-child(n+7) {
+    animation-delay: 350ms;
+}
+
+/* ============================================================
+ * 骨架屏（匹配 MessageCard 布局）
+ * ============================================================ */
+@keyframes lgmsg-skeleton-pulse {
+
+    0%,
+    100% {
+        opacity: 0.4;
+    }
+
+    50% {
+        opacity: 0.8;
+    }
+}
+
+.lgmsg-skeleton {
+    margin-top: 2rem;
+    padding: 0 0.8rem 1.2rem;
+    position: relative;
+}
+
+.lgmsg-skeleton-line {
+    background: rgba(0, 0, 0, 0.04);
+    border-radius: 8px;
+    animation: lgmsg-skeleton-pulse 1.5s ease-in-out infinite;
+}
+
+.lgmsg-skeleton .sk-avatar {
+    width: 4rem;
+    height: 4rem;
+    border-radius: 50%;
+    flex-shrink: 0;
+}
+
+.lgmsg-skeleton .sk-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 14px;
+}
+
+.lgmsg-skeleton .sk-name {
+    width: 70px;
+    height: 12px;
+}
+
+.lgmsg-skeleton .sk-time {
+    width: 50px;
+    height: 9px;
+    margin-top: 5px;
+}
+
+.lgmsg-skeleton .sk-text1 {
+    width: 90%;
+    height: 10px;
+    margin-bottom: 8px;
+}
+
+.lgmsg-skeleton .sk-text2 {
+    width: 65%;
+    height: 10px;
+    margin-bottom: 8px;
+}
+
+.lgmsg-skeleton .sk-text3 {
+    width: 40%;
+    height: 10px;
+    margin-bottom: 0;
+}
+
+.lgmsg-skeleton .sk-footer {
+    display: flex;
+    gap: 8px;
+    margin-top: 14px;
+}
+
+.lgmsg-skeleton .sk-pill {
+    width: 60px;
+    height: 20px;
+    border-radius: 100px;
+}
+
+/* ============================================================
+ * 加载更多按钮
+ * ============================================================ */
+.lgmsg-load-more-wrap {
+    text-align: center;
+    padding: 2rem 0;
+}
+
+.lgmsg-load-more-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 12px 36px;
+    border: none;
+    border-radius: 100px;
+    background: linear-gradient(135deg, #2c2c2c, #1a1a1a);
+    color: rgba(255, 255, 255, 0.9);
+    font-size: 13px;
+    font-weight: 500;
+    font-family: inherit;
+    letter-spacing: 0.5px;
+    cursor: pointer;
+    transition: all 0.4s cubic-bezier(0.2, 0.8, 0.2, 1);
+    outline: none;
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.15), inset 0 1px 0 rgba(255, 255, 255, 0.08);
+}
+
+.lgmsg-load-more-btn:hover {
+    background: linear-gradient(135deg, #3a3a3a, #222);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.2), inset 0 1px 0 rgba(255, 255, 255, 0.1);
+    color: #fff;
+}
+
+.lgmsg-load-more-btn:active {
+    transform: translateY(0) scale(0.97);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+}
+
+.lgmsg-load-more-btn:disabled {
+    opacity: 0.75;
+    cursor: not-allowed;
+    transform: none;
+}
+
+.lgmsg-load-more-btn .btn-text {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.lgmsg-load-more-btn .btn-text i {
+    font-size: 14px;
+    line-height: 1;
+}
+
+@keyframes lgmsg-spin {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+}
+
+.lgmsg-load-more-btn .lgmsg-spinner {
+    display: inline-block;
+    animation: lgmsg-spin 0.9s linear infinite;
+}
+
+.lgmsg-no-more {
+    text-align: center;
+    padding: 20px 0 40px;
+    color: var(--lgmsg-text-muted);
+    font-size: 13px;
+}
+
+/* ============================================================
+ * 卡片空状态
+ * ============================================================ */
+.lgmsg-empty {
+    text-align: center;
+    padding: 40px 20px;
+    color: var(--lgmsg-text-muted);
+    font-size: 14px;
+}
+
+.lgmsg-empty svg {
+    width: 48px;
+    height: 48px;
+    margin-bottom: 12px;
+    opacity: 0.3;
+}
+
+/* ============================================================
+ * 侧边抽屉 (1:1 from fullscreen-message-v2.html demo)
+ * 使用 lgnewui-message-* 命名空间
+ * ============================================================ */
+.lgnewui-message-drawer-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 100001;
+    opacity: 0;
+    pointer-events: none;
+}
+
+.lgnewui-message-drawer-overlay::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.15);
+    backdrop-filter: blur(2px);
+    -webkit-backdrop-filter: blur(2px);
+    z-index: -1;
+    pointer-events: none;
+    transform: translateZ(0);
+    transition: opacity 0.35s cubic-bezier(0.32, 0.72, 0, 1);
+
+    /* will-change: opacity; */
+}
+
+.lgnewui-message-drawer-overlay.active {
+    opacity: 1;
+    pointer-events: auto;
+}
+
+.lgnewui-message-drawer-overlay.closing {
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s ease;
+}
+
+.lgnewui-message-drawer-content {
+    position: absolute;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    width: 500px;
+    display: flex;
+    flex-direction: column;
+    transform: translateX(100%);
+    transition: transform 0.4s cubic-bezier(0.32, 0.72, 0, 1);
+    will-change: transform;
+    background: transparent;
+}
+
+.lgnewui-message-drawer-bg {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    background: rgba(245, 245, 247, 0.75);
+    backdrop-filter: blur(40px) saturate(180%);
+    -webkit-backdrop-filter: blur(40px) saturate(180%);
+    border-left: 1px solid rgba(255, 255, 255, 0.4);
+    pointer-events: none;
+    transform: translateZ(0);
+}
+
+.lgnewui-message-drawer-overlay.active .lgnewui-message-drawer-content {
+    transform: translateX(0);
+}
+
+.lgnewui-message-drawer-overlay.closing .lgnewui-message-drawer-content {
+    transform: translateX(100%);
+    transition: transform 0.3s ease;
+}
+
+.lgnewui-message-drawer-header {
+    position: relative;
+    z-index: 1;
+    padding: 20px 24px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+.lgnewui-message-drawer-title-wrap {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.lgnewui-message-drawer-title-icon {
+    width: 36px;
+    height: 36px;
+    border-radius: 10px;
+    background: rgba(0, 0, 0, 0.05);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #3a3a3c;
+    flex-shrink: 0;
+}
+
+.lgnewui-message-drawer-title {
+    font-size: 16px;
+    font-weight: 600;
+    line-height: 1.3;
+}
+
+.lgnewui-message-drawer-subtitle {
+    font-size: 12px;
+    color: #a1a1a6;
+    font-weight: 400;
+    margin-top: 1px;
+}
+
+/* ── 抽屉内容分隔线 ── */
+.lgnewui-message-drawer-divider {
+    height: 1px;
+    background: linear-gradient(to right, transparent, rgba(0, 0, 0, 0.06) 20%, rgba(0, 0, 0, 0.06) 80%, transparent);
+    margin: 16px 0;
+}
+
+.lgnewui-message-close-btn {
+    width: 34px;
+    height: 34px;
+    border-radius: 50%;
+    border: none;
+    background: rgba(0, 0, 0, 0.04);
+    color: var(--lgmsg-text-muted);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    transition: all 0.25s ease;
+}
+
+.lgnewui-message-close-btn:hover {
+    background: rgba(0, 0, 0, 0.08);
+    color: var(--lgmsg-text-main);
+}
+
+.lgnewui-message-drawer-scroll {
+    position: relative;
+    z-index: 1;
+    flex: 1;
+    overflow-y: auto;
+    scrollbar-width: none;
+    display: flex;
+    flex-direction: column;
+    contain: layout style;
+    -webkit-overflow-scrolling: touch;
+}
+
+.lgnewui-message-drawer-scroll::-webkit-scrollbar {
+    display: none;
+}
+
+.lgnewui-message-drawer-body {
+    flex: 1;
+    padding: 24px 20px 24px 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+}
+
+/* ── 抽屉内消息项（QQ 风格气泡） ── */
+.lgnewui-message-msg-item {
+    display: flex;
+    gap: 12px;
+    align-items: flex-start;
+    contain: content;
+}
+
+.lgnewui-message-msg-item.is-me {
+    flex-direction: row-reverse;
+}
+
+.lgnewui-message-avatar-wrap {
+    position: relative;
+    width: 40px;
+    height: 40px;
+    border-radius: 12px;
+    flex-shrink: 0;
+    cursor: pointer;
+    overflow: hidden;
+    user-select: none;
+}
+
+.lgnewui-message-avatar-wrap .lgnewui-message-avatar-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.25);
+    backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(4px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    transition: all 0.3s ease;
+    color: #fff;
+    border-radius: 12px;
+}
+
+.lgnewui-message-avatar-wrap .lgnewui-message-avatar-overlay svg {
+    width: 16px;
+    height: 16px;
+    transform: scale(0.5);
+    transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.lgnewui-message-avatar-wrap:hover .lgnewui-message-avatar-overlay {
+    opacity: 1;
+}
+
+.lgnewui-message-avatar-wrap:hover .lgnewui-message-avatar-overlay svg {
+    transform: scale(1);
+}
+
+.lgnewui-message-msg-avatar {
+    width: 100%;
+    height: 100%;
+    border-radius: 12px;
+    object-fit: cover;
+    background: #fff;
+    display: block;
+}
+
+.lgnewui-message-msg-main {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    max-width: 75%;
+    align-items: flex-start;
+    min-width: 0;
+}
+
+.lgnewui-message-msg-item.is-me .lgnewui-message-msg-main {
+    align-items: flex-end;
+}
+
+.lgnewui-message-msg-info {
+    font-size: 12px;
+    color: var(--lgmsg-text-muted);
+    display: flex;
+    gap: 8px;
+    align-items: center;
+}
+
+.lgnewui-message-msg-item.is-me .lgnewui-message-msg-info {
+    flex-direction: row-reverse;
+}
+
+.lgnewui-message-msg-name {
+    font-weight: 500;
+    color: #555;
+    cursor: pointer;
+    max-width: 120px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    display: inline-block;
+    vertical-align: middle;
+}
+
+.lgnewui-message-msg-name:hover {
+    color: var(--lgmsg-text-main);
+}
+
+.lgnewui-message-msg-bubble {
+    padding: 12px 16px;
+    background: rgba(255, 255, 255, 0.9);
+    border-radius: 4px 16px 16px 16px;
+    font-size: 14px;
+    line-height: 1.6;
+    color: var(--lgmsg-text-main);
+    word-break: break-word;
+    position: relative;
+    cursor: pointer;
+    transition: opacity 0.2s;
+    max-width: 100%;
+    box-sizing: border-box;
+    min-width: 0;
+}
+
+.lgnewui-message-msg-bubble:active {
+    opacity: 0.8;
+}
+
+.lgnewui-message-msg-bubble img.emoji,
+.lgnewui-message-msg-bubble img[data-emoji] {
+    height: 24px;
+    width: auto;
+    max-width: 80px;
+    vertical-align: bottom;
+    margin: -2px 2px 0;
+    display: inline-block;
+    object-fit: contain;
+}
+
+/* 兜底：气泡内所有非头像 img 限高，防止 textHtml 中的表情撑大 */
+.lgnewui-message-msg-bubble img:not(.lgnewui-message-msg-avatar) {
+    max-height: 28px;
+    vertical-align: bottom;
+}
+
+.lgnewui-message-msg-item.is-me .lgnewui-message-msg-bubble {
+    background: #007aff;
+    color: #fff;
+    border-radius: 16px 4px 16px 16px;
+}
+
+/* ── @ 标签 ── */
+.lgnewui-message-at-tag {
+    color: var(--lgmsg-text-main);
+    background: rgba(0, 0, 0, 0.05);
+    padding: 1px 5px;
+    border-radius: 6px;
+    margin: 0 2px;
+    cursor: pointer;
+    font-weight: 600;
+    font-size: 0.85em;
+    user-select: none;
+    transition: all 0.2s ease;
+    vertical-align: baseline;
+    display: inline;
+    line-height: inherit;
+    white-space: nowrap;
+}
+
+.lgnewui-message-at-tag:hover {
+    background: rgba(0, 0, 0, 0.08);
+}
+
+.lgnewui-message-msg-item.is-me .lgnewui-message-at-tag {
+    color: #fff;
+    background: rgba(255, 255, 255, 0.2);
+}
+
+.lgnewui-message-msg-item.is-me .lgnewui-message-at-tag:hover {
+    background: rgba(255, 255, 255, 0.3);
+}
+
+/* ── 引用块 ── */
+.lgnewui-message-msg-bubble blockquote,
+.lgnewui-message-drawer-editor blockquote {
+    margin: 0 0 8px 0;
+    color: #555;
+    font-size: 13px;
+    background: rgba(0, 0, 0, 0.05);
+    border-radius: 12px;
+    padding: 8px 12px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    user-select: none;
+    -webkit-user-select: none;
+    display: block;
+    max-width: 100%;
+    box-sizing: border-box;
+}
+
+/* ── 编辑器内引用条（带删除按钮） ── */
+.lgmsg-editor-quote {
+    display: flex !important;
+    align-items: center;
+    gap: 4px;
+    white-space: nowrap;
+    overflow: hidden;
+    position: relative;
+    padding-right: 28px !important;
+}
+
+.lgmsg-editor-quote .emoji {
+    height: 18px;
+    width: 18px;
+    vertical-align: text-bottom;
+}
+
+.lgmsg-editor-quote-label {
+    font-weight: 600;
+    color: var(--lgmsg-primary, #007AFF);
+    flex-shrink: 0;
+}
+
+.lgmsg-editor-quote-close {
+    position: absolute;
+    right: 6px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 20px;
+    height: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    background: rgba(0, 0, 0, 0.08);
+    color: #666;
+    font-size: 14px;
+    line-height: 1;
+    cursor: pointer;
+    flex-shrink: 0;
+    transition: background 0.15s ease;
+}
+
+.lgmsg-editor-quote-close:hover {
+    background: rgba(0, 0, 0, 0.15);
+    color: #333;
+}
+
+.lgmsg-editor-input {
+    min-height: 1em;
+    outline: none;
+}
+
+/* ── 引用回复（基于 reply_to_id） ── */
+.lgmsg-reply-quote {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    white-space: normal;
+    cursor: pointer;
+    margin-bottom: 4px;
+    padding: 0;
+    border: none;
+    box-shadow: none;
+}
+
+.lgmsg-reply-quote-name {
+    font-weight: 600;
+    font-size: 12px;
+    color: var(--lgmsg-primary, #007AFF);
+}
+
+.lgmsg-reply-quote-name::after {
+    content: '\FF1A';
+}
+
+.lgmsg-reply-quote-text {
+    font-size: 12px;
+    opacity: 0.7;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    line-height: 1.6;
+}
+
+/* 引用摘要内的表情图片（懒加载 class="lazy"，用 img 选择器统一匹配） */
+.lgmsg-reply-quote-text img {
+    height: 16px;
+    width: 16px;
+    vertical-align: middle;
+    margin: 0 1px;
+    display: inline;
+}
+
+.lgnewui-message-msg-item.is-me .lgmsg-reply-quote-name {
+    color: rgba(255, 255, 255, 0.95);
+}
+
+.lgnewui-message-msg-item.is-me .lgmsg-reply-quote-text {
+    color: rgba(255, 255, 255, 0.7);
+}
+
+.lgnewui-message-drawer-editor blockquote {
+    cursor: default;
+}
+
+.lgnewui-message-msg-item.is-me .lgnewui-message-msg-bubble blockquote {
+    color: rgba(255, 255, 255, 0.9);
+    background: rgba(255, 255, 255, 0.18);
+    border-left-color: rgba(255, 255, 255, 0.5);
+}
+
+.lgnewui-message-msg-item.is-me .lgnewui-message-msg-bubble .lg-msg-at {
+    color: #fff !important;
+    background: rgba(255, 255, 255, 0.2);
+}
+
+.lgnewui-message-msg-item.is-me .lgnewui-message-msg-bubble .lg-msg-at:hover {
+    background: rgba(255, 255, 255, 0.3);
+}
+
+/* ── 徽章 ── */
+.lgnewui-message-msg-badge {
+    font-size: 10px;
+    padding: 2px 6px;
+    border-radius: 6px;
+    font-weight: 600;
+    margin-left: 4px;
+    display: inline-flex;
+    align-items: center;
+    gap: 3px;
+}
+
+.lgnewui-message-msg-badge svg {
+    width: 10px;
+    height: 10px;
+    stroke-width: 2.5;
+}
+
+.lgnewui-message-msg-badge.author {
+    color: #f5d787;
+    background: linear-gradient(135deg, #2c2c2e, #1a1a1c);
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+}
+
+.lgnewui-message-msg-badge.admin {
+    color: #fff;
+    background: linear-gradient(135deg, #FF6B6B, #E03131);
+    box-shadow: 0 1px 2px rgba(224, 49, 49, 0.2);
+}
+
+.lgnewui-message-msg-badge.pending {
+    color: #d97706;
+    background: rgba(245, 158, 11, 0.1);
+    border: none;
+    box-shadow: none;
+}
+
+.lgnewui-message-msg-item.is-pending .lgnewui-message-msg-bubble {
+    opacity: 0.85;
+}
+
+/* ── 消息元信息（城市、浏览器、OS） ── */
+.lgnewui-message-msg-meta {
+    display: flex;
+    gap: 6px;
+    margin-top: 4px;
+    min-width: 0;
+    flex: 1 1 0;
+    flex-wrap: wrap;
+}
+
+/* 移动端：横向滚动 */
+@media (max-width: 768px) {
+    .lgnewui-message-msg-meta {
+        flex: none;
+        width: 100%;
+        flex-wrap: nowrap;
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+        scrollbar-width: none;
+    }
+}
+
+.lgnewui-message-msg-meta::-webkit-scrollbar {
+    display: none;
+}
+
+.lgnewui-message-msg-meta span {
+    font-size: 11px;
+    color: #98989d !important;
+    background: rgba(0, 0, 0, 0.03);
+    padding: 4px 8px;
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+    gap: 3px;
+    flex-shrink: 0;
+    white-space: nowrap;
+}
+
+.lgnewui-message-msg-meta .lgmsg-ico-sm {
+    width: 10px !important;
+    height: 10px !important;
+    flex-shrink: 0;
+    stroke: currentColor;
+    fill: none;
+    stroke-width: 2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+}
+
+.lgnewui-message-msg-meta i[class*="qi-"].lgmsg-ico-sm {
+    width: auto !important;
+    height: auto !important;
+    font-size: 11px;
+    line-height: 1;
+}
+
+.lgnewui-message-msg-meta svg {
+    width: 10px;
+    height: 10px;
+    color: inherit;
+    stroke: currentColor;
+}
+
+.lgnewui-message-msg-item.is-me .lgnewui-message-msg-meta {
+    justify-content: flex-end;
+}
+
+/* ── 消息底部（meta + 点赞按钮） ── */
+.lgnewui-message-msg-footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: 4px;
+    gap: 8px;
+    min-width: 0;
+    width: 100%;
+}
+
+.lgnewui-message-msg-item.is-me .lgnewui-message-msg-footer {
+    flex-direction: row-reverse;
+}
+
+/* ── 点赞包装器（气泡右上角，hover 显示） ── */
+.lgnewui-message-like-wrap {
+    position: absolute;
+    top: -6px;
+    right: -6px;
+    display: flex;
+    align-items: center;
+    gap: 2px;
+    background: #fff;
+    border-radius: 20px;
+    padding: 2px 6px 2px 2px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    z-index: 1;
+    opacity: 0;
+    transform: scale(0.8);
+    transition: opacity 0.2s ease, transform 0.2s ease;
+    pointer-events: none;
+}
+
+.lgnewui-message-msg-bubble:hover .lgnewui-message-like-wrap {
+    opacity: 1;
+    transform: scale(1);
+    pointer-events: auto;
+}
+
+.lgnewui-message-msg-item.is-me .lgnewui-message-like-wrap {
+    right: auto;
+    left: -6px;
+}
+
+/* ── 点赞按钮 ── */
+.lgnewui-message-like-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 20px;
+    height: 20px;
+    padding: 0;
+    border: none;
+    background: transparent;
+    color: #c8c8cc;
+    cursor: pointer;
+    border-radius: 50%;
+    transition: all 0.15s ease;
+    flex-shrink: 0;
+}
+
+.lgnewui-message-like-btn:hover {
+    color: #ef4444;
+    background: rgba(239, 68, 68, 0.1);
+    transform: scale(1.1);
+}
+
+.lgnewui-message-like-btn:active {
+    transform: scale(0.95);
+}
+
+.lgnewui-message-like-btn.is-liked,
+.lgnewui-message-like-btn[data-liked="true"] {
+    color: #ef4444;
+}
+
+.lgnewui-message-like-btn.is-liked:hover,
+.lgnewui-message-like-btn[data-liked="true"]:hover {
+    color: #dc2626;
+}
+
+.lgnewui-message-like-btn i {
+    font-size: 12px;
+    line-height: 1;
+}
+
+/* 点赞数量 */
+.lgnewui-message-like-count {
+    font-size: 11px;
+    color: #98989d;
+    min-width: 12px;
+    text-align: center;
+}
+
+/* AuthModal 层级高于 CommentModal */
+#lgmsgAuthModal.lgnewui-message-modal-overlay {
+    z-index: 100002;
+}
+
+/* 上下文菜单项样式见下方主声明块 */
+
+/* ── 消息弹入动画 ── */
+.lgnewui-message-msg-pop-in {
+    animation: msgPopIn 0.4s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+    transform-origin: bottom right;
+}
+
+@keyframes msgPopIn {
+    0% {
+        opacity: 0;
+        transform: scale(0.8) translateY(20px);
+    }
+
+    100% {
+        opacity: 1;
+        transform: scale(1) translateY(0);
+    }
+}
+
+/* ── 高亮动画（普通气泡） ── */
+@keyframes highlightFlash {
+    0% {
+        box-shadow: 0 0 0 0 rgba(0, 122, 255, 0);
+    }
+
+    15% {
+        box-shadow: 0 0 0 4px rgba(0, 122, 255, 0.2);
+    }
+
+    100% {
+        box-shadow: 0 0 0 0 rgba(0, 122, 255, 0);
+    }
+}
+
+/* ── 高亮动画（蓝色气泡 is-me） ── */
+@keyframes highlightFlashMe {
+    0% {
+        box-shadow: 0 0 0 0 rgba(0, 122, 255, 0);
+    }
+
+    15% {
+        box-shadow: 0 0 0 4px rgba(0, 122, 255, 0.35);
+    }
+
+    100% {
+        box-shadow: 0 0 0 0 rgba(0, 122, 255, 0);
+    }
+}
+
+.lgnewui-message-bubble-highlight {
+    animation: highlightFlash 1.2s ease-out;
+}
+
+.lgnewui-message-msg-item.is-me .lgnewui-message-bubble-highlight {
+    animation: highlightFlashMe 1.2s ease-out;
+}
+
+/* ── 抽屉底部 ── */
+.lgnewui-message-drawer-footer {
+    position: sticky;
+    bottom: 0;
+    z-index: 10;
+    padding: 16px 20px calc(16px + env(safe-area-inset-bottom, 0px));
+    border-top: none;
+    background: rgb(245 245 247 / 60%);
+    transition: padding-bottom 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+    box-shadow: 0 -1px 0 rgba(0, 0, 0, 0.03);
+    backdrop-filter: blur(24px) saturate(200%);
+    -webkit-backdrop-filter: blur(24px) saturate(200%);
+}
+
+.lgnewui-message-drawer-footer::before {
+    content: '';
+    position: absolute;
+    top: -40px;
+    left: 0;
+    right: 0;
+    height: 40px;
+    background: linear-gradient(to bottom, transparent, rgba(245, 245, 247, 0.4));
+    pointer-events: none;
+    z-index: -1;
+}
+
+.lgnewui-message-drawer-footer-inner {
+    display: flex;
+    flex-direction: column;
+}
+
+/* 收起/展开状态 */
+.lgnewui-message-drawer-collapsed-wrap {
+    transition: max-height 0.3s cubic-bezier(0.25, 0.8, 0.25, 1), opacity 0.2s ease;
+    max-height: 80px;
+    opacity: 1;
+    overflow: hidden;
+}
+
+.lgnewui-message-drawer-expanded-wrap {
+    transition: max-height 0.3s cubic-bezier(0.25, 0.8, 0.25, 1), opacity 0.25s ease;
+    max-height: 0;
+    opacity: 0;
+    overflow: hidden;
+}
+
+.lgnewui-message-drawer-footer.is-expanded .lgnewui-message-drawer-collapsed-wrap {
+    max-height: 0;
+    opacity: 0;
+    pointer-events: none;
+}
+
+.lgnewui-message-drawer-footer.is-expanded .lgnewui-message-drawer-expanded-wrap {
+    max-height: 400px;
+    opacity: 1;
+    pointer-events: auto;
+}
+
+.lgnewui-message-drawer-collapsed {
+    cursor: pointer;
+    padding: 0 4px;
+}
+
+.lgnewui-message-dc-input {
+    background: rgb(227 227 227 / 67%);
+    /* border: 1px solid rgba(255, 255, 255, 0.4); */
+    border-radius: 20px;
+    padding: 10px 16px;
+    color: var(--lgmsg-text-muted);
+    font-size: 14px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    transition: background 0.2s;
+}
+
+.lgnewui-message-dc-input:hover {
+    background: rgba(0, 0, 0, 0.08);
+}
+
+.lgnewui-message-dc-input svg {
+    width: 16px;
+    height: 16px;
+    opacity: 0.7;
+}
+
+/* ── 身份栏 ── */
+.lgnewui-message-drawer-identity {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 12px;
+    padding: 8px 12px;
+    background: rgba(242, 242, 247, 0.38);
+    border-radius: 10px;
+    cursor: pointer;
+    transition: background 0.2s ease;
+}
+
+.lgnewui-message-drawer-identity:hover {
+    background: rgba(229, 229, 234, 0.42);
+}
+
+.lgnewui-message-drawer-identity img {
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+.lgnewui-message-drawer-identity span {
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--lgmsg-text-main);
+    flex: 1;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.lgnewui-message-drawer-identity .edit-icon {
+    color: var(--lgmsg-text-muted);
+    width: 14px;
+    height: 14px;
+    flex-shrink: 0;
+}
+
+/* ── 访客标签 ── */
+.lgnewui-message-drawer-input-tags {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 12px;
+    flex-wrap: wrap;
+}
+
+.lgnewui-message-drawer-input-tags .lgnewui-message-v-tag {
+    font-size: 11px;
+    padding: 4px 10px 4px 4px;
+    background: rgba(242, 242, 247, 0.38);
+    border-radius: var(--lgmsg-radius-round);
+}
+
+.lgnewui-message-drawer-input-tags .lgnewui-message-v-tag-icon {
+    width: 20px;
+    height: 20px;
+}
+
+.lgnewui-message-drawer-input-tags .lgnewui-message-v-tag-icon svg {
+    width: 10px;
+    height: 10px;
+}
+
+.lgnewui-message-drawer-input-tags .lgnewui-message-v-tag-icon i[class*="qi-"] {
+    font-size: 12px;
+    line-height: 1;
+}
+
+/* ── 编辑器 ── */
+.lgnewui-message-drawer-editor-wrap {
+    background: rgba(242, 242, 247, 0.38);
+    border-radius: 10px;
+    display: flex;
+    flex-direction: column;
+    transition: background 0.2s ease;
+}
+
+.lgnewui-message-drawer-editor-wrap:focus-within {
+    background: rgba(229, 229, 234, 0.42);
+}
+
+.lgnewui-message-drawer-editor {
+    min-height: 60px;
+    max-height: 150px;
+    padding: 12px 14px;
+    font-size: 14px;
+    line-height: 1.6;
+    outline: none;
+    overflow-y: auto;
+    scrollbar-width: none;
+}
+
+.lgnewui-message-drawer-editor::-webkit-scrollbar {
+    display: none;
+}
+
+.lgnewui-message-drawer-editor[data-placeholder]:empty::before {
+    content: attr(data-placeholder);
+    color: #a1a1a6;
+    pointer-events: none;
+}
+
+.lgnewui-message-drawer-editor img.emoji {
+    vertical-align: bottom;
+    height: 24px;
+    width: auto;
+    margin: -2px 2px 0;
+}
+
+.lgnewui-message-drawer-toolbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 6px 10px 10px;
+}
+
+/* ── 工具按钮 ── */
+.lgnewui-message-tb-left {
+    display: flex;
+    gap: 4px;
+}
+
+.lgnewui-message-tb-btn {
+    background: transparent;
+    border: none;
+    outline: none;
+    color: var(--lgmsg-text-muted);
+    width: 36px;
+    height: 36px;
+    border-radius: 10px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.lgnewui-message-tb-btn:hover {
+    background: rgba(0, 0, 0, 0.06);
+    color: var(--lgmsg-text-main);
+}
+
+.lgnewui-message-tb-btn svg {
+    width: 22px;
+    height: 22px;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+}
+
+/* ── 发送按钮 ── */
+.lgnewui-message-reply-btn {
+    padding: 10px 20px;
+    border-radius: var(--lgmsg-radius-round);
+    background: var(--lgmsg-text-main);
+    color: #fff;
+    border: none;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.lgnewui-message-reply-btn:hover {
+    background: #3a3a3c;
+}
+
+.lgnewui-message-reply-btn:active {
+    background: #2c2c2e;
+}
+
+.lgnewui-message-reply-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+/* ── Enter 发送开关 ── */
+.lgnewui-message-switch-wrap {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-left: 8px;
+    cursor: pointer;
+    padding: 4px 8px;
+    border-radius: 8px;
+    transition: background 0.2s;
+    user-select: none;
+}
+
+.lgnewui-message-switch-wrap:hover {
+    background: rgba(0, 0, 0, 0.04);
+}
+
+.lgnewui-message-switch-text {
+    font-size: 13px;
+    color: var(--lgmsg-text-muted);
+    font-weight: 500;
+    transition: color 0.3s ease;
+}
+
+.lgnewui-message-switch-wrap.active .lgnewui-message-switch-text {
+    color: var(--lgmsg-text-main);
+}
+
+.lgnewui-message-switch {
+    width: 32px;
+    height: 16px;
+    border-radius: 16px;
+    background: rgba(0, 0, 0, 0.05);
+    overflow: hidden;
+}
+
+.lgnewui-message-switch::after {
+    content: '';
+    display: block;
+    width: 100%;
+    height: 100%;
+    background: var(--lgmsg-text-main);
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.lgnewui-message-switch-wrap.active .lgnewui-message-switch::after {
+    transform: scaleX(1);
+}
+
+/* ── 字数统计 ── */
+.lgnewui-message-char-counter {
+    font-size: 12px;
+    color: var(--lgmsg-text-muted);
+    font-weight: 500;
+    opacity: 0.5;
+    transition: color 0.25s ease;
+    font-variant-numeric: tabular-nums;
+    white-space: nowrap;
+    padding: 0 4px;
+}
+
+.lgnewui-message-char-counter.warning {
+    color: #ff9f0a;
+    opacity: 1;
+}
+
+.lgnewui-message-char-counter.danger {
+    color: #ff3b30;
+    opacity: 1;
+}
+
+/* ── 表情面板（全局定位，抽屉和弹窗共用） ── */
+.lgnewui-message-emoji-panel {
+    position: fixed;
+    z-index: 100010;
+    width: 420px;
+    background: rgba(255, 255, 255, 0.38);
+    backdrop-filter: blur(40px) saturate(200%);
+    -webkit-backdrop-filter: blur(40px) saturate(200%);
+    border-radius: 16px;
+    border: 1px solid rgba(255, 255, 255, 0.4);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    transform-origin: bottom left;
+    will-change: transform, opacity;
+    visibility: hidden;
+    pointer-events: none;
+    opacity: 0;
+    transform: scale(0.82) translateY(14px) translateZ(0);
+    user-select: none;
+    -webkit-user-select: none;
+}
+
+.lgnewui-message-emoji-panel.show {
+    visibility: visible;
+    pointer-events: auto;
+    animation: epIn 0.38s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+}
+
+.lgnewui-message-emoji-panel.hide {
+    visibility: visible;
+    pointer-events: none;
+    animation: epOut 0.22s ease-out forwards;
+}
+
+@keyframes epIn {
+    0% {
+        opacity: 0;
+        transform: scale(0.82) translateY(14px) translateZ(0);
+    }
+
+    60% {
+        opacity: 1;
+        transform: scale(1.04) translateY(-3px) translateZ(0);
+    }
+
+    100% {
+        opacity: 1;
+        transform: scale(1) translateY(0) translateZ(0);
+    }
+}
+
+@keyframes epOut {
+    0% {
+        opacity: 1;
+        transform: scale(1) translateY(0) translateZ(0);
+    }
+
+    100% {
+        opacity: 0;
+        transform: scale(0.88) translateY(10px) translateZ(0);
+    }
+}
+
+.lgnewui-message-emoji-tabs-wrap {
+    display: flex;
+    align-items: center;
+    padding: 6px 10px 2px;
+    gap: 2px;
+}
+
+.lgnewui-message-emoji-tabs {
+    display: flex;
+    overflow-x: auto;
+    gap: 2px;
+    scrollbar-width: none;
+    flex: 1;
+}
+
+.lgnewui-message-emoji-tabs::-webkit-scrollbar {
+    display: none;
+}
+
+.lgnewui-message-e-tab {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    padding: 8px 12px;
+    border-radius: 10px;
+    transition: all 0.15s ease;
+    opacity: 0.35;
+    background: transparent;
+    min-width: 46px;
+    flex-shrink: 0;
+    border: none;
+    outline: none;
+}
+
+.lgnewui-message-e-tab:hover {
+    opacity: 0.65;
+    background: rgba(0, 0, 0, 0.04);
+}
+
+.lgnewui-message-e-tab.active {
+    opacity: 1;
+    background: rgba(0, 0, 0, 0.06);
+}
+
+.lgnewui-message-e-tab img {
+    height: 28px;
+    width: auto;
+    object-fit: contain;
+    pointer-events: none;
+}
+
+.lgnewui-message-emoji-cat-title {
+    font-size: 11px;
+    font-weight: 600;
+    color: rgba(0, 0, 0, 0.2);
+    padding: 0 16px 4px;
+    letter-spacing: 0.3px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.lgnewui-message-emoji-cat-title::before {
+    content: '';
+    flex: 1;
+    height: 0.5px;
+    background: linear-gradient(to right, transparent, rgba(0, 0, 0, 0.08));
+}
+
+.lgnewui-message-emoji-cat-title::after {
+    content: '';
+    flex: 1;
+    height: 0.5px;
+    background: linear-gradient(to left, transparent, rgba(0, 0, 0, 0.08));
+}
+
+.lgnewui-message-emoji-list {
+    padding: 6px 12px 14px;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(42px, 1fr));
+    gap: 4px;
+    max-height: 230px;
+    overflow-y: auto;
+    scrollbar-width: none;
+    align-content: start;
+    contain: layout style;
+}
+
+.lgnewui-message-emoji-list::-webkit-scrollbar {
+    display: none;
+}
+
+.lgnewui-message-emoji-item {
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 8px;
+    padding: 6px;
+    transition: transform 0.15s ease, background 0.15s ease;
+    aspect-ratio: 1/1;
+    contain: layout style paint;
+}
+
+.lgnewui-message-emoji-item:hover {
+    background: rgba(0, 0, 0, 0.05);
+    transform: scale(1.12);
+}
+
+.lgnewui-message-emoji-item:active {
+    transform: scale(0.92);
+}
+
+.lgnewui-message-emoji-item img {
+    height: 28px;
+    width: auto;
+    max-width: 100%;
+    object-fit: contain;
+    pointer-events: none;
+}
+
+/* 表情预览气泡 */
+.lgnewui-message-emoji-preview {
+    position: fixed;
+    background: rgba(255, 255, 255, 0.42);
+    backdrop-filter: blur(30px) saturate(180%);
+    -webkit-backdrop-filter: blur(30px) saturate(180%);
+    border: 1px solid rgba(255, 255, 255, 0.4);
+    border-radius: 14px;
+    padding: 12px 16px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    z-index: 100012;
+    transform: translate(-50%, 0) scale(0.6);
+    opacity: 0;
+    pointer-events: none;
+    visibility: hidden;
+    transition: opacity 0.2s ease, transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1), visibility 0.2s,
+        left 0.15s ease-out, top 0.15s ease-out;
+    user-select: none;
+}
+
+.lgnewui-message-emoji-preview.active {
+    opacity: 1;
+    visibility: visible;
+    transform: translate(-50%, 0) scale(1);
+}
+
+.lgnewui-message-emoji-preview img {
+    height: 48px;
+    width: auto;
+    max-width: 120px;
+    object-fit: contain;
+}
+
+.lgnewui-message-emoji-preview span {
+    font-size: 13px;
+    font-weight: 500;
+    color: #555;
+    max-width: 100px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    text-align: center;
+}
+
+/* 表情骨架 */
+@keyframes shimmer {
+    0% {
+        background-position: -200% 0;
+    }
+
+    100% {
+        background-position: 200% 0;
+    }
+}
+
+.lgnewui-message-emoji-skeleton {
+    border-radius: 10px;
+    background: linear-gradient(90deg, rgba(0, 0, 0, 0.012) 25%, rgba(0, 0, 0, 0.04) 50%, rgba(0, 0, 0, 0.012) 75%);
+    background-size: 200% 100%;
+    animation: shimmer 1.4s ease-in-out infinite;
+    aspect-ratio: 1/1;
+}
+
+@keyframes emojiListFadeIn {
+    0% {
+        opacity: 0;
+        transform: translateY(4px);
+    }
+
+    100% {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.lgnewui-message-emoji-list.fade-in {
+    animation: emojiListFadeIn 0.22s ease-out forwards;
+}
+
+/* ── 抽屉空状态 ── */
+.lgnewui-message-drawer-empty {
+    text-align: center;
+    padding: 60px 20px;
+    margin-top: 20px;
+    color: var(--lgmsg-text-muted);
+    font-size: 14px;
+    letter-spacing: 0.5px;
+    font-weight: 300;
+}
+
+.lgnewui-message-drawer-empty svg {
+    width: 36px;
+    height: 36px;
+    margin-bottom: 10px;
+    opacity: 0.25;
+    stroke-width: 1.2;
+}
+
+/* ── 抽屉加载状态 ── */
+.lgnewui-message-drawer-loading {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+    min-height: 200px;
+    color: var(--lgmsg-text-muted, #a1a1a6);
+    gap: 10px;
+}
+
+.lgnewui-message-drawer-loading span {
+    font-size: 14px;
+    font-weight: 500;
+}
+
+/* ── 时间分隔（纯文字居中，无线条） ── */
+.lgnewui-message-time-divider {
+    text-align: center;
+    font-size: 11px;
+    color: #a1a1a6;
+    margin: 12px 0 4px;
+    padding: 4px 0;
+    letter-spacing: 0.3px;
+}
+
+/* ── 身份认证弹窗 ── */
+.lgnewui-message-modal-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 100002;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    opacity: 0;
+    pointer-events: none;
+    padding: 3vh 3vw;
+}
+
+.lgnewui-message-modal-overlay::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: rgb(160 160 160 / 53%);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    z-index: -1;
+    pointer-events: none;
+    transform: translateZ(0);
+    will-change: opacity;
+}
+
+.lgnewui-message-modal-overlay.active {
+    opacity: 1;
+    pointer-events: auto;
+}
+
+.lgnewui-message-modal-overlay.closing {
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.35s ease;
+}
+
+.lgnewui-message-modal-content {
+    background: rgb(255 255 255 / 35%);
+    backdrop-filter: blur(40px);
+    -webkit-backdrop-filter: blur(40px);
+    border: 1px solid rgba(255, 255, 255, 0.4);
+    width: 100%;
+    max-width: 900px;
+    max-height: 760px;
+    border-radius: 28px;
+    display: flex;
+    flex-direction: column;
+    transform: scale(0.92) translateY(16px);
+    opacity: 0;
+    transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1), opacity 0.3s ease;
+    position: relative;
+    overflow: hidden;
+    will-change: transform, opacity;
+}
+
+.lgnewui-message-modal-overlay.active .lgnewui-message-modal-content {
+    transform: scale(1) translateY(0);
+    opacity: 1;
+}
+
+.lgnewui-message-modal-overlay.closing .lgnewui-message-modal-content {
+    transform: scale(0.88) translateY(24px);
+    opacity: 0;
+    transition: transform 0.4s cubic-bezier(0.4, 0, 0.6, 1), opacity 0.3s ease;
+}
+
+.lgnewui-message-close-wrapper {
+    position: absolute;
+    top: 24px;
+    right: 28px;
+    z-index: 10;
+}
+
+.lgnewui-message-modal-body {
+    padding: 36px 44px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    overflow-y: auto;
+    scrollbar-width: none;
+}
+
+.lgnewui-message-modal-body::-webkit-scrollbar {
+    display: none;
+}
+
+/* iOS Tab */
+.lgnewui-message-ios-tabs-wrap {
+    display: flex;
+}
+
+.lgnewui-message-ios-tabs {
+    position: relative;
+    display: inline-flex;
+    background: rgba(242, 242, 247, 0.38);
+    padding: 4px;
+    border-radius: var(--lgmsg-radius-round);
+}
+
+.lgnewui-message-ios-tab {
+    position: relative;
+    z-index: 2;
+    padding: 10px 28px;
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--lgmsg-text-muted);
+    cursor: pointer;
+    transition: color 0.3s;
+}
+
+.lgnewui-message-ios-tab.active {
+    color: var(--lgmsg-text-main);
+}
+
+.lgnewui-message-ios-tab-slider {
+    position: absolute;
+    top: 4px;
+    bottom: 4px;
+    left: 0;
+    background: rgba(255, 255, 255, 0.85);
+    border-radius: var(--lgmsg-radius-round);
+    transition: transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1), width 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+    z-index: 1;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08), 0 1px 2px rgba(0, 0, 0, 0.04);
+    will-change: transform, width;
+}
+
+/* 输入框 */
+.lgnewui-message-input-row {
+    display: flex;
+    gap: 16px;
+    transition: all 0.25s ease;
+}
+
+.lgnewui-message-input-wrapper {
+    position: relative;
+    flex: 1;
+}
+
+.lgnewui-message-i-icon {
+    position: absolute;
+    left: 14px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 28px;
+    height: 28px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: var(--lgmsg-text-muted);
+    z-index: 2;
+}
+
+.lgnewui-message-input-wrapper input {
+    width: 100%;
+    padding: 16px 20px 16px 52px;
+    border: 1px solid rgba(255, 255, 255, 0.4);
+    border-radius: 16px;
+    background: rgba(242, 242, 247, 0.38);
+    font-size: 15px;
+    color: #6e6e73;
+    outline: none;
+    transition: background 0.2s ease, color 0.2s ease;
+    font-weight: 500;
+}
+
+.lgnewui-message-input-wrapper input::placeholder {
+    color: #a1a1a6;
+    font-weight: 400;
+}
+
+.lgnewui-message-input-wrapper input:focus {
+    background: rgba(229, 229, 234, 0.42);
+    color: var(--lgmsg-text-main);
+}
+
+.lgnewui-message-i-icon .lgnewui-message-input-avatar {
+    width: 28px;
+    height: 28px;
+    border-radius: 8px;
+    object-fit: cover;
+}
+
+/* 提交按钮动画 */
+.lgnewui-message-submit-btn {
+    background: var(--lgmsg-text-main);
+    color: #fff;
+    border: none;
+    padding: 12px 28px;
+    border-radius: var(--lgmsg-radius-round);
+    font-size: 15px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.lgnewui-message-submit-btn:hover {
+    background: #3a3a3c;
+}
+
+.lgnewui-message-submit-btn .lgnewui-message-submit-loader,
+.lgnewui-message-submit-btn .lgnewui-message-submit-check {
+    display: none;
+}
+
+.lgnewui-message-submit-btn.is-loading {
+    pointer-events: none;
+    opacity: 0.85;
+}
+
+.lgnewui-message-submit-btn.is-loading .lgnewui-message-submit-icon {
+    display: none;
+}
+
+.lgnewui-message-submit-btn.is-loading .lgnewui-message-submit-loader {
+    display: inline-block;
+}
+
+.lgnewui-message-submit-btn.is-success {
+    opacity: 0.75;
+    pointer-events: none;
+}
+
+.lgnewui-message-submit-btn.is-success .lgnewui-message-submit-icon {
+    display: none;
+}
+
+.lgnewui-message-submit-btn.is-success .lgnewui-message-submit-loader {
+    display: none;
+}
+
+.lgnewui-message-submit-btn.is-success .lgnewui-message-submit-check {
+    display: inline-block;
+}
+
+.lgnewui-message-lucide-loader {
+    animation: lgmsg-spin 1.2s linear infinite;
+}
+
+/* ── 上下文菜单（z-index 必须高于抽屉 100002） ── */
+.lgnewui-message-context-menu {
+    position: fixed;
+    z-index: 100005;
+    background: rgba(40, 40, 40, 0.88);
+    backdrop-filter: blur(24px);
+    -webkit-backdrop-filter: blur(24px);
+    border-radius: 14px;
+    display: flex;
+    padding: 6px;
+    gap: 4px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.18);
+    opacity: 0;
+    visibility: hidden;
+    transform: scale(0.4);
+    transition: opacity 0.22s cubic-bezier(0.32, 0.72, 0, 1),
+        transform 0.22s cubic-bezier(0.32, 0.72, 0, 1),
+        visibility 0.22s;
+    transform-origin: center bottom;
+    pointer-events: none;
+}
+
+.lgnewui-message-context-menu.active {
+    opacity: 1;
+    visibility: visible;
+    transform: scale(1);
+    pointer-events: auto;
+}
+
+.lgnewui-message-cm-item {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #fff;
+    cursor: pointer;
+    padding: 8px;
+    border-radius: 8px;
+    transition: background 0.2s;
+    width: 38px;
+    height: 38px;
+}
+
+.lgnewui-message-cm-item:hover,
+.lgnewui-message-cm-item:active {
+    background: rgba(255, 255, 255, 0.15);
+}
+
+.lgnewui-message-cm-item svg {
+    width: 20px;
+    height: 20px;
+    opacity: 0.9;
+}
+
+/* ── 弹窗内头部标题 ── */
+.lgnewui-message-head-titles .lgnewui-message-title {
+    font-size: 26px;
+    font-weight: 600;
+    margin-bottom: 6px;
+    letter-spacing: 0.2px;
+}
+
+.lgnewui-message-head-titles .lgnewui-message-subtitle {
+    font-size: 15px;
+    color: var(--lgmsg-text-muted);
+    font-weight: 400;
+}
+
+/* ── 弹窗内访客标签 ── */
+.lgnewui-message-visitor-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.lgnewui-message-v-tag {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 13px;
+    font-weight: 500;
+    color: #636366;
+    background: rgba(242, 242, 247, 0.38);
+    padding: 6px 14px 6px 6px;
+    border-radius: var(--lgmsg-radius-round);
+}
+
+.lgnewui-message-v-tag-icon {
+    width: 26px;
+    height: 26px;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-shrink: 0;
+    background: rgba(0, 0, 0, 0.06);
+    color: #8e8e93;
+}
+
+.lgnewui-message-v-tag-icon svg {
+    width: 14px;
+    height: 14px;
+    flex-shrink: 0;
+}
+
+.lgnewui-message-v-tag-icon i[class*="qi-"] {
+    font-size: 16px;
+    line-height: 1;
+}
+
+/* ── 弹窗内输入行（demo input-wrapper 结构） ── */
+.lgnewui-message-input-row {
+    display: flex;
+    gap: 12px;
+    transition: opacity 0.2s ease;
+}
+
+.lgnewui-message-input-wrapper {
+    position: relative;
+    display: flex;
+    align-items: center;
+    flex: 1;
+}
+
+.lgnewui-message-i-icon {
+    position: absolute;
+    left: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 28px;
+    height: 28px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: var(--lgmsg-text-muted);
+    z-index: 2;
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+.lgnewui-message-i-icon svg {
+    width: 18px;
+    height: 18px;
+}
+
+.lgnewui-message-input-avatar {
+    width: 28px;
+    height: 28px;
+    border-radius: 8px;
+    object-fit: cover;
+    flex-shrink: 0;
+}
+
+.lgnewui-message-input-wrapper input {
+    width: 100%;
+    padding: 14px 16px 14px 50px;
+    border: 1px solid rgba(255, 255, 255, 0.4);
+    border-radius: 14px;
+    background: rgba(242, 242, 247, 0.38);
+    backdrop-filter: blur(20px) saturate(180%);
+    -webkit-backdrop-filter: blur(20px) saturate(180%);
+    font-size: 15px;
+    color: var(--lgmsg-text-main);
+    outline: none;
+    transition: background 0.2s ease, border-color 0.2s ease;
+    font-weight: 500;
+    letter-spacing: 0.3px;
+}
+
+.lgnewui-message-input-wrapper input::placeholder {
+    color: #a1a1a6;
+    font-weight: 400;
+}
+
+.lgnewui-message-input-wrapper input:focus {
+    background: rgba(229, 229, 234, 0.42);
+    color: var(--lgmsg-text-main);
+}
+
+/* QQ 缓存快捷填入 hint（对齐 demo） */
+.lgnewui-message-qq-cache-hint {
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%) scale(1);
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 4px 10px 4px 5px;
+    border-radius: var(--lgmsg-radius-round);
+    background: rgba(0, 0, 0, 0.04);
+    cursor: pointer;
+    font-size: 12px;
+    color: var(--lgmsg-text-muted);
+    transition: transform 0.4s var(--lgmsg-spring, cubic-bezier(0.34, 1.56, 0.64, 1)), opacity 0.3s ease, background 0.2s ease;
+    z-index: 2;
+    -webkit-tap-highlight-color: transparent;
+    transform-origin: right center;
+}
+
+.lgnewui-message-qq-cache-hint img {
+    width: 22px;
+    height: 22px;
+    border-radius: 6px;
+    object-fit: cover;
+}
+
+.lgnewui-message-qq-cache-hint span {
+    font-weight: 500;
+    white-space: nowrap;
+}
+
+.lgnewui-message-qq-cache-hint:hover {
+    background: rgba(0, 0, 0, 0.08);
+}
+
+.lgnewui-message-qq-cache-hint:active {
+    transform: translateY(-50%) scale(0.96);
+}
+
+.lgnewui-message-qq-cache-hint.lgnewui-message-hint-hidden {
+    opacity: 0;
+    transform: translateY(-50%) scale(0.5);
+    pointer-events: none;
+}
+
+/* 抽屉身份栏 QQ 辅助文本（用 small 避免 span 选择器冲突） */
+.lgnewui-message-drawer-qq-sub {
+    font-size: 10px;
+    font-weight: 400;
+    color: var(--lgmsg-text-muted);
+    opacity: 0.45;
+    margin-left: 6px;
+    letter-spacing: 0.5px;
+    flex-shrink: 0;
+}
+
+/* ── 表情快捷气泡栏 ── */
+.lgnewui-message-emoji-bubbles {
+    display: flex;
+    gap: 8px;
+    padding: 0 16px 6px;
+    overflow-x: auto;
+    scrollbar-width: none;
+    flex-shrink: 0;
+}
+
+.lgnewui-message-emoji-bubbles::-webkit-scrollbar {
+    display: none;
+}
+
+.lgnewui-message-emoji-bubble {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    padding: 5px 12px 5px 7px;
+    border-radius: var(--lgmsg-radius-round);
+    background: rgba(0, 0, 0, 0.035);
+    cursor: pointer;
+    white-space: nowrap;
+    font-size: 13px;
+    color: var(--lgmsg-text-muted);
+    font-weight: 500;
+    transition: all 0.2s ease;
+    flex-shrink: 0;
+    -webkit-tap-highlight-color: transparent;
+    user-select: none;
+    -webkit-user-select: none;
+}
+
+.lgnewui-message-emoji-bubble:hover {
+    background: rgba(0, 0, 0, 0.07);
+    color: var(--lgmsg-text-main);
+}
+
+.lgnewui-message-emoji-bubble:active {
+    transform: scale(0.95);
+}
+
+.lgnewui-message-emoji-bubble img {
+    height: 22px;
+    width: auto;
+    pointer-events: none;
+}
+
+.lgnewui-message-emoji-bubble.lgnewui-message-bubble-out {
+    animation: bubbleOut 0.28s ease forwards;
+    pointer-events: none;
+}
+
+.lgnewui-message-emoji-bubble.lgnewui-message-bubble-in {
+    animation: bubbleIn 0.35s var(--lgmsg-spring) forwards;
+}
+
+@keyframes bubbleOut {
+    0% {
+        opacity: 1;
+        transform: scale(1) translateZ(0);
+    }
+
+    100% {
+        opacity: 0;
+        transform: scale(0.4) translateZ(0);
+    }
+}
+
+@keyframes bubbleIn {
+    0% {
+        opacity: 0;
+        transform: scale(0.3) translateZ(0);
+    }
+
+    50% {
+        opacity: 1;
+    }
+
+    100% {
+        opacity: 1;
+        transform: scale(1) translateZ(0);
+    }
+}
+
+/* ── 旧版输入框组兼容 ── */
+.lgnewui-message-input-group {
+    position: relative;
+    display: flex;
+    align-items: center;
+    flex: 1;
+    margin-bottom: 0;
+}
+
+.lgnewui-message-input-icon {
+    position: absolute;
+    left: 14px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 28px;
+    height: 28px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: var(--lgmsg-text-muted);
+    z-index: 2;
+}
+
+.lgnewui-message-input-icon svg {
+    width: 18px;
+    height: 18px;
+}
+
+.lgnewui-message-input {
+    width: 100%;
+    padding: 16px 20px 16px 52px;
+    border: 1px solid rgba(255, 255, 255, 0.4);
+    border-radius: 16px;
+    background: rgba(242, 242, 247, 0.38);
+    backdrop-filter: blur(20px) saturate(180%);
+    -webkit-backdrop-filter: blur(20px) saturate(180%);
+    font-size: 15px;
+    color: #6e6e73;
+    outline: none;
+    transition: background 0.2s ease, color 0.2s ease;
+    font-weight: 500;
+    letter-spacing: 0.3px;
+}
+
+.lgnewui-message-input::placeholder {
+    color: #a1a1a6;
+    font-weight: 400;
+}
+
+.lgnewui-message-input:focus {
+    background: rgba(229, 229, 234, 0.42);
+    color: var(--lgmsg-text-main);
+}
+
+/* ── 隐私安全提示 ── */
+.lgnewui-message-privacy-hint {
+    display: none;
+    padding: 2px 4px 6px;
+    font-family: 'Inter', system-ui, sans-serif;
+    font-weight: 400;
+    font-size: 12px;
+    color: var(--lgmsg-text-muted, #8e8e93);
+    letter-spacing: 0.01em;
+    line-height: 1.5;
+    opacity: .85;
+}
+
+.lgnewui-message-privacy-hint svg {
+    width: 13px;
+    height: 13px;
+    vertical-align: -2px;
+    margin-right: 4px;
+    opacity: .65;
+}
+
+/* ── 弹窗内编辑器区域 ── */
+.lgnewui-message-editor-wrap {
+    display: flex;
+    flex-direction: column;
+    border-radius: 16px;
+    background: rgba(242, 242, 247, 0.38);
+    backdrop-filter: blur(20px) saturate(180%);
+    -webkit-backdrop-filter: blur(20px) saturate(180%);
+    border: 1px solid rgba(255, 255, 255, 0.4);
+    transition: background 0.2s ease;
+    position: relative;
+    flex-shrink: 0;
+}
+
+.lgnewui-message-editor-wrap:focus-within {
+    background: rgba(229, 229, 234, 0.42);
+}
+
+.lgnewui-message-editor-content {
+    flex: 1;
+    padding: 16px 20px;
+    font-size: 16px;
+    line-height: 1.8;
+    color: var(--lgmsg-text-main);
+    outline: none;
+    overflow-y: auto;
+    scrollbar-width: none;
+    font-weight: 400;
+    letter-spacing: 0.3px;
+    min-height: 150px;
+    max-height: 200px;
+}
+
+.lgnewui-message-editor-content::-webkit-scrollbar {
+    display: none;
+}
+
+.lgnewui-message-editor-content[data-placeholder]:empty::before {
+    content: attr(data-placeholder);
+    color: #a1a1a6;
+    pointer-events: none;
+}
+
+.lgnewui-message-editor-content img.emoji {
+    vertical-align: bottom;
+    height: 28px;
+    width: auto;
+    max-width: 100%;
+    object-fit: contain;
+    margin: -2px 2px 0;
+}
+
+.lgnewui-message-editor-toolbar {
+    padding: 10px 16px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+/* ── 抽屉消息气泡内 emoji 尺寸限制 ── */
+.lgnewui-message-msg-bubble img.emoji {
+    vertical-align: bottom;
+    height: 24px;
+    width: auto;
+    max-width: 80px;
+    margin: -2px 2px 0;
+    object-fit: contain;
+}
+
+/* ── 抽屉编辑器内 emoji 尺寸 ── */
+.lgnewui-message-drawer-editor img.emoji {
+    vertical-align: bottom;
+    height: 24px;
+    width: auto;
+    margin: -2px 2px 0;
+}
+
+/* ============================================================
+ * 移动端适配
+ * ============================================================ */
+@media (max-width: 768px) {
+    .lgnewui-message-drawer-content {
+        right: 0;
+        left: 0;
+        bottom: 0;
+        top: auto;
+        width: 100%;
+        height: 85vh;
+        transform: translateY(100%);
+    }
+
+    .lgnewui-message-drawer-bg {
+        border-radius: 24px 24px 0 0;
+        border-left: none;
+        border-top: 1px solid rgba(255, 255, 255, 0.4);
+    }
+
+    .lgnewui-message-drawer-overlay.active .lgnewui-message-drawer-content {
+        transform: translateY(0);
+    }
+
+    .lgnewui-message-drawer-overlay.closing .lgnewui-message-drawer-content {
+        transform: translateY(100%);
+    }
+
+    /* 移动端留言卡片 InfoItem：紧凑 + 可横向滑动 */
+    .Message_Wrap .MessageCard .MsgFooter {
+        overflow: visible;
+    }
+
+    .Message_Wrap .MessageCard .UserInfo {
+        gap: 4px;
+        overflow: visible;
+        overflow-x: scroll;
+        -webkit-overflow-scrolling: touch;
+        scrollbar-width: none;
+        touch-action: pan-x;
+        padding-bottom: 2px;
+    }
+
+    .Message_Wrap .MessageCard .UserInfo::-webkit-scrollbar {
+        display: none;
+    }
+
+    .Message_Wrap .MessageCard .MsgFooter .InfoItem {
+        padding: 4px 8px 4px 4px !important;
+        font-size: 11px;
+        gap: 4px;
+    }
+
+    /* 移动端：设备/天气/时间仅显示图标，点击 tooltip 显示完整内容 */
+    .Message_Wrap .MessageCard .MsgFooter .InfoItem.lgmsg-info-hideable .lgmsg-info-text {
+        display: none;
+    }
+
+    .Message_Wrap .MessageCard .MsgFooter .InfoItem.lgmsg-info-hideable {
+        padding: 4px !important;
+        gap: 0;
+        min-width: 28px;
+        min-height: 28px;
+        justify-content: center;
+    }
+
+    /* 移动端回复项：完整文本隐藏，仅显示短文本(数字) */
+    .Message_Wrap .MessageCard .MsgFooter .lgmsg-reply-badge .lgmsg-info-text-full {
+        display: none;
+    }
+
+    .Message_Wrap .MessageCard .MsgFooter .lgmsg-reply-badge .lgmsg-info-text-short {
+        display: inline;
+    }
+
+    .Message_Wrap .MessageCard .MsgFooter .InfoItem .lgmsg-ico {
+        width: 12px !important;
+        height: 12px !important;
+        padding: 3px;
+        border-radius: 5px;
+    }
+
+    .Message_Wrap .MessageCard .MsgFooter .InfoItem i[class*="qi-"].lgmsg-ico {
+        font-size: 12px;
+        padding: 3px;
+        border-radius: 5px;
+    }
+
+    .Message_Wrap .MessageCard .MsgFooter .InfoItem svg {
+        width: 12px !important;
+        height: 12px !important;
+    }
+
+    .lgnewui-message-emoji-panel {
+        width: calc(100vw - 24px) !important;
+        left: 12px !important;
+        right: 12px !important;
+    }
+
+    .lgnewui-message-input-row {
+        flex-direction: column;
+        gap: 12px;
+    }
+
+    /* 留言弹窗移动端 */
+    .lgnewui-message-modal-overlay {
+        padding: 0;
+    }
+
+    .lgnewui-message-modal-content {
+        max-width: 100%;
+        max-height: 100%;
+        border-radius: 0;
+        height: 100%;
+    }
+
+    .lgnewui-message-modal-body {
+        padding: 24px 16px;
+    }
+
+    .lgnewui-message-editor-content {
+        min-height: 80px;
+        max-height: 160px;
+        overflow-y: auto;
+    }
+
+    /* 发送留言按钮：紧凑 */
+    .lgnewui-message-editor-toolbar .lgnewui-message-submit-btn {
+        padding: 10px 20px;
+        font-size: 14px;
+    }
+
+    /* 身份设置弹窗：移动端不要全屏，加圆角和间距 */
+    #lgmsgAuthModal .lgnewui-message-modal-content {
+        max-width: calc(100% - 20px);
+        max-height: unset;
+        height: auto;
+        margin: 10px;
+        border-radius: 20px;
+    }
+
+    .lgnewui-message-head-titles .lgnewui-message-title {
+        font-size: 22px;
+    }
+
+    /* 弹窗编辑器工具栏：移动端两行布局 */
+    .lgnewui-message-editor-toolbar {
+        padding: 8px 12px;
+        flex-wrap: wrap;
+        gap: 6px;
+    }
+
+    .lgnewui-message-editor-toolbar .lgnewui-message-tb-left {
+        width: 100%;
+        align-items: center;
+        gap: 2px;
+    }
+
+    .lgnewui-message-editor-toolbar .lgnewui-message-tb-left .lgnewui-message-switch-wrap {
+        margin-left: auto;
+    }
+
+    .lgnewui-message-editor-toolbar .lgnewui-message-char-counter {
+        order: 10;
+    }
+
+    .lgnewui-message-editor-toolbar .lgnewui-message-submit-btn {
+        order: 11;
+        margin-left: auto;
+    }
+
+    /* Enter发送开关：不换行 */
+    .lgnewui-message-switch-wrap {
+        white-space: nowrap;
+    }
+
+    .lgnewui-message-switch-text {
+        font-size: 11px;
+    }
+
+    /* 提交按钮：不换行，紧凑化 */
+    .lgnewui-message-submit-btn {
+        white-space: nowrap;
+        padding: 10px 18px;
+        font-size: 14px;
+    }
+
+    /* 弹窗 v-tags：移动端缩小+横向滚动 */
+    .lgnewui-message-visitor-tags {
+        flex-wrap: nowrap;
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+        scrollbar-width: none;
+        gap: 6px;
+    }
+
+    .lgnewui-message-visitor-tags::-webkit-scrollbar {
+        display: none;
+    }
+
+    .lgnewui-message-visitor-tags .lgnewui-message-v-tag {
+        font-size: 11px;
+        padding: 4px 10px 4px 4px;
+        gap: 4px;
+        white-space: nowrap;
+        flex-shrink: 0;
+    }
+
+    .lgnewui-message-visitor-tags .lgnewui-message-v-tag-icon {
+        width: 20px;
+        height: 20px;
+    }
+
+    .lgnewui-message-visitor-tags .lgnewui-message-v-tag-icon svg {
+        width: 11px;
+        height: 11px;
+    }
+
+    .lgnewui-message-visitor-tags .lgnewui-message-v-tag-icon i[class*="qi-"] {
+        font-size: 12px;
+    }
+
+    /* 抽屉工具栏：移动端换行自适应 */
+    .lgnewui-message-drawer-toolbar {
+        flex-wrap: wrap;
+        gap: 6px;
+        padding: 6px 8px 8px;
+    }
+
+    .lgnewui-message-drawer-toolbar .lgnewui-message-tb-left {
+        flex-wrap: wrap;
+    }
+
+    .lgnewui-message-reply-btn {
+        white-space: nowrap;
+        padding: 8px 16px;
+        font-size: 13px;
+    }
+
+    /* 抽屉 v-tags：移动端缩小+横向滚动 */
+    .lgnewui-message-drawer-input-tags {
+        flex-wrap: nowrap;
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+        scrollbar-width: none;
+        gap: 6px;
+    }
+
+    .lgnewui-message-drawer-input-tags::-webkit-scrollbar {
+        display: none;
+    }
+
+    .lgnewui-message-drawer-input-tags .lgnewui-message-v-tag {
+        white-space: nowrap;
+        flex-shrink: 0;
+    }
+}
+
+/* ── 确认弹窗（about.php 风格） ── */
+.lgmsg-confirm-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 100010;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(247, 247, 249, 0.65);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.lgmsg-confirm-overlay.active {
+    opacity: 1;
+    pointer-events: auto;
+}
+
+.lgmsg-confirm-panel {
+    width: min(340px, 88vw);
+    background: #FFFFFF;
+    border-radius: 24px;
+    border: none;
+    box-shadow: none;
+    transform: translateY(20px) scale(0.98);
+    opacity: 0;
+    transition: all 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+    overflow: hidden;
+    position: relative;
+    padding: 32px 24px;
+    text-align: center;
+}
+
+.lgmsg-confirm-overlay.active .lgmsg-confirm-panel {
+    transform: translateY(0) scale(1);
+    opacity: 1;
+}
+
+/* 关闭按钮 */
+.lgmsg-confirm-close-btn {
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    width: 32px;
+    height: 32px;
+    border: none;
+    background: rgba(0, 0, 0, 0.04);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    color: #86868b;
+}
+
+.lgmsg-confirm-close-btn:hover {
+    background: rgba(0, 0, 0, 0.08);
+    color: #1d1d1f;
+}
+
+.lgmsg-confirm-close-btn i {
+    font-size: 16px;
+}
+
+/* 图标 */
+.lgmsg-confirm-icon-wrapper {
+    width: 56px;
+    height: 56px;
+    border-radius: 16px;
+    background: linear-gradient(135deg, #FFD60A 0%, #FFCA28 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 20px;
+    box-shadow: 0 8px 24px rgba(255, 214, 10, 0.35);
+}
+
+.lgmsg-confirm-icon-wrapper svg {
+    width: 28px;
+    height: 28px;
+    color: #fff;
+}
+
+/* 标题 */
+.lgmsg-confirm-title {
+    font-size: 18px;
+    font-weight: 700;
+    color: #1d1d1f;
+    margin: 0 0 8px 0;
+    letter-spacing: -0.3px;
+}
+
+/* 描述 */
+.lgmsg-confirm-desc {
+    font-size: 14px;
+    color: #86868b;
+    line-height: 1.6;
+    margin: 0 0 24px 0;
+}
+
+/* 操作按钮 */
+.lgmsg-confirm-actions {
+    display: flex;
+    gap: 12px;
+}
+
+.lgmsg-confirm-btn {
+    flex: 1;
+    padding: 14px 0;
+    border: none;
+    border-radius: 14px;
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+    letter-spacing: 0.2px;
+}
+
+.lgmsg-confirm-btn-secondary {
+    background: rgba(0, 0, 0, 0.05);
+    color: #6e6e73;
+}
+
+.lgmsg-confirm-btn-secondary:hover {
+    background: rgba(0, 0, 0, 0.08);
+}
+
+.lgmsg-confirm-btn-primary {
+    background: linear-gradient(135deg, #FFD60A 0%, #FFCA28 100%);
+    color: #1a1a1a;
+    box-shadow: 0 4px 16px rgba(255, 214, 10, 0.35);
+}
+
+.lgmsg-confirm-btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(255, 214, 10, 0.45);
+}
+
+.lgmsg-confirm-btn-primary:active {
+    transform: translateY(0);
+    box-shadow: 0 2px 12px rgba(255, 214, 10, 0.3);
+}
+
+/* ============================================================
+ * 留言成功 —— 编辑器收缩 + 飞行纸条 + 纸飞机动画
+ * ============================================================ */
+.lgnewui-message-editor-wrap.lgnewui-message-fly-shrink {
+    animation: lgmsg-contentShrink 0.6s ease forwards;
+}
+
+@keyframes lgmsg-contentShrink {
+    0% {
+        opacity: 1;
+        transform: scale(1);
+    }
+
+    60% {
+        opacity: 0.4;
+        transform: scale(0.95);
+    }
+
+    100% {
+        opacity: 0.15;
+        transform: scale(0.88);
+    }
+}
+
+.lgnewui-message-flying-note {
+    position: fixed;
+    z-index: 100001;
+    pointer-events: none;
+    padding: 10px 16px;
+    background: rgba(255, 255, 255, 0.88);
+    backdrop-filter: blur(16px) saturate(160%);
+    -webkit-backdrop-filter: blur(16px) saturate(160%);
+    border-radius: 10px;
+    border: 1px solid rgba(255, 255, 255, 0.5);
+    font-size: 12px;
+    line-height: 1.5;
+    color: var(--lgmsg-text-muted);
+    font-weight: 500;
+    max-width: 140px;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    animation: lgmsg-notePack 0.9s cubic-bezier(0.22, 0.68, 0.35, 1) forwards;
+    will-change: transform, opacity;
+}
+
+@keyframes lgmsg-notePack {
+    0% {
+        opacity: 0;
+        transform: translate(-50%, -50%) scale(0.35);
+    }
+
+    22% {
+        opacity: 1;
+        transform: translate(-50%, -50%) scale(1.06);
+    }
+
+    38% {
+        opacity: 1;
+        transform: translate(-50%, -50%) scale(1);
+    }
+
+    72% {
+        opacity: 0.9;
+        transform: translate(-50%, -50%) scale(0.45) rotate(6deg);
+    }
+
+    92% {
+        opacity: 0.3;
+        transform: translate(-50%, -50%) scale(0.15) rotate(12deg);
+    }
+
+    100% {
+        opacity: 0;
+        transform: translate(-50%, -50%) scale(0.08) rotate(15deg);
+    }
+}
+
+.lgnewui-message-paper-plane-fly {
+    position: fixed;
+    z-index: 100002;
+    width: 36px;
+    height: 36px;
+    color: var(--lgmsg-primary);
+    pointer-events: none;
+    animation: lgmsg-planeArc 1.4s cubic-bezier(0.22, 0.68, 0.35, 1) forwards;
+    will-change: transform, opacity;
+}
+
+.lgnewui-message-paper-plane-fly svg {
+    width: 100%;
+    height: 100%;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 1.8;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+}
+
+@keyframes lgmsg-planeArc {
+    0% {
+        opacity: 0;
+        transform: scale(0.4) rotate(-15deg);
+    }
+
+    14% {
+        opacity: 1;
+        transform: scale(1.2) rotate(-8deg);
+    }
+
+    28% {
+        opacity: 1;
+        transform: scale(1) rotate(-3deg) translate(0, 0);
+    }
+
+    100% {
+        opacity: 0;
+        transform: scale(0.55) rotate(-30deg) translate(60vw, -55vh);
+    }
+}

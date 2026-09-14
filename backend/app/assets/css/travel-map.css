@@ -1,0 +1,564 @@
+/* WithU · 地图与足迹页（travel.php）专属样式
+   依赖：style.css 基础重置、theme.css 的 --withu-* 令牌、
+   withu-sakura.css 的 withu-front-modern 背景与字体 */
+
+/* ── 页面骨架 ─────────────────────────────── */
+body.withu-travel-page {
+    min-height: 100vh;
+}
+
+.withu-travel-page .travel-map-shell {
+    max-width: 1180px;
+    margin: 0 auto;
+    padding: clamp(1.5rem, 4vw, 2.75rem) 1.25rem 4rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1.35rem;
+}
+
+/* ── 顶部标题区 ───────────────────────────── */
+.withu-travel-page .travel-map-head {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 1rem 1.5rem;
+    flex-wrap: wrap;
+}
+
+.withu-travel-page .travel-kicker {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.45rem;
+    color: var(--withu-primary, #ec4899);
+    font-size: 0.68rem;
+    font-weight: 800;
+    letter-spacing: 0.24em;
+}
+
+.withu-travel-page .travel-map-head h1 {
+    margin: 0.55rem 0 0.45rem;
+    color: var(--ink, #182033);
+    font-size: clamp(1.55rem, 3.4vw, 2.15rem);
+    font-weight: 900;
+    letter-spacing: -0.03em;
+}
+
+.withu-travel-page .travel-map-head p {
+    max-width: 620px;
+    color: var(--muted, #7b8498);
+    font-size: 0.88rem;
+}
+
+.withu-travel-page .travel-head-actions {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    flex-wrap: wrap;
+}
+
+.withu-travel-page .travel-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    min-height: 40px;
+    padding: 0.5rem 1rem;
+    border: 1px solid color-mix(in srgb, var(--withu-primary, #ec4899) 26%, transparent);
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.78);
+    color: color-mix(in srgb, var(--withu-primary, #ec4899) 78%, #182033);
+    font-size: 0.8rem;
+    font-weight: 700;
+    text-decoration: none;
+    white-space: nowrap;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.withu-travel-page .travel-pill:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 20px rgba(30, 41, 59, 0.1);
+}
+
+/* ── 地图卡片 ─────────────────────────────── */
+.withu-travel-page .travel-map-card {
+    padding: 1.15rem 1.15rem 1.25rem;
+    scroll-margin-top: 1.5rem;
+}
+
+.withu-travel-page .travel-map-toolbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.7rem 1rem;
+    flex-wrap: wrap;
+    margin-bottom: 0.9rem;
+}
+
+.withu-travel-page .travel-map-status {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: var(--muted, #7b8498);
+    font-size: 0.8rem;
+    font-weight: 600;
+}
+
+.withu-travel-page .travel-map-status i {
+    color: var(--withu-primary, #ec4899);
+}
+
+.withu-travel-page .travel-map-tools {
+    display: flex;
+    gap: 0.55rem;
+    flex-wrap: wrap;
+}
+
+.withu-travel-page .travel-tool {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.45rem;
+    min-height: 40px;
+    padding: 0.45rem 0.95rem;
+    border: 1px solid var(--line, rgba(24, 32, 51, 0.08));
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.85);
+    color: var(--ink, #182033);
+    font: inherit;
+    font-size: 0.78rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: color 0.2s ease, border-color 0.2s ease, transform 0.2s ease;
+}
+
+.withu-travel-page .travel-tool:hover {
+    color: var(--withu-primary, #ec4899);
+    border-color: var(--withu-primary, #ec4899);
+    transform: translateY(-1px);
+}
+
+.withu-travel-page .couple-map {
+    height: clamp(360px, 58vh, 540px);
+    border-radius: 16px;
+    z-index: 0;
+}
+
+.withu-travel-page .travel-map-legend {
+    display: flex;
+    align-items: center;
+    gap: 1.1rem;
+    flex-wrap: wrap;
+    margin-top: 0.9rem;
+    padding-top: 0.85rem;
+    border-top: 1px dashed var(--line, rgba(24, 32, 51, 0.08));
+    color: var(--muted, #7b8498);
+    font-size: 0.74rem;
+}
+
+.withu-travel-page .travel-map-legend span {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.45rem;
+}
+
+.withu-travel-page .map-dot {
+    display: inline-block;
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+}
+
+.withu-travel-page .map-dot-me {
+    background: var(--withu-primary, #ec4899);
+}
+
+.withu-travel-page .map-dot-memory {
+    background: var(--withu-purple, #8b5cf6);
+}
+
+.withu-travel-page .map-line {
+    display: inline-block;
+    width: 26px;
+    border-top: 3px dashed var(--withu-primary, #ec4899);
+    opacity: 0.8;
+}
+
+/* Leaflet 容器与自定义心形标记 */
+.withu-travel-page .leaflet-container {
+    font-family: inherit;
+    background: #e8edf4;
+}
+
+.withu-travel-page .withu-map-marker {
+    display: grid;
+    place-items: center;
+    border: 2px solid #fff;
+    border-radius: 50%;
+    color: #fff;
+    box-shadow: 0 6px 14px rgba(30, 41, 59, 0.3);
+}
+
+.withu-travel-page .withu-map-marker i {
+    font-size: 0.68rem;
+}
+
+.withu-travel-page .withu-map-marker.is-position {
+    background: var(--withu-primary, #ec4899);
+}
+
+.withu-travel-page .withu-map-marker.is-memory {
+    background: var(--withu-purple, #8b5cf6);
+}
+
+.withu-travel-page .leaflet-popup-content {
+    font-size: 0.8rem;
+    line-height: 1.55;
+}
+
+/* ── 通用卡片与网格 ───────────────────────── */
+.withu-travel-page .travel-map-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 1.35rem;
+    align-items: start;
+}
+
+.withu-travel-page .travel-card {
+    padding: 1.5rem;
+    background: rgba(255, 255, 255, 0.78);
+    border: 1px solid rgba(255, 255, 255, 0.85);
+    border-radius: 22px;
+    box-shadow: 0 12px 34px rgba(30, 41, 59, 0.07);
+}
+
+.withu-travel-page .travel-card-title {
+    display: flex;
+    align-items: center;
+    gap: 0.85rem;
+    margin-bottom: 1.15rem;
+}
+
+.withu-travel-page .travel-card-title i {
+    flex: 0 0 auto;
+    display: grid;
+    place-items: center;
+    width: 42px;
+    height: 42px;
+    border-radius: 14px;
+    color: #fff;
+    font-size: 0.95rem;
+    background: linear-gradient(135deg, var(--withu-primary, #ec4899), var(--withu-purple, #8b5cf6));
+    box-shadow: 0 8px 18px color-mix(in srgb, var(--withu-primary, #ec4899) 32%, transparent);
+}
+
+.withu-travel-page .travel-card-title h2 {
+    color: var(--ink, #182033);
+    font-size: 1.02rem;
+    font-weight: 800;
+}
+
+.withu-travel-page .travel-card-title p {
+    margin-top: 0.2rem;
+    color: var(--muted, #7b8498);
+    font-size: 0.76rem;
+}
+
+/* ── 表单 ─────────────────────────────────── */
+.withu-travel-page .travel-form-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0.85rem 1rem;
+}
+
+.withu-travel-page .travel-form-grid label {
+    display: flex;
+    flex-direction: column;
+    gap: 0.35rem;
+    color: var(--muted, #7b8498);
+    font-size: 0.76rem;
+    font-weight: 700;
+    min-width: 0;
+}
+
+.withu-travel-page .travel-form-grid input,
+.withu-travel-page .travel-form-grid select {
+    width: 100%;
+    min-height: 42px;
+    padding: 0.55rem 0.8rem;
+    border: 1px solid var(--line, rgba(24, 32, 51, 0.08));
+    border-radius: 12px;
+    background: rgba(255, 255, 255, 0.92);
+    color: var(--ink, #182033);
+    font: inherit;
+    font-size: 0.85rem;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.withu-travel-page .travel-form-grid input:focus,
+.withu-travel-page .travel-form-grid select:focus {
+    outline: none;
+    border-color: var(--withu-primary, #ec4899);
+    box-shadow: var(--withu-focus, 0 0 0 3px rgba(236, 72, 153, 0.18));
+}
+
+.withu-travel-page .travel-form-grid input::placeholder {
+    color: color-mix(in srgb, var(--muted, #7b8498) 62%, transparent);
+}
+
+/* 路线卡片的四个字段并排 */
+.withu-travel-page .travel-route-card .travel-form-grid {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+}
+
+.withu-travel-page .travel-check {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-top: 0.9rem;
+    color: var(--muted, #7b8498);
+    font-size: 0.8rem;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.withu-travel-page .travel-check input {
+    width: 16px;
+    height: 16px;
+    accent-color: var(--withu-primary, #ec4899);
+}
+
+/* ── 按钮 ─────────────────────────────────── */
+.withu-travel-page .travel-primary,
+.withu-travel-page .travel-secondary {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    min-height: 44px;
+    padding: 0.6rem 1.25rem;
+    border: 1px solid transparent;
+    border-radius: 999px;
+    font: inherit;
+    font-size: 0.84rem;
+    font-weight: 800;
+    cursor: pointer;
+    transition: transform 0.2s ease, box-shadow 0.2s ease, filter 0.2s ease;
+}
+
+.withu-travel-page .travel-card > .travel-primary {
+    margin-top: 1.05rem;
+}
+
+.withu-travel-page .travel-primary {
+    color: #fff;
+    background: linear-gradient(135deg, var(--withu-primary, #ec4899), var(--withu-purple, #8b5cf6));
+    box-shadow: 0 10px 22px color-mix(in srgb, var(--withu-primary, #ec4899) 35%, transparent);
+}
+
+.withu-travel-page .travel-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 14px 26px color-mix(in srgb, var(--withu-primary, #ec4899) 42%, transparent);
+}
+
+.withu-travel-page .travel-primary:active {
+    transform: translateY(0);
+}
+
+.withu-travel-page .travel-secondary {
+    color: var(--ink, #182033);
+    background: rgba(255, 255, 255, 0.85);
+    border-color: var(--line, rgba(24, 32, 51, 0.08));
+}
+
+.withu-travel-page .travel-secondary:hover {
+    transform: translateY(-2px);
+    color: var(--withu-primary, #ec4899);
+}
+
+.withu-travel-page .travel-actions {
+    display: flex;
+    gap: 0.7rem;
+    flex-wrap: wrap;
+    margin-top: 1.05rem;
+}
+
+.withu-travel-page .travel-inline-hint {
+    display: inline-flex;
+    align-items: center;
+    margin: 1.5rem 0 0 0.7rem;
+    vertical-align: middle;
+    padding: 0.35rem 0.75rem;
+    border-radius: 999px;
+    background: color-mix(in srgb, var(--withu-primary, #ec4899) 9%, #fff);
+    color: var(--muted, #7b8498);
+    font-size: 0.74rem;
+    font-weight: 600;
+}
+
+/* 天气 / 计划 JSON 输出 */
+.withu-travel-page #weatherOut,
+.withu-travel-page #planOut {
+    margin-top: 0.95rem;
+    padding: 0.85rem 1rem;
+    max-height: 340px;
+    overflow: auto;
+    border: 1px solid var(--line, rgba(24, 32, 51, 0.08));
+    border-radius: 14px;
+    background: #f6f8fb;
+    color: #33415c;
+    font: 0.75rem/1.65 ui-monospace, SFMono-Regular, Consolas, "Courier New", monospace;
+    white-space: pre-wrap;
+    word-break: break-word;
+}
+
+.withu-travel-page #weatherOut:empty,
+.withu-travel-page #planOut:empty {
+    display: none;
+}
+
+/* ── 足迹时间线 ───────────────────────────── */
+.withu-travel-page .location-timeline {
+    max-height: 430px;
+    overflow: auto;
+    padding-right: 0.25rem;
+}
+
+.withu-travel-page .location-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.8rem;
+    padding: 0.85rem 0;
+    border-bottom: 1px dashed var(--line, rgba(24, 32, 51, 0.08));
+}
+
+.withu-travel-page .location-item:last-child {
+    border-bottom: 0;
+}
+
+.withu-travel-page .location-item-dot {
+    flex: 0 0 auto;
+    width: 11px;
+    height: 11px;
+    margin-top: 0.42rem;
+    border-radius: 50%;
+    background: var(--withu-primary, #ec4899);
+    box-shadow: 0 0 0 3px color-mix(in srgb, var(--withu-primary, #ec4899) 20%, transparent);
+}
+
+.withu-travel-page .location-item > div {
+    flex: 1;
+    min-width: 0;
+}
+
+.withu-travel-page .location-item strong {
+    color: var(--ink, #182033);
+    font-size: 0.88rem;
+}
+
+.withu-travel-page .location-item p {
+    margin-top: 0.15rem;
+    color: var(--muted, #7b8498);
+    font-size: 0.76rem;
+}
+
+.withu-travel-page .location-item small {
+    display: block;
+    margin-top: 0.25rem;
+    color: var(--muted, #7b8498);
+    font-size: 0.74rem;
+}
+
+.withu-travel-page .location-item [data-delete-location] {
+    flex: 0 0 auto;
+    display: grid;
+    place-items: center;
+    width: 32px;
+    height: 32px;
+    border: 0;
+    border-radius: 50%;
+    background: transparent;
+    color: var(--muted, #7b8498);
+    font-size: 0.78rem;
+    cursor: pointer;
+    transition: color 0.2s ease, background 0.2s ease;
+}
+
+.withu-travel-page .location-item [data-delete-location]:hover {
+    color: var(--withu-danger, #c95d6d);
+    background: color-mix(in srgb, var(--withu-danger, #c95d6d) 12%, transparent);
+}
+
+.withu-travel-page .travel-empty {
+    padding: 1.6rem 1rem;
+    border: 1px dashed var(--line, rgba(24, 32, 51, 0.08));
+    border-radius: 14px;
+    color: var(--muted, #7b8498);
+    font-size: 0.82rem;
+    text-align: center;
+}
+
+/* ── 键盘可达性 ───────────────────────────── */
+.withu-travel-page .travel-pill:focus-visible,
+.withu-travel-page .travel-tool:focus-visible,
+.withu-travel-page .travel-primary:focus-visible,
+.withu-travel-page .travel-secondary:focus-visible,
+.withu-travel-page .location-item [data-delete-location]:focus-visible {
+    outline: 2px solid var(--withu-primary, #ec4899);
+    outline-offset: 2px;
+}
+
+/* ── 响应式 ───────────────────────────────── */
+@media (max-width: 920px) {
+    .withu-travel-page .travel-map-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .withu-travel-page .travel-route-card .travel-form-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+}
+
+@media (max-width: 640px) {
+    .withu-travel-page .travel-map-shell {
+        padding: 1.2rem 0.8rem 3rem;
+        gap: 1.1rem;
+    }
+
+    .withu-travel-page .travel-map-head {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .withu-travel-page .travel-card {
+        padding: 1.2rem 1rem;
+    }
+
+    .withu-travel-page .travel-map-card {
+        padding: 0.95rem 0.95rem 1.05rem;
+    }
+
+    .withu-travel-page .couple-map {
+        height: 62vw;
+        min-height: 300px;
+    }
+
+    .withu-travel-page .travel-map-toolbar {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+}
+
+@media (max-width: 560px) {
+    .withu-travel-page .travel-form-grid,
+    .withu-travel-page .travel-route-card .travel-form-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .withu-travel-page .travel-pill,
+    .withu-travel-page .travel-tool,
+    .withu-travel-page .travel-primary,
+    .withu-travel-page .travel-secondary,
+    .withu-travel-page .location-item [data-delete-location] {
+        transition: none;
+    }
+}

@@ -1,0 +1,760 @@
+
+
+
+.withu-private-wrapper {
+    font-family: 'Inter', 'Noto Serif SC', sans-serif;
+    background-color: #f8fafc;
+    /* bg-slate-50 */
+    height: 100vh;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 9999;
+}
+
+.withu-private-wrapper ::selection {
+    background-color: #0f172a;
+    /* selection:bg-slate-900 */
+    color: #ffffff;
+}
+
+/* 
+ * 背景区域
+ */
+.withu-private-wrapper .withu-private-bg {
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    z-index: 0;
+}
+
+.withu-private-wrapper .withu-private-bg-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    opacity: 0.85;
+    filter: blur(3px);
+    transform: scale(1.05);
+    transition: all 30s ease-out;
+    user-select: none;
+    pointer-events: none;
+}
+
+.withu-private-wrapper .withu-private-bg-img:hover {
+    transform: scale(1.1);
+}
+
+.withu-private-wrapper .withu-private-bg-img.is-clear {
+    filter: blur(0px);
+    transform: scale(1.1);
+    transition-duration: 1.5s;
+}
+
+.withu-private-wrapper .withu-private-bg-overlay {
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    background: linear-gradient(to bottom, rgba(0, 0, 0, 0.1), rgba(0, 0, 0, 0.05), rgba(0, 0, 0, 0.3));
+    transition: background-color 1s, background-image 1s;
+}
+
+.withu-private-wrapper .withu-private-bg-overlay.is-dark {
+    background: linear-gradient(to bottom, rgba(0, 0, 0, 0.1), rgba(0, 0, 0, 0.05), rgba(0, 0, 0, 0.8));
+    background-color: rgba(0, 0, 0, 0.4);
+}
+
+/* 
+ * 主卡片区域
+ */
+.withu-private-wrapper .withu-private-main-card {
+    position: relative;
+    z-index: 10;
+    width: 100%;
+    max-width: 360px;
+    padding: 2.5rem;
+    /* p-10 */
+    border-radius: 1.5rem;
+    /* rounded-3xl */
+    background: rgba(255, 255, 255, 0.55);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.5);
+    box-shadow: 0 20px 40px -10px rgba(0, 0, 0, 0.1), 0 0 15px rgba(255, 255, 255, 0.05) inset;
+    transition: all 0.5s;
+    /* initial animation state */
+    opacity: 0;
+    transform: translateY(30px);
+}
+
+.withu-private-wrapper .withu-private-main-card.fade-in-up {
+    animation: withu-private-fadeInUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    animation-delay: 0.1s;
+}
+
+.withu-private-wrapper .withu-private-main-card:hover {
+    background: rgba(255, 255, 255, 0.65);
+}
+
+.withu-private-wrapper .withu-private-main-card.fade-out-scale {
+    animation: withu-private-fadeOutScale 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+/* 头部信息 */
+.withu-private-wrapper .withu-private-header {
+    text-align: center;
+    margin-bottom: 2rem;
+}
+
+.withu-private-wrapper .withu-private-icon-box {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 3.5rem;
+    height: 3.5rem;
+    border-radius: 1rem;
+    background-color: #0f172a;
+    /* slate-900 */
+    color: #ffffff;
+    margin-bottom: 0.5rem;
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+    animation: withu-private-pulse-slow 4s infinite alternate ease-in-out;
+}
+
+.withu-private-wrapper .withu-private-icon-box svg {
+    width: 1.75rem;
+    height: 1.75rem;
+}
+
+/* 场景标识 Badge */
+.withu-private-wrapper .withu-private-badge-container {
+    margin-bottom: 0.5rem;
+}
+
+.withu-private-wrapper .withu-private-badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.25rem 0.75rem;
+    border-radius: 9999px;
+    background-color: rgba(255, 255, 255, 0.6);
+    backdrop-filter: blur(8px);
+    border: 1px solid rgba(255, 255, 255, 0.8);
+    color: #475569;
+    /* slate-600 */
+    font-size: 0.7rem;
+    font-weight: 600;
+    letter-spacing: 0.05em;
+    box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+}
+
+.withu-private-wrapper .withu-private-title {
+    font-size: 1.5rem;
+    line-height: 2rem;
+    font-weight: 700;
+    color: #1e293b;
+    /* slate-800 */
+    letter-spacing: -0.025em;
+    margin-bottom: 0.75rem;
+}
+
+.withu-private-wrapper .withu-private-subtitle {
+    font-size: 0.75rem;
+    font-weight: 500;
+    color: #64748b;
+    /* slate-500 */
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.75rem;
+}
+
+.withu-private-wrapper .withu-private-divider-left {
+    height: 1px;
+    width: 2.5rem;
+    background: linear-gradient(to right, transparent, #94a3b8);
+}
+
+.withu-private-wrapper .withu-private-divider-right {
+    height: 1px;
+    width: 2.5rem;
+    background: linear-gradient(to right, #94a3b8, transparent);
+}
+
+.withu-private-wrapper .withu-private-highlight {
+    color: #1e293b;
+    font-weight: 600;
+    font-size: 0.875rem;
+    margin: 0 0.25rem;
+    letter-spacing: normal;
+}
+
+/* 登录表单 */
+.withu-private-wrapper .withu-private-form {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+.withu-private-wrapper .withu-private-input-wrapper {
+    position: relative;
+}
+
+.withu-private-wrapper .withu-private-input-icon {
+    position: absolute;
+    left: 1rem;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 1rem;
+    height: 1rem;
+    color: #94a3b8;
+    /* slate-400 */
+    transition: color 0.3s;
+    z-index: 10;
+}
+
+.withu-private-wrapper .withu-private-input-wrapper:focus-within .withu-private-input-icon {
+    color: #1e293b;
+    /* slate-800 */
+}
+
+.withu-private-wrapper .withu-private-input {
+    width: 100%;
+    padding: 0.875rem 2.75rem 0.875rem 2.75rem;
+    background-color: rgba(255, 255, 255, 0.4);
+    border: 1px solid rgba(255, 255, 255, 0.5);
+    border-radius: 0.75rem;
+    font-size: 0.875rem;
+    color: #1e293b;
+    font-weight: 500;
+    text-align: left;
+    box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+    backdrop-filter: blur(4px);
+    transition: all 0.3s;
+    letter-spacing: 0.15em;
+    /* 密码圆点间距 */
+    box-sizing: border-box;
+    outline: none;
+}
+
+.withu-private-wrapper .withu-private-input::placeholder {
+    color: #94a3b8;
+    letter-spacing: normal;
+    font-family: 'Inter', sans-serif;
+    font-weight: 300;
+}
+
+.withu-private-wrapper .withu-private-input:hover {
+    background-color: rgba(255, 255, 255, 0.5);
+}
+
+.withu-private-wrapper .withu-private-input:focus {
+    border-color: #ffffff;
+    background-color: rgba(255, 255, 255, 0.7);
+    box-shadow: 0 0 0 4px rgba(255, 255, 255, 0.3);
+}
+
+/* 密码可视切换按钮 */
+.withu-private-wrapper .withu-private-eye-btn {
+    position: absolute;
+    right: 1rem;
+    top: 50%;
+    transform: translateY(-50%);
+    background: none;
+    border: none;
+    padding: 0;
+    cursor: pointer;
+    color: #94a3b8;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 10;
+    transition: color 0.3s;
+    outline: none;
+}
+
+.withu-private-wrapper .withu-private-eye-btn:hover,
+.withu-private-wrapper .withu-private-eye-btn:focus {
+    color: #1e293b;
+}
+
+.withu-private-wrapper .withu-private-eye-icon {
+    width: 1.125rem;
+    height: 1.125rem;
+}
+
+/* 按钮 */
+.withu-private-wrapper .withu-private-btn {
+    width: 100%;
+    padding: 0.875rem;
+    background-color: #0f172a;
+    /* bg-slate-900 */
+    color: #ffffff;
+    font-size: 0.875rem;
+    font-family: inherit;
+    font-weight: 500;
+    letter-spacing: 0.05em;
+    border-radius: 0.75rem;
+    border: none;
+    cursor: pointer;
+    box-shadow: 0 4px 14px 0 rgba(15, 23, 42, 0.2);
+    transition: all 0.3s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    position: relative;
+    overflow: hidden;
+    outline: none;
+}
+
+.withu-private-wrapper .withu-private-btn:hover {
+    background-color: #1e293b;
+    /* hover:bg-slate-800 */
+    box-shadow: 0 6px 20px rgba(15, 23, 42, 0.25);
+}
+
+.withu-private-wrapper .withu-private-btn:active {
+    transform: scale(0.98);
+}
+
+.withu-private-wrapper .withu-private-btn-text {
+    position: relative;
+    z-index: 10;
+    transition: transform 0.3s;
+}
+
+.withu-private-wrapper .withu-private-btn-icon {
+    width: 1rem;
+    height: 1rem;
+    position: relative;
+    z-index: 10;
+    transition: all 0.3s;
+    opacity: 0.7;
+}
+
+.withu-private-wrapper .withu-private-btn.is-loading {
+    opacity: 0.9;
+    cursor: wait;
+}
+
+.withu-private-wrapper .withu-private-btn:not(.is-loading):hover .withu-private-btn-text {
+    transform: translateX(-2px);
+}
+
+.withu-private-wrapper .withu-private-btn:not(.is-loading):hover .withu-private-btn-icon {
+    opacity: 1;
+    transform: translateX(2px);
+}
+
+.withu-private-wrapper .withu-private-btn-shimmer {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(255, 255, 255, 0.1);
+    transform: skewX(-12deg) translateX(-100%);
+    z-index: 0;
+    pointer-events: none;
+}
+
+.withu-private-wrapper .withu-private-btn:hover .withu-private-btn-shimmer {
+    animation: withu-private-shimmer 1.5s infinite;
+}
+
+/* 按钮状态 - 加载 / 成功 */
+.withu-private-wrapper .withu-private-btn.is-loading {
+    opacity: 0.9;
+    cursor: wait;
+}
+
+.withu-private-wrapper .withu-private-btn.is-unlocking {
+    pointer-events: none;
+}
+
+.withu-private-wrapper .withu-private-btn.is-unlocking::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -60%;
+    width: 60%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.12), rgba(255, 255, 255, 0.3), rgba(255, 255, 255, 0.12), transparent);
+    animation: withu-private-unlockSweep 0.6s ease-in-out forwards;
+    z-index: 5;
+    border-radius: inherit;
+}
+
+.withu-private-wrapper .withu-private-btn.is-success {
+    background: linear-gradient(135deg, #1e293b, #334155);
+    box-shadow: 0 0 20px rgba(148, 163, 184, 0.12), 0 4px 14px rgba(15, 23, 42, 0.15);
+    cursor: default;
+    pointer-events: none;
+}
+
+
+/* 底部头像区域 */
+.withu-private-wrapper .withu-private-avatars {
+    margin-top: 2.5rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+.withu-private-wrapper .withu-private-avatar-item {
+    position: relative;
+    cursor: pointer;
+}
+
+.withu-private-wrapper .withu-private-avatar-img-box {
+    width: 3rem;
+    height: 3rem;
+    border-radius: 9999px;
+    overflow: hidden;
+    border: 1px solid rgba(255, 255, 255, 0.8);
+    box-shadow: 0 0 15px rgba(255, 255, 255, 0.8);
+    transition: all 0.5s;
+}
+
+.withu-private-wrapper .withu-private-avatar-item:hover .withu-private-avatar-img-box {
+    transform: scale(1.05);
+    box-shadow: 0 0 20px rgba(255, 255, 255, 1);
+}
+
+.withu-private-wrapper .withu-private-avatar-img-box img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    user-select: none;
+    pointer-events: none;
+}
+
+.withu-private-wrapper .withu-private-heart {
+    padding: 0 0.75rem;
+    z-index: 10;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.withu-private-glow-dot {
+    display: block;
+    width: 0.5rem;
+    height: 0.5rem;
+    border-radius: 50%;
+    background: rgba(251, 113, 133, 0.9);
+    box-shadow: 0 0 6px 3px rgba(251, 113, 133, 0.4),
+                0 0 16px 6px rgba(251, 113, 133, 0.15);
+    animation: withu-private-glow 2.4s ease-in-out infinite;
+}
+
+@keyframes withu-private-glow {
+    0%, 100% {
+        box-shadow: 0 0 6px 3px rgba(251, 113, 133, 0.4),
+                    0 0 16px 6px rgba(251, 113, 133, 0.15);
+        transform: scale(1);
+    }
+    50% {
+        box-shadow: 0 0 10px 5px rgba(251, 113, 133, 0.55),
+                    0 0 24px 10px rgba(251, 113, 133, 0.25);
+        transform: scale(1.15);
+    }
+}
+
+/* 退场动画：纯 opacity + transform，走 GPU 合成层保证 60fps */
+.withu-private-wrapper.is-exiting .withu-private-main-card {
+    will-change: transform, opacity;
+    animation: withu-private-cardExit 0.8s cubic-bezier(0.22, 1, 0.36, 1) forwards !important;
+}
+
+.withu-private-wrapper.is-exiting .withu-private-bg-img {
+    will-change: transform, opacity;
+    animation: withu-private-bgExit 1.6s cubic-bezier(0.22, 1, 0.36, 1) forwards !important;
+}
+
+.withu-private-wrapper.is-exiting .withu-private-bg-overlay {
+    will-change: opacity;
+    transition: opacity 1.4s cubic-bezier(0.22, 1, 0.36, 1) !important;
+    opacity: 0 !important;
+}
+
+.withu-private-wrapper.is-exiting {
+    will-change: opacity;
+    transition: opacity 0.5s cubic-bezier(0.22, 1, 0.36, 1) 1.2s;
+    opacity: 0;
+}
+
+
+/* Keyframes */
+@keyframes withu-private-fadeInUp {
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes withu-private-pulse-slow {
+    0% {
+        transform: scale(1);
+        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+    }
+
+    100% {
+        transform: scale(1.05);
+        box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+    }
+}
+
+@keyframes withu-private-fadeOutScale {
+    to {
+        opacity: 0;
+        transform: scale(0.9) translateY(20px);
+        filter: blur(10px);
+    }
+}
+
+@keyframes withu-private-shimmer {
+    100% {
+        transform: skewX(-12deg) translateX(200%);
+    }
+}
+
+@keyframes withu-private-pulse {
+
+    0%,
+    100% {
+        opacity: 1;
+    }
+
+    50% {
+        opacity: .5;
+    }
+}
+
+/* shake error */
+.withu-private-wrapper .withu-private-shake {
+    animation: withu-private-headShake 0.5s ease-in-out;
+}
+
+@keyframes withu-private-headShake {
+    0% {
+        transform: translateX(0);
+    }
+
+    6.5% {
+        transform: translateX(-6px) rotateY(-9deg);
+    }
+
+    18.5% {
+        transform: translateX(5px) rotateY(7deg);
+    }
+
+    31.5% {
+        transform: translateX(-3px) rotateY(-5deg);
+    }
+
+    43.5% {
+        transform: translateX(2px) rotateY(3deg);
+    }
+
+    50% {
+        transform: translateX(0);
+    }
+}
+
+/* 转圈动画 */
+.withu-private-spin {
+    animation: withu-private-spin 1s linear infinite !important;
+    transform-origin: center !important;
+    /* 取消过渡防止跟 animation 冲突 */
+    transition: none !important;
+}
+
+@keyframes withu-private-spin {
+    from {
+        transform: rotate(0deg);
+    }
+
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+@keyframes withu-private-unlockSweep {
+    to {
+        left: 140%;
+    }
+}
+
+@keyframes withu-private-cardExit {
+    0% {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+    100% {
+        opacity: 0;
+        transform: translateY(-30px) scale(0.97);
+    }
+}
+
+@keyframes withu-private-bgExit {
+    0% {
+        opacity: 0.85;
+        transform: scale(1.05);
+    }
+    30% {
+        opacity: 1;
+        transform: scale(1.08);
+    }
+    100% {
+        opacity: 0;
+        transform: scale(1.12);
+    }
+}
+
+/*
+ * ===================================================
+ * 加密页面模式：隐藏导航和页脚等全局元素
+ * ===================================================
+ */
+html.withu-private-mode body {
+    overflow: hidden;
+}
+
+html.withu-private-mode .row.central.nav_k,
+html.withu-private-mode #homePage,
+html.withu-private-mode .footer-warp,
+html.withu-private-mode #footer-animal,
+html.withu-private-mode .div_marb_7rem-none,
+html.withu-private-mode .withu-mobile-nav-root,
+html.withu-private-mode #NavBtnList,
+html.withu-private-mode #isAdminIcon,
+html.withu-private-mode #withuFloatingActions,
+html.withu-private-mode .message_btn,
+html.withu-private-mode #scrollTopBtn,
+html.withu-private-mode .bg-wrap,
+html.withu-private-mode #loader-wrapper,
+html.withu-private-mode .Width_limit_10re {
+    display: none !important;
+}
+
+/*
+ * ===================================================
+ * 微信小程序风格胶囊按钮
+ * ===================================================
+ */
+.withu-private-capsule {
+    position: fixed;
+    top: 20px;
+    left: 50%;
+    transform: translateX(-50%) translateY(-10px);
+    z-index: 100;
+    display: flex;
+    align-items: center;
+    background: rgba(0, 0, 0, 0.18);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border-radius: 9999px;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    padding: 4px 6px;
+    gap: 2px;
+    opacity: 0;
+    animation: withu-private-capsuleFadeIn 0.6s 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.withu-private-capsule-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    border-radius: 30px;
+    color: rgba(255, 255, 255, 0.85);
+    text-decoration: none;
+    transition: background 0.2s, color 0.2s, transform 0.15s;
+    cursor: pointer;
+}
+
+.withu-private-capsule-btn:hover {
+    color: #ffffff;
+    background: rgba(255, 255, 255, 0.15);
+}
+
+.withu-private-capsule-btn:active {
+    transform: scale(0.92);
+}
+
+.withu-private-capsule-btn svg {
+    width: 18px;
+    height: 18px;
+}
+
+.withu-private-capsule-divider {
+    width: 1px;
+    height: 16px;
+    background: rgba(255, 255, 255, 0.25);
+    margin: 0 1px;
+}
+
+@keyframes withu-private-capsuleFadeIn {
+    to {
+        opacity: 1;
+        transform: translateX(-50%) translateY(0);
+    }
+}
+
+/*
+ * ===================================================
+ * 背景入场动画增强
+ * ===================================================
+ */
+.withu-private-wrapper .withu-private-bg-img {
+    animation: withu-private-bgEntrance 30s ease-out forwards;
+}
+
+@keyframes withu-private-bgEntrance {
+    0% {
+        transform: scale(1.15);
+        filter: blur(6px);
+        opacity: 0;
+    }
+    8% {
+        opacity: 0.85;
+        filter: blur(3px);
+    }
+    100% {
+        transform: scale(1.05);
+        filter: blur(3px);
+        opacity: 0.85;
+    }
+}
+
+/* 响应式断点 */
+@media (max-width: 768px) {
+    .withu-private-wrapper .withu-private-main-card {
+        margin: 1rem;
+        padding: 2rem 1.5rem;
+    }
+
+    .withu-private-wrapper .withu-private-title {
+        font-size: 1.25rem;
+    }
+
+    .withu-private-capsule {
+        top: 16px;
+    }
+}

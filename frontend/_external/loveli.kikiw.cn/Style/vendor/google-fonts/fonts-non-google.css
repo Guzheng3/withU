@@ -1,0 +1,45 @@
+/* 非 Google Fonts 字体 — cdn 模式下仍需从本地加载 */
+/* 这些字体在 Google Fonts 库中不存在，无论字体加载模式如何都必须本地提供 */
+
+/* HarmonyOS Sans SC - 鸿蒙字体 */
+@font-face {
+  font-family: 'HarmonyOS-Sans';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url('../../Font/HarmonyOS_Sans_SC_Regular.woff2') format('woff2');
+}
+
+@font-face {
+  font-family: 'HarmonyOS-Sans';
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: url('../../Font/HarmonyOS_Sans_SC_Medium.woff2') format('woff2');
+}
+
+@font-face {
+  font-family: 'HarmonyOS-Sans';
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url('../../Font/HarmonyOS_Sans_SC_Bold.woff2') format('woff2');
+}
+
+/* HanYi Cu FangSong Jian - 汉仪粗仿宋简 */
+@font-face {
+  font-family: 'HanYi CuFangSong';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url('../../Font/HanYiCuFangSongJian.ttf') format('truetype');
+}
+
+/* Fira Code - 等宽编程字体（OFL 开源），确保非 macOS 系统也能渲染 */
+@font-face {
+  font-family: 'Fira Code';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url('../../Font/FiraCode-Regular.woff2') format('woff2');
+}

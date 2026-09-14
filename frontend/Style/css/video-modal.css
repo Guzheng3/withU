@@ -1,0 +1,195 @@
+/**
+ * 全局视频弹窗播放器样式
+ *
+ * 两步动画：
+ *   1) .active     → 遮罩淡入 + loading 显示（内容面板仍隐藏）
+ *   2) .vm-show    → 内容面板弹入（此时方向已确定，不会跳）
+ */
+
+/* ── 遮罩层 ── */
+.video-modal {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.75);
+    backdrop-filter: blur(20px) saturate(180%);
+    -webkit-backdrop-filter: blur(20px) saturate(180%);
+    z-index: 99999;
+    opacity: 0;
+    will-change: opacity;
+    transition: opacity .25s ease-out;
+}
+
+.video-modal.active {
+    opacity: 1;
+}
+
+.video-modal.closing {
+    opacity: 0;
+    transition: opacity .2s ease-in;
+}
+
+/* ── Loading（挂在遮罩层，内容面板出现前居中显示） ── */
+.video-modal-loading {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+    color: rgba(255, 255, 255, 0.55);
+    font-size: 13px;
+    z-index: 5;
+    pointer-events: none;
+    transition: opacity .2s ease;
+}
+
+.video-modal-loading.hidden {
+    opacity: 0;
+}
+
+.video-modal-spinner {
+    font-size: 32px;
+    color: rgba(255, 255, 255, 0.7);
+    animation: vmSpin .8s linear infinite;
+}
+
+@keyframes vmSpin {
+    to { transform: rotate(360deg); }
+}
+
+/* ── 内容面板（默认隐藏，.vm-show 后弹入） ── */
+.video-modal-content {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 92%;
+    max-width: 960px;
+    max-height: 90vh;
+    border-radius: 14px;
+    overflow: hidden;
+    background: #000;
+    will-change: transform, opacity;
+    transform: translate(-50%, -50%) scale(0.88);
+    opacity: 0;
+    pointer-events: none;
+    transition: transform .35s cubic-bezier(0.34, 1.56, 0.64, 1),
+                opacity .22s ease-out;
+}
+
+/* 宽高比占位：默认 16:9，JS 通过 --vm-aspect 动态覆盖 */
+.video-modal-content::before {
+    content: '';
+    display: block;
+    padding-top: var(--vm-aspect, 56.25%);
+}
+
+/* 竖屏视频 */
+.video-modal-content.vm-portrait {
+    max-width: 420px;
+}
+
+/* 内容面板弹入（方向已确定后才添加此类） */
+.video-modal-content.vm-show {
+    transform: translate(-50%, -50%) scale(1);
+    opacity: 1;
+    pointer-events: auto;
+}
+
+/* 关闭动画 */
+.video-modal.closing .video-modal-content {
+    transform: translate(-50%, -50%) scale(0.92);
+    opacity: 0;
+    transition: transform .2s ease-in, opacity .2s ease-in;
+}
+
+/* ── 关闭按钮 ── */
+.video-modal-close {
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: rgb(0 0 0 / 36%);
+    backdrop-filter: blur(12px) saturate(180%);
+    -webkit-backdrop-filter: blur(12px) saturate(180%);
+    border: none;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #fff;
+    z-index: 100;
+    transition: background .15s, transform .15s;
+}
+
+.video-modal-close:hover {
+    background: rgb(0 0 0 / 55%);
+    transform: rotate(90deg);
+}
+
+/* ── 播放器填满占位区 ── */
+.video-modal-player {
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+}
+
+.video-modal-player #dplayer,
+.video-modal-player .dplayer {
+    width: 100%;
+    height: 100%;
+}
+
+.video-modal-player .dplayer-video-wrap {
+    height: 100%;
+}
+
+.video-modal-player .dplayer-video-wrap video {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+}
+
+/* ── DPlayer 样式优化 ── */
+.dplayer-notice-list {
+    width: 100%;
+}
+
+.dplayer-notice-list .dplayer-notice {
+    background: rgba(28, 28, 28, 0.57) !important;
+    backdrop-filter: saturate(180%) blur(20px) !important;
+    border-radius: 5px !important;
+}
+
+.dplayer-controller .dplayer-bar-wrap .dplayer-bar .dplayer-played {
+    position: absolute;
+    left: 1px !important;
+    top: 1px !important;
+    height: 6px !important;
+    border-radius: 1rem !important;
+    max-width: calc(100% - 1px);
+}
+
+.dplayer-controller .dplayer-bar-wrap .dplayer-bar {
+    height: 8px !important;
+    border-radius: 1rem !important;
+}
+
+.dplayer-controller .dplayer-bar-wrap .dplayer-bar .dplayer-loaded {
+    left: 1px !important;
+    top: 1px !important;
+    height: 6px !important;
+    border-radius: 1rem !important;
+}
+
+.dplayer-controller .dplayer-bar-wrap .dplayer-bar .dplayer-played .dplayer-thumb {
+    border: 2px solid #fff;
+}
+
+.dplayer-controller .dplayer-bar-wrap {
+    bottom: 40px !important;
+}

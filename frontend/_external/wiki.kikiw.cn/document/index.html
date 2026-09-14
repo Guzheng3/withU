@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no">
+    <meta charset="UTF-8">
+    <title>LG_NewUi — Wiki 使用文档</title>
+    <meta name="keywords" content="LGNeUi,情侣小站,情侣记录,情侣网站,情侣项目,情侣小窝,Love,LikeGirl,Ki,PHP情侣小站,情侣小站使用教程,情侣小站使用文档" />
+    <meta content="Coderthemes" name="Ki" />
+    <link rel="icon" href="favicon.ico" />
+    <link rel="stylesheet" href="resource/css/vue.css">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400&display=swap" rel="stylesheet">
+    <link href="https://fonts.font.im/css?family=Niconne" rel="stylesheet">
+</head>
+
+
+
+<style>
+    ::-webkit-scrollbar-track {
+        background: rgba(135, 135, 135, .1)
+    }
+
+    ::-webkit-scrollbar-thumb {
+        background: rgba(135, 135, 135, .4);
+        border-radius: 10px;
+    }
+
+    ::-webkit-scrollbar-thumb:hover {
+        background: #727272;
+    }
+
+    ::-webkit-scrollbar {
+        width: 8px;
+        height: 8px
+    }
+
+    ::-webkit-scrollbar-corner {
+        background: unset
+    }
+
+    @font-face {
+        font-family: 'SourceCodePro';
+        src: url('./SourceCodePro.woff2') format('woff');
+        font-style: normal;
+    }
+
+    section.cover.show {
+        background: linear-gradient(to left bottom, hsl(110, 100%, 85%) 0%, hsl(37, 100%, 85%) 100%) !important;
+    }
+
+    .docsify-copy-code-button{
+        padding: .3rem .8rem !important;
+    }
+
+    .markdown-section pre {
+        padding: 0 .5rem;
+    }
+
+    .markdown-section pre code {
+        font-family: 'SourceCodePro' !important;
+        padding: 1em .5rem;
+    }
+
+    .cover-main,
+    body {
+        font-family: 'Noto Serif SC', serif !important;
+        font-size: 1rem;
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+    }
+
+    .cover-main img {
+        width: 300px;
+    }
+
+
+    .cover-main .anchor {
+        font-family: 'Niconne', cursive;
+    }
+
+    article#main img {
+        border-radius: 22px;
+        box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
+    }
+
+    .markdown-section ul li {
+        margin: 1rem auto;
+        letter-spacing: 1px;
+    }
+
+    .markdown-section code {
+        font-weight: bold;
+        font-family: 'Noto Serif SC', serif !important;
+    }
+
+    .markdown-section blockquote p {
+        color: #fd7e14 !important;
+        background-color: rgba(253, 126, 20, .1) !important;
+        padding: 15px 20px;
+        border-radius: .25rem;
+    }
+
+    .markdown-section blockquote {
+        padding-left: 0;
+        border-left: 5px solid #fd7e14;
+        border-radius: .25rem;
+        font-size: 16px;
+    }
+
+    .markdown-section p.warn {
+        border-radius: 6px;
+        background: #ff1a391a !important;
+        color: #ff0023 !important;
+        position: relative;
+        padding-left: 1.5rem;
+        font-weight: bold;
+    }
+
+    .markdown-section p.warn::before {
+        content: "";
+        position: absolute;
+        top: 50%;
+        left: 8px;
+        width: 5px;
+        height: 70%;
+        background: #ff6181;
+        box-shadow: 0px 0px 20px #ff002363;
+        border-radius: 1rem;
+        transform: translate(0, -50%);
+    }
+
+    .markdown-section p.warn code {
+        background: #ffffff;
+        border-radius: 5px;
+        color: #1573ff;
+    }
+
+    .docsify-copy-code-button,
+    .markdown-section pre {
+        border-radius: 10px !important;
+    }
+
+    .markdown-section pre>code {
+        color: #878787;
+    }
+
+    details summary {
+        user-select: none;
+        cursor: pointer;
+        background: #f6f6f6;
+        padding: 0.6rem 1rem;
+        border-radius: 10px;
+    }
+
+    .NewVersion {
+        padding: 0 10px;
+        background: #333;
+        color: #fadfa3;
+        display: inline-flex;
+        border-radius: 10px;
+        font-weight: bold;
+    }
+
+    .markdown-section h2 {
+        font-size: 1.5rem;
+    }
+
+    .markdown-section h3 {
+        font-size: 1.2rem;
+    }
+
+    @media (max-width: 600px) {
+        .markdown-section {
+            max-width: 95%;
+        }
+
+        article#main img {
+            border-radius: 8px;
+        }
+
+        .markdown-section blockquote {
+            font-size: .9em;
+        }
+    }
+</style>
+
+<body>
+    <div data-app id="main"></div>
+    <script>
+        window.$docsify = {
+            name: '<span>withU</span>',
+            el: '#main',
+            themeColor: '#03A9F4',
+            topMargin: 20,
+            auto2top: true,
+            loadSidebar: true,
+            subMaxLevel: 3,
+            // loadNavbar: true,
+            search: 'auto',
+            search: {
+                maxAge: 86400000,
+                placeholder: '请输入搜索内容...',
+
+            },
+            coverpage: true,
+            copyCode: {
+                buttonText: 'Copy',
+                errorText: 'Error',
+                successText: 'Copied',
+            },
+            count: {
+                countable: true,
+                fontsize: '0.9em',
+                color: 'rgb(90,90,90)',
+                language: 'chinese'
+            }
+        }
+
+    </script>
+    <script src="resource/js/docsify.min.js"></script>
+    <script src="resource/js/emoji.min.js"></script>
+    <script src="resource/js/prism-bash.min.js"></script>
+    <script src="resource/js/prism-php.min.js"></script>
+    <script src="resource/js/zoom-image.min.js"></script>
+    <script src="resource/js/docsify-copy-code.min.js"></script>
+    <script src="resource/js/countable.js"></script>
+    <script src="resource/js/search.min.js"></script>
+    <script src="//cdn.jsdelivr.net/npm/docsify/lib/plugins/emoji.min.js"></script>
+</body>
+
+</html>
