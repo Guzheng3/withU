@@ -1,0 +1,29 @@
+# 云原生开发环境：一键启动 withU 预览
+# 使用 .ide/Dockerfile 构建环境（PHP + MariaDB），启动时自动拉起站点
+$:
+  vscode:
+    - docker:
+        build: .ide/Dockerfile
+      services:
+        - name: vscode
+          options:
+            keepAliveTimeout: 2h
+      stages:
+        - name: start-withu
+          script: |
+            set -e
+            # MariaDB 初始化与启动（root 运行时需指定 user）
+            mkdir -p /var/run/mysqld && chown -R mysql:mysql /var/run/mysqld
+            [ -d /var/lib/mysql/mysql ] || mariadb-install-db --user=mysql --datadir=/var/lib/mysql >/dev/null 2>&1
+            su mysql -s /bin/bash -c "mariadbd --bind-address=0.0.0.0 --port=3306 --socket=/var/run/mysqld/mysqld.sock" &
+            for i in $(seq 1 40); do (echo >/dev/tcp/127.0.0.1/3306) 2>/dev/null && break; sleep 1; done
+            mysql -u root --socket=/var/run/mysqld/mysqld.sock -e "CREATE USER IF NOT EXISTS 'root'@'127.0.0.1' IDENTIFIED BY ''; GRANT ALL ON *.* TO 'root'@'127.0.0.1' WITH GRANT OPTION; FLUSH PRIVILEGES;" || true
+            # 生成配置并初始化库
+            export MYSQL_PORT=3306
+            export WITHU_PORT=1314
+            bash deploy-local/start-linux.sh || true
+            # 服务需监听 0.0.0.0 以支持端口预览
+            pkill -f "php -S 127.0.0.1:1314" || true
+            nohup php -S 0.0.0.0:1314 -t "$PWD" "$PWD/router.php" >/tmp/withu-preview.log 2>&1 &
+            sleep 2
+            echo "withU preview ready on :1314"
