@@ -1,29 +1,35 @@
 # 云原生开发环境：一键启动 withU 预览
-# 使用 .ide/Dockerfile 构建环境（PHP + MariaDB），启动时自动拉起站点
 $:
   vscode:
-    - docker:
-        build: .ide/Dockerfile
-      services:
+    - services:
         - name: vscode
           options:
             keepAliveTimeout: 2h
       stages:
         - name: start-withu
           script: |
-            set -e
-            # MariaDB 初始化与启动（root 运行时需指定 user）
-            mkdir -p /var/run/mysqld && chown -R mysql:mysql /var/run/mysqld
+            set +e
+            export DEBIAN_FRONTEND=noninteractive
+            # 1) 安装运行时（默认镜像不含 PHP/MariaDB）
+            if ! command -v php >/dev/null 2>&1; then
+              (apt-get update -qq && apt-get install -y -qq php-cli php-mysql php-gd php-curl php-xml php-mbstring php-zip mariadb-server) || \
+              (apt-get update && apt-get install -y php-cli php-mysql php-gd php-curl php-xml php-mbstring mariadb-server)
+            fi
+            command -v php >/dev/null 2>&1 || { echo "PHP install failed"; exit 0; }
+            # 2) 启动 MariaDB
+            mkdir -p /var/run/mysqld && chown -R mysql:mysql /var/run/mysqld 2>/dev/null
             [ -d /var/lib/mysql/mysql ] || mariadb-install-db --user=mysql --datadir=/var/lib/mysql >/dev/null 2>&1
-            su mysql -s /bin/bash -c "mariadbd --bind-address=0.0.0.0 --port=3306 --socket=/var/run/mysqld/mysqld.sock" &
-            for i in $(seq 1 40); do (echo >/dev/tcp/127.0.0.1/3306) 2>/dev/null && break; sleep 1; done
-            mysql -u root --socket=/var/run/mysqld/mysqld.sock -e "CREATE USER IF NOT EXISTS 'root'@'127.0.0.1' IDENTIFIED BY ''; GRANT ALL ON *.* TO 'root'@'127.0.0.1' WITH GRANT OPTION; FLUSH PRIVILEGES;" || true
-            # 生成配置并初始化库
-            export MYSQL_PORT=3306
-            export WITHU_PORT=1314
-            bash deploy-local/start-linux.sh || true
-            # 服务需监听 0.0.0.0 以支持端口预览
-            pkill -f "php -S 127.0.0.1:1314" || true
-            nohup php -S 0.0.0.0:1314 -t "$PWD" "$PWD/router.php" >/tmp/withu-preview.log 2>&1 &
-            sleep 2
-            echo "withU preview ready on :1314"
+            if ! (echo >/dev/tcp/127.0.0.1/3306) 2>/dev/null; then
+              nohup setsid bash -c 'su mysql -s /bin/bash -c "mariadbd --bind-address=0.0.0.0 --port=3306 --socket=/var/run/mysqld/mysqld.sock"' >/tmp/mariadb.log 2>&1 &
+              for i in $(seq 1 40); do (echo >/dev/tcp/127.0.0.1/3306) 2>/dev/null && break; sleep 1; done
+            fi
+            mysql -u root --socket=/var/run/mysqld/mysqld.sock -e "CREATE USER IF NOT EXISTS 'root'@'127.0.0.1' IDENTIFIED BY ''; GRANT ALL ON *.* TO 'root'@'127.0.0.1' WITH GRANT OPTION; FLUSH PRIVILEGES;" 2>/dev/null
+            # 3) 生成配置 + 初始化数据库
+            MYSQL_PORT=3306 WITHU_PORT=1314 bash deploy-local/start-linux.sh
+            # 4) 改监听 0.0.0.0 以支持端口预览
+            pkill -f "php -S 127.0.0.1:1314" 2>/dev/null
+            sleep 1
+            nohup setsid php -S 0.0.0.0:1314 -t "$PWD" "$PWD/router.php" >/tmp/withu-preview.log 2>&1 &
+            sleep 3
+            curl -s -o /dev/null -w "local check http=%{http_code}\n" http://127.0.0.1:1314/ || true
+            echo "withU preview ready on 0.0.0.0:1314"
