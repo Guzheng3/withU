@@ -4,11 +4,34 @@
  * 记录详细访问信息：域名、IP、UA、来源
  */
 header('Content-Type: application/json; charset=utf-8');
-header('Access-Control-Allow-Origin: *');
 header('Access-Control-Allow-Methods: GET, POST, OPTIONS');
 header('Cache-Control: no-store, no-cache, must-revalidate');
 
+// 信标只服务本站页面：仅回显同源 Origin，且拒绝跨站写入。
+// 原先是无条件 `Access-Control-Allow-Origin: *` —— CORS 只挡「读取」不挡「发送」，
+// 光去掉星号并不能阻止别的站点用访客浏览器往 visitor_logs 灌数据，所以这里同时校验来源。
+$withuBeaconOrigin = (string)($_SERVER['HTTP_ORIGIN'] ?? '');
+// HTTP_HOST 带端口（如 127.0.0.1:1314），拿去和 Origin 的 host 比会永远不相等，先剥掉
+$withuBeaconHost   = strtolower((string)preg_replace('/:\d+$/', '', (string)($_SERVER['HTTP_HOST'] ?? '')));
+$withuBeaconSameOrigin = true;
+if ($withuBeaconOrigin !== '') {
+    $withuBeaconOriginHost = parse_url($withuBeaconOrigin, PHP_URL_HOST);
+    $withuBeaconSameOrigin = $withuBeaconOriginHost !== null
+        && $withuBeaconHost !== ''
+        && strcasecmp((string)$withuBeaconOriginHost, $withuBeaconHost) === 0;
+    if ($withuBeaconSameOrigin) {
+        header('Access-Control-Allow-Origin: ' . $withuBeaconOrigin);
+        header('Vary: Origin');
+    }
+}
+
 if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
+    http_response_code(204);
+    exit;
+}
+
+if (!$withuBeaconSameOrigin) {
+    // 跨站来源：不记录、不回显 CORS
     http_response_code(204);
     exit;
 }

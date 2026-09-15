@@ -35,6 +35,15 @@ require_once __DIR__ . '/../core/CzSource.php';
 require_once __DIR__ . '/../core/Database.php';
 require_once __DIR__ . '/../core/CzCatalog.php';
 
+// 鉴权：开关打开后同样只对已登录的情侣账号开放。
+// 这里含 action=collect（写库）与 api=pm3u8/pseg/play（代理播放），
+// 原先仅靠 WITHU_CZ_ENABLED 把关，一旦在 config 里打开就是匿名可用的写入口。
+// 放在开关判断之后：未启用时统一 404，不额外暴露接口是否存在。
+// 注意顺序：Auth 的构造依赖 Database 类，必须排在 Database.php 之后。
+require_once __DIR__ . '/../core/Auth.php';
+require_once __DIR__ . '/../core/withu.php';
+withu_require_couple_user(new Auth());
+
 function cz_json($data, int $code = 200)
 {
     http_response_code($code);

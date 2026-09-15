@@ -216,6 +216,14 @@ if (in_array($path, $privateDataFiles, true)) {
     return true;
 }
 
+// ── services/runtime/：服务端运行时数据（定位快照、天气缓存），一律不可直接下载 ──
+// 定位数据已移出 web 根（backend/app/runtime），这里同时兜住历史遗留文件；
+// 注意 nginx/php-fpm 部署不会经过 router.php，所以不能只靠这一层。
+if (strpos($path, '/services/runtime/') === 0) {
+    withu_router_404($path);
+    return true;
+}
+
 // ── 前台静态资源 ─────────────────────────
 $frontStaticDirs = ['/Style/', '/services/', '/Lovefolder/', '/OwO/', '/assets/', '/favicon.png', '/favicon.ico'];
 foreach ($frontStaticDirs as $dir) {

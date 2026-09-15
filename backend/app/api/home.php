@@ -151,13 +151,17 @@ try {
             ? '加密相册'
             : (string) ($row['name'] ?? '');
 
+        // 加密相册对未登录游客需整体脱敏：display_name 之外，name/description 同样不能漏
+        // （口径与 api/albums.php 的 name/description 处理保持一致）
+        $maskEncrypted = $isEncrypted && !$currentUser;
+
         $albums[] = [
             'id'           => $aid,
-            'name'         => (string) ($row['name'] ?? ''),
+            'name'         => $maskEncrypted ? '加密相册' : (string) ($row['name'] ?? ''),
             'display_name' => $displayName,
             'is_encrypted' => $isEncrypted ? 1 : 0,
             'created_at_text' => formatDate($row['created_at'] ?? date('Y-m-d H:i:s'), 'Y-m-d'),
-            'description'  => (string) ($row['description'] ?? ''),
+            'description'  => $maskEncrypted ? '' : (string) ($row['description'] ?? ''),
             'image_count'  => $imageCount,
             'nickname'     => (string) ($row['nickname'] ?? ''),
             'avatar'       => (string) ($row['avatar'] ?? '/assets/images/default-avatar.svg'),

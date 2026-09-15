@@ -2,8 +2,10 @@
 /**
  * 情侣实时位置信标
  * POST：已登录用户上报高德定位坐标（按账号角色 user1/user2 存储）
- * GET ：读取双方最新上报坐标（公开展示，与首页头像地名一致）
- * 存储：services/runtime/user-geo.json（临时数据，含时间戳，过期自动视为无效）
+ * GET ：读取双方最新上报坐标（仅限已登录的情侣账号）
+ * 存储：backend/app/runtime/user-geo.json
+ *       必须放在 web 根目录之外 —— 该文件是明文精确经纬度快照，
+ *       放进 frontend/services/runtime/ 时可通过 URL 直接下载。
  */
 header('Content-Type: application/json; charset=utf-8');
 header('Cache-Control: no-store, no-cache, must-revalidate');
@@ -16,7 +18,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
 const GEO_MAX_AGE_SEC = 43200; // 12 小时内的上报视为有效
 
 function geoStoreFile() {
-    return __DIR__ . '/runtime/user-geo.json';
+    // web 根之外：backend/app/runtime（/runtime/ 不在 router 的路由表内，任何 web 服务器都取不到）
+    return dirname(__DIR__, 2) . '/backend/app/runtime/user-geo.json';
 }
 
 function geoLoadAll() {
@@ -32,7 +35,7 @@ function geoLoadAll() {
 }
 
 function geoSaveRole($role, $entry) {
-    $dir = __DIR__ . '/runtime';
+    $dir = dirname(geoStoreFile());
     if (!is_dir($dir)) { @mkdir($dir, 0755, true); }
     if (!is_dir($dir)) return false;
     $all = geoLoadAll();
@@ -157,7 +160,13 @@ try {
         exit;
     }
 
-    // GET：返回双方最新位置
+    // GET：返回双方最新位置（精确住址级坐标，仅限已登录的情侣账号）
+    if (!(new Auth())->isLoggedIn()) {
+        http_response_code(401);
+        echo json_encode(['code' => 401, 'message' => 'unauthorized']);
+        exit;
+    }
+
     $all = geoLoadAll();
     echo json_encode([
         'code' => 200,
