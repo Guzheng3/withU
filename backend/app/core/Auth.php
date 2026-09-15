@@ -472,13 +472,32 @@ class Auth
     }
 
     /**
+     * 跳转到登录页，并带上当前地址供登录后回跳
+     * 只接受站内相对路径（GET 请求），避免开放重定向与响应头注入。
+     */
+    private function redirectToLogin(): void
+    {
+        $target = '';
+        if (($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'GET') {
+            $uri = (string) ($_SERVER['REQUEST_URI'] ?? '');
+            if (function_exists('withu_safe_redirect_path')) {
+                $target = withu_safe_redirect_path($uri);
+            } elseif ($uri !== '' && $uri[0] === '/' && strpos($uri, '//') !== 0 && strpbrk($uri, "\r\n") === false) {
+                $target = $uri;
+            }
+        }
+
+        header('Location: /login.php' . ($target !== '' ? '?redirect=' . rawurlencode($target) : ''));
+        exit;
+    }
+
+    /**
      * 需要登录后才能访问的页面调用
      */
     public function requireLogin(): void
     {
         if (!$this->isLoggedIn()) {
-            header('Location: /login.php');
-            exit;
+            $this->redirectToLogin();
         }
     }
 
@@ -495,8 +514,7 @@ class Auth
         }
 
         if (empty($_SESSION['user_id']) || empty($_SESSION['role'])) {
-            header('Location: /login.php');
-            exit;
+            $this->redirectToLogin();
         }
 
         $currentRole = (string) $_SESSION['role'];

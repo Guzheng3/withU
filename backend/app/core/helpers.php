@@ -26,6 +26,22 @@ function redirect($url) {
 }
 
 /**
+ * 校验站内回跳地址（登录 / 登出等场景的 redirect 参数）
+ * 只接受以单个 "/" 开头的站内路径，用于避免开放重定向与响应头注入。
+ * 非法或跨站地址一律返回空串，由调用方回退到默认落地页。
+ */
+function withu_safe_redirect_path($path) {
+    $path = trim((string) $path);
+    if ($path === '' || $path[0] !== '/' || strpos($path, '//') === 0) {
+        return '';
+    }
+    if (strpos($path, '\\') !== false || strpbrk($path, "\r\n") !== false) {
+        return '';
+    }
+    return $path;
+}
+
+/**
  * 输出 JSON 响应并结束脚本
  */
 function jsonResponse($data, $statusCode = 200) {

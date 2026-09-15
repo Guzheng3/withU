@@ -36,8 +36,9 @@
 3. 保存（宝塔会自动 `nginx -t` 校验，报错即语法有问题）
 
 该配置实现了与 `router.php` 等价的路由：
-- `/admin/**`、`/api/**`、`watch*.php`、`player.php` → `backend/app/`
+- `/admin/**`、`/api/**` 与 `login|logout|install|password_reset|events|travel|watch|watch_play|watch_history|player|cz_player`.php → `backend/app/`
 - 其余全部 → `frontend/`
+- `/favicon.ico`、`/robots.txt` 前台优先、回退 `backend/app/`
 - 禁止外部访问 `backend/`、`config/`、`core/`、`deploy/` 等敏感目录
 - 静态资源 30 天缓存；上传目录禁止执行 PHP
 
@@ -112,7 +113,7 @@ bash install-linux.sh
 | 现象 | 处理 |
 | --- | --- |
 | 站点打开 404 / 403 | 检查站点根目录是否指向项目根目录（含 `router.php` 那层），Nginx 配置是否合并完整 |
-| `/watch.php` 打不开 | 确认 Nginx 配置中 `watch|watch_play|watch_history` 的 rewrite 段存在 |
+| `/watch.php`、`/events.php`、`/travel.php` 打不开 | 确认 Nginx 配置中 `login\|logout\|install\|password_reset\|events\|travel\|watch\|watch_play\|watch_history\|player\|cz_player` 的 rewrite 段完整（与 `router.php` 一致） |
 | withUstrm 服务反复重启 | 宝塔「Python 项目管理器」查看日志；检查 `start-*.sh` 的 `exec` 行是否存在 |
 | API Key 无效 | 重新执行 `bash install-linux.sh` 同步 Key 文件，或到管理界面重新生成 |
 | 后台登录页样式丢失 | `/admin-assets/` 别名配置未生效，检查 Nginx 配置 |

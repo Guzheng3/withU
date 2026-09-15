@@ -38,9 +38,6 @@
 | `logout.php` | 登出 |
 | `install.php` | 安装向导（数据库初始化，由 `.installed` + `enable_install.lock` 门控） |
 | `password_reset.php` | 伴侣改密独立落地页（不依赖登录态） |
-| `article.php` | 文章详情页（含评论 / 聊天创作） |
-| `articles.php` | 文章列表页 |
-| `messages.php` | 留言墙页面 |
 | `events.php` | 纪念事件页面 |
 | `travel.php` | 地图足迹 / 天气旅行页面 |
 | `watch.php` | 影视库页面（搜索、筛选、分组、最近播放） |
@@ -48,8 +45,9 @@
 | `watch_play.php` | 网页播放器页（MP4/HLS/withUstrm 源、分集、弹幕、一起看） |
 | `player.php` | 外部链接播放入口（`/player.php?url=...` → 复用 `watch_play.php`） |
 | `cz_player.php` | 旧链接兼容：302 跳转到 `watch_play.php?source=cz` |
-| `404.html` / `favicon.ico` / `robots.txt` | 站点基础文件 |
-| `api-docs.html` | API 接口文档页 |
+| `favicon.ico` / `robots.txt` | 站点基础文件。两套路由均已放行 `/favicon.ico`、`/robots.txt`（前台优先，回退本目录），与 `router.php` 行为一致 |
+
+> 文章列表 / 详情与留言墙由**前台**承载：`frontend/articles.php`、`frontend/page.php`、`frontend/messages.php`。`/articles.php`、`/messages.php` 由路由指向前台，`backend/app/` 下的同名旧页面因被遮蔽而不可达（已删除）。
 
 ### 2.2 后台管理 `backend/app/admin/`（移动端优先）
 
@@ -166,7 +164,7 @@
 - 引入方式：在**原位置**替换为 `<link rel="stylesheet" href="/assets/css/...">` 或 `<script src="/assets/js/..."></script>`，执行顺序与原来完全一致（无 defer/async 改动）。
 - 不抽取的情况：块内含 `<?php`（如 `WITHU_CONFIG` 注入）、原本就带 `src`、非 JS 的 `type`、CSS 含相对 `url()`（如 `index.php` 的 4097 B 块引用 `Style/cur/hover.cur`）、JS 含相对 URL 引用。这些仍留在页面内联。
 - 维护约定：**不要**再把大段样式/脚本写回页面；新增页面级样式直接放 `frontend/assets/css/page-<页面>.css` 并引用即可（手工文件不必带 hash）。
-- 后端页面（`article.php`、`watch_history.php`、`watch_play.php` 等）仍有内联块，其中 `watch_play.php` 的样式/脚本内含 PHP 插值，需人工拆分，暂未处理。
+- 后端页面（`watch_history.php`、`watch_play.php`、`events.php`、`travel.php` 等）仍有内联块，其中 `watch_play.php` 的样式/脚本内含 PHP 插值，需人工拆分，暂未处理。
 
 ### 3.4 其它目录
 
@@ -259,3 +257,8 @@
 | 文档修正 | `README.md`、`docs/source-structure.md`、`deploy-local/README.md` | 运行时配置在 `backend/app/config/`（根 `config/` 仅为母本）；补充两套本地栈的端口差异与排障 |
 | `.gitignore` 清理 | `.gitignore` | 删除已不存在的 `backend/strm/**` 规则，修复乱码注释，统一换行符 |
 | 课表看板改版 + JSON 导入 | `backend/app/admin/timetable_settings.php` | 看板卡片重排（头像 + 状态徽标头部、6 格统计条、技术字段降级为次要信息、更清晰的空状态）；新增「导入课表 JSON」卡片（跨整行、目标账号切换、粘贴或选择 `.json` 文件、本地实时解析预览、CSRF 校验、2 MB 上限、覆盖前旧内容自动写入 `timetable_history`）。哈希算法与历史保留逻辑与 `api/timetable.php` 的 `action=save` 完全一致，导入结果 App 侧可读、可回滚 |
+| 前后台链接修复 | `admin/strm_settings.php`、`deploy/baota-nginx-withu.conf`、`frontend/inc/header.php`、`router.php` | ① 后台「withUstrm 媒体库」对接说明里的「媒体库浏览」原指向不存在的 `/admin/media_library.php`，改为前台 `/watch.php`；② Nginx rewrite 补齐 `password_reset`/`events`/`travel`（此前仅 `router.php` 可达，宝塔部署下后台「地图与足迹」跳前台地图、纪念事件页、伴侣改密链接全部 404），并移除已无对应页面的 `imglist`；③ 前台公共头里重复出现的「移动端更多面板」整块删除，消除 5 组重复 `id`，恢复被遮蔽的观影/管理/登录入口 |
+| 登录回跳 | `backend/app/core/helpers.php`、`core/Auth.php`、`login.php` | 新增 `withu_safe_redirect_path()`（只放行以单个 `/` 开头的站内路径，拒绝 `//host`、反斜杠与 CR/LF）；未登录访问受保护页时跳转 `/login.php?redirect=…`，登录 / 注册成功后回跳原目标页（此前固定回首页，从首页点「管理」需登录两次） |
+| 死页面清理 | `backend/app/article.php`、`articles.php`、`messages.php` | 三者在两套路由下均不可达：`/articles.php`、`/messages.php` 由路由交给前台同名页面（`backend/app/` 版本被遮蔽），`/article.php` 无任何路由入口。删除前已确认无 include/require 引用、其内部函数（`resolve_avatar_url` 等）也仅自用；`views/` 仍由可达的 `events.php` 使用，保留 |
+| 静态残留清理 | `backend/app/404.html`、`api-docs.html`、`stuck_view.png` | 三者均无路由入口且全仓库零引用：`router.php` 自带内联 404 页、Nginx 配置无 `error_page`；`/api-docs.html` 不匹配 `/api/` 前缀故落到前台 → 404；`stuck_view.png` 无任何引用（含 CSS）。连同已删除的前台注释（`frontend/Style/css/photo.css` 中的 `imglist.php`）一并清理 |
+| 站点基础文件放行 | `router.php`、`deploy/baota-nginx-withu.conf` | `/favicon.ico` 与 `/robots.txt` 此前无路由（前台也无同名文件），实际访问均为 404。现两套路由都放行这两个路径（前台优先，回退 `backend/app/`）；`router.php` 侧为它们单独登记**单文件白名单**（`withu_static_files()`），避免为此把整个 `backend/app/` 开放为可读目录 |

@@ -12,9 +12,13 @@ require_once __DIR__ . '/core/helpers.php';
 $auth = new Auth();
 $db   = Database::getInstance();
 
-// 已登录则直接回到首页
+// 登录后回跳目标：由未登录访问受保护页面时携带（如 /admin/），非法地址一律忽略
+$redirectTo = withu_safe_redirect_path($_GET['redirect'] ?? $_POST['redirect'] ?? '');
+$loginLanding = $redirectTo !== '' ? $redirectTo : '/';
+
+// 已登录则直接回到目标页（默认首页）
 if ($auth->isLoggedIn()) {
-    redirect('/');
+    redirect($loginLanding);
 }
 
 $error   = '';
@@ -61,8 +65,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $error = '请输入用户名和密码';
             } else {
                 if ($auth->login($username, $password)) {
-                    // 登录成功后直接重定向到首页，防止刷新重复提交
-                    redirect('/');
+                    // 登录成功后重定向回来源页（默认首页），防止刷新重复提交
+                    redirect($loginLanding);
                 } else {
                     // 统一错误提示，避免暴露具体原因
                     $error = '用户名或密码错误，或尝试次数过多，请稍后再试';
@@ -129,7 +133,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                                 ], 'id = :id AND status = \'pending\'', ['id' => (int)$inviteRow['id']]);
                             } catch (Throwable $e) { /* 注册成功不因邀请状态写入失败而回滚 */ }
                         }
-                        header('Location: /login.php?success=register');
+                        header('Location: /login.php?success=register' . ($redirectTo !== '' ? '&redirect=' . rawurlencode($redirectTo) : ''));
                         exit;
                     } else {
                         $error = $result['message'] ?? '注册失败，请稍后重试';
@@ -239,6 +243,7 @@ body{background:linear-gradient(135deg,#ffeef5 0%,#f4f6fb 60%,#eef2ff 100%);
     <form method="POST" action="/login.php" id="loginForm" style="display:<?php echo $activeTab === 'login' ? 'block' : 'none'; ?>;">
       <?php echo csrf_field(); ?>
       <input type="hidden" name="action" value="login">
+      <input type="hidden" name="redirect" value="<?php echo e($redirectTo); ?>">
 
       <div class="form-group">
         <label><i class="fas fa-user"></i> 用户名</label>
@@ -258,6 +263,7 @@ body{background:linear-gradient(135deg,#ffeef5 0%,#f4f6fb 60%,#eef2ff 100%);
       <?php echo csrf_field(); ?>
       <input type="hidden" name="action" value="register">
       <input type="hidden" name="invite_token" value="<?php echo e($inviteToken); ?>">
+      <input type="hidden" name="redirect" value="<?php echo e($redirectTo); ?>">
 
       <div class="form-group">
         <label><i class="fas fa-user"></i> 用户名</label>

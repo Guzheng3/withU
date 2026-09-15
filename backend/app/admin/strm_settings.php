@@ -203,7 +203,7 @@ include __DIR__ . '/header.php';
             <li>确认 withUstrm 服务已在运行（Spring Boot 后端默认监听 <code>127.0.0.1:8081</code>）。</li>
             <li>在 withUstrm 管理界面启用<strong>外部媒体库接口</strong>并复制生成的 API Key。</li>
             <li>在这里填入服务地址与 Key，点击「测试连接」看到媒体计数后再保存。</li>
-            <li>保存成功后前往<a href="/admin/media_library.php" style="color:var(--v3-pink,#f26d9c);">「媒体库浏览」</a>查看电影、剧集与动漫。</li>
+            <li>保存成功后前往前台<a href="/watch.php" style="color:var(--v3-pink,#f26d9c);">「影视库」</a>查看电影、剧集与动漫。</li>
         </ol>
         <p style="margin:.4rem 0 0;font-size:.78rem;line-height:1.7;color:var(--text-light);">
             安全说明：API Key 仅保存在主站数据库的服务器端；媒体库页面与播放地址解析都要求先登录情侣账号，未登录无法访问。withUstrm 的其他管理接口不受影响。
