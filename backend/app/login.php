@@ -34,7 +34,9 @@ if ($inviteToken !== '') {
         );
     } catch (Throwable $e) { $inviteRow = null; }
 }
-$registerEnabled = ($activeUserCount === 0) || ($activeUserCount === 1 && $inviteRow);
+$needsSetup      = ($activeUserCount === 0);               // 首次部署：还没有任何账号
+$isInvited       = ($activeUserCount === 1 && $inviteRow); // 已有 1 个账号且带有效邀请链接
+$registerEnabled = $needsSetup || $isInvited;
 
 // 重定向后的成功提示
 if (isset($_GET['success']) && $_GET['success'] === 'register') {
@@ -143,7 +145,15 @@ $oldLoginName = $lastAction === 'login' ? trim((string) ($_POST['username'] ?? '
 $oldUsername  = $lastAction === 'register' ? trim((string) ($_POST['username'] ?? '')) : '';
 $oldQq        = $lastAction === 'register' ? trim((string) ($_POST['qq'] ?? '')) : '';
 $oldNickname  = $lastAction === 'register' ? trim((string) ($_POST['nickname'] ?? '')) : '';
-$activeTab    = ($lastAction === 'register' && $error !== '') ? 'register' : 'login';
+// 默认落在哪个表单：首装（还没账号）或凭邀请注册时直接显示注册，其余只显示登录。
+// 提交失败时停留在出错的那个表单，不把用户甩到另一个 tab。
+if ($lastAction === 'register' && $error !== '') {
+    $activeTab = 'register';
+} elseif ($lastAction === 'login' && $error !== '') {
+    $activeTab = 'login';
+} else {
+    $activeTab = $registerEnabled ? 'register' : 'login';
+}
 
 $themeConfig = withu_theme_config();
 $themeInlineStyle = '';
@@ -154,7 +164,7 @@ foreach (($themeConfig['colors'] ?? []) as $themeName => $themeValue) $themeInli
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>登录 - <?php echo e(SITE_NAME); ?></title>
+<title><?php echo $activeTab === 'register' ? '注册' : '登录'; ?> - <?php echo e(SITE_NAME); ?></title>
 <link rel="stylesheet" href="/admin-assets/vendor/fontawesome/css/all.min.css">
 <style>
 :root{--brand:#e75480;--brand-dark:#c23b64;}
@@ -206,7 +216,7 @@ body{background:linear-gradient(135deg,#ffeef5 0%,#f4f6fb 60%,#eef2ff 100%);
 <div class="login-card">
   <div class="login-head">
     <h3>💗 withU</h3>
-    <p id="authSubtitle">登录你的账号，记录你们的点点滴滴</p>
+    <p id="authSubtitle"><?php echo $activeTab === 'register' ? '创建你们的账号，开启情侣空间' : '登录你的账号，记录你们的点点滴滴'; ?></p>
   </div>
   <div class="login-body">
 
@@ -218,7 +228,7 @@ body{background:linear-gradient(135deg,#ffeef5 0%,#f4f6fb 60%,#eef2ff 100%);
     <div class="login-success"><i class="fas fa-check-circle"></i> <?php echo e($success); ?></div>
     <?php endif; ?>
 
-    <?php if ($registerEnabled): ?>
+    <?php if ($registerEnabled && !$needsSetup): ?>
     <div class="auth-tabs" role="tablist">
       <button type="button" class="tab-btn<?php echo $activeTab === 'login' ? ' active' : ''; ?>" data-tab="login" onclick="toggleForm('login')">登 录</button>
       <button type="button" class="tab-btn<?php echo $activeTab === 'register' ? ' active' : ''; ?>" data-tab="register" onclick="toggleForm('register')">注 册</button>
