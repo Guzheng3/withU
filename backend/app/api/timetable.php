@@ -154,10 +154,10 @@ function timetable_capture_history(
         'SELECT id FROM timetable_history
          WHERE user_id = :user_id
          ORDER BY id DESC
-         LIMIT 13',
+         LIMIT ' . withu_timetable_history_limit(),
         ['user_id' => $userId]
     );
-    if (count($rows) < 13) {
+    if (count($rows) < withu_timetable_history_limit()) {
         return;
     }
 
@@ -181,13 +181,13 @@ function timetable_history_respond(Auth $auth, Database $db): void {
              FROM timetable_history
              WHERE user_id = :user_id
              ORDER BY id DESC
-             LIMIT 13',
+             LIMIT ' . withu_timetable_history_limit(),
             ['user_id' => (int)$user['id']]
         ) : [];
 
         withu_json_response([
             'success' => true,
-            'max_entries' => 13,
+            'max_entries' => withu_timetable_history_limit(),
             'history' => array_map(
                 function (array $row): array {
                     return [

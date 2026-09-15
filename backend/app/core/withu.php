@@ -68,6 +68,16 @@ if (!function_exists('withu_hash_token')) {
     function withu_hash_token(string $token): string { return hash('sha256', $token); }
 }
 
+if (!function_exists('withu_timetable_history_limit')) {
+    /**
+     * 每个账号保留的历史课表条数上限。
+     *
+     * 写入（capture）、裁剪、列表查询与响应里的 max_entries 必须同源，
+     * 否则会出现「列表返回的条数与实际保留的不一致」。
+     */
+    function withu_timetable_history_limit(): int { return 13; }
+}
+
 if (!function_exists('withu_watch_history_min_ms')) {
     function withu_watch_history_min_ms(): int {
         $seconds = (int)get_setting('watch_history_min_sec', '15');

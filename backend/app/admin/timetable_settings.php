@@ -95,10 +95,10 @@ function withu_tt_capture_history(Database $db, int $userId, ?array $currentRow,
         'SELECT id FROM timetable_history
          WHERE user_id = :user_id
          ORDER BY id DESC
-         LIMIT 13',
+         LIMIT ' . withu_timetable_history_limit(),
         ['user_id' => $userId]
     );
-    if (count($rows) < 13) {
+    if (count($rows) < withu_timetable_history_limit()) {
         return;
     }
     $oldestKeptId = min(array_map('intval', array_column($rows, 'id')));
