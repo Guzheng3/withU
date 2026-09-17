@@ -46,6 +46,358 @@ function withu_remote_update_max_upload_bytes(): int {
     return max(1, min($maxBytes, 2 * 1024 * 1024 * 1024));
 }
 
+/** 版本号归一化：`v5.2.0-6+136` 与 `5.2.0.6` 视为同一版本（与 app 侧 RELEASE.md 约定一致）。 */
+function withu_remote_update_normalize_version(string $version): string {
+    $value = strtolower(trim($version));
+    if ($value !== '' && $value[0] === 'v') {
+        $value = substr($value, 1);
+    }
+    $value = explode('+', $value)[0];
+    if (preg_match('/^(\d+(?:\.\d+)*)-(\d+)$/', $value, $matches)) {
+        $value = $matches[1] . '.' . $matches[2];
+    }
+    return $value;
+}
+
+/** 外链安装包下载上限：超过即拒绝，避免填错链接时把服务器磁盘写满。 */
+function withu_remote_update_max_link_bytes(): int {
+    return 512 * 1024 * 1024;
+}
+
+/** 下载外链安装包到临时文件；返回空字符串表示成功，否则返回错误文案。 */
+function withu_remote_update_fetch_apk(string $url, string $destPath): string {
+    if (!function_exists('curl_init')) {
+        return '服务器缺少 cURL 扩展，无法校验外链安装包。';
+    }
+
+    $handle = @fopen($destPath, 'wb');
+    if ($handle === false) {
+        return '无法创建临时文件以校验外链安装包。';
+    }
+
+    $maxBytes = withu_remote_update_max_link_bytes();
+    $received = 0;
+    $tooLarge = false;
+    $curl = curl_init($url);
+    curl_setopt_array($curl, [
+        CURLOPT_FOLLOWLOCATION => true,
+        CURLOPT_MAXREDIRS => 5,
+        CURLOPT_CONNECTTIMEOUT => 15,
+        CURLOPT_TIMEOUT => 300,
+        CURLOPT_USERAGENT => 'withu-release-verifier',
+        CURLOPT_WRITEFUNCTION => function ($curlHandle, $chunk) use ($handle, &$received, $maxBytes, &$tooLarge) {
+            $received += strlen($chunk);
+            if ($received > $maxBytes) {
+                $tooLarge = true;
+                return 0;
+            }
+            return fwrite($handle, $chunk);
+        },
+    ]);
+    $executed = curl_exec($curl);
+    $status = (int)curl_getinfo($curl, CURLINFO_RESPONSE_CODE);
+    $transportError = curl_error($curl);
+    curl_close($curl);
+    fclose($handle);
+
+    if ($tooLarge) {
+        @unlink($destPath);
+        return '外链安装包超过 ' . withu_remote_update_format_bytes($maxBytes) . '，拒绝校验。';
+    }
+    if ($executed === false || $status !== 200) {
+        @unlink($destPath);
+        $reason = $transportError !== '' ? $transportError : ('HTTP ' . $status);
+        return '无法下载外链安装包（' . $reason . '），请确认链接可直连且未过期。';
+    }
+    return '';
+}
+
+/** 读取二进制字符串池中的长度前缀（UTF-8 池为 1~2 字节，UTF-16 池为 1~2 个 16 位字）。 */
+function withu_remote_update_read_pool_length(string $data, int &$position, int $limit, bool $utf8): ?int {
+    if ($utf8) {
+        if ($position >= $limit) {
+            return null;
+        }
+        $first = ord($data[$position]);
+        $position++;
+        if (($first & 0x80) !== 0) {
+            if ($position >= $limit) {
+                return null;
+            }
+            $second = ord($data[$position]);
+            $position++;
+            return (($first & 0x7F) << 8) | $second;
+        }
+        return $first;
+    }
+
+    if ($position + 2 > $limit) {
+        return null;
+    }
+    $first = unpack('v', substr($data, $position, 2))[1];
+    $position += 2;
+    if (($first & 0x8000) !== 0) {
+        if ($position + 2 > $limit) {
+            return null;
+        }
+        $second = unpack('v', substr($data, $position, 2))[1];
+        $position += 2;
+        return (($first & 0x7FFF) << 16) | $second;
+    }
+    return $first;
+}
+
+/** 解析 AXML 字符串池，返回「下标 => 字符串」。 */
+function withu_remote_update_parse_string_pool(string $data, int $chunkStart, int $headerSize, int $chunkSize): ?array {
+    $limit = $chunkStart + $chunkSize;
+    if ($chunkStart + $headerSize + 20 > strlen($data)) {
+        return null;
+    }
+    $stringCount = unpack('V', substr($data, $chunkStart + 8, 4))[1];
+    $flags = unpack('V', substr($data, $chunkStart + 16, 4))[1];
+    $stringsStart = unpack('V', substr($data, $chunkStart + 20, 4))[1];
+    $utf8 = ($flags & 0x0100) !== 0;
+    $offsetsBase = $chunkStart + $headerSize;
+    $dataBase = $chunkStart + $stringsStart;
+
+    $strings = [];
+    for ($index = 0; $index < $stringCount; $index++) {
+        $offsetPosition = $offsetsBase + $index * 4;
+        if ($offsetPosition + 4 > $limit || $offsetPosition + 4 > strlen($data)) {
+            return null;
+        }
+        $position = $dataBase + unpack('V', substr($data, $offsetPosition, 4))[1];
+        if ($position < 0 || $position > $limit) {
+            return null;
+        }
+        if ($utf8) {
+            // UTF-8 池：先 utf16 长度，再 utf8 字节长度
+            if (withu_remote_update_read_pool_length($data, $position, $limit, true) === null) {
+                return null;
+            }
+            $byteLength = withu_remote_update_read_pool_length($data, $position, $limit, true);
+            if ($byteLength === null || $position + $byteLength > $limit) {
+                return null;
+            }
+            $strings[$index] = substr($data, $position, $byteLength);
+        } else {
+            $charLength = withu_remote_update_read_pool_length($data, $position, $limit, false);
+            if ($charLength === null || $position + $charLength * 2 > $limit) {
+                return null;
+            }
+            $strings[$index] = mb_convert_encoding(substr($data, $position, $charLength * 2), 'UTF-8', 'UTF-16LE');
+        }
+    }
+    return $strings;
+}
+
+/**
+ * 读取 APK 内 AndroidManifest.xml 的 versionName / versionCode。
+ *
+ * 发布页必须核对「填写的版本号 == 包内真实 versionName」，而 PHP 主机上一般没有 aapt，
+ * 所以这里直接解析二进制的 AXML 分块结构（本函数只依赖 zlib/标准库，见调用方对 ZipArchive 的检查）。
+ */
+function withu_remote_update_parse_axml_manifest(string $data): ?array {
+    $length = strlen($data);
+    if ($length < 8 || unpack('v', substr($data, 0, 2))[1] !== 0x0003) {
+        return null;
+    }
+
+    $strings = null;
+    $offset = 8;
+    while ($offset + 8 <= $length) {
+        $chunkType = unpack('v', substr($data, $offset, 2))[1];
+        $headerSize = unpack('v', substr($data, $offset + 2, 2))[1];
+        $chunkSize = unpack('V', substr($data, $offset + 4, 4))[1];
+        if ($chunkSize < 8 || $offset + $chunkSize > $length) {
+            return null;
+        }
+
+        if ($chunkType === 0x0001) {
+            $strings = withu_remote_update_parse_string_pool($data, $offset, $headerSize, $chunkSize);
+            if ($strings === null) {
+                return null;
+            }
+        } elseif ($chunkType === 0x0102 && is_array($strings)) {
+            $info = withu_remote_update_parse_manifest_start_element($data, $offset, $headerSize, $strings);
+            if ($info !== null) {
+                return $info;
+            }
+        }
+        $offset += $chunkSize;
+    }
+    return null;
+}
+
+/** 从 START_ELEMENT 分块中取出 <manifest> 的 versionName / versionCode。 */
+function withu_remote_update_parse_manifest_start_element(string $data, int $chunkStart, int $headerSize, array $strings): ?array {
+    $body = $chunkStart + $headerSize;
+    if ($body + 20 > strlen($data)) {
+        return null;
+    }
+    $nameIndex = unpack('V', substr($data, $body + 4, 4))[1];
+    if (($strings[$nameIndex] ?? null) !== 'manifest') {
+        return null;
+    }
+    $attributeStart = unpack('v', substr($data, $body + 8, 2))[1];
+    $attributeSize = unpack('v', substr($data, $body + 10, 2))[1];
+    $attributeCount = unpack('v', substr($data, $body + 12, 2))[1];
+
+    $result = ['versionName' => null, 'versionCode' => null];
+    for ($index = 0; $index < $attributeCount; $index++) {
+        $position = $body + $attributeStart + $index * $attributeSize;
+        if ($position + 20 > strlen($data)) {
+            return null;
+        }
+        $attributeNameIndex = unpack('V', substr($data, $position + 4, 4))[1];
+        $rawValueIndex = unpack('V', substr($data, $position + 8, 4))[1];
+        $valueType = ord($data[$position + 15]);
+        $valueData = unpack('V', substr($data, $position + 16, 4))[1];
+        $attributeName = $strings[$attributeNameIndex] ?? '';
+
+        if ($attributeName === 'versionName') {
+            if ($rawValueIndex !== 0xFFFFFFFF) {
+                $result['versionName'] = $strings[$rawValueIndex] ?? null;
+            } elseif ($valueType === 0x03) {
+                $result['versionName'] = $strings[$valueData] ?? null;
+            }
+        } elseif ($attributeName === 'versionCode') {
+            $result['versionCode'] = $valueType === 0x10
+                ? $valueData
+                : (int)($strings[$valueData] ?? 0);
+        }
+    }
+    return $result;
+}
+
+/** 从文件流里精确读取 N 字节；不足返回 null。 */
+function withu_remote_update_read_exact($handle, int $bytes): ?string {
+    $buffer = '';
+    while (strlen($buffer) < $bytes) {
+        $chunk = fread($handle, $bytes - strlen($buffer));
+        if ($chunk === false || $chunk === '') {
+            return null;
+        }
+        $buffer .= $chunk;
+    }
+    return $buffer;
+}
+
+/**
+ * 不依赖 php-zip 的 ZIP 条目读取：走中央目录定位，再用 gzinflate 解压。
+ * 发布机常常只装了 zlib 而没装 php-zip，缺了它整套校验就会把发布堵死。
+ */
+function withu_remote_update_read_zip_entry(string $apkPath, string $entryName): ?string {
+    if (!function_exists('gzinflate')) {
+        return null;
+    }
+    $handle = @fopen($apkPath, 'rb');
+    if ($handle === false) {
+        return null;
+    }
+    $size = (int)filesize($apkPath);
+    $result = null;
+    $tailLength = (int)min($size, 65557);
+    $tail = $tailLength > 0 ? (fseek($handle, $size - $tailLength) === 0 ? fread($handle, $tailLength) : false) : false;
+    $eocd = is_string($tail) ? strrpos($tail, "PK\x05\x06") : false;
+    if ($eocd !== false) {
+        $entryCount = unpack('v', substr($tail, $eocd + 10, 2))[1];
+        $centralOffset = unpack('V', substr($tail, $eocd + 16, 4))[1];
+        if (fseek($handle, $centralOffset) === 0) {
+            for ($index = 0; $index < $entryCount; $index++) {
+                $header = withu_remote_update_read_exact($handle, 46);
+                if ($header === null || substr($header, 0, 4) !== "PK\x01\x02") {
+                    break;
+                }
+                $method = unpack('v', substr($header, 10, 2))[1];
+                $compressedSize = unpack('V', substr($header, 20, 4))[1];
+                $nameLength = unpack('v', substr($header, 28, 2))[1];
+                $extraLength = unpack('v', substr($header, 30, 2))[1];
+                $commentLength = unpack('v', substr($header, 32, 2))[1];
+                $localOffset = unpack('V', substr($header, 42, 4))[1];
+                $name = $nameLength > 0 ? (string)withu_remote_update_read_exact($handle, $nameLength) : '';
+                if ($extraLength + $commentLength > 0) {
+                    fseek($handle, $extraLength + $commentLength, SEEK_CUR);
+                }
+                if ($name !== $entryName) {
+                    continue;
+                }
+
+                $localHeader = fseek($handle, $localOffset) === 0
+                    ? withu_remote_update_read_exact($handle, 30)
+                    : null;
+                if ($localHeader === null || substr($localHeader, 0, 4) !== "PK\x03\x04") {
+                    break;
+                }
+                $localNameLength = unpack('v', substr($localHeader, 26, 2))[1];
+                $localExtraLength = unpack('v', substr($localHeader, 28, 2))[1];
+                $dataOffset = $localOffset + 30 + $localNameLength + $localExtraLength;
+                if ($compressedSize <= 0 || $dataOffset + $compressedSize > $size) {
+                    break;
+                }
+                $payload = fseek($handle, $dataOffset) === 0
+                    ? withu_remote_update_read_exact($handle, $compressedSize)
+                    : null;
+                if ($payload === null) {
+                    break;
+                }
+                if ($method === 0) {
+                    $result = $payload;
+                } elseif ($method === 8) {
+                    $inflated = @gzinflate($payload);
+                    $result = is_string($inflated) ? $inflated : null;
+                }
+                break;
+            }
+        }
+    }
+    fclose($handle);
+    return $result;
+}
+
+/** 取出 APK 内的二进制 AndroidManifest.xml。 */
+function withu_remote_update_read_apk_manifest(string $apkPath): ?string {
+    if (class_exists('ZipArchive')) {
+        $zip = new ZipArchive();
+        if ($zip->open($apkPath) === true) {
+            $manifest = $zip->getFromName('AndroidManifest.xml');
+            $zip->close();
+            if (is_string($manifest) && $manifest !== '') {
+                return $manifest;
+            }
+        }
+    }
+    return withu_remote_update_read_zip_entry($apkPath, 'AndroidManifest.xml');
+}
+
+/** 从 APK 中读取 versionName / versionCode；读不到返回 null。 */
+function withu_remote_update_apk_manifest_info(string $apkPath): ?array {
+    $manifest = withu_remote_update_read_apk_manifest($apkPath);
+    if (!is_string($manifest) || $manifest === '') {
+        return null;
+    }
+    return withu_remote_update_parse_axml_manifest($manifest);
+}
+
+/**
+ * 核对安装包内的 versionName 与填写的版本号是否一致。
+ * 返回空字符串表示一致，否则返回错误文案。
+ */
+function withu_remote_update_verify_apk_version(string $apkPath, string $version): string {
+    $info = withu_remote_update_apk_manifest_info($apkPath);
+    if ($info === null || $info['versionName'] === null) {
+        return '无法从安装包内读取 versionName，拒绝发布以免版本号填错（请确认服务器已启用 zlib/gzinflate）。';
+    }
+
+    $declared = withu_remote_update_normalize_version((string)$info['versionName']);
+    $entered = withu_remote_update_normalize_version($version);
+    if ($declared !== $entered) {
+        return '填写的版本号 ' . $version . ' 与安装包内的 versionName '
+            . (string)$info['versionName'] . ' 不一致，请核对后再发布。';
+    }
+    return '';
+}
+
 function withu_remote_update_source_label(?array $row): string {
     $apkUrl = trim((string)($row['apk_url'] ?? ''));
     return preg_match('#^https?://#i', $apkUrl) ? '外部链接' : '本地上传';
@@ -198,9 +550,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                             $savedLocalPath = '';
                             $error = '无法计算 APK 的 SHA-256，请重新上传。';
                         } else {
-                            $apkUrl = 'updates/' . $filename;
-                            $sha256 = strtolower($computedSha256);
-                            $sizeBytes = (int)filesize($savedLocalPath);
+                            // 版本号必须等于包内真实 versionName，否则客户端会把错的版本号当更新提示。
+                            $versionMismatch = withu_remote_update_verify_apk_version($savedLocalPath, $version);
+                            if ($versionMismatch !== '') {
+                                @unlink($savedLocalPath);
+                                $savedLocalPath = '';
+                                $error = $versionMismatch;
+                            } else {
+                                $apkUrl = 'updates/' . $filename;
+                                $sha256 = strtolower($computedSha256);
+                                $sizeBytes = (int)filesize($savedLocalPath);
+                            }
                         }
                     }
                 }
@@ -217,8 +577,33 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             } elseif (!preg_match('/^[a-f0-9]{64}$/', $apkSha256)) {
                 $error = '外部链接必须填写 64 位小写 SHA-256 摘要。';
             } else {
-                $apkUrl = $apkLink;
-                $sha256 = $apkSha256;
+                // 外链模式过去只校验摘要格式，填的摘要与链接里的文件可以完全无关，
+                // 于是「版本号 / 摘要 / 文件」不一致也能发布出去。这里实际下载并逐项核对。
+                $tempApkPath = tempnam(sys_get_temp_dir(), 'withu-apk-');
+                if ($tempApkPath === false) {
+                    $error = '无法创建临时文件以校验外链安装包。';
+                } else {
+                    $fetchError = withu_remote_update_fetch_apk($apkLink, $tempApkPath);
+                    if ($fetchError !== '') {
+                        $error = $fetchError;
+                    } else {
+                        $actualSha256 = @hash_file('sha256', $tempApkPath);
+                        if (!is_string($actualSha256) || !hash_equals($apkSha256, strtolower($actualSha256))) {
+                            $error = '外链安装包的 SHA-256 与填写值不一致，拒绝发布（实际为 '
+                                . (is_string($actualSha256) ? strtolower($actualSha256) : '无法计算') . '）。';
+                        } else {
+                            $versionMismatch = withu_remote_update_verify_apk_version($tempApkPath, $version);
+                            if ($versionMismatch !== '') {
+                                $error = $versionMismatch;
+                            } else {
+                                $apkUrl = $apkLink;
+                                $sha256 = $apkSha256;
+                                $sizeBytes = (int)filesize($tempApkPath);
+                            }
+                        }
+                    }
+                    @unlink($tempApkPath);
+                }
             }
         }
 
