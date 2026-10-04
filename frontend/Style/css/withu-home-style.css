@@ -3344,10 +3344,12 @@ a.withu-review-card:visited {
     align-items: center;
     background-color: rgba(255, 255, 255, 0.6);
     border: 1px solid rgba(0, 0, 0, 0.05);
-    padding: 5px 12px 5px 5px;
+    padding: 4px 10px 4px 4px;
     border-radius: 50px;
-    gap: 10px;
+    gap: 8px;
     width: fit-content;
+    max-width: 100%;
+    font-family: system-ui;
     transition: all 0.3s ease;
     cursor: default;
 }
@@ -3360,15 +3362,15 @@ a.withu-review-card:visited {
 }
 
 .withu-day-icon-circle {
-    width: 28px;
-    height: 28px;
+    width: 24px;
+    height: 24px;
     background-color: var(--withu-day-accent-color);
     color: #fff;
     border-radius: 50%;
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 0.75rem;
+    font-size: 0.7rem;
     box-shadow: 0 2px 8px rgba(229, 62, 62, 0.3);
 }
 
@@ -3385,17 +3387,18 @@ a.withu-review-card:visited {
 
 .withu-day-date-label-small {
     font-family: var(--withu-day-font-ui);
-    font-size: 0.55rem;
+    font-size: 0.5rem;
+    line-height: 1.2;
     color: var(--withu-day-text-light);
     text-transform: uppercase;
     font-weight: 700;
     letter-spacing: 0.05em;
-    margin-bottom: 3px;
+    margin-bottom: 2px;
 }
 
 .withu-day-date-value-clean {
     font-family: var(--withu-day-font-nums);
-    font-size: 0.85rem;
+    font-size: 0.78rem;
     font-weight: 600;
     color: var(--withu-day-text-sub);
     line-height: 1.2;
@@ -3562,6 +3565,26 @@ a.withu-review-card:visited {
         text-align: left;
     }
 
+    .withu-day-start-date-capsule {
+        padding: 5px 12px 5px 5px;
+        gap: 10px;
+    }
+
+    .withu-day-icon-circle {
+        width: 28px;
+        height: 28px;
+        font-size: 0.75rem;
+    }
+
+    .withu-day-date-label-small {
+        font-size: 0.55rem;
+        margin-bottom: 3px;
+    }
+
+    .withu-day-date-value-clean {
+        font-size: 0.85rem;
+    }
+
     .withu-day-left-section {
         align-items: flex-start;
         text-align: left;
@@ -3605,6 +3628,26 @@ a.withu-review-card:visited {
     .withu-day-fusion-card {
         padding: 4rem 5rem;
         gap: 5rem;
+    }
+
+    .withu-day-start-date-capsule {
+        padding: 6px 14px 6px 6px;
+        gap: 12px;
+    }
+
+    .withu-day-icon-circle {
+        width: 32px;
+        height: 32px;
+        font-size: 0.8rem;
+    }
+
+    .withu-day-date-label-small {
+        font-size: 0.6rem;
+        margin-bottom: 3px;
+    }
+
+    .withu-day-date-value-clean {
+        font-size: 0.95rem;
     }
 
     .withu-day-main-days-number {
@@ -5183,6 +5226,7 @@ body.bg-grad-grid::before {
     align-items: center;
     justify-content: center;
     margin-bottom: 1.5rem;
+    font-family: system-ui;
 }
 
 .withu-home .withu-epilogue__quote-text {
@@ -5765,8 +5809,10 @@ body.bg-grad-grid::before {
     font-size: 13px;
     font-weight: 700;
     letter-spacing: 0.025em;
+    line-height: 1;
+    white-space: nowrap;
     color: #ffffff;
-    font-family: 'Inter', sans-serif;
+    font-family: system-ui, sans-serif;
 }
 
 /* 时间标签 */
