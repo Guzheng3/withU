@@ -33,6 +33,39 @@ try {
     $enabled = true;
 }
 
+// ── IP 限流：本接口本质是「文件是否存在」查询，可被当作扫描器批量刷 ──
+// 规则与 api/qq_profile.php 一致：同一 IP 每小时最多 60 次；
+// 正常页面每次加载只会发 1 次请求（一次带上全页图片路径），60 次足够。
+$withuWpIp         = function_exists('getClientIp') ? getClientIp() : ($_SERVER['REMOTE_ADDR'] ?? '0.0.0.0');
+$withuWpNow        = time();
+$withuWpLimitPerHour = 60;
+$withuWpDb         = null;
+
+try {
+    $withuWpDb = Database::getInstance();
+    $withuWpDb->query("
+        CREATE TABLE IF NOT EXISTS `webp_query_attempts` (
+            `id` int(11) NOT NULL AUTO_INCREMENT,
+            `ip` varchar(45) DEFAULT NULL,
+            `created_at` datetime NOT NULL,
+            PRIMARY KEY (`id`),
+            KEY `idx_ip_time` (`ip`,`created_at`)
+        ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='WebP 副本查询尝试记录'
+    ");
+    $withuWpRow = $withuWpDb->fetch(
+        "SELECT COUNT(*) AS c FROM webp_query_attempts WHERE ip = :ip AND created_at >= :start",
+        ['ip' => $withuWpIp, 'start' => date('Y-m-d H:i:s', $withuWpNow - 3600)]
+    );
+    if ($withuWpRow && (int)($withuWpRow['c'] ?? 0) >= $withuWpLimitPerHour) {
+        http_response_code(429);
+        echo json_encode(['code' => 429, 'message' => '查询太频繁，请稍后再试'], JSON_UNESCAPED_UNICODE);
+        exit;
+    }
+} catch (Throwable $e) {
+    // 数据库异常时不做限流，不影响正常页面加载
+    $withuWpDb = null;
+}
+
 // ── 收集待检查路径 ─────────────────────────────────────────
 $paths = [];
 $rawBody = file_get_contents('php://input');
@@ -49,6 +82,16 @@ if ($rawBody) {
 }
 if (!$paths && isset($_GET['paths'])) {
     $paths = explode(',', (string) $_GET['paths']);
+}
+
+// 记录一次查询尝试（最佳努力，不影响主流程）
+if ($withuWpDb instanceof Database && $withuWpIp !== '') {
+    try {
+        $withuWpDb->insert('webp_query_attempts', [
+            'ip'         => $withuWpIp,
+            'created_at' => date('Y-m-d H:i:s', $withuWpNow),
+        ]);
+    } catch (Throwable $e) { /* 记录失败忽略 */ }
 }
 
 $map = [];

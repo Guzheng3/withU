@@ -1015,11 +1015,13 @@
         _pendingRequest: null,
         _cachePayload: null,
         _cacheAt: 0,
+        _geoCity: '',
         _handleDocumentClick: null,
         _handleToggleClick: null,
         _handleKeydown: null,
         _handleScroll: null,
         _handleResize: null,
+        _handleLocationReady: null,
 
         init() {
             if (window.WITHU_CONFIG && window.WITHU_CONFIG.weatherEnabled === false) {
@@ -1037,6 +1039,23 @@
             }
 
             this._bindEvents();
+            // 访客定位是异步的，首次 _refresh() 只能拿到服务端 IP 定位；
+            // 定位就绪后清掉缓存重取一次，天气才真正跟随访客位置
+            this._handleLocationReady = (ev) => {
+                var geo = (ev && ev.detail) || (window.WithULocation && window.WithULocation.get()) || null;
+                if (!geo || !geo.lat || !geo.lng) {
+                    return;
+                }
+                this._cachePayload = null;
+                this._cacheAt = 0;
+                // 上一次请求可能是不带城市名的，等它结束后再取，避免竞态导致城市名丢失
+                if (this._pendingRequest) {
+                    this._pendingRequest.finally(() => this._refresh());
+                    return;
+                }
+                this._refresh();
+            };
+            window.addEventListener('withu:location-ready', this._handleLocationReady);
             this._setLoading(true);
             this._refresh();
             this._timerId = setInterval(() => this._refresh(), 10 * 60 * 1000);
@@ -1047,6 +1066,10 @@
             if (this._timerId) {
                 clearInterval(this._timerId);
                 this._timerId = null;
+            }
+            if (this._handleLocationReady) {
+                window.removeEventListener('withu:location-ready', this._handleLocationReady);
+                this._handleLocationReady = null;
             }
             this._unbindEvents();
             this._initialized = false;
@@ -1067,13 +1090,21 @@
                 this._setLoading(true);
                 var _siteBase = (window.WITHU_CONFIG && window.WITHU_CONFIG.siteBase) || '';
 
-                // 使用后台设置的固定位置
+                // 坐标优先级：后台固定位置 > 访客实时定位 > 服务端 IP 定位
                 var locLat = window.WITHU_CONFIG && window.WITHU_CONFIG.weatherLocLat;
                 var locLng = window.WITHU_CONFIG && window.WITHU_CONFIG.weatherLocLng;
                 var geoParams = 'mode=ip';
-                
+                this._geoCity = '';
+
                 if (locLat && locLng) {
                     geoParams = 'mode=geo&lat=' + locLat + '&lng=' + locLng;
+                } else {
+                    var visitorGeo = (window.WithULocation && window.WithULocation.get()) || null;
+                    if (visitorGeo && visitorGeo.lat && visitorGeo.lng) {
+                        geoParams = 'mode=geo&lat=' + visitorGeo.lat + '&lng=' + visitorGeo.lng;
+                    }
+                    // 定位模块已逆地理编码出城市名，服务端缓存按经纬度命中拿不到，这里本地覆盖
+                    this._geoCity = visitorGeo && visitorGeo.city ? visitorGeo.city : '';
                 }
 
                 this._pendingRequest = fetch(_siteBase + 'services/weather.php?' + geoParams, {
@@ -1101,6 +1132,9 @@
                         const data = payload && payload.code === 200 ? payload.data : null;
                         if (!data || typeof data !== 'object') {
                             throw new Error('INVALID_PAYLOAD');
+                        }
+                        if (this._geoCity) {
+                            data.city = this._geoCity;
                         }
                         this._cachePayload = data;
                         this._cacheAt = Date.now();

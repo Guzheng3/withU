@@ -83,16 +83,37 @@ function withu_static_roots(): array {
     return $roots;
 }
 
+/**
+ * 允许被当作静态文件直读的单文件白名单（realpath 归一化后的绝对路径）。
+ * 站点根级基础文件（favicon / robots）不属于任何静态目录，单独登记，
+ * 这样无需把整个 backend/app/ 开放为可读目录。
+ */
+function withu_static_files(): array {
+    static $files = null;
+    if ($files === null) {
+        $files = [];
+        foreach ([__DIR__ . '/backend/app/favicon.ico', __DIR__ . '/backend/app/robots.txt'] as $candidate) {
+            $real = realpath($candidate);
+            if ($real !== false) {
+                $files[] = $real;
+            }
+        }
+    }
+    return $files;
+}
+
 function serveStatic(string $file, array $mime): bool {
     if (!is_file($file)) return false;
     // realpath 收敛后再比对白名单，避免未归一化路径或符号链接读到敏感文件
     $real = realpath($file);
     if ($real === false) return false;
-    $allowed = false;
-    foreach (withu_static_roots() as $root) {
-        if (strncmp($real, $root, strlen($root)) === 0) {
-            $allowed = true;
-            break;
+    $allowed = in_array($real, withu_static_files(), true);
+    if (!$allowed) {
+        foreach (withu_static_roots() as $root) {
+            if (strncmp($real, $root, strlen($root)) === 0) {
+                $allowed = true;
+                break;
+            }
         }
     }
     if (!$allowed) return false;
@@ -183,6 +204,12 @@ if (strpos($path, '/assets/') === 0) {
     if (serveStatic($appRoot . $path, $mimeTypes)) return true;
 }
 
+// ── 站点基础文件 /favicon.ico、/robots.txt（前台优先，回退 backend/app） ──
+if ($path === '/favicon.ico' || $path === '/robots.txt') {
+    if (serveStatic($frontRoot . $path, $mimeTypes)) return true;
+    if (serveStatic($appRoot . $path, $mimeTypes)) return true;
+}
+
 // ── 后台 API /api/ ───────────────────────
 if (strpos($path, '/api/') === 0) {
     $apiFile = $appRoot . $path;
@@ -216,6 +243,14 @@ if (in_array($path, $privateDataFiles, true)) {
     return true;
 }
 
+// ── services/runtime/：服务端运行时数据（定位快照、天气缓存），一律不可直接下载 ──
+// 定位数据已移出 web 根（backend/app/runtime），这里同时兜住历史遗留文件；
+// 注意 nginx/php-fpm 部署不会经过 router.php，所以不能只靠这一层。
+if (strpos($path, '/services/runtime/') === 0) {
+    withu_router_404($path);
+    return true;
+}
+
 // ── 前台静态资源 ─────────────────────────
 $frontStaticDirs = ['/Style/', '/services/', '/Lovefolder/', '/OwO/', '/assets/', '/favicon.png', '/favicon.ico'];
 foreach ($frontStaticDirs as $dir) {
@@ -227,7 +262,7 @@ foreach ($frontStaticDirs as $dir) {
 }
 
 // ── 前台 .html → .php 301 永久跳转 ────────
-$frontPages = ['about', 'albums', 'articles', 'lovelist', 'messages', 'page', 'timeline', 'album-detail', 'album-detail-private', 'imglist'];
+$frontPages = ['about', 'albums', 'articles', 'lovelist', 'messages', 'page', 'timeline', 'album-detail', 'album-detail-private'];
 foreach ($frontPages as $page) {
     $htmlPath = '/' . $page . '.html';
     if (strpos($path, $htmlPath) === 0) {
