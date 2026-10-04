@@ -27,6 +27,14 @@ CREATE TABLE IF NOT EXISTS `articles` (
   `type` enum('article','diary') NOT NULL DEFAULT 'article' COMMENT '类型',
   `is_encrypted` tinyint(1) NOT NULL DEFAULT 0 COMMENT '是否加密（1=完全隐藏，兼容旧字段）',
   `visibility` varchar(20) NOT NULL DEFAULT 'public' COMMENT '可见范围：public=所有人可见，login=仅登录可见（权限墙），hidden=完全隐藏',
+  `location_name` varchar(255) DEFAULT NULL COMMENT '发布地点名称',
+  `latitude` decimal(10,7) DEFAULT NULL COMMENT '纬度',
+  `longitude` decimal(10,7) DEFAULT NULL COMMENT '经度',
+  `weather` varchar(100) DEFAULT NULL COMMENT '发布时天气',
+  `weather_icon` varchar(100) DEFAULT NULL COMMENT '天气图标类名',
+  `mood` varchar(50) DEFAULT NULL COMMENT '心情标签',
+  `mood_icon` varchar(50) DEFAULT NULL COMMENT '心情图标类名',
+  `like_count` int(11) NOT NULL DEFAULT 0 COMMENT '点赞数',
   `tags` varchar(255) DEFAULT NULL COMMENT '标签，逗号分隔',
   `comments_enabled` tinyint(1) NOT NULL DEFAULT 1 COMMENT '是否允许评论（1=允许，0=关闭）',
   `views` int(11) NOT NULL DEFAULT 0 COMMENT '浏览量',
@@ -50,6 +58,11 @@ CREATE TABLE IF NOT EXISTS `albums` (
   `is_encrypted` tinyint(1) NOT NULL DEFAULT 0 COMMENT '是否加密（1=完全隐藏，兼容旧字段）',
   `visibility` varchar(20) NOT NULL DEFAULT 'public' COMMENT '可见范围：public=所有人可见，login=仅登录可见（权限墙），hidden=完全隐藏',
   `keep_original_quality` tinyint(1) NOT NULL DEFAULT 0 COMMENT '是否保留原始画质（0=默认压缩，1=尽量不压缩主图）',
+  `location_name` varchar(255) DEFAULT NULL COMMENT '相册地点',
+  `latitude` decimal(10,7) DEFAULT NULL COMMENT '纬度',
+  `longitude` decimal(10,7) DEFAULT NULL COMMENT '经度',
+  `views` int(11) NOT NULL DEFAULT 0 COMMENT '浏览量',
+  `like_count` int(11) NOT NULL DEFAULT 0 COMMENT '点赞数',
   `created_at` datetime NOT NULL COMMENT '创建时间',
   `updated_at` datetime DEFAULT NULL COMMENT '更新时间',
   PRIMARY KEY (`id`),
@@ -65,6 +78,7 @@ CREATE TABLE IF NOT EXISTS `album_images` (
   `is_optimized` tinyint(1) NOT NULL DEFAULT 0 COMMENT '是否已按当前规则压缩',
   `skip_optimize` tinyint(1) NOT NULL DEFAULT 0 COMMENT '是否永久跳过主图压缩',
   `description` varchar(255) DEFAULT NULL COMMENT '描述',
+  `file_size` int(11) DEFAULT NULL COMMENT '原图文件大小（字节），未知为 NULL',
   `sort_order` int(11) NOT NULL DEFAULT 0 COMMENT '排序值',
   `created_at` datetime NOT NULL COMMENT '创建时间',
   PRIMARY KEY (`id`),
@@ -398,3 +412,35 @@ CREATE TABLE IF NOT EXISTS `content_likes` (
   `target_type` varchar(20) NOT NULL, `target_id` int(11) NOT NULL, `created_at` datetime NOT NULL,
   PRIMARY KEY (`id`), UNIQUE KEY `uk_like_actor_target` (`actor_key`,`target_type`,`target_id`), KEY `idx_like_target` (`target_type`,`target_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- 恋爱清单（心愿）表
+CREATE TABLE IF NOT EXISTS `love_list_items` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `user_id` int(11) NOT NULL COMMENT '创建用户ID',
+  `title` varchar(200) NOT NULL COMMENT '心愿标题',
+  `is_done` tinyint(1) NOT NULL DEFAULT 0 COMMENT '是否已完成',
+  `done_date` date DEFAULT NULL COMMENT '完成日期',
+  `location_name` varchar(255) DEFAULT NULL COMMENT '达成地点',
+  `latitude` decimal(10,7) DEFAULT NULL COMMENT '纬度',
+  `longitude` decimal(10,7) DEFAULT NULL COMMENT '经度',
+  `note` varchar(500) DEFAULT NULL COMMENT '备注',
+  `sort_order` int(11) NOT NULL DEFAULT 0 COMMENT '排序值，越小越靠前',
+  `created_at` datetime NOT NULL COMMENT '创建时间',
+  `updated_at` datetime DEFAULT NULL COMMENT '更新时间',
+  PRIMARY KEY (`id`),
+  KEY `user_id` (`user_id`),
+  KEY `is_done` (`is_done`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='恋爱清单心愿表';
+
+-- 恋爱清单心愿图片表
+CREATE TABLE IF NOT EXISTS `love_list_item_images` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `item_id` int(11) NOT NULL COMMENT '心愿ID',
+  `image_path` varchar(255) NOT NULL COMMENT '图片路径',
+  `thumbnail_path` varchar(255) DEFAULT NULL COMMENT '缩略图路径',
+  `sort_order` int(11) NOT NULL DEFAULT 0 COMMENT '排序值',
+  `created_at` datetime NOT NULL COMMENT '创建时间',
+  PRIMARY KEY (`id`),
+  KEY `item_id` (`item_id`),
+  KEY `sort_order` (`sort_order`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='恋爱清单心愿图片表';

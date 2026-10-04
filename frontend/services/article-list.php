@@ -94,7 +94,7 @@ $total    = $totalRow ? (int) $totalRow['c'] : 0;
 $rows = [];
 try {
     $rows = $db->fetchAll(
-        "SELECT a.id, a.type, a.title, a.content, a.is_encrypted, a.visibility, a.views, a.created_at,
+        "SELECT a.*, a.visibility,
                 u.nickname AS author_name, u.avatar AS author_avatar, u.gender AS author_gender
          FROM articles a
          LEFT JOIN users u ON u.id = a.user_id
@@ -105,7 +105,7 @@ try {
 } catch (Throwable $e) {
     // 与总数查询同口径的兜底：去掉加密字段条件重试一次
     $rows = $db->fetchAll(
-        "SELECT a.id, a.type, a.title, a.content, a.is_encrypted, a.views, a.created_at,
+        "SELECT a.*,
                 u.nickname AS author_name, u.avatar AS author_avatar, u.gender AS author_gender
          FROM articles a
          LEFT JOIN users u ON u.id = a.user_id
@@ -179,6 +179,7 @@ foreach ($rows as $r) {
         'day_no'     => $dayNo,
         'created_at' => $created,
         'views'      => (int) ($r['views'] ?? 0),
+        'like_count' => (int) ($r['like_count'] ?? 0),
         'author'     => [
             'name'   => (string) ($r['author_name'] ?? ''),
             'avatar' => articlelist_avatar_url($r['author_avatar'] ?? ''),

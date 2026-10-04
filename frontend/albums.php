@@ -399,1550 +399,305 @@
 <body class="bg-pdot-vignette">
     <div id="pjax-container">
 
-        
-        <div class="withu-page-container ">
+    <?php
+    // ── 相册卡片数据：与后台/数据库联动 ──────────────────────────
+    // 相册与图片清单来自 albums / album_images / album_videos 表（后台可管理），
+    // 读取失败时降级为空态，不影响页面其它区域。
+    // 前台详情页 code 沿用 map-all.json 注册表（与后台「前台查看」同名匹配约定一致）。
+    $withuAlbumCards = [];
+    $withuAlbumDbReady = false;
 
-            <!-- Masonry Grid Container -->
-            <div class="withu-masonry-grid">
+    if (!function_exists('withu_album_size_label')) {
+        // 原图大小展示：639.1KB / 152KB（与原静态卡片口径一致）
+        function withu_album_size_label($bytes) {
+            $bytes = (int) $bytes;
+            if ($bytes <= 0) return '';
+            $kb = $bytes / 1024;
+            if ($kb >= 1024) {
+                return round($kb / 1024, 1) . 'MB';
+            }
+            $label = number_format(round($kb, 1), 1, '.', '');
+            if (substr($label, -2) === '.0') {
+                $label = substr($label, 0, -2);
+            }
+            return $label . 'KB';
+        }
+    }
 
-                                    
+    try {
+        if (!class_exists('Database')) {
+            throw new RuntimeException('backend unavailable');
+        }
+        if (!isset($db) || !$db) {
+            throw new RuntimeException('db unavailable');
+        }
+        if (function_exists('migrate_schema_if_needed')) {
+            migrate_schema_if_needed();
+        }
+        if (!function_exists('upload_url')) {
+            require_once dirname(__DIR__) . '/backend/app/core/helpers.php';
+        }
+
+        $withuAlbumRows = $db->fetchAll(
+            "SELECT a.*, u.nickname, u.avatar, u.gender
+             FROM albums a
+             LEFT JOIN users u ON a.user_id = u.id
+             ORDER BY a.created_at DESC, a.id ASC"
+        );
+
+        // 前台相册 code 注册表：同名匹配（后台「前台查看」同款约定）
+        $withuAlbumCodes = [];
+        $__mapFile = __DIR__ . '/services/map-all.json';
+        if (is_file($__mapFile)) {
+            $__map = json_decode((string) file_get_contents($__mapFile), true);
+            foreach ((is_array($__map) ? ($__map['albums'] ?? []) : []) as $__ma) {
+                if (!empty($__ma['name']) && !empty($__ma['code'])) {
+                    $withuAlbumCodes[(string) $__ma['name']] = (string) $__ma['code'];
+                }
+            }
+        }
+
+        $withuAlbumDbReady = true;
+        $withuAlbumIds = array_column($withuAlbumRows, 'id');
+        $withuMedia = [];
+        if ($withuAlbumIds) {
+            $__ph = implode(',', array_fill(0, count($withuAlbumIds), '?'));
+            foreach ($db->fetchAll(
+                "SELECT id, album_id, image_path, thumbnail_path, file_size, created_at
+                 FROM album_images
+                 WHERE album_id IN ($__ph)
+                 ORDER BY album_id ASC, created_at DESC, id DESC",
+                $withuAlbumIds
+            ) as $__im) {
+                $withuMedia[(int) $__im['album_id']][] = [
+                    'type'       => 'image',
+                    'path'       => (string) ($__im['thumbnail_path'] ?: $__im['image_path']),
+                    'original'   => (string) ($__im['image_path'] ?: $__im['thumbnail_path']),
+                    'file_size'  => (int) ($__im['file_size'] ?? 0),
+                    'created_at' => (string) ($__im['created_at'] ?? ''),
+                ];
+            }
+            try {
+                foreach ($db->fetchAll(
+                    "SELECT id, album_id, video_path, poster_path, created_at
+                     FROM album_videos
+                     WHERE album_id IN ($__ph)
+                     ORDER BY album_id ASC, created_at DESC, id DESC",
+                    $withuAlbumIds
+                ) as $__vd) {
+                    $withuMedia[(int) $__vd['album_id']][] = [
+                        'type'       => 'video',
+                        'path'       => (string) ($__vd['poster_path'] ?: ''),
+                        'video_url'  => (string) ($__vd['video_path'] ?: ''),
+                        'created_at' => (string) ($__vd['created_at'] ?? ''),
+                    ];
+                }
+            } catch (Throwable $e) {
+                // 老库无视频表时忽略
+            }
+            // 与后端接口同口径：按创建时间倒序混排图片与视频封面，取前 9 张做预览
+            foreach ($withuMedia as $__aid => $__items) {
+                usort($__items, function ($x, $y) {
+                    $tx = strtotime($x['created_at'] ?? '') ?: 0;
+                    $ty = strtotime($y['created_at'] ?? '') ?: 0;
+                    return ($tx === $ty) ? 0 : (($tx > $ty) ? -1 : 1);
+                });
+                $withuMedia[$__aid] = $__items;
+            }
+        }
+
+        foreach ($withuAlbumRows as $__row) {
+            $aid = (int) $__row['id'];
+            $visibility = function_exists('withu_effective_visibility')
+                ? withu_effective_visibility($__row)
+                : 'public';
+            if (!$loggedIn && $visibility === 'hidden') {
+                continue;
+            }
+            // 权限墙：游客访问「仅登录可见」的相册时锁定卡片，不暴露预览图
+            $guestLocked = !$loggedIn && $visibility === 'login';
+
+            $mediaItems = $withuMedia[$aid] ?? [];
+            $totalCount = count($mediaItems);
+            $preview = array_slice($mediaItems, 0, 9);
+            $gridClass = 'grid-' . min(max($totalCount, 1), 9);
+            $boxSquare = in_array($gridClass, ['grid-2', 'grid-4', 'grid-6', 'grid-8', 'grid-9'], true);
+            $code = $withuAlbumCodes[(string) ($__row['name'] ?? '')] ?? null;
+            $detailHref = $code ? 'album-detail.php?code=' . rawurlencode($code) : '';
+
+            $withuAlbumCards[] = [
+                'id'         => $aid,
+                'name'       => (string) ($__row['name'] ?? ''),
+                'author'     => (string) ($__row['nickname'] ?? ''),
+                'avatar'     => upload_url((string) ($__row['avatar'] ?? '')) ?: '/assets/images/default-avatar.svg',
+                'gender'     => (string) ($__row['gender'] ?? ''),
+                'date'       => substr((string) ($__row['created_at'] ?? ''), 0, 10),
+                'location'   => (string) ($__row['location_name'] ?? ''),
+                'lng'        => $__row['longitude'] ?? null,
+                'lat'        => $__row['latitude'] ?? null,
+                'views'      => (int) ($__row['views'] ?? 0),
+                'likes'      => (int) ($__row['like_count'] ?? 0),
+                'count'      => $totalCount,
+                'grid'       => $gridClass,
+                'square'     => $boxSquare,
+                'preview'    => $preview,
+                'locked'     => $guestLocked,
+                'detail'     => $detailHref,
+            ];
+        }
+    } catch (Throwable $e) {
+        $withuAlbumCards = [];
+        $withuAlbumDbReady = false;
+    }
+    ?>
+
+    <div class="withu-page-container ">
+
+        <!-- Masonry Grid Container -->
+        <div class="withu-masonry-grid">
+
+            <?php if (empty($withuAlbumCards)): ?>
+                <div class="withu-masonry-col" data-aos="fade-up" data-aos-delay="0">
+                    <div class="withu-card">
+                        <div class="withu-content" style="text-align:center;padding:2.5rem 1rem;">
+                            <i class="ph-fill ph-camera" style="font-size:2.2rem;color:#c5c5c5;"></i>
+                            <h3 class="withu-title" style="margin-top:.75rem;"><?php echo $withuAlbumDbReady ? '还没有相册' : '相册暂时无法加载'; ?></h3>
+                            <p style="font-size:.85rem;color:#9ca3af;margin-top:.35rem;"><?php echo $withuAlbumDbReady ? '去后台上传第一组照片吧～' : '请检查数据库连接后重试'; ?></p>
+                        </div>
+                    </div>
+                </div>
+            <?php else: ?>
+                <?php foreach ($withuAlbumCards as $__card): ?>
                     <!-- Masonry Column -->
                     <div class="withu-masonry-col" data-aos="fade-up" data-aos-delay="0">
 
-                        <!-- 私密相册卡片：未登录显示锁定，已登录显示正常内容 -->
-                                                    <div class="withu-card">
+                        <!-- 相册卡片：数据来自后台数据库，未登录时私密相册显示锁定 -->
+                        <div class="withu-card">
 
-                                <!-- 已解锁标识 -->
-                                
-                                <!-- Header -->
-                                <div class="withu-header">
-                                                                        <div class="withu-author show-gender">
-                                        <div class="withu-author__ring">
-                                            <img class="withu-author__avatar"
-                                                src="/Lovefolder/20260411043037_69d95ded97293201118237.webp"
-                                                alt="Avatar">
-                                                                                        <div
-                                                class="withu-author__badge male">
-                                                <i
-                                                    class="ph-bold ph-gender-male"></i>
+                            <!-- Header -->
+                            <div class="withu-header">
+                                <div class="withu-author show-gender">
+                                    <div class="withu-author__ring">
+                                        <img class="withu-author__avatar"
+                                            src="<?php echo htmlspecialchars($__card['avatar'], ENT_QUOTES, 'UTF-8'); ?>"
+                                            alt="Avatar">
+                                        <?php if ($__card['gender'] === 'male' || $__card['gender'] === 'female'): ?>
+                                            <div class="withu-author__badge <?php echo $__card['gender']; ?>">
+                                                <i class="ph-bold ph-gender-<?php echo $__card['gender']; ?>"></i>
                                             </div>
-                                                                                    </div>
-                                        <div class="withu-author__text">
-                                            <span class="withu-author__name">Ki.</span>
-                                            <span class="withu-author__meta">2026-04-16</span>
-                                        </div>
+                                        <?php endif; ?>
                                     </div>
-                                    <!-- 跳转按钮 (单张图片不显示) -->
-                                                                            <a href="album-detail.php?code=20240613125618" class="withu-header-action">
-                                            <i class="ph-bold ph-arrow-right"></i>
-                                        </a>
-                                                                    </div>
-
-                                <!-- Content -->
-                                <div class="withu-content">
-                                    <h3 class="withu-title">帅帅</h3>
-                                                                    </div>
-
-                                <!-- Media -->
-                                                                    <div class="withu-media grid-9" view-image>
-                                                                                    <div class="withu-photo-box square"
-                                                >
-                                                <img class="withu-photo lazy" data-src="Lovefolder/20240613130838_1_thumb.webp"
-                                                    data-original="/uploads/20240613130838_1.jpeg" src="Lovefolder/20240613130838_1_thumb.webp" alt="Photo"
-                                                    >
-                                                                                                                                                    <span class="withu-file-size">639.1KB</span>
-                                                
-                                                <!-- +N 遮罩层 -->
-                                                                                            </div>
-                                                                                    <div class="withu-photo-box square"
-                                                >
-                                                <img class="withu-photo lazy" data-src="Lovefolder/20240613130534_14_thumb.webp"
-                                                    data-original="/uploads/20240613130534_14.jpeg" src="Lovefolder/20240613130534_14_thumb.webp" alt="Photo"
-                                                    >
-                                                                                                                                                    <span class="withu-file-size">63.9KB</span>
-                                                
-                                                <!-- +N 遮罩层 -->
-                                                                                            </div>
-                                                                                    <div class="withu-photo-box square"
-                                                >
-                                                <img class="withu-photo lazy" data-src="Lovefolder/20240613130534_13_thumb.webp"
-                                                    data-original="/uploads/20240613130534_13.jpeg" src="Lovefolder/20240613130534_13_thumb.webp" alt="Photo"
-                                                    >
-                                                                                                                                                    <span class="withu-file-size">376.9KB</span>
-                                                
-                                                <!-- +N 遮罩层 -->
-                                                                                            </div>
-                                                                                    <div class="withu-photo-box square"
-                                                >
-                                                <img class="withu-photo lazy" data-src="Lovefolder/20240613130534_12_thumb.webp"
-                                                    data-original="/uploads/20240613130534_12.jpeg" src="Lovefolder/20240613130534_12_thumb.webp" alt="Photo"
-                                                    >
-                                                                                                                                                    <span class="withu-file-size">98.2KB</span>
-                                                
-                                                <!-- +N 遮罩层 -->
-                                                                                            </div>
-                                                                                    <div class="withu-photo-box square"
-                                                >
-                                                <img class="withu-photo lazy" data-src="Lovefolder/20240613130533_10_thumb.webp"
-                                                    data-original="/uploads/20240613130533_10.png" src="Lovefolder/20240613130533_10_thumb.webp" alt="Photo"
-                                                    >
-                                                                                                                                                    <span class="withu-file-size">349.7KB</span>
-                                                
-                                                <!-- +N 遮罩层 -->
-                                                                                            </div>
-                                                                                    <div class="withu-photo-box square"
-                                                >
-                                                <img class="withu-photo lazy" data-src="Lovefolder/20240613130532_9_thumb.webp"
-                                                    data-original="/uploads/20240613130532_9.jpeg" src="Lovefolder/20240613130532_9_thumb.webp" alt="Photo"
-                                                    >
-                                                                                                                                                    <span class="withu-file-size">358.5KB</span>
-                                                
-                                                <!-- +N 遮罩层 -->
-                                                                                            </div>
-                                                                                    <div class="withu-photo-box square"
-                                                >
-                                                <img class="withu-photo lazy" data-src="Lovefolder/20240613130532_8_thumb.webp"
-                                                    data-original="/uploads/20240613130532_8.jpeg" src="Lovefolder/20240613130532_8_thumb.webp" alt="Photo"
-                                                    >
-                                                                                                                                                    <span class="withu-file-size">142.2KB</span>
-                                                
-                                                <!-- +N 遮罩层 -->
-                                                                                            </div>
-                                                                                    <div class="withu-photo-box square"
-                                                >
-                                                <img class="withu-photo lazy" data-src="Lovefolder/20240613130532_7_thumb.webp"
-                                                    data-original="/uploads/20240613130532_7.jpeg" src="Lovefolder/20240613130532_7_thumb.webp" alt="Photo"
-                                                    >
-                                                                                                                                                    <span class="withu-file-size">81.6KB</span>
-                                                
-                                                <!-- +N 遮罩层 -->
-                                                                                            </div>
-                                                                                    <div class="withu-photo-box square"
-                                                >
-                                                <img class="withu-photo lazy" data-src="Lovefolder/20240613130532_6_thumb.webp"
-                                                    data-original="/uploads/20240613130532_6.jpeg" src="Lovefolder/20240613130532_6_thumb.webp" alt="Photo"
-                                                    >
-                                                                                                                                                    <span class="withu-file-size">628.9KB</span>
-                                                
-                                                <!-- +N 遮罩层 -->
-                                                                                                    <a href="album-detail.php?code=20240613125618" class="withu-overlay">
-                                                        <span>+5</span>
-                                                    </a>
-                                                                                            </div>
-                                                                            </div>
-                                
-                                <!-- Footer -->
-                                <div class="withu-footer">
-                                    <div class="withu-location-tag"
-                                                                                    data-lng="114.71708800"
-                                            data-lat="23.00520100"
-                                            onclick="WithUMap.open({ mode: 'albums', coords: [114.71708800, 23.00520100], zoom: 20 })"
-                                                                                data-tooltip="惠州市">
-                                        <i class="ph-fill ph-map-pin"></i>
-                                        <span>惠州市</span>
+                                    <div class="withu-author__text">
+                                        <span class="withu-author__name"><?php echo htmlspecialchars($__card['author'] !== '' ? $__card['author'] : 'withU', ENT_QUOTES, 'UTF-8'); ?></span>
+                                        <span class="withu-author__meta"><?php echo htmlspecialchars($__card['date'], ENT_QUOTES, 'UTF-8'); ?></span>
                                     </div>
-                                    <div class="withu-actions-left">
-                                        <div class="withu-action-item">
-                                            <i class="ph ph-eye"></i>
-                                            <span data-view-count="album:20240613125618">54</span>
-                                        </div>
-                                        <div class="withu-action-item" data-like-target="album" data-like-id="20240613125618">
-                                            <i class="ph ph-heart"></i>
-                                            <span class="withu-interaction-like-num" data-like-count="album:20240613125618">5</span>
-                                        </div>
-                                                                                    <div class="withu-photo-count">
-                                                <span class="num">14</span>
-                                                <span class="label">PICS</span>
-                                            </div>
-                                                                            </div>
                                 </div>
-
+                                <!-- 跳转按钮 (单张图片不显示) -->
+                                <?php if (!$__card['locked'] && $__card['detail'] !== '' && $__card['count'] > 1): ?>
+                                    <a href="<?php echo htmlspecialchars($__card['detail'], ENT_QUOTES, 'UTF-8'); ?>" class="withu-header-action">
+                                        <i class="ph-bold ph-arrow-right"></i>
+                                    </a>
+                                <?php endif; ?>
                             </div>
-                        
-                    </div>
-                                    
-                    <!-- Masonry Column -->
-                    <div class="withu-masonry-col" data-aos="fade-up" data-aos-delay="0">
 
-                        <!-- 私密相册卡片：未登录显示锁定，已登录显示正常内容 -->
-                                                    <div class="withu-card">
+                            <!-- Content -->
+                            <div class="withu-content">
+                                <h3 class="withu-title"><?php echo htmlspecialchars($__card['name'], ENT_QUOTES, 'UTF-8'); ?></h3>
+                            </div>
 
-                                <!-- 已解锁标识 -->
-                                
-                                <!-- Header -->
-                                <div class="withu-header">
-                                                                        <div class="withu-author show-gender">
-                                        <div class="withu-author__ring">
-                                            <img class="withu-author__avatar"
-                                                src="/Lovefolder/20260411043037_69d95ded97293201118237.webp"
-                                                alt="Avatar">
-                                                                                        <div
-                                                class="withu-author__badge male">
-                                                <i
-                                                    class="ph-bold ph-gender-male"></i>
-                                            </div>
-                                                                                    </div>
-                                        <div class="withu-author__text">
-                                            <span class="withu-author__name">Ki.</span>
-                                            <span class="withu-author__meta">2025-08-11</span>
-                                        </div>
+                            <!-- Media -->
+                            <?php if ($__card['locked']): ?>
+                                <div class="withu-media <?php echo $__card['grid']; ?>">
+                                    <div class="withu-photo-box" style="display:flex;flex-direction:column;gap:8px;align-items:center;justify-content:center;color:#9ca3af;">
+                                        <i class="ph-fill ph-lock-simple" style="font-size:2rem;"></i>
+                                        <span style="font-size:.85rem;">登录后可见</span>
                                     </div>
-                                    <!-- 跳转按钮 (单张图片不显示) -->
-                                                                            <a href="album-detail.php?code=20250811124452" class="withu-header-action">
-                                            <i class="ph-bold ph-arrow-right"></i>
-                                        </a>
-                                                                    </div>
-
-                                <!-- Content -->
-                                <div class="withu-content">
-                                    <h3 class="withu-title">Dalinshan</h3>
-                                                                    </div>
-
-                                <!-- Media -->
-                                                                    <div class="withu-media grid-9" view-image>
-                                                                                    <div class="withu-photo-box square"
-                                                >
-                                                <img class="withu-photo lazy" data-src="https://loveli-1255495366.cos.ap-guangzhou.myqcloud.com/Lovefolder/20260409154408_69d758c87bec1109371280.webp"
-                                                    data-original="https://loveli-1255495366.cos.ap-guangzhou.myqcloud.com/Lovefolder/20260409154408_69d758c87bec1109371280.webp" src="https://loveli-1255495366.cos.ap-guangzhou.myqcloud.com/Lovefolder/20260409154408_69d758c87bec1109371280.webp" alt="Photo"
-                                                    >
-                                                                                                                                                    <span class="withu-file-size">316.5KB</span>
-                                                
-                                                <!-- +N 遮罩层 -->
-                                                                                            </div>
-                                                                                    <div class="withu-photo-box square"
-                                                >
-                                                <img class="withu-photo lazy" data-src="Lovefolder/20260409200706_69d7966a5de55963866644.webp"
-                                                    data-original="/Lovefolder/20260409200706_69d7966a5de55963866644.webp" src="Lovefolder/20260409200706_69d7966a5de55963866644.webp" alt="Photo"
-                                                    >
-                                                                                                                                                    <span class="withu-file-size">351.3KB</span>
-                                                
-                                                <!-- +N 遮罩层 -->
-                                                                                            </div>
-                                                                                    <div class="withu-photo-box square"
-                                                >
-                                                <img class="withu-photo lazy" data-src="Lovefolder/20260409200659_69d7966311ed3484002730.webp"
-                                                    data-original="/Lovefolder/20260409200659_69d7966311ed3484002730.webp" src="Lovefolder/20260409200659_69d7966311ed3484002730.webp" alt="Photo"
-                                                    >
-                                                                                                                                                    <span class="withu-file-size">152KB</span>
-                                                
-                                                <!-- +N 遮罩层 -->
-                                                                                            </div>
-                                                                                    <div class="withu-photo-box square"
-                                                >
-                                                <img class="withu-photo lazy" data-src="Lovefolder/20260409200656_69d7966012351355916717.webp"
-                                                    data-original="/Lovefolder/20260409200656_69d7966012351355916717.webp" src="Lovefolder/20260409200656_69d7966012351355916717.webp" alt="Photo"
-                                                    >
-                                                                                                                                                    <span class="withu-file-size">332.5KB</span>
-                                                
-                                                <!-- +N 遮罩层 -->
-                                                                                            </div>
-                                                                                    <div class="withu-photo-box square"
-                                                >
-                                                <img class="withu-photo lazy" data-src="Lovefolder/20260409200652_69d7965c9c347266658802.webp"
-                                                    data-original="/Lovefolder/20260409200652_69d7965c9c347266658802.webp" src="Lovefolder/20260409200652_69d7965c9c347266658802.webp" alt="Photo"
-                                                    >
-                                                                                                                                                    <span class="withu-file-size">161.1KB</span>
-                                                
-                                                <!-- +N 遮罩层 -->
-                                                                                            </div>
-                                                                                    <div class="withu-photo-box square"
-                                                >
-                                                <img class="withu-photo lazy" data-src="Lovefolder/20260409200649_69d796591be57476010915.webp"
-                                                    data-original="/Lovefolder/20260409200649_69d796591be57476010915.webp" src="Lovefolder/20260409200649_69d796591be57476010915.webp" alt="Photo"
-                                                    >
-                                                                                                                                                    <span class="withu-file-size">272.6KB</span>
-                                                
-                                                <!-- +N 遮罩层 -->
-                                                                                            </div>
-                                                                                    <div class="withu-photo-box square"
-                                                >
-                                                <img class="withu-photo lazy" data-src="Lovefolder/20250811130000_689978d011796_thumb.webp"
-                                                    data-original="https://loveli-1255495366.cos.ap-guangzhou.myqcloud.com/Lovefolder/20250811130000_689978d011796.jpeg" src="Lovefolder/20250811130000_689978d011796_thumb.webp" alt="Photo"
-                                                    >
-                                                                                                                                                    <span class="withu-file-size">622.7KB</span>
-                                                
-                                                <!-- +N 遮罩层 -->
-                                                                                            </div>
-                                                                                    <div class="withu-photo-box square"
-                                                >
-                                                <img class="withu-photo lazy" data-src="Lovefolder/20250811125959_689978cf9b95f_thumb.webp"
-                                                    data-original="https://loveli-1255495366.cos.ap-guangzhou.myqcloud.com/Lovefolder/20250811125959_689978cf9b95f.jpeg" src="Lovefolder/20250811125959_689978cf9b95f_thumb.webp" alt="Photo"
-                                                    >
-                                                                                                                                                    <span class="withu-file-size">572.9KB</span>
-                                                
-                                                <!-- +N 遮罩层 -->
-                                                                                            </div>
-                                                                                    <div class="withu-photo-box square"
-                                                >
-                                                <img class="withu-photo lazy" data-src="Lovefolder/20250811125958_689978cea8729_thumb.webp"
-                                                    data-original="https://loveli-1255495366.cos.ap-guangzhou.myqcloud.com/Lovefolder/20250811125958_689978cea8729.jpeg" src="Lovefolder/20250811125958_689978cea8729_thumb.webp" alt="Photo"
-                                                    >
-                                                                                                                                                    <span class="withu-file-size">609.6KB</span>
-                                                
-                                                <!-- +N 遮罩层 -->
-                                                                                                    <a href="album-detail.php?code=20250811124452" class="withu-overlay">
-                                                        <span>+17</span>
-                                                    </a>
-                                                                                            </div>
-                                                                            </div>
-                                
-                                <!-- Footer -->
-                                <div class="withu-footer">
-                                    <div class="withu-location-tag"
-                                                                                    data-lng="113.58827700"
-                                            data-lat="22.26141700"
-                                            onclick="WithUMap.open({ mode: 'albums', coords: [113.58827700, 22.26141700], zoom: 20 })"
-                                                                                data-tooltip="珠海渔女">
-                                        <i class="ph-fill ph-map-pin"></i>
-                                        <span>珠海渔女</span>
-                                    </div>
-                                    <div class="withu-actions-left">
-                                        <div class="withu-action-item">
-                                            <i class="ph ph-eye"></i>
-                                            <span data-view-count="album:20250811124452">60</span>
-                                        </div>
-                                        <div class="withu-action-item" data-like-target="album" data-like-id="20250811124452">
-                                            <i class="ph ph-heart"></i>
-                                            <span class="withu-interaction-like-num" data-like-count="album:20250811124452">2</span>
-                                        </div>
-                                                                                    <div class="withu-photo-count">
-                                                <span class="num">26</span>
-                                                <span class="label">PICS</span>
-                                            </div>
-                                                                            </div>
                                 </div>
-
-                            </div>
-                        
-                    </div>
-                                    
-                    <!-- Masonry Column -->
-                    <div class="withu-masonry-col" data-aos="fade-up" data-aos-delay="0">
-
-                        <!-- 私密相册卡片：未登录显示锁定，已登录显示正常内容 -->
-                                                    <div class="withu-card">
-
-                                <!-- 已解锁标识 -->
-                                
-                                <!-- Header -->
-                                <div class="withu-header">
-                                                                        <div class="withu-author show-gender">
-                                        <div class="withu-author__ring">
-                                            <img class="withu-author__avatar"
-                                                src="/Lovefolder/20260411043037_69d95ded97293201118237.webp"
-                                                alt="Avatar">
-                                                                                        <div
-                                                class="withu-author__badge male">
-                                                <i
-                                                    class="ph-bold ph-gender-male"></i>
-                                            </div>
-                                                                                    </div>
-                                        <div class="withu-author__text">
-                                            <span class="withu-author__name">Ki.</span>
-                                            <span class="withu-author__meta">2024-12-25</span>
+                            <?php else: ?>
+                                <div class="withu-media <?php echo $__card['grid']; ?>" view-image>
+                                    <?php if (empty($__card['preview'])): ?>
+                                        <div class="withu-photo-box<?php echo $__card['square'] ? ' square' : ''; ?>" style="display:flex;flex-direction:column;gap:8px;align-items:center;justify-content:center;color:#c5c5c5;">
+                                            <i class="ph-fill ph-images" style="font-size:1.6rem;"></i>
+                                            <span style="font-size:.8rem;">暂无照片</span>
                                         </div>
-                                    </div>
-                                    <!-- 跳转按钮 (单张图片不显示) -->
-                                                                            <a href="album-detail.php?code=20241225163641" class="withu-header-action">
-                                            <i class="ph-bold ph-arrow-right"></i>
-                                        </a>
-                                                                    </div>
-
-                                <!-- Content -->
-                                <div class="withu-content">
-                                    <h3 class="withu-title">探索秋日山林的宁静之旅</h3>
-                                                                    </div>
-
-                                <!-- Media -->
-                                                                    <div class="withu-media grid-9" view-image>
-                                                                                    <div class="withu-photo-box square"
-                                                >
-                                                <img class="withu-photo lazy" data-src="Lovefolder/20260409211730_69d7a6eaecf46322029252.webp"
-                                                    data-original="/Lovefolder/20260409211730_69d7a6eaecf46322029252.webp" src="Lovefolder/20260409211730_69d7a6eaecf46322029252.webp" alt="Photo"
+                                    <?php else: ?>
+                                        <?php foreach ($__card['preview'] as $__pi => $__media): ?>
+                                            <?php if ($__media['type'] === 'video'): ?>
+                                                <div class="withu-photo-box<?php echo $__card['square'] ? ' square' : ''; ?> is-video"
+                                                    data-video-url="<?php echo htmlspecialchars(upload_url($__media['video_url']), ENT_QUOTES, 'UTF-8'); ?>"
+                                                    data-video-cover="<?php echo htmlspecialchars(upload_url($__media['path']), ENT_QUOTES, 'UTF-8'); ?>">
+                                                    <img class="withu-photo lazy" data-src="<?php echo htmlspecialchars(upload_url($__media['path']), ENT_QUOTES, 'UTF-8'); ?>"
+                                                        data-original="<?php echo htmlspecialchars(upload_url($__media['path']), ENT_QUOTES, 'UTF-8'); ?>" src="<?php echo htmlspecialchars(upload_url($__media['path']), ENT_QUOTES, 'UTF-8'); ?>" alt="Photo"
+                                                        no-view>
+                                                    <div class="withu-video-icon"><i class="ph-fill ph-play"></i></div>
+                                                </div>
+                                            <?php else: ?>
+                                                <div class="withu-photo-box<?php echo $__card['square'] ? ' square' : ''; ?>"
                                                     >
-                                                                                                                                                    <span class="withu-file-size">932.6KB</span>
-                                                
-                                                <!-- +N 遮罩层 -->
-                                                                                            </div>
-                                                                                    <div class="withu-photo-box square"
-                                                >
-                                                <img class="withu-photo lazy" data-src="https://loveli-1255495366.cos.ap-guangzhou.myqcloud.com/Lovefolder/20260409000955_69d67dd3b7a69592012172.webp"
-                                                    data-original="https://loveli-1255495366.cos.ap-guangzhou.myqcloud.com/Lovefolder/20260409000955_69d67dd3b7a69592012172.webp" src="https://loveli-1255495366.cos.ap-guangzhou.myqcloud.com/Lovefolder/20260409000955_69d67dd3b7a69592012172.webp" alt="Photo"
-                                                    >
-                                                                                                                                                    <span class="withu-file-size">345.8KB</span>
-                                                
-                                                <!-- +N 遮罩层 -->
-                                                                                            </div>
-                                                                                    <div class="withu-photo-box square"
-                                                >
-                                                <img class="withu-photo lazy" data-src="https://loveli-1255495366.cos.ap-guangzhou.myqcloud.com/Lovefolder/20260409000955_69d67dd3b7a69592012172.webp"
-                                                    data-original="https://loveli-1255495366.cos.ap-guangzhou.myqcloud.com/Lovefolder/20260409000955_69d67dd3b7a69592012172.webp" src="https://loveli-1255495366.cos.ap-guangzhou.myqcloud.com/Lovefolder/20260409000955_69d67dd3b7a69592012172.webp" alt="Photo"
-                                                    >
-                                                                                                                                                    <span class="withu-file-size">345.8KB</span>
-                                                
-                                                <!-- +N 遮罩层 -->
-                                                                                            </div>
-                                                                                    <div class="withu-photo-box square"
-                                                >
-                                                <img class="withu-photo lazy" data-src="Lovefolder/20250122113356_67906724745f6_thumb.webp"
-                                                    data-original="/Lovefolder/20250122113356_67906724745f6.webp" src="Lovefolder/20250122113356_67906724745f6_thumb.webp" alt="Photo"
-                                                    >
-                                                                                                                                                    <span class="withu-file-size">553.4KB</span>
-                                                
-                                                <!-- +N 遮罩层 -->
-                                                                                            </div>
-                                                                                    <div class="withu-photo-box square"
-                                                >
-                                                <img class="withu-photo lazy" data-src="Lovefolder/20250122113356_67906724717c5_thumb.webp"
-                                                    data-original="/Lovefolder/20250122113356_67906724717c5.webp" src="Lovefolder/20250122113356_67906724717c5_thumb.webp" alt="Photo"
-                                                    >
-                                                                                                                                                    <span class="withu-file-size">579.4KB</span>
-                                                
-                                                <!-- +N 遮罩层 -->
-                                                                                            </div>
-                                                                                    <div class="withu-photo-box square"
-                                                >
-                                                <img class="withu-photo lazy" data-src="Lovefolder/20250122113356_679067246e4c6_thumb.webp"
-                                                    data-original="/Lovefolder/20250122113356_679067246e4c6.webp" src="Lovefolder/20250122113356_679067246e4c6_thumb.webp" alt="Photo"
-                                                    >
-                                                                                                                                                    <span class="withu-file-size">590.1KB</span>
-                                                
-                                                <!-- +N 遮罩层 -->
-                                                                                            </div>
-                                                                                    <div class="withu-photo-box square"
-                                                >
-                                                <img class="withu-photo lazy" data-src="Lovefolder/20250122113356_679067246b42b_thumb.webp"
-                                                    data-original="/Lovefolder/20250122113356_679067246b42b.webp" src="Lovefolder/20250122113356_679067246b42b_thumb.webp" alt="Photo"
-                                                    >
-                                                                                                                                                    <span class="withu-file-size">643.4KB</span>
-                                                
-                                                <!-- +N 遮罩层 -->
-                                                                                            </div>
-                                                                                    <div class="withu-photo-box square"
-                                                >
-                                                <img class="withu-photo lazy" data-src="Lovefolder/20250122113356_6790672468456_thumb.webp"
-                                                    data-original="/Lovefolder/20250122113356_6790672468456.webp" src="Lovefolder/20250122113356_6790672468456_thumb.webp" alt="Photo"
-                                                    >
-                                                                                                                                                    <span class="withu-file-size">592.2KB</span>
-                                                
-                                                <!-- +N 遮罩层 -->
-                                                                                            </div>
-                                                                                    <div class="withu-photo-box square"
-                                                >
-                                                <img class="withu-photo lazy" data-src="Lovefolder/20250122113356_6790672465362_thumb.webp"
-                                                    data-original="/Lovefolder/20250122113356_6790672465362.webp" src="Lovefolder/20250122113356_6790672465362_thumb.webp" alt="Photo"
-                                                    >
-                                                                                                                                                    <span class="withu-file-size">610.8KB</span>
-                                                
-                                                <!-- +N 遮罩层 -->
-                                                                                                    <a href="album-detail.php?code=20241225163641" class="withu-overlay">
-                                                        <span>+6</span>
-                                                    </a>
-                                                                                            </div>
-                                                                            </div>
-                                
-                                <!-- Footer -->
-                                <div class="withu-footer">
-                                    <div class="withu-location-tag"
-                                                                                    data-lng="113.75180000"
-                                            data-lat="23.02070000"
-                                            onclick="WithUMap.open({ mode: 'albums', coords: [113.75180000, 23.02070000], zoom: 20 })"
-                                                                                data-tooltip="广东·东莞">
-                                        <i class="ph-fill ph-map-pin"></i>
-                                        <span>广东·东莞</span>
-                                    </div>
-                                    <div class="withu-actions-left">
-                                        <div class="withu-action-item">
-                                            <i class="ph ph-eye"></i>
-                                            <span data-view-count="album:20241225163641">33</span>
-                                        </div>
-                                        <div class="withu-action-item" data-like-target="album" data-like-id="20241225163641">
-                                            <i class="ph ph-heart"></i>
-                                            <span class="withu-interaction-like-num" data-like-count="album:20241225163641">0</span>
-                                        </div>
-                                                                                    <div class="withu-photo-count">
-                                                <span class="num">15</span>
-                                                <span class="label">PICS</span>
-                                            </div>
-                                                                            </div>
+                                                    <img class="withu-photo lazy" data-src="<?php echo htmlspecialchars(upload_url($__media['path']), ENT_QUOTES, 'UTF-8'); ?>"
+                                                        data-original="<?php echo htmlspecialchars(upload_url($__media['original']), ENT_QUOTES, 'UTF-8'); ?>" src="<?php echo htmlspecialchars(upload_url($__media['path']), ENT_QUOTES, 'UTF-8'); ?>" alt="Photo"
+                                                        >
+                                                    <?php $sizeLabel = withu_album_size_label($__media['file_size']); ?>
+                                                    <?php if ($sizeLabel !== ''): ?>
+                                                        <span class="withu-file-size"><?php echo htmlspecialchars($sizeLabel, ENT_QUOTES, 'UTF-8'); ?></span>
+                                                    <?php endif; ?>
+                                                    <?php if ($__pi === 8 && $__card['count'] > 9): ?>
+                                                        <?php if ($__card['detail'] !== ''): ?>
+                                                            <a href="<?php echo htmlspecialchars($__card['detail'], ENT_QUOTES, 'UTF-8'); ?>" class="withu-overlay">
+                                                                <span>+<?php echo $__card['count'] - 9; ?></span>
+                                                            </a>
+                                                        <?php else: ?>
+                                                            <div class="withu-overlay">
+                                                                <span>+<?php echo $__card['count'] - 9; ?></span>
+                                                            </div>
+                                                        <?php endif; ?>
+                                                    <?php endif; ?>
+                                                </div>
+                                            <?php endif; ?>
+                                        <?php endforeach; ?>
+                                    <?php endif; ?>
                                 </div>
+                            <?php endif; ?>
 
-                            </div>
-                        
-                    </div>
-                                    
-                    <!-- Masonry Column -->
-                    <div class="withu-masonry-col" data-aos="fade-up" data-aos-delay="0">
-
-                        <!-- 私密相册卡片：未登录显示锁定，已登录显示正常内容 -->
-                                                    <div class="withu-card">
-
-                                <!-- 已解锁标识 -->
-                                
-                                <!-- Header -->
-                                <div class="withu-header">
-                                                                        <div class="withu-author show-gender">
-                                        <div class="withu-author__ring">
-                                            <img class="withu-author__avatar"
-                                                src="/Lovefolder/20260411043046_69d95df639c33274072975.webp"
-                                                alt="Avatar">
-                                                                                        <div
-                                                class="withu-author__badge female">
-                                                <i
-                                                    class="ph-bold ph-gender-female"></i>
-                                            </div>
-                                                                                    </div>
-                                        <div class="withu-author__text">
-                                            <span class="withu-author__name">Really</span>
-                                            <span class="withu-author__meta">2024-07-22</span>
-                                        </div>
-                                    </div>
-                                    <!-- 跳转按钮 (单张图片不显示) -->
-                                                                            <a href="album-detail.php?code=20240729105505" class="withu-header-action">
-                                            <i class="ph-bold ph-arrow-right"></i>
-                                        </a>
-                                                                    </div>
-
-                                <!-- Content -->
-                                <div class="withu-content">
-                                    <h3 class="withu-title">新家记</h3>
-                                                                    </div>
-
-                                <!-- Media -->
-                                                                    <div class="withu-media grid-9" view-image>
-                                                                                    <div class="withu-photo-box square"
-                                                >
-                                                <img class="withu-photo lazy" data-src="Lovefolder/20240729112533_2_thumb.webp"
-                                                    data-original="/uploads/20240729112533_2.jpeg" src="Lovefolder/20240729112533_2_thumb.webp" alt="Photo"
-                                                    >
-                                                                                                                                                    <span class="withu-file-size">497.6KB</span>
-                                                
-                                                <!-- +N 遮罩层 -->
-                                                                                            </div>
-                                                                                    <div class="withu-photo-box square"
-                                                >
-                                                <img class="withu-photo lazy" data-src="Lovefolder/20240729112533_1_thumb.webp"
-                                                    data-original="/uploads/20240729112533_1.jpeg" src="Lovefolder/20240729112533_1_thumb.webp" alt="Photo"
-                                                    >
-                                                                                                                                                    <span class="withu-file-size">264.8KB</span>
-                                                
-                                                <!-- +N 遮罩层 -->
-                                                                                            </div>
-                                                                                    <div class="withu-photo-box square"
-                                                >
-                                                <img class="withu-photo lazy" data-src="Lovefolder/20240729105828_12_thumb.webp"
-                                                    data-original="/uploads/20240729105828_12.jpeg" src="Lovefolder/20240729105828_12_thumb.webp" alt="Photo"
-                                                    >
-                                                                                                                                                    <span class="withu-file-size">481KB</span>
-                                                
-                                                <!-- +N 遮罩层 -->
-                                                                                            </div>
-                                                                                    <div class="withu-photo-box square"
-                                                >
-                                                <img class="withu-photo lazy" data-src="Lovefolder/20240729105827_11_thumb.webp"
-                                                    data-original="/uploads/20240729105827_11.jpeg" src="Lovefolder/20240729105827_11_thumb.webp" alt="Photo"
-                                                    >
-                                                                                                                                                    <span class="withu-file-size">458.3KB</span>
-                                                
-                                                <!-- +N 遮罩层 -->
-                                                                                            </div>
-                                                                                    <div class="withu-photo-box square"
-                                                >
-                                                <img class="withu-photo lazy" data-src="Lovefolder/20240729105826_10_thumb.webp"
-                                                    data-original="/uploads/20240729105826_10.jpeg" src="Lovefolder/20240729105826_10_thumb.webp" alt="Photo"
-                                                    >
-                                                                                                                                                    <span class="withu-file-size">496.3KB</span>
-                                                
-                                                <!-- +N 遮罩层 -->
-                                                                                            </div>
-                                                                                    <div class="withu-photo-box square"
-                                                >
-                                                <img class="withu-photo lazy" data-src="Lovefolder/20240729105825_9_thumb.webp"
-                                                    data-original="/uploads/20240729105825_9.jpeg" src="Lovefolder/20240729105825_9_thumb.webp" alt="Photo"
-                                                    >
-                                                                                                                                                    <span class="withu-file-size">719KB</span>
-                                                
-                                                <!-- +N 遮罩层 -->
-                                                                                            </div>
-                                                                                    <div class="withu-photo-box square"
-                                                >
-                                                <img class="withu-photo lazy" data-src="Lovefolder/20240729105824_8_thumb.webp"
-                                                    data-original="/uploads/20240729105824_8.jpeg" src="Lovefolder/20240729105824_8_thumb.webp" alt="Photo"
-                                                    >
-                                                                                                                                                    <span class="withu-file-size">429.4KB</span>
-                                                
-                                                <!-- +N 遮罩层 -->
-                                                                                            </div>
-                                                                                    <div class="withu-photo-box square"
-                                                >
-                                                <img class="withu-photo lazy" data-src="Lovefolder/20240729105823_7_thumb.webp"
-                                                    data-original="/uploads/20240729105823_7.jpeg" src="Lovefolder/20240729105823_7_thumb.webp" alt="Photo"
-                                                    >
-                                                                                                                                                    <span class="withu-file-size">643.5KB</span>
-                                                
-                                                <!-- +N 遮罩层 -->
-                                                                                            </div>
-                                                                                    <div class="withu-photo-box square"
-                                                >
-                                                <img class="withu-photo lazy" data-src="Lovefolder/20240729105822_6_thumb.webp"
-                                                    data-original="/uploads/20240729105822_6.jpeg" src="Lovefolder/20240729105822_6_thumb.webp" alt="Photo"
-                                                    >
-                                                                                                                                                    <span class="withu-file-size">634.9KB</span>
-                                                
-                                                <!-- +N 遮罩层 -->
-                                                                                                    <a href="album-detail.php?code=20240729105505" class="withu-overlay">
-                                                        <span>+5</span>
-                                                    </a>
-                                                                                            </div>
-                                                                            </div>
-                                
-                                <!-- Footer -->
-                                <div class="withu-footer">
+                            <!-- Footer -->
+                            <div class="withu-footer">
+                                <?php if ($__card['location'] !== '' && $__card['lng'] !== null && $__card['lat'] !== null): ?>
                                     <div class="withu-location-tag"
-                                                                                    data-lng="112.46510000"
-                                            data-lat="23.04690000"
-                                            onclick="WithUMap.open({ mode: 'albums', coords: [112.46510000, 23.04690000], zoom: 20 })"
-                                                                                data-tooltip="广东·肇庆">
+                                        data-lng="<?php echo htmlspecialchars((string) $__card['lng'], ENT_QUOTES, 'UTF-8'); ?>"
+                                        data-lat="<?php echo htmlspecialchars((string) $__card['lat'], ENT_QUOTES, 'UTF-8'); ?>"
+                                        onclick="WithUMap.open({ mode: 'albums', coords: [<?php echo (float) $__card['lng']; ?>, <?php echo (float) $__card['lat']; ?>], zoom: 20 })"
+                                        data-tooltip="<?php echo htmlspecialchars($__card['location'], ENT_QUOTES, 'UTF-8'); ?>">
                                         <i class="ph-fill ph-map-pin"></i>
-                                        <span>广东·肇庆</span>
+                                        <span><?php echo htmlspecialchars($__card['location'], ENT_QUOTES, 'UTF-8'); ?></span>
                                     </div>
-                                    <div class="withu-actions-left">
-                                        <div class="withu-action-item">
-                                            <i class="ph ph-eye"></i>
-                                            <span data-view-count="album:20240729105505">19</span>
+                                <?php endif; ?>
+                                <div class="withu-actions-left">
+                                    <div class="withu-action-item">
+                                        <i class="ph ph-eye"></i>
+                                        <span data-view-count="album:<?php echo $__card['id']; ?>"><?php echo $__card['views']; ?></span>
+                                    </div>
+                                    <div class="withu-action-item" data-like-target="album" data-like-id="<?php echo $__card['id']; ?>">
+                                        <i class="ph ph-heart"></i>
+                                        <span class="withu-interaction-like-num" data-like-count="album:<?php echo $__card['id']; ?>"><?php echo $__card['likes']; ?></span>
+                                    </div>
+                                    <?php if ($__card['count'] > 1): ?>
+                                        <div class="withu-photo-count">
+                                            <span class="num"><?php echo sprintf('%02d', $__card['count']); ?></span>
+                                            <span class="label">PICS</span>
                                         </div>
-                                        <div class="withu-action-item" data-like-target="album" data-like-id="20240729105505">
-                                            <i class="ph ph-heart"></i>
-                                            <span class="withu-interaction-like-num" data-like-count="album:20240729105505">0</span>
-                                        </div>
-                                                                                    <div class="withu-photo-count">
-                                                <span class="num">14</span>
-                                                <span class="label">PICS</span>
-                                            </div>
-                                                                            </div>
+                                    <?php endif; ?>
                                 </div>
-
                             </div>
-                        
+
+                        </div>
+
                     </div>
-                                    
-                    <!-- Masonry Column -->
-                    <div class="withu-masonry-col" data-aos="fade-up" data-aos-delay="0">
+                <?php endforeach; ?>
+            <?php endif; ?>
 
-                        <!-- 私密相册卡片：未登录显示锁定，已登录显示正常内容 -->
-                                                    <div class="withu-card">
-
-                                <!-- 已解锁标识 -->
-                                
-                                <!-- Header -->
-                                <div class="withu-header">
-                                                                        <div class="withu-author show-gender">
-                                        <div class="withu-author__ring">
-                                            <img class="withu-author__avatar"
-                                                src="/Lovefolder/20260411043046_69d95df639c33274072975.webp"
-                                                alt="Avatar">
-                                                                                        <div
-                                                class="withu-author__badge female">
-                                                <i
-                                                    class="ph-bold ph-gender-female"></i>
-                                            </div>
-                                                                                    </div>
-                                        <div class="withu-author__text">
-                                            <span class="withu-author__name">Really</span>
-                                            <span class="withu-author__meta">2024-07-15</span>
-                                        </div>
-                                    </div>
-                                    <!-- 跳转按钮 (单张图片不显示) -->
-                                                                            <a href="album-detail.php?code=20240729110914" class="withu-header-action">
-                                            <i class="ph-bold ph-arrow-right"></i>
-                                        </a>
-                                                                    </div>
-
-                                <!-- Content -->
-                                <div class="withu-content">
-                                    <h3 class="withu-title">广州夜游</h3>
-                                                                    </div>
-
-                                <!-- Media -->
-                                                                    <div class="withu-media grid-9" view-image>
-                                                                                    <div class="withu-photo-box square"
-                                                >
-                                                <img class="withu-photo lazy" data-src="Lovefolder/20241109171801_672f28c9e8fef_thumb.webp"
-                                                    data-original="/Lovefolder/20241109171801_672f28c9e8fef.jpeg" src="Lovefolder/20241109171801_672f28c9e8fef_thumb.webp" alt="Photo"
-                                                    >
-                                                                                                                                                    <span class="withu-file-size">177.6KB</span>
-                                                
-                                                <!-- +N 遮罩层 -->
-                                                                                            </div>
-                                                                                    <div class="withu-photo-box square"
-                                                >
-                                                <img class="withu-photo lazy" data-src="Lovefolder/20241109171801_672f28c9d15f1_thumb.webp"
-                                                    data-original="/Lovefolder/20241109171801_672f28c9d15f1.jpeg" src="Lovefolder/20241109171801_672f28c9d15f1_thumb.webp" alt="Photo"
-                                                    >
-                                                                                                                                                    <span class="withu-file-size">165.2KB</span>
-                                                
-                                                <!-- +N 遮罩层 -->
-                                                                                            </div>
-                                                                                    <div class="withu-photo-box square"
-                                                >
-                                                <img class="withu-photo lazy" data-src="Lovefolder/20241109171801_672f28c9ba581_thumb.webp"
-                                                    data-original="/Lovefolder/20241109171801_672f28c9ba581.jpeg" src="Lovefolder/20241109171801_672f28c9ba581_thumb.webp" alt="Photo"
-                                                    >
-                                                                                                                                                    <span class="withu-file-size">176.4KB</span>
-                                                
-                                                <!-- +N 遮罩层 -->
-                                                                                            </div>
-                                                                                    <div class="withu-photo-box square"
-                                                >
-                                                <img class="withu-photo lazy" data-src="Lovefolder/20241109171801_672f28c9a3585_thumb.webp"
-                                                    data-original="/Lovefolder/20241109171801_672f28c9a3585.jpeg" src="Lovefolder/20241109171801_672f28c9a3585_thumb.webp" alt="Photo"
-                                                    >
-                                                                                                                                                    <span class="withu-file-size">161.1KB</span>
-                                                
-                                                <!-- +N 遮罩层 -->
-                                                                                            </div>
-                                                                                    <div class="withu-photo-box square"
-                                                >
-                                                <img class="withu-photo lazy" data-src="Lovefolder/20241109171801_672f28c98c04f_thumb.webp"
-                                                    data-original="/Lovefolder/20241109171801_672f28c98c04f.jpeg" src="Lovefolder/20241109171801_672f28c98c04f_thumb.webp" alt="Photo"
-                                                    >
-                                                                                                                                                    <span class="withu-file-size">152.2KB</span>
-                                                
-                                                <!-- +N 遮罩层 -->
-                                                                                            </div>
-                                                                                    <div class="withu-photo-box square"
-                                                >
-                                                <img class="withu-photo lazy" data-src="Lovefolder/20241109171801_672f28c973b65_thumb.webp"
-                                                    data-original="/Lovefolder/20241109171801_672f28c973b65.jpeg" src="Lovefolder/20241109171801_672f28c973b65_thumb.webp" alt="Photo"
-                                                    >
-                                                                                                                                                    <span class="withu-file-size">161.4KB</span>
-                                                
-                                                <!-- +N 遮罩层 -->
-                                                                                            </div>
-                                                                                    <div class="withu-photo-box square"
-                                                >
-                                                <img class="withu-photo lazy" data-src="Lovefolder/20241109171801_672f28c951082_thumb.webp"
-                                                    data-original="/Lovefolder/20241109171801_672f28c951082.jpeg" src="Lovefolder/20241109171801_672f28c951082_thumb.webp" alt="Photo"
-                                                    >
-                                                                                                                                                    <span class="withu-file-size">172.4KB</span>
-                                                
-                                                <!-- +N 遮罩层 -->
-                                                                                            </div>
-                                                                                    <div class="withu-photo-box square is-video"
-                                                 data-video-url="https://test-1255495366.cos.ap-guangzhou.myqcloud.com/Lovefolder/20241016232047_670fd9cfbf374.mp4"
-                                                    data-video-cover="https://test-1255495366.cos.ap-guangzhou.myqcloud.com/Lovefolder/20241016231935_670fd987aad9f.png" >
-                                                <img class="withu-photo lazy" data-src="https://test-1255495366.cos.ap-guangzhou.myqcloud.com/Lovefolder/20241016231935_670fd987aad9f.png"
-                                                    data-original="https://test-1255495366.cos.ap-guangzhou.myqcloud.com/Lovefolder/20241016231935_670fd987aad9f.png" src="https://test-1255495366.cos.ap-guangzhou.myqcloud.com/Lovefolder/20241016231935_670fd987aad9f.png" alt="Photo"
-                                                    no-view>
-                                                                                                    <div class="withu-video-icon"><i class="ph-fill ph-play"></i></div>
-                                                                                                
-                                                <!-- +N 遮罩层 -->
-                                                                                            </div>
-                                                                                    <div class="withu-photo-box square"
-                                                >
-                                                <img class="withu-photo lazy" data-src="Lovefolder/20240729112018_6_thumb.webp"
-                                                    data-original="/uploads/20240729112018_6.jpeg" src="Lovefolder/20240729112018_6_thumb.webp" alt="Photo"
-                                                    >
-                                                                                                                                                    <span class="withu-file-size">795.1KB</span>
-                                                
-                                                <!-- +N 遮罩层 -->
-                                                                                                    <a href="album-detail.php?code=20240729110914" class="withu-overlay">
-                                                        <span>+14</span>
-                                                    </a>
-                                                                                            </div>
-                                                                            </div>
-                                
-                                <!-- Footer -->
-                                <div class="withu-footer">
-                                    <div class="withu-location-tag"
-                                                                                    data-lng="113.26440000"
-                                            data-lat="23.12910000"
-                                            onclick="WithUMap.open({ mode: 'albums', coords: [113.26440000, 23.12910000], zoom: 20 })"
-                                                                                data-tooltip="广东·广州">
-                                        <i class="ph-fill ph-map-pin"></i>
-                                        <span>广东·广州</span>
-                                    </div>
-                                    <div class="withu-actions-left">
-                                        <div class="withu-action-item">
-                                            <i class="ph ph-eye"></i>
-                                            <span data-view-count="album:20240729110914">31</span>
-                                        </div>
-                                        <div class="withu-action-item" data-like-target="album" data-like-id="20240729110914">
-                                            <i class="ph ph-heart"></i>
-                                            <span class="withu-interaction-like-num" data-like-count="album:20240729110914">2</span>
-                                        </div>
-                                                                                    <div class="withu-photo-count">
-                                                <span class="num">23</span>
-                                                <span class="label">PICS</span>
-                                            </div>
-                                                                            </div>
-                                </div>
-
-                            </div>
-                        
-                    </div>
-                                    
-                    <!-- Masonry Column -->
-                    <div class="withu-masonry-col" data-aos="fade-up" data-aos-delay="0">
-
-                        <!-- 私密相册卡片：未登录显示锁定，已登录显示正常内容 -->
-                                                    <div class="withu-card">
-
-                                <!-- 已解锁标识 -->
-                                
-                                <!-- Header -->
-                                <div class="withu-header">
-                                                                        <div class="withu-author show-gender">
-                                        <div class="withu-author__ring">
-                                            <img class="withu-author__avatar"
-                                                src="/Lovefolder/20260411043037_69d95ded97293201118237.webp"
-                                                alt="Avatar">
-                                                                                        <div
-                                                class="withu-author__badge male">
-                                                <i
-                                                    class="ph-bold ph-gender-male"></i>
-                                            </div>
-                                                                                    </div>
-                                        <div class="withu-author__text">
-                                            <span class="withu-author__name">Ki.</span>
-                                            <span class="withu-author__meta">2024-05-16</span>
-                                        </div>
-                                    </div>
-                                    <!-- 跳转按钮 (单张图片不显示) -->
-                                                                            <a href="album-detail.php?code=20240516152808" class="withu-header-action">
-                                            <i class="ph-bold ph-arrow-right"></i>
-                                        </a>
-                                                                    </div>
-
-                                <!-- Content -->
-                                <div class="withu-content">
-                                    <h3 class="withu-title">测试新增相册</h3>
-                                                                    </div>
-
-                                <!-- Media -->
-                                                                    <div class="withu-media grid-9" view-image>
-                                                                                    <div class="withu-photo-box square"
-                                                >
-                                                <img class="withu-photo lazy" data-src="Lovefolder/20240516162650_3_thumb.webp"
-                                                    data-original="/uploads/20240516162650_3.jpeg" src="Lovefolder/20240516162650_3_thumb.webp" alt="Photo"
-                                                    >
-                                                                                                                                                    <span class="withu-file-size">741.9KB</span>
-                                                
-                                                <!-- +N 遮罩层 -->
-                                                                                            </div>
-                                                                                    <div class="withu-photo-box square"
-                                                >
-                                                <img class="withu-photo lazy" data-src="Lovefolder/20240516162650_2_thumb.webp"
-                                                    data-original="/uploads/20240516162650_2.jpeg" src="Lovefolder/20240516162650_2_thumb.webp" alt="Photo"
-                                                    >
-                                                                                                                                                    <span class="withu-file-size">715.4KB</span>
-                                                
-                                                <!-- +N 遮罩层 -->
-                                                                                            </div>
-                                                                                    <div class="withu-photo-box square"
-                                                >
-                                                <img class="withu-photo lazy" data-src="Lovefolder/20240516162650_1_thumb.webp"
-                                                    data-original="/uploads/20240516162650_1.jpeg" src="Lovefolder/20240516162650_1_thumb.webp" alt="Photo"
-                                                    >
-                                                                                                                                                    <span class="withu-file-size">614.4KB</span>
-                                                
-                                                <!-- +N 遮罩层 -->
-                                                                                            </div>
-                                                                                    <div class="withu-photo-box square"
-                                                >
-                                                <img class="withu-photo lazy" data-src="Lovefolder/20240516161257_1_thumb.webp"
-                                                    data-original="/uploads/20240516161257_1.jpeg" src="Lovefolder/20240516161257_1_thumb.webp" alt="Photo"
-                                                    >
-                                                                                                                                                    <span class="withu-file-size">565KB</span>
-                                                
-                                                <!-- +N 遮罩层 -->
-                                                                                            </div>
-                                                                                    <div class="withu-photo-box square"
-                                                >
-                                                <img class="withu-photo lazy" data-src="Lovefolder/20240516154645_5_thumb.webp"
-                                                    data-original="/uploads/20240516154645_5.jpeg" src="Lovefolder/20240516154645_5_thumb.webp" alt="Photo"
-                                                    >
-                                                                                                                                                    <span class="withu-file-size">125.1KB</span>
-                                                
-                                                <!-- +N 遮罩层 -->
-                                                                                            </div>
-                                                                                    <div class="withu-photo-box square"
-                                                >
-                                                <img class="withu-photo lazy" data-src="Lovefolder/20240516154645_4_thumb.webp"
-                                                    data-original="/uploads/20240516154645_4.jpeg" src="Lovefolder/20240516154645_4_thumb.webp" alt="Photo"
-                                                    >
-                                                                                                                                                    <span class="withu-file-size">108.4KB</span>
-                                                
-                                                <!-- +N 遮罩层 -->
-                                                                                            </div>
-                                                                                    <div class="withu-photo-box square"
-                                                >
-                                                <img class="withu-photo lazy" data-src="Lovefolder/20240516154645_3_thumb.webp"
-                                                    data-original="/uploads/20240516154645_3.jpeg" src="Lovefolder/20240516154645_3_thumb.webp" alt="Photo"
-                                                    >
-                                                                                                                                                    <span class="withu-file-size">96.7KB</span>
-                                                
-                                                <!-- +N 遮罩层 -->
-                                                                                            </div>
-                                                                                    <div class="withu-photo-box square"
-                                                >
-                                                <img class="withu-photo lazy" data-src="Lovefolder/20240516154645_2_thumb.webp"
-                                                    data-original="/uploads/20240516154645_2.jpeg" src="Lovefolder/20240516154645_2_thumb.webp" alt="Photo"
-                                                    >
-                                                                                                                                                    <span class="withu-file-size">90.9KB</span>
-                                                
-                                                <!-- +N 遮罩层 -->
-                                                                                            </div>
-                                                                                    <div class="withu-photo-box square"
-                                                >
-                                                <img class="withu-photo lazy" data-src="Lovefolder/20240516154645_1_thumb.webp"
-                                                    data-original="/uploads/20240516154645_1.jpeg" src="Lovefolder/20240516154645_1_thumb.webp" alt="Photo"
-                                                    >
-                                                                                                                                                    <span class="withu-file-size">104.1KB</span>
-                                                
-                                                <!-- +N 遮罩层 -->
-                                                                                            </div>
-                                                                            </div>
-                                
-                                <!-- Footer -->
-                                <div class="withu-footer">
-                                    <div class="withu-location-tag"
-                                                                                    data-lng="116.68230000"
-                                            data-lat="23.35350000"
-                                            onclick="WithUMap.open({ mode: 'albums', coords: [116.68230000, 23.35350000], zoom: 20 })"
-                                                                                data-tooltip="广东·汕头">
-                                        <i class="ph-fill ph-map-pin"></i>
-                                        <span>广东·汕头</span>
-                                    </div>
-                                    <div class="withu-actions-left">
-                                        <div class="withu-action-item">
-                                            <i class="ph ph-eye"></i>
-                                            <span data-view-count="album:20240516152808">5</span>
-                                        </div>
-                                        <div class="withu-action-item" data-like-target="album" data-like-id="20240516152808">
-                                            <i class="ph ph-heart"></i>
-                                            <span class="withu-interaction-like-num" data-like-count="album:20240516152808">0</span>
-                                        </div>
-                                                                                    <div class="withu-photo-count">
-                                                <span class="num">09</span>
-                                                <span class="label">PICS</span>
-                                            </div>
-                                                                            </div>
-                                </div>
-
-                            </div>
-                        
-                    </div>
-                                    
-                    <!-- Masonry Column -->
-                    <div class="withu-masonry-col" data-aos="fade-up" data-aos-delay="0">
-
-                        <!-- 私密相册卡片：未登录显示锁定，已登录显示正常内容 -->
-                                                    <div class="withu-card">
-
-                                <!-- 已解锁标识 -->
-                                
-                                <!-- Header -->
-                                <div class="withu-header">
-                                                                        <div class="withu-author show-gender">
-                                        <div class="withu-author__ring">
-                                            <img class="withu-author__avatar"
-                                                src="/Lovefolder/20260411043037_69d95ded97293201118237.webp"
-                                                alt="Avatar">
-                                                                                        <div
-                                                class="withu-author__badge male">
-                                                <i
-                                                    class="ph-bold ph-gender-male"></i>
-                                            </div>
-                                                                                    </div>
-                                        <div class="withu-author__text">
-                                            <span class="withu-author__name">Ki.</span>
-                                            <span class="withu-author__meta">2024-05-07</span>
-                                        </div>
-                                    </div>
-                                    <!-- 跳转按钮 (单张图片不显示) -->
-                                                                            <a href="album-detail.php?code=20240507221649" class="withu-header-action">
-                                            <i class="ph-bold ph-arrow-right"></i>
-                                        </a>
-                                                                    </div>
-
-                                <!-- Content -->
-                                <div class="withu-content">
-                                    <h3 class="withu-title">关于五一假期的部分碎片</h3>
-                                                                    </div>
-
-                                <!-- Media -->
-                                                                    <div class="withu-media grid-3" view-image>
-                                                                                    <div class="withu-photo-box "
-                                                >
-                                                <img class="withu-photo lazy" data-src="Lovefolder/20240507221938_3_thumb.webp"
-                                                    data-original="/uploads/20240507221938_3.jpeg" src="Lovefolder/20240507221938_3_thumb.webp" alt="Photo"
-                                                    >
-                                                                                                                                                    <span class="withu-file-size">769.5KB</span>
-                                                
-                                                <!-- +N 遮罩层 -->
-                                                                                            </div>
-                                                                                    <div class="withu-photo-box "
-                                                >
-                                                <img class="withu-photo lazy" data-src="Lovefolder/20240507221938_2_thumb.webp"
-                                                    data-original="/uploads/20240507221938_2.jpeg" src="Lovefolder/20240507221938_2_thumb.webp" alt="Photo"
-                                                    >
-                                                                                                                                                    <span class="withu-file-size">740.5KB</span>
-                                                
-                                                <!-- +N 遮罩层 -->
-                                                                                            </div>
-                                                                                    <div class="withu-photo-box "
-                                                >
-                                                <img class="withu-photo lazy" data-src="Lovefolder/20240507221937_1_thumb.webp"
-                                                    data-original="/uploads/20240507221937_1.jpeg" src="Lovefolder/20240507221937_1_thumb.webp" alt="Photo"
-                                                    >
-                                                                                                                                                    <span class="withu-file-size">480.9KB</span>
-                                                
-                                                <!-- +N 遮罩层 -->
-                                                                                            </div>
-                                                                            </div>
-                                
-                                <!-- Footer -->
-                                <div class="withu-footer">
-                                    <div class="withu-location-tag"
-                                                                                    data-lng="113.39280000"
-                                            data-lat="22.51760000"
-                                            onclick="WithUMap.open({ mode: 'albums', coords: [113.39280000, 22.51760000], zoom: 20 })"
-                                                                                data-tooltip="广东·中山">
-                                        <i class="ph-fill ph-map-pin"></i>
-                                        <span>广东·中山</span>
-                                    </div>
-                                    <div class="withu-actions-left">
-                                        <div class="withu-action-item">
-                                            <i class="ph ph-eye"></i>
-                                            <span data-view-count="album:20240507221649">8</span>
-                                        </div>
-                                        <div class="withu-action-item" data-like-target="album" data-like-id="20240507221649">
-                                            <i class="ph ph-heart"></i>
-                                            <span class="withu-interaction-like-num" data-like-count="album:20240507221649">0</span>
-                                        </div>
-                                                                                    <div class="withu-photo-count">
-                                                <span class="num">03</span>
-                                                <span class="label">PICS</span>
-                                            </div>
-                                                                            </div>
-                                </div>
-
-                            </div>
-                        
-                    </div>
-                                    
-                    <!-- Masonry Column -->
-                    <div class="withu-masonry-col" data-aos="fade-up" data-aos-delay="0">
-
-                        <!-- 私密相册卡片：未登录显示锁定，已登录显示正常内容 -->
-                                                    <div class="withu-card">
-
-                                <!-- 已解锁标识 -->
-                                
-                                <!-- Header -->
-                                <div class="withu-header">
-                                                                        <div class="withu-author show-gender">
-                                        <div class="withu-author__ring">
-                                            <img class="withu-author__avatar"
-                                                src="/Lovefolder/20260411043046_69d95df639c33274072975.webp"
-                                                alt="Avatar">
-                                                                                        <div
-                                                class="withu-author__badge female">
-                                                <i
-                                                    class="ph-bold ph-gender-female"></i>
-                                            </div>
-                                                                                    </div>
-                                        <div class="withu-author__text">
-                                            <span class="withu-author__name">Really</span>
-                                            <span class="withu-author__meta">2024-05-07</span>
-                                        </div>
-                                    </div>
-                                    <!-- 跳转按钮 (单张图片不显示) -->
-                                                                            <a href="album-detail.php?code=20240507224441" class="withu-header-action">
-                                            <i class="ph-bold ph-arrow-right"></i>
-                                        </a>
-                                                                    </div>
-
-                                <!-- Content -->
-                                <div class="withu-content">
-                                    <h3 class="withu-title">五一快乐~</h3>
-                                                                    </div>
-
-                                <!-- Media -->
-                                                                    <div class="withu-media grid-6" view-image>
-                                                                                    <div class="withu-photo-box square"
-                                                >
-                                                <img class="withu-photo lazy" data-src="Lovefolder/20240508160357_1_thumb.webp"
-                                                    data-original="/uploads/20240508160357_1.jpeg" src="Lovefolder/20240508160357_1_thumb.webp" alt="Photo"
-                                                    >
-                                                                                                                                                    <span class="withu-file-size">763.7KB</span>
-                                                
-                                                <!-- +N 遮罩层 -->
-                                                                                            </div>
-                                                                                    <div class="withu-photo-box square"
-                                                >
-                                                <img class="withu-photo lazy" data-src="Lovefolder/20240507224615_5_thumb.webp"
-                                                    data-original="/uploads/20240507224615_5.jpeg" src="Lovefolder/20240507224615_5_thumb.webp" alt="Photo"
-                                                    >
-                                                                                                                                                    <span class="withu-file-size">368.6KB</span>
-                                                
-                                                <!-- +N 遮罩层 -->
-                                                                                            </div>
-                                                                                    <div class="withu-photo-box square"
-                                                >
-                                                <img class="withu-photo lazy" data-src="Lovefolder/20240507224614_4_thumb.webp"
-                                                    data-original="/uploads/20240507224614_4.jpeg" src="Lovefolder/20240507224614_4_thumb.webp" alt="Photo"
-                                                    >
-                                                                                                                                                    <span class="withu-file-size">525.8KB</span>
-                                                
-                                                <!-- +N 遮罩层 -->
-                                                                                            </div>
-                                                                                    <div class="withu-photo-box square"
-                                                >
-                                                <img class="withu-photo lazy" data-src="Lovefolder/20240507224614_3_thumb.webp"
-                                                    data-original="/uploads/20240507224614_3.jpeg" src="Lovefolder/20240507224614_3_thumb.webp" alt="Photo"
-                                                    >
-                                                                                                                                                    <span class="withu-file-size">262.7KB</span>
-                                                
-                                                <!-- +N 遮罩层 -->
-                                                                                            </div>
-                                                                                    <div class="withu-photo-box square"
-                                                >
-                                                <img class="withu-photo lazy" data-src="Lovefolder/20240507224614_2_thumb.webp"
-                                                    data-original="/uploads/20240507224614_2.jpeg" src="Lovefolder/20240507224614_2_thumb.webp" alt="Photo"
-                                                    >
-                                                                                                                                                    <span class="withu-file-size">405.3KB</span>
-                                                
-                                                <!-- +N 遮罩层 -->
-                                                                                            </div>
-                                                                                    <div class="withu-photo-box square"
-                                                >
-                                                <img class="withu-photo lazy" data-src="Lovefolder/20240507224613_1_thumb.webp"
-                                                    data-original="/uploads/20240507224613_1.jpeg" src="Lovefolder/20240507224613_1_thumb.webp" alt="Photo"
-                                                    >
-                                                                                                                                                    <span class="withu-file-size">451.4KB</span>
-                                                
-                                                <!-- +N 遮罩层 -->
-                                                                                            </div>
-                                                                            </div>
-                                
-                                <!-- Footer -->
-                                <div class="withu-footer">
-                                    <div class="withu-location-tag"
-                                                                                    data-lng="114.41680000"
-                                            data-lat="23.11150000"
-                                            onclick="WithUMap.open({ mode: 'albums', coords: [114.41680000, 23.11150000], zoom: 20 })"
-                                                                                data-tooltip="广东·惠州">
-                                        <i class="ph-fill ph-map-pin"></i>
-                                        <span>广东·惠州</span>
-                                    </div>
-                                    <div class="withu-actions-left">
-                                        <div class="withu-action-item">
-                                            <i class="ph ph-eye"></i>
-                                            <span data-view-count="album:20240507224441">8</span>
-                                        </div>
-                                        <div class="withu-action-item" data-like-target="album" data-like-id="20240507224441">
-                                            <i class="ph ph-heart"></i>
-                                            <span class="withu-interaction-like-num" data-like-count="album:20240507224441">0</span>
-                                        </div>
-                                                                                    <div class="withu-photo-count">
-                                                <span class="num">06</span>
-                                                <span class="label">PICS</span>
-                                            </div>
-                                                                            </div>
-                                </div>
-
-                            </div>
-                        
-                    </div>
-                                    
-                    <!-- Masonry Column -->
-                    <div class="withu-masonry-col" data-aos="fade-up" data-aos-delay="0">
-
-                        <!-- 私密相册卡片：未登录显示锁定，已登录显示正常内容 -->
-                                                    <div class="withu-card">
-
-                                <!-- 已解锁标识 -->
-                                
-                                <!-- Header -->
-                                <div class="withu-header">
-                                                                        <div class="withu-author show-gender">
-                                        <div class="withu-author__ring">
-                                            <img class="withu-author__avatar"
-                                                src="/Lovefolder/20260411043037_69d95ded97293201118237.webp"
-                                                alt="Avatar">
-                                                                                        <div
-                                                class="withu-author__badge male">
-                                                <i
-                                                    class="ph-bold ph-gender-male"></i>
-                                            </div>
-                                                                                    </div>
-                                        <div class="withu-author__text">
-                                            <span class="withu-author__name">Ki.</span>
-                                            <span class="withu-author__meta">2024-04-30</span>
-                                        </div>
-                                    </div>
-                                    <!-- 跳转按钮 (单张图片不显示) -->
-                                                                    </div>
-
-                                <!-- Content -->
-                                <div class="withu-content">
-                                    <h3 class="withu-title">withU 五一限定相册测试</h3>
-                                                                    </div>
-
-                                <!-- Media -->
-                                                                    <div class="withu-media grid-1" view-image>
-                                                                                    <div class="withu-photo-box "
-                                                >
-                                                <img class="withu-photo lazy" data-src="Lovefolder/20240501105219_1_thumb.webp"
-                                                    data-original="/uploads/20240501105219_1.jpeg" src="Lovefolder/20240501105219_1_thumb.webp" alt="Photo"
-                                                    >
-                                                                                                                                                    <span class="withu-file-size">96.9KB</span>
-                                                
-                                                <!-- +N 遮罩层 -->
-                                                                                            </div>
-                                                                            </div>
-                                
-                                <!-- Footer -->
-                                <div class="withu-footer">
-                                    <div class="withu-location-tag"
-                                                                                    data-lng="113.75180000"
-                                            data-lat="23.02070000"
-                                            onclick="WithUMap.open({ mode: 'albums', coords: [113.75180000, 23.02070000], zoom: 20 })"
-                                                                                data-tooltip="广东·东莞">
-                                        <i class="ph-fill ph-map-pin"></i>
-                                        <span>广东·东莞</span>
-                                    </div>
-                                    <div class="withu-actions-left">
-                                        <div class="withu-action-item">
-                                            <i class="ph ph-eye"></i>
-                                            <span data-view-count="album:20240430110438">1</span>
-                                        </div>
-                                        <div class="withu-action-item" data-like-target="album" data-like-id="20240430110438">
-                                            <i class="ph ph-heart"></i>
-                                            <span class="withu-interaction-like-num" data-like-count="album:20240430110438">0</span>
-                                        </div>
-                                                                            </div>
-                                </div>
-
-                            </div>
-                        
-                    </div>
-                                    
-                    <!-- Masonry Column -->
-                    <div class="withu-masonry-col" data-aos="fade-up" data-aos-delay="0">
-
-                        <!-- 私密相册卡片：未登录显示锁定，已登录显示正常内容 -->
-                                                    <div class="withu-card">
-
-                                <!-- 已解锁标识 -->
-                                
-                                <!-- Header -->
-                                <div class="withu-header">
-                                                                        <div class="withu-author show-gender">
-                                        <div class="withu-author__ring">
-                                            <img class="withu-author__avatar"
-                                                src="/Lovefolder/20260411043046_69d95df639c33274072975.webp"
-                                                alt="Avatar">
-                                                                                        <div
-                                                class="withu-author__badge female">
-                                                <i
-                                                    class="ph-bold ph-gender-female"></i>
-                                            </div>
-                                                                                    </div>
-                                        <div class="withu-author__text">
-                                            <span class="withu-author__name">Really</span>
-                                            <span class="withu-author__meta">2024-04-30</span>
-                                        </div>
-                                    </div>
-                                    <!-- 跳转按钮 (单张图片不显示) -->
-                                                                            <a href="album-detail.php?code=20240430110508" class="withu-header-action">
-                                            <i class="ph-bold ph-arrow-right"></i>
-                                        </a>
-                                                                    </div>
-
-                                <!-- Content -->
-                                <div class="withu-content">
-                                    <h3 class="withu-title">关于美食的合集</h3>
-                                                                    </div>
-
-                                <!-- Media -->
-                                                                    <div class="withu-media grid-9" view-image>
-                                                                                    <div class="withu-photo-box square"
-                                                >
-                                                <img class="withu-photo lazy" data-src="Lovefolder/20240430111607_1_thumb.webp"
-                                                    data-original="/uploads/20240430111607_1.jpeg" src="Lovefolder/20240430111607_1_thumb.webp" alt="Photo"
-                                                    >
-                                                                                                                                                    <span class="withu-file-size">82.1KB</span>
-                                                
-                                                <!-- +N 遮罩层 -->
-                                                                                            </div>
-                                                                                    <div class="withu-photo-box square"
-                                                >
-                                                <img class="withu-photo lazy" data-src="Lovefolder/20240430111426_1_thumb.webp"
-                                                    data-original="/uploads/20240430111426_1.jpeg" src="Lovefolder/20240430111426_1_thumb.webp" alt="Photo"
-                                                    >
-                                                                                                                                                    <span class="withu-file-size">537.2KB</span>
-                                                
-                                                <!-- +N 遮罩层 -->
-                                                                                            </div>
-                                                                                    <div class="withu-photo-box square"
-                                                >
-                                                <img class="withu-photo lazy" data-src="Lovefolder/20240430110750_11_thumb.webp"
-                                                    data-original="/uploads/20240430110750_11.jpeg" src="Lovefolder/20240430110750_11_thumb.webp" alt="Photo"
-                                                    >
-                                                                                                                                                    <span class="withu-file-size">734.1KB</span>
-                                                
-                                                <!-- +N 遮罩层 -->
-                                                                                            </div>
-                                                                                    <div class="withu-photo-box square"
-                                                >
-                                                <img class="withu-photo lazy" data-src="Lovefolder/20240430110750_10_thumb.webp"
-                                                    data-original="/uploads/20240430110750_10.jpeg" src="Lovefolder/20240430110750_10_thumb.webp" alt="Photo"
-                                                    >
-                                                                                                                                                    <span class="withu-file-size">414.7KB</span>
-                                                
-                                                <!-- +N 遮罩层 -->
-                                                                                            </div>
-                                                                                    <div class="withu-photo-box square"
-                                                >
-                                                <img class="withu-photo lazy" data-src="Lovefolder/20240430110749_9_thumb.webp"
-                                                    data-original="/uploads/20240430110749_9.jpeg" src="Lovefolder/20240430110749_9_thumb.webp" alt="Photo"
-                                                    >
-                                                                                                                                                    <span class="withu-file-size">728.9KB</span>
-                                                
-                                                <!-- +N 遮罩层 -->
-                                                                                            </div>
-                                                                                    <div class="withu-photo-box square"
-                                                >
-                                                <img class="withu-photo lazy" data-src="Lovefolder/20240430110749_8_thumb.webp"
-                                                    data-original="/uploads/20240430110749_8.jpeg" src="Lovefolder/20240430110749_8_thumb.webp" alt="Photo"
-                                                    >
-                                                                                                                                                    <span class="withu-file-size">673KB</span>
-                                                
-                                                <!-- +N 遮罩层 -->
-                                                                                            </div>
-                                                                                    <div class="withu-photo-box square"
-                                                >
-                                                <img class="withu-photo lazy" data-src="Lovefolder/20240430110748_7_thumb.webp"
-                                                    data-original="/uploads/20240430110748_7.jpeg" src="Lovefolder/20240430110748_7_thumb.webp" alt="Photo"
-                                                    >
-                                                                                                                                                    <span class="withu-file-size">546.3KB</span>
-                                                
-                                                <!-- +N 遮罩层 -->
-                                                                                            </div>
-                                                                                    <div class="withu-photo-box square"
-                                                >
-                                                <img class="withu-photo lazy" data-src="Lovefolder/20240430110747_6_thumb.webp"
-                                                    data-original="/uploads/20240430110747_6.jpeg" src="Lovefolder/20240430110747_6_thumb.webp" alt="Photo"
-                                                    >
-                                                                                                                                                    <span class="withu-file-size">954KB</span>
-                                                
-                                                <!-- +N 遮罩层 -->
-                                                                                            </div>
-                                                                                    <div class="withu-photo-box square"
-                                                >
-                                                <img class="withu-photo lazy" data-src="Lovefolder/20240430110747_5_thumb.webp"
-                                                    data-original="/uploads/20240430110747_5.jpeg" src="Lovefolder/20240430110747_5_thumb.webp" alt="Photo"
-                                                    >
-                                                                                                                                                    <span class="withu-file-size">483.6KB</span>
-                                                
-                                                <!-- +N 遮罩层 -->
-                                                                                                    <a href="album-detail.php?code=20240430110508" class="withu-overlay">
-                                                        <span>+4</span>
-                                                    </a>
-                                                                                            </div>
-                                                                            </div>
-                                
-                                <!-- Footer -->
-                                <div class="withu-footer">
-                                    <div class="withu-location-tag"
-                                                                                    data-lng="113.12140000"
-                                            data-lat="23.02150000"
-                                            onclick="WithUMap.open({ mode: 'albums', coords: [113.12140000, 23.02150000], zoom: 20 })"
-                                                                                data-tooltip="广东·佛山">
-                                        <i class="ph-fill ph-map-pin"></i>
-                                        <span>广东·佛山</span>
-                                    </div>
-                                    <div class="withu-actions-left">
-                                        <div class="withu-action-item">
-                                            <i class="ph ph-eye"></i>
-                                            <span data-view-count="album:20240430110508">13</span>
-                                        </div>
-                                        <div class="withu-action-item" data-like-target="album" data-like-id="20240430110508">
-                                            <i class="ph ph-heart"></i>
-                                            <span class="withu-interaction-like-num" data-like-count="album:20240430110508">1</span>
-                                        </div>
-                                                                                    <div class="withu-photo-count">
-                                                <span class="num">13</span>
-                                                <span class="label">PICS</span>
-                                            </div>
-                                                                            </div>
-                                </div>
-
-                            </div>
-                        
-                    </div>
-                                    
-                    <!-- Masonry Column -->
-                    <div class="withu-masonry-col" data-aos="fade-up" data-aos-delay="0">
-
-                        <!-- 私密相册卡片：未登录显示锁定，已登录显示正常内容 -->
-                                                    <div class="withu-card">
-
-                                <!-- 已解锁标识 -->
-                                
-                                <!-- Header -->
-                                <div class="withu-header">
-                                                                        <div class="withu-author show-gender">
-                                        <div class="withu-author__ring">
-                                            <img class="withu-author__avatar"
-                                                src="/Lovefolder/20260411043046_69d95df639c33274072975.webp"
-                                                alt="Avatar">
-                                                                                        <div
-                                                class="withu-author__badge female">
-                                                <i
-                                                    class="ph-bold ph-gender-female"></i>
-                                            </div>
-                                                                                    </div>
-                                        <div class="withu-author__text">
-                                            <span class="withu-author__name">Really</span>
-                                            <span class="withu-author__meta">2021-08-29</span>
-                                        </div>
-                                    </div>
-                                    <!-- 跳转按钮 (单张图片不显示) -->
-                                                                            <a href="album-detail.php?code=1776318513866" class="withu-header-action">
-                                            <i class="ph-bold ph-arrow-right"></i>
-                                        </a>
-                                                                    </div>
-
-                                <!-- Content -->
-                                <div class="withu-content">
-                                    <h3 class="withu-title">测试相册</h3>
-                                                                    </div>
-
-                                <!-- Media -->
-                                                                    <div class="withu-media grid-9" view-image>
-                                                                                    <div class="withu-photo-box square"
-                                                >
-                                                <img class="withu-photo lazy" data-src="https://loveli-1255495366.cos.ap-guangzhou.myqcloud.com/Lovefolder/20260523212529_6a11aac9895bc506883115_thumb.webp"
-                                                    data-original="https://loveli-1255495366.cos.ap-guangzhou.myqcloud.com/Lovefolder/20260523212529_6a11aac989601609134928.webp" src="https://loveli-1255495366.cos.ap-guangzhou.myqcloud.com/Lovefolder/20260523212529_6a11aac9895bc506883115_thumb.webp" alt="Photo"
-                                                    >
-                                                                                                                                                    <span class="withu-file-size">237.8KB</span>
-                                                
-                                                <!-- +N 遮罩层 -->
-                                                                                            </div>
-                                                                                    <div class="withu-photo-box square"
-                                                >
-                                                <img class="withu-photo lazy" data-src="Lovefolder/20260416152610_69e08f120ea9f251265302_thumb.webp"
-                                                    data-original="/Lovefolder/20260416152610_69e08f120ead1831369049.webp" src="Lovefolder/20260416152610_69e08f120ea9f251265302_thumb.webp" alt="Photo"
-                                                    >
-                                                                                                                                                    <span class="withu-file-size">219.5KB</span>
-                                                
-                                                <!-- +N 遮罩层 -->
-                                                                                            </div>
-                                                                                    <div class="withu-photo-box square"
-                                                >
-                                                <img class="withu-photo lazy" data-src="Lovefolder/20260416152656_69e08f4087d64784547991_thumb.webp"
-                                                    data-original="/Lovefolder/20260416152656_69e08f4087da1066854328.webp" src="Lovefolder/20260416152656_69e08f4087d64784547991_thumb.webp" alt="Photo"
-                                                    >
-                                                                                                                                                    <span class="withu-file-size">184.9KB</span>
-                                                
-                                                <!-- +N 遮罩层 -->
-                                                                                            </div>
-                                                                                    <div class="withu-photo-box square"
-                                                >
-                                                <img class="withu-photo lazy" data-src="Lovefolder/20260416152612_69e08f1433ec1936267310_thumb.webp"
-                                                    data-original="/Lovefolder/20260416152612_69e08f1433ef5695777043.webp" src="Lovefolder/20260416152612_69e08f1433ec1936267310_thumb.webp" alt="Photo"
-                                                    >
-                                                                                                                                                    <span class="withu-file-size">364KB</span>
-                                                
-                                                <!-- +N 遮罩层 -->
-                                                                                            </div>
-                                                                                    <div class="withu-photo-box square"
-                                                >
-                                                <img class="withu-photo lazy" data-src="Lovefolder/20260416152615_69e08f1746aad723099683_thumb.webp"
-                                                    data-original="/Lovefolder/20260416152615_69e08f1746ae0802172044.webp" src="Lovefolder/20260416152615_69e08f1746aad723099683_thumb.webp" alt="Photo"
-                                                    >
-                                                                                                                                                    <span class="withu-file-size">211.1KB</span>
-                                                
-                                                <!-- +N 遮罩层 -->
-                                                                                            </div>
-                                                                                    <div class="withu-photo-box square"
-                                                >
-                                                <img class="withu-photo lazy" data-src="Lovefolder/20260416152620_69e08f1ca7a9f850617615_thumb.webp"
-                                                    data-original="/Lovefolder/20260416152620_69e08f1ca7ae6234005612.webp" src="Lovefolder/20260416152620_69e08f1ca7a9f850617615_thumb.webp" alt="Photo"
-                                                    >
-                                                                                                                                                    <span class="withu-file-size">375.2KB</span>
-                                                
-                                                <!-- +N 遮罩层 -->
-                                                                                            </div>
-                                                                                    <div class="withu-photo-box square"
-                                                >
-                                                <img class="withu-photo lazy" data-src="Lovefolder/20260416152625_69e08f21d3ba4526472220_thumb.webp"
-                                                    data-original="/Lovefolder/20260416152625_69e08f21d3bdf147867170.webp" src="Lovefolder/20260416152625_69e08f21d3ba4526472220_thumb.webp" alt="Photo"
-                                                    >
-                                                                                                                                                    <span class="withu-file-size">378.7KB</span>
-                                                
-                                                <!-- +N 遮罩层 -->
-                                                                                            </div>
-                                                                                    <div class="withu-photo-box square"
-                                                >
-                                                <img class="withu-photo lazy" data-src="Lovefolder/20260416152631_69e08f276e9de203148723_thumb.webp"
-                                                    data-original="/Lovefolder/20260416152631_69e08f276ea29566330051.webp" src="Lovefolder/20260416152631_69e08f276e9de203148723_thumb.webp" alt="Photo"
-                                                    >
-                                                                                                                                                    <span class="withu-file-size">254.4KB</span>
-                                                
-                                                <!-- +N 遮罩层 -->
-                                                                                            </div>
-                                                                                    <div class="withu-photo-box square"
-                                                >
-                                                <img class="withu-photo lazy" data-src="Lovefolder/20260416152636_69e08f2cbf415963255468_thumb.webp"
-                                                    data-original="/Lovefolder/20260416152636_69e08f2cbf44f248335826.webp" src="Lovefolder/20260416152636_69e08f2cbf415963255468_thumb.webp" alt="Photo"
-                                                    >
-                                                                                                                                                    <span class="withu-file-size">957.9KB</span>
-                                                
-                                                <!-- +N 遮罩层 -->
-                                                                                                    <a href="album-detail.php?code=1776318513866" class="withu-overlay">
-                                                        <span>+12</span>
-                                                    </a>
-                                                                                            </div>
-                                                                            </div>
-                                
-                                <!-- Footer -->
-                                <div class="withu-footer">
-                                    <div class="withu-location-tag"
-                                                                                    data-lng="113.31222700"
-                                            data-lat="23.13955500"
-                                            onclick="WithUMap.open({ mode: 'albums', coords: [113.31222700, 23.13955500], zoom: 20 })"
-                                                                                data-tooltip="广州市">
-                                        <i class="ph-fill ph-map-pin"></i>
-                                        <span>广州市</span>
-                                    </div>
-                                    <div class="withu-actions-left">
-                                        <div class="withu-action-item">
-                                            <i class="ph ph-eye"></i>
-                                            <span data-view-count="album:1776318513866">29</span>
-                                        </div>
-                                        <div class="withu-action-item" data-like-target="album" data-like-id="1776318513866">
-                                            <i class="ph ph-heart"></i>
-                                            <span class="withu-interaction-like-num" data-like-count="album:1776318513866">0</span>
-                                        </div>
-                                                                                    <div class="withu-photo-count">
-                                                <span class="num">21</span>
-                                                <span class="label">PICS</span>
-                                            </div>
-                                                                            </div>
-                                </div>
-
-                            </div>
-                        
-                    </div>
-                
-            </div>
         </div>
     </div>
+</div>
 
     <script src="/assets/js/page-albums.js"></script>
     

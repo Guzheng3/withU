@@ -1,0 +1,50 @@
+[
+ {
+  "speaker": "male",
+  "text": "今天路过那家书店，顺手帮你看了一眼，没有新货。"
+ },
+ {
+  "speaker": "female",
+  "text": "……那家店要绕两条街吧。"
+ },
+ {
+  "speaker": "male",
+  "text": "最近在那片跑步。"
+ },
+ {
+  "speaker": "female",
+  "text": "你之前说那片路灯不好，不爱去。"
+ },
+ {
+  "speaker": "male",
+  "text": "换路线了。"
+ },
+ {
+  "speaker": "female",
+  "text": "哦。"
+ },
+ {
+  "speaker": "female",
+  "text": "谢谢你。"
+ },
+ {
+  "speaker": "male",
+  "text": "今晚下雨，记得带伞。"
+ },
+ {
+  "speaker": "female",
+  "text": "你怎么知道今晚下雨。"
+ },
+ {
+  "speaker": "male",
+  "text": "我查了。"
+ },
+ {
+  "speaker": "female",
+  "text": "你每天都查天气吗。"
+ },
+ {
+  "speaker": "male",
+  "text": "只查你那边的。"
+ }
+]

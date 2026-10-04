@@ -650,6 +650,15 @@ function upload_url(?string $path): string {
         return BASE_URL . '/' . $path;
     }
 
+    // Lovefolder 为前台公开媒体目录（由站点根直接提供 /Lovefolder/ 静态访问），
+    // 数据库中可能以相对路径引用其中的 demo/历史图片，按站点根路径补全
+    if (strpos($path, '/Lovefolder/') === 0) {
+        return BASE_URL . $path;
+    }
+    if (strpos($path, 'Lovefolder/') === 0) {
+        return BASE_URL . '/' . $path;
+    }
+
     // 其它情况：按相对路径处理
     return UPLOAD_URL . ltrim($path, '/');
 }
@@ -1223,7 +1232,7 @@ function migrate_schema_if_needed(): void {
 
     // Avoid rerunning dozens of SHOW/ALTER/CREATE statements on every PHP
     // request, including each high-frequency watch poll.
-    $schemaVersion = '20261004-01';
+    $schemaVersion = '20261004-05';
     $runtimeDir = dirname(ROOT_PATH) . DIRECTORY_SEPARATOR . 'runtime';
     $markerPath = $runtimeDir . DIRECTORY_SEPARATOR . 'schema-version';
     $lockPath = $runtimeDir . DIRECTORY_SEPARATOR . 'schema-migration.lock';
@@ -1696,6 +1705,34 @@ function migrate_withu_v1($db): void {
             PRIMARY KEY (`id`), UNIQUE KEY `uk_like_actor_target` (`actor_key`,`target_type`,`target_id`),
             KEY `idx_like_target` (`target_type`,`target_id`)
         ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='游客与情侣点赞';",
+        "CREATE TABLE IF NOT EXISTS `love_list_items` (
+            `id` int(11) NOT NULL AUTO_INCREMENT,
+            `user_id` int(11) NOT NULL COMMENT '创建用户ID',
+            `title` varchar(200) NOT NULL COMMENT '心愿标题',
+            `is_done` tinyint(1) NOT NULL DEFAULT 0 COMMENT '是否已完成',
+            `done_date` date DEFAULT NULL COMMENT '完成日期',
+            `location_name` varchar(255) DEFAULT NULL COMMENT '达成地点',
+            `latitude` decimal(10,7) DEFAULT NULL COMMENT '纬度',
+            `longitude` decimal(10,7) DEFAULT NULL COMMENT '经度',
+            `note` varchar(500) DEFAULT NULL COMMENT '备注',
+            `sort_order` int(11) NOT NULL DEFAULT 0 COMMENT '排序值，越小越靠前',
+            `created_at` datetime NOT NULL COMMENT '创建时间',
+            `updated_at` datetime DEFAULT NULL COMMENT '更新时间',
+            PRIMARY KEY (`id`),
+            KEY `user_id` (`user_id`),
+            KEY `is_done` (`is_done`)
+        ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='恋爱清单心愿表';",
+        "CREATE TABLE IF NOT EXISTS `love_list_item_images` (
+            `id` int(11) NOT NULL AUTO_INCREMENT,
+            `item_id` int(11) NOT NULL COMMENT '心愿ID',
+            `image_path` varchar(255) NOT NULL COMMENT '图片路径',
+            `thumbnail_path` varchar(255) DEFAULT NULL COMMENT '缩略图路径',
+            `sort_order` int(11) NOT NULL DEFAULT 0 COMMENT '排序值',
+            `created_at` datetime NOT NULL COMMENT '创建时间',
+            PRIMARY KEY (`id`),
+            KEY `item_id` (`item_id`),
+            KEY `sort_order` (`sort_order`)
+        ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='恋爱清单心愿图片表';",
         "CREATE TABLE IF NOT EXISTS `password_reset_tokens` (
             `id` int(11) NOT NULL AUTO_INCREMENT,
             `user_id` int(11) NOT NULL,
@@ -1721,6 +1758,17 @@ function migrate_withu_v1($db): void {
         ['albums', 'location_name', "ALTER TABLE `albums` ADD COLUMN `location_name` varchar(255) DEFAULT NULL COMMENT '相册地点'"],
         ['albums', 'latitude', "ALTER TABLE `albums` ADD COLUMN `latitude` decimal(10,7) DEFAULT NULL COMMENT '纬度'"],
         ['albums', 'longitude', "ALTER TABLE `albums` ADD COLUMN `longitude` decimal(10,7) DEFAULT NULL COMMENT '经度'"],
+        ['albums', 'views', "ALTER TABLE `albums` ADD COLUMN `views` int(11) NOT NULL DEFAULT 0 COMMENT '浏览量'"],
+        ['albums', 'like_count', "ALTER TABLE `albums` ADD COLUMN `like_count` int(11) NOT NULL DEFAULT 0 COMMENT '点赞数'"],
+        ['album_images', 'file_size', "ALTER TABLE `album_images` ADD COLUMN `file_size` int(11) DEFAULT NULL COMMENT '原图文件大小（字节），未知为 NULL'"],
+        ['articles', 'location_name', "ALTER TABLE `articles` ADD COLUMN `location_name` varchar(255) DEFAULT NULL COMMENT '发布地点名称'"],
+        ['articles', 'latitude', "ALTER TABLE `articles` ADD COLUMN `latitude` decimal(10,7) DEFAULT NULL COMMENT '纬度'"],
+        ['articles', 'longitude', "ALTER TABLE `articles` ADD COLUMN `longitude` decimal(10,7) DEFAULT NULL COMMENT '经度'"],
+        ['articles', 'weather', "ALTER TABLE `articles` ADD COLUMN `weather` varchar(100) DEFAULT NULL COMMENT '发布时天气'"],
+        ['articles', 'weather_icon', "ALTER TABLE `articles` ADD COLUMN `weather_icon` varchar(100) DEFAULT NULL COMMENT '天气图标类名'"],
+        ['articles', 'mood', "ALTER TABLE `articles` ADD COLUMN `mood` varchar(50) DEFAULT NULL COMMENT '心情标签'"],
+        ['articles', 'mood_icon', "ALTER TABLE `articles` ADD COLUMN `mood_icon` varchar(50) DEFAULT NULL COMMENT '心情图标类名'"],
+        ['articles', 'like_count', "ALTER TABLE `articles` ADD COLUMN `like_count` int(11) NOT NULL DEFAULT 0 COMMENT '点赞数'"],
         ['album_images', 'location_name', "ALTER TABLE `album_images` ADD COLUMN `location_name` varchar(255) DEFAULT NULL COMMENT '图片地点'"],
         ['album_images', 'latitude', "ALTER TABLE `album_images` ADD COLUMN `latitude` decimal(10,7) DEFAULT NULL COMMENT '图片纬度'"],
         ['album_images', 'longitude', "ALTER TABLE `album_images` ADD COLUMN `longitude` decimal(10,7) DEFAULT NULL COMMENT '图片经度'"],

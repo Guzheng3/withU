@@ -1,0 +1,128 @@
+[
+ {
+  "title": "奶牛猫的生日",
+  "description": "每年冬月二十",
+  "event_date": "2026-12-28",
+  "icon": "heart",
+  "is_important": 0,
+  "is_recurring": 1,
+  "sort_order": 0
+ },
+ {
+  "title": "Really生日倒计时",
+  "description": "每年三月初六",
+  "event_date": "2027-04-12",
+  "icon": "heart",
+  "is_important": 0,
+  "is_recurring": 1,
+  "sort_order": 1
+ },
+ {
+  "title": "咕噜的一岁生日",
+  "description": "每年六月初八",
+  "event_date": "2027-07-11",
+  "icon": "heart",
+  "is_important": 0,
+  "is_recurring": 1,
+  "sort_order": 2
+ },
+ {
+  "title": "拉拉扯扯一周年啦",
+  "description": "",
+  "event_date": "2024-07-19",
+  "icon": "heart",
+  "is_important": 1,
+  "is_recurring": 0,
+  "sort_order": 3
+ },
+ {
+  "title": "搬新家就是今天",
+  "description": "",
+  "event_date": "2024-07-20",
+  "icon": "heart",
+  "is_important": 0,
+  "is_recurring": 0,
+  "sort_order": 4
+ },
+ {
+  "title": "不异地已经",
+  "description": "",
+  "event_date": "2024-07-19",
+  "icon": "heart",
+  "is_important": 0,
+  "is_recurring": 0,
+  "sort_order": 5
+ },
+ {
+  "title": "测试纪念日10年前",
+  "description": "",
+  "event_date": "2014-05-15",
+  "icon": "heart",
+  "is_important": 1,
+  "is_recurring": 0,
+  "sort_order": 6
+ },
+ {
+  "title": "测试自动判断倒计时自动增加一年",
+  "description": "",
+  "event_date": "2027-03-08",
+  "icon": "heart",
+  "is_important": 0,
+  "is_recurring": 0,
+  "sort_order": 7
+ },
+ {
+  "title": "我们在一起咯",
+  "description": "",
+  "event_date": "2023-07-19",
+  "icon": "heart",
+  "is_important": 0,
+  "is_recurring": 0,
+  "sort_order": 8
+ },
+ {
+  "title": "距离2028年春节",
+  "description": "",
+  "event_date": "2028-01-26",
+  "icon": "heart",
+  "is_important": 0,
+  "is_recurring": 0,
+  "sort_order": 9
+ },
+ {
+  "title": "Our first 100days",
+  "description": "",
+  "event_date": "2023-10-27",
+  "icon": "heart",
+  "is_important": 0,
+  "is_recurring": 0,
+  "sort_order": 10
+ },
+ {
+  "title": "第一次约会",
+  "description": "",
+  "event_date": "2023-08-29",
+  "icon": "heart",
+  "is_important": 0,
+  "is_recurring": 0,
+  "sort_order": 11
+ },
+ {
+  "title": "第一次一起玩游戏",
+  "description": "",
+  "event_date": "2023-07-16",
+  "icon": "heart",
+  "is_important": 0,
+  "is_recurring": 0,
+  "sort_order": 12
+ },
+ {
+  "title": "我们相遇的那天",
+  "description": "",
+  "event_date": "2023-06-30",
+  "icon": "heart",
+  "is_important": 0,
+  "is_recurring": 0,
+  "sort_order": 13
+ }
+]

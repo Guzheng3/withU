@@ -188,6 +188,7 @@
             const esc = (s) => this._escHtml(s);
             const delay = Math.min((index + 1) * 50, 300);
             const id = esc(a.id);
+            const likeCount = parseInt(a.like_count, 10) || 0;
 
             const dayNoBadge = a.day_no
                 ? `<div class="withu-article-badge-serial"><span class="withu-article-label">DAY</span><span class="withu-article-num">${esc(a.day_no)}</span></div>`
@@ -268,7 +269,7 @@
                                 </div>
                                 <div class="withu-article-action-btn" data-like-target="article" data-like-id="${id}">
                                     <i class="ph ph-heart"></i>
-                                    <span class="withu-interaction-like-num" data-like-count="article:${id}">0</span>
+                                    <span class="withu-interaction-like-num" data-like-count="article:${id}">${likeCount}</span>
                                 </div>
                             </div>
                         </footer>

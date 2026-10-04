@@ -396,9 +396,116 @@
 </head>
 
 <body class="bg-pdot-vignette">
-    <div id="pjax-container" data-view-target="article" data-view-id="6">
+        <?php
+    // ── 文章详情：与后台/数据库联动 ──────────────────────────────
+    // 按 ?id= 从 articles 表读取（后台可管理）；不可见或不存在时回列表页。
+    $withuArticle = null;
+    $withuArticleAuthor = ['name' => '', 'avatar' => '', 'gender' => ''];
+    $withuArticlePrev = null;
+    $withuArticleNext = null;
+    $withuArticleDayNo = null;
+    $withuArticleWordCount = 0;
+    $withuArticleId = isset($_GET['id']) ? (int) $_GET['id'] : 0;
+
+    try {
+        if (class_exists('Database') && isset($db) && $db) {
+            if (function_exists('migrate_schema_if_needed')) {
+                migrate_schema_if_needed();
+            }
+            if (!function_exists('upload_url')) {
+                require_once dirname(__DIR__) . '/backend/app/core/helpers.php';
+            }
+            if ($withuArticleId > 0) {
+                $withuArticle = $db->fetch(
+                    "SELECT a.*, u.nickname, u.avatar, u.gender
+                     FROM articles a
+                     LEFT JOIN users u ON a.user_id = u.id
+                     WHERE a.id = :id AND a.status = 'published'
+                     LIMIT 1",
+                    ['id' => $withuArticleId]
+                );
+                // 可见范围：hidden/login 的文章仅登录可见（与列表页、首页口径一致）
+                if ($withuArticle) {
+                    $__vis = function_exists('withu_effective_visibility')
+                        ? withu_effective_visibility($withuArticle)
+                        : 'public';
+                    if (!$loggedIn && $__vis !== 'public') {
+                        $withuArticle = null;
+                    }
+                }
+            }
+
+            if ($withuArticle) {
+                $withuArticleAuthor = [
+                    'name'   => (string) ($withuArticle['nickname'] ?? ''),
+                    'avatar' => (string) ($withuArticle['avatar'] ?? ''),
+                    'gender' => in_array(($withuArticle['gender'] ?? ''), ['male', 'female'], true) ? $withuArticle['gender'] : '',
+                ];
+                $withuArticleWordCount = mb_strlen(preg_replace('/\s+/u', '', strip_tags((string) ($withuArticle['content'] ?? ''))));
+
+                // 恋爱 DAY 计数（后台 love_date 优先，回落站点配置 startTime）
+                $__loveStart = function_exists('get_setting') ? trim((string) get_setting('love_date', '')) : '';
+                if ($__loveStart === '') {
+                    $__cfg = json_decode($withuConfigJson ?? '{}', true);
+                    $__loveStart = trim((string) ($__cfg['startTime'] ?? ''));
+                }
+                $__loveTs = $__loveStart !== '' ? strtotime($__loveStart) : false;
+                $__artTs  = strtotime((string) $withuArticle['created_at']);
+                if ($__loveTs && $__artTs && $__artTs >= $__loveTs) {
+                    $withuArticleDayNo = (int) floor(($__artTs - $__loveTs) / 86400) + 1;
+                }
+
+                // 上一篇 / 下一篇（同可见范围内的相邻文章）
+                $__guestFilter = $loggedIn ? '' : " AND (is_encrypted = 0 OR is_encrypted IS NULL)";
+                $withuArticlePrev = $db->fetch(
+                    "SELECT a.id, a.title, a.created_at, u.nickname, u.avatar
+                     FROM articles a LEFT JOIN users u ON u.id = a.user_id
+                     WHERE a.status = 'published' AND a.id < :id{$__guestFilter}
+                     ORDER BY a.id DESC LIMIT 1",
+                    ['id' => $withuArticleId]
+                );
+                $withuArticleNext = $db->fetch(
+                    "SELECT a.id, a.title, a.created_at, u.nickname, u.avatar
+                     FROM articles a LEFT JOIN users u ON u.id = a.user_id
+                     WHERE a.status = 'published' AND a.id > :id{$__guestFilter}
+                     ORDER BY a.id ASC LIMIT 1",
+                    ['id' => $withuArticleId]
+                );
+            }
+        }
+    } catch (Throwable $e) {
+        $withuArticle = null;
+    }
+
+    if (!$withuArticle) {
+        // 文章不存在或无权访问：回到点滴列表
+        header('Location: /articles.php', true, 302);
+        exit;
+    }
+
+    $__art = $withuArticle;
+    $__artTs = strtotime((string) $__art['created_at']);
+    $__artYear = date('Y', $__artTs ?: time());
+    $__artMonth = date('m', $__artTs ?: time());
+    $__artDay = date('j', $__artTs ?: time());
+    $__artTime = date('H:i', $__artTs ?: time());
+    $__artDateCn = date('m月d日', $__artTs ?: time());
+    $__artLocation = trim((string) ($__art['location_name'] ?? ''));
+    $__artLng = $__art['longitude'] ?? null;
+    $__artLat = $__art['latitude'] ?? null;
+    $__artHasCoords = $__artLng !== null && $__artLat !== null && is_numeric($__artLng) && is_numeric($__artLat);
+    $__artAuthorName = $withuArticleAuthor['name'] !== '' ? $withuArticleAuthor['name'] : 'withU';
+    $__artAuthorAvatar = function_exists('upload_url') ? (upload_url($withuArticleAuthor['avatar']) ?: '/assets/images/default-avatar.svg') : '/assets/images/default-avatar.svg';
+    $__artContent = (string) ($__art['content'] ?? '');
+    // 富文本内容原样输出（尊重原有自定义标签语法）；纯文本则转义并保留换行
+    $__artContentHtml = (strip_tags($__artContent) !== $__artContent)
+        ? $__artContent
+        : nl2br(htmlspecialchars($__artContent, ENT_QUOTES, 'UTF-8'));
+    ?>
+
+    <div id="pjax-container" data-view-target="article" data-view-id="<?php echo (int) $__art['id']; ?>">
         <!-- PJAX 浏览量元数据 -->
-        <div id="withu-view-meta" data-view-target="article" data-view-id="6" style="display:none;"></div>
+        <div id="withu-view-meta" data-view-target="article" data-view-id="<?php echo (int) $__art['id']; ?>" style="display:none;"></div>
 
         <!-- Toast -->
         <div id="toast" class="withu-detail-toast">
@@ -408,7 +515,7 @@
 
         <!-- Right Vertical Rail (Operations) -->
         <aside class="withu-detail-vertical-rail">
-            <button class="withu-detail-rail-btn" id="rail-like-btn" data-like-target="article" data-like-id="6" data-withu-tip="<span data-like-count='article:6'>0</span> 人喜欢" data-withu-tip-html="true" data-withu-tip-force="true" data-withu-tip-dir="left">
+            <button class="withu-detail-rail-btn" id="rail-like-btn" data-like-target="article" data-like-id="<?php echo (int) $__art['id']; ?>" data-withu-tip="<span data-like-count='article:<?php echo (int) $__art['id']; ?>'><?php echo (int) ($__art['like_count'] ?? 0); ?></span> 人喜欢" data-withu-tip-html="true" data-withu-tip-force="true" data-withu-tip-dir="left">
                 <i class="ph ph-heart"></i>
             </button>
             <button class="withu-detail-rail-btn withu-detail-rail-mobile-only" id="mobile-toc-btn" data-withu-tip="目录" data-withu-tip-force="true" data-withu-tip-dir="left">
@@ -502,18 +609,18 @@
                             <div class="withu-detail-date-capsule">
                                 <div class="withu-detail-date-text-wrapper">
                                     <i class="ph-fill ph-sparkle withu-detail-date-icon-sparkle"></i>
-                                    <span>2024</span>
+                                    <span><?php echo $__artYear; ?></span>
                                     <div class="withu-detail-date-gradient-divider"></div>
-                                    <span>07</span>
+                                    <span><?php echo $__artMonth; ?></span>
                                 </div>
                                 <div class="withu-detail-date-circle">
-                                    <span class="withu-detail-date-day-number">31</span>
+                                    <span class="withu-detail-date-day-number"><?php echo $__artDay; ?></span>
                                 </div>
                             </div>
                         </div>
 
                         <!-- Title -->
-                        <h1 class="withu-detail-article-title">点点滴滴语法书写参考</h1>
+                        <h1 class="withu-detail-article-title"><?php echo htmlspecialchars((string) $__art['title'], ENT_QUOTES, 'UTF-8'); ?></h1>
 
                         <!-- Author Section -->
                         <div class="withu-detail-author-section">
@@ -521,15 +628,21 @@
                                 <div class="withu-detail-author-info">
                                     <div class="withu-detail-author-avatar-wrapper">
                                         <div class="withu-detail-author-avatar-blur"></div>
-                                        <img src="/Lovefolder/20260411043037_69d95ded97293201118237.webp" class="withu-detail-author-avatar">
+                                        <img src="<?php echo htmlspecialchars($__artAuthorAvatar, ENT_QUOTES, 'UTF-8'); ?>" class="withu-detail-author-avatar">
                                         <div class="withu-detail-author-badge">
                                             <i class="ph-fill ph-seal-check"></i>
                                         </div>
                                     </div>
                                     <div class="withu-detail-author-text">
-                                        <h3 class="withu-detail-author-name">Ki.</h3>
+                                        <h3 class="withu-detail-author-name"><?php echo htmlspecialchars($__artAuthorName, ENT_QUOTES, 'UTF-8'); ?></h3>
                                         <p class="withu-detail-author-desc">
-                                            <span>16:51于<a href="javascript:void(0)" style="color:inherit;" onclick="if(window.WithUMap) WithUMap.open({ mode:'moments', coords:[114.4168,23.1115], zoom:15 })">广东·惠州</a>，记录当下的瞬间。</span>
+                                            <?php if ($__artLocation !== '' && $__artHasCoords): ?>
+                                                <span><?php echo $__artTime; ?>于<a href="javascript:void(0)" style="color:inherit;" onclick="if(window.WithUMap) WithUMap.open({ mode:'moments', coords:[<?php echo (float) $__artLng; ?>,<?php echo (float) $__artLat; ?>], zoom:15 })"><?php echo htmlspecialchars($__artLocation, ENT_QUOTES, 'UTF-8'); ?></a>，记录当下的瞬间。</span>
+                                            <?php elseif ($__artLocation !== ''): ?>
+                                                <span><?php echo $__artTime; ?>于<?php echo htmlspecialchars($__artLocation, ENT_QUOTES, 'UTF-8'); ?>，记录当下的瞬间。</span>
+                                            <?php else: ?>
+                                                <span><?php echo $__artTime; ?>，记录当下的瞬间。</span>
+                                            <?php endif; ?>
                                         </p>
                                     </div>
                                 </div>
@@ -539,7 +652,7 @@
                                     <span class="withu-detail-day-label">WITH YOU</span>
                                     <div class="withu-detail-day-value">
                                         <i class="ph-fill ph-heart"></i>
-                                        <span>DAY 379</span>
+                                        <span>DAY <?php echo $withuArticleDayNo !== null ? (int) $withuArticleDayNo : '—'; ?></span>
                                     </div>
                                 </div>
                             </div>
@@ -551,36 +664,38 @@
                                     <div class="withu-detail-meta-icon-wrapper">
                                         <i class="ph-fill ph-eye"></i>
                                     </div>
-                                    <span class="withu-detail-meta-text"><span data-view-count="article:6">0</span> 次阅读</span>
+                                    <span class="withu-detail-meta-text"><span data-view-count="article:<?php echo (int) $__art['id']; ?>"><?php echo (int) ($__art['views'] ?? 0); ?></span> 次阅读</span>
                                 </div>
                                 <!-- Likes -->
-                                <div class="withu-detail-meta-badge" data-like-target="article" data-like-id="6" style="cursor:pointer;">
+                                <div class="withu-detail-meta-badge" data-like-target="article" data-like-id="<?php echo (int) $__art['id']; ?>" style="cursor:pointer;">
                                     <div class="withu-detail-meta-icon-wrapper">
                                         <i class="ph-fill ph-heart"></i>
                                     </div>
-                                    <span class="withu-detail-meta-text"><span class="withu-interaction-like-num" data-like-count="article:6">0</span> 喜欢</span>
+                                    <span class="withu-detail-meta-text"><span class="withu-interaction-like-num" data-like-count="article:<?php echo (int) $__art['id']; ?>"><?php echo (int) ($__art['like_count'] ?? 0); ?></span> 喜欢</span>
                                 </div>
                                 <!-- Time -->
                                 <div class="withu-detail-meta-badge">
                                     <div class="withu-detail-meta-icon-wrapper">
                                         <i class="ph-fill ph-clock"></i>
                                     </div>
-                                    <span class="withu-detail-meta-text">16:51</span>
+                                    <span class="withu-detail-meta-text"><?php echo $__artTime; ?></span>
                                 </div>
                                 <!-- Location -->
-                                <div class="withu-detail-meta-badge" style="cursor:pointer" onclick="if(window.WithUMap) WithUMap.open({ mode:'moments', coords:[114.4168,23.1115], zoom:15 })">
-                                    <div class="withu-detail-meta-icon-wrapper">
-                                        <i class="ph-fill ph-map-pin"></i>
+                                <?php if ($__artLocation !== ''): ?>
+                                    <div class="withu-detail-meta-badge" style="cursor:pointer"<?php echo $__artHasCoords ? ' onclick="if(window.WithUMap) WithUMap.open({ mode:\'moments\', coords:[' . (float) $__artLng . ',' . (float) $__artLat . '], zoom:15 })"' : ''; ?>>
+                                        <div class="withu-detail-meta-icon-wrapper">
+                                            <i class="ph-fill ph-map-pin"></i>
+                                        </div>
+                                        <span class="withu-detail-meta-text"><?php echo htmlspecialchars($__artLocation, ENT_QUOTES, 'UTF-8'); ?></span>
                                     </div>
-                                    <span class="withu-detail-meta-text">广东·惠州</span>
-                                </div>
+                                <?php endif; ?>
 
-                                                                <!-- Words -->
+                                <!-- Words -->
                                 <div class="withu-detail-meta-badge">
                                     <div class="withu-detail-meta-icon-wrapper">
                                         <i class="ph-fill ph-text-aa"></i>
                                     </div>
-                                    <span class="withu-detail-meta-text">869 字</span>
+                                    <span class="withu-detail-meta-text"><?php echo (int) $withuArticleWordCount; ?> 字</span>
                                 </div>
                             </div>
                         </div>
@@ -619,108 +734,51 @@
                             </div>
                         </div>
 
-                        <!-- Reading Guide -->
-                        <div class="withu-detail-reading-guide">
-                            <div class="withu-detail-reading-guide-inner">
-                                <div class="withu-detail-reading-guide-left">
-                                    <div class="withu-detail-reading-guide-icon">
-                                        <i class="ph-fill ph-eyeglasses"></i>
-                                    </div>
-                                    <span class="withu-detail-reading-guide-title">阅读指引</span>
-                                </div>
-                                <div class="withu-detail-reading-guide-spacer"></div>
-                                <div class="withu-detail-reading-guide-right">
-                                    <div class="withu-detail-reading-guide-time">
-                                        <span class="withu-detail-reading-guide-time-value">3</span>
-                                        <span class="withu-detail-reading-guide-time-label">分钟</span>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
                         <!-- Article Content -->
                         <div id="withu-detail-content" class="withu-detail-text">
-                            <desc>在时光的长河中，青春如同一颗璀璨而又转瞬即逝的流星，划过我们生命的夜空。它是一个短暂的美梦，当我们从梦中醒来，却发现它早已消失得无影无踪。那么，正在读这篇文章的你，是正在经历着如梦似幻的青春岁月，还是那一段段青春往事早已沉淀为心中难以言说的遗憾呢？你的青春，又有着怎样独特的模样？是藏着一场刻骨铭心的暗恋，还是有一个对你影响深远的少年？亦或是，你觉得陪你走过那段日子的人们仅仅只是你生命中的过客？让我们一同走进青春的回忆与思索之中。</desc>
-
-<quote>“你觉得青春是什么？”</quote>
-
-<center><i>青春是一个短暂的美梦，当你醒来时，它早已消失无踪。</i></center>
-
-<img alt="" src="https://loveli.kikiw.cn/uploads/20240516120344_1.jpeg">
-
-<hr>
-
-<center>
-<a href=" https://www.bilibili.com/" target="_blank">前往 bilibili </a>
-
-<a href="/album-detail.php?code=20240507224441">查看我们的相册</a>
-</center>
-
-<audio id="music" src data-id="0046EF1a1yhW8E" data-type="tencent"></audio>
-
-<audio id="music" src data-id="1475319299" data-type="netease"></audio>
-
-<audio id="music" src data-id="233921" data-type="netease" data-url="https://blog.kikiw.cn/mp4/nizaibuzai.m4a"></audio>
-
-<p>正在读这篇文章的你是正在经历着<code>青春岁月</code>，还是那一段段<b>青春往事</b>早已沉淀为遗憾是那样难以言说?你的青春于你而言是怎样一副模样呢?是有那样一场毕生难忘的暗恋?还是有一个对你影响深远的少年?抑或是，你觉得陪你走过那段日子的人们仅仅只是你<s>生命中的过客</s>？</p>
-
-<h2>人的一生是万里山河，来往无数过客。</h2>
-
-<p>有人给山河添色，有人使日月无光，有人改他江流，有人塑他骨梁。我的青春里，便有那样一个女孩，悄悄改变了从前那个胆小怯懦的少年。这一生漫长崎岖，总会有一些人消失在生活里却刻骨铭心的住在心里。那个女孩 是在偶然的一天， 悄然走进我的视线，慢慢填满了我的心间。就是那样的一天，那个看似遥不可及的女孩，让我一点点为她做出改变。也就这样，女孩在我的一生里原本注定是个过客，却偏偏变成了记忆中的常客。
-</p>
-
-<h4>人生天地间，忽如远行客，世间的一切无非是十里长亭一杯酒，折下柳枝，依依挥手。</h4>
-<p>曾看到一句话“命运就像是齿轮，在一无所知的时候把我们的人生轨迹重叠到一起，却又在紧密相连时把我们硬生生拆开。”人生天地间，忽如远行客，世间的一切无非是十里长亭一杯酒，折下柳枝，依依挥手。人总是很难在青春时认识青春，只有走过了青春，才能认识青春。所以，无论你现在是正在经历着，亦或是已经经历过，都不必为了去寻找那个答案而变得小心翼翼。</p>
-
-<video id="withUPlayerVideo" class="withu-player-video"  controls><source src="https://classpic.kikiw.cn/video/fengjing.mp4" type="video/mp4"/></video>
-
-<h5>在这秋意渐浓黄昏下的落日余晖中，抬起头看看天边的落日与云彩吧，他都为我们而脸红。</h5>
-
-
-<quote>B 站视频插入</quote>
-
-<center><iframe id="spkj" src="https://player.bilibili.com/player.html?isOutside=true&aid=112799380408343&bvid=BV1YpbzeaEHE&cid=500001617799426&p=1" scrolling="no" border="0" frameborder="no" framespacing="0" allowfullscreen="true" width=100%> </iframe></center>
-
-
-<center>
-<h6>2024-05-16 14:57:24 星期四</h6>
-</center>                        </div>
+<?php echo $__artContentHtml; ?>
+                        </div>
 
                     </div>
-                                            <div class="withu-detail-bottom-nav">
+                    <?php if ($withuArticlePrev || $withuArticleNext): ?>
+                        <div class="withu-detail-bottom-nav">
                             <div class="withu-detail-bottom-nav-grid">
-                                                                    <!-- Previous Article -->
-                                    <a href="page.php?id=5" class="withu-detail-nav-card">
+                                <?php if ($withuArticlePrev): ?>
+                                    <!-- Previous Article -->
+                                    <a href="page.php?id=<?php echo (int) $withuArticlePrev['id']; ?>" class="withu-detail-nav-card">
                                         <div class="withu-detail-nav-header">
                                             <i class="ph-bold ph-arrow-left"></i>
                                             <span>上一篇</span>
                                         </div>
-                                        <div class="withu-detail-nav-title">小本本</div>
+                                        <div class="withu-detail-nav-title"><?php echo htmlspecialchars((string) $withuArticlePrev['title'], ENT_QUOTES, 'UTF-8'); ?></div>
                                         <div class="withu-detail-nav-footer">
-                                            <img src="/Lovefolder/20260411043046_69d95df639c33274072975.webp" alt="Really">
-                                            <span>Really</span>
+                                            <img src="<?php echo htmlspecialchars(function_exists('upload_url') ? (upload_url((string) ($withuArticlePrev['avatar'] ?? '')) ?: '/assets/images/default-avatar.svg') : '/assets/images/default-avatar.svg', ENT_QUOTES, 'UTF-8'); ?>" alt="<?php echo htmlspecialchars((string) ($withuArticlePrev['nickname'] ?? ''), ENT_QUOTES, 'UTF-8'); ?>">
+                                            <span><?php echo htmlspecialchars((string) ($withuArticlePrev['nickname'] ?? ''), ENT_QUOTES, 'UTF-8'); ?></span>
                                             <span>·</span>
-                                            <span>03月12日</span>
+                                            <span><?php echo date('m月d日', strtotime((string) $withuArticlePrev['created_at']) ?: time()); ?></span>
                                         </div>
                                     </a>
-                                
-                                                                    <!-- Next Article -->
-                                    <a href="page.php?id=7" class="withu-detail-nav-card withu-detail-nav-card-right">
+                                <?php endif; ?>
+                                <?php if ($withuArticleNext): ?>
+                                    <!-- Next Article -->
+                                    <a href="page.php?id=<?php echo (int) $withuArticleNext['id']; ?>" class="withu-detail-nav-card<?php echo $withuArticlePrev ? ' withu-detail-nav-card-right' : ''; ?>">
                                         <div class="withu-detail-nav-header">
                                             <span>下一篇</span>
                                             <i class="ph-bold ph-arrow-right"></i>
                                         </div>
-                                        <div class="withu-detail-nav-title">标签书写演示🎄🍰🐍</div>
+                                        <div class="withu-detail-nav-title"><?php echo htmlspecialchars((string) $withuArticleNext['title'], ENT_QUOTES, 'UTF-8'); ?></div>
                                         <div class="withu-detail-nav-footer">
-                                            <img src="/Lovefolder/20260411043037_69d95ded97293201118237.webp" alt="Ki.">
-                                            <span>Ki.</span>
+                                            <img src="<?php echo htmlspecialchars(function_exists('upload_url') ? (upload_url((string) ($withuArticleNext['avatar'] ?? '')) ?: '/assets/images/default-avatar.svg') : '/assets/images/default-avatar.svg', ENT_QUOTES, 'UTF-8'); ?>" alt="<?php echo htmlspecialchars((string) ($withuArticleNext['nickname'] ?? ''), ENT_QUOTES, 'UTF-8'); ?>">
+                                            <span><?php echo htmlspecialchars((string) ($withuArticleNext['nickname'] ?? ''), ENT_QUOTES, 'UTF-8'); ?></span>
                                             <span>·</span>
-                                            <span>12月24日</span>
+                                            <span><?php echo date('m月d日', strtotime((string) $withuArticleNext['created_at']) ?: time()); ?></span>
                                         </div>
                                     </a>
-                                                            </div>
+                                <?php endif; ?>
+                            </div>
                         </div>
-                                    </article>
+                    <?php endif; ?>
+                </article>
 
             </main>
 

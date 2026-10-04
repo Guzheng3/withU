@@ -434,19 +434,25 @@
 
         <!-- PHP 配置输出 -->
         <script>
-            // 双主角配置（由 PHP 注入，key = login_id）
-            window.TIMELINE_AUTHORS = {};
-                        window.TIMELINE_AUTHORS[1] = {
-                name: "Ki.",
-                avatar: "https:\/\/love-really.kikiw.cn\/Lovefolder\/20260411043037_69d95ded97293201118237.webp",
-                gender: "male"            };
-                        window.TIMELINE_AUTHORS[2] = {
-                name: "Really",
-                avatar: "https:\/\/love-really.kikiw.cn\/Lovefolder\/20260411043046_69d95df639c33274072975.webp",
-                gender: "female"            };
-                        // 兼容旧数据 male/female 键
-            window.TIMELINE_AUTHORS['male'] = window.TIMELINE_AUTHORS[1];
-window.TIMELINE_AUTHORS['female'] = window.TIMELINE_AUTHORS[2];
+            // 双主角配置（由站点配置/数据库用户生成，key 与时间轴数据的 author_id 对应）
+            window.TIMELINE_AUTHORS = (function () {
+                var cfg = window.WITHU_CONFIG || {};
+                var authors = {};
+                authors[1] = {
+                    name: cfg.maleName || '我',
+                    avatar: cfg.maleAvatar || '',
+                    gender: 'male'
+                };
+                authors[2] = {
+                    name: cfg.femaleName || '你',
+                    avatar: cfg.femaleAvatar || '',
+                    gender: 'female'
+                };
+                // 兼容旧数据 male/female 键
+                authors['male'] = authors[1];
+                authors['female'] = authors[2];
+                return authors;
+            })();
         </script>
 
         <!-- WaveSurfer 音频波形 -->

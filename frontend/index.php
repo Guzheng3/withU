@@ -55,7 +55,199 @@ try {
         }
     }
 } catch (Throwable $e) {}
+
+$__cfgWeather = json_decode($withuConfigJson ?? '{}', true);
+
+// 首页统计数字：按数据库实时计算（原为静态快照数字）
+$homeStats = ['articles' => 0, 'photos' => 0, 'messages' => 0, 'timeline' => 0];
+try {
+    if (isset($db) && $db) {
+        $guestArt = $loggedIn ? '' : " AND (is_encrypted = 0 OR is_encrypted IS NULL)";
+        $guestAlb = $loggedIn ? '' : " AND (is_encrypted = 0 OR is_encrypted IS NULL)";
+        $homeStats['articles'] = (int) $db->fetch("SELECT COUNT(*) AS c FROM articles WHERE status = 'published'{$guestArt}")['c'];
+        $homeStats['photos']   = (int) $db->fetch("SELECT COUNT(*) AS c FROM album_images")['c'];
+        $homeStats['messages'] = (int) $db->fetch("SELECT COUNT(*) AS c FROM messages WHERE status = 'published' AND is_public = 1")['c'];
+        $homeStats['lovelist_done']  = (int) $db->fetch("SELECT COUNT(*) AS c FROM love_list_items WHERE is_done = 1")['c'];
+        $homeStats['lovelist_total'] = (int) $db->fetch("SELECT COUNT(*) AS c FROM love_list_items")['c'];
+        $homeStats['timeline'] = $homeStats['articles']
+            + (int) $db->fetch("SELECT COUNT(*) AS c FROM albums WHERE 1=1{$guestAlb}")['c']
+            + (int) $db->fetch("SELECT COUNT(*) AS c FROM love_list_items WHERE is_done = 1")['c']
+            + (int) $db->fetch("SELECT COUNT(*) AS c FROM events")['c'];
+    }
+} catch (Throwable $e) {
+    // 统计失败保持 0
+}
+
+// ── 首页三大区块数据：与后台/数据库联动 ────────────────────────
+// 点滴（articles）/ 相册（albums）/ 留言（messages）均从数据库读取，
+// 取代原先写死在页面里的静态卡片；读取失败时对应区块降级为空。
+if (!function_exists('upload_url')) {
+    require_once __DIR__ . '/../backend/app/core/helpers.php';
+}
+
+if (!function_exists('withu_home_cn_date')) {
+    /** 2021-08-29 → 二〇二一年八月二十九日 */
+    function withu_home_cn_date(string $date): string {
+        $ts = strtotime($date);
+        if (!$ts) return '';
+        $y = date('Y', $ts);
+        $m = (int) date('n', $ts);
+        $d = (int) date('j', $ts);
+        $digits = ['〇', '一', '二', '三', '四', '五', '六', '七', '八', '九'];
+        $yearCn = '';
+        foreach (str_split($y) as $ch) {
+            $yearCn .= $digits[(int) $ch] ?? $ch;
+        }
+        $months = ['', '一', '二', '三', '四', '五', '六', '七', '八', '九', '十', '十一', '十二'];
+        $dayCn = $d <= 10
+            ? ($d === 10 ? '十' : $digits[$d])
+            : ($d < 20 ? '十' . $digits[$d - 10] : ($d % 10 === 0 ? $digits[intdiv($d, 10)] . '十' : $digits[intdiv($d, 10)] . '十' . $digits[$d % 10]));
+        return $yearCn . '年' . $months[$m] . '月' . $dayCn . '日';
+    }
+}
+
+$homeLoveTs = false;
+try {
+    $__cfgHome = json_decode($withuConfigJson ?? '{}', true);
+    $__loveStartHome = function_exists('get_setting') ? trim((string) get_setting('love_date', '')) : '';
+    if ($__loveStartHome === '') {
+        $__loveStartHome = trim((string) ($__cfgHome['startTime'] ?? ''));
+    }
+    if ($__loveStartHome !== '') {
+        $homeLoveTs = strtotime($__loveStartHome) ?: false;
+    }
+} catch (Throwable $e) {
+    $homeLoveTs = false;
+}
+
+// 点滴：最新 6 篇（游客仅公开文章）
+$homeArticles = [];
+try {
+    if (isset($db) && $db) {
+        $rows = $db->fetchAll(
+            "SELECT a.*, u.nickname, u.avatar
+             FROM articles a
+             LEFT JOIN users u ON a.user_id = u.id
+             WHERE a.status = 'published'
+             ORDER BY a.created_at DESC, a.id DESC
+             LIMIT 12"
+        );
+        foreach ($rows as $r) {
+            $vis = function_exists('withu_effective_visibility') ? withu_effective_visibility($r) : 'public';
+            if (!$loggedIn && $vis !== 'public') {
+                continue;
+            }
+            $ts = strtotime((string) $r['created_at']) ?: 0;
+            $dayNo = ($homeLoveTs && $ts >= $homeLoveTs) ? (int) floor(($ts - $homeLoveTs) / 86400) + 1 : null;
+            $excerpt = trim(preg_replace('/\s+/u', ' ', strip_tags((string) ($r['content'] ?? ''))));
+            if (mb_strlen($excerpt) > 160) {
+                $excerpt = mb_substr($excerpt, 0, 160) . '…';
+            }
+            $homeArticles[] = [
+                'id'        => (int) $r['id'],
+                'title'     => (string) $r['title'],
+                'excerpt'   => $excerpt,
+                'author'    => (string) ($r['nickname'] ?? ''),
+                'avatar'    => upload_url((string) ($r['avatar'] ?? '')) ?: '/assets/images/default-avatar.svg',
+                'date'      => $ts ? date('Y-m-d H:i', $ts) : '',
+                'city'      => (string) ($r['location_name'] ?? ''),
+                'weather'   => (string) ($r['weather'] ?? ''),
+                'weather_icon' => (string) ($r['weather_icon'] ?? ''),
+                'mood'      => (string) ($r['mood'] ?? ''),
+                'mood_icon' => (string) ($r['mood_icon'] ?? ''),
+                'views'     => (int) ($r['views'] ?? 0),
+                'likes'     => (int) ($r['like_count'] ?? 0),
+                'day_no'    => $dayNo,
+            ];
+            if (count($homeArticles) >= 6) {
+                break;
+            }
+        }
+    }
+} catch (Throwable $e) {
+    $homeArticles = [];
+}
+
+// 相册：最新 3 个（游客过滤完全隐藏的相册）
+$homeAlbums = [];
+try {
+    if (isset($db) && $db) {
+        $rows = $db->fetchAll(
+            "SELECT a.*, u.nickname, u.avatar,
+                    ((SELECT COUNT(*) FROM album_images WHERE album_id = a.id) +
+                     (SELECT COUNT(*) FROM album_videos  WHERE album_id = a.id)) AS image_count
+             FROM albums a
+             LEFT JOIN users u ON a.user_id = u.id
+             ORDER BY a.created_at DESC, a.id ASC
+             LIMIT 8"
+        );
+        $homeAlbumCodes = [];
+        $__mapFileHome = __DIR__ . '/services/map-all.json';
+        if (is_file($__mapFileHome)) {
+            $__mapHome = json_decode((string) file_get_contents($__mapFileHome), true);
+            foreach ((is_array($__mapHome) ? ($__mapHome['albums'] ?? []) : []) as $__ma) {
+                if (!empty($__ma['name']) && !empty($__ma['code'])) {
+                    $homeAlbumCodes[(string) $__ma['name']] = (string) $__ma['code'];
+                }
+            }
+        }
+        foreach ($rows as $r) {
+            $vis = function_exists('withu_effective_visibility') ? withu_effective_visibility($r) : 'public';
+            if (!$loggedIn && $vis === 'hidden') {
+                continue;
+            }
+            $homeAlbums[] = [
+                'name'    => (string) $r['name'],
+                'city'    => (string) ($r['location_name'] ?? ''),
+                'count'   => (int) ($r['image_count'] ?? 0),
+                'cover'   => upload_url((string) ($r['cover_image'] ?? '')),
+                'author'  => (string) ($r['nickname'] ?? ''),
+                'avatar'  => upload_url((string) ($r['avatar'] ?? '')) ?: '/assets/images/default-avatar.svg',
+                'date'    => withu_home_cn_date((string) $r['created_at']),
+                'code'    => $homeAlbumCodes[(string) $r['name']] ?? '',
+            ];
+            if (count($homeAlbums) >= 3) {
+                break;
+            }
+        }
+    }
+} catch (Throwable $e) {
+    $homeAlbums = [];
+}
+
+// 留言：最新 24 条公开留言
+$homeMessages = [];
+try {
+    if (isset($db) && $db) {
+        $rows = $db->fetchAll(
+            "SELECT * FROM messages
+             WHERE status = 'published' AND is_public = 1 AND (parent_id IS NULL OR parent_id = 0)
+             ORDER BY created_at DESC, id DESC
+             LIMIT 24"
+        );
+        foreach ($rows as $r) {
+            $qq = trim((string) ($r['guest_qq'] ?? ''));
+            $avatar = trim((string) ($r['guest_avatar'] ?? ''));
+            if ($avatar === '') {
+                $avatar = $qq !== '' ? '/_qqavatar.php?qq=' . rawurlencode($qq) . '&s=100' : '/_qqavatar.php?qq=10000&s=100';
+            }
+            $homeMessages[] = [
+                'id'         => (int) $r['id'],
+                'name'       => (string) ($r['guest_nickname'] ?? '') !== '' ? (string) $r['guest_nickname'] : '匿名留言',
+                'avatar'     => $avatar,
+                'time'       => (string) ($r['created_at'] ?? ''),
+                'content'    => (string) ($r['content_html'] ?? '') !== '' ? (string) $r['content_html'] : nl2br(htmlspecialchars((string) ($r['content'] ?? ''), ENT_QUOTES, 'UTF-8')),
+                'location'   => (string) ($r['location'] ?? ''),
+                'os'         => (string) ($r['os'] ?? ''),
+                'browser'    => (string) ($r['browser'] ?? ''),
+            ];
+        }
+    }
+} catch (Throwable $e) {
+    $homeMessages = [];
+}
 ?>
+
 <meta name="x-withu-license-instance" content="858ee1d099b9">
 
 <link rel="icon" href="favicon.png" />
@@ -572,9 +764,9 @@ try {
                         <!-- 顶部：用户 + 时间 -->
                         <div class="withu-home-weather-row-top">
                             <div class="withu-home-weather-user-pill">
-                                <img src="Lovefolder/20260411043037_69d95ded97293201118237.webp"
-                                    class="withu-home-weather-avatar" alt="Ki.">
-                                <span class="withu-home-weather-username">Ki.</span>
+                                <img src="<?php echo htmlspecialchars(function_exists('upload_url') ? (upload_url((string) ($__cfgWeather['maleAvatar'] ?? '')) ?: '/assets/images/default-avatar.svg') : '/assets/images/default-avatar.svg', ENT_QUOTES, 'UTF-8'); ?>"
+                                    class="withu-home-weather-avatar" alt="<?php echo htmlspecialchars((string) ($__cfgWeather['maleName'] ?? '我'), ENT_QUOTES, 'UTF-8'); ?>">
+                                <span class="withu-home-weather-username"><?php echo htmlspecialchars((string) ($__cfgWeather['maleName'] ?? '我'), ENT_QUOTES, 'UTF-8'); ?></span>
                             </div>
                             <div class="withu-home-weather-time-tag">--</div>
                         </div>
@@ -617,9 +809,9 @@ try {
 
                         <div class="withu-home-weather-row-top">
                             <div class="withu-home-weather-user-pill">
-                                <img src="Lovefolder/20260411043046_69d95df639c33274072975.webp"
-                                    class="withu-home-weather-avatar" alt="Really">
-                                <span class="withu-home-weather-username">Really</span>
+                                <img src="<?php echo htmlspecialchars(function_exists('upload_url') ? (upload_url((string) ($__cfgWeather['femaleAvatar'] ?? '')) ?: '/assets/images/default-avatar.svg') : '/assets/images/default-avatar.svg', ENT_QUOTES, 'UTF-8'); ?>"
+                                    class="withu-home-weather-avatar" alt="<?php echo htmlspecialchars((string) ($__cfgWeather['femaleName'] ?? '你'), ENT_QUOTES, 'UTF-8'); ?>">
+                                <span class="withu-home-weather-username"><?php echo htmlspecialchars((string) ($__cfgWeather['femaleName'] ?? '你'), ENT_QUOTES, 'UTF-8'); ?></span>
                             </div>
                             <div class="withu-home-weather-time-tag">--</div>
                         </div>
@@ -673,21 +865,21 @@ try {
                                 <div class="withu-lovelist-stats">
                                     <div class="withu-lovelist-fraction withu-font-num">
                                         <span
-                                            class="withu-lovelist-completed">23</span>
+                                            class="withu-lovelist-completed"><?php echo (int) $homeStats['lovelist_done']; ?></span>
                                         <span class="withu-lovelist-divider">/</span>
                                         <span
-                                            class="withu-lovelist-total">36</span>
+                                            class="withu-lovelist-total"><?php echo (int) $homeStats['lovelist_total']; ?></span>
                                     </div>
 
                                     <div class="withu-font-num withu-num-huge">
-                                        <span>64</span><span
+                                        <span><?php echo $homeStats['lovelist_total'] > 0 ? (int) round($homeStats['lovelist_done'] * 100 / $homeStats['lovelist_total']) : 0; ?></span><span
                                             class="withu-num-suffix">%</span>
                                     </div>
                                 </div>
 
                                 <div class="withu-progress withu-progress-sm">
                                     <div class="withu-progress__bar withu-progress-fill-white"
-                                        style="width: 64%;"></div>
+                                        style="width: <?php echo $homeStats['lovelist_total'] > 0 ? (int) round($homeStats['lovelist_done'] * 100 / $homeStats['lovelist_total']) : 0; ?>%;"></div>
                                 </div>
                             </div>
                         </div>
@@ -709,7 +901,7 @@ try {
                             </div>
                             <div class="withu-mt-1rem">
                                 <div class="withu-font-num withu-stats-num">
-                                    10                                </div>
+                                    <?php echo (int) $homeStats['articles']; ?>                                </div>
                                 <div class="withu-stats-label withu-stats-label--en">Memory Notes</div>
                             </div>
                         </div>
@@ -730,7 +922,7 @@ try {
                             </div>
                             <div class="withu-mt-1rem">
                                 <div class="withu-font-num withu-stats-num">
-                                    144                                </div>
+                                    <?php echo (int) $homeStats['photos']; ?>                                </div>
                                 <div class="withu-stats-label withu-stats-label--en">Photo Keepsakes</div>
                             </div>
                         </div>
@@ -751,7 +943,7 @@ try {
                             </div>
                             <div class="withu-mt-1rem">
                                 <div class="withu-font-num withu-stats-num">
-                                    184                                </div>
+                                    <?php echo (int) $homeStats['messages']; ?>                                </div>
                                 <div class="withu-stats-label withu-stats-label--en">Kind Messages</div>
                             </div>
                         </div>
@@ -772,7 +964,7 @@ try {
                             </div>
                             <div class="withu-mt-1rem">
                                 <div class="withu-font-num withu-stats-num">
-                                    4                                </div>
+                                    <?php echo (int) $homeStats['timeline']; ?>                                </div>
                                 <div class="withu-stats-label withu-stats-label--en">Steps of Us</div>
                             </div>
                         </div>
@@ -1541,220 +1733,67 @@ try {
                     </div>
                 </div>
                 <div class="withu-journal-grid">
-                                                    <div data-aos="fade-up" data-aos-delay="0">                            <a href="page.php?id=12"
+<?php if (empty($homeArticles)): ?>
+                    <div class="withu-no-data withu-no-data--search">
+                        <div class="withu-no-data-wrap"><div class="withu-no-data-content">
+                            <h3 class="withu-no-data-title">还没有点滴记录</h3>
+                            <p class="withu-no-data-desc">去后台写下第一篇日常吧～</p>
+                        </div></div>
+                    </div>
+<?php else: ?>
+<?php foreach ($homeArticles as $__i => $__a): ?>
+                    <div data-aos="fade-up" data-aos-delay="<?php echo (int) $__i * 50; ?>">
+                            <a href="page.php?id=<?php echo (int) $__a['id']; ?>"
                                 class="withu-journal-card withu-journal-card--link">
-                                <div class="withu-watermark">DAY 1002</div>
+                                <div class="withu-watermark">DAY <?php echo $__a['day_no'] !== null ? (int) $__a['day_no'] : '—'; ?></div>
 
                                 <div class="withu-journal-header">
                                     <div class="withu-journal-user">
-                                        <img data-src="Lovefolder/20260411043046_69d95df639c33274072975.webp" class="withu-journal-avatar lazy">
+                                        <img data-src="<?php echo htmlspecialchars($__a['avatar'], ENT_QUOTES, 'UTF-8'); ?>" class="withu-journal-avatar lazy">
                                         <div>
-                                            <div class="withu-font-sm-bold">Really</div>
-                                            <div class="withu-journal-meta">2026-04-15 21:04</div>
+                                            <div class="withu-font-sm-bold"><?php echo htmlspecialchars($__a['author'] !== '' ? $__a['author'] : 'withU', ENT_QUOTES, 'UTF-8'); ?></div>
+                                            <div class="withu-journal-meta"><?php echo htmlspecialchars($__a['date'], ENT_QUOTES, 'UTF-8'); ?></div>
                                         </div>
                                     </div>
                                 </div>
 
                                 <div class="withu-journal-content">
                                     <h3 class="withu-journal-title withu-journal-title-text">
-                                        测试女主发布文章丨の 文章标题                                    </h3>
-                                    <p class="withu-journal-body withu-journal-body-clamp">
-                                         自动识别1233。 test                                    </p>
+                                        <?php echo htmlspecialchars($__a['title'], ENT_QUOTES, 'UTF-8'); ?>
+                                    </h3>
+                                    <?php if ($__a['excerpt'] !== ''): ?>
+                                        <p class="withu-journal-body withu-journal-body-clamp">
+                                            <?php echo htmlspecialchars($__a['excerpt'], ENT_QUOTES, 'UTF-8'); ?>
+                                        </p>
+                                    <?php endif; ?>
                                 </div>
 
                                 <div class="withu-journal-footer">
                                     <div class="withu-flex-gap-sm">
-                                        <span class="withu-chip withu-chip--light"><i class="ph-bold ph-map-pin"></i>
-                                            广东 · 惠东</span>
-                                                                                <span class="withu-chip withu-chip--light"><i class="ph-bold ph-cloud-sun"></i>
-                                            多云</span>
-                                                                                                                        <span class="withu-chip withu-chip--light"><i class="ph-bold ph-smiley"></i>
-                                            开心</span>
-                                                                                <span class="withu-chip withu-chip--light"><i class="ph-bold ph-eye"></i>
-                                            109</span>
+                                        <?php if ($__a['city'] !== ''): ?>
+                                            <span class="withu-chip withu-chip--light"><i class="ph-bold ph-map-pin"></i>
+                                                <?php echo htmlspecialchars($__a['city'], ENT_QUOTES, 'UTF-8'); ?></span>
+                                        <?php endif; ?>
+                                        <?php if ($__a['weather'] !== ''): ?>
+                                            <span class="withu-chip withu-chip--light"><i class="ph-bold <?php echo htmlspecialchars($__a['weather_icon'] !== '' ? $__a['weather_icon'] : 'ph-cloud-sun', ENT_QUOTES, 'UTF-8'); ?>"></i>
+                                                <?php echo htmlspecialchars($__a['weather'], ENT_QUOTES, 'UTF-8'); ?></span>
+                                        <?php endif; ?>
+                                        <?php if ($__a['mood'] !== ''): ?>
+                                            <span class="withu-chip withu-chip--light"><i class="ph-bold <?php echo htmlspecialchars($__a['mood_icon'] !== '' ? $__a['mood_icon'] : 'ph-smiley', ENT_QUOTES, 'UTF-8'); ?>"></i>
+                                                <?php echo htmlspecialchars($__a['mood'], ENT_QUOTES, 'UTF-8'); ?></span>
+                                        <?php endif; ?>
+                                        <span class="withu-chip withu-chip--light"><i class="ph-bold ph-eye"></i>
+                                            <?php echo (int) $__a['views']; ?></span>
                                         <span class="withu-chip withu-chip--light"><i class="ph-bold ph-heart"></i>
-                                            4</span>
+                                            <?php echo (int) $__a['likes']; ?></span>
                                     </div>
                                 </div>
                             </a>
-                            </div>                                                    <div data-aos="fade-up" data-aos-delay="50">                            <a href="page.php?id=11"
-                                class="withu-journal-card withu-journal-card--link">
-                                <div class="withu-watermark">DAY 997</div>
-
-                                <div class="withu-journal-header">
-                                    <div class="withu-journal-user">
-                                        <img data-src="Lovefolder/20260411043037_69d95ded97293201118237.webp" class="withu-journal-avatar lazy">
-                                        <div>
-                                            <div class="withu-font-sm-bold">Ki.</div>
-                                            <div class="withu-journal-meta">2026-04-10 17:39</div>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <div class="withu-journal-content">
-                                    <h3 class="withu-journal-title withu-journal-title-text">
-                                        测试 v2.0.7发布是否正常                                    </h3>
-                                    <p class="withu-journal-body withu-journal-body-clamp">
-                                        测试 v2.0.7发布是否正常测试 v2.0.7发布是否正常测试 v2.0.7发布是否正常测试 v2.0.7发布是否正常测试 v2.0.7发布是否正常测试 v2.0.7发布是否正常测试 v2.0.7发布是否正常测试 v2.0.7发布是否正常                                    </p>
-                                </div>
-
-                                <div class="withu-journal-footer">
-                                    <div class="withu-flex-gap-sm">
-                                        <span class="withu-chip withu-chip--light"><i class="ph-bold ph-map-pin"></i>
-                                            广东 · 惠东</span>
-                                                                                <span class="withu-chip withu-chip--light"><i class="ph-bold ph-cloud-sun"></i>
-                                            多云</span>
-                                                                                                                        <span class="withu-chip withu-chip--light"><i class="ph-bold ph-smiley"></i>
-                                            开心</span>
-                                                                                <span class="withu-chip withu-chip--light"><i class="ph-bold ph-eye"></i>
-                                            85</span>
-                                        <span class="withu-chip withu-chip--light"><i class="ph-bold ph-heart"></i>
-                                            2</span>
-                                    </div>
-                                </div>
-                            </a>
-                            </div>                                                    <div data-aos="fade-up" data-aos-delay="100">                            <a href="page.php?id=10"
-                                class="withu-journal-card withu-journal-card--link">
-                                <div class="withu-watermark">DAY 997</div>
-
-                                <div class="withu-journal-header">
-                                    <div class="withu-journal-user">
-                                        <img data-src="Lovefolder/20260411043037_69d95ded97293201118237.webp" class="withu-journal-avatar lazy">
-                                        <div>
-                                            <div class="withu-font-sm-bold">Ki.</div>
-                                            <div class="withu-journal-meta">2026-04-10 05:36</div>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <div class="withu-journal-content">
-                                    <h3 class="withu-journal-title withu-journal-title-text">
-                                        我再新增一遍测试                                    </h3>
-                                    <p class="withu-journal-body withu-journal-body-clamp">
-                                        我再新增一遍测试我再新增一遍测试我再新增一遍测试我再新增一遍测试我再新增一遍测试我再新增一遍测试我再新增一遍测试我再新增一遍测试我再新增一遍测试我再新增一遍测试我再新增一遍测试我再新增一遍测试我再新增一遍测试我再新增一遍测试我再新增一遍测试                                    </p>
-                                </div>
-
-                                <div class="withu-journal-footer">
-                                    <div class="withu-flex-gap-sm">
-                                        <span class="withu-chip withu-chip--light"><i class="ph-bold ph-map-pin"></i>
-                                            广东 · 惠东</span>
-                                                                                <span class="withu-chip withu-chip--light"><i class="ph-bold ph-cloud-sun"></i>
-                                            多云</span>
-                                                                                                                        <span class="withu-chip withu-chip--light"><i class="ph-bold ph-smiley"></i>
-                                            开心</span>
-                                                                                <span class="withu-chip withu-chip--light"><i class="ph-bold ph-eye"></i>
-                                            36</span>
-                                        <span class="withu-chip withu-chip--light"><i class="ph-bold ph-heart"></i>
-                                            1</span>
-                                    </div>
-                                </div>
-                            </a>
-                            </div>                                                    <div data-aos="fade-up" data-aos-delay="150">                            <a href="page.php?id=9"
-                                class="withu-journal-card withu-journal-card--link">
-                                <div class="withu-watermark">DAY 996</div>
-
-                                <div class="withu-journal-header">
-                                    <div class="withu-journal-user">
-                                        <img data-src="Lovefolder/20260411043037_69d95ded97293201118237.webp" class="withu-journal-avatar lazy">
-                                        <div>
-                                            <div class="withu-font-sm-bold">Ki.</div>
-                                            <div class="withu-journal-meta">2026-04-09 21:40</div>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <div class="withu-journal-content">
-                                    <h3 class="withu-journal-title withu-journal-title-text">
-                                        测试新增文章 目前时间                                    </h3>
-                                    <p class="withu-journal-body withu-journal-body-clamp">
-                                        31232123123 123312123 123 123123 123 123 123 123 1231 312 123 312 123 123 123 123 123 123 123                                    </p>
-                                </div>
-
-                                <div class="withu-journal-footer">
-                                    <div class="withu-flex-gap-sm">
-                                        <span class="withu-chip withu-chip--light"><i class="ph-bold ph-map-pin"></i>
-                                            广东 · 惠东</span>
-                                                                                <span class="withu-chip withu-chip--light"><i class="ph-bold ph-cloud-sun"></i>
-                                            多云</span>
-                                                                                                                        <span class="withu-chip withu-chip--light"><i class="ph-bold ph-smiley"></i>
-                                            开心</span>
-                                                                                <span class="withu-chip withu-chip--light"><i class="ph-bold ph-eye"></i>
-                                            34</span>
-                                        <span class="withu-chip withu-chip--light"><i class="ph-bold ph-heart"></i>
-                                            0</span>
-                                    </div>
-                                </div>
-                            </a>
-                            </div>                                                    <div data-aos="fade-up" data-aos-delay="200">                            <a href="page.php?id=8"
-                                class="withu-journal-card withu-journal-card--link">
-                                <div class="withu-watermark">DAY 996</div>
-
-                                <div class="withu-journal-header">
-                                    <div class="withu-journal-user">
-                                        <img data-src="Lovefolder/20260411043037_69d95ded97293201118237.webp" class="withu-journal-avatar lazy">
-                                        <div>
-                                            <div class="withu-font-sm-bold">Ki.</div>
-                                            <div class="withu-journal-meta">2026-04-09 20:09</div>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <div class="withu-journal-content">
-                                    <h3 class="withu-journal-title withu-journal-title-text">
-                                        测试新增点点滴滴内容😈表情测试《》                                    </h3>
-                                    <p class="withu-journal-body withu-journal-body-clamp">
-                                        测试彩色标签 测试解析音乐 测试测试 21:38:34 《》《》：， 哈哈哈 测试一下测试 测试测试发布动画效果                                    </p>
-                                </div>
-
-                                <div class="withu-journal-footer">
-                                    <div class="withu-flex-gap-sm">
-                                        <span class="withu-chip withu-chip--light"><i class="ph-bold ph-map-pin"></i>
-                                            广东 · 惠东</span>
-                                                                                <span class="withu-chip withu-chip--light"><i class="ph-bold ph-cloud-sun"></i>
-                                            多云</span>
-                                                                                                                        <span class="withu-chip withu-chip--light"><i class="ph-bold ph-smiley"></i>
-                                            开心</span>
-                                                                                <span class="withu-chip withu-chip--light"><i class="ph-bold ph-eye"></i>
-                                            36</span>
-                                        <span class="withu-chip withu-chip--light"><i class="ph-bold ph-heart"></i>
-                                            1</span>
-                                    </div>
-                                </div>
-                            </a>
-                            </div>                                                    <div data-aos="fade-up" data-aos-delay="250">                            <a href="page.php?id=1"
-                                class="withu-journal-card withu-journal-card--link">
-                                <div class="withu-watermark">DAY 554</div>
-
-                                <div class="withu-journal-header">
-                                    <div class="withu-journal-user">
-                                        <img data-src="Lovefolder/20260411043037_69d95ded97293201118237.webp" class="withu-journal-avatar lazy">
-                                        <div>
-                                            <div class="withu-font-sm-bold">Ki.</div>
-                                            <div class="withu-journal-meta">2025-01-22 09:03</div>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <div class="withu-journal-content">
-                                    <h3 class="withu-journal-title withu-journal-title-text">
-                                        音乐解析播放演示                                    </h3>
-                                    <p class="withu-journal-body withu-journal-body-clamp">
-                                        音乐解析测试 音乐解析参考#直链解析 data-id：音乐ID data-type：netease 为网易云 tencent为QQ音乐 双双 Copy 音乐解析参考#直链解析+本地URL文件 data-id：音乐ID data-type：n                                    </p>
-                                </div>
-
-                                <div class="withu-journal-footer">
-                                    <div class="withu-flex-gap-sm">
-                                        <span class="withu-chip withu-chip--light"><i class="ph-bold ph-map-pin"></i>
-                                            广东·深圳</span>
-                                                                                                                        <span class="withu-chip withu-chip--light"><i class="ph-bold ph-eye"></i>
-                                            45</span>
-                                        <span class="withu-chip withu-chip--light"><i class="ph-bold ph-heart"></i>
-                                            1</span>
-                                    </div>
-                                </div>
-                            </a>
-                            </div>                                        </div>
-            </section>
+                            </div>
+<?php endforeach; ?>
+<?php endif; ?>
+                </div>
+</section>
             
             <!-- 4. Album (回忆相册) -->
                         <section id="album" class="withu-section">
@@ -1775,83 +1814,52 @@ try {
                     </div>
                 </div>
                                 <div class="withu-mosaic-grid withu-mosaic-count-3">
-                                            <div data-aos="fade-up" data-aos-delay="0">                        <a href="album-detail.php?code=1776318513866" class="withu-mosaic-item">
-                            <img data-src="Lovefolder/20260409200702_69d79666f3e2b024272479.webp" class="withu-mosaic-img lazy">
+<?php if (empty($homeAlbums)): ?>
+                    <div class="withu-no-data withu-no-data--search">
+                        <div class="withu-no-data-wrap"><div class="withu-no-data-content">
+                            <h3 class="withu-no-data-title">还没有相册</h3>
+                            <p class="withu-no-data-desc">去后台上传第一组照片吧～</p>
+                        </div></div>
+                    </div>
+<?php else: ?>
+<?php foreach ($homeAlbums as $__i => $__al): ?>
+                    <div data-aos="fade-up" data-aos-delay="<?php echo (int) $__i * 50; ?>">
+                        <a href="<?php echo $__al['code'] !== '' ? 'album-detail.php?code=' . rawurlencode($__al['code']) : 'albums.php'; ?>" class="withu-mosaic-item">
+                            <?php if ($__al['cover'] !== ''): ?>
+                                <img data-src="<?php echo htmlspecialchars($__al['cover'], ENT_QUOTES, 'UTF-8'); ?>" class="withu-mosaic-img lazy">
+                            <?php endif; ?>
 
                             <div class="withu-mosaic-pos-tr">
                                 <div class="withu-chip--dark-glass">
-                                    <span class="withu-flex-center-gap-xs"><i class="ph-fill ph-map-pin"></i>
-                                        广州市</span>
-                                    <span class="withu-mosaic-divider"></span>
+                                    <?php if ($__al['city'] !== ''): ?>
+                                        <span class="withu-flex-center-gap-xs"><i class="ph-fill ph-map-pin"></i>
+                                            <?php echo htmlspecialchars($__al['city'], ENT_QUOTES, 'UTF-8'); ?></span>
+                                        <span class="withu-mosaic-divider"></span>
+                                    <?php endif; ?>
                                     <span class="withu-flex-center-gap-xs"><i class="ph-fill ph-image"></i>
-                                        21</span>
+                                        <?php echo (int) $__al['count']; ?></span>
                                 </div>
                             </div>
 
                             <div class="withu-mosaic-overlay">
                                 <div class="withu-mosaic-overlay-content">
                                     <div class="withu-capsule withu-capsule--avatar withu-mosaic-avatar-mb">
-                                        <img data-src="Lovefolder/20260411043046_69d95df639c33274072975.webp" class="withu-capsule__img lazy">
-                                        <span class="withu-capsule__text withu-text-white">Really</span>
+                                        <img data-src="<?php echo htmlspecialchars($__al['avatar'], ENT_QUOTES, 'UTF-8'); ?>" class="withu-capsule__img lazy">
+                                        <span class="withu-capsule__text withu-text-white"><?php echo htmlspecialchars($__al['author'] !== '' ? $__al['author'] : 'withU', ENT_QUOTES, 'UTF-8'); ?></span>
                                     </div>
 
-                                    <h3 class="u-font-serif withu-mosaic-title">测试相册</h3>
-                                                                        <div class="u-font-serif withu-mosaic-date">二〇二一年八月二十九日</div>
+                                    <h3 class="u-font-serif withu-mosaic-title"><?php echo htmlspecialchars($__al['name'], ENT_QUOTES, 'UTF-8'); ?></h3>
+                                    <?php if ($__al['date'] !== ''): ?>
+                                        <div class="u-font-serif withu-mosaic-date"><?php echo htmlspecialchars($__al['date'], ENT_QUOTES, 'UTF-8'); ?></div>
+                                    <?php endif; ?>
                                 </div>
                             </div>
                         </a>
-                        </div>                                            <div data-aos="fade-up" data-aos-delay="50">                        <a href="album-detail.php?code=20250811124452" class="withu-mosaic-item">
-                            <img data-src="Lovefolder/20250811124741_689975ed5796a_thumb.webp" class="withu-mosaic-img lazy">
-
-                            <div class="withu-mosaic-pos-tr">
-                                <div class="withu-chip--dark-glass">
-                                    <span class="withu-flex-center-gap-xs"><i class="ph-fill ph-map-pin"></i>
-                                        珠海渔女</span>
-                                    <span class="withu-mosaic-divider"></span>
-                                    <span class="withu-flex-center-gap-xs"><i class="ph-fill ph-image"></i>
-                                        26</span>
-                                </div>
-                            </div>
-
-                            <div class="withu-mosaic-overlay">
-                                <div class="withu-mosaic-overlay-content">
-                                    <div class="withu-capsule withu-capsule--avatar withu-mosaic-avatar-mb">
-                                        <img data-src="Lovefolder/20260411043037_69d95ded97293201118237.webp" class="withu-capsule__img lazy">
-                                        <span class="withu-capsule__text withu-text-white">Ki.</span>
-                                    </div>
-
-                                    <h3 class="u-font-serif withu-mosaic-title">Dalinshan</h3>
-                                                                        <div class="u-font-serif withu-mosaic-date">二〇二五年八月十一日</div>
-                                </div>
-                            </div>
-                        </a>
-                        </div>                                            <div data-aos="fade-up" data-aos-delay="100">                        <a href="album-detail.php?code=20241225163641" class="withu-mosaic-item">
-                            <img data-src="Lovefolder/20250310100354_67ce488abed5b_thumb.webp" class="withu-mosaic-img lazy">
-
-                            <div class="withu-mosaic-pos-tr">
-                                <div class="withu-chip--dark-glass">
-                                    <span class="withu-flex-center-gap-xs"><i class="ph-fill ph-map-pin"></i>
-                                        广东·东莞</span>
-                                    <span class="withu-mosaic-divider"></span>
-                                    <span class="withu-flex-center-gap-xs"><i class="ph-fill ph-image"></i>
-                                        15</span>
-                                </div>
-                            </div>
-
-                            <div class="withu-mosaic-overlay">
-                                <div class="withu-mosaic-overlay-content">
-                                    <div class="withu-capsule withu-capsule--avatar withu-mosaic-avatar-mb">
-                                        <img data-src="Lovefolder/20260411043037_69d95ded97293201118237.webp" class="withu-capsule__img lazy">
-                                        <span class="withu-capsule__text withu-text-white">Ki.</span>
-                                    </div>
-
-                                    <h3 class="u-font-serif withu-mosaic-title">探索秋日山林的宁静之旅</h3>
-                                                                        <div class="u-font-serif withu-mosaic-date">二〇二四年十二月二十五日</div>
-                                </div>
-                            </div>
-                        </a>
-                        </div>                                    </div>
-            </section>
+                        </div>
+<?php endforeach; ?>
+<?php endif; ?>
+                </div>
+</section>
             
             <!-- 5. Messages (祝福留言) -->
                         <section id="messages" class="withu-section">
@@ -1874,545 +1882,44 @@ try {
 
                 <div class="withu-home-message-container" id="messageCarousel">
                     <div class="withu-home-message-track">
-                                                                    <a href="messages.php#comment_544" class="withu-home-message-card">
+<?php if (empty($homeMessages)): ?>
+                        <div class="withu-no-data withu-no-data--search">
+                            <div class="withu-no-data-wrap"><div class="withu-no-data-content">
+                                <h3 class="withu-no-data-title">还没有留言</h3>
+                                <p class="withu-no-data-desc">成为第一个留下祝福的人吧～</p>
+                            </div></div>
+                        </div>
+<?php else: ?>
+<?php foreach ($homeMessages as $__m): ?>
+                        <a href="messages.php#comment_<?php echo (int) $__m['id']; ?>" class="withu-home-message-card">
                             <div class="withu-home-message-header">
-                                <img class="withu-home-message-avatar" src="https://weavatar.com/avatar/4e11c40a0e83de42c9c91974b48630bf05a2f75a79827dd01491dd99a09a57e0?s=100&amp;d=mm&amp;r=g" alt="南城">
+                                <img class="withu-home-message-avatar lazy" data-src="<?php echo htmlspecialchars($__m['avatar'], ENT_QUOTES, 'UTF-8'); ?>" src="<?php echo htmlspecialchars($__m['avatar'], ENT_QUOTES, 'UTF-8'); ?>" alt="<?php echo htmlspecialchars($__m['name'], ENT_QUOTES, 'UTF-8'); ?>">
                                 <div class="withu-home-message-user-info">
                                     <div class="withu-home-message-name-row">
-                                        <span class="withu-home-message-user-name">南城</span>
-                                                                            </div>
-                                    <span class="withu-home-message-post-time">2026-08-02 13:10</span>
+                                        <span class="withu-home-message-user-name"><?php echo htmlspecialchars($__m['name'], ENT_QUOTES, 'UTF-8'); ?></span>
+                                    </div>
+                                    <span class="withu-home-message-post-time"><?php echo htmlspecialchars($__m['time'], ENT_QUOTES, 'UTF-8'); ?></span>
                                 </div>
                             </div>
-                            <div class="withu-home-message-content">已经支持了，价格不贵，不懂得兄弟也听热心解决，程序员懂美感的真心不多了<img class="lazy" data-src="OwO/images/emoji/threekids/8.png" data-emoji=":@(TK_8)"/></div>
+                            <div class="withu-home-message-content"><?php echo $__m['content']; ?></div>
                             <div class="withu-home-message-divider"></div>
                             <div class="withu-home-message-footer">
-                                                                <span class="withu-chip withu-chip--light"><i class="ph-fill ph-map-pin"></i> 江苏 · 南京</span>
-                                                                                                <span class="withu-chip withu-chip--light withu-chip--no-transform"><i class="ph-bold ph-devices"></i> Android</span>
-                                                                                                <span class="withu-chip withu-chip--light withu-chip--no-transform"><i class="ph-bold ph-globe"></i> Chrome</span>
-                                                            </div>
-                        </a>
-                                                                    <a href="messages.php#comment_543" class="withu-home-message-card">
-                            <div class="withu-home-message-header">
-                                <img class="withu-home-message-avatar" src="https://weavatar.com/avatar/4e11c40a0e83de42c9c91974b48630bf05a2f75a79827dd01491dd99a09a57e0?s=100&amp;d=mm&amp;r=g" alt="南城">
-                                <div class="withu-home-message-user-info">
-                                    <div class="withu-home-message-name-row">
-                                        <span class="withu-home-message-user-name">南城</span>
-                                                                            </div>
-                                    <span class="withu-home-message-post-time">2026-08-01 14:25</span>
-                                </div>
+                                <?php if ($__m['location'] !== ''): ?>
+                                    <span class="withu-chip withu-chip--light"><i class="ph-fill ph-map-pin"></i> <?php echo htmlspecialchars($__m['location'], ENT_QUOTES, 'UTF-8'); ?></span>
+                                <?php endif; ?>
+                                <?php if ($__m['os'] !== ''): ?>
+                                    <span class="withu-chip withu-chip--light withu-chip--no-transform"><i class="ph-bold ph-devices"></i> <?php echo htmlspecialchars($__m['os'], ENT_QUOTES, 'UTF-8'); ?></span>
+                                <?php endif; ?>
+                                <?php if ($__m['browser'] !== ''): ?>
+                                    <span class="withu-chip withu-chip--light withu-chip--no-transform"><i class="ph-bold ph-globe"></i> <?php echo htmlspecialchars($__m['browser'], ENT_QUOTES, 'UTF-8'); ?></span>
+                                <?php endif; ?>
                             </div>
-                            <div class="withu-home-message-content">看到blog做的这么好，必须买一个支持一下<img class="lazy" data-src="OwO/images/emoji/aru/E8A385E5A4A7E6ACBE_2x.png" data-emoji=":@(装大款)"/><img class="lazy" data-src="OwO/images/emoji/aru/E8A385E5A4A7E6ACBE_2x.png" data-emoji=":@(装大款)"/><img class="lazy" data-src="OwO/images/emoji/aru/E8A385E5A4A7E6ACBE_2x.png" data-emoji=":@(装大款)"/></div>
-                            <div class="withu-home-message-divider"></div>
-                            <div class="withu-home-message-footer">
-                                                                <span class="withu-chip withu-chip--light"><i class="ph-fill ph-map-pin"></i> 江苏 · 南京</span>
-                                                                                                <span class="withu-chip withu-chip--light withu-chip--no-transform"><i class="ph-bold ph-devices"></i> Windows</span>
-                                                                                                <span class="withu-chip withu-chip--light withu-chip--no-transform"><i class="ph-bold ph-globe"></i> Chrome</span>
-                                                            </div>
                         </a>
-                                                                    <a href="messages.php#comment_540" class="withu-home-message-card">
-                            <div class="withu-home-message-header">
-                                <img class="withu-home-message-avatar" src="Lovefolder/20250310095643_67ce46dbe283d.webp" alt="深卦">
-                                <div class="withu-home-message-user-info">
-                                    <div class="withu-home-message-name-row">
-                                        <span class="withu-home-message-user-name">深卦</span>
-                                                                            </div>
-                                    <span class="withu-home-message-post-time">2026-07-19 23:53</span>
-                                </div>
-                            </div>
-                            <div class="withu-home-message-content">两情相悦春常在 一世恩爱梦也甜<img class="lazy" data-src="OwO/images/emoji/qq/5.gif" data-emoji="::(5)"/><img class="lazy" data-src="OwO/images/emoji/qq/5.gif" data-emoji="::(5)"/><img class="lazy" data-src="OwO/images/emoji/qq/5.gif" data-emoji="::(5)"/></div>
-                            <div class="withu-home-message-divider"></div>
-                            <div class="withu-home-message-footer">
-                                                                <span class="withu-chip withu-chip--light"><i class="ph-fill ph-map-pin"></i> 河南 · 信阳</span>
-                                                                                                <span class="withu-chip withu-chip--light withu-chip--no-transform"><i class="ph-bold ph-devices"></i> Windows</span>
-                                                                                                <span class="withu-chip withu-chip--light withu-chip--no-transform"><i class="ph-bold ph-globe"></i> Chrome</span>
-                                                            </div>
-                        </a>
-                                                                    <a href="messages.php#reply_516_536" class="withu-home-message-card">
-                            <div class="withu-home-message-header">
-                                <img class="withu-home-message-avatar" src="https://weavatar.com/avatar/e9f098f09a2ee8095e5bf8b2f862be96fb873ba805901d76f293162a53d69dee?s=100&amp;d=mm&amp;r=g" alt="独木舟">
-                                <div class="withu-home-message-user-info">
-                                    <div class="withu-home-message-name-row">
-                                        <span class="withu-home-message-user-name">独木舟</span>
-                                        <span class="withu-home-message-badge withu-home-message-badge--level"><i class="ph ph-arrow-bend-down-right"></i> 二级</span>                                    </div>
-                                    <span class="withu-home-message-post-time">2026-06-02 16:12</span>
-                                </div>
-                            </div>
-                            <div class="withu-home-message-content">携手共赴红尘路 恩爱相伴到永远</div>
-                            <div class="withu-home-message-divider"></div>
-                            <div class="withu-home-message-footer">
-                                                                <span class="withu-chip withu-chip--light"><i class="ph-fill ph-map-pin"></i> 中国 · 河南</span>
-                                                                                                <span class="withu-chip withu-chip--light withu-chip--no-transform"><i class="ph-bold ph-devices"></i> Windows</span>
-                                                                                                <span class="withu-chip withu-chip--light withu-chip--no-transform"><i class="ph-bold ph-globe"></i> Chrome</span>
-                                                            </div>
-                        </a>
-                                                                    <a href="messages.php#reply_533_535" class="withu-home-message-card">
-                            <div class="withu-home-message-header">
-                                <img class="withu-home-message-avatar" src="https://weavatar.com/avatar/43c37253c302e96e98489ba43c055b5463e18bca05d4f70eaa544dfe834a6c71?s=100&amp;d=mm&amp;r=g" alt="Qing.Ruo(奶龙版)">
-                                <div class="withu-home-message-user-info">
-                                    <div class="withu-home-message-name-row">
-                                        <span class="withu-home-message-user-name">Qing.Ruo(奶龙版)</span>
-                                        <span class="withu-home-message-badge withu-home-message-badge--level"><i class="ph ph-arrow-bend-down-right"></i> 二级</span>                                    </div>
-                                    <span class="withu-home-message-post-time">2026-06-02 11:53</span>
-                                </div>
-                            </div>
-                            <div class="withu-home-message-content">这是二级回复测试</div>
-                            <div class="withu-home-message-divider"></div>
-                            <div class="withu-home-message-footer">
-                                                                <span class="withu-chip withu-chip--light"><i class="ph-fill ph-map-pin"></i> 湖北 · 武汉</span>
-                                                                                                <span class="withu-chip withu-chip--light withu-chip--no-transform"><i class="ph-bold ph-devices"></i> Windows</span>
-                                                                                                <span class="withu-chip withu-chip--light withu-chip--no-transform"><i class="ph-bold ph-globe"></i> Chrome</span>
-                                                            </div>
-                        </a>
-                                                                    <a href="messages.php#comment_533" class="withu-home-message-card">
-                            <div class="withu-home-message-header">
-                                <img class="withu-home-message-avatar" src="https://weavatar.com/avatar/43c37253c302e96e98489ba43c055b5463e18bca05d4f70eaa544dfe834a6c71?s=100&amp;d=mm&amp;r=g" alt="Qing.Ruo(奶龙版)">
-                                <div class="withu-home-message-user-info">
-                                    <div class="withu-home-message-name-row">
-                                        <span class="withu-home-message-user-name">Qing.Ruo(奶龙版)</span>
-                                                                            </div>
-                                    <span class="withu-home-message-post-time">2026-06-01 11:50</span>
-                                </div>
-                            </div>
-                            <div class="withu-home-message-content"><img class="lazy" data-src="OwO/images/emoji/aru/E4B88DE587BAE68980E69699_2x.png" data-emoji=":@(不出所料)"/><img class="lazy" data-src="OwO/images/emoji/aru/E4B88DE587BAE68980E69699_2x.png" data-emoji=":@(不出所料)"/><img class="lazy" data-src="OwO/images/emoji/aru/E4B88DE587BAE68980E69699_2x.png" data-emoji=":@(不出所料)"/>百年好合</div>
-                            <div class="withu-home-message-divider"></div>
-                            <div class="withu-home-message-footer">
-                                                                <span class="withu-chip withu-chip--light"><i class="ph-fill ph-map-pin"></i> 湖北 · 武汉</span>
-                                                                                                <span class="withu-chip withu-chip--light withu-chip--no-transform"><i class="ph-bold ph-devices"></i> Android</span>
-                                                                                                <span class="withu-chip withu-chip--light withu-chip--no-transform"><i class="ph-bold ph-globe"></i> Chrome</span>
-                                                            </div>
-                        </a>
-                                                                    <a href="messages.php#comment_526" class="withu-home-message-card">
-                            <div class="withu-home-message-header">
-                                <img class="withu-home-message-avatar" src="https://weavatar.com/avatar/9a4eeef886a23c8a579df9a93d74651bb41e5de8ed539d355d7c21db80c1e8da?s=100&amp;d=mm&amp;r=g" alt="听雨">
-                                <div class="withu-home-message-user-info">
-                                    <div class="withu-home-message-name-row">
-                                        <span class="withu-home-message-user-name">听雨</span>
-                                                                            </div>
-                                    <span class="withu-home-message-post-time">2026-05-17 02:13</span>
-                                </div>
-                            </div>
-                            <div class="withu-home-message-content"><img class="lazy" data-src="OwO/images/emoji/qq/88.gif" data-emoji="::(88)"/><img class="lazy" data-src="OwO/images/emoji/qq/88.gif" data-emoji="::(88)"/><img class="lazy" data-src="OwO/images/emoji/qq/88.gif" data-emoji="::(88)"/></div>
-                            <div class="withu-home-message-divider"></div>
-                            <div class="withu-home-message-footer">
-                                                                <span class="withu-chip withu-chip--light"><i class="ph-fill ph-map-pin"></i> 中国 · 新疆</span>
-                                                                                                <span class="withu-chip withu-chip--light withu-chip--no-transform"><i class="ph-bold ph-devices"></i> Android</span>
-                                                                                                <span class="withu-chip withu-chip--light withu-chip--no-transform"><i class="ph-bold ph-globe"></i> Chrome</span>
-                                                            </div>
-                        </a>
-                                                                    <a href="messages.php#comment_527" class="withu-home-message-card">
-                            <div class="withu-home-message-header">
-                                <img class="withu-home-message-avatar" src="https://weavatar.com/avatar/a122f65031fefddae290ee10ef645e0457987386325d501444c5204eb84b6cf0?s=100&amp;d=mm&amp;r=g" alt="Ki.">
-                                <div class="withu-home-message-user-info">
-                                    <div class="withu-home-message-name-row">
-                                        <span class="withu-home-message-user-name">Ki.</span>
-                                        <span class="withu-home-message-badge withu-home-message-badge--developer"><i class="ph-fill ph-terminal-window"></i> 开发者</span>                                    </div>
-                                    <span class="withu-home-message-post-time">2026-05-17 02:13</span>
-                                </div>
-                            </div>
-                            <div class="withu-home-message-content">测试一条留言数据</div>
-                            <div class="withu-home-message-divider"></div>
-                            <div class="withu-home-message-footer">
-                                                                <span class="withu-chip withu-chip--light"><i class="ph-fill ph-map-pin"></i> 广东 · 惠州</span>
-                                                                                                                                <span class="withu-chip withu-chip--light withu-chip--no-transform"><i class="ph-bold ph-globe"></i> Safari</span>
-                                                            </div>
-                        </a>
-                                                                    <a href="messages.php#comment_523" class="withu-home-message-card">
-                            <div class="withu-home-message-header">
-                                <img class="withu-home-message-avatar" src="https://weavatar.com/avatar/f06b376a446f6b7a0526c79699a09af4d8f67e4f230174bb3f7915128962ffcb?s=100&amp;d=mm&amp;r=g" alt="一清化剑.">
-                                <div class="withu-home-message-user-info">
-                                    <div class="withu-home-message-name-row">
-                                        <span class="withu-home-message-user-name">一清化剑.</span>
-                                                                            </div>
-                                    <span class="withu-home-message-post-time">2026-04-30 21:25</span>
-                                </div>
-                            </div>
-                            <div class="withu-home-message-content">天天开心.<img class="lazy" data-src="OwO/images/emoji/qq/A01.gif" data-emoji="::(A01)"/><img class="lazy" data-src="OwO/images/emoji/qq/A01.gif" data-emoji="::(A01)"/><img class="lazy" data-src="OwO/images/emoji/qq/A01.gif" data-emoji="::(A01)"/></div>
-                            <div class="withu-home-message-divider"></div>
-                            <div class="withu-home-message-footer">
-                                                                <span class="withu-chip withu-chip--light"><i class="ph-fill ph-map-pin"></i> 中国 · 河南</span>
-                                                                                                <span class="withu-chip withu-chip--light withu-chip--no-transform"><i class="ph-bold ph-devices"></i> Android</span>
-                                                                                                <span class="withu-chip withu-chip--light withu-chip--no-transform"><i class="ph-bold ph-globe"></i> Chrome</span>
-                                                            </div>
-                        </a>
-                                                                    <a href="messages.php#reply_521_522" class="withu-home-message-card">
-                            <div class="withu-home-message-header">
-                                <img class="withu-home-message-avatar" src="https://weavatar.com/avatar/a122f65031fefddae290ee10ef645e0457987386325d501444c5204eb84b6cf0?s=100&amp;d=mm&amp;r=g" alt="Ki.">
-                                <div class="withu-home-message-user-info">
-                                    <div class="withu-home-message-name-row">
-                                        <span class="withu-home-message-user-name">Ki.</span>
-                                        <span class="withu-home-message-badge withu-home-message-badge--developer"><i class="ph-fill ph-terminal-window"></i> 开发者</span><span class="withu-home-message-badge withu-home-message-badge--level"><i class="ph ph-arrow-bend-down-right"></i> 二级</span>                                    </div>
-                                    <span class="withu-home-message-post-time">2026-04-22 21:59</span>
-                                </div>
-                            </div>
-                            <div class="withu-home-message-content">测试二级评论</div>
-                            <div class="withu-home-message-divider"></div>
-                            <div class="withu-home-message-footer">
-                                                                <span class="withu-chip withu-chip--light"><i class="ph-fill ph-map-pin"></i> 广东 · 惠州</span>
-                                                                                                <span class="withu-chip withu-chip--light withu-chip--no-transform"><i class="ph-bold ph-devices"></i> Mac</span>
-                                                                                                <span class="withu-chip withu-chip--light withu-chip--no-transform"><i class="ph-bold ph-globe"></i> Chrome</span>
-                                                            </div>
-                        </a>
-                                                                    <a href="messages.php#comment_521" class="withu-home-message-card">
-                            <div class="withu-home-message-header">
-                                <img class="withu-home-message-avatar" src="https://weavatar.com/avatar/7ef891bf3c0bbd177ca5765a93b12f145f957dff9d862ddfc2d34ced7c4f2c4d?s=100&amp;d=mm&amp;r=g" alt="Ki.">
-                                <div class="withu-home-message-user-info">
-                                    <div class="withu-home-message-name-row">
-                                        <span class="withu-home-message-user-name">Ki.</span>
-                                        <span class="withu-home-message-badge withu-home-message-badge--admin"><i class="ph-fill ph-seal-check"></i> 管理员</span>                                    </div>
-                                    <span class="withu-home-message-post-time">2026-04-22 21:58</span>
-                                </div>
-                            </div>
-                            <div class="withu-home-message-content">测试一级评论<img class="lazy" data-src="OwO/images/emoji/threekids/14.png" data-emoji=":@(TK_14)"/><img class="lazy" data-src="OwO/images/emoji/threekids/14.png" data-emoji=":@(TK_14)"/><img class="lazy" data-src="OwO/images/emoji/threekids/14.png" data-emoji=":@(TK_14)"/></div>
-                            <div class="withu-home-message-divider"></div>
-                            <div class="withu-home-message-footer">
-                                                                <span class="withu-chip withu-chip--light"><i class="ph-fill ph-map-pin"></i> 广东 · 惠州</span>
-                                                                                                <span class="withu-chip withu-chip--light withu-chip--no-transform"><i class="ph-bold ph-devices"></i> Mac</span>
-                                                                                                <span class="withu-chip withu-chip--light withu-chip--no-transform"><i class="ph-bold ph-globe"></i> Chrome</span>
-                                                            </div>
-                        </a>
-                                                                    <a href="messages.php#comment_520" class="withu-home-message-card">
-                            <div class="withu-home-message-header">
-                                <img class="withu-home-message-avatar" src="https://weavatar.com/avatar/b79d5dc704f398313e2dd108021a399c2bd0adfd568b794ccc9499c621ac61d4?s=100&amp;d=mm&amp;r=g" alt="江奕浩">
-                                <div class="withu-home-message-user-info">
-                                    <div class="withu-home-message-name-row">
-                                        <span class="withu-home-message-user-name">江奕浩</span>
-                                                                            </div>
-                                    <span class="withu-home-message-post-time">2026-04-22 21:22</span>
-                                </div>
-                            </div>
-                            <div class="withu-home-message-content">祝福你们的心如同繁星闪耀 永远相伴不离 愿长长久久</div>
-                            <div class="withu-home-message-divider"></div>
-                            <div class="withu-home-message-footer">
-                                                                <span class="withu-chip withu-chip--light"><i class="ph-fill ph-map-pin"></i> 内蒙古 · 通辽</span>
-                                                                                                <span class="withu-chip withu-chip--light withu-chip--no-transform"><i class="ph-bold ph-devices"></i> Android</span>
-                                                                                                <span class="withu-chip withu-chip--light withu-chip--no-transform"><i class="ph-bold ph-globe"></i> Chrome</span>
-                                                            </div>
-                        </a>
-                                                                    <a href="messages.php#comment_519" class="withu-home-message-card">
-                            <div class="withu-home-message-header">
-                                <img class="withu-home-message-avatar" src="https://weavatar.com/avatar/6e4f1f21dce85d7fc7e9edf34d6e7796d5db3be2d5eda25de4c95ae8d345241b?s=100&amp;d=mm&amp;r=g" alt="轩">
-                                <div class="withu-home-message-user-info">
-                                    <div class="withu-home-message-name-row">
-                                        <span class="withu-home-message-user-name">轩</span>
-                                                                            </div>
-                                    <span class="withu-home-message-post-time">2026-04-22 21:21</span>
-                                </div>
-                            </div>
-                            <div class="withu-home-message-content">两情相悦春常在 一世恩爱梦也甜</div>
-                            <div class="withu-home-message-divider"></div>
-                            <div class="withu-home-message-footer">
-                                                                <span class="withu-chip withu-chip--light"><i class="ph-fill ph-map-pin"></i> 江西 · 上饶</span>
-                                                                                                <span class="withu-chip withu-chip--light withu-chip--no-transform"><i class="ph-bold ph-devices"></i> Android</span>
-                                                                                                <span class="withu-chip withu-chip--light withu-chip--no-transform"><i class="ph-bold ph-globe"></i> Chrome</span>
-                                                            </div>
-                        </a>
-                                                                    <a href="messages.php#comment_518" class="withu-home-message-card">
-                            <div class="withu-home-message-header">
-                                <img class="withu-home-message-avatar" src="https://weavatar.com/avatar/7a92b8dc2bdc586c5b761c7bb3ded431a0edb6def62c8fad50f97e0a3496c4f8?s=100&amp;d=mm&amp;r=g" alt="小嘿">
-                                <div class="withu-home-message-user-info">
-                                    <div class="withu-home-message-name-row">
-                                        <span class="withu-home-message-user-name">小嘿</span>
-                                                                            </div>
-                                    <span class="withu-home-message-post-time">2026-04-22 21:21</span>
-                                </div>
-                            </div>
-                            <div class="withu-home-message-content"><img class="lazy" data-src="OwO/images/emoji/qq/9.gif" data-emoji="::(9)"/><img class="lazy" data-src="OwO/images/emoji/qq/9.gif" data-emoji="::(9)"/><img class="lazy" data-src="OwO/images/emoji/qq/9.gif" data-emoji="::(9)"/>祝福你们的心灵似广袤天空般辽阔 彼此成就不凡 愿你们99</div>
-                            <div class="withu-home-message-divider"></div>
-                            <div class="withu-home-message-footer">
-                                                                <span class="withu-chip withu-chip--light"><i class="ph-fill ph-map-pin"></i> 中国 · 浙江</span>
-                                                                                                <span class="withu-chip withu-chip--light withu-chip--no-transform"><i class="ph-bold ph-devices"></i> iOS</span>
-                                                                                                <span class="withu-chip withu-chip--light withu-chip--no-transform"><i class="ph-bold ph-globe"></i> Chrome</span>
-                                                            </div>
-                        </a>
-                                                                    <a href="messages.php#reply_516_517" class="withu-home-message-card">
-                            <div class="withu-home-message-header">
-                                <img class="withu-home-message-avatar" src="https://weavatar.com/avatar/86587ba68b4fea9e6f44e77d9860f9341b210610c323bdcb6ca3db88b233a809?s=100&amp;d=mm&amp;r=g" alt=".">
-                                <div class="withu-home-message-user-info">
-                                    <div class="withu-home-message-name-row">
-                                        <span class="withu-home-message-user-name">.</span>
-                                        <span class="withu-home-message-badge withu-home-message-badge--admin"><i class="ph-fill ph-seal-check"></i> 管理员</span><span class="withu-home-message-badge withu-home-message-badge--level"><i class="ph ph-arrow-bend-down-right"></i> 二级</span>                                    </div>
-                                    <span class="withu-home-message-post-time">2026-04-22 21:09</span>
-                                </div>
-                            </div>
-                            <div class="withu-home-message-content">测试二级评论回复邮件问题<img class="lazy" data-src="OwO/images/emoji/threekids/4.png" data-emoji=":@(TK_4)"/></div>
-                            <div class="withu-home-message-divider"></div>
-                            <div class="withu-home-message-footer">
-                                                                <span class="withu-chip withu-chip--light"><i class="ph-fill ph-map-pin"></i> 广东 · 惠州</span>
-                                                                                                <span class="withu-chip withu-chip--light withu-chip--no-transform"><i class="ph-bold ph-devices"></i> Mac</span>
-                                                                                                <span class="withu-chip withu-chip--light withu-chip--no-transform"><i class="ph-bold ph-globe"></i> Chrome</span>
-                                                            </div>
-                        </a>
-                                                                    <a href="messages.php#comment_516" class="withu-home-message-card">
-                            <div class="withu-home-message-header">
-                                <img class="withu-home-message-avatar" src="https://weavatar.com/avatar/7ef891bf3c0bbd177ca5765a93b12f145f957dff9d862ddfc2d34ced7c4f2c4d?s=100&amp;d=mm&amp;r=g" alt="Ki.">
-                                <div class="withu-home-message-user-info">
-                                    <div class="withu-home-message-name-row">
-                                        <span class="withu-home-message-user-name">Ki.</span>
-                                        <span class="withu-home-message-badge withu-home-message-badge--admin"><i class="ph-fill ph-seal-check"></i> 管理员</span>                                    </div>
-                                    <span class="withu-home-message-post-time">2026-04-22 21:07</span>
-                                </div>
-                            </div>
-                            <div class="withu-home-message-content">测试邮件回复<img class="lazy" data-src="OwO/images/emoji/qq/101.gif" data-emoji="::(101)"/><img class="lazy" data-src="OwO/images/emoji/qq/101.gif" data-emoji="::(101)"/><img class="lazy" data-src="OwO/images/emoji/qq/101.gif" data-emoji="::(101)"/></div>
-                            <div class="withu-home-message-divider"></div>
-                            <div class="withu-home-message-footer">
-                                                                <span class="withu-chip withu-chip--light"><i class="ph-fill ph-map-pin"></i> 广东 · 惠州</span>
-                                                                                                <span class="withu-chip withu-chip--light withu-chip--no-transform"><i class="ph-bold ph-devices"></i> Mac</span>
-                                                                                                <span class="withu-chip withu-chip--light withu-chip--no-transform"><i class="ph-bold ph-globe"></i> Chrome</span>
-                                                            </div>
-                        </a>
-                                                                    <a href="messages.php#comment_514" class="withu-home-message-card">
-                            <div class="withu-home-message-header">
-                                <img class="withu-home-message-avatar" src="https://weavatar.com/avatar/43e538b0ccbd0e491d47baefe8d4816f77a1fdd58f5ed8663fb1283b377cfae6?s=100&amp;d=mm&amp;r=g" alt="泽北饱饱想吃糖">
-                                <div class="withu-home-message-user-info">
-                                    <div class="withu-home-message-name-row">
-                                        <span class="withu-home-message-user-name">泽北饱饱想吃糖</span>
-                                                                            </div>
-                                    <span class="withu-home-message-post-time">2026-04-21 09:59</span>
-                                </div>
-                            </div>
-                            <div class="withu-home-message-content">心像花朵欣然绽放 每日都弥漫着甜蜜的芬芳 愿你们爱情长长久久</div>
-                            <div class="withu-home-message-divider"></div>
-                            <div class="withu-home-message-footer">
-                                                                <span class="withu-chip withu-chip--light"><i class="ph-fill ph-map-pin"></i> 贵州 · 黔西南布依族苗族自治州</span>
-                                                                                                <span class="withu-chip withu-chip--light withu-chip--no-transform"><i class="ph-bold ph-devices"></i> Windows</span>
-                                                                                                <span class="withu-chip withu-chip--light withu-chip--no-transform"><i class="ph-bold ph-globe"></i> Chrome</span>
-                                                            </div>
-                        </a>
-                                                                    <a href="messages.php#comment_512" class="withu-home-message-card">
-                            <div class="withu-home-message-header">
-                                <img class="withu-home-message-avatar" src="https://weavatar.com/avatar/a9b68c9c93d54c0670271c778cb349230a33d24b2f34473970532ca513d0baa1?s=100&amp;d=mm&amp;r=g" alt="小晴挽星河✨✨">
-                                <div class="withu-home-message-user-info">
-                                    <div class="withu-home-message-name-row">
-                                        <span class="withu-home-message-user-name">小晴挽星河✨✨</span>
-                                                                            </div>
-                                    <span class="withu-home-message-post-time">2026-04-21 00:27</span>
-                                </div>
-                            </div>
-                            <div class="withu-home-message-content">执手相看情脉脉 倾心相守爱悠悠</div>
-                            <div class="withu-home-message-divider"></div>
-                            <div class="withu-home-message-footer">
-                                                                <span class="withu-chip withu-chip--light"><i class="ph-fill ph-map-pin"></i> 龙场镇</span>
-                                                                                                <span class="withu-chip withu-chip--light withu-chip--no-transform"><i class="ph-bold ph-devices"></i> Android</span>
-                                                                                                <span class="withu-chip withu-chip--light withu-chip--no-transform"><i class="ph-bold ph-globe"></i> Chrome</span>
-                                                            </div>
-                        </a>
-                                                                    <a href="messages.php#reply_508_511" class="withu-home-message-card">
-                            <div class="withu-home-message-header">
-                                <img class="withu-home-message-avatar" src="https://weavatar.com/avatar/86587ba68b4fea9e6f44e77d9860f9341b210610c323bdcb6ca3db88b233a809?s=100&amp;d=mm&amp;r=g" alt=".">
-                                <div class="withu-home-message-user-info">
-                                    <div class="withu-home-message-name-row">
-                                        <span class="withu-home-message-user-name">.</span>
-                                        <span class="withu-home-message-badge withu-home-message-badge--level"><i class="ph ph-arrow-bend-down-right"></i> 二级</span>                                    </div>
-                                    <span class="withu-home-message-post-time">2026-04-16 20:21</span>
-                                </div>
-                            </div>
-                            <div class="withu-home-message-content">测试留言回复是否邮件通知<img class="lazy" data-src="OwO/images/emoji/threekids/6.png" data-emoji=":@(TK_6)"/></div>
-                            <div class="withu-home-message-divider"></div>
-                            <div class="withu-home-message-footer">
-                                                                <span class="withu-chip withu-chip--light"><i class="ph-fill ph-map-pin"></i> 广东 · 惠州</span>
-                                                                                                <span class="withu-chip withu-chip--light withu-chip--no-transform"><i class="ph-bold ph-devices"></i> Mac</span>
-                                                                                                <span class="withu-chip withu-chip--light withu-chip--no-transform"><i class="ph-bold ph-globe"></i> Chrome</span>
-                                                            </div>
-                        </a>
-                                                                    <a href="messages.php#comment_508" class="withu-home-message-card">
-                            <div class="withu-home-message-header">
-                                <img class="withu-home-message-avatar" src="https://weavatar.com/avatar/7ef891bf3c0bbd177ca5765a93b12f145f957dff9d862ddfc2d34ced7c4f2c4d?s=100&amp;d=mm&amp;r=g" alt="Ki.">
-                                <div class="withu-home-message-user-info">
-                                    <div class="withu-home-message-name-row">
-                                        <span class="withu-home-message-user-name">Ki.</span>
-                                        <span class="withu-home-message-badge withu-home-message-badge--admin"><i class="ph-fill ph-seal-check"></i> 管理员</span>                                    </div>
-                                    <span class="withu-home-message-post-time">2026-04-16 19:39</span>
-                                </div>
-                            </div>
-                            <div class="withu-home-message-content">测试一下邮件通知</div>
-                            <div class="withu-home-message-divider"></div>
-                            <div class="withu-home-message-footer">
-                                                                <span class="withu-chip withu-chip--light"><i class="ph-fill ph-map-pin"></i> 广东 · 惠州</span>
-                                                                                                <span class="withu-chip withu-chip--light withu-chip--no-transform"><i class="ph-bold ph-devices"></i> Mac</span>
-                                                                                                <span class="withu-chip withu-chip--light withu-chip--no-transform"><i class="ph-bold ph-globe"></i> Chrome</span>
-                                                            </div>
-                        </a>
-                                                                    <a href="messages.php#comment_507" class="withu-home-message-card">
-                            <div class="withu-home-message-header">
-                                <img class="withu-home-message-avatar" src="https://weavatar.com/avatar/86587ba68b4fea9e6f44e77d9860f9341b210610c323bdcb6ca3db88b233a809?s=100&amp;d=mm&amp;r=g" alt=".">
-                                <div class="withu-home-message-user-info">
-                                    <div class="withu-home-message-name-row">
-                                        <span class="withu-home-message-user-name">.</span>
-                                        <span class="withu-home-message-badge withu-home-message-badge--admin"><i class="ph-fill ph-seal-check"></i> 管理员</span>                                    </div>
-                                    <span class="withu-home-message-post-time">2026-04-14 19:00</span>
-                                </div>
-                            </div>
-                            <div class="withu-home-message-content">携手相伴情路远 爱意绵延岁月长<img class="lazy" data-src="OwO/images/emoji/threekids/31.png" data-emoji=":@(TK_31)"/></div>
-                            <div class="withu-home-message-divider"></div>
-                            <div class="withu-home-message-footer">
-                                                                <span class="withu-chip withu-chip--light"><i class="ph-fill ph-map-pin"></i> 广东 · 惠州</span>
-                                                                                                <span class="withu-chip withu-chip--light withu-chip--no-transform"><i class="ph-bold ph-devices"></i> Mac</span>
-                                                                                                <span class="withu-chip withu-chip--light withu-chip--no-transform"><i class="ph-bold ph-globe"></i> Chrome</span>
-                                                            </div>
-                        </a>
-                                                                    <a href="messages.php#reply_501_506" class="withu-home-message-card">
-                            <div class="withu-home-message-header">
-                                <img class="withu-home-message-avatar" src="Lovefolder/20250310095445_67ce466597870.gif" alt="匿名">
-                                <div class="withu-home-message-user-info">
-                                    <div class="withu-home-message-name-row">
-                                        <span class="withu-home-message-user-name">匿名</span>
-                                        <span class="withu-home-message-badge withu-home-message-badge--level"><i class="ph ph-arrow-bend-down-right"></i> 二级</span>                                    </div>
-                                    <span class="withu-home-message-post-time">2026-04-12 16:42</span>
-                                </div>
-                            </div>
-                            <div class="withu-home-message-content">同心同德情不断 相亲相爱到永远1 月底到期了吗？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？<img class="lazy" data-src="OwO/images/emoji/threekids/1.png" data-emoji=":@(TK_1)"/><img class="lazy" data-src="OwO/images/emoji/threekids/1.png" data-emoji=":@(TK_1)"/><img class="lazy" data-src="OwO/images/emoji/threekids/1.png" data-emoji=":@(TK_1)"/></div>
-                            <div class="withu-home-message-divider"></div>
-                            <div class="withu-home-message-footer">
-                                                                <span class="withu-chip withu-chip--light"><i class="ph-fill ph-map-pin"></i> 广东 · 惠州</span>
-                                                                                                <span class="withu-chip withu-chip--light withu-chip--no-transform"><i class="ph-bold ph-devices"></i> iOS</span>
-                                                                                                <span class="withu-chip withu-chip--light withu-chip--no-transform"><i class="ph-bold ph-globe"></i> Chrome</span>
-                                                            </div>
-                        </a>
-                                                                    <a href="messages.php#comment_504" class="withu-home-message-card">
-                            <div class="withu-home-message-header">
-                                <img class="withu-home-message-avatar" src="https://weavatar.com/avatar/87146fa766ead530e2fbe7ba1000ee30beab30e96c23d54c326db0864a18e441?s=100&amp;d=mm&amp;r=g" alt="Ki.">
-                                <div class="withu-home-message-user-info">
-                                    <div class="withu-home-message-name-row">
-                                        <span class="withu-home-message-user-name">Ki.</span>
-                                        <span class="withu-home-message-badge withu-home-message-badge--admin"><i class="ph-fill ph-seal-check"></i> 管理员</span>                                    </div>
-                                    <span class="withu-home-message-post-time">2026-04-10 17:43</span>
-                                </div>
-                            </div>
-                            <div class="withu-home-message-content">测试一下归属地问题</div>
-                            <div class="withu-home-message-divider"></div>
-                            <div class="withu-home-message-footer">
-                                                                <span class="withu-chip withu-chip--light"><i class="ph-fill ph-map-pin"></i> 广东 · 惠州</span>
-                                                                                                <span class="withu-chip withu-chip--light withu-chip--no-transform"><i class="ph-bold ph-devices"></i> Mac</span>
-                                                                                                <span class="withu-chip withu-chip--light withu-chip--no-transform"><i class="ph-bold ph-globe"></i> Chrome</span>
-                                                            </div>
-                        </a>
-                                                                    <a href="messages.php#comment_503" class="withu-home-message-card">
-                            <div class="withu-home-message-header">
-                                <img class="withu-home-message-avatar" src="https://weavatar.com/avatar/73e1eb095f75a569e42275bde8ae9fd38e71a471b680d85dbc4450834a4eaf55?s=100&amp;d=mm&amp;r=g" alt="𝘈𝘱𝘰𝘭𝘰𝘨𝘪𝘻𝘦">
-                                <div class="withu-home-message-user-info">
-                                    <div class="withu-home-message-name-row">
-                                        <span class="withu-home-message-user-name">𝘈𝘱𝘰𝘭𝘰𝘨𝘪𝘻𝘦</span>
-                                        <span class="withu-home-message-badge withu-home-message-badge--admin"><i class="ph-fill ph-seal-check"></i> 管理员</span>                                    </div>
-                                    <span class="withu-home-message-post-time">2026-04-10 16:57</span>
-                                </div>
-                            </div>
-                            <div class="withu-home-message-content">测试</div>
-                            <div class="withu-home-message-divider"></div>
-                            <div class="withu-home-message-footer">
-                                                                <span class="withu-chip withu-chip--light"><i class="ph-fill ph-map-pin"></i> 未知</span>
-                                                                                                <span class="withu-chip withu-chip--light withu-chip--no-transform"><i class="ph-bold ph-devices"></i> Mac</span>
-                                                                                                <span class="withu-chip withu-chip--light withu-chip--no-transform"><i class="ph-bold ph-globe"></i> Chrome</span>
-                                                            </div>
-                        </a>
-                                                                    <a href="messages.php#comment_502" class="withu-home-message-card">
-                            <div class="withu-home-message-header">
-                                <img class="withu-home-message-avatar" src="https://weavatar.com/avatar/87146fa766ead530e2fbe7ba1000ee30beab30e96c23d54c326db0864a18e441?s=100&amp;d=mm&amp;r=g" alt="袁小K">
-                                <div class="withu-home-message-user-info">
-                                    <div class="withu-home-message-name-row">
-                                        <span class="withu-home-message-user-name">袁小K</span>
-                                        <span class="withu-home-message-badge withu-home-message-badge--admin"><i class="ph-fill ph-seal-check"></i> 管理员</span>                                    </div>
-                                    <span class="withu-home-message-post-time">2026-04-09 19:06</span>
-                                </div>
-                            </div>
-                            <div class="withu-home-message-content">共赴爱河情无尽 同享人生乐无边<img class="lazy" data-src="OwO/images/emoji/douyin/dy109.gif" data-emoji=":@(DY_109)"/><img class="lazy" data-src="OwO/images/emoji/douyin/dy109.gif" data-emoji=":@(DY_109)"/><img class="lazy" data-src="OwO/images/emoji/douyin/dy109.gif" data-emoji=":@(DY_109)"/></div>
-                            <div class="withu-home-message-divider"></div>
-                            <div class="withu-home-message-footer">
-                                                                <span class="withu-chip withu-chip--light"><i class="ph-fill ph-map-pin"></i> 广东 · 惠州</span>
-                                                                                                <span class="withu-chip withu-chip--light withu-chip--no-transform"><i class="ph-bold ph-devices"></i> Mac</span>
-                                                                                                <span class="withu-chip withu-chip--light withu-chip--no-transform"><i class="ph-bold ph-globe"></i> Chrome</span>
-                                                            </div>
-                        </a>
-                                                                    <a href="messages.php#comment_501" class="withu-home-message-card">
-                            <div class="withu-home-message-header">
-                                <img class="withu-home-message-avatar" src="https://weavatar.com/avatar/afe9b79a36417da3cf1149214441f97cd427ba11c30a731d9086a6d4672baedf?s=100&amp;d=mm&amp;r=g" alt="Mental derangement">
-                                <div class="withu-home-message-user-info">
-                                    <div class="withu-home-message-name-row">
-                                        <span class="withu-home-message-user-name">Mental derangement</span>
-                                                                            </div>
-                                    <span class="withu-home-message-post-time">2026-04-09 11:42</span>
-                                </div>
-                            </div>
-                            <div class="withu-home-message-content"><img class="lazy" data-src="OwO/images/emoji/threekids/12.png" data-emoji=":@(TK_12)"/>同心同德情不断 相亲相爱到永远</div>
-                            <div class="withu-home-message-divider"></div>
-                            <div class="withu-home-message-footer">
-                                                                <span class="withu-chip withu-chip--light"><i class="ph-fill ph-map-pin"></i> 中国 · 辽宁</span>
-                                                                                                                                <span class="withu-chip withu-chip--light withu-chip--no-transform"><i class="ph-bold ph-globe"></i> Chrome</span>
-                                                            </div>
-                        </a>
-                                                                    <a href="messages.php#comment_500" class="withu-home-message-card">
-                            <div class="withu-home-message-header">
-                                <img class="withu-home-message-avatar" src="https://weavatar.com/avatar/a583b0a809b5cbfa2ce8c534e63d2cf8762c0345f049227453a4220bcd295d15?s=100&amp;d=mm&amp;r=g" alt="宇柯">
-                                <div class="withu-home-message-user-info">
-                                    <div class="withu-home-message-name-row">
-                                        <span class="withu-home-message-user-name">宇柯</span>
-                                                                            </div>
-                                    <span class="withu-home-message-post-time">2026-04-09 07:05</span>
-                                </div>
-                            </div>
-                            <div class="withu-home-message-content">于彼此陪伴之时 你们定能发掘生活的每一帧美好瞬间 愿爱情99</div>
-                            <div class="withu-home-message-divider"></div>
-                            <div class="withu-home-message-footer">
-                                                                <span class="withu-chip withu-chip--light"><i class="ph-fill ph-map-pin"></i> 江苏 · 扬州</span>
-                                                                                                                                <span class="withu-chip withu-chip--light withu-chip--no-transform"><i class="ph-bold ph-globe"></i> Chrome</span>
-                                                            </div>
-                        </a>
-                                                                    <a href="messages.php#comment_496" class="withu-home-message-card">
-                            <div class="withu-home-message-header">
-                                <img class="withu-home-message-avatar" src="https://weavatar.com/avatar/a122f65031fefddae290ee10ef645e0457987386325d501444c5204eb84b6cf0?s=100&amp;d=mm&amp;r=g" alt="Ki.">
-                                <div class="withu-home-message-user-info">
-                                    <div class="withu-home-message-name-row">
-                                        <span class="withu-home-message-user-name">Ki.</span>
-                                        <span class="withu-home-message-badge withu-home-message-badge--developer"><i class="ph-fill ph-terminal-window"></i> 开发者</span>                                    </div>
-                                    <span class="withu-home-message-post-time">2026-04-09 04:00</span>
-                                </div>
-                            </div>
-                            <div class="withu-home-message-content">测试一条留言数据</div>
-                            <div class="withu-home-message-divider"></div>
-                            <div class="withu-home-message-footer">
-                                                                <span class="withu-chip withu-chip--light"><i class="ph-fill ph-map-pin"></i> 广东 · 惠州</span>
-                                                                                                                                <span class="withu-chip withu-chip--light withu-chip--no-transform"><i class="ph-bold ph-globe"></i> Safari</span>
-                                                            </div>
-                        </a>
-                                                                    <a href="messages.php#comment_495" class="withu-home-message-card">
-                            <div class="withu-home-message-header">
-                                <img class="withu-home-message-avatar" src="https://weavatar.com/avatar/e9ea60a17075cc4a050bcefbd4f114afc9be98b8e5f938d3b63e01935ec563f2?s=100&amp;d=mm&amp;r=g" alt="星期六">
-                                <div class="withu-home-message-user-info">
-                                    <div class="withu-home-message-name-row">
-                                        <span class="withu-home-message-user-name">星期六</span>
-                                                                            </div>
-                                    <span class="withu-home-message-post-time">2026-03-24 20:31</span>
-                                </div>
-                            </div>
-                            <div class="withu-home-message-content">情定今生 爱如繁星闪耀 永恒璀璨</div>
-                            <div class="withu-home-message-divider"></div>
-                            <div class="withu-home-message-footer">
-                                                                <span class="withu-chip withu-chip--light"><i class="ph-fill ph-map-pin"></i> 未知</span>
-                                                                                                <span class="withu-chip withu-chip--light withu-chip--no-transform"><i class="ph-bold ph-devices"></i> iOS</span>
-                                                                                                <span class="withu-chip withu-chip--light withu-chip--no-transform"><i class="ph-bold ph-globe"></i> Chrome</span>
-                                                            </div>
-                        </a>
-                                                                    <a href="messages.php#comment_494" class="withu-home-message-card">
-                            <div class="withu-home-message-header">
-                                <img class="withu-home-message-avatar" src="https://weavatar.com/avatar/e9ea60a17075cc4a050bcefbd4f114afc9be98b8e5f938d3b63e01935ec563f2?s=100&amp;d=mm&amp;r=g" alt="星期六">
-                                <div class="withu-home-message-user-info">
-                                    <div class="withu-home-message-name-row">
-                                        <span class="withu-home-message-user-name">星期六</span>
-                                                                            </div>
-                                    <span class="withu-home-message-post-time">2026-03-24 01:54</span>
-                                </div>
-                            </div>
-                            <div class="withu-home-message-content">琴瑟和鸣 奏响爱情乐章 相伴到天荒</div>
-                            <div class="withu-home-message-divider"></div>
-                            <div class="withu-home-message-footer">
-                                                                <span class="withu-chip withu-chip--light"><i class="ph-fill ph-map-pin"></i> 未知</span>
-                                                                                                <span class="withu-chip withu-chip--light withu-chip--no-transform"><i class="ph-bold ph-devices"></i> iOS</span>
-                                                                                                <span class="withu-chip withu-chip--light withu-chip--no-transform"><i class="ph-bold ph-globe"></i> Safari</span>
-                                                            </div>
-                        </a>
-                                        </div>
+<?php endforeach; ?>
+<?php endif; ?>
+                    </div>
                 </div>
-            </section>
+</section>
             
             <!-- 6. Ending: 笔记本卡片式结尾 -->
             <section class="withu-epilogue" data-aos="fade-up" data-aos-delay="300">
@@ -2642,7 +2149,7 @@ try {
 <script src="Style/LoveListStyle/carousel.thumbs.umd.js"></script>
 <script src="Style/LoveListStyle/fancybox.umd.js"></script>
 <script src="assets/js/page-lovelist.js"></script>
-<script src="assets/js/page-index.js?v=20260906"></script>
+<script src="assets/js/page-index.js?v=20261004"></script>
 <script src="assets/js/page-timetable.js?v=20260907-3"></script>
 <script src="assets/js/page-detail.js"></script>
 <script src="assets/js/page-album-detail.js"></script>
