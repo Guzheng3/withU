@@ -559,15 +559,39 @@
             if (!this._quoteEl) return;
 
             if (isInitial) {
-                this._quoteEl.textContent = text;
+                this._renderQuote(text);
                 return;
             }
 
             this._quoteEl.classList.add('switching');
             setTimeout(() => {
-                this._quoteEl.textContent = text;
+                this._renderQuote(text);
                 this._quoteEl.classList.remove('switching');
             }, 600);
+        },
+
+        // 正文与署名分成两段：正文居中，署名单独成行右对齐，避免署名被折行断开。
+        _renderQuote(text) {
+            const el = this._quoteEl;
+            if (!el) return;
+            el.textContent = '';
+
+            const dash = text.lastIndexOf('——');
+            const author = dash > 0 ? text.slice(dash + 2) : '';
+            // 仅当结尾是「——短署名」时才拆行，避免把正文中的破折号误判为署名
+            const hasAuthor = dash > 0 && author.length > 0 && author.length <= 30;
+
+            const body = document.createElement('span');
+            body.className = 'withu-quote__body';
+            body.textContent = hasAuthor ? text.slice(0, dash) : text;
+            el.appendChild(body);
+
+            if (hasAuthor) {
+                const cite = document.createElement('span');
+                cite.className = 'withu-quote__author';
+                cite.textContent = '——' + author;
+                el.appendChild(cite);
+            }
         },
 
         _openLeavingModal() {

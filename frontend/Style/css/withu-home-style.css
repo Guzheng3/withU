@@ -5231,7 +5231,7 @@ body.bg-grad-grid::before {
 
 .withu-home .withu-epilogue__quote-text {
     font-family: 'Inter', var(--withu-font-sans);
-    font-weight: 200;
+    font-weight: 400;
     font-size: 1.65rem;
     line-height: 2;
     color: #222;
@@ -5242,6 +5242,16 @@ body.bg-grad-grid::before {
     transform: scale(1);
     max-width: 90%;
     margin: 0;
+}
+
+.withu-home .withu-epilogue__quote-text .withu-quote__body {
+    display: block;
+}
+
+/* 署名独立成行右对齐，避免与正文挤在一行被折行断开 */
+.withu-home .withu-epilogue__quote-text .withu-quote__author {
+    display: block;
+    text-align: right;
 }
 
 .withu-home .withu-epilogue__quote-text.switching {

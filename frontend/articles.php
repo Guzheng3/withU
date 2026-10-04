@@ -422,10 +422,12 @@
         </div>
     </div>
 
+        <!-- 文章列表模块：置于 #pjax-container 内，PJAX 进入本页时随容器内容执行（与 timeline.php 做法一致） -->
+        <script src="/assets/js/page-articles.js"></script>
+    </div>
+
     <!-- Toast 容器 -->
     <div id="withu-toast" class="withu-toast"></div>
-
-    <script src="/assets/js/page-articles.js"></script>
     
 
     <!-- 留言弹窗遮罩层 -->
