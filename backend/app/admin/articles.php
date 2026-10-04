@@ -246,8 +246,11 @@ include __DIR__ . '/header.php';
                         <div>
                             <div class="admin-card-title" style="max-width:15rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">
                                 <?php echo e($article['title']); ?>
-                                <?php if (!empty($article['is_encrypted'])): ?>
-                                    <i class="fas fa-lock" style="color:#f97373;margin-left:0.25rem;"></i>
+                                <?php $withuVis = withu_effective_visibility($article); ?>
+                                <?php if ($withuVis === 'hidden'): ?>
+                                    <i class="fas fa-lock" style="color:#f97373;margin-left:0.25rem;" title="<?php echo withu_visibility_label('hidden'); ?>"></i>
+                                <?php elseif ($withuVis === 'login'): ?>
+                                    <i class="fas fa-user-lock" style="color:#f59e0b;margin-left:0.25rem;" title="<?php echo withu_visibility_label('login'); ?>"></i>
                                 <?php endif; ?>
                             </div>
                             <div class="admin-card-subtitle">

@@ -113,11 +113,24 @@ try {
         if (is_file($helpersFile)) {
             require_once $helpersFile;
         }
-        $row = $db->fetch("SELECT id, name, is_encrypted FROM albums WHERE name = :name LIMIT 1", ['name' => (string) ($albumRow['name'] ?? '')]);
+        // visibility 为新字段：老库缺失时回退旧查询
+        try {
+            $row = $db->fetch("SELECT id, name, is_encrypted, visibility FROM albums WHERE name = :name LIMIT 1", ['name' => (string) ($albumRow['name'] ?? '')]);
+        } catch (Throwable $e) {
+            $row = $db->fetch("SELECT id, name, is_encrypted FROM albums WHERE name = :name LIMIT 1", ['name' => (string) ($albumRow['name'] ?? '')]);
+        }
         if ($row) {
-            // 加密相册：未登录直接拒绝，不返回任何照片与路径
-            if ((int) ($row['is_encrypted'] ?? 0) === 1 && !$photolistLoggedIn) {
-                echo json_encode(['code' => 403, 'msg' => '该相册仅对情侣可见，请先登录'], JSON_UNESCAPED_UNICODE);
+            // 可见范围：hidden（旧加密）对游客完全不暴露；login 对游客返回锁定状态，
+            // 由前台相册详情页渲染登录权限墙（不返回任何照片与路径）
+            $albumVisibility = function_exists('withu_effective_visibility')
+                ? withu_effective_visibility($row)
+                : ((int) ($row['is_encrypted'] ?? 0) === 1 ? 'hidden' : 'public');
+            if (!$photolistLoggedIn && $albumVisibility !== 'public') {
+                if ($albumVisibility === 'hidden') {
+                    echo json_encode(['code' => 404, 'msg' => '相册不存在'], JSON_UNESCAPED_UNICODE);
+                } else {
+                    echo json_encode(['code' => 403, 'msg' => '该相册仅登录后可见，请先登录', 'locked' => true], JSON_UNESCAPED_UNICODE);
+                }
                 exit;
             }
             $aid = (int) $row['id'];

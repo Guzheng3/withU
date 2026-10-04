@@ -76,7 +76,8 @@ if (!function_exists('articlelist_avatar_url')) {
     }
 }
 
-// 游客过滤：加密文章整体隐藏（列表与总数口径一致）
+// 游客过滤：完全隐藏（旧 is_encrypted=1，含 visibility=hidden）的文章整体隐藏；
+// visibility=login 的文章保留在列表中（游客拿到 locked 标记，前台渲染登录权限墙卡片）
 // 极老数据库可能没有 is_encrypted 字段，查询失败时回退为不过滤（此类库中也不存在加密文章）
 $articleListWhere = "a.status = 'published'" . ($articleListLoggedIn ? '' : " AND (a.is_encrypted = 0 OR a.is_encrypted IS NULL)");
 $articleListWhereFallback = "a.status = 'published'";
@@ -93,7 +94,7 @@ $total    = $totalRow ? (int) $totalRow['c'] : 0;
 $rows = [];
 try {
     $rows = $db->fetchAll(
-        "SELECT a.id, a.type, a.title, a.content, a.is_encrypted, a.views, a.created_at,
+        "SELECT a.id, a.type, a.title, a.content, a.is_encrypted, a.visibility, a.views, a.created_at,
                 u.nickname AS author_name, u.avatar AS author_avatar, u.gender AS author_gender
          FROM articles a
          LEFT JOIN users u ON u.id = a.user_id
@@ -137,9 +138,20 @@ foreach ($rows as $r) {
     $created = (string) ($r['created_at'] ?? '');
     $ts      = $created !== '' ? strtotime($created) : false;
 
-    // 摘要：去标签、压缩空白、截断；加密文章不输出内容摘要
+    // 有效可见范围：hidden（旧加密）对游客不出现；login 对游客输出锁定卡片（权限墙）
+    $visibility = function_exists('withu_effective_visibility')
+        ? withu_effective_visibility($r)
+        : (!empty($r['is_encrypted']) ? 'hidden' : 'public');
+    // PHP 层兜底：SQL 仅按 is_encrypted 过滤（兼容老库），异常的 hidden 行在此拦截
+    if (!$articleListLoggedIn && $visibility === 'hidden') {
+        continue;
+    }
+    $canRead = $articleListLoggedIn || $visibility === 'public';
+    $locked  = !$articleListLoggedIn && $visibility === 'login';
+
+    // 摘要：去标签、压缩空白、截断；游客无权阅读的内容不输出摘要
     $excerpt = '';
-    if (empty($r['is_encrypted'])) {
+    if ($canRead) {
         $excerpt = html_entity_decode(strip_tags((string) ($r['content'] ?? '')), ENT_QUOTES, 'UTF-8');
         $excerpt = trim(preg_replace('/\s+/u', ' ', $excerpt));
         if (mb_strlen($excerpt) > 120) {
@@ -158,6 +170,8 @@ foreach ($rows as $r) {
         'title'      => (string) ($r['title'] ?? ''),
         'excerpt'    => $excerpt,
         'encrypted'  => !empty($r['is_encrypted']),
+        'visibility' => $visibility,
+        'locked'     => $locked,
         'day'        => $ts ? (int) date('j', $ts) : '',
         'month_cn'   => $ts ? $monthCn[(int) date('n', $ts)] : '',
         'year'       => $ts ? (int) date('Y', $ts) : '',

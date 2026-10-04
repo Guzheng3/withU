@@ -1072,9 +1072,144 @@ function get_couple_users(): array {
 }
 
 /**
+ * 可见范围统一口径（登录权限墙）：
+ * - public  所有人可见（游客可读）
+ * - login   仅登录可见：游客在列表可见锁定卡片，打开详情显示登录墙
+ * - hidden  完全隐藏：游客列表不出现，直链也不返回内容
+ * 兼容旧数据：is_encrypted=1 的行一律视为 hidden（旧「加密」语义 = 游客完全不可见）。
+ */
+function withu_visibility_normalize($value): string {
+    $value = strtolower(trim((string) $value));
+    return in_array($value, ['public', 'login', 'hidden'], true) ? $value : 'public';
+}
+
+/** 数据行（articles/albums）的有效可见范围：旧 is_encrypted=1 视为 hidden */
+function withu_effective_visibility(array $row): string {
+    if (!empty($row['is_encrypted'])) {
+        return 'hidden';
+    }
+    return withu_visibility_normalize($row['visibility'] ?? 'public');
+}
+
+/** 可见范围的中文标签（后台列表徽章/表单用） */
+function withu_visibility_label(string $visibility): string {
+    switch (withu_visibility_normalize($visibility)) {
+        case 'login':
+            return '仅登录可见';
+        case 'hidden':
+            return '完全隐藏';
+        default:
+            return '所有人可见';
+    }
+}
+
+/**
+ * 后台「可见范围」选择器：仿微信朋友圈的展开式选项
+ * - 收起时一行「谁可以看 · 当前值」，点开展示图标+说明的选项列表，选中项打勾
+ * - 自包含样式与脚本（同页多次调用只输出一次资源），不依赖后台主题细节
+ * - 表单值由隐藏域承载，保存逻辑与普通 select 完全一致
+ */
+function withu_visibility_picker(string $name = 'visibility', string $selected = 'public', string $hint = ''): string
+{
+    static $assetsEmitted = false;
+    $selected = withu_visibility_normalize($selected);
+    $options  = [
+        'public' => ['icon' => 'fa-globe',     'color' => '#3b82f6', 'title' => '所有人可见', 'desc' => '游客也可以查看这条内容'],
+        'login'  => ['icon' => 'fa-user-lock', 'color' => '#e75480', 'title' => '仅登录可见', 'desc' => '游客会看到登录权限墙'],
+        'hidden' => ['icon' => 'fa-eye-slash', 'color' => '#64748b', 'title' => '完全隐藏',   'desc' => '只有情侣登录后可见'],
+    ];
+
+    $nameEsc = htmlspecialchars($name, ENT_QUOTES, 'UTF-8');
+    $html  = '<div class="withu-vis-picker' . ($selected === 'public' ? '' : ' has-custom') . '">';
+    $html .= '<input type="hidden" name="' . $nameEsc . '" value="' . $selected . '">';
+    $html .= '<button type="button" class="withu-vis-toggle" aria-expanded="false">';
+    $html .= '<span class="withu-vis-toggle-label"><i class="fas fa-users"></i>谁可以看</span>';
+    $html .= '<span class="withu-vis-toggle-value">' . $options[$selected]['title'] . '</span>';
+    $html .= '<i class="fas fa-chevron-down withu-vis-chevron"></i></button>';
+    $html .= '<div class="withu-vis-options">';
+    foreach ($options as $value => $opt) {
+        $isSel = $value === $selected;
+        $html .= '<button type="button" class="withu-vis-option' . ($isSel ? ' is-selected' : '') . '"'
+               . ' data-value="' . $value . '" data-title="' . $opt['title'] . '">';
+        $html .= '<span class="withu-vis-option-icon" style="background:' . $opt['color'] . '1a;color:' . $opt['color'] . ';"><i class="fas ' . $opt['icon'] . '"></i></span>';
+        $html .= '<span class="withu-vis-option-text"><b>' . $opt['title'] . '</b><small>' . $opt['desc'] . '</small></span>';
+        $html .= '<i class="fas fa-check withu-vis-check"></i></button>';
+    }
+    $html .= '</div>';
+    if ($hint !== '') {
+        $html .= '<p class="withu-vis-hint">' . htmlspecialchars($hint, ENT_QUOTES, 'UTF-8') . '</p>';
+    }
+    $html .= '</div>';
+
+    if (!$assetsEmitted) {
+        $assetsEmitted = true;
+        $html .= <<<'HTML'
+<style>
+.withu-vis-picker{margin:0 0 .75rem;}
+.withu-vis-picker .withu-vis-toggle{display:flex;align-items:center;gap:.5rem;width:100%;padding:.68rem .85rem;border:1px solid rgba(148,163,184,.7);border-radius:.75rem;background:#fff;font-size:.9rem;cursor:pointer;text-align:left;transition:border-color .15s,box-shadow .15s;}
+.withu-vis-picker .withu-vis-toggle:hover{border-color:rgba(231,84,128,.45);}
+.withu-vis-picker.is-open .withu-vis-toggle{border-color:rgba(231,84,128,.55);box-shadow:0 0 0 3px rgba(231,84,128,.08);}
+.withu-vis-picker .withu-vis-toggle-label{display:inline-flex;align-items:center;gap:.45rem;font-weight:600;color:#334155;}
+.withu-vis-picker .withu-vis-toggle-label i{color:#e75480;}
+.withu-vis-picker .withu-vis-toggle-value{margin-left:auto;font-weight:500;color:#94a3b8;}
+.withu-vis-picker.has-custom .withu-vis-toggle-value{color:#e75480;}
+.withu-vis-picker .withu-vis-chevron{color:#94a3b8;font-size:.72rem;transition:transform .2s;}
+.withu-vis-picker.is-open .withu-vis-chevron{transform:rotate(180deg);}
+.withu-vis-picker .withu-vis-options{display:none;margin-top:.45rem;border:1px solid rgba(148,163,184,.45);border-radius:.75rem;overflow:hidden;background:#fff;}
+.withu-vis-picker.is-open .withu-vis-options{display:block;animation:withuVisIn .18s ease-out;}
+@keyframes withuVisIn{from{opacity:0;transform:translateY(-4px);}to{opacity:1;transform:none;}}
+.withu-vis-picker .withu-vis-option{display:flex;align-items:center;gap:.7rem;width:100%;padding:.68rem .85rem;background:#fff;border:0;border-bottom:1px solid rgba(148,163,184,.22);font-size:.9rem;cursor:pointer;text-align:left;transition:background .15s;}
+.withu-vis-picker .withu-vis-option:last-child{border-bottom:0;}
+.withu-vis-picker .withu-vis-option:hover{background:rgba(241,245,249,.6);}
+.withu-vis-picker .withu-vis-option.is-selected{background:rgba(231,84,128,.06);}
+.withu-vis-picker .withu-vis-option-icon{display:inline-flex;align-items:center;justify-content:center;width:2rem;height:2rem;border-radius:.6rem;font-size:.82rem;flex:none;}
+.withu-vis-picker .withu-vis-option-text{display:flex;flex-direction:column;gap:.1rem;min-width:0;}
+.withu-vis-picker .withu-vis-option-text b{font-weight:600;color:#334155;}
+.withu-vis-picker .withu-vis-option-text small{color:#94a3b8;font-size:.75rem;}
+.withu-vis-picker .withu-vis-check{margin-left:auto;color:#e75480;font-size:.85rem;opacity:0;transform:scale(.6);transition:opacity .15s,transform .15s;}
+.withu-vis-picker .withu-vis-option.is-selected .withu-vis-check{opacity:1;transform:scale(1);}
+.withu-vis-picker .withu-vis-hint{margin:.35rem 0 0;font-size:.78rem;color:var(--text-light,#94a3b8);}
+</style>
+<script>
+(function () {
+    if (window.__withuVisPickerBound) return;
+    window.__withuVisPickerBound = true;
+    document.addEventListener('click', function (e) {
+        var toggle = e.target.closest('.withu-vis-toggle');
+        if (toggle) {
+            var p = toggle.closest('.withu-vis-picker');
+            p.classList.toggle('is-open');
+            toggle.setAttribute('aria-expanded', p.classList.contains('is-open') ? 'true' : 'false');
+            return;
+        }
+        var opt = e.target.closest('.withu-vis-option');
+        if (opt) {
+            var picker = opt.closest('.withu-vis-picker');
+            picker.querySelector('input[type="hidden"]').value = opt.getAttribute('data-value');
+            var list = picker.querySelectorAll('.withu-vis-option');
+            for (var i = 0; i < list.length; i++) list[i].classList.toggle('is-selected', list[i] === opt);
+            picker.querySelector('.withu-vis-toggle-value').textContent = opt.getAttribute('data-title');
+            picker.classList.add('has-custom');
+            picker.classList.remove('is-open');
+            return;
+        }
+        if (!e.target.closest('.withu-vis-picker')) {
+            var open = document.querySelectorAll('.withu-vis-picker.is-open');
+            for (var j = 0; j < open.length; j++) open[j].classList.remove('is-open');
+        }
+    });
+})();
+</script>
+HTML;
+    }
+    return $html;
+}
+
+/**
  * 最佳努力的数据库结构迁移：为老版本补充新字段
  * - articles.edit_mode
  * - article_blocks.speaker
+ * - articles.visibility / albums.visibility（登录权限墙）
  */
 function migrate_schema_if_needed(): void {
     static $done = false;
@@ -1088,7 +1223,7 @@ function migrate_schema_if_needed(): void {
 
     // Avoid rerunning dozens of SHOW/ALTER/CREATE statements on every PHP
     // request, including each high-frequency watch poll.
-    $schemaVersion = '20260908-02';
+    $schemaVersion = '20261004-01';
     $runtimeDir = dirname(ROOT_PATH) . DIRECTORY_SEPARATOR . 'runtime';
     $markerPath = $runtimeDir . DIRECTORY_SEPARATOR . 'schema-version';
     $lockPath = $runtimeDir . DIRECTORY_SEPARATOR . 'schema-migration.lock';
@@ -1342,6 +1477,31 @@ function migrate_schema_if_needed(): void {
             }
         } catch (Throwable $e) {
             // 字段已存在或执行失败时忽略
+        }
+
+        // 可见范围（登录权限墙）：public=所有人可见，login=仅登录可见，hidden=完全隐藏。
+        // 旧「加密」行（is_encrypted=1，语义=游客不可见）回填为 hidden，保持既有行为不变。
+        try {
+            $db->query("
+                ALTER TABLE `articles`
+                ADD COLUMN `visibility` varchar(20) NOT NULL DEFAULT 'public' COMMENT '可见范围：public=所有人可见，login=仅登录可见（权限墙），hidden=完全隐藏'
+            ");
+        } catch (Throwable $e) {
+            // 字段已存在或数据库不支持该写法时忽略
+        }
+        try {
+            $db->query("
+                ALTER TABLE `albums`
+                ADD COLUMN `visibility` varchar(20) NOT NULL DEFAULT 'public' COMMENT '可见范围：public=所有人可见，login=仅登录可见（权限墙），hidden=完全隐藏'
+            ");
+        } catch (Throwable $e) {
+            // 字段已存在或数据库不支持该写法时忽略
+        }
+        try {
+            $db->query("UPDATE `articles` SET `visibility` = 'hidden' WHERE `is_encrypted` = 1 AND `visibility` = 'public'");
+            $db->query("UPDATE `albums` SET `visibility` = 'hidden' WHERE `is_encrypted` = 1 AND `visibility` = 'public'");
+        } catch (Throwable $e) {
+            // 回填失败时忽略，读取侧按 is_encrypted 兜底
         }
 
         // withU 第一版扩展：账户设备、媒体库、同步观影和审核记录

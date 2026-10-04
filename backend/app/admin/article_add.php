@@ -138,7 +138,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $title           = trim($_POST['title'] ?? '');
     $content         = trim($_POST['content'] ?? '');
     $type            = $_POST['type'] ?? 'article';
-    $isEncrypted     = isset($_POST['is_encrypted']) ? 1 : 0;
+    $visibility      = withu_visibility_normalize($_POST['visibility'] ?? 'public');
+    $isEncrypted     = $visibility === 'hidden' ? 1 : 0;
     $tags            = trim($_POST['tags'] ?? '');
     $disableComments = isset($_POST['disable_comments']) ? 1 : 0;
     $allowPartnerEdit = isset($_POST['allow_partner_edit']) ? 1 : 0;
@@ -192,6 +193,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             'content'          => $content,
             'type'             => $type,
             'is_encrypted'     => $isEncrypted,
+            'visibility'       => $visibility,
             'comments_enabled' => $disableComments ? 0 : 1,
             'tags'             => $tags,
             'status'           => 'published',
@@ -595,15 +597,7 @@ include __DIR__ . '/header.php';
             </p>
         </div>
 
-        <div class="form-group" style="margin-bottom:0.75rem;">
-            <label class="switch">
-                <input type="checkbox" name="is_encrypted" value="1" <?php echo isset($_POST['is_encrypted']) ? 'checked' : ''; ?>>
-                <span class="switch-track">
-                    <span class="switch-thumb"></span>
-                </span>
-                <span class="switch-label">加密内容（仅双方可见）</span>
-            </label>
-        </div>
+        <?php echo withu_visibility_picker('visibility', withu_visibility_normalize($_POST['visibility'] ?? 'public'), '发布后可随时在编辑页调整可见范围。'); ?>
 
         <div class="form-group" style="margin-bottom:1rem;">
             <label class="switch">

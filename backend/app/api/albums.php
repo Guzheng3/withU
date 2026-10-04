@@ -35,6 +35,10 @@ if ($perPage <= 0) {
 $offset    = ($page - 1) * $perPage;
 $limitPlus = $perPage + 1;
 
+// 游客过滤：完全隐藏（旧 is_encrypted=1，含 visibility=hidden）的相册不出现在列表；
+// visibility=login 的相册保留（游客拿到 locked 标记，由前台渲染登录权限墙）
+$guestVisibilityWhere = $currentUser ? '' : " WHERE (a.is_encrypted = 0 OR a.is_encrypted IS NULL)";
+
 try {
     $sql = "
         SELECT a.*, u.nickname, u.avatar,
@@ -43,7 +47,7 @@ try {
                    (SELECT COUNT(*) FROM album_videos  WHERE album_id = a.id)
                ) AS image_count
         FROM albums a
-        LEFT JOIN users u ON a.user_id = u.id
+        LEFT JOIN users u ON a.user_id = u.id{$guestVisibilityWhere}
         ORDER BY a.created_at DESC
         LIMIT {$limitPlus} OFFSET {$offset}
     ";
@@ -261,22 +265,31 @@ $items = [];
 foreach ($albums as $album) {
     $aid          = (int) $album['id'];
     $isEncrypted  = (int) ($album['is_encrypted'] ?? 0) === 1;
+    $visibility   = withu_effective_visibility($album);
     $imageCount   = (int) ($album['image_count'] ?? 0);
     $previewImages = array_values($covers[$aid] ?? []);
 
-    // 未登录用户访问加密相册时，不返回真实预览图片 URL，只保留计数等元信息
-    if ($isEncrypted && !$currentUser) {
+    // PHP 层兜底：SQL 仅按 is_encrypted 过滤（兼容老库），异常的 hidden 行在此拦截
+    if (!$currentUser && $visibility === 'hidden') {
+        continue;
+    }
+
+    // 权限墙：游客访问仅登录可见的相册时，不返回真实预览图片 URL 与描述，
+    // 保留名称与计数引导登录（完全隐藏的相册已在 SQL 层对游客排除）
+    $guestLocked = !$currentUser && $visibility === 'login';
+    if ($guestLocked) {
         $previewImages = [];
     }
 
     $items[] = [
         'id'           => $aid,
         'user_id'      => (int) ($album['user_id'] ?? 0),
-        // 加密相册对未登录游客隐藏真实名称与描述（与首页 home.php 口径一致）
-        'name'         => ($isEncrypted && !$currentUser) ? '加密相册' : (string) ($album['name'] ?? ''),
+        'name'         => (string) ($album['name'] ?? ''),
         'is_encrypted' => $isEncrypted ? 1 : 0,
+        'visibility'   => $visibility,
+        'locked'       => $guestLocked ? 1 : 0,
         'created_at'   => (string) ($album['created_at'] ?? date('Y-m-d H:i:s')),
-        'description'  => ($isEncrypted && !$currentUser) ? '' : (string) ($album['description'] ?? ''),
+        'description'  => $guestLocked ? '' : (string) ($album['description'] ?? ''),
         'image_count'  => $imageCount,
         'nickname'     => (string) ($album['nickname'] ?? ''),
         'avatar'       => (string) ($album['avatar'] ?? ''),

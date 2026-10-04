@@ -65,11 +65,14 @@ try {
 // 最新文章
 $articles = [];
 try {
+    // 游客过滤：完全隐藏（旧 is_encrypted=1）的文章不出现在首页；
+    // visibility=login 的文章保留（游客拿到 locked 标记，excerpt 为空，由前台渲染登录权限墙）
+    $guestVisibilityFilter = $currentUser ? '' : " AND (a.is_encrypted = 0 OR a.is_encrypted IS NULL)";
     $rows = $db->fetchAll(
         "SELECT a.*, u.nickname, u.avatar
          FROM articles a
          LEFT JOIN users u ON a.user_id = u.id
-         WHERE a.status = 'published'
+         WHERE a.status = 'published'{$guestVisibilityFilter}
          ORDER BY a.created_at DESC
          LIMIT 3"
     );
@@ -77,7 +80,13 @@ try {
     foreach ($rows as $row) {
         $id          = (int) ($row['id'] ?? 0);
         $isEncrypted = !empty($row['is_encrypted']);
-        $canView     = $currentUser || !$isEncrypted;
+        $visibility  = withu_effective_visibility($row);
+        // PHP 层兜底：SQL 仅按 is_encrypted 过滤（兼容老库），异常的 hidden 行在此拦截
+        if (!$currentUser && $visibility === 'hidden') {
+            continue;
+        }
+        $canView     = $currentUser || $visibility === 'public';
+        $locked      = !$currentUser && $visibility === 'login';
 
         $content = (string) ($row['content'] ?? '');
         $excerpt = $canView
@@ -91,6 +100,8 @@ try {
             'avatar'           => (string) ($row['avatar'] ?? '/assets/images/default-avatar.svg'),
             'created_at_text'  => formatDate($row['created_at'] ?? date('Y-m-d H:i:s'), 'Y-m-d H:i'),
             'is_encrypted'     => $isEncrypted ? 1 : 0,
+            'visibility'       => $visibility,
+            'locked'           => $locked ? 1 : 0,
             'can_view_content' => $canView ? 1 : 0,
             'excerpt'          => $excerpt,
         ];
@@ -102,11 +113,14 @@ try {
 // 首页相册预览（两行左右的卡片）
 $albums = [];
 try {
+    // 游客过滤：完全隐藏（旧 is_encrypted=1）的相册不出现在首页；
+    // visibility=login 的相册保留（游客拿到 locked 标记，无预览图，由前台渲染登录权限墙）
+    $guestVisibilityWhere = $currentUser ? '' : " WHERE (a.is_encrypted = 0 OR a.is_encrypted IS NULL)";
     $rows = $db->fetchAll(
         "SELECT a.*, u.nickname, u.avatar,
                 (SELECT COUNT(*) FROM album_images WHERE album_id = a.id) AS image_count
          FROM albums a
-         LEFT JOIN users u ON a.user_id = u.id
+         LEFT JOIN users u ON a.user_id = u.id{$guestVisibilityWhere}
          ORDER BY a.created_at DESC
          LIMIT 6"
     );
@@ -139,29 +153,32 @@ try {
     foreach ($rows as $row) {
         $aid         = (int) ($row['id'] ?? 0);
         $isEncrypted = !empty($row['is_encrypted']);
+        $visibility  = withu_effective_visibility($row);
+        // PHP 层兜底：SQL 仅按 is_encrypted 过滤（兼容老库），异常的 hidden 行在此拦截
+        if (!$currentUser && $visibility === 'hidden') {
+            continue;
+        }
         $imageCount  = (int) ($row['image_count'] ?? 0);
 
         $previewImages = array_values($covers[$aid] ?? []);
-        if ($isEncrypted && !$currentUser) {
-            // 未登录时访问加密相册，不返回真实预览图列表
+        // 权限墙：游客访问仅登录可见的相册时，不返回真实预览图与描述，
+        // 但保留名称与计数引导登录（完全隐藏的相册已在 SQL 层对游客排除）
+        $guestLocked = !$currentUser && $visibility === 'login';
+        if ($guestLocked) {
             $previewImages = [];
         }
 
-        $displayName = $isEncrypted && !$currentUser
-            ? '加密相册'
-            : (string) ($row['name'] ?? '');
-
-        // 加密相册对未登录游客需整体脱敏：display_name 之外，name/description 同样不能漏
-        // （口径与 api/albums.php 的 name/description 处理保持一致）
-        $maskEncrypted = $isEncrypted && !$currentUser;
+        $displayName = (string) ($row['name'] ?? '');
 
         $albums[] = [
             'id'           => $aid,
-            'name'         => $maskEncrypted ? '加密相册' : (string) ($row['name'] ?? ''),
+            'name'         => $displayName,
             'display_name' => $displayName,
             'is_encrypted' => $isEncrypted ? 1 : 0,
+            'visibility'   => $visibility,
+            'locked'       => $guestLocked ? 1 : 0,
             'created_at_text' => formatDate($row['created_at'] ?? date('Y-m-d H:i:s'), 'Y-m-d'),
-            'description'  => $maskEncrypted ? '' : (string) ($row['description'] ?? ''),
+            'description'  => $guestLocked ? '' : (string) ($row['description'] ?? ''),
             'image_count'  => $imageCount,
             'nickname'     => (string) ($row['nickname'] ?? ''),
             'avatar'       => (string) ($row['avatar'] ?? '/assets/images/default-avatar.svg'),

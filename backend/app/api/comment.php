@@ -84,18 +84,28 @@ if ($articleId) {
     }
 }
 
-// 加密内容的评论仅限已登录用户：游客看不到内容，也不允许对其评论
+// 非公开内容（仅登录可见/完全隐藏）的评论仅限已登录用户：游客看不到内容，也不允许对其评论
 $targetEncrypted = false;
 try {
     if ($articleId) {
-        $encRow = $db->fetch("SELECT is_encrypted FROM articles WHERE id = :id LIMIT 1", ['id' => $articleId]);
-        $targetEncrypted = $encRow && !empty($encRow['is_encrypted']);
+        $encRow = $db->fetch("SELECT is_encrypted, visibility FROM articles WHERE id = :id LIMIT 1", ['id' => $articleId]);
     } elseif ($albumId) {
-        $encRow = $db->fetch("SELECT is_encrypted FROM albums WHERE id = :id LIMIT 1", ['id' => $albumId]);
-        $targetEncrypted = $encRow && !empty($encRow['is_encrypted']);
+        $encRow = $db->fetch("SELECT is_encrypted, visibility FROM albums WHERE id = :id LIMIT 1", ['id' => $albumId]);
     }
+    $targetEncrypted = !empty($encRow) && withu_effective_visibility($encRow) !== 'public';
 } catch (Throwable $e) {
-    // 老库缺少 is_encrypted 字段时按未加密处理（此类库中也不存在加密内容）
+    // 老库缺少 visibility 字段时回退按旧 is_encrypted 判断
+    try {
+        if ($articleId) {
+            $encRow = $db->fetch("SELECT is_encrypted FROM articles WHERE id = :id LIMIT 1", ['id' => $articleId]);
+            $targetEncrypted = $encRow && !empty($encRow['is_encrypted']);
+        } elseif ($albumId) {
+            $encRow = $db->fetch("SELECT is_encrypted FROM albums WHERE id = :id LIMIT 1", ['id' => $albumId]);
+            $targetEncrypted = $encRow && !empty($encRow['is_encrypted']);
+        }
+    } catch (Throwable $e2) {
+        // 老库缺少 is_encrypted 字段时按未加密处理（此类库中也不存在加密内容）
+    }
 }
 if ($targetEncrypted && !$currentUser) {
     jsonResponse(['success' => false, 'message' => '该内容仅对情侣可见，请先登录后再评论'], 403);

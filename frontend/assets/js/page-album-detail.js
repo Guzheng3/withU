@@ -10,6 +10,7 @@ window.ImglistApp = (function() {
     let loading = false;
     let hasMore = true;
     let msnry = null;
+    let wallClickBound = false;
     let grid, loadBtn, loadMoreWrap, loadDone, loadingEl, totalCountEl;
     let CODE = '';
     let ALBUM_NAME = '';
@@ -115,6 +116,23 @@ window.ImglistApp = (function() {
         }
     }
 
+    /** 渲染登录权限墙（相册仅登录可见，photo-list 返回 403 + locked） */
+    function renderWall() {
+        loading = false;
+        if (loadingEl) loadingEl.style.display = 'none';
+        if (loadMoreWrap) loadMoreWrap.style.display = 'none';
+        if (loadDone) loadDone.style.display = 'none';
+        if (totalCountEl) totalCountEl.style.display = 'none';
+        if (!grid) return;
+        grid.innerHTML = `
+            <div style="text-align:center;padding:4rem 1rem 5rem;color:#a58ba0;">
+                <i class="ph ph-lock-key" style="font-size:2.4rem;color:#e75480;"></i>
+                <p style="margin:1rem 0 .4rem;font-size:1rem;color:#7d6470;">这个相册仅登录后可见</p>
+                <p style="margin:0 0 1.4rem;font-size:.82rem;opacity:.8;">登录后即可查看这里的全部照片与视频</p>
+                <button type="button" data-withu-wall-login style="padding:.6rem 1.8rem;border:none;border-radius:999px;background:linear-gradient(135deg,#f78fb3,#e75480);color:#fff;font-size:.9rem;cursor:pointer;">登录后查看</button>
+            </div>`;
+    }
+
     function loadPage() {
         if (loading || !hasMore) return;
         loading = true;
@@ -133,6 +151,12 @@ window.ImglistApp = (function() {
             url: `${API}?code=${encodeURIComponent(CODE)}&page=${page}&per_page=20`,
             dataType: 'json',
             success(res) {
+                // 登录权限墙：相册仅登录可见（photo-list 返回 403 + locked，兼容旧 403 文案）
+                if (res && (res.locked || res.code === 403)) {
+                    renderWall();
+                    return;
+                }
+
                 if (res.code !== 200 || !res.data) {
                     loading = false;
                     loadingEl.style.display = 'none';
@@ -282,6 +306,19 @@ window.ImglistApp = (function() {
     function init() {
         grid = document.getElementById('imglist-grid');
         if (!grid) return;
+
+        // 权限墙登录按钮：捕获阶段原生跳转，绕过 pjax 的链接拦截
+        if (!wallClickBound) {
+            wallClickBound = true;
+            document.addEventListener('click', (e) => {
+                const btn = e.target && e.target.closest ? e.target.closest('[data-withu-wall-login]') : null;
+                if (!btn) return;
+                e.preventDefault();
+                e.stopPropagation();
+                const back = encodeURIComponent(window.location.pathname + window.location.search);
+                window.location.href = 'login.php?redirect=' + back;
+            }, true);
+        }
 
         CODE = grid.dataset.code || '';
         ALBUM_NAME = grid.dataset.albumName || '';

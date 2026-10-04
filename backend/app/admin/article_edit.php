@@ -281,7 +281,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $title           = trim($_POST['title'] ?? '');
     $content         = trim($_POST['content'] ?? '');
     $type            = $_POST['type'] ?? 'article';
-    $isEncrypted     = isset($_POST['is_encrypted']) ? 1 : 0;
+    $visibility      = withu_visibility_normalize($_POST['visibility'] ?? 'public');
+    $isEncrypted     = $visibility === 'hidden' ? 1 : 0;
     $tags            = trim($_POST['tags'] ?? '');
     $disableComments = isset($_POST['disable_comments']) ? 1 : 0;
     $postedEditMode  = $_POST['edit_mode'] ?? '';
@@ -364,6 +365,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             'title'            => $title,
             'type'             => $type,
             'is_encrypted'     => $isEncrypted,
+            'visibility'       => $visibility,
             'comments_enabled' => $disableComments ? 0 : 1,
             'tags'             => $tags,
             'edit_mode'        => $postedEditMode,
@@ -747,6 +749,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $article['content']          = $content;
     $article['type']             = $type;
     $article['is_encrypted']     = $isEncrypted;
+    $article['visibility']       = $visibility;
     $article['comments_enabled'] = $disableComments ? 0 : 1;
     $article['tags']             = $tags;
     $article['edit_mode']        = $postedEditMode;
@@ -1624,15 +1627,7 @@ include __DIR__ . '/header.php';
             <?php endif; ?>
         </div>
 
-        <div class="form-group" style="margin-bottom:0.75rem;">
-            <label class="switch">
-                <input type="checkbox" name="is_encrypted" value="1" <?php echo !empty($article['is_encrypted']) ? 'checked' : ''; ?>>
-                <span class="switch-track">
-                    <span class="switch-thumb"></span>
-                </span>
-                <span class="switch-label">加密内容（仅双方可见）</span>
-            </label>
-        </div>
+        <?php echo withu_visibility_picker('visibility', withu_effective_visibility($article), '保存后立即生效，可随时再次修改。'); ?>
 
         <?php
         $commentsEnabled         = isset($article['comments_enabled']) ? (int) $article['comments_enabled'] : 1;

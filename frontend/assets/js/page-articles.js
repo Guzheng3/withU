@@ -26,6 +26,19 @@
             const grid = document.getElementById('withu-article-masonry');
             if (!grid) return;
 
+            // 锁定卡片（仅登录可见）：捕获阶段拦截，优先于 pjax 的 data-href 委托，点击引导登录
+            if (!this._lockedClickBound) {
+                this._lockedClickBound = true;
+                document.addEventListener('click', (e) => {
+                    const lockedCard = e.target && e.target.closest ? e.target.closest('.withu-article-locked') : null;
+                    if (!lockedCard) return;
+                    e.preventDefault();
+                    e.stopPropagation();
+                    const back = encodeURIComponent(window.location.pathname + window.location.search);
+                    window.location.href = 'login.php?redirect=' + back;
+                }, true);
+            }
+
             // 已有服务端直出的卡片时跳过动态加载
             if (grid.querySelector('.withu-article-masonry-item')) {
                 this._afterRender(true);
@@ -202,15 +215,23 @@
             const titleHtml = a.title
                 ? `<h3 class="withu-article-card-title">${esc(a.title)}</h3>`
                 : '';
-            const descText = a.encrypted ? '该内容已加密，点击输入密码查看' : (a.excerpt || '');
+            // 仅登录可见（权限墙）：锁定卡片不挂 data-href，点击引导登录
+            const cardAttrs = a.locked
+                ? 'class="withu-article-card-base withu-article-theme-light withu-article-aurora-spot withu-article-locked"'
+                : `data-href="page.php?id=${id}" class="withu-article-card-base withu-article-theme-light withu-article-aurora-spot"`;
+            const lockBadge = a.locked
+                ? '<div style="display:inline-flex;align-items:center;gap:.3rem;margin:0 0 .5rem;padding:.22rem .65rem;border-radius:999px;background:rgba(231,84,128,.1);color:#c2557e;font-size:.72rem;"><i class="ph ph-lock-key"></i>仅登录可见</div>'
+                : '';
+            const descText = a.locked
+                ? '该内容仅登录后可见，登录后即可查看'
+                : (a.encrypted && !a.excerpt ? '该内容已加密，仅情侣登录后可见' : (a.excerpt || ''));
             const descHtml = descText
                 ? `<p class="withu-article-card-desc">${esc(descText)}</p>`
                 : '';
 
             return `
                 <div class="withu-article-masonry-item" data-aos="fade-up" data-aos-delay="${delay}">
-                    <div data-href="page.php?id=${id}"
-                       class="withu-article-card-base withu-article-theme-light withu-article-aurora-spot"
+                    <div ${cardAttrs}
                        style="cursor:pointer;">
 
                         <header class="withu-article-card-header">
@@ -233,6 +254,7 @@
                                 </div>
                             </div>
 
+                            ${lockBadge}
                             ${titleHtml}
                             ${descHtml}
                         </main>

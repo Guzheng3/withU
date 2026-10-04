@@ -109,7 +109,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['album_update'])) {
 
     $name        = trim($_POST['name'] ?? '');
     $description = trim($_POST['description'] ?? '');
-    $isEncrypted = isset($_POST['is_encrypted']) ? 1 : 0;
+    $visibility = withu_visibility_normalize($_POST['visibility'] ?? 'public');
+    $isEncrypted = $visibility === 'hidden' ? 1 : 0;
     $keepOriginal = isset($_POST['keep_original_quality']) ? 1 : 0;
     $layoutMode = in_array($_POST['layout_mode'] ?? 'grid', ['grid', 'waterfall', 'heart'], true) ? $_POST['layout_mode'] : 'grid';
     $maskType = in_array($_POST['mask_type'] ?? 'none', ['none', 'circle', 'heart'], true) ? $_POST['mask_type'] : 'none';
@@ -128,6 +129,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['album_update'])) {
             'name'                => $name,
             'description'         => $description !== '' ? $description : null,
             'is_encrypted'        => $isEncrypted,
+            'visibility'          => $visibility,
             'keep_original_quality'=> $keepOriginal,
             'layout_mode'          => $layoutMode,
             'mask_type'            => $maskType,
@@ -1375,7 +1377,7 @@ include __DIR__ . '/header.php';
                 <div>
                     <div class="admin-card-title">相册信息</div>
                     <div class="admin-card-help">
-                        <div class="admin-card-subtitle">修改相册名称、描述、加密状态与编辑权限</div>
+                        <div class="admin-card-subtitle">修改相册名称、描述、可见范围与编辑权限</div>
                     </div>
                     <button type="button" class="admin-help-toggle" title="查看说明" aria-label="查看说明" aria-expanded="false"><i class="ti ti-info-circle"></i></button>
                 </div>
@@ -1399,15 +1401,7 @@ include __DIR__ . '/header.php';
                         placeholder="给这个相册写一句小小的说明～"
                         style="width:100%;min-height:80px;padding:0.55rem 0.75rem;border-radius:0.75rem;border:1px solid rgba(148,163,184,0.7);font-size:0.9rem;resize:vertical;"><?php echo e($album['description'] ?? ''); ?></textarea>
                 </div>
-                <div class="form-group" style="margin-bottom:1rem;">
-                    <label class="switch">
-                        <input type="checkbox" name="is_encrypted" value="1" <?php echo !empty($album['is_encrypted']) ? 'checked' : ''; ?>>
-                        <span class="switch-track">
-                            <span class="switch-thumb"></span>
-                        </span>
-                        <span class="switch-label">加密相册（前台仅登录后可见）</span>
-                    </label>
-                </div>
+                <?php echo withu_visibility_picker('visibility', withu_effective_visibility($album), '保存后立即生效，可随时再次修改。'); ?>
                 <div class="form-group" style="margin-bottom:1rem;display:grid;grid-template-columns:1fr 1fr;gap:.75rem;">
                     <div><label>相册排版</label><select name="layout_mode" style="width:100%;padding:.55rem"><option value="grid" <?php echo ($album['layout_mode'] ?? 'grid') === 'grid' ? 'selected' : ''; ?>>四宫格 / 九宫格</option><option value="waterfall" <?php echo ($album['layout_mode'] ?? '') === 'waterfall' ? 'selected' : ''; ?>>瀑布流</option><option value="heart" <?php echo ($album['layout_mode'] ?? '') === 'heart' ? 'selected' : ''; ?>>心型拼图</option></select></div>
                     <div><label>缩略图蒙版</label><select name="mask_type" style="width:100%;padding:.55rem"><option value="none" <?php echo ($album['mask_type'] ?? 'none') === 'none' ? 'selected' : ''; ?>>不裁切</option><option value="circle" <?php echo ($album['mask_type'] ?? '') === 'circle' ? 'selected' : ''; ?>>圆形</option><option value="heart" <?php echo ($album['mask_type'] ?? '') === 'heart' ? 'selected' : ''; ?>>心形</option></select></div>

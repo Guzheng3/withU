@@ -316,9 +316,12 @@ include __DIR__ . '/header.php';
                                         创建者：<?php echo e($creatorName); ?>
                                     </div>
                                 </div>
-                                <span class="badge <?php echo !empty($album['is_encrypted']) ? 'badge-warning' : 'badge-success'; ?>">
-                                    <?php if (!empty($album['is_encrypted'])): ?>
-                                        <i class="fas fa-lock" style="margin-right:0.2rem;"></i> 加密
+                                <?php $withuVis = withu_effective_visibility($album); ?>
+                                <span class="badge <?php echo $withuVis === 'public' ? 'badge-success' : 'badge-warning'; ?>">
+                                    <?php if ($withuVis === 'hidden'): ?>
+                                        <i class="fas fa-lock" style="margin-right:0.2rem;"></i> 完全隐藏
+                                    <?php elseif ($withuVis === 'login'): ?>
+                                        <i class="fas fa-user-lock" style="margin-right:0.2rem;"></i> 仅登录
                                     <?php else: ?>
                                         公开
                                     <?php endif; ?>
