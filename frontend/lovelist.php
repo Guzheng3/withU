@@ -987,11 +987,7 @@ try {
 
     <script src="/assets/js/withu-shared-6eddfbc2.js"></script>
 
-    <link rel="stylesheet" href="/assets/css/withu-shared-18595d61.css">
-</div>
-
-<div id="footer-animal">
-    <img class="animal" src="/Style/img/animals.png" draggable="false" alt="动物">
+    <link rel="stylesheet" href="/assets/css/withu-shared-686093da.css">
 </div>
 
 <?php include __DIR__ . '/inc/footer.php'; ?>

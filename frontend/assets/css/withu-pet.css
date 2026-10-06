@@ -1,0 +1,269 @@
+/* ============================================================
+ * withu-pet.css — 网页桌宠（一二 & 布布，源自 oneno-pet 玩法移植）
+ * 结构：.withu-pet-root（JS 挂 body，PJAX 容器外常驻）
+ *      └ .withu-pet（固定定位，可拖拽）
+ *         ├ img.withu-pet-img（造型图）
+ *         └ .withu-pet-bubble（气泡）
+ *      ├ .withu-pet-menu（右键/长按菜单，全局单例）
+ *      └ .withu-pet-recall（隐藏后的唤回 chip，全局单例）
+ * ============================================================ */
+
+.withu-pet-root {
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 80;
+}
+
+/* ── 桌宠本体 ─────────────────────────────── */
+.withu-pet {
+    position: absolute;
+    /* left/top 由 JS 写入（像素），宽 = 造型尺寸 */
+    pointer-events: auto;
+    cursor: grab;
+    user-select: none;
+    -webkit-user-select: none;
+    touch-action: none; /* 拖拽期间阻止移动端滚动/手势 */
+    filter: drop-shadow(0 4px 10px rgba(0, 0, 0, .18));
+    transition: opacity .25s ease;
+    will-change: transform;
+}
+
+.withu-pet.is-dragging {
+    cursor: grabbing;
+    filter: drop-shadow(0 10px 18px rgba(0, 0, 0, .25));
+}
+
+.withu-pet.is-hidden {
+    display: none;
+}
+
+.withu-pet-img {
+    display: block;
+    width: 100%;
+    height: auto;
+    -webkit-user-drag: none;
+    user-select: none;
+}
+
+/* 点击小弹跳（戳一戳反馈） */
+@keyframes withuPetPoke {
+    0% { transform: translateY(0) scale(1); }
+    35% { transform: translateY(-8px) scale(1.06); }
+    70% { transform: translateY(2px) scale(.97); }
+    100% { transform: translateY(0) scale(1); }
+}
+
+.withu-pet.is-poking .withu-pet-img {
+    animation: withuPetPoke .45s ease;
+}
+
+/* ── 气泡 ─────────────────────────────────── */
+.withu-pet-bubble {
+    position: absolute;
+    bottom: calc(100% + 10px);
+    left: 50%;
+    max-width: 230px;
+    transform: translateX(-50%) translateY(6px) scale(.92);
+    transform-origin: 50% 100%;
+    background: #fff;
+    color: #4a3f35;
+    font-size: 13px;
+    line-height: 1.55;
+    padding: 9px 13px;
+    border-radius: 14px;
+    border: 1px solid #f0e4dc;
+    box-shadow: 0 6px 20px rgba(96, 70, 52, .16);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity .22s ease, transform .22s ease;
+    white-space: normal;
+    word-break: break-word;
+    z-index: 2;
+}
+
+/* 尖角 */
+.withu-pet-bubble::after {
+    content: '';
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    border: 7px solid transparent;
+    border-top-color: #fff;
+}
+
+.withu-pet-bubble.is-visible {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0) scale(1);
+}
+
+/* 气泡在屏幕边缘的防裁切：靠边时 JS 会追加 .align-left / .align-right */
+.withu-pet-bubble.align-left {
+    left: 0;
+    transform: translateX(0) translateY(6px) scale(.92);
+}
+
+.withu-pet-bubble.align-left.is-visible {
+    transform: translateX(0) translateY(0) scale(1);
+}
+
+.withu-pet-bubble.align-left::after {
+    left: 24px;
+}
+
+.withu-pet-bubble.align-right {
+    left: auto;
+    right: 0;
+    transform: translateX(0) translateY(6px) scale(.92);
+}
+
+.withu-pet-bubble.align-right.is-visible {
+    transform: translateX(0) translateY(0) scale(1);
+}
+
+.withu-pet-bubble.align-right::after {
+    left: auto;
+    right: 24px;
+}
+
+/* ── 右键 / 长按菜单 ──────────────────────── */
+.withu-pet-menu {
+    position: fixed;
+    min-width: 132px;
+    background: rgba(255, 255, 255, .96);
+    backdrop-filter: blur(8px);
+    border: 1px solid #f0e4dc;
+    border-radius: 12px;
+    box-shadow: 0 10px 30px rgba(96, 70, 52, .18);
+    padding: 5px;
+    opacity: 0;
+    transform: scale(.94);
+    transform-origin: 0 0;
+    pointer-events: none;
+    transition: opacity .15s ease, transform .15s ease;
+    z-index: 82;
+}
+
+.withu-pet-menu.is-open {
+    opacity: 1;
+    transform: scale(1);
+    pointer-events: auto;
+}
+
+.withu-pet-menu-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    width: 100%;
+    box-sizing: border-box;
+    padding: 8px 12px;
+    border: 0;
+    border-radius: 8px;
+    background: transparent;
+    color: #4a3f35;
+    font-size: 13px;
+    text-align: left;
+    cursor: pointer;
+    -webkit-tap-highlight-color: transparent;
+}
+
+.withu-pet-menu-item:hover {
+    background: #faf3ee;
+    color: #e75480;
+}
+
+.withu-pet-menu-item .ico {
+    font-style: normal;
+    font-size: 14px;
+    line-height: 1;
+}
+
+.withu-pet-menu-char {
+    padding: 6px 12px 4px;
+    font-size: 11px;
+    color: #b8a99d;
+    letter-spacing: .05em;
+}
+
+/* ── 唤回 chip ────────────────────────────── */
+.withu-pet-recall {
+    position: fixed;
+    right: 14px;
+    bottom: 92px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 8px 14px;
+    border: 1px solid #f0e4dc;
+    border-radius: 999px;
+    background: rgba(255, 255, 255, .96);
+    box-shadow: 0 6px 18px rgba(96, 70, 52, .18);
+    color: #4a3f35;
+    font-size: 13px;
+    cursor: pointer;
+    user-select: none;
+    -webkit-tap-highlight-color: transparent;
+    opacity: 0;
+    transform: translateY(8px);
+    pointer-events: none;
+    transition: opacity .2s ease, transform .2s ease;
+    z-index: 81;
+}
+
+.withu-pet-recall.is-visible {
+    opacity: 1;
+    transform: translateY(0);
+    pointer-events: auto;
+}
+
+.withu-pet-recall:hover {
+    color: #e75480;
+    border-color: #f3cfd9;
+}
+
+/* ── 移动端：缩小并抬到底部导航之上 ───────── */
+@media (max-width: 768px) {
+    .withu-pet-recall {
+        bottom: 96px;
+        right: 12px;
+    }
+
+    .withu-pet-bubble {
+        max-width: 180px;
+        font-size: 12px;
+    }
+}
+
+/* 深色模式跟随站点变量（若站点后续接入） */
+@media (prefers-color-scheme: dark) {
+    .withu-pet-bubble {
+        background: rgba(45, 38, 34, .95);
+        color: #f3ece5;
+        border-color: #57493f;
+    }
+
+    .withu-pet-bubble::after {
+        border-top-color: rgba(45, 38, 34, .95);
+    }
+
+    .withu-pet-menu,
+    .withu-pet-recall {
+        background: rgba(45, 38, 34, .96);
+        border-color: #57493f;
+        color: #f3ece5;
+    }
+
+    .withu-pet-menu-item {
+        color: #f3ece5;
+    }
+
+    .withu-pet-menu-item:hover {
+        background: #3d332c;
+        color: #ff8fab;
+    }
+
+    .withu-pet-menu-char {
+        color: #8d7d70;
+    }
+}

@@ -638,7 +638,6 @@ html.withu-private-mode body {
 html.withu-private-mode .row.central.nav_k,
 html.withu-private-mode #homePage,
 html.withu-private-mode .footer-warp,
-html.withu-private-mode #footer-animal,
 html.withu-private-mode .div_marb_7rem-none,
 html.withu-private-mode .withu-mobile-nav-root,
 html.withu-private-mode #NavBtnList,
@@ -648,7 +647,8 @@ html.withu-private-mode .message_btn,
 html.withu-private-mode #scrollTopBtn,
 html.withu-private-mode .bg-wrap,
 html.withu-private-mode #loader-wrapper,
-html.withu-private-mode .Width_limit_10re {
+html.withu-private-mode .Width_limit_10re,
+{
     display: none !important;
 }
 

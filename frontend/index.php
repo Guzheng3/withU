@@ -2445,38 +2445,7 @@ try {
             background-image: linear-gradient(120deg, #747474 0%, #66a6ff 100%);
         }
 
-        #footer-animal {
-            position: relative;
-            user-select: none;
-        }
-
-        #footer-animal:before {
-            content: '';
-            position: absolute;
-            bottom: 0;
-            width: 100%;
-            height: 36px;
-            background: url(Style/img/animalBg.jpg) repeat center / auto 100%;
-            box-shadow: 0 4px 7px rgba(0, 0, 0, .15);
-        }
-
-        .animal {
-            position: relative;
-            max-width: min(974px, 100vw);
-            margin: 0 auto;
-            display: block;
-        }
-
-        @media (max-width: 768px) {
-            .animal {
-                bottom: 15px;
-            }
-        }
     </style>
-</div>
-
-<div id="footer-animal">
-    <img class="animal" src="Style/img/animals.png" draggable="false" alt="动物">
 </div>
 
 <?php include __DIR__ . '/inc/footer.php'; ?>

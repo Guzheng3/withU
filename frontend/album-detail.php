@@ -565,8 +565,8 @@ $__albumAuthorAvatar = (string) ($__cfg['maleAvatar'] ?? '');
     </aside>
 <?php else: ?>
 <title>页面已加密 — <?php echo htmlspecialchars($withuSiteTitle, ENT_QUOTES, 'UTF-8'); ?></title>
-<link rel="stylesheet" href="/Style/css/withu-private.css">
-<link rel="stylesheet" href="/assets/css/withu-shared-bc4f37b4.css">
+<link rel="stylesheet" href="/Style/css/withu-private.css?v=1.0.75">
+<link rel="stylesheet" href="/assets/css/withu-shared-17918c53.css">
 <script>document.documentElement.classList.add("withu-private-mode");</script>
 <div class="withu-private-wrapper" id="withuPrivateWrapper">
 
@@ -986,11 +986,7 @@ if (typeof window.initPrivatePage === 'function') window.initPrivatePage();
 
     <script src="/assets/js/withu-shared-6eddfbc2.js"></script>
 
-    <link rel="stylesheet" href="/assets/css/withu-shared-18595d61.css">
-</div>
-
-<div id="footer-animal">
-    <img class="animal" src="/Style/img/animals.png" draggable="false" alt="动物">
+    <link rel="stylesheet" href="/assets/css/withu-shared-686093da.css">
 </div>
 
 <?php include __DIR__ . '/inc/footer.php'; ?>

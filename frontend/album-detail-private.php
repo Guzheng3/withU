@@ -386,8 +386,8 @@
 
 <div id="pjax-container">
 <title><?php echo htmlspecialchars($withuSiteTitle, ENT_QUOTES, 'UTF-8'); ?></title>
-<link rel="stylesheet" href="/Style/css/withu-private.css?wm=4c668768&v=1.0.74">
-<link rel="stylesheet" href="/assets/css/withu-shared-bc4f37b4.css">
+<link rel="stylesheet" href="/Style/css/withu-private.css?wm=4c668768&v=1.0.75">
+<link rel="stylesheet" href="/assets/css/withu-shared-17918c53.css">
 <script>document.documentElement.classList.add("withu-private-mode");</script>
 <div class="withu-private-wrapper" id="withuPrivateWrapper">
 
@@ -801,11 +801,7 @@ if (typeof window.initPrivatePage === 'function') window.initPrivatePage();
 
     <script src="/assets/js/withu-shared-c69475f5.js"></script>
 
-    <link rel="stylesheet" href="/assets/css/page-album-detail-private-d2ac59d1.css">
-</div>
-
-<div id="footer-animal">
-    <img class="animal" src="/Style/img/animals.png?wm=4c668768&v=1.0.74" draggable="false" alt="动物">
+    <link rel="stylesheet" href="/assets/css/page-album-detail-private-ead4db95.css">
 </div>
 
 <?php include __DIR__ . '/inc/footer.php'; ?>
