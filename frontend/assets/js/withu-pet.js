@@ -20,7 +20,7 @@
 
     var STORE_KEY = 'withu-pet.v1';
     var CHAR_KEYS = ['yier', 'bubu'];
-    var SIZE_DEFAULT = 96, SIZE_MOBILE = 60, SIZE_MIN = 44, SIZE_MAX = 160, SIZE_STEP = 16;
+    var SIZE_DEFAULT = 120, SIZE_MOBILE = 72, SIZE_MIN = 44, SIZE_MAX = 160, SIZE_STEP = 16;
     var SWITCH_BASE_MS = 60000;          // 随机轮播基准间隔（±20% 抖动）
     var CHATTER_MIN_MS = 45000, CHATTER_MAX_MS = 90000;
     var POKE_POSE_MS = 2600;             // 点击后「戳一戳」造型保持时长
@@ -182,6 +182,8 @@
         pet.bubble.classList.remove('align-left', 'align-right');
         if (cx < 130) pet.bubble.classList.add('align-left');
         else if (cx > window.innerWidth - 130) pet.bubble.classList.add('align-right');
+        /* 上方空间不足（桌宠被拖到顶部附近）时气泡翻到下方 */
+        pet.bubble.classList.toggle('below', rect.top < 160);
         /* 强制重排后再入场，保证连续说话也有过渡 */
         void pet.bubble.offsetWidth;
         pet.bubble.classList.add('is-visible');

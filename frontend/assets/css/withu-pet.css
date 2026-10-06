@@ -60,6 +60,10 @@
     position: absolute;
     bottom: calc(100% + 10px);
     left: 50%;
+    /* max-content：宽度优先取整行内容宽，再被 max-width 截断换行。
+       不能省——气泡以桌宠（约 96px 宽）为包含块，shrink-to-fit 会把中文
+       逐字断行压成一字宽，排成通天竖幅 */
+    width: max-content;
     max-width: 230px;
     transform: translateX(-50%) translateY(6px) scale(.92);
     transform-origin: 50% 100%;
@@ -122,6 +126,20 @@
 .withu-pet-bubble.align-right::after {
     left: auto;
     right: 24px;
+}
+
+/* 桌宠贴近视口顶部时气泡翻到下方（JS 加 .below） */
+.withu-pet-bubble.below {
+    bottom: auto;
+    top: calc(100% + 10px);
+    transform-origin: 50% 0;
+}
+
+.withu-pet-bubble.below::after {
+    top: auto;
+    bottom: 100%;
+    border-top-color: transparent;
+    border-bottom-color: #fff;
 }
 
 /* ── 右键 / 长按菜单 ──────────────────────── */
@@ -242,6 +260,11 @@
 
     .withu-pet-bubble::after {
         border-top-color: rgba(45, 38, 34, .95);
+    }
+
+    .withu-pet-bubble.below::after {
+        border-top-color: transparent;
+        border-bottom-color: rgba(45, 38, 34, .95);
     }
 
     .withu-pet-menu,
