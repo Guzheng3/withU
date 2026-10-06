@@ -18,9 +18,9 @@
     var DATA = window.WithUPetData || null;
     if (!DATA) return;
 
-    var STORE_KEY = 'withu-pet.v1';
+    var STORE_KEY = 'withu-pet.v2'; /* v2：默认尺寸上调，弃用旧记忆 */
     var CHAR_KEYS = ['yier', 'bubu'];
-    var SIZE_DEFAULT = 120, SIZE_MOBILE = 72, SIZE_MIN = 44, SIZE_MAX = 160, SIZE_STEP = 16;
+    var SIZE_DEFAULT = 160, SIZE_MOBILE = 96, SIZE_MIN = 44, SIZE_MAX = 240, SIZE_STEP = 24;
     var SWITCH_BASE_MS = 60000;          // 随机轮播基准间隔（±20% 抖动）
     var CHATTER_MIN_MS = 45000, CHATTER_MAX_MS = 90000;
     var POKE_POSE_MS = 2600;             // 点击后「戳一戳」造型保持时长
