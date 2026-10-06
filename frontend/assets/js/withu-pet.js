@@ -478,7 +478,7 @@
                 if (dp) new Image().src = petUrl(c, dp.file);
                 idlePoses(c).filter(function (p) { return /\.webp$/.test(p.file); })
                     .sort(function (a, b) { return a.bytes - b.bytes; })
-                    .slice(0, 3)
+                    .slice(0, 2)
                     .forEach(function (p) { new Image().src = petUrl(c, p.file); });
             });
             if (cb) cb();

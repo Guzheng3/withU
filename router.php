@@ -22,23 +22,64 @@ if (strpbrk($path, "\\\0") !== false
 
 // PHP's built-in server closes HTML responses with EOF. Some SSH tunnels do
 // not forward that half-close, so give browsers an explicit response length.
+// 同一回调顺带做 gzip：php -S 自身不压缩，站内 4MB+ 的 JS/CSS 文本裸传是首屏主要开销；
+// 仅压文本类 MIME（视频/音频/图片/woff2 等已压缩格式跳过），长度头按压缩后字节数回写。
 ob_start(function (string $output): string {
     if (headers_sent()) {
         return $output;
     }
 
+    $contentType = '';
     $hasLength = false;
+    $hasEncoding = false;
     foreach (headers_list() as $header) {
-        if (stripos($header, 'Content-Length:') === 0) {
+        if (stripos($header, 'Content-Type:') === 0) {
+            $contentType = $header;
+        } elseif (stripos($header, 'Content-Length:') === 0) {
             $hasLength = true;
-            break;
+        } elseif (stripos($header, 'Content-Encoding:') === 0) {
+            $hasEncoding = true;
         }
     }
+
+    static $clientAcceptsGzip = null;
+    if ($clientAcceptsGzip === null) {
+        $clientAcceptsGzip = extension_loaded('zlib')
+            && stripos($_SERVER['HTTP_ACCEPT_ENCODING'] ?? '', 'gzip') !== false;
+    }
+
+    if ($clientAcceptsGzip && !$hasEncoding
+        && strlen($output) > 255
+        && withu_is_compressible_type($contentType)) {
+        $gz = gzencode($output, 4, FORCE_GZIP);
+        if ($gz !== false && strlen($gz) < strlen($output)) {
+            header('Content-Encoding: gzip', true);
+            header('Vary: Accept-Encoding', false);
+            header('Content-Length: ' . strlen($gz), true);
+            return $gz;
+        }
+    }
+
     if (!$hasLength) {
         header('Content-Length: ' . strlen($output), true);
     }
     return $output;
 });
+
+/**
+ * 是否适合 gzip 的响应类型。$header 是 headers_list() 里的 Content-Type 行；
+ * 未显式设置时 PHP 默认发 text/html，视为可压缩。
+ */
+function withu_is_compressible_type(string $header): bool {
+    $mime = strtolower(trim(preg_replace('/\s*;.*$/', '', substr($header, 13))));
+    if ($mime === '') {
+        return true;
+    }
+    return preg_match(
+        '#^(text/|application/(javascript|json|xml|rss|atom|manifest\+json|wasm)$|image/svg)#',
+        $mime
+    ) === 1;
+}
 
 // ── 遗留目录 backend/：不对公网暴露（含已停用的 Node 服务） ──
 if ($path === '/backend' || strpos($path, '/backend/') === 0) {

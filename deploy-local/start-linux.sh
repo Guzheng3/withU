@@ -104,7 +104,9 @@ else
     log "检测到 nginx+php-fpm 配置，请用 systemctl start nginx php-fpm"
     systemctl start nginx php8.1-fpm 2>/dev/null || systemctl start nginx php-fpm 2>/dev/null || true
   else
-    detach withu-php "php -S 127.0.0.1:$WITHU_PORT -t '$ROOT' '$ROOT/router.php'" "$WORKROOT/runtime/withu-php.log"
+    # PHP_CLI_SERVER_WORKERS：php -S 默认单进程串行处理请求，首页百余个静态资源会排队；
+    # 8 个 worker 让并发请求真正并行（PHP 7.4+ 支持）
+    detach withu-php "PHP_CLI_SERVER_WORKERS=8 php -S 127.0.0.1:$WITHU_PORT -t '$ROOT' '$ROOT/router.php'" "$WORKROOT/runtime/withu-php.log"
     for i in $(seq 1 10); do is_listening $WITHU_PORT && break; sleep 1; done
     if is_listening $WITHU_PORT; then
       log "withU PHP 就绪: http://127.0.0.1:$WITHU_PORT/"
