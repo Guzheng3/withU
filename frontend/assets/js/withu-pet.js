@@ -18,7 +18,7 @@
     var DATA = window.WithUPetData || null;
     if (!DATA) return;
 
-    var STORE_KEY = 'withu-pet.v2'; /* v2：默认尺寸上调，弃用旧记忆 */
+    var STORE_KEY = 'withu-pet.v3'; /* v3：修复哨兵值被钳到最小值的 bug，弃用旧记忆 */
     var CHAR_KEYS = ['yier', 'bubu'];
     var SIZE_DEFAULT = 160, SIZE_MOBILE = 96, SIZE_MIN = 44, SIZE_MAX = 240, SIZE_STEP = 24;
     var SWITCH_BASE_MS = 60000;          // 随机轮播基准间隔（±20% 抖动）
@@ -66,7 +66,9 @@
             var raw = JSON.parse(localStorage.getItem(STORE_KEY) || '{}');
             CHAR_KEYS.forEach(function (c) {
                 var s = raw[c] || {};
-                def[c].size = clamp(Number(s.size) || 0, SIZE_MIN, SIZE_MAX);
+                /* 仅当存过有效尺寸才钳制；否则保持 0（跟随默认），防止哨兵值被钳到 SIZE_MIN */
+                var savedSize = Number(s.size);
+                def[c].size = savedSize >= SIZE_MIN ? clamp(savedSize, SIZE_MIN, SIZE_MAX) : 0;
                 def[c].opacity = clamp(Number(s.opacity), 0.3, 1) || 1;
                 def[c].hidden = !!s.hidden;
                 if (s.pos && isFinite(s.pos.xPct) && isFinite(s.pos.yPct)) {
