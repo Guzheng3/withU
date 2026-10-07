@@ -120,7 +120,7 @@ try {
 <link rel="stylesheet" href="/Style/css/interaction.css">
 <link rel="stylesheet" href="/Style/css/withu-home-style.css">
 <link rel="stylesheet" href="/Style/css/withu-detail.css">
-<link rel="stylesheet" href="/Style/css/mobile-nav.css">
+<link rel="stylesheet" href="/Style/css/mobile-nav.css?v=1.0.1-flush">
 <link rel="stylesheet" href="/Style/css/header.css">
 <!-- 自定义右键菜单 -->
 <link rel="stylesheet" href="/Style/css/context-menu.css">

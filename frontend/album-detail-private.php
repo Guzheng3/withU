@@ -58,7 +58,7 @@
 <link rel="stylesheet" href="/Style/css/interaction.css?wm=4c668768&v=1.0.74">
 <link rel="stylesheet" href="/Style/css/withu-home-style.css?wm=4c668768&v=1.0.74">
 <link rel="stylesheet" href="/Style/css/withu-detail.css?wm=4c668768&v=1.0.74">
-<link rel="stylesheet" href="/Style/css/mobile-nav.css?wm=4c668768&v=1.0.74">
+<link rel="stylesheet" href="/Style/css/mobile-nav.css?v=1.0.1-flush?wm=4c668768&v=1.0.74">
 <link rel="stylesheet" href="/Style/css/header.css?wm=4c668768&v=1.0.74">
 <!-- 自定义右键菜单 -->
 <link rel="stylesheet" href="/Style/css/context-menu.css?wm=4c668768&v=1.0.74">

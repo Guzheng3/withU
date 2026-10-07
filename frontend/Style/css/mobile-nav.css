@@ -607,14 +607,17 @@
    ================================================================ */
 .withu-tab-template-v5-container {
     position: fixed;
-    bottom: 20px;
+    bottom: 0;
     left: 50%;
     transform: translateX(-50%);
-    height: 56px;
-    border-radius: 32px;
+    /* 贴底：玻璃背景延伸进 iPhone 底部安全区，图标仍居中在 56px 内容区 */
+    height: calc(56px + env(safe-area-inset-bottom, 0px));
+    box-sizing: border-box;
+    border-radius: 28px 28px 0 0;
     display: flex;
     align-items: center;
     padding: 0 6px;
+    padding-bottom: env(safe-area-inset-bottom, 0px);
     z-index: 100;
     overflow-x: auto;
     scroll-behavior: smooth;
