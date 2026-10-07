@@ -1290,6 +1290,6 @@ function endTogether(){watchRequest('end_together',{room_code:code}).then(functi
 <!-- withU 桌宠（一二/布布随机一只，左下角，与前台共版） -->
 <link rel="stylesheet" href="/assets/css/withu-pet.css?v=1.0.80">
 <script src="/assets/js/withu-pet-data.js?v=1.0.80"></script>
-<script src="/assets/js/withu-pet.js?v=1.0.82"></script>
+<script src="/assets/js/withu-pet.js?v=1.0.83"></script>
 </body>
 </html>
