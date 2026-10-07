@@ -5,7 +5,10 @@
 // 返回渲染后的 HTML（不含页面标题）。
 if (!function_exists('withu_advanced_blacklist_panel')) {
     function withu_advanced_blacklist_panel(): string {
+        // requirePhp() 在函数作用域内 require 页面，页面顶层的 $db 不会进入全局符号表；
+        // global 取不到时回退到自行获取（两种加载上下文均可用）。
         global $db;
+        $db = $db ?? Database::getInstance();
 
         $tableError   = '';
         $message      = '';

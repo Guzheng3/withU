@@ -57,7 +57,7 @@
 <link rel="stylesheet" href="/Style/css/tooltip.css?wm=4c668768&v=1.0.74">
 <link rel="stylesheet" href="/Style/css/interaction.css?wm=4c668768&v=1.0.74">
 <link rel="stylesheet" href="/Style/css/withu-home-style.css?wm=4c668768&v=1.0.74">
-<link rel="stylesheet" href="/Style/css/withu-detail.css?wm=4c668768&v=1.0.74">
+<link rel="stylesheet" href="/Style/css/withu-detail.css?wm=4c668768&v=1.0.80">
 <link rel="stylesheet" href="/Style/css/mobile-nav.css?v=1.0.1-flush?wm=4c668768&v=1.0.74">
 <link rel="stylesheet" href="/Style/css/header.css?wm=4c668768&v=1.0.74">
 <!-- 自定义右键菜单 -->
@@ -244,13 +244,13 @@
         <script src="/assets/js/withu-shared-bc1ba20d.js"></script>
 <script src="/assets/js/app.js?wm=4c668768&v=1.0.74"></script>
 <script src="/assets/js/withu-location.js?v=20260906e"></script>
-<script src="/assets/js/head-avatar-location.js?v=20260906"></script>
+<script src="/assets/js/head-avatar-location.js?v=20261007"></script>
 <script src="/assets/js/components.js?v=1.0.0-confetti1?wm=4c668768&v=1.0.74"></script>
 
 <!-- 礼花效果已迁移到 components.js 的 ConfettiEffect 模块 -->
 
 <script src="/assets/js/pjax.js?wm=4c668768&v=1.0.74"></script><script>if(window.WithUPjax&&typeof window.WithUPjax.init==="function")window.WithUPjax.init();</script>
-<link rel="stylesheet" href="/assets/css/page-album-detail-private-7204a42e.css">
+<link rel="stylesheet" href="/assets/css/page-album-detail-private-22a6385f.css">
 
 <script>
     // 倒计时、高度调整、轮播图、导航栏等功能已迁移到 app.js 和 components.js
@@ -264,7 +264,7 @@
 </script>
 
 <div id="loader-wrapper">
-    <div id="loader"></div>
+    <img id="loader" src="/assets/pet/yier/yier-poke.webp" alt="">
     <div class="loader-section"></div>
 </div>
 

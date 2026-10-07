@@ -306,7 +306,7 @@ try {
 <link rel="stylesheet" href="Style/css/interaction.css">
 <link rel="stylesheet" href="Style/css/withu-home-style.css">
 <link rel="stylesheet" href="Style/css/timetable.css?v=20260907-3">
-<link rel="stylesheet" href="Style/css/withu-detail.css">
+<link rel="stylesheet" href="Style/css/withu-detail.css?v=1.0.80">
 <link rel="stylesheet" href="Style/css/mobile-nav.css?v=1.0.1-flush">
 <link rel="stylesheet" href="Style/css/header.css">
 <!-- 自定义右键菜单 -->
@@ -493,7 +493,7 @@ try {
         <script src="/assets/js/withu-shared-bc1ba20d.js"></script>
 <script src="assets/js/app.js"></script>
 <script src="/assets/js/withu-location.js?v=20260906e"></script>
-<script src="/assets/js/head-avatar-location.js?v=20260906b"></script>
+<script src="/assets/js/head-avatar-location.js?v=20261007"></script>
 <?php if (!empty($loggedIn)): ?>
 <!-- 对方正在看邀请气泡（头像区） -->
 <script src="/assets/js/head-avatar-watch-bubble.js"></script>
@@ -503,7 +503,7 @@ try {
 <!-- 礼花效果已迁移到 components.js 的 ConfettiEffect 模块 -->
 
 <script src="assets/js/pjax.js"></script><script>if(window.WithUPjax&&typeof window.WithUPjax.init==="function")window.WithUPjax.init();</script>
-<link rel="stylesheet" href="/assets/css/withu-shared-f1846031.css">
+<link rel="stylesheet" href="/assets/css/withu-shared-6790eb7e.css">
 
 <script>
     // 倒计时、高度调整、轮播图、导航栏等功能已迁移到 app.js 和 components.js
@@ -517,7 +517,7 @@ try {
 </script>
 
 <div id="loader-wrapper">
-    <div id="loader"></div>
+    <img id="loader" src="/assets/pet/yier/yier-poke.webp" alt="">
     <div class="loader-section"></div>
 </div>
 

@@ -356,6 +356,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $content = clean_wangeditor_html($content);
     }
 
+    // 正文统一按 Markdown 存储：编辑器书写的 Markdown 原样保存，前台用 Parsedown 渲染为 HTML。
+    // content_format 字段仅作标记，服务端不再做 Markdown -> HTML 转换。
+    // 注意：项目内旧的 core/Parsedown.php 为改过的 1.8.0-beta，会丢弃行内 HTML（如作者标记），前台渲染不用它
+
     $requireContent = ($postedEditMode !== 'chat');
     if ($title === '' || ($requireContent && $content === '')) {
         $error = '请填写标题和内容';
@@ -1262,7 +1266,7 @@ include __DIR__ . '/header.php';
         </div>
 
         <div class="form-group" id="fullEditorSection" style="margin-bottom:0.75rem;">
-            <label style="display:block;font-size:0.85rem;margin-bottom:0.25rem;">内容 *（自定义标签书写 · 点击快捷按钮插入 · 实时预览）</label>
+            <label style="display:block;font-size:0.85rem;margin-bottom:0.25rem;">内容 *（Markdown 书写 · 点击快捷按钮插入 · 实时预览）</label>
 
             <?php
             // 计算当前情侣中的男主 / 女主，用于标记按钮和统计
@@ -1360,11 +1364,14 @@ include __DIR__ . '/header.php';
             <div class="withu-split">
                 <textarea
                     id="articleSourceEditor"
-                    placeholder="在这里书写 HTML（用上方按钮快速插入标签）……"
+                    placeholder="在这里书写 Markdown（用上方按钮快速插入语法）……"
                     spellcheck="false"><?php echo e($initialContent); ?></textarea>
                 <div class="withu-preview-pane" id="articlePreview"></div>
             </div>
-            <p class="withu-editor-hint">左侧书写 HTML，右侧实时渲染预览；按钮插入的占位文字选中后直接输入即可覆盖。保存时统一按 HTML 存储，前台展示不受影响。</p>
+            <p class="withu-editor-hint">左侧书写 Markdown，右侧实时渲染预览；标准 Markdown 语法（# 标题、**加粗**、[链接](地址) 等）与部分自定义标签（居中/引言/导语/媒体）均可用。保存时统一转为 HTML 存储，前台展示不受影响。</p>
+
+            <!-- 内容格式标记：前端渲染库不可用时由服务端按 markdown 兜底转换 -->
+            <input type="hidden" name="content_format" id="contentFormatField" value="markdown">
 
             <!-- 实际提交用的隐藏 textarea，JS 在提交前同步编辑器的 HTML -->
             <textarea
@@ -1657,6 +1664,7 @@ include __DIR__ . '/header.php';
 
     <!-- wangEditor 脚本（本地） -->
     <script src="/admin-assets/js/wangeditor.min.js"></script>
+    <script src="/admin-assets/js/marked.min.js"></script>
 
     <script>
     // 若前台通用的 showToast 尚未定义，则在后台提供一个兼容版本，使用与前台一致的样式
@@ -1743,34 +1751,34 @@ include __DIR__ . '/header.php';
                 }
 
                 const TAGS = {
-                    h1: { insert: '<h1>标题</h1>', sel: '标题' },
-                    h2: { insert: '<h2>小标题</h2>', sel: '小标题' },
-                    h3: { insert: '<h3>小标题</h3>', sel: '小标题' },
-                    h4: { insert: '<h4>小节标题</h4>', sel: '小节标题' },
-                    h5: { insert: '<h5>小标题</h5>', sel: '小标题' },
-                    h6: { insert: '<h6>脚注标题</h6>', sel: '脚注标题' },
-                    p: { insert: '<p>段落文字</p>', sel: '段落文字' },
+                    h1: { insert: '# 标题', sel: '标题' },
+                    h2: { insert: '## 小标题', sel: '小标题' },
+                    h3: { insert: '### 小标题', sel: '小标题' },
+                    h4: { insert: '#### 小节标题', sel: '小节标题' },
+                    h5: { insert: '##### 小标题', sel: '小标题' },
+                    h6: { insert: '###### 脚注标题', sel: '脚注标题' },
+                    p: { insert: '段落文字', sel: '段落文字' },
                     center: { insert: '<center>居中文字</center>', sel: '居中文字' },
-                    hr: { insert: '<hr>' },
-                    b: { wrap: ['<b>', '</b>'], ph: '加粗文字' },
-                    i: { wrap: ['<i>', '</i>'], ph: '斜体文字' },
-                    s: { wrap: ['<s>', '</s>'], ph: '删除文字' },
-                    code: { wrap: ['<code>', '</code>'], ph: '行内代码' },
-                    a: { insert: '<a href="https://" target="_blank">链接文字</a>', sel: '链接文字' },
+                    hr: { insert: '\n---\n' },
+                    b: { wrap: ['**', '**'], ph: '加粗文字' },
+                    i: { wrap: ['*', '*'], ph: '斜体文字' },
+                    s: { wrap: ['~~', '~~'], ph: '删除文字' },
+                    code: { wrap: ['`', '`'], ph: '行内代码' },
+                    a: { insert: '[链接文字](https://)', sel: '链接文字' },
                     quote: { insert: '<quote>引言</quote>', sel: '引言' },
                     desc: { insert: '<desc>导语或说明</desc>', sel: '导语或说明' },
-                    blockquote: { insert: '<blockquote>引用内容</blockquote>', sel: '引用内容' },
+                    blockquote: { insert: '\n> 引用内容\n', sel: '引用内容' },
                     colorcard: { insert: '<div class="color-card shadow-blur">高亮文字</div>', sel: '高亮文字' },
-                    img: { insert: '<img alt="图片描述" src="图片地址">', sel: '图片地址' },
+                    img: { insert: '![图片描述](图片地址)', sel: '图片地址' },
                     video: { insert: '<video id="withUPlayerVideo" class="withu-player-video" controls><source src="视频地址" type="video/mp4"></video>', sel: '视频地址' },
                     iframe: { insert: '<iframe src="https://" allowfullscreen="true"></iframe>' },
                     'music-netease': { insert: '<audio id="music" src data-id="歌曲ID" data-type="netease"></audio>', sel: '歌曲ID' },
                     'music-tencent': { insert: '<audio id="music" src data-id="歌曲ID" data-type="tencent"></audio>', sel: '歌曲ID' },
                     'music-custom': { insert: '<audio id="music" src="" data-type="custom" data-name="歌名" data-author="歌手" data-cover="封面地址" data-url="音频地址"></audio>', sel: '歌名' },
-                    codeblock: { insert: '<pre><button id="btn">Copy</button><code contenteditable="false" class="language-html" id="copy"><xmp>在这里粘贴代码</xmp></code></pre>', sel: '在这里粘贴代码' },
-                    ul: { insert: '<ul>\n<li>列表项</li>\n<li>列表项</li>\n</ul>', sel: '列表项' },
-                    ol: { insert: '<ol>\n<li>列表项</li>\n<li>列表项</li>\n</ol>', sel: '列表项' },
-                    table: { insert: '<table border="1">\n<thead><tr><th>表头1</th><th>表头2</th></tr></thead>\n<tbody><tr><td>内容</td><td>内容</td></tr></tbody>\n</table>', sel: '表头1' }
+                    codeblock: { insert: '\n```html\n在这里粘贴代码\n```\n', sel: '在这里粘贴代码' },
+                    ul: { insert: '\n- 列表项\n- 列表项\n', sel: '列表项' },
+                    ol: { insert: '\n1. 列表项\n2. 列表项\n', sel: '列表项' },
+                    table: { insert: '\n| 表头1 | 表头2 |\n| --- | --- |\n| 内容 | 内容 |\n', sel: '表头1' }
                 };
 
                 function insertBlock(snippet, sel) {
@@ -1821,11 +1829,18 @@ include __DIR__ . '/header.php';
 
                 function sync() {
                     textarea.value = sourceEditor.value;
-                    if (contentFormatField) contentFormatField.value = 'html';
+                    if (contentFormatField) contentFormatField.value = 'markdown';
                 }
 
                 function renderPreview() {
-                    if (preview) preview.innerHTML = sourceEditor.value || '';
+                    const md = sourceEditor.value || '';
+                    if (!preview) return;
+                    if (window.marked && window.marked.parse) {
+                        preview.innerHTML = window.marked.parse(md);
+                    } else {
+                        // markdown 渲染库尚未加载时兜底按纯文本展示，加载完成后下次输入会刷新
+                        preview.textContent = md;
+                    }
                 }
 
                 let previewTimer = null;
@@ -1836,6 +1851,26 @@ include __DIR__ . '/header.php';
                 });
                 sync();
                 renderPreview();
+
+                // 左右分栏关联滚动：源码 ↔ 预览 按滚动比例双向同步
+                let syncingScroll = null;
+                function bindLinkedScroll(src, dst) {
+                    if (!src || !dst) return;
+                    src.addEventListener('scroll', function () {
+                        if (syncingScroll && syncingScroll !== src) return;
+                        syncingScroll = src;
+                        const srcMax = src.scrollHeight - src.clientHeight;
+                        const dstMax = dst.scrollHeight - dst.clientHeight;
+                        if (srcMax > 0 && dstMax > 0) {
+                            dst.scrollTop = Math.round((src.scrollTop / srcMax) * dstMax);
+                        } else {
+                            dst.scrollTop = 0;
+                        }
+                        requestAnimationFrame(function () { syncingScroll = null; });
+                    }, { passive: true });
+                }
+                bindLinkedScroll(sourceEditor, preview);
+                bindLinkedScroll(preview, sourceEditor);
 
                 if (tagToolbar) {
                     tagToolbar.addEventListener('click', function (e) {
@@ -1946,7 +1981,7 @@ include __DIR__ . '/header.php';
                 if (form) {
                     form.addEventListener('submit', function () {
                         textarea.value = sourceEditor.value;
-                        if (contentFormatField) contentFormatField.value = 'html';
+                        if (contentFormatField) contentFormatField.value = 'markdown';
                         if (uploadsField) {
                             if (newUploads.length) {
                                 uploadsField.value = JSON.stringify(Array.from(new Set(newUploads)));
@@ -2409,7 +2444,14 @@ include __DIR__ . '/header.php';
 #articlePreview h2 { font-size: 1.3rem; padding-left: 0.6rem; border-left: 4px solid #667eea; }
 #articlePreview h3 { font-size: 1.15rem; }
 #articlePreview h4 { font-size: 1rem; }
-#articlePreview p { margin: 0.6em 0; }
+#articlePreview p { margin: 0.6em 0; text-indent: 2em; }
+/* 中文排版：正文段落首行缩进；引用、列表、媒体容器内的段落除外 */
+#articlePreview blockquote p,
+#articlePreview li p,
+#articlePreview desc p,
+#articlePreview quote p,
+#articlePreview center p,
+#articlePreview .chat-bubble p { text-indent: 0; }
 #articlePreview img { max-width: 100%; border-radius: 0.6rem; }
 
 #articlePreview blockquote {

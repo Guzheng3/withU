@@ -13,6 +13,7 @@
         display: none;
     }
 
+    /* #loader 现在是 <img>（一二戳一戳动图），不再是 CSS 三环 spinner */
     #loader {
         display: block;
         position: relative;
@@ -21,80 +22,8 @@
         width: 150px;
         height: 150px;
         margin: -75px 0 0 -75px;
-        border-radius: 50%;
-        border: 3px solid transparent;
-        border-top-color: #16a085;
-        -webkit-animation: spin 1.7s linear infinite;
-        animation: spin 1.7s linear infinite;
+        object-fit: contain;
         z-index: 11;
-    }
-
-    #loader:before {
-        content: "";
-        position: absolute;
-        top: 5px;
-        left: 5px;
-        right: 5px;
-        bottom: 5px;
-        border-radius: 50%;
-        border: 3px solid transparent;
-        border-top-color: #e74c3c;
-        -webkit-animation: spin-reverse 0.6s linear infinite;
-        animation: spin-reverse 0.6s linear infinite;
-    }
-
-    #loader:after {
-        content: "";
-        position: absolute;
-        top: 15px;
-        left: 15px;
-        right: 15px;
-        bottom: 15px;
-        border-radius: 50%;
-        border: 3px solid transparent;
-        border-top-color: #f9c922;
-        -webkit-animation: spin 1s linear infinite;
-        animation: spin 1s linear infinite;
-    }
-
-    @-webkit-keyframes spin {
-        0% {
-            -webkit-transform: rotate(0deg);
-        }
-
-        100% {
-            -webkit-transform: rotate(360deg);
-        }
-    }
-
-    @keyframes spin {
-        0% {
-            transform: rotate(0deg);
-        }
-
-        100% {
-            transform: rotate(360deg);
-        }
-    }
-
-    @-webkit-keyframes spin-reverse {
-        0% {
-            -webkit-transform: rotate(0deg);
-        }
-
-        100% {
-            -webkit-transform: rotate(-360deg);
-        }
-    }
-
-    @keyframes spin-reverse {
-        0% {
-            transform: rotate(0deg);
-        }
-
-        100% {
-            transform: rotate(-360deg);
-        }
     }
 
     #loader-wrapper .loader-section {
@@ -116,7 +45,8 @@
 
     .loaded #loader-wrapper {
         animation: MaskFadeOut .5s linear forwards;
-        display: none;
+        /* 淡出期间与动画结束后都不得拦截点击；终态由关键帧 100% 的 visibility:hidden 兜底 */
+        pointer-events: none;
     }
 
     @keyframes MaskFadeOut {
@@ -132,7 +62,7 @@
 
         100% {
             opacity: 0;
-            display: none;
+            visibility: hidden;
         }
     }
 
@@ -2023,6 +1953,22 @@
         filter: blur(0);
         opacity: 1;
         transition: .7s filter linear, .7s -webkit-filter linear;
+    }
+
+    /* 懒加载占位：src 挂上之前显示一二骑小摩托；src 一到立即隐去占位（禁过渡防模糊图闪现），出图仍走 blur-up */
+    img.lazy:not([src]),
+    img.photo_style:not([src]),
+    img.aiv_touxiang:not([src]) {
+        opacity: 1;
+        filter: none;
+        background: url('/assets/pet/yier/yier-moto.gif') center center no-repeat;
+        background-size: min(120px, 60%) min(120px, 60%);
+    }
+
+    img.lazy[src]:not(.loaded),
+    img.photo_style[src]:not(.loaded),
+    img.aiv_touxiang[src]:not(.loaded) {
+        transition: none;
     }
 
     .list {

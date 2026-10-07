@@ -169,20 +169,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $content = clean_wangeditor_html($content);
     }
 
-    // Markdown 兜底：正常情况下前端已在提交前把 Markdown 转成 HTML；
-    // 仅当前端渲染库不可用（content_format=markdown）时，用官方 Parsedown（ParsedownMarkdown）在服务端转换。
-    // 注意：项目内旧的 core/Parsedown.php 为改过的 1.8.0-beta，会丢弃行内 HTML（如作者标记），故兜底不用它
-    if (($_POST['content_format'] ?? '') === 'markdown' && $content !== '') {
-        require_once __DIR__ . '/../core/ParsedownMarkdown.php';
-        if (class_exists('ParsedownMarkdown')) {
-            try {
-                $parsedown = new ParsedownMarkdown();
-                $content = (string) $parsedown->text($content);
-            } catch (Exception $e) {
-                // 转换失败则保持原文，不影响发文主流程
-            }
-        }
-    }
+    // 正文统一按 Markdown 存储：编辑器书写的 Markdown 原样保存，前台用 Parsedown 渲染为 HTML。
+    // content_format 字段仅作标记，服务端不再做 Markdown -> HTML 转换。
+    // 注意：项目内旧的 core/Parsedown.php 为改过的 1.8.0-beta，会丢弃行内 HTML（如作者标记），前台渲染不用它
 
     if ($title === '' || $content === '') {
         $error = '请填写标题和内容';

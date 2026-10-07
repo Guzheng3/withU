@@ -70,7 +70,7 @@ foreach (($themeConfig['colors'] ?? []) as $themeName => $themeValue) {
 <aside class="admin-drawer" id="admin-drawer" aria-label="后台导航">
     <div class="admin-drawer-header">
         <div>
-            <div class="admin-drawer-title"><?php echo e(SITE_NAME); ?></div>
+            <div class="admin-drawer-title"><?php echo function_exists('e') ? e('我们的情侣小站') : '我们的情侣小站'; ?></div>
             <div style="font-size:0.8rem;color:var(--text-light);margin-top:0.15rem;">
                 管理中心
             </div>

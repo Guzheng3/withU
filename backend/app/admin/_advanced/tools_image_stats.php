@@ -7,7 +7,10 @@ require_once __DIR__ . '/../../core/MediaTranscode.php';
 
 if (!function_exists('withu_advanced_tools_panel')) {
     function withu_advanced_tools_panel(): string {
+        // requirePhp() 在函数作用域内 require 页面，页面顶层的 $db 不会进入全局符号表；
+        // global 取不到时回退到自行获取（两种加载上下文均可用）。
         global $db;
+        $db = $db ?? Database::getInstance();
 
         if (function_exists('migrate_schema_if_needed')) {
             migrate_schema_if_needed();

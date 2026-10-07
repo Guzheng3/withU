@@ -4,7 +4,11 @@
 // 返回渲染后的 HTML（不含页面标题），可被独立页或 settings.php 高级设置面板复用。
 if (!function_exists('withu_advanced_moderation_panel')) {
     function withu_advanced_moderation_panel(): string {
+        // requirePhp() 在函数作用域内 require 页面，页面顶层的 $db / $currentUser 不会进入
+        // 全局符号表；global 取不到时回退到自行获取（两种加载上下文均可用）。
         global $db, $currentUser;
+        $db          = $db ?? Database::getInstance();
+        $currentUser = $currentUser ?? null;
 
         $message = '';
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {

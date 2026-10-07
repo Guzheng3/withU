@@ -4,7 +4,10 @@
 // 返回渲染后的 HTML（不含页面标题），可被独立页或 settings.php 高级设置面板复用。
 if (!function_exists('withu_advanced_devices_panel')) {
     function withu_advanced_devices_panel(): string {
+        // requirePhp() 在函数作用域内 require 页面，页面顶层的 $auth 不会进入全局符号表；
+        // global 取不到时回退到自行构造（两种加载上下文均可用）。
         global $auth;
+        $auth = $auth ?? new Auth();
 
         $message      = '';
         $messageError = false;

@@ -57,7 +57,7 @@
 <link rel="stylesheet" href="/Style/css/tooltip.css">
 <link rel="stylesheet" href="/Style/css/interaction.css">
 <link rel="stylesheet" href="/Style/css/withu-home-style.css">
-<link rel="stylesheet" href="/Style/css/withu-detail.css">
+<link rel="stylesheet" href="/Style/css/withu-detail.css?v=1.0.80">
 <link rel="stylesheet" href="/Style/css/mobile-nav.css?v=1.0.1-flush">
 <link rel="stylesheet" href="/Style/css/header.css">
 <!-- 自定义右键菜单 -->
@@ -245,13 +245,13 @@
         <script src="/assets/js/withu-shared-7eca2584.js"></script>
 <script src="/assets/js/app.js"></script>
 <script src="/assets/js/withu-location.js?v=20260906e"></script>
-<script src="/assets/js/head-avatar-location.js?v=20260906"></script>
+<script src="/assets/js/head-avatar-location.js?v=20261007"></script>
 <script src="/assets/js/components.js?v=1.0.0-confetti1"></script>
 
 <!-- 礼花效果已迁移到 components.js 的 ConfettiEffect 模块 -->
 
 <script src="/assets/js/pjax.js"></script><script>if(window.WithUPjax&&typeof window.WithUPjax.init==="function")window.WithUPjax.init();</script>
-<link rel="stylesheet" href="/assets/css/withu-shared-f1846031.css">
+<link rel="stylesheet" href="/assets/css/withu-shared-6790eb7e.css">
 
 <script>
     // 倒计时、高度调整、轮播图、导航栏等功能已迁移到 app.js 和 components.js
@@ -266,7 +266,7 @@
 
 
 <div id="loader-wrapper">
-    <div id="loader"></div>
+    <img id="loader" src="/assets/pet/yier/yier-poke.webp" alt="">
     <div class="loader-section"></div>
 </div>
 
@@ -497,10 +497,71 @@
     $__artAuthorName = $withuArticleAuthor['name'] !== '' ? $withuArticleAuthor['name'] : 'withU';
     $__artAuthorAvatar = function_exists('upload_url') ? (upload_url($withuArticleAuthor['avatar']) ?: '/assets/images/default-avatar.svg') : '/assets/images/default-avatar.svg';
     $__artContent = (string) ($__art['content'] ?? '');
-    // 富文本内容原样输出（尊重原有自定义标签语法）；纯文本则转义并保留换行
-    $__artContentHtml = (strip_tags($__artContent) !== $__artContent)
-        ? $__artContent
-        : nl2br(htmlspecialchars($__artContent, ENT_QUOTES, 'UTF-8'));
+    // 聊天/块模式（edit_mode=chat）：全文按块存在 article_blocks 表，content 字段可能为空，按 block_index 拼接
+    $__chatBlockRows = [];
+    if ($__artContent === '' && in_array((string) ($__art['edit_mode'] ?? ''), ['chat', 'blocks'], true) && isset($db) && $db) {
+        try {
+            $__blockRows = $db->fetchAll(
+                "SELECT speaker, html FROM article_blocks WHERE article_id = :id ORDER BY block_index ASC, id ASC",
+                ['id' => $withuArticleId]
+            );
+            $__blocksHtml = '';
+            foreach ($__blockRows as $__blockRow) {
+                $__part = trim((string) ($__blockRow['html'] ?? ''));
+                if ($__part !== '') {
+                    $__blocksHtml .= $__part;
+                    $__chatBlockRows[] = $__blockRow;
+                }
+            }
+            if ($__blocksHtml !== '') {
+                $__artContent = $__blocksHtml;
+            }
+        } catch (Throwable $__blockEx) {
+            // 旧库没有 article_blocks 表时忽略，保持原逻辑
+        }
+    }
+    // 正文统一按 Markdown 渲染（Markdown 是 HTML 的超集：# 标题、**加粗** 等语法生效，
+    // <desc>/<center> 等自定义标签与原有行内 HTML 由官方 Parsedown 原样保留）
+    $__artContentHtml = '';
+    if (trim($__artContent) !== '') {
+        try {
+            require_once __DIR__ . '/../backend/app/core/ParsedownMarkdown.php';
+            if (class_exists('ParsedownMarkdown')) {
+                $__parsedown = new ParsedownMarkdown();
+                $__artContentHtml = (string) $__parsedown->text($__artContent);
+            }
+        } catch (Throwable $__pdEx) {
+            $__artContentHtml = '';
+        }
+        // 渲染库不可用或转换失败时兜底：含标签按原样输出，纯文本转义保留换行
+        if ($__artContentHtml === '') {
+            $__artContentHtml = (strip_tags($__artContent) !== $__artContent)
+                ? $__artContent
+                : nl2br(htmlspecialchars($__artContent, ENT_QUOTES, 'UTF-8'));
+        }
+    }
+
+    // 聊天模式正文：与后台「对话创作模式」预览一致，按说话人左右分侧的聊天气泡
+    $__chatHtml = '';
+    if ($__chatBlockRows) {
+        foreach ($__chatBlockRows as $__blockRow) {
+            $__part = trim((string) ($__blockRow['html'] ?? ''));
+            if ($__part === '') {
+                continue;
+            }
+            $__speaker = (string) ($__blockRow['speaker'] ?? '');
+            if ($__speaker === 'male') {
+                $__cls = 'chat-msg-male';
+            } elseif ($__speaker === 'female') {
+                $__cls = 'chat-msg-female';
+            } elseif ($__speaker === 'system') {
+                $__cls = 'chat-msg-system';
+            } else {
+                $__cls = 'chat-msg-neutral';
+            }
+            $__chatHtml .= '<div class="chat-msg ' . $__cls . '"><div class="chat-bubble">' . $__part . '</div></div>';
+        }
+    }
     ?>
 
     <div id="pjax-container" data-view-target="article" data-view-id="<?php echo (int) $__art['id']; ?>">
@@ -735,8 +796,13 @@
                         </div>
 
                         <!-- Article Content -->
-                        <div id="withu-detail-content" class="withu-detail-text">
-<?php echo $__artContentHtml; ?>
+                        <div id="withu-detail-content" class="withu-detail-text<?php echo $__chatHtml !== '' ? ' withu-detail-chat-content' : ''; ?>">
+<?php if ($__chatHtml !== '') { echo $__chatHtml; } elseif (trim($__artContent) !== '' || trim($__artContentHtml) !== '') { echo $__artContentHtml; } else { ?>
+                            <div class="withu-detail-empty-content" style="padding:2.5rem 1rem;text-align:center;color:#c4c9d4;font-size:.9rem;letter-spacing:.05em;">
+                                <i class="ph ph-note-blank" style="font-size:1.8rem;display:block;margin-bottom:.6rem;"></i>
+                                这篇还没有正文内容
+                            </div>
+<?php } ?>
                         </div>
 
                     </div>

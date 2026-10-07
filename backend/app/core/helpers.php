@@ -498,29 +498,43 @@ function extract_upload_paths_from_html(string $html): array {
 
     $paths = [];
 
-    // 粗略匹配所有带 uploads 路径的图片/视频 src
+    // 粗略匹配所有带 uploads 路径的图片/视频 src（HTML src 与 Markdown ![](...) 两种写法）
     if (preg_match_all(
         '#src=("|\')([^"\']*uploads/[^"\']+\.(?:jpg|jpeg|png|gif|webp|mp4|webm|ogg))\1#i',
         $html,
         $m
     )) {
         foreach ($m[2] as $url) {
-            // 去掉域名，仅保留 /uploads/... 或 uploads/...
-            $p = preg_replace('#^https?://[^/]+/#i', '/', $url);
-            $p = preg_replace('#^//[^/]+/#', '/', $p);
-            $p = ltrim($p, '/');
-            if (strpos($p, 'uploads/') !== 0) {
-                continue;
-            }
-            $relative = substr($p, strlen('uploads/'));
-            $relative = ltrim($relative, '/');
-            if ($relative !== '') {
-                $paths[] = $relative;
-            }
+            $paths[] = $url;
+        }
+    }
+    if (preg_match_all(
+        '#(?:!\[[^\]]*\]|<video[^>]*src)\(([^()\s]*uploads/[^()\s]+\.(?:jpg|jpeg|png|gif|webp|mp4|webm|ogg))\)#i',
+        $html,
+        $m
+    )) {
+        foreach ($m[1] as $url) {
+            $paths[] = $url;
         }
     }
 
-    return array_values(array_unique($paths));
+    $normalized = [];
+    foreach ($paths as $url) {
+        // 去掉域名，仅保留 /uploads/... 或 uploads/...
+        $p = preg_replace('#^https?://[^/]+/#i', '/', $url);
+        $p = preg_replace('#^//[^/]+/#', '/', $p);
+        $p = ltrim($p, '/');
+        if (strpos($p, 'uploads/') !== 0) {
+            continue;
+        }
+        $relative = substr($p, strlen('uploads/'));
+        $relative = ltrim($relative, '/');
+        if ($relative !== '') {
+            $normalized[] = $relative;
+        }
+    }
+
+    return array_values(array_unique($normalized));
 }
 
 /**

@@ -42,6 +42,30 @@ try {
     $boyLastLogin = $user1['last_login_at'] ?? null;
     $girlLastLogin = $user2['last_login_at'] ?? null;
 
+    // 站长自己的坐标（头像区「我」的兜底位置）：settings.solo_owner_geo 优先，
+    // 未配置时用演示默认值；格式 {lat, lng}，与 lovers[].coords 的 [lng, lat] 不同
+    $soloOwnerGeo = ['lat' => 21.915454, 'lng' => 110.856708];
+    $ownerGeoRow = $db->fetch("SELECT value FROM settings WHERE `key`='solo_owner_geo'");
+    if ($ownerGeoRow && !empty($ownerGeoRow['value'])) {
+        $ownerGeoParsed = json_decode($ownerGeoRow['value'], true);
+        if (is_array($ownerGeoParsed) && isset($ownerGeoParsed['lat'], $ownerGeoParsed['lng'])) {
+            $soloOwnerGeo = ['lat' => floatval($ownerGeoParsed['lat']), 'lng' => floatval($ownerGeoParsed['lng'])];
+        }
+    }
+
+    // 头像区位置文字（后台设置优先）：settings.avatar_loc_boy/girl_name，
+    // 后台没设置时 JS 回退为展示坐标
+    $avatarLocBoy = '';
+    $avatarLocGirl = '';
+    $avatarLocBoyRow = $db->fetch("SELECT value FROM settings WHERE `key`='avatar_loc_boy_name'");
+    if ($avatarLocBoyRow && trim((string)$avatarLocBoyRow['value']) !== '') {
+        $avatarLocBoy = trim((string)$avatarLocBoyRow['value']);
+    }
+    $avatarLocGirlRow = $db->fetch("SELECT value FROM settings WHERE `key`='avatar_loc_girl_name'");
+    if ($avatarLocGirlRow && trim((string)$avatarLocGirlRow['value']) !== '') {
+        $avatarLocGirl = trim((string)$avatarLocGirlRow['value']);
+    }
+
     // 读取情侣坐标（从 map-all.json）
     // 优先按头像文件名 / 昵称匹配 lovers，避免 lovers 数组顺序与 boy/girl 顺序不一致时位置挂反
     $boyCoords = [116.39, 39.90];
@@ -75,12 +99,31 @@ try {
                 $girlCoordsMatched = true;
             }
         }
-        // 头像与昵称都未匹配上时按旧的顺序兜底（lovers[0] -> boy, lovers[1] -> girl）
-        if (!$boyCoordsMatched && isset($lovers[0]['coords'])) {
-            $boyCoords = $lovers[0]['coords'];
+        // 头像与昵称都未匹配上时兜底：
+        // boy 优先用站长自己的坐标（soloOwnerGeo）——lovers 数组顺序不保证 boy 在前，
+        // 按下标取会把对方的位置挂到「我」头上；girl 再取剩余未分配的 lover
+        if (!$boyCoordsMatched) {
+            if (!empty($soloOwnerGeo['lat']) && !empty($soloOwnerGeo['lng'])) {
+                $boyCoords = [$soloOwnerGeo['lng'], $soloOwnerGeo['lat']];
+            } elseif (isset($lovers[0]['coords'])) {
+                $boyCoords = $lovers[0]['coords'];
+            }
         }
-        if (!$girlCoordsMatched && isset($lovers[1]['coords'])) {
-            $girlCoords = $lovers[1]['coords'];
+        if (!$girlCoordsMatched) {
+            $girlFallback = null;
+            foreach ($lovers as $lover) {
+                $c = $lover['coords'] ?? null;
+                if (!is_array($c) || count($c) < 2) continue;
+                // 跳过已被 boy 占用的坐标，避免双方显示同一位置
+                if ($c === $boyCoords) continue;
+                $girlFallback = $c;
+                break;
+            }
+            if ($girlFallback !== null) {
+                $girlCoords = $girlFallback;
+            } elseif (isset($lovers[1]['coords'])) {
+                $girlCoords = $lovers[1]['coords'];
+            }
         }
     }
 
@@ -154,7 +197,9 @@ try {
         'weatherLocLat' => $locLat,
         'weatherLocLng' => $locLng,
         'weatherLocName' => $locName,
-        'soloOwnerGeo' => ['lat' => 21.915454, 'lng' => 110.856708],
+        'soloOwnerGeo' => $soloOwnerGeo,
+        'boyLocation' => $avatarLocBoy,
+        'girlLocation' => $avatarLocGirl,
         'boyCoords' => $boyCoords,
         'girlCoords' => $girlCoords,
         'bannedChars' => '操屌',
