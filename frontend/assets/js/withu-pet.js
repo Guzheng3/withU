@@ -1,9 +1,9 @@
 /**
  * withu-pet.js — 网页桌宠（一二 & 布布，单只）
  * 玩法移植自 oneno-pet（Tauri 桌面应用，Away6v/oneno-pet）：
- * 每次加载从「一二」「布布」中随机选一只，蹲在页面左下角；进场即随机 GIF 造型、
- * 待机随机轮播、拖拽专属造型、点击弹跳换装、位置/大小/透明度记忆、右键/长按菜单
- * （可"换一只"切换角色）。纯动画展示，无文字气泡。
+ * 每次加载从「一二」「布布」中随机选一只，蹲在页面左下角；此后不刷新页面也会
+ * 每约 1 分钟轮换角色（两只交替）并配随机 GIF 造型；拖拽专属造型、点击弹跳换装、
+ * 位置/大小/透明度记忆、右键/长按菜单（可"换一只"手动切换）。纯动画展示，无文字气泡。
  *
  * 架构约束：
  * - 本脚本由 inc/footer.php 引入（PJAX 容器之外），整页只加载一次，跨 PJAX 导航存活；
@@ -138,8 +138,12 @@
     function tickSwitch() {
         if (document.hidden) { scheduleSwitch(10000); return; }
         if (pet.dragging) { scheduleSwitch(5000); return; }
-        var pool = idlePoses(pet.char);
-        if (pool.length) setPose(pet.char, pickRandom(pool, pet.curFile));
+        /* 每次轮播同时换角色（一二/布布交替），造型只从 GIF 里抽，保证始终在动 */
+        pet.char = pet.char === 'yier' ? 'bubu' : 'yier';
+        activeChar = pet.char;
+        pet.img.alt = DATA[pet.char].name;
+        var pool = gifPoses(pet.char);
+        if (pool.length) setPose(pet.char, pickRandom(pool, null));
         var jitter = SWITCH_BASE_MS * (0.8 + Math.random() * 0.4);
         scheduleSwitch(jitter);
     }
@@ -249,7 +253,7 @@
                     swapChar();
                     break;
                 case 'pose':
-                    var pool = idlePoses(pet.char);
+                    var pool = gifPoses(pet.char);
                     if (pool.length) {
                         setPose(pet.char, pickRandom(pool, pet.curFile));
                         scheduleSwitch(SWITCH_BASE_MS);
@@ -336,7 +340,8 @@
         var warm = function () {
             var dp = dragPose(activeChar);
             if (dp) new Image().src = petUrl(activeChar, dp.file);
-            idlePoses(activeChar).filter(function (p) { return /\.webp$/.test(p.file); })
+            /* 预热 2 个体积最小的 GIF，让下一次轮播即时切换 */
+            idlePoses(activeChar).filter(function (p) { return /\.gif$/.test(p.file); })
                 .sort(function (a, b) { return a.bytes - b.bytes; })
                 .slice(0, 2)
                 .forEach(function (p) { new Image().src = petUrl(activeChar, p.file); });
