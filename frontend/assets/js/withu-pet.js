@@ -18,7 +18,7 @@
     var DATA = window.WithUPetData || null;
     if (!DATA) return;
 
-    var STORE_KEY = 'withu-pet.v4'; /* v4：双宠记忆改为单宠共享记忆 */
+    var STORE_KEY = 'withu-pet.v5'; /* v5：初始位置改贴边贴栏，弃用旧记忆 */
     var CHAR_KEYS = ['yier', 'bubu'];
     var SIZE_DEFAULT = 160, SIZE_MOBILE = 96, SIZE_MIN = 44, SIZE_MAX = 240, SIZE_STEP = 24;
     var SWITCH_BASE_MS = 60000;          // 随机轮播基准间隔（±20% 抖动）
@@ -76,13 +76,29 @@
 
     function defaultSize() { return isMobile() ? SIZE_MOBILE : SIZE_DEFAULT; }
 
-    /* 默认落位：左下角（移动端抬到底部导航上方） */
+    /* 默认落位：左边贴边、底部贴着 tab 栏顶边（桌面无 tab 栏则贴底留 28px） */
     function defaultPos() {
         var w = state.size || defaultSize();
-        var bottomPad = isMobile() ? 96 : 28;
+        var navTop = null;
+        if (isMobile()) {
+            var nav = document.getElementById('withu-mobile-nav-v5');
+            if (nav) {
+                var rect = nav.getBoundingClientRect();
+                /* 私密模式等场景 nav 可能 display:none（rect 全 0），回退到常规高度 */
+                if (rect.height > 0 && rect.top > 0) navTop = rect.top;
+            }
+        }
+        var yTop;
+        if (navTop !== null) {
+            /* 元素底边压进 tab 栏顶 0.15w（造型图自带透明留白），熊本体视觉上贴着栏 */
+            yTop = navTop - w * 0.85;
+        } else {
+            var bottomPad = isMobile() ? 56 : 28;
+            yTop = window.innerHeight - bottomPad - w * 0.85;
+        }
         return {
-            xPct: 8,
-            yPct: (window.innerHeight - bottomPad - w * 0.7) / window.innerHeight * 100
+            xPct: 0,
+            yPct: clamp(yTop, 4, window.innerHeight - w * 0.85 - 4) / window.innerHeight * 100
         };
     }
 
@@ -91,7 +107,7 @@
         var pos = state.pos || defaultPos();
         pet.el.style.width = size + 'px';
         pet.el.style.opacity = state.opacity;
-        var x = clamp(pos.xPct / 100 * window.innerWidth, 4, window.innerWidth - size - 4);
+        var x = clamp(pos.xPct / 100 * window.innerWidth, 0, window.innerWidth - size - 4);
         var y = clamp(pos.yPct / 100 * window.innerHeight, 4, window.innerHeight - size * 0.85 - 4);
         pet.el.style.left = Math.round(x) + 'px';
         pet.el.style.top = Math.round(y) + 'px';
