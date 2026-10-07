@@ -109,4 +109,4 @@ foreach (preg_split('/[\r\n,，;；]+/u', $withuBeianRaw) as $withuBeianItem) {
 <!-- withU 桌宠（一二 & 布布）：位于 PJAX 容器之外，整页只加载一次，跨页常驻 -->
 <link rel="stylesheet" href="/assets/css/withu-pet.css?v=1.0.80">
 <script src="/assets/js/withu-pet-data.js?v=1.0.80"></script>
-<script src="/assets/js/withu-pet.js?v=1.0.80"></script>
+<script src="/assets/js/withu-pet.js?v=1.0.81"></script>
