@@ -1287,5 +1287,9 @@ var touchStart=null;$('gesture').addEventListener('pointerdown',function(e){begi
 function endTogether(){watchRequest('end_together',{room_code:code}).then(function(result){if(!result.success){setStatus(result.message||'结束一起看失败');return;}if(voiceActive)stopVoice();localOnly=true;roomJoined=false;setWatermarkOnline(false);setTogetherUi(false);if(timer)clearInterval(timer);if(heartbeatTimer)clearInterval(heartbeatTimer);heartbeatTimer=null;setStatus('已结束一起看，当前仅自己观看');});}
 </script>
 <script src="/assets/js/sakura.js"></script>
+<!-- withU 桌宠（一二/布布随机一只，左下角，与前台共版） -->
+<link rel="stylesheet" href="/assets/css/withu-pet.css?v=1.0.80">
+<script src="/assets/js/withu-pet-data.js?v=1.0.80"></script>
+<script src="/assets/js/withu-pet.js?v=1.0.82"></script>
 </body>
 </html>
