@@ -245,7 +245,7 @@
 <script src="/assets/js/app.js?wm=4c668768&v=1.0.74"></script>
 <script src="/assets/js/withu-location.js?v=20260906e"></script>
 <script src="/assets/js/head-avatar-location.js?v=20260906"></script>
-<script src="/assets/js/components.js?wm=4c668768&v=1.0.74"></script>
+<script src="/assets/js/components.js?v=1.0.0-confetti1?wm=4c668768&v=1.0.74"></script>
 
 <!-- 礼花效果已迁移到 components.js 的 ConfettiEffect 模块 -->
 

@@ -498,7 +498,7 @@ try {
 <!-- 对方正在看邀请气泡（头像区） -->
 <script src="/assets/js/head-avatar-watch-bubble.js"></script>
 <?php endif; ?>
-<script src="assets/js/components.js"></script>
+<script src="assets/js/components.js?v=1.0.0-confetti1"></script>
 
 <!-- 礼花效果已迁移到 components.js 的 ConfettiEffect 模块 -->
 

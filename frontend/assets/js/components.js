@@ -71,21 +71,26 @@
 
         /**
          * 如影随形效果 - 页面加载时使用
+         * H5（≤640px）下减量缩小：全尺寸的 160 片在大屏合适，小屏会糊满视口，
+         * 旋转碎片被误认成渲染异常的花瓣
          */
         loveWingEffect() {
             if (!this._confettiInstance || !this._shapes) return;
 
+            const mobile = window.innerWidth <= 640;
             const wing = {
-                particleCount: 80,
+                particleCount: mobile ? 24 : 80,
                 spread: 70,
                 origin: { y: 0.15 },
                 shapes: [this._shapes.heart, this._shapes.flower],
                 colors: this.COLORS.ROSE,
-                scalar: 1.8
+                scalar: mobile ? 1.1 : 1.8
             };
 
             this._confettiInstance({ ...wing, angle: 315, origin: { x: 0, y: 0 } });
-            this._confettiInstance({ ...wing, angle: 225, origin: { x: 1, y: 0 } });
+            if (!mobile) {
+                this._confettiInstance({ ...wing, angle: 225, origin: { x: 1, y: 0 } });
+            }
         },
 
         /**
