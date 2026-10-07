@@ -3,7 +3,6 @@
  * 结构：.withu-pet-root（JS 挂 body，PJAX 容器外常驻）
  *      └ .withu-pet（固定定位，可拖拽）
  *         ├ img.withu-pet-img（造型图）
- *         └ .withu-pet-bubble（气泡）
  *      ├ .withu-pet-menu（右键/长按菜单，全局单例）
  *      └ .withu-pet-recall（隐藏后的唤回 chip，全局单例）
  * ============================================================ */
@@ -53,93 +52,6 @@
 
 .withu-pet.is-poking .withu-pet-img {
     animation: withuPetPoke .45s ease;
-}
-
-/* ── 气泡 ─────────────────────────────────── */
-.withu-pet-bubble {
-    position: absolute;
-    bottom: calc(100% + 10px);
-    left: 50%;
-    /* max-content：宽度优先取整行内容宽，再被 max-width 截断换行。
-       不能省——气泡以桌宠（约 96px 宽）为包含块，shrink-to-fit 会把中文
-       逐字断行压成一字宽，排成通天竖幅 */
-    width: max-content;
-    max-width: 230px;
-    transform: translateX(-50%) translateY(6px) scale(.92);
-    transform-origin: 50% 100%;
-    background: #fff;
-    color: #4a3f35;
-    font-size: 13px;
-    line-height: 1.55;
-    padding: 9px 13px;
-    border-radius: 14px;
-    border: 1px solid #f0e4dc;
-    box-shadow: 0 6px 20px rgba(96, 70, 52, .16);
-    opacity: 0;
-    pointer-events: none;
-    transition: opacity .22s ease, transform .22s ease;
-    white-space: normal;
-    word-break: break-word;
-    z-index: 2;
-}
-
-/* 尖角 */
-.withu-pet-bubble::after {
-    content: '';
-    position: absolute;
-    top: 100%;
-    left: 50%;
-    transform: translateX(-50%);
-    border: 7px solid transparent;
-    border-top-color: #fff;
-}
-
-.withu-pet-bubble.is-visible {
-    opacity: 1;
-    transform: translateX(-50%) translateY(0) scale(1);
-}
-
-/* 气泡在屏幕边缘的防裁切：靠边时 JS 会追加 .align-left / .align-right */
-.withu-pet-bubble.align-left {
-    left: 0;
-    transform: translateX(0) translateY(6px) scale(.92);
-}
-
-.withu-pet-bubble.align-left.is-visible {
-    transform: translateX(0) translateY(0) scale(1);
-}
-
-.withu-pet-bubble.align-left::after {
-    left: 24px;
-}
-
-.withu-pet-bubble.align-right {
-    left: auto;
-    right: 0;
-    transform: translateX(0) translateY(6px) scale(.92);
-}
-
-.withu-pet-bubble.align-right.is-visible {
-    transform: translateX(0) translateY(0) scale(1);
-}
-
-.withu-pet-bubble.align-right::after {
-    left: auto;
-    right: 24px;
-}
-
-/* 桌宠贴近视口顶部时气泡翻到下方（JS 加 .below） */
-.withu-pet-bubble.below {
-    bottom: auto;
-    top: calc(100% + 10px);
-    transform-origin: 50% 0;
-}
-
-.withu-pet-bubble.below::after {
-    top: auto;
-    bottom: 100%;
-    border-top-color: transparent;
-    border-bottom-color: #fff;
 }
 
 /* ── 右键 / 长按菜单 ──────────────────────── */
@@ -243,30 +155,10 @@
         bottom: 96px;
         right: 12px;
     }
-
-    .withu-pet-bubble {
-        max-width: 180px;
-        font-size: 12px;
-    }
 }
 
 /* 深色模式跟随站点变量（若站点后续接入） */
 @media (prefers-color-scheme: dark) {
-    .withu-pet-bubble {
-        background: rgba(45, 38, 34, .95);
-        color: #f3ece5;
-        border-color: #57493f;
-    }
-
-    .withu-pet-bubble::after {
-        border-top-color: rgba(45, 38, 34, .95);
-    }
-
-    .withu-pet-bubble.below::after {
-        border-top-color: transparent;
-        border-bottom-color: rgba(45, 38, 34, .95);
-    }
-
     .withu-pet-menu,
     .withu-pet-recall {
         background: rgba(45, 38, 34, .96);

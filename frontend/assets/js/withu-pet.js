@@ -1,9 +1,8 @@
 /**
  * withu-pet.js — 网页桌宠（一二 & 布布）
- * 玩法移植自 oneno-pet（Tauri 桌面应用，Away6v/oneno-pet，MIT 类个人非商用许可）：
- * 待机随机轮播、拖拽专属造型、点击戳一戳、气泡会话、闲置碎碎念、位置/大小/透明度记忆。
- * 融合 WithU 站点能力：气泡文案接入随机结语（random_quote）、天气（weather）、
- * 最新留言与热恋天数（api/home）。
+ * 玩法移植自 oneno-pet（Tauri 桌面应用，Away6v/oneno-pet）：
+ * 进场即随机 GIF 造型、待机随机轮播、拖拽专属造型、点击弹跳换装、
+ * 位置/大小/透明度记忆、右键/长按菜单。纯动画展示，无文字气泡。
  *
  * 架构约束：
  * - 本脚本由 inc/footer.php 引入（PJAX 容器之外），整页只加载一次，跨 PJAX 导航存活；
@@ -18,43 +17,16 @@
     var DATA = window.WithUPetData || null;
     if (!DATA) return;
 
-    var STORE_KEY = 'withu-pet.v3'; /* v3：修复哨兵值被钳到最小值的 bug，弃用旧记忆 */
+    var STORE_KEY = 'withu-pet.v3'; /* v3：修复尺寸哨兵 bug，弃用旧记忆 */
     var CHAR_KEYS = ['yier', 'bubu'];
     var SIZE_DEFAULT = 160, SIZE_MOBILE = 96, SIZE_MIN = 44, SIZE_MAX = 240, SIZE_STEP = 24;
     var SWITCH_BASE_MS = 60000;          // 随机轮播基准间隔（±20% 抖动）
-    var CHATTER_MIN_MS = 45000, CHATTER_MAX_MS = 90000;
-    var POKE_POSE_MS = 2600;             // 点击后「戳一戳」造型保持时长
     var LONGPRESS_MS = 550;
     var DRAG_THRESHOLD = 6;
     var OPACITY_STEPS = [1, .8, .6, .4];
 
-    /* ── 碎碎念静态文案（暖棕友好风，含情侣站语境） ── */
-    var PHRASES = [
-        '今天也要元气满满哦～',
-        '在忙什么呢？记得抬头看看远方～',
-        '我一直在这儿陪着你呀。',
-        '要不要伸个懒腰，动一动？',
-        '累了就歇一会儿，我等你。',
-        '专注的你，超棒的！',
-        '记得喝口水，休息一下下～',
-        '页面逛累了吧，去留言墙写句话嘛～',
-        '悄悄告诉你，相册里又多了新回忆。',
-        '点我一下，送你一句话～',
-        '一起看看今天的足迹地图吧！',
-        '心愿单里的那件事，什么时候去实现呀？'
-    ];
-
     function isMobile() { return window.innerWidth <= 768; }
     function clamp(v, lo, hi) { return Math.min(hi, Math.max(lo, v)); }
-
-    function fetchJSON(url, timeoutMs) {
-        var ctl = typeof AbortController !== 'undefined' ? new AbortController() : null;
-        var timer = ctl && setTimeout(function () { ctl.abort(); }, timeoutMs || 5000);
-        return fetch(url, { credentials: 'same-origin', cache: 'no-store', signal: ctl ? ctl.signal : undefined })
-            .then(function (r) { return r.ok ? r.json() : null; })
-            .catch(function () { return null; })
-            .then(function (d) { if (timer) clearTimeout(timer); return d; });
-    }
 
     /* ── 持久化 ─────────────────────────────── */
     function loadState() {
@@ -89,7 +61,6 @@
     var pets = {};
     var menuFor = null;
     var badPoses = {};
-    var chatterTimer = null;
 
     function petUrl(char, file) { return '/assets/pet/' + char + '/' + file; }
 
@@ -97,6 +68,11 @@
         return DATA[char].poses.filter(function (p) {
             return p.cat !== 'drag' && !(badPoses[char] && badPoses[char][p.file]);
         });
+    }
+
+    function gifPoses(char) {
+        var gifs = idlePoses(char).filter(function (p) { return /\.gif$/.test(p.file); });
+        return gifs.length ? gifs : idlePoses(char);
     }
 
     function dragPose(char) {
@@ -142,7 +118,6 @@
         im.onload = function () {
             pet.img.src = url;
             pet.img.alt = DATA[pet.char].name;
-            pet.img.title = pose.label;
             pet.curFile = pose.file;
             if (done) done();
         };
@@ -174,123 +149,14 @@
         scheduleSwitch(pet, jitter);
     }
 
-    /* ── 气泡 ───────────────────────────────── */
-    function speak(pet, text) {
-        if (!text || pet.state.hidden) return;
-        hideBubble(pet);
-        pet.bubble.textContent = text;
-        var rect = pet.el.getBoundingClientRect();
-        var cx = rect.left + rect.width / 2;
-        pet.bubble.classList.remove('align-left', 'align-right');
-        if (cx < 130) pet.bubble.classList.add('align-left');
-        else if (cx > window.innerWidth - 130) pet.bubble.classList.add('align-right');
-        /* 上方空间不足（桌宠被拖到顶部附近）时气泡翻到下方 */
-        pet.bubble.classList.toggle('below', rect.top < 160);
-        /* 强制重排后再入场，保证连续说话也有过渡 */
-        void pet.bubble.offsetWidth;
-        pet.bubble.classList.add('is-visible');
-        var duration = clamp(2400 + text.length * 130, 3000, 8000);
-        pet.bubbleTimer = setTimeout(function () { hideBubble(pet); }, duration);
-    }
-
-    function hideBubble(pet) {
-        clearTimeout(pet.bubbleTimer);
-        pet.bubble.classList.remove('is-visible');
-    }
-
-    /* ── 联动数据源（带缓存，失败静默降级到静态文案） ── */
-    var weatherCache = { at: 0, text: null };
-    var homeCache = { at: 0, data: null };
-
-    function getQuote() {
-        return fetchJSON('/services/random_quote.php', 5000).then(function (d) {
-            return d && d.text ? String(d.text) : null;
-        });
-    }
-
-    function getWeather() {
-        if (Date.now() - weatherCache.at < 30 * 60 * 1000) return Promise.resolve(weatherCache.text);
-        return fetchJSON('/services/weather.php', 5000).then(function (d) {
-            var w = d && d.data;
-            weatherCache.at = Date.now();
-            weatherCache.text = w ? w.city + '今天' + w.desc + ' ' + w.temp + '℃，出门看天～' : null;
-            return weatherCache.text;
-        });
-    }
-
-    function getHome() {
-        if (Date.now() - homeCache.at < 10 * 60 * 1000) return Promise.resolve(homeCache.data);
-        return fetchJSON('/api/home.php', 6000).then(function (d) {
-            homeCache.at = Date.now();
-            homeCache.data = d && d.success ? d : null;
-            return homeCache.data;
-        });
-    }
-
-    function loveDaysText(home) {
-        if (!home || !home.love_start_date) return null;
-        var start = new Date(home.love_start_date);
-        if (isNaN(start.getTime())) return null;
-        var days = Math.floor((Date.now() - start.getTime()) / 86400000);
-        return days > 0 ? '我们已经在一起 ' + days + ' 天啦，继续加油鸭～' : null;
-    }
-
-    function fetchChatter() {
-        var roll = Math.random();
-        if (roll < 0.5) return Promise.resolve(null); // 静态文案
-        if (roll < 0.68) return getQuote();
-        if (roll < 0.84) {
-            return getHome().then(function (home) {
-                if (!home) return null;
-                var days = loveDaysText(home);
-                if (days && Math.random() < 0.5) return days;
-                var items = (home.latest_messages || []).filter(function (m) { return m && m.text; });
-                if (!items.length) return null;
-                var m = items[Math.floor(Math.random() * items.length)];
-                return '留言墙上「' + (m.name || '有人') + '」说：' + String(m.text).slice(0, 40);
-            });
-        }
-        return getWeather();
-    }
-
-    function startChatter() {
-        clearTimeout(chatterTimer);
-        chatterTimer = setTimeout(function () {
-            var next = function () { startChatter(); };
-            if (document.hidden || isAnyDragging()) { next(); return; }
-            var visible = CHAR_KEYS.map(function (c) { return pets[c]; })
-                .filter(function (p) { return p && !p.state.hidden; });
-            if (!visible.length) { next(); return; }
-            fetchChatter().then(function (text) {
-                if (!text) text = PHRASES[Math.floor(Math.random() * PHRASES.length)];
-                var pet = visible[Math.floor(Math.random() * visible.length)];
-                speak(pet, text);
-                next();
-            });
-        }, CHATTER_MIN_MS + Math.random() * (CHATTER_MAX_MS - CHATTER_MIN_MS));
-    }
-
-    /* ── 点击（戳一戳）：短暂换戳戳造型 + 弹随机结语 ── */
+    /* ── 点击：弹跳一下并立即换一个随机 GIF 造型 ── */
     function pokeAction(pet) {
         pet.el.classList.remove('is-poking');
         void pet.el.offsetWidth;
         pet.el.classList.add('is-poking');
         setTimeout(function () { pet.el.classList.remove('is-poking'); }, 480);
-
-        var prevFile = pet.curFile;
-        var poke = idlePoses(pet.char).filter(function (p) { return p.id === pet.char + '-poke'; })[0];
-        if (poke) {
-            setPose(pet, poke);
-            setTimeout(function () {
-                var pool = idlePoses(pet.char);
-                var back = pool.filter(function (p) { return p.file === prevFile; })[0];
-                setPose(pet, back || pickRandom(pool, null));
-            }, POKE_POSE_MS);
-        }
-        getQuote().then(function (text) {
-            if (!text) text = PHRASES[Math.floor(Math.random() * PHRASES.length)];
-            speak(pet, text);
-        });
+        setPose(pet, pickRandom(gifPoses(pet.char), pet.curFile));
+        scheduleSwitch(pet, SWITCH_BASE_MS);
     }
 
     /* ── 拖拽（Pointer Events 统一鼠标/触摸） ── */
@@ -318,7 +184,6 @@
             if (!moved && Math.hypot(dx, dy) > DRAG_THRESHOLD) {
                 moved = true;
                 clearTimeout(pet.longPressTimer);
-                hideBubble(pet);
                 pet.dragging = true;
                 pet.preDragFile = pet.curFile; /* 松手后恢复到拖拽前的造型 */
                 pet.el.classList.add('is-dragging');
@@ -358,10 +223,6 @@
             e.preventDefault();
             openMenu(pet, e.clientX, e.clientY);
         });
-    }
-
-    function isAnyDragging() {
-        return CHAR_KEYS.some(function (c) { return pets[c] && pets[c].dragging; });
     }
 
     /* ── 菜单 ───────────────────────────────── */
@@ -405,7 +266,6 @@
                 case 'hide':
                     pet.state.hidden = true;
                     pet.el.classList.add('is-hidden');
-                    hideBubble(pet);
                     saveState(); updateRecall();
                     break;
             }
@@ -456,27 +316,24 @@
         img.className = 'withu-pet-img';
         img.alt = DATA[char].name;
         img.draggable = false;
-        var bubble = document.createElement('div');
-        bubble.className = 'withu-pet-bubble';
         el.appendChild(img);
-        el.appendChild(bubble);
         root.appendChild(el);
 
-        var pet = { char: char, el: el, img: img, bubble: bubble, state: state[char], dragging: false, curFile: null, switchTimer: 0, bubbleTimer: 0, longPressTimer: 0 };
+        var pet = { char: char, el: el, img: img, state: state[char], dragging: false, curFile: null, switchTimer: 0, longPressTimer: 0 };
         pets[char] = pet;
 
         if (pet.state.hidden) el.classList.add('is-hidden');
         applyLayout(pet);
         bindPointer(pet);
 
-        var first = DATA[char].poses.filter(function (p) { return p.file === DATA[char].avatar; })[0]
-            || idlePoses(char)[0];
+        /* 进场即随机 GIF 造型，不等轮播 */
+        var first = pickRandom(gifPoses(char), null);
         if (first) setPose(pet, first);
         return pet;
     }
 
     function warmPreload() {
-        var warm = function (cb) {
+        var warm = function () {
             CHAR_KEYS.forEach(function (c) {
                 var dp = dragPose(c);
                 if (dp) new Image().src = petUrl(c, dp.file);
@@ -485,7 +342,6 @@
                     .slice(0, 2)
                     .forEach(function (p) { new Image().src = petUrl(c, p.file); });
             });
-            if (cb) cb();
         };
         if ('requestIdleCallback' in window) requestIdleCallback(warm, { timeout: 8000 });
         else setTimeout(warm, 3000);
@@ -511,7 +367,6 @@
         /* 两只错峰开轮，避免同频换装 */
         scheduleSwitch(pets.yier, 20000);
         scheduleSwitch(pets.bubu, 34000);
-        if (!chatterTimer) startChatter();
         warmPreload();
     }
 
