@@ -882,7 +882,7 @@ body.watch-history-page button,body.watch-history-page select{font-family:inheri
 })();
 </script>
 <!-- withU 桌宠（一二/布布随机一只，左下角，与前台共版） -->
-<link rel="stylesheet" href="/assets/css/withu-pet.css?v=1.0.80">
+<link rel="stylesheet" href="/assets/css/withu-pet.css?v=1.0.84">
 <script src="/assets/js/withu-pet-data.js?v=1.0.80"></script>
 <script src="/assets/js/withu-pet.js?v=1.0.83"></script>
 </body>

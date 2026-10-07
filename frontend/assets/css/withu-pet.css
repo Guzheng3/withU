@@ -11,7 +11,8 @@
     position: fixed;
     inset: 0;
     pointer-events: none;
-    z-index: 80;
+    /* 高于移动端 tab 栏（z-index:100）：宠物是"站在栏上"，不能被栏盖住下半截 */
+    z-index: 120;
 }
 
 /* ── 桌宠本体 ─────────────────────────────── */
