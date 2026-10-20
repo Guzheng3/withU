@@ -698,6 +698,13 @@
          * 计算 sidebar 初始位置
          */
         _calcSidebarOffset() {
+            // 折叠状态下 sidebar 不可见，跳过测量，避免拿到 0 宽高导致吸附错位
+            if (!this._sidebar || this._sidebar.offsetParent === null) {
+                this._sidebarOffsetTop = 0;
+                this._cachedWidth = 0;
+                return;
+            }
+
             // 临时重置以获取准确的自然位置
             var el = this._stickyContent;
             el.classList.remove('is-sticky', 'is-bottom');
@@ -752,6 +759,12 @@
         _update() {
             if (!this._sidebar || !this._stickyContent || !this._mainContent) return;
             if (window.innerWidth < 1024) return;
+
+            // 折叠时清掉吸附内联样式，避免展开后残留错位
+            if (this._sidebar.offsetParent === null) {
+                this._reset();
+                return;
+            }
 
             var scrollTop = window.pageYOffset || document.documentElement.scrollTop;
             var stickyHeight = this._stickyContent.offsetHeight;
@@ -820,6 +833,75 @@
     };
 
     // ============================================
+    // 左侧目录折叠模块
+    // ============================================
+    const SidebarToggle = {
+        _key: 'withuDetailSidebarCollapsed',
+        _grid: null,
+        _btn: null,
+
+        init() {
+            this._grid = document.querySelector('.withu-detail-main-grid');
+            this._btn = document.getElementById('rail-sidebar-toggle');
+            if (!this._grid || !this._btn) return;
+
+            var stored = null;
+            try { stored = localStorage.getItem(this._key); } catch (e) {}
+
+            // 用户手动选择优先；否则无目录（正文没有标题）时默认折叠，避免左侧空卡片占位
+            var collapsed;
+            if (stored === '1' || stored === '0') {
+                collapsed = stored === '1';
+            } else {
+                collapsed = this._grid.querySelectorAll('#toc-desktop .withu-detail-toc-link').length === 0;
+            }
+            this._apply(collapsed, false);
+
+            if (this._btn.dataset.sidebarToggleBound === '1') return;
+            this._btn.dataset.sidebarToggleBound = '1';
+
+            var self = this;
+            this._btn.addEventListener('click', function() {
+                var next = !self._grid.classList.contains('is-sidebar-collapsed');
+                self._apply(next, true);
+            });
+        },
+
+        _apply(collapsed, persist) {
+            if (!this._grid || !this._btn) return;
+
+            this._grid.classList.toggle('is-sidebar-collapsed', collapsed);
+
+            var icon = this._btn.querySelector('i');
+            if (icon) {
+                icon.classList.toggle('ph-sidebar-simple', !collapsed);
+                icon.classList.toggle('ph-list-bullets', collapsed);
+            }
+
+            var label = collapsed ? '展开目录' : '收起目录';
+            this._btn.setAttribute('data-withu-tip', label);
+            this._btn.setAttribute('aria-label', label);
+            this._btn.setAttribute('aria-expanded', collapsed ? 'false' : 'true');
+
+            // 折叠时解除吸附并清理内联定位；展开时重新测量，保证与正文顶部对齐
+            if (collapsed) {
+                SidebarSticky.destroy();
+            } else {
+                SidebarSticky.init();
+            }
+
+            if (persist) {
+                try { localStorage.setItem(this._key, collapsed ? '1' : '0'); } catch (e) {}
+            }
+        },
+
+        destroy() {
+            this._grid = null;
+            this._btn = null;
+        }
+    };
+
+    // ============================================
     // 文章详情页主模块
     // ============================================
     const PageDetailModule = {
@@ -837,6 +919,7 @@
             // 初始化各子模块
             PlyrManager.init();
             TocManager.init();
+            SidebarToggle.init();
             FontSwitcher.init();
             ImageEnhancer.init();
             TableEnhancer.init();
@@ -861,6 +944,7 @@
         destroy() {
             PlyrManager.destroy();
             SidebarSticky.destroy();
+            SidebarToggle.destroy();
             RailManager.destroy();
 
             // 断开 TocManager 的 IntersectionObserver

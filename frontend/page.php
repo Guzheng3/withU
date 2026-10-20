@@ -57,7 +57,7 @@
 <link rel="stylesheet" href="/Style/css/tooltip.css">
 <link rel="stylesheet" href="/Style/css/interaction.css">
 <link rel="stylesheet" href="/Style/css/withu-home-style.css?v=20261007a">
-<link rel="stylesheet" href="/Style/css/withu-detail.css?v=1.0.80">
+<link rel="stylesheet" href="/Style/css/withu-detail.css?v=1.0.81">
 <link rel="stylesheet" href="/Style/css/mobile-nav.css?v=1.0.1-flush">
 <link rel="stylesheet" href="/Style/css/header.css">
 <!-- 自定义右键菜单 -->
@@ -581,6 +581,9 @@
             <button class="withu-detail-rail-btn" id="rail-like-btn" data-like-target="article" data-like-id="<?php echo (int) $__art['id']; ?>" data-withu-tip="<span data-like-count='article:<?php echo (int) $__art['id']; ?>'><?php echo (int) ($__art['like_count'] ?? 0); ?></span> 人喜欢" data-withu-tip-html="true" data-withu-tip-force="true" data-withu-tip-dir="left">
                 <i class="ph ph-heart"></i>
             </button>
+            <button class="withu-detail-rail-btn withu-detail-rail-desktop-only" id="rail-sidebar-toggle" data-withu-tip="收起目录" data-withu-tip-force="true" data-withu-tip-dir="left" aria-label="收起目录" aria-expanded="true" aria-controls="withu-detail-sidebar">
+                <i class="ph ph-sidebar-simple"></i>
+            </button>
             <button class="withu-detail-rail-btn withu-detail-rail-mobile-only" id="mobile-toc-btn" data-withu-tip="目录" data-withu-tip-force="true" data-withu-tip-dir="left">
                 <i class="ph ph-list-bullets"></i>
             </button>
@@ -624,7 +627,7 @@
         <!-- Main Grid -->
         <div class="withu-detail-main-grid">
 
-            <aside class="withu-detail-sidebar">
+            <aside class="withu-detail-sidebar" id="withu-detail-sidebar">
                 <div class="withu-detail-sidebar-sticky">
                     <!-- Weather Widget -->
                     
@@ -1030,7 +1033,7 @@
 <script src="/Style/LoveListStyle/fancybox.umd.js"></script>
 <script src="/assets/js/page-lovelist.js"></script>
 <script src="/assets/js/page-index.js"></script>
-<script src="/assets/js/page-detail.js"></script>
+<script src="/assets/js/page-detail.js?v=1.0.81"></script>
 <script src="/assets/js/page-album-detail.js"></script>
 <script src="/assets/js/html2canvas.min.js"></script>
 <script src="/assets/js/chat.js"></script>

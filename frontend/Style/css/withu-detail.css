@@ -69,12 +69,25 @@ html {
 /* Main Content Area */
 .withu-detail-main-content {
     width: 100%;
+    min-width: 0;
 }
 
 @media (min-width: 1024px) {
     .withu-detail-main-content {
         grid-column: span 8;
         animation: fadeInUp 0.6s ease-out forwards;
+    }
+
+    /* 目录折叠后：左栏退出布局，正文占据整行并居中 */
+    .withu-detail-main-grid.is-sidebar-collapsed .withu-detail-sidebar {
+        display: none;
+    }
+
+    .withu-detail-main-grid.is-sidebar-collapsed .withu-detail-main-content {
+        grid-column: 1 / -1;
+        justify-self: center;
+        width: 100%;
+        max-width: 56rem;
     }
 }
 
