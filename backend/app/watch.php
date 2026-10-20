@@ -139,24 +139,10 @@ body.watch-page a{color:inherit}
 /* ===== 头部诗句常显：吸顶后不随 withu-actions-visible 隐藏 ===== */
 .withu-header-actions.withu-actions-visible .withu-header-poem{display:block !important}
 
-/* ===== 左侧液态玻璃导航 ===== */
-.side-nav{position:fixed;left:26px;z-index:50;display:flex;flex-direction:column;gap:.35rem;padding:.7rem;border-radius:22px;background:linear-gradient(135deg,rgba(255,255,255,.6),rgba(255,255,255,.28));backdrop-filter:blur(22px) saturate(170%);-webkit-backdrop-filter:blur(22px) saturate(170%);border:1px solid rgba(255,255,255,.72);box-shadow:inset 0 1px 0 rgba(255,255,255,.8),inset 1px 0 0 rgba(255,255,255,.4),inset -1px -1px 0 rgba(255,255,255,.2),0 22px 46px rgba(247,141,167,.18);top:50%;transform:translateY(-50%);transition:top .7s cubic-bezier(.34,1.56,.64,1),transform .7s cubic-bezier(.34,1.56,.64,1)}
-.side-nav::before{content:"";position:absolute;left:14%;right:14%;top:0;height:1px;background:linear-gradient(90deg,transparent,rgba(255,255,255,.95),transparent)}
-.side-nav.is-down{top:var(--recent-center,50%);transform:translateY(-50%)}
-.side-link{position:relative;display:flex;align-items:center;gap:.6rem;padding:.62rem .95rem;border-radius:14px;color:var(--ink);font-size:.9rem;font-weight:600;text-decoration:none;overflow:hidden;transition:transform .22s var(--ease),color .22s}
-.side-link::before{content:"";position:absolute;inset:0;background:linear-gradient(135deg,var(--pink),var(--blue));border-radius:14px;transform:scaleX(0);transform-origin:left;transition:transform .3s var(--ease);z-index:0}
-.side-link::after{content:"";position:absolute;left:50%;top:50%;width:26px;height:26px;margin:-13px 0 0 -13px;border-radius:50%;background:radial-gradient(circle,rgba(255,255,255,.85),transparent 65%);transform:scale(0);transition:transform .5s var(--ease);z-index:0}
-.side-link:hover::before,.side-link.active::before{transform:scaleX(1)}
-.side-link:hover::after{transform:scale(2.7)}
-.side-link .side-icon{position:relative;z-index:1;display:inline-flex;align-items:center;justify-content:center;width:26px;height:26px;border-radius:9px;background:var(--pink-soft);color:var(--pink);font-size:.82rem;transition:transform .25s var(--ease),background .25s,color .25s}
-.side-link:nth-child(2) .side-icon{background:var(--blue-soft);color:var(--blue)}
-.side-link:nth-child(3) .side-icon{background:var(--green-soft);color:var(--green)}
-.side-link:hover .side-icon,.side-link.active .side-icon{transform:translateY(-2px) rotate(-8deg);background:#fff;color:var(--pink)}
-.side-link:hover,.side-link.active{color:#fff;transform:translateX(4px)}
 
 /* ===== 主布局 ===== */
 .page{position:relative;display:flex;gap:2rem;max-width:1380px;margin:0 auto;padding:1.6rem 2rem 4rem}
-.main-col{flex:1;min-width:0;padding-left:8px}
+.main-col{flex:1;min-width:0}
 .section{margin:2.2rem 0 3rem}
 .section-head{display:flex;align-items:center;gap:.7rem;margin-bottom:1.05rem}
 .section-head h2{margin:0;font-size:1.18rem;font-weight:800;color:var(--ink)}
@@ -213,10 +199,6 @@ body.watch-page a{color:inherit}
 @media(max-width:1000px){
   .page{flex-direction:column;padding:1.2rem 1rem 3.5rem}
   .main-col{padding-left:0}
-  .side-nav{position:sticky;top:76px;left:auto;flex-direction:row;width:100%;justify-content:space-around;border-radius:18px;transform:none;margin-bottom:1.2rem;z-index:40}
-  .side-nav.is-down{top:76px;transform:none}
-  .side-link{flex:1;justify-content:center}
-  .side-link .side-txt{display:none}
 }
 @media(max-width:760px){
   .header-links .hide-m{display:none}
@@ -247,11 +229,6 @@ if (file_exists($headerPath)) {
 <div id="watchLoading" class="watch-loading"><span class="watch-spinner"></span><span>正在加载影视库</span></div>
 
 <div class="page">
-  <nav class="side-nav" id="sideNav">
-    <a class="side-link" href="#recent"><span class="side-icon">▶</span><span class="side-txt">最近播放</span></a>
-    <a class="side-link" href="#strm"><span class="side-icon">🎬</span><span class="side-txt">媒体库</span></a>
-  </nav>
-
   <div class="main-col">
     <section class="section" id="recent" style="--sec-accent:var(--pink);--sec-soft:var(--pink-soft)">
       <div class="section-head"><span class="sec-accent"></span><h2>最近播放</h2><a class="sec-more" href="/watch_history.php?from=<?php echo urlencode($_SERVER['REQUEST_URI']); ?>">全部历史 ›</a></div>
@@ -382,28 +359,6 @@ if (file_exists($headerPath)) {
       });
     },{rootMargin:'0px 0px -40px 0px'});
     cards.forEach(function(c){ io.observe(c); });
-  }
-
-  /* ============ 侧边导航滚动联动 + scroll spy ============ */
-  var sideNav=document.getElementById('sideNav'), recentSec=document.getElementById('recent');
-  function placeNav(){
-    if(!sideNav || !recentSec) return;
-    if(window.innerWidth<=1000){ sideNav.classList.remove('is-down'); return; }
-    var rect=recentSec.getBoundingClientRect();
-    var center=rect.top + rect.height/2;
-    sideNav.style.setProperty('--recent-center', center+'px');
-  }
-  window.addEventListener('scroll',function(){ placeNav(); },{passive:true});
-  window.addEventListener('resize',function(){ placeNav(); });
-  if(sideNav && document.querySelectorAll('.section').length){
-    var spy=new IntersectionObserver(function(entries){
-      entries.forEach(function(en){
-        if(en.isIntersecting){
-          sideNav.querySelectorAll('.side-link').forEach(function(a){ a.classList.toggle('active', a.getAttribute('href')==='#'+en.target.id); });
-        }
-      });
-    },{rootMargin:'-40% 0px -55% 0px'});
-    document.querySelectorAll('.section').forEach(function(s){ spy.observe(s); });
   }
 
   /* ============ 轨道滚动（左右箭头仅在内容显示不下时出现） ============ */

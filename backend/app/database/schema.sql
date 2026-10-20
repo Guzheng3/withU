@@ -409,7 +409,7 @@ CREATE TABLE IF NOT EXISTS `travel_plans` (
 
 CREATE TABLE IF NOT EXISTS `content_likes` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT, `actor_key` varchar(64) NOT NULL,
-  `target_type` varchar(20) NOT NULL, `target_id` int(11) NOT NULL, `created_at` datetime NOT NULL,
+  `target_type` varchar(20) NOT NULL, `target_id` bigint(20) NOT NULL, `created_at` datetime NOT NULL,
   PRIMARY KEY (`id`), UNIQUE KEY `uk_like_actor_target` (`actor_key`,`target_type`,`target_id`), KEY `idx_like_target` (`target_type`,`target_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 

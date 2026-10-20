@@ -112,6 +112,48 @@ if ($messages === null) {
     $messages = withu_message_json_fallback();
 }
 
+// 情侣昵称/头像：与页头头像区同源（数据库 users 表），保持全站同步；
+// 坐标沿用 map-all.json 的 lovers（按头像文件名/昵称匹配，顺序不保证），JSON 只作库不可用时兜底
+$lovers = $mapData['lovers'] ?? [];
+try {
+    $rootPath = dirname(__DIR__, 2) . '/backend/app';
+    if (is_file($rootPath . '/config/database.php') && is_file($rootPath . '/.installed')) {
+        require_once $rootPath . '/core/Database.php';
+        $db = Database::getInstance();
+        $users = $db->fetchAll("SELECT nickname, avatar, role FROM users WHERE status='active' ORDER BY FIELD(role,'user1','user2')");
+        $boy = null; $girl = null;
+        foreach ($users as $u) {
+            if (($u['role'] ?? '') === 'user1' && !$boy) $boy = $u;
+            if (($u['role'] ?? '') === 'user2' && !$girl) $girl = $u;
+        }
+        if ($boy && $girl) {
+            $jsonLovers = $mapData['lovers'] ?? [];
+            $pickCoords = function (array $user) use ($jsonLovers) {
+                $nickname = trim((string)($user['nickname'] ?? ''));
+                $avatarFile = strtolower(pathinfo(parse_url((string)($user['avatar'] ?? ''), PHP_URL_PATH) ?? '', PATHINFO_BASENAME));
+                foreach ($jsonLovers as $lover) {
+                    $c = $lover['coords'] ?? null;
+                    if (!is_array($c) || count($c) < 2) continue;
+                    $lAvatarFile = strtolower(pathinfo(parse_url((string)($lover['avatar'] ?? ''), PHP_URL_PATH) ?? '', PATHINFO_BASENAME));
+                    if (($avatarFile !== '' && $lAvatarFile === $avatarFile)
+                        || ($nickname !== '' && trim((string)($lover['name'] ?? '')) === $nickname)) {
+                        return array_slice($c, 0, 2);
+                    }
+                }
+                return null;
+            };
+            $boyCoords = $pickCoords($boy) ?? ($jsonLovers[0]['coords'] ?? [116.39, 39.90]);
+            $girlCoords = $pickCoords($girl) ?? ($jsonLovers[1]['coords'] ?? [116.39, 39.90]);
+            $lovers = [
+                ['name' => $boy['nickname'] ?? '', 'label' => $jsonLovers[0]['label'] ?? '', 'role' => 'user1', 'coords' => $boyCoords, 'avatar' => $boy['avatar'] ?? ''],
+                ['name' => $girl['nickname'] ?? '', 'label' => $jsonLovers[1]['label'] ?? '', 'role' => 'user2', 'coords' => $girlCoords, 'avatar' => $girl['avatar'] ?? ''],
+            ];
+        }
+    }
+} catch (Throwable $e) {
+    // 数据库不可用时保留 JSON 数据
+}
+
 // 合并数据：相册、留言用数据库的，其他用 JSON 的
-$result = array_merge($mapData, ['albums' => $albums], ['messages' => $messages]);
+$result = array_merge($mapData, ['lovers' => $lovers], ['albums' => $albums], ['messages' => $messages]);
 echo json_encode($result, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);

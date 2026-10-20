@@ -97,7 +97,9 @@
 })();
 </script>
 <link rel="stylesheet" href="/Style/dplayer/DPlayer.min.css?wm=4c668768&v=1.0.16">
-<link rel="stylesheet" href="/Style/css/video-modal.css?wm=4c668768&v=1.0.16">
+<link rel="stylesheet" href="/Style/css/video-modal.css?wm=4c668768<link rel="stylesheet" href="/Style/css/video-modal.css?wm=4c668768&v=1.0.16">v=1.0.16">
+<link rel="stylesheet" href="/Style/css/motion-effects.css?wm=4c668768&v=20261007a">
+<script src="/Style/js/motion-effects.js?wm=4c668768&v=20261007a" defer></script>
 <script src="/Style/dplayer/DPlayer.min.js?wm=4c668768&v=1.0.16"></script>
 <script src="/Style/js/video-modal.js?wm=4c668768&v=1.0.16"></script>
 <script src="/Style/js/nprogress.js?wm=4c668768&v=1.0.16"></script>
@@ -232,7 +234,7 @@
 <!-- 足迹地图配置（懒加载，点击才初始化） -->
         <script>
         window._AMapSecurityConfig = {"securityJsCode":"7f8cc5cd8b46c9aaf48e402288a4d228"};
-        window.LGMAP_CONFIG = {"amapKey":"d88e24ef5e5c043b12023368c2274558","modeConfig":{"lovers":{"title":"情侣模式","desc":"无论相隔多远，心始终在一起"},"moments":{"title":"点点滴滴","desc":"记录我们的每一个美好瞬间"},"messages":{"title":"留言模式","desc":"来自世界各地的温暖祝福"},"albums":{"title":"相册模式","desc":"用照片定格我们的回忆"},"events":{"title":"事件清单","desc":"一起完成的每一个小目标"}},"lovers":[],"milestones":[],"events":[],"albums":[],"messages":[],"moments":[],"loveStartDate":"","hsla":"345deg,70%,55%","mapStyle":"amap://styles/grey","soloMode":false,"_apiBase":"/assets/map-api.php"};
+        window.LGMAP_CONFIG = {"amapKey":"d88e24ef5e5c043b12023368c2274558","modeConfig":{"lovers":{"title":"情侣模式","desc":"无论相隔多远，心始终在一起"},"moments":{"title":"点点滴滴","desc":"记录我们的每一个美好瞬间"},"messages":{"title":"留言模式","desc":"来自世界各地的温暖祝福"},"albums":{"title":"相册模式","desc":"用照片定格我们的回忆"},"events":{"title":"事件清单","desc":"一起完成的每一个小目标"}},"lovers":[],"milestones":[],"events":[],"albums":[],"messages":[],"moments":[],"loveStartDate":"","hsla":"345deg,70%,55%","mapStyle":"amap://styles/normal","soloMode":false,"_apiBase":"/assets/map-api.php"};
         window.LGMapData = window.LGMapData || {
             assign: function (data) {
                 if (data.lovers) window.LGMAP_CONFIG.lovers = data.lovers;

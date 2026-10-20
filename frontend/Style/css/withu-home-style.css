@@ -21,8 +21,8 @@ body {
 
 .withu-home {
     --withu-font-sans: 'Inter', system-ui, -apple-system, sans-serif;
-    --withu-font-serif: 'Noto Serif SC', serif;
-    --withu-font-main: 'Noto Serif SC', serif;
+    --withu-font-serif: system-ui;
+    --withu-font-main: system-ui;
     --withu-font-body: 'Inter', sans-serif;
     --withu-color-bg: #ffffff;
     --withu-color-text: #1a1a1a;
@@ -1388,7 +1388,7 @@ body {
     justify-content: center;
     background: #1a1a1a;
     color: #ffffff;
-    font-family: 'Noto Serif SC', serif;
+    font-family: system-ui;
     font-size: 0.7rem;
     font-weight: 500;
     line-height: 1.2;
@@ -1443,7 +1443,7 @@ body {
     border: none;
     background: transparent;
     color: rgba(60, 60, 67, 0.6);
-    font-family: 'Noto Serif SC', serif;
+    font-family: system-ui;
     font-size: 0.9rem;
     font-weight: 500;
     cursor: pointer;
@@ -1626,7 +1626,7 @@ body {
 }
 
 .withu-home .withu-event-title {
-    font-family: var(--withu-font-serif);
+    font-family: -apple-system, 'Inter', system-ui, sans-serif;
     text-align: left;
 }
 
@@ -1913,6 +1913,39 @@ a.withu-review-card:visited {
     will-change: transform;
     backface-visibility: hidden;
     -webkit-backface-visibility: hidden;
+}
+
+/* 空数据状态在横向留言轨道内铺满容器宽度并居中，避免塌缩成窄条靠左；
+   :has 判定轨道只含空状态时改铺满整行（有留言卡片时保持 max-content 拖拽行为） */
+.withu-home .withu-home-message-track:has(> .withu-no-data) {
+    width: 100%;
+}
+
+.withu-home .withu-home-message-track .withu-no-data {
+    flex: 1 1 auto;
+    align-self: center;
+    margin-inline: auto;
+}
+
+/* 顶部 .withu-home * 重置会清零空状态卡片内边距（content.css 在其之前加载），
+   这里按组件原样恢复，保证标题/描述文字与卡片留白正常 */
+.withu-home .withu-no-data {
+    padding: 3.5rem 1.5rem;
+}
+
+/* 马赛克网格的子项 span 规则特异度更高，会盖过组件的占满整行；
+   这里以同等特异度让空状态卡片在马赛克区也占满整行居中 */
+.withu-home .withu-mosaic-grid>*.withu-no-data,
+.withu-home .withu-mosaic-grid>*:first-child.withu-no-data {
+    grid-row: auto;
+    grid-column: 1 / -1;
+    min-height: 0;
+}
+
+@media (max-width: 640px) {
+    .withu-home .withu-no-data {
+        padding: 2.5rem 1rem;
+    }
 }
 
 .withu-home .withu-home-message-card {
@@ -2642,7 +2675,7 @@ a.withu-review-card:visited {
 }
 
 .withu-home .withu-moment-title {
-    font-family: 'Noto Serif SC', serif;
+    font-family: system-ui;
     font-size: 1.75rem;
     font-weight: 700;
     line-height: 1.2;
@@ -3212,7 +3245,7 @@ a.withu-review-card:visited {
     --withu-day-text-light: #A0AEC0;
     --withu-day-accent-color: #E53E3E;
     --withu-day-font-en: 'Inter', sans-serif;
-    --withu-day-font-cn-serif: 'Noto Serif SC', serif;
+    --withu-day-font-cn-serif: system-ui;
     --withu-day-font-ui: 'Inter', sans-serif;
     --withu-day-font-nums: 'Inter', sans-serif;
     --withu-day-shadow-card: 0 20px 40px -10px rgba(0, 0, 0, 0.05), 0 10px 20px -10px rgba(0, 0, 0, 0.02);
@@ -3672,7 +3705,7 @@ a.withu-review-card:visited {
     color: #fff;
     padding: 2rem;
     border-radius: 1rem;
-    font-family: 'Noto Serif SC', serif;
+    font-family: system-ui;
     font-weight: 700;
     transition: transform 0.3s, box-shadow 0.3s;
 }
@@ -3788,7 +3821,7 @@ a.withu-review-card:visited {
     border-radius: 0.5rem;
     padding: 1.5rem 1rem;
     font-size: 1.3rem;
-    font-family: 'Noto Serif SC', serif;
+    font-family: system-ui;
     font-weight: 700;
     display: flex;
     align-items: center;
@@ -4870,7 +4903,7 @@ body.bg-grad-grid::before {
 .withu-map .lover-name,
 .withu-map .lpc-name,
 .withu-new-photo .user-info{
-    font-family: 'Dancing Script', 'Noto Serif SC', cursive;
+    font-family: 'Dancing Script', system-ui, cursive;
 }
 
 .withu-home .withu-smart-card__time {
@@ -4964,7 +4997,7 @@ body.bg-grad-grid::before {
 
 /* 标题 */
 .withu-home .withu-smart-card__title {
-    font-family: "Noto Serif SC", serif;
+    font-family: system-ui;
     font-size: 1.875rem;
     line-height: 1.1;
     font-weight: 700;
@@ -5198,7 +5231,7 @@ body.bg-grad-grid::before {
     display: flex;
     align-items: center;
     gap: 1.5rem;
-    font-family: 'Noto Serif SC', serif;
+    font-family: system-ui;
     font-size: 1.285rem;
     color: #c7c7c7;
     letter-spacing: 0.3em;
@@ -5595,7 +5628,7 @@ body.bg-grad-grid::before {
     font-size: 1.45rem;
     font-weight: 500;
     letter-spacing: 0.02em;
-    font-family: 'Dancing Script', 'Noto Serif SC', cursive;
+    font-family: 'Dancing Script', system-ui, cursive;
     transform: translateY(2px);
 }
 

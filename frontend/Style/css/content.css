@@ -281,6 +281,20 @@ body {
   pointer-events: none;
 }
 
+/* 两侧花边镜像翻转 */
+.bg-img .middle .avatarArea .avatarFrame {
+  transform: scale(-1.6, 1.6) !important;
+}
+
+/* 豁免 .bg-img .middle img 的头像圆形裁剪/cover 规则：花环 PNG 周圈是花瓣，
+   被圆形裁剪后会全部裁掉只剩中间透明区域，看起来花边消失 */
+.bg-img .middle .avatarArea .avatarFrame {
+  width: 100% !important;
+  height: 100% !important;
+  border-radius: 0 !important;
+  object-fit: fill !important;
+}
+
 .bg-img .middle img {
   width: 10rem;
   height: 10rem;
@@ -650,6 +664,13 @@ body {
   background: transparent;
 }
 
+/* 头像区不要懒加载占位小摩托 gif（反馈：背景区有 gif，去掉） */
+.bg-wrap.central.limg .bg-img img.lazy:not([src]),
+.bg-wrap.central.limg .bg-img img.aiv_touxiang:not([src]) {
+  background: none;
+  opacity: 0;
+}
+
 .mask_black {
   position: relative;
 }
@@ -679,6 +700,12 @@ ul.mask_black::before {
   padding: 3.5rem 1.5rem;
   box-sizing: border-box;
   isolation: isolate;
+}
+
+/* 空数据卡片在多列网格中占满整行，让内容随 wrap 居中（否则会挤在第一列靠左） */
+.withu-no-data {
+  grid-column: 1 / -1;
+  justify-self: center;
 }
 
 .withu-no-data::before {
@@ -1663,3 +1690,4 @@ body.bg-grad-grid::before {
     font-weight: 700;
     color: #e11d48;
 }
+

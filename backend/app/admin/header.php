@@ -64,6 +64,8 @@ foreach (($themeConfig['colors'] ?? []) as $themeName => $themeValue) {
 		<link rel="stylesheet" href="/admin-assets/vendor/tabler-icons/tabler-icons.min.css">
 		<!-- Font Awesome 备用（本地） -->
 		<link rel="stylesheet" href="/admin-assets/vendor/fontawesome/css/all.min.css">
+	<link rel="stylesheet" href="/admin-assets/css/motion-effects.css?v=20261007a">
+	<script src="/admin-assets/js/motion-effects.js?v=20261007a" defer></script>
 </head>
 <body class="admin-v3 admin-ui-<?php echo e($adminUiMode); ?><?php echo !empty($adminNarrow) ? ' admin-narrow' : ''; ?>">
 <div class="admin-drawer-backdrop" aria-hidden="true"></div>

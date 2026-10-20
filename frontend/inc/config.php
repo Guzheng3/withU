@@ -53,19 +53,6 @@ try {
         }
     }
 
-    // 头像区位置文字（后台设置优先）：settings.avatar_loc_boy/girl_name，
-    // 后台没设置时 JS 回退为展示坐标
-    $avatarLocBoy = '';
-    $avatarLocGirl = '';
-    $avatarLocBoyRow = $db->fetch("SELECT value FROM settings WHERE `key`='avatar_loc_boy_name'");
-    if ($avatarLocBoyRow && trim((string)$avatarLocBoyRow['value']) !== '') {
-        $avatarLocBoy = trim((string)$avatarLocBoyRow['value']);
-    }
-    $avatarLocGirlRow = $db->fetch("SELECT value FROM settings WHERE `key`='avatar_loc_girl_name'");
-    if ($avatarLocGirlRow && trim((string)$avatarLocGirlRow['value']) !== '') {
-        $avatarLocGirl = trim((string)$avatarLocGirlRow['value']);
-    }
-
     // 读取情侣坐标（从 map-all.json）
     // 优先按头像文件名 / 昵称匹配 lovers，避免 lovers 数组顺序与 boy/girl 顺序不一致时位置挂反
     $boyCoords = [116.39, 39.90];
@@ -198,8 +185,6 @@ try {
         'weatherLocLng' => $locLng,
         'weatherLocName' => $locName,
         'soloOwnerGeo' => $soloOwnerGeo,
-        'boyLocation' => $avatarLocBoy,
-        'girlLocation' => $avatarLocGirl,
         'boyCoords' => $boyCoords,
         'girlCoords' => $girlCoords,
         'bannedChars' => '操屌',

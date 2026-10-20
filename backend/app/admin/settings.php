@@ -475,7 +475,7 @@ include __DIR__ . '/header.php';
                 </div>
 
                 <div class="form-group" style="margin-bottom:0.75rem;">
-                    <label style="display:block;font-size:0.85rem;margin-bottom:0.25rem;">天气定位</label>
+                    <label style="display:block;font-size:0.85rem;margin-bottom:0.25rem;">位置</label>
                     <?php
                     $locLat  = $settingsData['weather_loc_lat'] ?? '';
                     $locLng  = $settingsData['weather_loc_lng'] ?? '';
@@ -497,38 +497,8 @@ include __DIR__ . '/header.php';
                             未选择位置，天气将使用默认数据
                         <?php endif; ?>
                     </div>
-                    <small style="color:#888;">搜索并选择城市，天气和地图将使用此位置</small>
+                    <small style="color:#888;">头像位置与天气共用同一位置，均来自高德定位 SDK；此处可搜索选择固定位置，留空则使用高德实时定位</small>
                 </div>
-
-                <?php
-                // 头像区位置（首页头像下方文字）：名称 + 坐标，与天气定位同款搜索
-                $avatarLocFields = [
-                    'boy'  => ['label' => '头像位置（我）', 'name' => $settingsData['avatar_loc_boy_name'] ?? '', 'lat' => $settingsData['avatar_loc_boy_lat'] ?? '', 'lng' => $settingsData['avatar_loc_boy_lng'] ?? ''],
-                    'girl' => ['label' => '头像位置（TA）', 'name' => $settingsData['avatar_loc_girl_name'] ?? '', 'lat' => $settingsData['avatar_loc_girl_lat'] ?? '', 'lng' => $settingsData['avatar_loc_girl_lng'] ?? ''],
-                ];
-                foreach ($avatarLocFields as $avatarLocKey => $avatarLoc):
-                    $avatarLocHas = $avatarLoc['lat'] !== '' && $avatarLoc['lng'] !== '';
-                ?>
-                <div class="form-group" style="margin-bottom:0.75rem;">
-                    <label style="display:block;font-size:0.85rem;margin-bottom:0.25rem;"><?php echo e($avatarLoc['label']); ?></label>
-                    <div style="position:relative;">
-                        <input type="text" id="avatar_loc_<?php echo $avatarLocKey; ?>_search" placeholder="搜索城市或地址..." value="<?php echo e($avatarLoc['name']); ?>" autocomplete="off"
-                               style="width:100%;padding:.55rem .75rem;border-radius:.75rem;border:1px solid rgba(148,163,184,.6);font-size:.9rem;">
-                        <div id="avatar_loc_<?php echo $avatarLocKey; ?>_results" style="display:none;position:absolute;top:100%;left:0;right:0;z-index:100;background:#fff;border:1px solid rgba(148,163,184,.3);border-radius:.75rem;max-height:240px;overflow-y:auto;box-shadow:0 8px 24px rgba(0,0,0,.12);"></div>
-                    </div>
-                    <input type="hidden" name="settings[avatar_loc_<?php echo $avatarLocKey; ?>_lat]" id="avatar_loc_<?php echo $avatarLocKey; ?>_lat" value="<?php echo e($avatarLoc['lat']); ?>">
-                    <input type="hidden" name="settings[avatar_loc_<?php echo $avatarLocKey; ?>_lng]" id="avatar_loc_<?php echo $avatarLocKey; ?>_lng" value="<?php echo e($avatarLoc['lng']); ?>">
-                    <input type="hidden" name="settings[avatar_loc_<?php echo $avatarLocKey; ?>_name]" id="avatar_loc_<?php echo $avatarLocKey; ?>_name" value="<?php echo e($avatarLoc['name']); ?>">
-                    <div id="avatar_loc_<?php echo $avatarLocKey; ?>_selected" style="margin-top:.35rem;font-size:.8rem;color:<?php echo $avatarLocHas ? '#16a34a' : '#888'; ?>;">
-                        <?php if ($avatarLocHas): ?>
-                            ✅ 已选择：<?php echo e($avatarLoc['name']); ?>（<?php echo e($avatarLoc['lat']); ?>, <?php echo e($avatarLoc['lng']); ?>）
-                        <?php else: ?>
-                            未选择，头像位置将显示坐标
-                        <?php endif; ?>
-                    </div>
-                    <small style="color:#888;">搜索并选择位置，首页头像下方将显示此地名；留空显示坐标</small>
-                </div>
-                <?php endforeach; ?>
 
             </div>
 
@@ -1469,7 +1439,7 @@ include __DIR__ . '/header.php';
         render();
     }());
 
-    // 位置搜索自动完成：weather_loc（天气定位）+ avatar_loc_boy/girl（头像区位置）共用
+    // 位置搜索自动完成：weather_loc（全站统一「位置」：头像区与天气共用，均来自高德定位 SDK）
     (function () {
         var _amapLoading = false;
         var _amapQueue = [];
@@ -1593,8 +1563,6 @@ include __DIR__ . '/header.php';
         }
 
         setupPicker('weather_loc', '未选择位置，天气将使用默认数据');
-        setupPicker('avatar_loc_boy', '未选择，头像位置将显示坐标');
-        setupPicker('avatar_loc_girl', '未选择，头像位置将显示坐标');
     })();
     </script>
 

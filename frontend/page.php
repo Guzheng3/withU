@@ -33,7 +33,7 @@
 <link rel="stylesheet" href="/Style/css/leaving.css">
 <link rel="stylesheet" href="/Style/css/leav.css">
 <link rel="stylesheet" href="/Style/css/message.css">
-<link rel="stylesheet" href="/Style/css/index.css">
+<link rel="stylesheet" href="/Style/css/index.css?v=20261007f">
 <link rel="stylesheet" href="/Style/css/little.css">
 <link rel="stylesheet" href="/Style/css/loveImg.css">
 <link rel="stylesheet" href="/Style/css/list.css">
@@ -56,14 +56,14 @@
 <link rel="stylesheet" href="/Style/vendor/remixicon/remixicon.css">
 <link rel="stylesheet" href="/Style/css/tooltip.css">
 <link rel="stylesheet" href="/Style/css/interaction.css">
-<link rel="stylesheet" href="/Style/css/withu-home-style.css">
+<link rel="stylesheet" href="/Style/css/withu-home-style.css?v=20261007a">
 <link rel="stylesheet" href="/Style/css/withu-detail.css?v=1.0.80">
 <link rel="stylesheet" href="/Style/css/mobile-nav.css?v=1.0.1-flush">
 <link rel="stylesheet" href="/Style/css/header.css">
 <!-- 自定义右键菜单 -->
 <link rel="stylesheet" href="/Style/css/context-menu.css">
 <!-- 足迹地图样式 -->
-    <link rel="stylesheet" href="/Style/css/map.css">
+    <link rel="stylesheet" href="/Style/css/map.css?v=1.0.85">
 
 
 <script src="/Style/jquery/jquery.min.js"></script>
@@ -242,16 +242,18 @@
 </script>
 
 <!-- 足迹地图配置（懒加载，点击才初始化） -->
-        <script src="/assets/js/withu-shared-7eca2584.js"></script>
+        <script src="/assets/js/withu-shared-3a9d9473.js"></script>
 <script src="/assets/js/app.js"></script>
-<script src="/assets/js/withu-location.js?v=20260906e"></script>
-<script src="/assets/js/head-avatar-location.js?v=20261007"></script>
-<script src="/assets/js/components.js?v=1.0.0-confetti1"></script>
+<script src="/assets/js/withu-location.js?v=20261007"></script>
+<script src="/assets/js/head-avatar-location.js?v=20261007e"></script>
+<script src="/assets/js/components.js?v=20261007"></script>
 
 <!-- 礼花效果已迁移到 components.js 的 ConfettiEffect 模块 -->
 
 <script src="/assets/js/pjax.js"></script><script>if(window.WithUPjax&&typeof window.WithUPjax.init==="function")window.WithUPjax.init();</script>
 <link rel="stylesheet" href="/assets/css/withu-shared-6790eb7e.css">
+<link rel="stylesheet" href="Style/css/motion-effects.css?v=20261007a">
+<script src="Style/js/motion-effects.js?v=20261007a" defer></script>
 
 <script>
     // 倒计时、高度调整、轮播图、导航栏等功能已迁移到 app.js 和 components.js
@@ -1156,7 +1158,7 @@
     </div>
 </div>
 <!-- ============ /足迹地图弹窗 ============ -->
-<script src="/assets/js/map.js"></script>
+<script src="/assets/js/map.js?v=1.0.87"></script>
 
 <div id="pjax-container">
 

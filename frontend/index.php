@@ -120,6 +120,67 @@ try {
     $homeLoveTs = false;
 }
 
+// Love Day 卡片：与后台「纪念日（milestones）」同源，读取 frontend/services/map-all.json；
+// 后台增删后此区块随 JSON 同步，不再使用写死的静态卡片
+$homeLoveDays = [];
+try {
+    $__loveMapFile = __DIR__ . '/services/map-all.json';
+    if (is_file($__loveMapFile)) {
+        $__loveMap = json_decode((string) file_get_contents($__loveMapFile), true);
+        $homeLoveDays = is_array($__loveMap) ? ($__loveMap['milestones'] ?? []) : [];
+    }
+} catch (Throwable $e) {
+    $homeLoveDays = [];
+}
+
+// 首页清单/事件卡片：与后台「恋爱清单」同源，读取 love_list_items 表最新 4 条；
+// 后台增删后此区块随数据库同步，不再使用写死的静态卡片
+$homeListEvents = [];
+try {
+    if (isset($db) && $db) {
+        if (function_exists('migrate_schema_if_needed')) {
+            migrate_schema_if_needed();
+        }
+        if (!function_exists('upload_url')) {
+            require_once __DIR__ . '/../backend/app/core/helpers.php';
+        }
+        $rows = $db->fetchAll(
+            "SELECT * FROM love_list_items ORDER BY sort_order ASC, id DESC LIMIT 4"
+        );
+        $ids = array_column($rows, 'id');
+        $imagesByItem = [];
+        if ($ids) {
+            $ph = implode(',', array_fill(0, count($ids), '?'));
+            foreach ($db->fetchAll(
+                "SELECT item_id, image_path, thumbnail_path
+                 FROM love_list_item_images
+                 WHERE item_id IN ($ph)
+                 ORDER BY item_id ASC, sort_order ASC, id ASC",
+                $ids
+            ) as $im) {
+                $path = (string) ($im['thumbnail_path'] ?: $im['image_path']);
+                if ($path === '') {
+                    continue;
+                }
+                $imagesByItem[(int) $im['item_id']] ??= upload_url($path);
+            }
+        }
+        foreach ($rows as $r) {
+            $homeListEvents[] = [
+                'id'      => (int) $r['id'],
+                'title'   => (string) $r['title'],
+                'done'    => !empty($r['is_done']),
+                'date'    => (string) ($r['done_date'] ?? ''),
+                'place'   => (string) ($r['location_name'] ?? ''),
+                'note'    => (string) ($r['note'] ?? ''),
+                'image'   => $imagesByItem[(int) $r['id']] ?? '',
+            ];
+        }
+    }
+} catch (Throwable $e) {
+    $homeListEvents = [];
+}
+
 // 点滴：最新 6 篇（游客仅公开文章）
 $homeArticles = [];
 try {
@@ -281,7 +342,7 @@ try {
 <link rel="stylesheet" href="Style/css/leaving.css">
 <link rel="stylesheet" href="Style/css/leav.css">
 <link rel="stylesheet" href="Style/css/message.css">
-<link rel="stylesheet" href="Style/css/index.css">
+<link rel="stylesheet" href="Style/css/index.css?v=20261007f">
 <link rel="stylesheet" href="Style/css/little.css">
 <link rel="stylesheet" href="Style/css/loveImg.css">
 <link rel="stylesheet" href="Style/css/list.css">
@@ -304,7 +365,7 @@ try {
 <link rel="stylesheet" href="Style/vendor/remixicon/remixicon.css">
 <link rel="stylesheet" href="Style/css/tooltip.css">
 <link rel="stylesheet" href="Style/css/interaction.css">
-<link rel="stylesheet" href="Style/css/withu-home-style.css">
+<link rel="stylesheet" href="Style/css/withu-home-style.css?v=20261007g">
 <link rel="stylesheet" href="Style/css/timetable.css?v=20260907-3">
 <link rel="stylesheet" href="Style/css/withu-detail.css?v=1.0.80">
 <link rel="stylesheet" href="Style/css/mobile-nav.css?v=1.0.1-flush">
@@ -312,7 +373,7 @@ try {
 <!-- 自定义右键菜单 -->
 <link rel="stylesheet" href="Style/css/context-menu.css">
 <!-- 足迹地图样式 -->
-    <link rel="stylesheet" href="Style/css/map.css">
+    <link rel="stylesheet" href="Style/css/map.css?v=1.0.85">
 
 <script src="Style/jquery/jquery.min.js"></script>
 <script src="Style/Font/font_leav/iconfont.js"></script>
@@ -490,20 +551,22 @@ try {
 </script>
 
 <!-- 足迹地图配置（懒加载，点击才初始化） -->
-        <script src="/assets/js/withu-shared-bc1ba20d.js"></script>
+        <script src="/assets/js/withu-shared-1916a4be.js"></script>
 <script src="assets/js/app.js"></script>
-<script src="/assets/js/withu-location.js?v=20260906e"></script>
-<script src="/assets/js/head-avatar-location.js?v=20261007"></script>
+<script src="/assets/js/withu-location.js?v=20261007"></script>
+<script src="/assets/js/head-avatar-location.js?v=20261007e"></script>
 <?php if (!empty($loggedIn)): ?>
 <!-- 对方正在看邀请气泡（头像区） -->
 <script src="/assets/js/head-avatar-watch-bubble.js"></script>
 <?php endif; ?>
-<script src="assets/js/components.js?v=1.0.0-confetti1"></script>
+<script src="assets/js/components.js?v=20261007"></script>
 
 <!-- 礼花效果已迁移到 components.js 的 ConfettiEffect 模块 -->
 
 <script src="assets/js/pjax.js"></script><script>if(window.WithUPjax&&typeof window.WithUPjax.init==="function")window.WithUPjax.init();</script>
 <link rel="stylesheet" href="/assets/css/withu-shared-6790eb7e.css">
+<link rel="stylesheet" href="Style/css/motion-effects.css?v=20261007a">
+<script src="Style/js/motion-effects.js?v=20261007a" defer></script>
 
 <script>
     // 倒计时、高度调整、轮播图、导航栏等功能已迁移到 app.js 和 components.js
@@ -885,179 +948,6 @@ try {
                         </div>
                     </div>
                     </div>
-                    <!-- Stats Cards -->
-                    <div class="withu-col-2 withu-col-md-1" data-aos="fade-up" data-aos-delay="200">                    <div class="withu-widget withu-widget--stats-vibrant-1">
-                        <div class="withu-widget__bg-icon withu-widget__bg-icon--tilted">
-                            <i class="ph-fill ph-article"></i>
-                        </div>
-                        <div class="withu-flex-col-between-1">
-                            <div>
-                                <div class="withu-stats-header-row">
-                                    <div class="withu-icon-circle-glass">
-                                        <i class="ph-bold ph-newspaper-clipping withu-icon-sm-white"></i>
-                                    </div>
-                                    <div class="withu-stats-title" data-withu-tip="点滴">点滴</div>
-                                </div>
-                            </div>
-                            <div class="withu-mt-1rem">
-                                <div class="withu-font-num withu-stats-num">
-                                    <?php echo (int) $homeStats['articles']; ?>                                </div>
-                                <div class="withu-stats-label withu-stats-label--en">Memory Notes</div>
-                            </div>
-                        </div>
-                    </div>
-                    </div>
-                    <div class="withu-col-2 withu-col-md-1" data-aos="fade-up" data-aos-delay="250">                    <div class="withu-widget withu-widget--stats-vibrant-2">
-                        <div class="withu-widget__bg-icon withu-widget__bg-icon--tilted">
-                            <i class="ph-fill ph-images"></i>
-                        </div>
-                        <div class="withu-flex-col-between-1">
-                            <div>
-                                <div class="withu-stats-header-row">
-                                    <div class="withu-icon-circle-glass">
-                                        <i class="ph-bold ph-camera withu-icon-sm-white"></i>
-                                    </div>
-                                    <div class="withu-stats-title" data-withu-tip="相册">相册</div>
-                                </div>
-                            </div>
-                            <div class="withu-mt-1rem">
-                                <div class="withu-font-num withu-stats-num">
-                                    <?php echo (int) $homeStats['photos']; ?>                                </div>
-                                <div class="withu-stats-label withu-stats-label--en">Photo Keepsakes</div>
-                            </div>
-                        </div>
-                    </div>
-                    </div>
-                    <div class="withu-col-2 withu-col-md-1" data-aos="fade-up" data-aos-delay="300">                    <div class="withu-widget withu-widget--stats-vibrant-3">
-                        <div class="withu-widget__bg-icon withu-widget__bg-icon--tilted">
-                            <i class="ph-fill ph-chat-circle-dots"></i>
-                        </div>
-                        <div class="withu-flex-col-between-1">
-                            <div>
-                                <div class="withu-stats-header-row">
-                                    <div class="withu-icon-circle-glass">
-                                        <i class="ph-bold ph-chat-teardrop-dots withu-icon-sm-white"></i>
-                                    </div>
-                                    <div class="withu-stats-title" data-withu-tip="留言">留言</div>
-                                </div>
-                            </div>
-                            <div class="withu-mt-1rem">
-                                <div class="withu-font-num withu-stats-num">
-                                    <?php echo (int) $homeStats['messages']; ?>                                </div>
-                                <div class="withu-stats-label withu-stats-label--en">Kind Messages</div>
-                            </div>
-                        </div>
-                    </div>
-                    </div>
-                    <div class="withu-col-2 withu-col-md-1" data-aos="fade-up" data-aos-delay="300">                    <div class="withu-widget withu-widget--stats-vibrant-4">
-                        <div class="withu-widget__bg-icon withu-widget__bg-icon--tilted">
-                            <i class="ph-fill ph-hourglass-medium"></i>
-                        </div>
-                        <div class="withu-flex-col-between-1">
-                            <div>
-                                <div class="withu-stats-header-row">
-                                    <div class="withu-icon-circle-glass">
-                                        <i class="ph-bold ph-timer withu-icon-sm-white"></i>
-                                    </div>
-                                    <div class="withu-stats-title" data-withu-tip="轨迹">轨迹</div>
-                                </div>
-                            </div>
-                            <div class="withu-mt-1rem">
-                                <div class="withu-font-num withu-stats-num">
-                                    <?php echo (int) $homeStats['timeline']; ?>                                </div>
-                                <div class="withu-stats-label withu-stats-label--en">Steps of Us</div>
-                            </div>
-                        </div>
-                    </div>
-                    </div>
-                    <div class="withu-col-2 withu-col-md-1" data-aos="fade-up" data-aos-delay="300">                    <div class="withu-widget withu-widget--stats-vibrant-5">
-                        <div class="withu-widget__bg-icon withu-widget__bg-icon--tilted">
-                            <i class="ph-fill ph-heart"></i>
-                        </div>
-                        <div class="withu-traffic-card">
-                            <div class="withu-stats-header-row">
-                                <div class="withu-icon-circle-glass">
-                                    <i class="ph-bold ph-chart-line-up withu-icon-sm-white"></i>
-                                </div>
-                                <div class="withu-stats-title" data-withu-tip="今日访问">今日访问</div>
-                            </div>
-                            <div class="withu-traffic-metrics">
-                                <div class="withu-traffic-metric"
-                                    data-withu-tip="访问次数：<?php echo $todayViews; ?>" data-withu-tip-force="true">
-                                    <div class="withu-font-num withu-traffic-value">
-                                        <?php echo $todayViews; ?>                                    </div>
-                                    <div class="withu-traffic-label">访问次数</div>
-                                </div>
-                                <div class="withu-traffic-divider" aria-hidden="true"></div>
-                                <div class="withu-traffic-metric"
-                                    data-withu-tip="今日访客：<?php echo $todayVisitors; ?>" data-withu-tip-force="true">
-                                    <div class="withu-font-num withu-traffic-value">
-                                        <?php echo $todayVisitors; ?>                                    </div>
-                                    <div class="withu-traffic-label">今日访客</div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    </div>
-                    <div class="withu-col-2 withu-col-md-1" data-aos="fade-up" data-aos-delay="300">                    <div class="withu-widget withu-widget--stats-vibrant-7">
-                        <div class="withu-widget__bg-icon withu-widget__bg-icon--tilted">
-                            <i class="ph-fill ph-eye"></i>
-                        </div>
-                        <div class="withu-traffic-card">
-                            <div class="withu-stats-header-row">
-                                <div class="withu-icon-circle-glass">
-                                    <i class="ph-bold ph-users-three withu-icon-sm-white"></i>
-                                </div>
-                                <div class="withu-stats-title" data-withu-tip="累计访问">累计访问</div>
-                            </div>
-                            <div class="withu-traffic-metrics">
-                                <div class="withu-traffic-metric"
-                                    data-withu-tip="总访客数：<?php echo $totalVisitors; ?>" data-withu-tip-force="true">
-                                    <div class="withu-font-num withu-traffic-value">
-                                        <?php echo $totalVisitors; ?>                                    </div>
-                                    <div class="withu-traffic-label">总访客数</div>
-                                </div>
-                                <div class="withu-traffic-divider" aria-hidden="true"></div>
-                                <div class="withu-traffic-metric"
-                                    data-withu-tip="总访问次：<?php echo $totalViews; ?>" data-withu-tip-force="true">
-                                    <div class="withu-font-num withu-traffic-value">
-                                        <?php echo $totalViews; ?>                                    </div>
-                                    <div class="withu-traffic-label">总访问次</div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    </div>
-                    <div class="withu-col-2" data-aos="fade-up" data-aos-delay="300">                    <div class="withu-widget withu-widget--stats-vibrant-6">
-                        <div class="withu-widget__bg-icon withu-runtime-bg-icon">
-                            <i class="ph-fill ph-planet"></i>
-                        </div>
-
-                        <div class="withu-flex-col-runtime">
-                            <div>
-                                <div class="withu-header-row-sm">
-                                    <div class="withu-icon-circle-glass">
-                                        <i class="ph-bold ph-planet withu-icon-sm-white"></i>
-                                    </div>
-                                    <div class="withu-stats-title" data-withu-tip="我们的小世界">我们的小世界</div>
-                                </div>
-                            </div>
-
-                            <div class="withu-mt-auto">
-                                <div class="withu-runtime-values">
-                                    <div class="withu-font-num withu-runtime-num">
-                                        1,115                                    </div>
-
-                                    <div class="withu-runtime-meta">
-                                        <div class="withu-runtime-days">DAYS</div>
-                                        <span class="withu-runtime-divider"></span>
-                                        <div class="withu-runtime-text">已平稳运行</div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    </div>                </div>
             </section>
 
             <!-- 课表 Module（与轻屿课表 App 周视图一致，仅登录可见；数据由 page-timetable.js 拉取） -->
@@ -1110,126 +1000,63 @@ try {
                     </div>
                 </div>
                 <div class="withu-events-grid">
-                    
-                                                    <!-- 有图片样式 -->
-                            <div data-aos="fade-up" data-aos-delay="0">                            <a href="lovelist.php#event-36"
-                                class="withu-event-card withu-event-card--has-img withu-event-card--link">
-                                <img class="withu-event-bg-img lazy" data-src="Lovefolder/20260411053515_69d96d13af174939872800.webp"
-                                    alt="一起去吃淘蛙">
+<?php if (empty($homeListEvents)): ?>
+                    <div class="withu-no-data" data-aos="fade-up" data-aos-delay="0">
+                        <div class="withu-no-data-wrap"><div class="withu-no-data-content">
+                            <h3 class="withu-no-data-title">还没有心愿</h3>
+                            <p class="withu-no-data-desc">去后台恋爱清单添加一个吧～</p>
+                        </div></div>
+                    </div>
+<?php else: ?>
+<?php foreach ($homeListEvents as $__he_i => $__he): ?>
+<?php
+    $__he_done = !empty($__he['done']);
+    $__he_href = 'lovelist.php#event-' . (int) $__he['id'];
+?>
+                    <div data-aos="fade-up" data-aos-delay="<?php echo (int) min($__he_i * 50, 300); ?>">
+                        <a href="<?php echo $__he_href; ?>"
+                            class="withu-event-card <?php echo $__he_done ? 'withu-event-card--has-img withu-event-card--link' : 'withu-event-card--locked withu-event-card--link'; ?>">
+                            <?php if ($__he_done && $__he['image'] !== ''): ?>
+                                <img class="withu-event-bg-img lazy" data-src="<?php echo htmlspecialchars($__he['image'], ENT_QUOTES, 'UTF-8'); ?>"
+                                    alt="<?php echo htmlspecialchars($__he['title'], ENT_QUOTES, 'UTF-8'); ?>">
                                 <div class="withu-event-overlay"></div>
-                                <div class="withu-event-content">
+                            <?php endif; ?>
+                            <div class="withu-event-content">
+                                <?php if ($__he_done): ?>
                                     <div>
                                         <div class="withu-event-icon">
                                             <i class="ph-fill ph-heart"></i>
                                         </div>
                                     </div>
-                                    <div class="withu-event-content-mt">
-                                        <h3
-                                            class="withu-event-title withu-text-white withu-text-xl withu-font-bold withu-mb-1">
-                                            一起去吃淘蛙                                        </h3>
-                                        <div
-                                            class="withu-event-note withu-text-white withu-opacity-80 withu-event-note-sm">
-                                            好像一直都在吃的路上 个个不重样                                        </div>
-                                    </div>
-                                    <div class="withu-event-footer-glass">
-                                        <span class="withu-chip withu-chip--glass"><i class="ph-fill ph-map-pin"></i>
-                                            淘蛙(长安万达店)</span>
-                                        <span class="withu-chip withu-chip--glass"><i class="ph-fill ph-calendar-blank"></i>
-                                            2026-04-11</span>
-                                    </div>
-                                </div>
-                            </a>
-                            </div>
-                        
-                    
-                                                    <!-- 有图片样式 -->
-                            <div data-aos="fade-up" data-aos-delay="50">                            <a href="lovelist.php#event-35"
-                                class="withu-event-card withu-event-card--has-img withu-event-card--link">
-                                <img class="withu-event-bg-img lazy" data-src="Lovefolder/20260409211730_69d7a6eaecf46322029252.webp"
-                                    alt="测试修改问题 2.0.7">
-                                <div class="withu-event-overlay"></div>
-                                <div class="withu-event-content">
-                                    <div>
-                                        <div class="withu-event-icon">
-                                            <i class="ph-fill ph-heart"></i>
-                                        </div>
-                                    </div>
-                                    <div class="withu-event-content-mt">
-                                        <h3
-                                            class="withu-event-title withu-text-white withu-text-xl withu-font-bold withu-mb-1">
-                                            测试修改问题 2.0.7                                        </h3>
-                                        <div
-                                            class="withu-event-note withu-text-white withu-opacity-80 withu-event-note-sm">
-                                            又一个美好的回忆                                        </div>
-                                    </div>
-                                    <div class="withu-event-footer-glass">
-                                        <span class="withu-chip withu-chip--glass"><i class="ph-fill ph-map-pin"></i>
-                                            高州市</span>
-                                        <span class="withu-chip withu-chip--glass"><i class="ph-fill ph-calendar-blank"></i>
-                                            2026-02-17</span>
-                                    </div>
-                                </div>
-                            </a>
-                            </div>
-                        
-                    
-                                                    <!-- 未完成/锁定样式 -->
-                            <div data-aos="fade-up" data-aos-delay="100">                            <a href="lovelist.php#event-34"
-                                class="withu-event-card withu-event-card--locked withu-event-card--link">
-                                <div class="withu-event-content">
+                                <?php else: ?>
                                     <div class="withu-flex-between-start">
                                         <div class="withu-event-icon">
                                             <i class="ph-duotone ph-lock-key"></i>
                                         </div>
                                         <i class="ph-fill ph-lock-key withu-event-seal"></i>
                                     </div>
-                                    <div class="withu-event-content-mt">
-                                        <h3 class="withu-event-title withu-text-xl withu-font-bold withu-mb-1">
-                                            测试最新版本新增问题                                        </h3>
-                                        <div class="withu-event-note withu-event-note-color">
-                                            测试一下                                        </div>
-                                    </div>
-                                    <div class="withu-event-footer-light">
-                                        <span class="withu-chip withu-chip--light"><i class="ph-bold ph-map-pin"></i>
-                                            未设置</span>
-                                        <span class="withu-chip withu-chip--light"><i class="ph-bold ph-calendar-blank"></i>
-                                            待解锁</span>
-                                    </div>
+                                <?php endif; ?>
+                                <div class="withu-event-content-mt">
+                                    <h3
+                                        class="withu-event-title withu-text-white withu-text-xl withu-font-bold withu-mb-1">
+                                        <?php echo htmlspecialchars($__he['title'], ENT_QUOTES, 'UTF-8'); ?>                                    </h3>
+<?php if ($__he['note'] !== ''): ?>
+                                    <div
+                                        class="withu-event-note withu-text-white withu-opacity-80 withu-event-note-sm">
+                                        <?php echo htmlspecialchars($__he['note'], ENT_QUOTES, 'UTF-8'); ?>                                    </div>
+<?php endif; ?>
                                 </div>
-                            </a>
-                            </div>                        
-                    
-                                                    <!-- 有图片样式 -->
-                            <div data-aos="fade-up" data-aos-delay="150">                            <a href="lovelist.php#event-33"
-                                class="withu-event-card withu-event-card--has-img withu-event-card--link">
-                                <img class="withu-event-bg-img lazy" data-src="Lovefolder/20260411053340_69d96cb4ec19c441742336.webp"
-                                    alt="一起去吃海底捞">
-                                <div class="withu-event-overlay"></div>
-                                <div class="withu-event-content">
-                                    <div>
-                                        <div class="withu-event-icon">
-                                            <i class="ph-fill ph-heart"></i>
-                                        </div>
-                                    </div>
-                                    <div class="withu-event-content-mt">
-                                        <h3
-                                            class="withu-event-title withu-text-white withu-text-xl withu-font-bold withu-mb-1">
-                                            一起去吃海底捞                                        </h3>
-                                        <div
-                                            class="withu-event-note withu-text-white withu-opacity-80 withu-event-note-sm">
-                                            太好了 你妹也在这里了                                        </div>
-                                    </div>
-                                    <div class="withu-event-footer-glass">
-                                        <span class="withu-chip withu-chip--glass"><i class="ph-fill ph-map-pin"></i>
-                                            海底捞火锅(长安万科店)</span>
-                                        <span class="withu-chip withu-chip--glass"><i class="ph-fill ph-calendar-blank"></i>
-                                            2026-04-11</span>
-                                    </div>
+                                <div class="withu-event-footer-glass">
+                                    <span class="withu-chip withu-chip--glass"><i class="ph-fill ph-map-pin"></i>
+                                        <?php echo htmlspecialchars($__he['place'] !== '' ? $__he['place'] : '未设置', ENT_QUOTES, 'UTF-8'); ?></span>
+                                    <span class="withu-chip withu-chip--glass"><i class="ph-fill ph-calendar-blank"></i>
+                                        <?php echo htmlspecialchars($__he['date'] !== '' ? $__he['date'] : '待完成', ENT_QUOTES, 'UTF-8'); ?></span>
                                 </div>
-                            </a>
                             </div>
-                        
-                                    </div>
+                        </a>
+                    </div>
+<?php endforeach; ?>
+<?php endif; ?>
             </section>
             
             <!-- Love Day List -->
@@ -1267,450 +1094,72 @@ try {
                     </div>
 
                     <div class="withu-grid withu-loveday-grid">
-                                                    <div data-aos="fade-up" data-aos-delay="0">                            <div class="withu-widget withu-widget--loveday-vibrant withu-widget--loveday-future">
-
-                                                                <div class="withu-loveday-sup-label">
-                                    还有                                </div>
-                                <!-- Decorative BG Icon -->
-                                                                <svg class="withu-loveday-bg-icon" viewBox="0 0 1024 1024" version="1.1"
-                                    xmlns="http://www.w3.org/2000/svg">
-                                    <path d="M792 120H232a40 40 0 0 0-40 40v56c0 88.4 71.6 160 160 160 5.2 0 10.4-.2 15.6-.6 4.4 11.8 4.4 24.8 0 36.6-5.2-.4-10.4-.6-15.6-.6-88.4 0-160 71.6-160 160v56a40 40 0 0 0 40 40h560a40 40 0 0 0 40-40v-56c0-88.4-71.6-160-160-160-5.2 0-10.4.2-15.6.6-4.4-11.8-4.4-24.8 0-36.6 5.2.4 10.4.6 15.6.6 88.4 0 160-71.6 160-160v-56a40 40 0 0 0-40-40z" fill="currentColor"></path>
-                                </svg>
-
-                                <div class="withu-flex-between-center withu-loveday-content">
-                                    <div class="withu-flex-center-gap"
-                                        tabindex="0">
-                                        <div class=" withu-icon-box-glass-white">
-                                                                                            <svg viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg">
-                                                    <path
-                                                        d="M810 249.5c-38.6-38.6-83.5-68.8-133.5-90-51.8-21.9-106.8-33-163.5-33s-111.7 11.1-163.5 33c-50 21.2-94.9 51.4-133.5 90-38.6 38.6-68.8 83.5-90 133.5-21.9 51.8-33 106.8-33 163.5s11.1 111.7 33 163.5c21.2 50 51.4 94.9 90 133.5s83.5 68.8 133.5 90c51.8 21.9 106.8 33 163.5 33s111.7-11.1 163.5-33c50-21.2 94.9-51.4 133.5-90S878.8 760 900 710c21.9-51.8 33-106.8 33-163.5S921.9 434.8 900 383c-21.2-50-51.5-94.9-90-133.5z m-297 657c-198.5 0-360-161.5-360-360s161.5-360 360-360 360 161.5 360 360-161.5 360-360 360zM357 96.5c-42.3-49.6-141-53.3-208.1 4s-77.3 153.9-35 203.5L357 96.5zM877.2 100.5C810 43.2 711.3 47 669 96.5L912.2 304c42.3-49.6 32.1-146.2-35-203.5z">
-                                                    </path>
-                                                    <path
-                                                        d="M667.1 558.6H543V351c0-17.9-14.5-32.4-32.4-32.4-15.2 0-27.6 12.3-27.6 27.6v272.4h182.2c17.1 0 30.9-13.8 30.9-30.9 0-16.1-13-29.1-29-29.1z">
-                                                    </path>
-                                                </svg>
-                                                                                    </div>
-                                        <div class="withu-loveday-copy">
-                                            <div class="withu-loveday-title" data-withu-tip="咕噜的一岁生日">
-                                                咕噜的一岁生日                                            </div>
-                                            <div class="withu-loveday-date">
-                                                <span class="withu-loveday-date-line">
-                                                    目标日：                                                    2027-07-11                                                </span>
-                                            </div>
+<?php if (empty($homeLoveDays)): ?>
+                        <div class="withu-no-data" data-aos="fade-up" data-aos-delay="0">
+                            <div class="withu-no-data-wrap"><div class="withu-no-data-content">
+                                <h3 class="withu-no-data-title">还没有纪念日</h3>
+                                <p class="withu-no-data-desc">去后台添加一个吧～</p>
+                            </div></div>
+                        </div>
+<?php else: ?>
+<?php foreach ($homeLoveDays as $__ld_i => $__ld): ?>
+<?php
+    $__ld_date = trim((string) ($__ld['date'] ?? ''));
+    if ($__ld_date === '' || strtotime($__ld_date) === false) { continue; }
+    $__ld_ts = strtotime($__ld_date);
+    $__ld_today = strtotime(date('Y-m-d'));
+    // 每年重复按月日推算到今年/明年；一次性日期按原样计算
+    $__ld_is_recurring = stripos((string) ($__ld['desc'] ?? ''), '每年') !== false;
+    if ($__ld_is_recurring) {
+        $__ld_next = mktime(0, 0, 0, (int) date('n', $__ld_ts), (int) date('j', $__ld_ts), (int) date('Y'));
+        if ($__ld_next < $__ld_today) {
+            $__ld_next = mktime(0, 0, 0, (int) date('n', $__ld_ts), (int) date('j', $__ld_ts), (int) date('Y') + 1);
+        }
+        $__ld_count = (int) floor(($__ld_next - $__ld_today) / 86400);
+        $__ld_past = false;
+    } else {
+        $__ld_count = (int) floor(($__ld_today - $homeLoveTs && false ? 0 : $__ld_ts) / 86400);
+        $__ld_past = $__ld_ts < $__ld_today;
+        $__ld_count = (int) floor(max(0, $__ld_today - $__ld_ts) / 86400);
+        if ($__ld_count === 0 && date('Y-m-d', $__ld_ts) === date('Y-m-d')) {
+            $__ld_count = 0;
+        }
+        $__ld_count = abs($__ld_count);
+    }
+    $__ld_title = trim((string) ($__ld['title'] ?? ''));
+    $__ld_desc = trim((string) ($__ld['desc'] ?? ''));
+?>
+                    <div data-aos="fade-up" data-aos-delay="<?php echo (int) min($__ld_i * 50, 300); ?>">
+                        <div class="withu-widget withu-widget--loveday-vibrant <?php echo $__ld_past ? 'withu-widget--loveday-past' : 'withu-widget--loveday-future'; ?>">
+                            <div class="withu-loveday-sup-label"><?php echo $__ld_past ? '已经' : '还有'; ?></div>
+                            <!-- Decorative BG Icon -->
+                            <svg class="withu-loveday-bg-icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg">
+                                <?php if ($__ld_past): ?><path d="M923 283.6a260.04 260.04 0 0 0-56.9-82.6c-64.5-70-170.8-84-245.5-32.9L512 216.7l-108.6-48.6c-74.7-51.1-181-37.1-245.5 32.9-64.5 70-79.9 174.6-44.1 262.8 33.3 82.3 98.7 151.7 185.3 227.1L512 884.2l212.9-193.3c86.6-75.4 152-144.8 185.3-227.1 35.8-88.2 20.4-192.8-44.1-262.8z" fill="currentColor"></path>
+                                <?php else: ?><path d="M792 120H232a40 40 0 0 0-40 40v56c0 88.4 71.6 160 160 160 5.2 0 10.4-.2 15.6-.6 4.4 11.8 4.4 24.8 0 36.6-5.2-.4-10.4-.6-15.6-.6-88.4 0-160 71.6-160 160v56a40 40 0 0 0 40 40h560a40 40 0 0 0 40-40v-56c0-88.4-71.6-160-160-160-5.2 0-10.4.2-15.6.6-4.4 11.8-4.4 24.8 0 36.6 5.2.4 10.4.6 15.6.6 88.4 0 160-71.6 160-160v-56a40 40 0 0 0-40-40z" fill="currentColor"></path><?php endif; ?>
+                            </svg>
+                            <div class="withu-flex-between-center withu-loveday-content">
+                                <div class="withu-flex-center-gap" tabindex="0">
+                                    <div class="withu-icon-box-glass-white">
+                                        <i class="ph-fill ph-heart"></i>
+                                    </div>
+                                    <div class="withu-loveday-copy">
+                                        <div class="withu-loveday-title" data-withu-tip="<?php echo htmlspecialchars($__ld_title, ENT_QUOTES, 'UTF-8'); ?>"><?php echo htmlspecialchars($__ld_title, ENT_QUOTES, 'UTF-8'); ?></div>
+                                        <div class="withu-loveday-date">
+                                            <span class="withu-loveday-date-line"><?php echo $__ld_past ? '起始日：' : '目标日：'; ?><?php echo htmlspecialchars($__ld_date, ENT_QUOTES, 'UTF-8'); ?></span>
                                         </div>
                                     </div>
-                                    <div class="withu-text-right">
-                                        <div class="withu-loveday-count">
-                                                                                            339<span class="withu-loveday-unit">天</span>
-                                                                                    </div>
-                                                                                    <div class="withu-loveday-lunar-inline">
-                                                农历 六月初八                                            </div>
-                                                                            </div>
+                                </div>
+                                <div class="withu-text-right">
+                                    <div class="withu-loveday-count"><?php echo (int) max($__ld_count, 0); ?><span class="withu-loveday-unit">天</span></div>
+<?php if ($__ld_desc !== ''): ?>
+                                    <div class="withu-loveday-lunar-inline"><?php echo htmlspecialchars($__ld_desc, ENT_QUOTES, 'UTF-8'); ?></div>
+<?php endif; ?>
                                 </div>
                             </div>
-                            </div>                                                    <div data-aos="fade-up" data-aos-delay="50">                            <div class="withu-widget withu-widget--loveday-vibrant withu-widget--loveday-past">
-
-                                                                <div class="withu-loveday-sup-label">
-                                    已经                                </div>
-                                <!-- Decorative BG Icon -->
-                                                                <svg class="withu-loveday-bg-icon" viewBox="0 0 1024 1024" version="1.1"
-                                    xmlns="http://www.w3.org/2000/svg">
-                                    <path d="M923 283.6a260.04 260.04 0 0 0-56.9-82.6c-64.5-70-170.8-84-245.5-32.9L512 216.7l-108.6-48.6c-74.7-51.1-181-37.1-245.5 32.9-64.5 70-79.9 174.6-44.1 262.8 33.3 82.3 98.7 151.7 185.3 227.1L512 884.2l212.9-193.3c86.6-75.4 152-144.8 185.3-227.1 35.8-88.2 20.4-192.8-44.1-262.8z" fill="currentColor"></path>
-                                </svg>
-
-                                <div class="withu-flex-between-center withu-loveday-content">
-                                    <div class="withu-flex-center-gap"
-                                        tabindex="0">
-                                        <div class=" withu-icon-box-glass-white">
-                                                                                            <svg viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg">
-                                                    <path
-                                                        d="M470.4 204.8l44.8 44.8 44.8-44.8c99.2-99.2 262.4-99.2 361.6 0 48 48 73.6 112 73.6 179.2 0 19.2-12.8 32-32 32s-32-12.8-32-32c0-51.2-19.2-99.2-57.6-134.4-73.6-73.6-195.2-73.6-272 0l-67.2 67.2c-12.8 12.8-32 12.8-44.8 0l-67.2-67.2c-73.6-73.6-195.2-73.6-272 0-73.6 73.6-73.6 195.2 0 272L512 883.2c12.8 12.8 12.8 32 0 44.8s-32 12.8-44.8 0L105.6 566.4c-99.2-99.2-99.2-262.4 0-361.6 102.4-102.4 262.4-102.4 364.8 0z m176 710.4L425.6 694.4c-57.6-57.6-57.6-147.2 0-204.8 57.6-57.6 147.2-57.6 204.8 0l57.6 57.6 57.6-57.6c57.6-57.6 147.2-57.6 204.8 0 57.6 57.6 57.6 147.2 0 204.8L729.6 915.2c-9.6 9.6-25.6 16-38.4 16-19.2 0-32-6.4-44.8-16z m256-265.6c32-32 32-83.2 0-112-32-32-83.2-32-112 0l-80 80c-12.8 12.8-32 12.8-44.8 0l-80-80c-32-32-83.2-32-112 0-32 32-32 83.2 0 112L688 864l214.4-214.4z"
-                                                        fill="#ffffff"></path>
-                                                </svg>
-                                                                                    </div>
-                                        <div class="withu-loveday-copy">
-                                            <div class="withu-loveday-title" data-withu-tip="拉拉扯扯一周年啦">
-                                                拉拉扯扯一周年啦                                            </div>
-                                            <div class="withu-loveday-date">
-                                                <span class="withu-loveday-date-line">
-                                                    起始日：                                                    2024-07-19                                                </span>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="withu-text-right">
-                                        <div class="withu-loveday-count">
-                                                                                            748<span class="withu-loveday-unit">天</span>
-                                                                                    </div>
-                                                                            </div>
-                                </div>
-                            </div>
-                            </div>                                                    <div data-aos="fade-up" data-aos-delay="100">                            <div class="withu-widget withu-widget--loveday-vibrant withu-widget--loveday-past">
-
-                                                                <div class="withu-loveday-sup-label">
-                                    已经                                </div>
-                                <!-- Decorative BG Icon -->
-                                                                <svg class="withu-loveday-bg-icon" viewBox="0 0 1024 1024" version="1.1"
-                                    xmlns="http://www.w3.org/2000/svg">
-                                    <path d="M923 283.6a260.04 260.04 0 0 0-56.9-82.6c-64.5-70-170.8-84-245.5-32.9L512 216.7l-108.6-48.6c-74.7-51.1-181-37.1-245.5 32.9-64.5 70-79.9 174.6-44.1 262.8 33.3 82.3 98.7 151.7 185.3 227.1L512 884.2l212.9-193.3c86.6-75.4 152-144.8 185.3-227.1 35.8-88.2 20.4-192.8-44.1-262.8z" fill="currentColor"></path>
-                                </svg>
-
-                                <div class="withu-flex-between-center withu-loveday-content">
-                                    <div class="withu-flex-center-gap"
-                                        tabindex="0">
-                                        <div class=" withu-icon-box-glass-white">
-                                                                                            <svg viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg">
-                                                    <path
-                                                        d="M470.4 204.8l44.8 44.8 44.8-44.8c99.2-99.2 262.4-99.2 361.6 0 48 48 73.6 112 73.6 179.2 0 19.2-12.8 32-32 32s-32-12.8-32-32c0-51.2-19.2-99.2-57.6-134.4-73.6-73.6-195.2-73.6-272 0l-67.2 67.2c-12.8 12.8-32 12.8-44.8 0l-67.2-67.2c-73.6-73.6-195.2-73.6-272 0-73.6 73.6-73.6 195.2 0 272L512 883.2c12.8 12.8 12.8 32 0 44.8s-32 12.8-44.8 0L105.6 566.4c-99.2-99.2-99.2-262.4 0-361.6 102.4-102.4 262.4-102.4 364.8 0z m176 710.4L425.6 694.4c-57.6-57.6-57.6-147.2 0-204.8 57.6-57.6 147.2-57.6 204.8 0l57.6 57.6 57.6-57.6c57.6-57.6 147.2-57.6 204.8 0 57.6 57.6 57.6 147.2 0 204.8L729.6 915.2c-9.6 9.6-25.6 16-38.4 16-19.2 0-32-6.4-44.8-16z m256-265.6c32-32 32-83.2 0-112-32-32-83.2-32-112 0l-80 80c-12.8 12.8-32 12.8-44.8 0l-80-80c-32-32-83.2-32-112 0-32 32-32 83.2 0 112L688 864l214.4-214.4z"
-                                                        fill="#ffffff"></path>
-                                                </svg>
-                                                                                    </div>
-                                        <div class="withu-loveday-copy">
-                                            <div class="withu-loveday-title" data-withu-tip="搬新家就是今天">
-                                                搬新家就是今天                                            </div>
-                                            <div class="withu-loveday-date">
-                                                <span class="withu-loveday-date-line">
-                                                    起始日：                                                    2024-07-20                                                </span>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="withu-text-right">
-                                        <div class="withu-loveday-count">
-                                                                                            747<span class="withu-loveday-unit">天</span>
-                                                                                    </div>
-                                                                            </div>
-                                </div>
-                            </div>
-                            </div>                                                    <div data-aos="fade-up" data-aos-delay="150">                            <div class="withu-widget withu-widget--loveday-vibrant withu-widget--loveday-past">
-
-                                                                <div class="withu-loveday-sup-label">
-                                    已经                                </div>
-                                <!-- Decorative BG Icon -->
-                                                                <svg class="withu-loveday-bg-icon" viewBox="0 0 1024 1024" version="1.1"
-                                    xmlns="http://www.w3.org/2000/svg">
-                                    <path d="M923 283.6a260.04 260.04 0 0 0-56.9-82.6c-64.5-70-170.8-84-245.5-32.9L512 216.7l-108.6-48.6c-74.7-51.1-181-37.1-245.5 32.9-64.5 70-79.9 174.6-44.1 262.8 33.3 82.3 98.7 151.7 185.3 227.1L512 884.2l212.9-193.3c86.6-75.4 152-144.8 185.3-227.1 35.8-88.2 20.4-192.8-44.1-262.8z" fill="currentColor"></path>
-                                </svg>
-
-                                <div class="withu-flex-between-center withu-loveday-content">
-                                    <div class="withu-flex-center-gap"
-                                        tabindex="0">
-                                        <div class=" withu-icon-box-glass-white">
-                                                                                            <svg viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg">
-                                                    <path
-                                                        d="M470.4 204.8l44.8 44.8 44.8-44.8c99.2-99.2 262.4-99.2 361.6 0 48 48 73.6 112 73.6 179.2 0 19.2-12.8 32-32 32s-32-12.8-32-32c0-51.2-19.2-99.2-57.6-134.4-73.6-73.6-195.2-73.6-272 0l-67.2 67.2c-12.8 12.8-32 12.8-44.8 0l-67.2-67.2c-73.6-73.6-195.2-73.6-272 0-73.6 73.6-73.6 195.2 0 272L512 883.2c12.8 12.8 12.8 32 0 44.8s-32 12.8-44.8 0L105.6 566.4c-99.2-99.2-99.2-262.4 0-361.6 102.4-102.4 262.4-102.4 364.8 0z m176 710.4L425.6 694.4c-57.6-57.6-57.6-147.2 0-204.8 57.6-57.6 147.2-57.6 204.8 0l57.6 57.6 57.6-57.6c57.6-57.6 147.2-57.6 204.8 0 57.6 57.6 57.6 147.2 0 204.8L729.6 915.2c-9.6 9.6-25.6 16-38.4 16-19.2 0-32-6.4-44.8-16z m256-265.6c32-32 32-83.2 0-112-32-32-83.2-32-112 0l-80 80c-12.8 12.8-32 12.8-44.8 0l-80-80c-32-32-83.2-32-112 0-32 32-32 83.2 0 112L688 864l214.4-214.4z"
-                                                        fill="#ffffff"></path>
-                                                </svg>
-                                                                                    </div>
-                                        <div class="withu-loveday-copy">
-                                            <div class="withu-loveday-title" data-withu-tip="不异地已经">
-                                                不异地已经                                            </div>
-                                            <div class="withu-loveday-date">
-                                                <span class="withu-loveday-date-line">
-                                                    起始日：                                                    2024-07-19                                                </span>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="withu-text-right">
-                                        <div class="withu-loveday-count">
-                                                                                            748<span class="withu-loveday-unit">天</span>
-                                                                                    </div>
-                                                                            </div>
-                                </div>
-                            </div>
-                            </div>                                                    <div data-aos="fade-up" data-aos-delay="200">                            <div class="withu-widget withu-widget--loveday-vibrant withu-widget--loveday-past">
-
-                                                                <div class="withu-loveday-sup-label">
-                                    已经                                </div>
-                                <!-- Decorative BG Icon -->
-                                                                <svg class="withu-loveday-bg-icon" viewBox="0 0 1024 1024" version="1.1"
-                                    xmlns="http://www.w3.org/2000/svg">
-                                    <path d="M923 283.6a260.04 260.04 0 0 0-56.9-82.6c-64.5-70-170.8-84-245.5-32.9L512 216.7l-108.6-48.6c-74.7-51.1-181-37.1-245.5 32.9-64.5 70-79.9 174.6-44.1 262.8 33.3 82.3 98.7 151.7 185.3 227.1L512 884.2l212.9-193.3c86.6-75.4 152-144.8 185.3-227.1 35.8-88.2 20.4-192.8-44.1-262.8z" fill="currentColor"></path>
-                                </svg>
-
-                                <div class="withu-flex-between-center withu-loveday-content">
-                                    <div class="withu-flex-center-gap"
-                                        tabindex="0">
-                                        <div class=" withu-icon-box-glass-white">
-                                                                                            <svg viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg">
-                                                    <path
-                                                        d="M470.4 204.8l44.8 44.8 44.8-44.8c99.2-99.2 262.4-99.2 361.6 0 48 48 73.6 112 73.6 179.2 0 19.2-12.8 32-32 32s-32-12.8-32-32c0-51.2-19.2-99.2-57.6-134.4-73.6-73.6-195.2-73.6-272 0l-67.2 67.2c-12.8 12.8-32 12.8-44.8 0l-67.2-67.2c-73.6-73.6-195.2-73.6-272 0-73.6 73.6-73.6 195.2 0 272L512 883.2c12.8 12.8 12.8 32 0 44.8s-32 12.8-44.8 0L105.6 566.4c-99.2-99.2-99.2-262.4 0-361.6 102.4-102.4 262.4-102.4 364.8 0z m176 710.4L425.6 694.4c-57.6-57.6-57.6-147.2 0-204.8 57.6-57.6 147.2-57.6 204.8 0l57.6 57.6 57.6-57.6c57.6-57.6 147.2-57.6 204.8 0 57.6 57.6 57.6 147.2 0 204.8L729.6 915.2c-9.6 9.6-25.6 16-38.4 16-19.2 0-32-6.4-44.8-16z m256-265.6c32-32 32-83.2 0-112-32-32-83.2-32-112 0l-80 80c-12.8 12.8-32 12.8-44.8 0l-80-80c-32-32-83.2-32-112 0-32 32-32 83.2 0 112L688 864l214.4-214.4z"
-                                                        fill="#ffffff"></path>
-                                                </svg>
-                                                                                    </div>
-                                        <div class="withu-loveday-copy">
-                                            <div class="withu-loveday-title" data-withu-tip="测试纪念日10年前">
-                                                测试纪念日10年前                                            </div>
-                                            <div class="withu-loveday-date">
-                                                <span class="withu-loveday-date-line">
-                                                    起始日：                                                    2014-05-15                                                </span>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="withu-text-right">
-                                        <div class="withu-loveday-count">
-                                                                                            4466<span class="withu-loveday-unit">天</span>
-                                                                                    </div>
-                                                                            </div>
-                                </div>
-                            </div>
-                            </div>                                                    <div data-aos="fade-up" data-aos-delay="250">                            <div class="withu-widget withu-widget--loveday-vibrant withu-widget--loveday-future">
-
-                                                                <div class="withu-loveday-sup-label">
-                                    还有                                </div>
-                                <!-- Decorative BG Icon -->
-                                                                <svg class="withu-loveday-bg-icon" viewBox="0 0 1024 1024" version="1.1"
-                                    xmlns="http://www.w3.org/2000/svg">
-                                    <path d="M792 120H232a40 40 0 0 0-40 40v56c0 88.4 71.6 160 160 160 5.2 0 10.4-.2 15.6-.6 4.4 11.8 4.4 24.8 0 36.6-5.2-.4-10.4-.6-15.6-.6-88.4 0-160 71.6-160 160v56a40 40 0 0 0 40 40h560a40 40 0 0 0 40-40v-56c0-88.4-71.6-160-160-160-5.2 0-10.4.2-15.6.6-4.4-11.8-4.4-24.8 0-36.6 5.2.4 10.4.6 15.6.6 88.4 0 160-71.6 160-160v-56a40 40 0 0 0-40-40z" fill="currentColor"></path>
-                                </svg>
-
-                                <div class="withu-flex-between-center withu-loveday-content">
-                                    <div class="withu-flex-center-gap"
-                                        tabindex="0">
-                                        <div class=" withu-icon-box-glass-white">
-                                                                                            <svg viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg">
-                                                    <path
-                                                        d="M810 249.5c-38.6-38.6-83.5-68.8-133.5-90-51.8-21.9-106.8-33-163.5-33s-111.7 11.1-163.5 33c-50 21.2-94.9 51.4-133.5 90-38.6 38.6-68.8 83.5-90 133.5-21.9 51.8-33 106.8-33 163.5s11.1 111.7 33 163.5c21.2 50 51.4 94.9 90 133.5s83.5 68.8 133.5 90c51.8 21.9 106.8 33 163.5 33s111.7-11.1 163.5-33c50-21.2 94.9-51.4 133.5-90S878.8 760 900 710c21.9-51.8 33-106.8 33-163.5S921.9 434.8 900 383c-21.2-50-51.5-94.9-90-133.5z m-297 657c-198.5 0-360-161.5-360-360s161.5-360 360-360 360 161.5 360 360-161.5 360-360 360zM357 96.5c-42.3-49.6-141-53.3-208.1 4s-77.3 153.9-35 203.5L357 96.5zM877.2 100.5C810 43.2 711.3 47 669 96.5L912.2 304c42.3-49.6 32.1-146.2-35-203.5z">
-                                                    </path>
-                                                    <path
-                                                        d="M667.1 558.6H543V351c0-17.9-14.5-32.4-32.4-32.4-15.2 0-27.6 12.3-27.6 27.6v272.4h182.2c17.1 0 30.9-13.8 30.9-30.9 0-16.1-13-29.1-29-29.1z">
-                                                    </path>
-                                                </svg>
-                                                                                    </div>
-                                        <div class="withu-loveday-copy">
-                                            <div class="withu-loveday-title" data-withu-tip="测试自动判断倒计时自动增加一年">
-                                                测试自动判断倒计时自动增加一年                                            </div>
-                                            <div class="withu-loveday-date">
-                                                <span class="withu-loveday-date-line">
-                                                    目标日：                                                    2027-03-08                                                </span>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="withu-text-right">
-                                        <div class="withu-loveday-count">
-                                                                                            214<span class="withu-loveday-unit">天</span>
-                                                                                    </div>
-                                                                            </div>
-                                </div>
-                            </div>
-                            </div>                                                    <div data-aos="fade-up" data-aos-delay="300">                            <div class="withu-widget withu-widget--loveday-vibrant withu-widget--loveday-past">
-
-                                                                <div class="withu-loveday-sup-label">
-                                    已经                                </div>
-                                <!-- Decorative BG Icon -->
-                                                                <svg class="withu-loveday-bg-icon" viewBox="0 0 1024 1024" version="1.1"
-                                    xmlns="http://www.w3.org/2000/svg">
-                                    <path d="M923 283.6a260.04 260.04 0 0 0-56.9-82.6c-64.5-70-170.8-84-245.5-32.9L512 216.7l-108.6-48.6c-74.7-51.1-181-37.1-245.5 32.9-64.5 70-79.9 174.6-44.1 262.8 33.3 82.3 98.7 151.7 185.3 227.1L512 884.2l212.9-193.3c86.6-75.4 152-144.8 185.3-227.1 35.8-88.2 20.4-192.8-44.1-262.8z" fill="currentColor"></path>
-                                </svg>
-
-                                <div class="withu-flex-between-center withu-loveday-content">
-                                    <div class="withu-flex-center-gap"
-                                        tabindex="0">
-                                        <div class=" withu-icon-box-glass-white">
-                                                                                            <svg viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg">
-                                                    <path
-                                                        d="M470.4 204.8l44.8 44.8 44.8-44.8c99.2-99.2 262.4-99.2 361.6 0 48 48 73.6 112 73.6 179.2 0 19.2-12.8 32-32 32s-32-12.8-32-32c0-51.2-19.2-99.2-57.6-134.4-73.6-73.6-195.2-73.6-272 0l-67.2 67.2c-12.8 12.8-32 12.8-44.8 0l-67.2-67.2c-73.6-73.6-195.2-73.6-272 0-73.6 73.6-73.6 195.2 0 272L512 883.2c12.8 12.8 12.8 32 0 44.8s-32 12.8-44.8 0L105.6 566.4c-99.2-99.2-99.2-262.4 0-361.6 102.4-102.4 262.4-102.4 364.8 0z m176 710.4L425.6 694.4c-57.6-57.6-57.6-147.2 0-204.8 57.6-57.6 147.2-57.6 204.8 0l57.6 57.6 57.6-57.6c57.6-57.6 147.2-57.6 204.8 0 57.6 57.6 57.6 147.2 0 204.8L729.6 915.2c-9.6 9.6-25.6 16-38.4 16-19.2 0-32-6.4-44.8-16z m256-265.6c32-32 32-83.2 0-112-32-32-83.2-32-112 0l-80 80c-12.8 12.8-32 12.8-44.8 0l-80-80c-32-32-83.2-32-112 0-32 32-32 83.2 0 112L688 864l214.4-214.4z"
-                                                        fill="#ffffff"></path>
-                                                </svg>
-                                                                                    </div>
-                                        <div class="withu-loveday-copy">
-                                            <div class="withu-loveday-title" data-withu-tip="我们在一起咯">
-                                                我们在一起咯                                            </div>
-                                            <div class="withu-loveday-date">
-                                                <span class="withu-loveday-date-line">
-                                                    起始日：                                                    2023-07-19                                                </span>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="withu-text-right">
-                                        <div class="withu-loveday-count">
-                                                                                            1114<span class="withu-loveday-unit">天</span>
-                                                                                    </div>
-                                                                            </div>
-                                </div>
-                            </div>
-                            </div>                                                    <div data-aos="fade-up" data-aos-delay="300">                            <div class="withu-widget withu-widget--loveday-vibrant withu-widget--loveday-future">
-
-                                                                <div class="withu-loveday-sup-label">
-                                    还有                                </div>
-                                <!-- Decorative BG Icon -->
-                                                                <svg class="withu-loveday-bg-icon" viewBox="0 0 1024 1024" version="1.1"
-                                    xmlns="http://www.w3.org/2000/svg">
-                                    <path d="M792 120H232a40 40 0 0 0-40 40v56c0 88.4 71.6 160 160 160 5.2 0 10.4-.2 15.6-.6 4.4 11.8 4.4 24.8 0 36.6-5.2-.4-10.4-.6-15.6-.6-88.4 0-160 71.6-160 160v56a40 40 0 0 0 40 40h560a40 40 0 0 0 40-40v-56c0-88.4-71.6-160-160-160-5.2 0-10.4.2-15.6.6-4.4-11.8-4.4-24.8 0-36.6 5.2.4 10.4.6 15.6.6 88.4 0 160-71.6 160-160v-56a40 40 0 0 0-40-40z" fill="currentColor"></path>
-                                </svg>
-
-                                <div class="withu-flex-between-center withu-loveday-content">
-                                    <div class="withu-flex-center-gap"
-                                        tabindex="0">
-                                        <div class=" withu-icon-box-glass-white">
-                                                                                            <svg viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg">
-                                                    <path
-                                                        d="M810 249.5c-38.6-38.6-83.5-68.8-133.5-90-51.8-21.9-106.8-33-163.5-33s-111.7 11.1-163.5 33c-50 21.2-94.9 51.4-133.5 90-38.6 38.6-68.8 83.5-90 133.5-21.9 51.8-33 106.8-33 163.5s11.1 111.7 33 163.5c21.2 50 51.4 94.9 90 133.5s83.5 68.8 133.5 90c51.8 21.9 106.8 33 163.5 33s111.7-11.1 163.5-33c50-21.2 94.9-51.4 133.5-90S878.8 760 900 710c21.9-51.8 33-106.8 33-163.5S921.9 434.8 900 383c-21.2-50-51.5-94.9-90-133.5z m-297 657c-198.5 0-360-161.5-360-360s161.5-360 360-360 360 161.5 360 360-161.5 360-360 360zM357 96.5c-42.3-49.6-141-53.3-208.1 4s-77.3 153.9-35 203.5L357 96.5zM877.2 100.5C810 43.2 711.3 47 669 96.5L912.2 304c42.3-49.6 32.1-146.2-35-203.5z">
-                                                    </path>
-                                                    <path
-                                                        d="M667.1 558.6H543V351c0-17.9-14.5-32.4-32.4-32.4-15.2 0-27.6 12.3-27.6 27.6v272.4h182.2c17.1 0 30.9-13.8 30.9-30.9 0-16.1-13-29.1-29-29.1z">
-                                                    </path>
-                                                </svg>
-                                                                                    </div>
-                                        <div class="withu-loveday-copy">
-                                            <div class="withu-loveday-title" data-withu-tip="距离2028年春节">
-                                                距离2028年春节                                            </div>
-                                            <div class="withu-loveday-date">
-                                                <span class="withu-loveday-date-line">
-                                                    目标日：                                                    2028-01-26                                                </span>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="withu-text-right">
-                                        <div class="withu-loveday-count">
-                                                                                            538<span class="withu-loveday-unit">天</span>
-                                                                                    </div>
-                                                                            </div>
-                                </div>
-                            </div>
-                            </div>                                                    <div data-aos="fade-up" data-aos-delay="300">                            <div class="withu-widget withu-widget--loveday-vibrant withu-widget--loveday-past">
-
-                                                                <div class="withu-loveday-sup-label">
-                                    已经                                </div>
-                                <!-- Decorative BG Icon -->
-                                                                <svg class="withu-loveday-bg-icon" viewBox="0 0 1024 1024" version="1.1"
-                                    xmlns="http://www.w3.org/2000/svg">
-                                    <path d="M923 283.6a260.04 260.04 0 0 0-56.9-82.6c-64.5-70-170.8-84-245.5-32.9L512 216.7l-108.6-48.6c-74.7-51.1-181-37.1-245.5 32.9-64.5 70-79.9 174.6-44.1 262.8 33.3 82.3 98.7 151.7 185.3 227.1L512 884.2l212.9-193.3c86.6-75.4 152-144.8 185.3-227.1 35.8-88.2 20.4-192.8-44.1-262.8z" fill="currentColor"></path>
-                                </svg>
-
-                                <div class="withu-flex-between-center withu-loveday-content">
-                                    <div class="withu-flex-center-gap"
-                                        tabindex="0">
-                                        <div class=" withu-icon-box-glass-white">
-                                                                                            <svg viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg">
-                                                    <path
-                                                        d="M470.4 204.8l44.8 44.8 44.8-44.8c99.2-99.2 262.4-99.2 361.6 0 48 48 73.6 112 73.6 179.2 0 19.2-12.8 32-32 32s-32-12.8-32-32c0-51.2-19.2-99.2-57.6-134.4-73.6-73.6-195.2-73.6-272 0l-67.2 67.2c-12.8 12.8-32 12.8-44.8 0l-67.2-67.2c-73.6-73.6-195.2-73.6-272 0-73.6 73.6-73.6 195.2 0 272L512 883.2c12.8 12.8 12.8 32 0 44.8s-32 12.8-44.8 0L105.6 566.4c-99.2-99.2-99.2-262.4 0-361.6 102.4-102.4 262.4-102.4 364.8 0z m176 710.4L425.6 694.4c-57.6-57.6-57.6-147.2 0-204.8 57.6-57.6 147.2-57.6 204.8 0l57.6 57.6 57.6-57.6c57.6-57.6 147.2-57.6 204.8 0 57.6 57.6 57.6 147.2 0 204.8L729.6 915.2c-9.6 9.6-25.6 16-38.4 16-19.2 0-32-6.4-44.8-16z m256-265.6c32-32 32-83.2 0-112-32-32-83.2-32-112 0l-80 80c-12.8 12.8-32 12.8-44.8 0l-80-80c-32-32-83.2-32-112 0-32 32-32 83.2 0 112L688 864l214.4-214.4z"
-                                                        fill="#ffffff"></path>
-                                                </svg>
-                                                                                    </div>
-                                        <div class="withu-loveday-copy">
-                                            <div class="withu-loveday-title" data-withu-tip="Our first 100days">
-                                                Our first 100days                                            </div>
-                                            <div class="withu-loveday-date">
-                                                <span class="withu-loveday-date-line">
-                                                    起始日：                                                    2023-10-27                                                </span>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="withu-text-right">
-                                        <div class="withu-loveday-count">
-                                                                                            1014<span class="withu-loveday-unit">天</span>
-                                                                                    </div>
-                                                                            </div>
-                                </div>
-                            </div>
-                            </div>                                                    <div data-aos="fade-up" data-aos-delay="300">                            <div class="withu-widget withu-widget--loveday-vibrant withu-widget--loveday-past">
-
-                                                                <div class="withu-loveday-sup-label">
-                                    已经                                </div>
-                                <!-- Decorative BG Icon -->
-                                                                <svg class="withu-loveday-bg-icon" viewBox="0 0 1024 1024" version="1.1"
-                                    xmlns="http://www.w3.org/2000/svg">
-                                    <path d="M923 283.6a260.04 260.04 0 0 0-56.9-82.6c-64.5-70-170.8-84-245.5-32.9L512 216.7l-108.6-48.6c-74.7-51.1-181-37.1-245.5 32.9-64.5 70-79.9 174.6-44.1 262.8 33.3 82.3 98.7 151.7 185.3 227.1L512 884.2l212.9-193.3c86.6-75.4 152-144.8 185.3-227.1 35.8-88.2 20.4-192.8-44.1-262.8z" fill="currentColor"></path>
-                                </svg>
-
-                                <div class="withu-flex-between-center withu-loveday-content">
-                                    <div class="withu-flex-center-gap"
-                                        tabindex="0">
-                                        <div class=" withu-icon-box-glass-white">
-                                                                                            <svg viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg">
-                                                    <path
-                                                        d="M470.4 204.8l44.8 44.8 44.8-44.8c99.2-99.2 262.4-99.2 361.6 0 48 48 73.6 112 73.6 179.2 0 19.2-12.8 32-32 32s-32-12.8-32-32c0-51.2-19.2-99.2-57.6-134.4-73.6-73.6-195.2-73.6-272 0l-67.2 67.2c-12.8 12.8-32 12.8-44.8 0l-67.2-67.2c-73.6-73.6-195.2-73.6-272 0-73.6 73.6-73.6 195.2 0 272L512 883.2c12.8 12.8 12.8 32 0 44.8s-32 12.8-44.8 0L105.6 566.4c-99.2-99.2-99.2-262.4 0-361.6 102.4-102.4 262.4-102.4 364.8 0z m176 710.4L425.6 694.4c-57.6-57.6-57.6-147.2 0-204.8 57.6-57.6 147.2-57.6 204.8 0l57.6 57.6 57.6-57.6c57.6-57.6 147.2-57.6 204.8 0 57.6 57.6 57.6 147.2 0 204.8L729.6 915.2c-9.6 9.6-25.6 16-38.4 16-19.2 0-32-6.4-44.8-16z m256-265.6c32-32 32-83.2 0-112-32-32-83.2-32-112 0l-80 80c-12.8 12.8-32 12.8-44.8 0l-80-80c-32-32-83.2-32-112 0-32 32-32 83.2 0 112L688 864l214.4-214.4z"
-                                                        fill="#ffffff"></path>
-                                                </svg>
-                                                                                    </div>
-                                        <div class="withu-loveday-copy">
-                                            <div class="withu-loveday-title" data-withu-tip="第一次约会">
-                                                第一次约会                                            </div>
-                                            <div class="withu-loveday-date">
-                                                <span class="withu-loveday-date-line">
-                                                    起始日：                                                    2023-08-29                                                </span>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="withu-text-right">
-                                        <div class="withu-loveday-count">
-                                                                                            1073<span class="withu-loveday-unit">天</span>
-                                                                                    </div>
-                                                                            </div>
-                                </div>
-                            </div>
-                            </div>                                                    <div data-aos="fade-up" data-aos-delay="300">                            <div class="withu-widget withu-widget--loveday-vibrant withu-widget--loveday-past">
-
-                                                                <div class="withu-loveday-sup-label">
-                                    已经                                </div>
-                                <!-- Decorative BG Icon -->
-                                                                <svg class="withu-loveday-bg-icon" viewBox="0 0 1024 1024" version="1.1"
-                                    xmlns="http://www.w3.org/2000/svg">
-                                    <path d="M923 283.6a260.04 260.04 0 0 0-56.9-82.6c-64.5-70-170.8-84-245.5-32.9L512 216.7l-108.6-48.6c-74.7-51.1-181-37.1-245.5 32.9-64.5 70-79.9 174.6-44.1 262.8 33.3 82.3 98.7 151.7 185.3 227.1L512 884.2l212.9-193.3c86.6-75.4 152-144.8 185.3-227.1 35.8-88.2 20.4-192.8-44.1-262.8z" fill="currentColor"></path>
-                                </svg>
-
-                                <div class="withu-flex-between-center withu-loveday-content">
-                                    <div class="withu-flex-center-gap"
-                                        tabindex="0">
-                                        <div class=" withu-icon-box-glass-white">
-                                                                                            <svg viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg">
-                                                    <path
-                                                        d="M470.4 204.8l44.8 44.8 44.8-44.8c99.2-99.2 262.4-99.2 361.6 0 48 48 73.6 112 73.6 179.2 0 19.2-12.8 32-32 32s-32-12.8-32-32c0-51.2-19.2-99.2-57.6-134.4-73.6-73.6-195.2-73.6-272 0l-67.2 67.2c-12.8 12.8-32 12.8-44.8 0l-67.2-67.2c-73.6-73.6-195.2-73.6-272 0-73.6 73.6-73.6 195.2 0 272L512 883.2c12.8 12.8 12.8 32 0 44.8s-32 12.8-44.8 0L105.6 566.4c-99.2-99.2-99.2-262.4 0-361.6 102.4-102.4 262.4-102.4 364.8 0z m176 710.4L425.6 694.4c-57.6-57.6-57.6-147.2 0-204.8 57.6-57.6 147.2-57.6 204.8 0l57.6 57.6 57.6-57.6c57.6-57.6 147.2-57.6 204.8 0 57.6 57.6 57.6 147.2 0 204.8L729.6 915.2c-9.6 9.6-25.6 16-38.4 16-19.2 0-32-6.4-44.8-16z m256-265.6c32-32 32-83.2 0-112-32-32-83.2-32-112 0l-80 80c-12.8 12.8-32 12.8-44.8 0l-80-80c-32-32-83.2-32-112 0-32 32-32 83.2 0 112L688 864l214.4-214.4z"
-                                                        fill="#ffffff"></path>
-                                                </svg>
-                                                                                    </div>
-                                        <div class="withu-loveday-copy">
-                                            <div class="withu-loveday-title" data-withu-tip="第一次一起玩游戏">
-                                                第一次一起玩游戏                                            </div>
-                                            <div class="withu-loveday-date">
-                                                <span class="withu-loveday-date-line">
-                                                    起始日：                                                    2023-07-16                                                </span>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="withu-text-right">
-                                        <div class="withu-loveday-count">
-                                                                                            1117<span class="withu-loveday-unit">天</span>
-                                                                                    </div>
-                                                                            </div>
-                                </div>
-                            </div>
-                            </div>                                                    <div data-aos="fade-up" data-aos-delay="300">                            <div class="withu-widget withu-widget--loveday-vibrant withu-widget--loveday-past">
-
-                                                                <div class="withu-loveday-sup-label">
-                                    已经                                </div>
-                                <!-- Decorative BG Icon -->
-                                                                <svg class="withu-loveday-bg-icon" viewBox="0 0 1024 1024" version="1.1"
-                                    xmlns="http://www.w3.org/2000/svg">
-                                    <path d="M923 283.6a260.04 260.04 0 0 0-56.9-82.6c-64.5-70-170.8-84-245.5-32.9L512 216.7l-108.6-48.6c-74.7-51.1-181-37.1-245.5 32.9-64.5 70-79.9 174.6-44.1 262.8 33.3 82.3 98.7 151.7 185.3 227.1L512 884.2l212.9-193.3c86.6-75.4 152-144.8 185.3-227.1 35.8-88.2 20.4-192.8-44.1-262.8z" fill="currentColor"></path>
-                                </svg>
-
-                                <div class="withu-flex-between-center withu-loveday-content">
-                                    <div class="withu-flex-center-gap"
-                                        tabindex="0">
-                                        <div class=" withu-icon-box-glass-white">
-                                                                                            <svg viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg">
-                                                    <path
-                                                        d="M470.4 204.8l44.8 44.8 44.8-44.8c99.2-99.2 262.4-99.2 361.6 0 48 48 73.6 112 73.6 179.2 0 19.2-12.8 32-32 32s-32-12.8-32-32c0-51.2-19.2-99.2-57.6-134.4-73.6-73.6-195.2-73.6-272 0l-67.2 67.2c-12.8 12.8-32 12.8-44.8 0l-67.2-67.2c-73.6-73.6-195.2-73.6-272 0-73.6 73.6-73.6 195.2 0 272L512 883.2c12.8 12.8 12.8 32 0 44.8s-32 12.8-44.8 0L105.6 566.4c-99.2-99.2-99.2-262.4 0-361.6 102.4-102.4 262.4-102.4 364.8 0z m176 710.4L425.6 694.4c-57.6-57.6-57.6-147.2 0-204.8 57.6-57.6 147.2-57.6 204.8 0l57.6 57.6 57.6-57.6c57.6-57.6 147.2-57.6 204.8 0 57.6 57.6 57.6 147.2 0 204.8L729.6 915.2c-9.6 9.6-25.6 16-38.4 16-19.2 0-32-6.4-44.8-16z m256-265.6c32-32 32-83.2 0-112-32-32-83.2-32-112 0l-80 80c-12.8 12.8-32 12.8-44.8 0l-80-80c-32-32-83.2-32-112 0-32 32-32 83.2 0 112L688 864l214.4-214.4z"
-                                                        fill="#ffffff"></path>
-                                                </svg>
-                                                                                    </div>
-                                        <div class="withu-loveday-copy">
-                                            <div class="withu-loveday-title" data-withu-tip="我们相遇的那天">
-                                                我们相遇的那天                                            </div>
-                                            <div class="withu-loveday-date">
-                                                <span class="withu-loveday-date-line">
-                                                    起始日：                                                    2023-06-30                                                </span>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="withu-text-right">
-                                        <div class="withu-loveday-count">
-                                                                                            1133<span class="withu-loveday-unit">天</span>
-                                                                                    </div>
-                                                                            </div>
-                                </div>
-                            </div>
-                            </div>                                            </div>
+                        </div>
+                    </div>
+<?php endforeach; ?>
+<?php endif; ?>
 
                 </section>
             
@@ -2149,7 +1598,7 @@ try {
 <script src="Style/LoveListStyle/carousel.thumbs.umd.js"></script>
 <script src="Style/LoveListStyle/fancybox.umd.js"></script>
 <script src="assets/js/page-lovelist.js"></script>
-<script src="assets/js/page-index.js?v=20261004"></script>
+<script src="assets/js/page-index.js?v=20261007e"></script>
 <script src="assets/js/page-timetable.js?v=20260907-3"></script>
 <script src="assets/js/page-detail.js"></script>
 <script src="assets/js/page-album-detail.js"></script>
@@ -2279,7 +1728,7 @@ try {
     </div>
 </div>
 <!-- ============ /足迹地图弹窗 ============ -->
-<script src="assets/js/map.js"></script>
+<script src="assets/js/map.js?v=1.0.87"></script>
 
 <div id="pjax-container">
 

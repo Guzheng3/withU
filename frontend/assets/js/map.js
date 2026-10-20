@@ -363,6 +363,16 @@ window.WithUMap = (function () {
             await validateAmapKey();
             mapDebugLog('API Key 验证通过');
             await waitForMapContainerReady();
+            // 刷新双方实时定位（与头像位置/天气共用同一位置来源；60s 内缓存，不重复请求）。
+            // 必须带超时兜底：定位刷新慢/挂起时不能阻塞地图初始化，超时后按配置坐标展示
+            if (window.WithULiveGeo) {
+                try {
+                    await Promise.race([
+                        window.WithULiveGeo.refresh(),
+                        new Promise(resolve => setTimeout(resolve, 3000)),
+                    ]);
+                } catch (e) { /* 失败时按配置坐标展示 */ }
+            }
             _mapInstance = await initializeApp();
 
             // 如果有待执行的定位操作
@@ -1717,8 +1727,11 @@ const addLoversMarkers = (map, lovers) => {
 
     const lover1 = lovers[0];
     const lover2 = lovers[1];
-    const lover1Coords = extractCoordinatePair(lover1.coords);
-    const lover2Coords = extractCoordinatePair(lover2.coords);
+    // 坐标优先级：实时定位上报（与头像位置/天气共用同一位置，来自高德定位 SDK）> map-all.json 配置坐标
+    const live1 = (window.WithULiveGeo && window.WithULiveGeo.slotCoords(1)) || null;
+    const live2 = (window.WithULiveGeo && window.WithULiveGeo.slotCoords(2)) || null;
+    const lover1Coords = live1 || extractCoordinatePair(lover1.coords);
+    const lover2Coords = live2 || extractCoordinatePair(lover2.coords);
     const lover1Located = lover1.located !== false && !!lover1Coords;
     const lover2Located = lover2.located !== false && !!lover2Coords;
     const bothLocated = lover1Located && lover2Located;
@@ -1735,14 +1748,36 @@ const addLoversMarkers = (map, lovers) => {
 
     // 更新顶部情侣面板信息
     const loversPanel = document.getElementById('lovers-panel');
+    // 面板位置文字：与标记坐标同源（实时上报优先），实时坐标生效时按坐标反查地名，回退配置 label
+    const loverLocationLabel = (lover, coords, slot) => {
+        const isLive = (slot === 1 ? live1 : live2) !== null;
+        if (!isLive) return lover.label || '未知';
+        if (!window.AMap || !window.AMap.Geocoder) return lover.label || '未知';
+        try {
+            AMap.plugin('AMap.Geocoder', function () {
+                try {
+                    const geocoder = new AMap.Geocoder({ extensions: 'base' });
+                    geocoder.getAddress([coords[0], coords[1]], function (status, result) {
+                        if (status !== 'complete' || !result || !result.regeocode) return;
+                        const comp = result.regeocode.addressComponent || {};
+                        let name = comp.township || comp.district || '';
+                        if (name) name = name.replace(/街道$/, '');
+                        const locEl = document.getElementById(slot === 1 ? 'lover-left-location' : 'lover-right-location');
+                        if (locEl && name) locEl.textContent = name;
+                    });
+                } catch (e) { /* 反查失败保持配置 label */ }
+            });
+        } catch (e) { /* 插件失败保持配置 label */ }
+        return lover.label || '未知';
+    };
     if (loversPanel) {
         document.getElementById('lover-left-avatar').src = lover1.avatar;
         document.getElementById('lover-left-name').textContent = lover1.name;
-        document.getElementById('lover-left-location').textContent = lover1.label;
+        document.getElementById('lover-left-location').textContent = loverLocationLabel(lover1, lover1Coords, 1);
 
         document.getElementById('lover-right-avatar').src = lover2.avatar;
         document.getElementById('lover-right-name').textContent = lover2.name;
-        document.getElementById('lover-right-location').textContent = lover2.label;
+        document.getElementById('lover-right-location').textContent = loverLocationLabel(lover2, lover2Coords, 2);
 
         // 点击左侧头像/卡片，定位到"我"的位置
         const leftCard = document.getElementById('lover-left');

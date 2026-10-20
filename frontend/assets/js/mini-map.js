@@ -69,7 +69,7 @@ var WithUMiniMap = (function() {
     }
 
     function getMapStyle() {
-        return (window.WITHU_MAP_CONFIG && window.WITHU_MAP_CONFIG.mapStyle) || 'amap://styles/dark';
+        return (window.WITHU_MAP_CONFIG && window.WITHU_MAP_CONFIG.mapStyle) || 'amap://styles/normal';
     }
 
     // ========== 逆地理编码（带缓存） ==========

@@ -698,8 +698,7 @@
                 u.searchParams.set('lng', coords[0]);
                 u.searchParams.set('lat', coords[1]);
             }
-            const nameEl = cardEl.querySelector('.withu-home-weather-username');
-            const name = liveCoords
+            const nameEl = cardEl.querySelector('.withu-home-weather-username');            const name = liveCoords
                 ? ((nameEl && nameEl.textContent) || '')
                 : ((lover && lover.name) || (nameEl && nameEl.textContent) || '');
             if (name) u.searchParams.set('name', String(name).trim());
@@ -999,6 +998,9 @@
 
             this.speed = options.speed || 0.8;
             this.originalCards = Array.from(this.track.children);
+            // 空数据状态（仅含 .withu-no-data）不克隆、不滚动，由 CSS 铺满居中展示
+            this._emptyState = this.originalCards.length === 1 && this.originalCards[0].classList.contains('withu-no-data');
+            if (this._emptyState) this.originalCards = [];
             this.clonedCards = [];
             this.progress = 0;
             this.isHovering = false;
@@ -1044,6 +1046,8 @@
         }
 
         _updatePaused() {
+            // 空数据状态不滚动：进入视口也不恢复动画
+            if (this._emptyState) return;
             var shouldPause = document.hidden || !this._isInViewport;
             if (shouldPause && !this._paused) {
                 this._paused = true;
@@ -1077,7 +1081,10 @@
             this._intersectionObserver.observe(this.container);
 
             this._bindEvents();
-            this.animationFrameId = requestAnimationFrame(this._animateBound);
+            // 空数据状态不启动滚动动画，保持静止
+            if (!this._emptyState) {
+                this.animationFrameId = requestAnimationFrame(this._animateBound);
+            }
         }
 
         _bindEvents() {

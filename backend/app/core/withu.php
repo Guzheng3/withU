@@ -93,6 +93,11 @@ if (!function_exists('withu_strm_normalize_base')) {
         if ($url === '') return '';
         // 允许用户省略协议，本地内网地址默认按 http 处理
         if (!preg_match('#^https?://#i', $url)) $url = 'http://' . $url;
+        // 非 http localhost 的 http:// 自动升级为 https，避免服务器 301 跳 https 导致接口报异常状态
+        $host = parse_url($url, PHP_URL_HOST) ?: '';
+        if (stripos($url, 'http://') === 0 && !preg_match('/^(localhost|127\.0\.0\.1|\[::1\]|192\.168\.|10\.|172\.(1[6-9]|2\d|3[01])\.)/i', $host)) {
+            $url = 'https://' . substr($url, 7);
+        }
         return rtrim($url, '/');
     }
 }
@@ -129,7 +134,9 @@ if (!function_exists('withu_strm_request')) {
             CURLOPT_TIMEOUT => $timeout,
             CURLOPT_CONNECTTIMEOUT => 5,
             CURLOPT_HTTPHEADER => ['Accept: application/json', 'X-API-Key: ' . $cfg['api_key']],
-            CURLOPT_FOLLOWLOCATION => false,
+            // 跟随同主机重定向（http→https 等），最多 3 跳，避免 301 直接报「异常状态」
+            CURLOPT_FOLLOWLOCATION => true,
+            CURLOPT_MAXREDIRS => 3,
         ]);
         $body = curl_exec($ch);
         $status = (int)curl_getinfo($ch, CURLINFO_RESPONSE_CODE);
@@ -317,8 +324,10 @@ if (!function_exists('withu_strm_localize_items')) {
      */
     function withu_strm_localize_items(array &$items, array $types = ['poster'], ?int $budget = null): int
     {
-        // 只使用 withUstrm 本地刮削图片（/api/external 相对地址 → extimg 鉴权转发）；
-        // 不使用 CDN 图片：远程热链一律置空，前端走占位图，也不再发起 CDN 下载预热。
+        // 图片落地策略：远程 CDN 图（TMDB 刮削等）批量下载到本地 runtime/，
+        // 成功换本地链（浏览器免回源）；下载失败/超出预算保留 CDN 原链兜底，
+        // 页面始终有图。/api/external 相对地址走 extimg 鉴权转发。
+        $jobs = [];
         foreach ($items as $i => $item) {
             if (!is_array($item)) continue;
             $id = (int)($item['id'] ?? 0);
@@ -333,11 +342,27 @@ if (!function_exists('withu_strm_localize_items')) {
                 }
                 if ($url[0] === '/') continue; // 网关自身本地地址，保持不变
                 if (preg_match('#^https?://#i', $url)) {
-                    $items[$i][$field] = ''; // 不使用 CDN 图片
+                    if (is_file(withu_strm_img_file($id, $type))) {
+                        // 本地已有图（含豆瓣兜底图），优先本地
+                        $items[$i][$field] = withu_strm_img_url($id, $type);
+                    } elseif ($budget === null || count($jobs) < $budget) {
+                        $jobs[] = ['id' => $id, 'type' => $type, 'url' => $url];
+                    }
+                    // 预算外保留 CDN 原链，下轮巡检再落地
                 }
             }
         }
-        return 0;
+        if (!$jobs) return 0;
+        $ok = withu_strm_img_download_jobs($jobs);
+        foreach ($jobs as $job) {
+            if (empty($ok[$job['id'] . ':' . $job['type']])) continue;
+            foreach ($items as $i => $item) {
+                if (!is_array($item) || (int)($item['id'] ?? 0) !== $job['id']) continue;
+                $field = $job['type'] === 'backdrop' ? 'backdropUrl' : 'posterUrl';
+                $items[$i][$field] = withu_strm_img_url($job['id'], $job['type']);
+            }
+        }
+        return count($ok);
     }
 }
 
@@ -401,6 +426,38 @@ if (!function_exists('withu_strm_images_maintain')) {
         }
         withu_strm_images_gc(array_keys($validIds));
         withu_strm_localize_items($items, ['poster', 'backdrop'], $budget);
+        withu_strm_douban_fallback($items);
+    }
+}
+
+if (!function_exists('withu_strm_douban_fallback')) {
+    /**
+     * 豆瓣海报兜底（node 桥）：CDN 下载失败（如 TMDB 被墙）或无海报的媒体，
+     * 按标题搜豆瓣补图到 runtime/strm-posters/<id>.jpg，走 ?action=img 输出。
+     * 只在巡检（节流）内触发，避免每次列表请求都跑 node。
+     */
+    function withu_strm_douban_fallback(array $items, int $budget = 40): void
+    {
+        $need = [];
+        foreach ($items as $item) {
+            if (!is_array($item)) continue;
+            $id = (int)($item['id'] ?? 0);
+            if ($id <= 0 || is_file(withu_strm_img_file($id, 'poster'))) continue;
+            $poster = trim((string)($item['posterUrl'] ?? ''));
+            // 无海报，或仍是远程链（=本地化下载失败，浏览器大概率也打不开）
+            if ($poster !== '' && !preg_match('#^https?://#i', $poster)) continue;
+            $title = trim((string)($item['title'] ?? ($item['name'] ?? '')));
+            if ($title === '') continue;
+            $need[] = ['id' => $id, 'title' => $title];
+            if (count($need) >= $budget) break;
+        }
+        if (!$need) return;
+        $script = dirname(__DIR__) . '/scripts/strm_poster_fetch.cjs';
+        if (!is_file($script)) return;
+        $cmd = 'node ' . escapeshellarg($script) . ' ' . escapeshellarg(base64_encode(json_encode($need, JSON_UNESCAPED_UNICODE)));
+        if (function_exists('withu_run_node_sync')) {
+            withu_run_node_sync($cmd, 60000);
+        }
     }
 }
 

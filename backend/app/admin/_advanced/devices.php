@@ -59,7 +59,7 @@ if (!function_exists('withu_advanced_devices_panel')) {
                 <table class="admin-table">
                     <thead>
                         <tr>
-                            <?php if ($hasActive): ?><th style="width:36px"><input type="checkbox" id="deviceCheckAll" aria-label="全选设备"></th><?php endif; ?>
+                            <?php if ($hasActive): ?><th style="width:36px;font-weight:400;padding:0.75rem 0.5rem;text-align:center"><input type="checkbox" id="deviceCheckAll" aria-label="全选设备"></th><?php endif; ?>
                             <th>设备</th><th>IP</th><th>首次信任</th><th>最近使用</th><th>状态</th><th>操作</th>
                         </tr>
                     </thead>

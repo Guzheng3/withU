@@ -36,7 +36,7 @@
  *                work involved and the applicable authorization terms.
  *
  */
-@import url(content.css);
+@import url(content.css?v=20261007g);
 @import url(home.css);
 @import url(small-x.css) only screen and (max-width: 768px);
 @import url(small.css) only screen and (min-width: 768px);

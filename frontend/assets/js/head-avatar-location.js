@@ -1,10 +1,42 @@
 /**
  * 情侣头像位置更新
- * 更新头像 hover 区域的位置文字（坐标来自实时上报或后台配置，直接展示坐标，不加载地图 SDK）
+ * 更新头像 hover 区域的位置文字（坐标来自实时上报或后台配置，反查地名需加载地图 SDK）
  */
 (function () {
     'use strict';
     var _initialized = false;
+
+    // 共享的 AMap SDK 按需加载器（本地自带 SDK 包，地图页外的功能也复用）
+    // 供 head-avatar-location / page-index / withu-location 共同使用：
+    // withu-location 在浏览器定位后必须经 AMap.convertFrom 把 WGS-84 转成高德 GCJ-02，
+    // 缺少此加载器时会上报未转换的原始坐标，导致地图标记偏差数百米
+    var _sdkQueue = [];
+    var _sdkLoading = false;
+    function ensureAMap(callback) {
+        if (window.AMap) {
+            callback(true);
+            return;
+        }
+        _sdkQueue.push(callback);
+        if (_sdkLoading) return;
+        _sdkLoading = true;
+        var base = (window.WITHU_CONFIG && window.WITHU_CONFIG.assetBase) || '';
+        var s = document.createElement('script');
+        s.src = base + 'assets/js/map-sdk.js';
+        s.onload = function () {
+            _sdkLoading = false;
+            var ok = !!window.AMap;
+            _sdkQueue.forEach(function (cb) { try { cb(ok); } catch (e) {} });
+            _sdkQueue = [];
+        };
+        s.onerror = function () {
+            _sdkLoading = false;
+            _sdkQueue.forEach(function (cb) { try { cb(false); } catch (e) {} });
+            _sdkQueue = [];
+        };
+        document.head.appendChild(s);
+    }
+    window.WithUAMapLoader = { ensure: ensureAMap };
 
     // 共享的实时位置模块：从 location-beacon 读取双方最新高德定位上报
     // slot1 -> user1（男/我），slot2 -> user2（女/TA）
@@ -57,10 +89,32 @@
         return null;
     }
 
-    // 位置文案：后台设置的地名优先（WITHU_CONFIG.boyLocation/girlLocation），
-    // 没设置时展示坐标；不加载地图 SDK
+    // 位置文案：头像位置与天气共用同一位置来源（高德定位 SDK / location-beacon 实时上报），
+    // 实时坐标优先，其次后台配置坐标；坐标反查地名失败时展示坐标
     function formatCoords(coords) {
         return coords[1].toFixed(2) + ', ' + coords[0].toFixed(2);
+    }
+
+    // 坐标反查地名（AMap.Geocoder 逆地理编码，需 SDK 已加载）
+    function reverseGeocode(lng, lat, callback) {
+        try {
+            AMap.plugin('AMap.Geocoder', function () {
+                try {
+                    var geocoder = new AMap.Geocoder({ extensions: 'base' });
+                    geocoder.getAddress([lng, lat], function (status, result) {
+                        if (status === 'complete' && result && result.regeocode) {
+                            var comp = result.regeocode.addressComponent || {};
+                            var cityPart = comp.city || comp.province || '';
+                            var townPart = comp.township || comp.district || '';
+                            if (townPart) townPart = townPart.replace(/街道$/, '');
+                            callback(townPart ? cityPart + ' · ' + townPart : cityPart);
+                        } else {
+                            callback('');
+                        }
+                    });
+                } catch (e) { callback(''); }
+            });
+        } catch (e) { callback(''); }
     }
 
     function updateLocations() {
@@ -70,15 +124,27 @@
             var slot = parseInt(locEl.getAttribute('data-location-slot'), 10);
             var em = locEl.querySelector('em');
             if (!em) return;
-            // 后台设置的地名优先
-            var configuredName = slot === 1 ? (cfg.boyLocation || '') : (cfg.girlLocation || '');
-            if (configuredName) {
-                em.textContent = configuredName;
+            // 实时上报优先，其次后台配置坐标
+            var coords = (window.WithULiveGeo && window.WithULiveGeo.slotCoords(slot)) || getCoords(slot);
+            if (!coords || coords.length < 2) {
+                em.textContent = '未知';
                 return;
             }
-            // 后台没设置：坐标兜底（实时上报优先，其次后台配置坐标）
-            var coords = (window.WithULiveGeo && window.WithULiveGeo.slotCoords(slot)) || getCoords(slot);
-            em.textContent = (coords && coords.length >= 2) ? formatCoords(coords) : '未知';
+            // 已有地名（非占位文案、非坐标格式）不重复反查
+            var current = em.textContent || '';
+            if (current && current !== '未知' && current !== '加载中...' && current.indexOf(',') === -1) {
+                return;
+            }
+            // 坐标反查地名
+            ensureAMap(function (ok) {
+                if (!ok) {
+                    em.textContent = formatCoords(coords);
+                    return;
+                }
+                reverseGeocode(coords[0], coords[1], function (name) {
+                    em.textContent = name || formatCoords(coords);
+                });
+            });
         });
     }
 

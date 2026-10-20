@@ -56,7 +56,7 @@
 <link rel="stylesheet" href="/Style/vendor/remixicon/remixicon.css?wm=4c668768&v=1.0.74">
 <link rel="stylesheet" href="/Style/css/tooltip.css?wm=4c668768&v=1.0.74">
 <link rel="stylesheet" href="/Style/css/interaction.css?wm=4c668768&v=1.0.74">
-<link rel="stylesheet" href="/Style/css/withu-home-style.css?wm=4c668768&v=1.0.74">
+<link rel="stylesheet" href="/Style/css/withu-home-style.css?wm=4c668768&v=20261007a">
 <link rel="stylesheet" href="/Style/css/withu-detail.css?wm=4c668768&v=1.0.80">
 <link rel="stylesheet" href="/Style/css/mobile-nav.css?v=1.0.1-flush?wm=4c668768&v=1.0.74">
 <link rel="stylesheet" href="/Style/css/header.css?wm=4c668768&v=1.0.74">
@@ -241,11 +241,11 @@
 </script>
 
 <!-- 足迹地图配置（懒加载，点击才初始化） -->
-        <script src="/assets/js/withu-shared-bc1ba20d.js"></script>
+        <script src="/assets/js/withu-shared-1916a4be.js"></script>
 <script src="/assets/js/app.js?wm=4c668768&v=1.0.74"></script>
-<script src="/assets/js/withu-location.js?v=20260906e"></script>
-<script src="/assets/js/head-avatar-location.js?v=20261007"></script>
-<script src="/assets/js/components.js?v=1.0.0-confetti1?wm=4c668768&v=1.0.74"></script>
+<script src="/assets/js/withu-location.js?v=20261007"></script>
+<script src="/assets/js/head-avatar-location.js?v=20261007e"></script>
+<script src="/assets/js/components.js?v=20261007?wm=4c668768&v=1.0.74"></script>
 
 <!-- 礼花效果已迁移到 components.js 的 ConfettiEffect 模块 -->
 
@@ -388,6 +388,8 @@
 <title><?php echo htmlspecialchars($withuSiteTitle, ENT_QUOTES, 'UTF-8'); ?></title>
 <link rel="stylesheet" href="/Style/css/withu-private.css?wm=4c668768&v=1.0.76">
 <link rel="stylesheet" href="/assets/css/withu-shared-1d6387f9.css">
+<link rel="stylesheet" href="Style/css/motion-effects.css?v=20261007a">
+<script src="Style/js/motion-effects.js?v=20261007a" defer></script>
 <script>document.documentElement.classList.add("withu-private-mode");</script>
 <div class="withu-private-wrapper" id="withuPrivateWrapper">
 
