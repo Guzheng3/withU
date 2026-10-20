@@ -2859,11 +2859,12 @@
                             '<input type="text" id="withumsgNicknameInput" placeholder="昵称 (必填)">' +
                         '</div>'
                     );
-                    // QQ 输入监听（防抖 + 过期响应校验）
+                    // QQ 输入监听：头像即时预览 + 昵称接口防抖增强
                     var qqTimer, _qqSeq = 0;
                     $('#withumsgQQInput').off('input.withumsg').on('input.withumsg', function() {
                         clearTimeout(qqTimer);
                         var val = $(this).val().trim();
+                        var digits = val.replace(/\D/g, '');
                         var $icon = $('#withumsgQQIcon');
                         var $nick = $('#withumsgNicknameInput');
                         var $hint = $('#withumsgQQCacheHint');
@@ -2871,37 +2872,39 @@
                             if (val.length > 0) { $hint.addClass('withu-message-hint-hidden'); $(this).css('padding-right', ''); }
                             else { $hint.removeClass('withu-message-hint-hidden'); $(this).css('padding-right', '150px'); }
                         }
-                        if (val.length >= 5) {
-                            $icon.html(svgLoader);
+                        if (digits.length >= 5 && digits.length <= 12) {
+                            // 头像不依赖昵称接口：位数足够就先显示腾讯头像（本地代理，失败回落默认图）
+                            var avatar = '/_qqavatar.php?qq=' + encodeURIComponent(digits) + '&s=100';
+                            localStorage.setItem('withu_comment_qq', digits);
+                            localStorage.setItem('withu_comment_avatar', avatar);
+                            $icon.html('<img src="' + escapeHtml(avatar) + '" class="withu-message-input-avatar" style="opacity:0;transition:opacity 0.4s ease" onload="this.style.opacity=1" onerror="this.onerror=null;this.src=\'' + _defaultAvatar.replace(/'/g, '%27') + '\';this.style.opacity=1;">');
+
                             var seq = ++_qqSeq;
                             qqTimer = setTimeout(function() {
-                                localStorage.setItem('withu_comment_qq', val);
                                 $.ajax({
                                     url: endpoints.infoService || 'services/info-service.php',
                                     type: 'POST',
                                     dataType: 'json',
-                                    data: { action: 'qq', qq: val },
+                                    data: { action: 'qq', qq: digits },
                                     success: function(res) {
                                         if (seq !== _qqSeq) return;
+                                        // 昵称接口失败时保留已显示的头像，只补默认昵称
                                         if (res.Status && res.data) {
                                             if (res.data.qq_hash) localStorage.setItem('withu_comment_qq_hash', res.data.qq_hash);
-                                            var avatar = res.data.avatar || _defaultAvatar;
-                                            localStorage.setItem('withu_comment_avatar', avatar);
-                                            $icon.html('<img src="' + escapeHtml(avatar) + '" class="withu-message-input-avatar" style="opacity:0;transition:opacity 0.4s ease" onload="this.style.opacity=1" onerror="this.onerror=null;this.src=\'' + _defaultAvatar.replace(/'/g, '%27') + '\';this.style.opacity=1;">');
+                                            if (res.data.avatar && res.data.avatar !== avatar) {
+                                                localStorage.setItem('withu_comment_avatar', res.data.avatar);
+                                                $icon.html('<img src="' + escapeHtml(res.data.avatar) + '" class="withu-message-input-avatar" style="opacity:0;transition:opacity 0.4s ease" onload="this.style.opacity=1" onerror="this.onerror=null;this.src=\'' + _defaultAvatar.replace(/'/g, '%27') + '\';this.style.opacity=1;">');
+                                            }
                                             var nick = res.data.nickname || res.data.nick || '';
                                             if (nick) $nick.val(nick);
-                                        } else {
-                                            $icon.html('<img src="' + _defaultAvatar + '" class="withu-message-input-avatar">');
-                                            if (!$nick.val() || $nick.val().indexOf('\u670b\u53cb(') === 0) {
-                                                $nick.val('\u670b\u53cb(' + val.slice(-2) + ')');
-                                            }
+                                        } else if (!$nick.val() || $nick.val().indexOf('\u670b\u53cb(') === 0) {
+                                            $nick.val('\u670b\u53cb(' + digits.slice(-2) + ')');
                                         }
                                     },
                                     error: function() {
                                         if (seq !== _qqSeq) return;
-                                        $icon.html('<img src="' + _defaultAvatar + '" class="withu-message-input-avatar">');
                                         if (!$nick.val() || $nick.val().indexOf('\u670b\u53cb(') === 0) {
-                                            $nick.val('\u670b\u53cb(' + val.slice(-2) + ')');
+                                            $nick.val('\u670b\u53cb(' + digits.slice(-2) + ')');
                                         }
                                     }
                                 });
@@ -2909,7 +2912,7 @@
                         } else {
                             ++_qqSeq;
                             $icon.html('<img class="withu-message-input-avatar" src="' + _defaultAvatar + '">');
-                            $nick.val('');
+                            if (!$nick.val() || $nick.val().indexOf('\u670b\u53cb(') === 0) $nick.val('');
                         }
                     });
                     // QQ 缓存快捷填入（点击hint badge才填入）

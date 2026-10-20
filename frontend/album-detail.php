@@ -50,8 +50,14 @@ if ($__albumCode !== '') {
             foreach ((is_array($__apiData) ? ($__apiData['albums'] ?? []) : []) as $__a) {
                 if (isset($__a['code']) && (string) $__a['code'] === $__albumCode) {
                     $__cover = (string) ($__a['image'] ?? '');
-                    if ($__cover !== '' && !preg_match('#^https?://#i', $__cover) && strpos($__cover, '/') !== 0) {
-                        $__cover = '/' . $__cover;
+                    if ($__cover !== '' && !preg_match('#^https?://#i', $__cover)) {
+                        $__rel = ltrim($__cover, '/');
+                        // 后台上传的 cover_image 存的是 albums/xxx 相对路径，需补 /uploads/ 前缀
+                        if (strpos($__rel, 'uploads/') === 0 || is_file(__DIR__ . '/' . $__rel)) {
+                            $__cover = '/' . $__rel;
+                        } else {
+                            $__cover = '/uploads/' . $__rel;
+                        }
                     }
                     $__albumMeta = [
                         'name'   => (string) ($__a['name'] ?? '相册'),

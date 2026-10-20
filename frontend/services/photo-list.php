@@ -48,6 +48,34 @@ $albumRow = null;
 foreach ((is_array($map) ? ($map['albums'] ?? []) : []) as $a) {
     if (isset($a['code']) && (string) $a['code'] === $code) { $albumRow = $a; break; }
 }
+// map-all 未登记的后台新建相册：code 即 albums.id，回落到数据库元信息
+if (!$albumRow && isset($db)) {
+    try {
+        $fallback = $db->fetch("SELECT * FROM albums WHERE id = :id LIMIT 1", ['id' => (int) $code]);
+        if ($fallback) {
+            $helpersFile = dirname(__DIR__, 2) . '/backend/app/core/helpers.php';
+            if (is_file($helpersFile)) {
+                require_once $helpersFile;
+            }
+            $fallbackCover = (string) ($fallback['cover_image'] ?? '');
+            if ($fallbackCover !== '' && !preg_match('#^https?://#i', $fallbackCover) && function_exists('upload_url')) {
+                $fallbackCover = upload_url($fallbackCover);
+            }
+            $albumRow = [
+                'name'   => (string) ($fallback['name'] ?? ''),
+                'code'   => (string) ($fallback['id'] ?? $code),
+                'image'  => $fallbackCover,
+                'thumb'  => '',
+                'date'   => substr((string) ($fallback['created_at'] ?? ''), 0, 10),
+                'city'   => (string) ($fallback['location_name'] ?? ''),
+                'coords' => [(float) ($fallback['longitude'] ?? 0), (float) ($fallback['latitude'] ?? 0)],
+                'desc'   => (string) ($fallback['description'] ?? ''),
+            ];
+        }
+    } catch (Throwable $e) {
+        // 元信息读取失败时保持 404
+    }
+}
 if (!$albumRow) {
     echo json_encode(['code' => 404, 'msg' => '相册不存在'], JSON_UNESCAPED_UNICODE);
     exit;
