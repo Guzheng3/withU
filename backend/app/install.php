@@ -106,6 +106,21 @@ $step = isset($_POST['step'])
     ? intval($_POST['step'])
     : (isset($_GET['step']) ? intval($_GET['step']) : 1);
 
+// 引导顺序约束：先创建管理员账号，才允许进入站点信息步骤
+if ($step === 3 && is_file(__DIR__ . '/config/database.php')) {
+    try {
+        require_once __DIR__ . '/core/Database.php';
+        $installDb      = Database::getInstance();
+        $installUserRow = $installDb->fetch("SELECT COUNT(*) AS c FROM users WHERE status = 'active'");
+        if ((int) ($installUserRow['c'] ?? 0) === 0) {
+            header('Location: ?step=2');
+            exit;
+        }
+    } catch (Throwable $e) {
+        // 数据库尚未就绪时继续渲染，提交阶段会给出具体错误
+    }
+}
+
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && $step === 1) {
     // 第一步：数据库配置
     $dbConfig = [
@@ -193,62 +208,103 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && $step === 1) {
         }
     }
 } elseif ($_SERVER['REQUEST_METHOD'] === 'POST' && $step === 3) {
-    // 第三步：设置网站基础信息
+    // 第三步：设置网站基础信息、反代域名、备案号与在一起的时间
     require_once __DIR__ . '/core/Database.php';
     $db = Database::getInstance();
 
     $siteTitle       = trim($_POST['site_title'] ?? '');
     $siteDescription = trim($_POST['site_description'] ?? '');
+    $siteDomain      = trim($_POST['site_domain'] ?? '');
+    $icpBeian        = trim($_POST['icp_beian'] ?? '');
     $loveDate        = trim($_POST['love_date'] ?? '');
 
     if ($siteTitle === '') {
         $siteTitle = SITE_NAME;
     }
 
-    try {
-        // 兼容安装向导中的恋爱开始时间：允许使用日期或精确到秒
-        if ($loveDate !== '') {
-            $normalizedLove = str_replace(' ', 'T', $loveDate);
-            $dtLove = date_create($normalizedLove);
-            if ($dtLove instanceof DateTime) {
-                $loveDate = $dtLove->format('Y-m-d H:i:s');
+    // 反代域名：允许只填域名，自动补 https://；留空则沿用当前访问地址
+    if ($siteDomain !== '') {
+        if (!preg_match('#^https?://#i', $siteDomain)) {
+            $siteDomain = 'https://' . $siteDomain;
+        }
+        $siteDomain  = rtrim($siteDomain, '/');
+        $domainParts = parse_url($siteDomain);
+        if (!$domainParts || empty($domainParts['host']) || !filter_var($siteDomain, FILTER_VALIDATE_URL)) {
+            $error = '反代域名格式不正确，请填写如 https://love.example.com';
+        }
+    }
+
+    if ($error === '') {
+        try {
+            // 兼容安装向导中的恋爱开始时间：允许使用日期或精确到秒
+            if ($loveDate !== '') {
+                $normalizedLove = str_replace(' ', 'T', $loveDate);
+                $dtLove = date_create($normalizedLove);
+                if ($dtLove instanceof DateTime) {
+                    $loveDate = $dtLove->format('Y-m-d H:i:s');
+                }
             }
-        }
 
-        $settingsToSave = [
-            'site_title'       => $siteTitle,
-            'site_description' => $siteDescription,
-            'love_date'        => $loveDate,
-        ];
+            $settingsToSave = [
+                'site_title'       => $siteTitle,
+                'site_description' => $siteDescription,
+                'site_domain'      => $siteDomain,
+                'icp_beian'        => $icpBeian,
+                'love_date'        => $loveDate,
+            ];
 
-        foreach ($settingsToSave as $key => $value) {
-            $existing = $db->fetch("SELECT id FROM settings WHERE `key` = :key", ['key' => $key]);
+            foreach ($settingsToSave as $key => $value) {
+                $existing = $db->fetch("SELECT id FROM settings WHERE `key` = :key", ['key' => $key]);
 
-            if ($existing) {
-                $db->update('settings', [
-                    'value'      => $value,
-                    'updated_at' => date('Y-m-d H:i:s'),
-                ], '`key` = :key', ['key' => $key]);
-            } else {
-                $db->insert('settings', [
-                    'key'        => $key,
-                    'value'      => $value,
-                    'updated_at' => date('Y-m-d H:i:s'),
-                ]);
+                if ($existing) {
+                    $db->update('settings', [
+                        'value'      => $value,
+                        'updated_at' => date('Y-m-d H:i:s'),
+                    ], '`key` = :key', ['key' => $key]);
+                } else {
+                    $db->insert('settings', [
+                        'key'        => $key,
+                        'value'      => $value,
+                        'updated_at' => date('Y-m-d H:i:s'),
+                    ]);
+                }
             }
-        }
 
-        // 标记安装完成
-        file_put_contents(__DIR__ . '/.installed', date('Y-m-d H:i:s'));
-        // 安装完成后，删除安装解锁文件，避免长期遗留提升误操作风险
-        if (file_exists($installLockFile)) {
-            @unlink($installLockFile);
+            // 反代域名写入站点配置：邀请、分享、上传等绝对链接统一使用正式域名
+            $configUpdated = false;
+            if ($siteDomain !== '' && is_file($configPath) && is_writable($configPath)) {
+                $configSource = (string) file_get_contents($configPath);
+                $newSource = preg_replace_callback(
+                    "/define\(\s*['\"]BASE_URL['\"]\s*,[^;\n]*\);/",
+                    function () use ($siteDomain) {
+                        return "define('BASE_URL', " . var_export($siteDomain, true) . ");";
+                    },
+                    $configSource,
+                    1
+                );
+                if (is_string($newSource) && $newSource !== $configSource) {
+                    $configUpdated = (bool) file_put_contents($configPath, $newSource);
+                }
+            }
+
+            // 标记安装完成
+            file_put_contents(__DIR__ . '/.installed', date('Y-m-d H:i:s'));
+            // 安装完成后，删除安装解锁文件，避免长期遗留提升误操作风险
+            if (file_exists($installLockFile)) {
+                @unlink($installLockFile);
+            }
+            $success = '安装完成！';
+            if ($siteDomain !== '') {
+                $success .= ' 站点反代域名：' . $siteDomain;
+                if (!$configUpdated) {
+                    $success .= '（配置文件不可写，BASE_URL 未自动更新，请手动检查 config/config.php）';
+                }
+            }
+            $step = 4;
+        } catch (Exception $e) {
+            $error = '保存网站信息失败：' . $e->getMessage();
+            $step  = 3;
         }
-        $success = '安装完成！';
-        $step    = 4;
-    } catch (Exception $e) {
-        $error = '保存网站信息失败：' . $e->getMessage();
-        $step  = 3;
     }
 }
 ?>
@@ -341,7 +397,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && $step === 1) {
 <div class="install-card">
     <div class="install-head">
         <h2><i class="fas fa-heart"></i>安装向导</h2>
-        <p>三步完成数据库配置、账号创建与站点信息设置</p>
+        <p>三步完成数据库配置、管理员账号创建与站点信息设置（含反代域名、备案号、在一起的时间）</p>
     </div>
     <div class="install-body">
         <?php
@@ -466,7 +522,21 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && $step === 1) {
                           placeholder="简单介绍一下你们的故事～"><?php echo isset($_POST['site_description']) ? e($_POST['site_description']) : ''; ?></textarea>
             </div>
             <div class="form-group">
-                <label><i class="fas fa-calendar-days"></i>恋爱开始时间</label>
+                <label><i class="fas fa-globe"></i>反代域名</label>
+                <input type="text" name="site_domain"
+                       value="<?php echo isset($_POST['site_domain']) ? e($_POST['site_domain']) : ''; ?>"
+                       placeholder="例如：https://love.example.com" autocomplete="url">
+                <div class="hint">用于生成邀请、分享、上传等站内绝对链接。可只填域名，系统会自动补全 https://；留空则沿用当前访问域名。</div>
+            </div>
+            <div class="form-group">
+                <label><i class="fas fa-shield-halved"></i>网站备案号（选填）</label>
+                <input type="text" name="icp_beian"
+                       value="<?php echo isset($_POST['icp_beian']) ? e($_POST['icp_beian']) : ''; ?>"
+                       placeholder="例如：粤ICP备2024000000号">
+                <div class="hint">选填。填写后显示在网站页脚，支持换行或逗号分隔多个备案号。</div>
+            </div>
+            <div class="form-group">
+                <label><i class="fas fa-calendar-days"></i>在一起的时间</label>
                 <input type="datetime-local" name="love_date"
                        value="<?php echo isset($_POST['love_date']) ? e($_POST['love_date']) : ''; ?>"
                        placeholder="未设置" step="1">
