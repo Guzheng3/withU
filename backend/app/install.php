@@ -187,21 +187,27 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && $step === 1) {
 
     $password        = (string) ($_POST['password'] ?? '');
     $passwordConfirm = (string) ($_POST['password_confirm'] ?? '');
+    $qq              = trim((string) ($_POST['qq'] ?? ''));
 
     $auth = new Auth();
-    if ($password !== $passwordConfirm) {
+    if (!preg_match('/^[1-9][0-9]{4,10}$/', $qq)) {
+        $error = '请输入 5~11 位 QQ 号（QQ 号将作为唯一登录账号）';
+    } elseif ($password !== $passwordConfirm) {
         $error = '两次输入的密码不一致';
     } else {
+        // QQ 号直接作为 username，既满足唯一登录，也复用 Auth 的 QQ 头像写入逻辑
         $result = $auth->register(
-            $_POST['username'] ?? '',
+            $qq,
             $password,
             $_POST['nickname'] ?? '',
-            $role
+            $role,
+            null,
+            $qq
         );
 
         if ($result['success']) {
             // 管理员创建成功，进入第三步：站点基础信息设置
-            $success = '管理员账号创建成功，请继续配置网站基础信息。';
+            $success = '管理员账号创建成功，登录账号为 QQ ' . $qq . '，请继续配置网站基础信息。';
             $step    = 3;
         } else {
             $error = $result['message'];
@@ -351,17 +357,22 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && $step === 1) {
     .form-group input:focus,.form-group textarea:focus{border-color:var(--brand);box-shadow:0 0 0 3px rgba(231,84,128,.12);}
     .form-group textarea{min-height:96px;resize:vertical;line-height:1.6;}
     .form-group .hint{font-size:12px;color:#9aa0b0;margin-top:6px;line-height:1.5;}
+    /* QQ 账号输入与头像预览 */
+    .qq-input-row{display:flex;align-items:center;gap:12px;}
+    .qq-avatar{width:46px;height:46px;border-radius:50%;overflow:hidden;background:#f2f3f8;flex-shrink:0;
+      border:2px solid #ffe1ec;display:flex;align-items:center;justify-content:center;}
+    .qq-avatar img{width:100%;height:100%;object-fit:cover;display:block;}
+    .qq-input-row input[type="text"]{flex:1;min-width:0;}
     /* 角色选择 */
-    .role-toggle{display:flex;gap:10px;}
-    .role-toggle .role-option{flex:1;cursor:pointer;}
+    .role-toggle{display:flex;justify-content:center;gap:14px;}
+    .role-toggle .role-option{flex:0 1 132px;min-width:0;cursor:pointer;}
     .role-toggle .role-option input{display:none;}
-    .role-toggle .role-option-inner{display:flex;flex-direction:column;align-items:center;padding:12px 8px;gap:4px;
-      border:1.5px solid #e3e6f0;border-radius:12px;transition:.2s;text-align:center;}
+    .role-toggle .role-option-inner{display:flex;flex-direction:column;align-items:center;justify-content:center;
+      min-height:76px;padding:12px 8px;gap:4px;border:1.5px solid #e3e6f0;border-radius:12px;transition:.2s;text-align:center;}
     .role-toggle .role-option input:checked+.role-option-inner{border-color:var(--brand);background:#fff5f8;
       color:var(--brand);box-shadow:0 4px 12px rgba(231,84,128,.12);}
     .role-toggle .role-option-inner i{font-size:24px;}
     .role-toggle .role-option-inner .role-text-main{font-size:14px;font-weight:700;}
-    .role-toggle .role-option-inner .role-text-sub{font-size:11px;color:#9aa0b0;}
     .role-male-icon{color:#5dade2;}
     .role-female-icon{color:var(--brand);}
     /* 按钮 */
@@ -465,8 +476,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && $step === 1) {
         <form method="POST" novalidate>
             <input type="hidden" name="step" value="2">
             <div class="form-group">
-                <label><i class="fas fa-user"></i>用户名</label>
-                <input type="text" name="username" maxlength="32" placeholder="字母和数字，3~32 位，用于登录" autocomplete="username" autofocus>
+                <label><i class="fas fa-comment-dots"></i>QQ 号（登录账号）</label>
+                <div class="qq-input-row">
+                    <div class="qq-avatar">
+                        <img id="installQqAvatar" src="<?php echo (isset($_POST['qq']) && preg_match('/^[1-9][0-9]{4,10}$/', (string) $_POST['qq'])) ? '/_qqavatar.php?qq=' . urlencode((string) $_POST['qq']) . '&s=100' : '/_qqavatar.php?qq=10000&s=100'; ?>" alt="QQ 头像">
+                    </div>
+                    <input type="text" name="qq" id="installQqInput" maxlength="11" inputmode="numeric"
+                           value="<?php echo isset($_POST['qq']) ? e($_POST['qq']) : ''; ?>"
+                           placeholder="输入 5~11 位 QQ 号" autocomplete="username" autofocus>
+                </div>
+                <div class="hint">QQ 号将作为唯一登录账号，并自动获取 QQ 头像。</div>
             </div>
             <div class="form-group">
                 <label><i class="fas fa-user-tag"></i>昵称</label>
@@ -481,14 +500,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && $step === 1) {
                 <input type="password" name="password_confirm" minlength="8" placeholder="再输入一次密码" autocomplete="new-password">
             </div>
             <div class="form-group">
-                <label><i class="fas fa-user-friends"></i>角色（你在网站中的身份）</label>
+                <label><i class="fas fa-user-friends"></i>性别</label>
                 <div class="role-toggle">
                     <label class="role-option">
                         <input type="radio" name="role" value="user1" checked>
                         <span class="role-option-inner">
                             <i class="fas fa-mars role-male-icon"></i>
                             <span class="role-text-main">男生</span>
-                            <span class="role-text-sub">（角色 1）</span>
                         </span>
                     </label>
                     <label class="role-option">
@@ -496,7 +514,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && $step === 1) {
                         <span class="role-option-inner">
                             <i class="fas fa-venus role-female-icon"></i>
                             <span class="role-text-main">女生</span>
-                            <span class="role-text-sub">（角色 2）</span>
                         </span>
                     </label>
                 </div>
@@ -507,6 +524,21 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && $step === 1) {
                 <button type="submit" class="btn btn-primary"><i class="fas fa-arrow-right"></i>下一步：站点信息</button>
             </div>
         </form>
+        <script>
+        (function () {
+            var input = document.getElementById('installQqInput');
+            var avatar = document.getElementById('installQqAvatar');
+            if (!input || !avatar) return;
+            var fallback = '/_qqavatar.php?qq=10000&s=100';
+            input.addEventListener('input', function () {
+                var qq = this.value.replace(/\D/g, '').slice(0, 11);
+                if (this.value !== qq) this.value = qq;
+                avatar.src = /^[1-9][0-9]{4,10}$/.test(qq)
+                    ? '/_qqavatar.php?qq=' + encodeURIComponent(qq) + '&s=100'
+                    : fallback;
+            });
+        })();
+        </script>
         <?php elseif ($step === 3): ?>
         <form method="POST" novalidate>
             <input type="hidden" name="step" value="3">
