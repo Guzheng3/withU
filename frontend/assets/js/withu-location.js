@@ -88,16 +88,18 @@
     }
 
     // 已登录用户上报坐标（限频：10 分钟或移动 150 米以上）
-    function reportIfNeed(lat, lng, acc) {
+    function reportIfNeed(lat, lng, acc, source) {
         var cfg = window.WITHU_CONFIG;
         if (!cfg || !cfg.loggedIn) return;
+        source = source || 'unknown';
         var beacon = (cfg.endpoints && cfg.endpoints.locationBeacon) || '/services/location-beacon.php';
         try {
             var raw = localStorage.getItem('withu_geo_last_report');
             var last = raw ? JSON.parse(raw) : null;
             var now = Date.now();
             if (last && last.lat && (now - last.ts < REPORT_INTERVAL_MS) &&
-                distanceM(lat, lng, last.lat, last.lng) < REPORT_MOVE_M) {
+                distanceM(lat, lng, last.lat, last.lng) < REPORT_MOVE_M &&
+                (last.source || '') === source) {
                 return;
             }
         } catch (e) {}
@@ -106,6 +108,7 @@
         body.set('lat', lat);
         body.set('lng', lng);
         body.set('acc', acc || 0);
+        body.set('source', source);
         fetch(beacon, {
             method: 'POST',
             headers: { 'Content-Type': 'application/x-www-form-urlencoded', 'Accept': 'application/json' },
@@ -115,16 +118,17 @@
           .then(function (data) {
               if (data && data.code === 200) {
                   try {
-                      localStorage.setItem('withu_geo_last_report', JSON.stringify({ ts: Date.now(), lat: lat, lng: lng }));
+                      localStorage.setItem('withu_geo_last_report', JSON.stringify({ ts: Date.now(), lat: lat, lng: lng, source: source }));
                   } catch (e) {}
               }
           })
           .catch(function () {});
     }
 
-    function handlePosition(lng, lat, acc) {
+    function handlePosition(lng, lat, acc, source) {
         _requesting = false;
-        var geo = { lat: lat, lng: lng, ts: Date.now() };
+        source = source || 'unknown';
+        var geo = { lat: lat, lng: lng, ts: Date.now(), source: source };
         _cachedGeo = geo;
         saveCache(geo);
 
@@ -138,13 +142,14 @@
         });
 
         // 已登录用户上报实时位置
-        reportIfNeed(lat, lng, acc);
+        reportIfNeed(lat, lng, acc, source);
 
         notifyListeners(geo);
         window.dispatchEvent(new CustomEvent('withu:location-ready', { detail: geo }));
     }
 
     var _ipFallbackTried = false;
+    var MAX_ACCURACY_M = 5000; // 浏览器/高德插件定位精度超过 5km 视为不可靠，回退下一级定位
 
     // 使用本地缓存的位置兜底
     function useCachedGeo() {
@@ -168,7 +173,7 @@
                 .then(function (r) { return r.json(); })
                 .then(function (data) {
                     if (data && data.code === 200 && data.data && data.data.lng) {
-                        handlePosition(data.data.lng, data.data.lat, 30000);
+                        handlePosition(data.data.lng, data.data.lat, 30000, 'ip');
                     } else {
                         useCachedGeo();
                     }
@@ -180,8 +185,8 @@
     }
 
     // WGS-84（浏览器原生定位）-> 高德 GCJ-02 坐标
-    function toAmapCoords(lng, lat, acc) {
-        var done = function (a, b) { handlePosition(a, b, acc); };
+    function toAmapCoords(lng, lat, acc, source) {
+        var done = function (a, b) { handlePosition(a, b, acc, source); };
         var convert = function () {
             try {
                 AMap.convertFrom([lng, lat], 'gps', function (status, result) {
@@ -209,7 +214,13 @@
     function locateByBrowser() {
         navigator.geolocation.getCurrentPosition(
             function (position) {
-                toAmapCoords(position.coords.longitude, position.coords.latitude, position.coords.accuracy || 0);
+                var acc = position.coords.accuracy || 0;
+                if (acc > MAX_ACCURACY_M) {
+                    console.warn('[WithULocation] 浏览器定位精度过低(' + Math.round(acc) + 'm)，回退高德定位');
+                    locateByAmapPlugin();
+                    return;
+                }
+                toAmapCoords(position.coords.longitude, position.coords.latitude, acc, 'browser');
             },
             function (err) {
                 console.warn('[WithULocation] 浏览器定位失败(' + (err.code || '') + '): ' + (err.message || '') + '，回退高德定位');
@@ -241,7 +252,12 @@
                         : function (cb) { geolocation.getLocation(cb); };
                     call(function (status, result) {
                         if (status === 'complete' && result && result.position) {
-                            handlePosition(result.position.lng, result.position.lat, result.accuracy || 0);
+                            var acc = result.accuracy || 0;
+                            if (acc > MAX_ACCURACY_M) {
+                                locateFail('low_accuracy(' + Math.round(acc) + 'm)');
+                                return;
+                            }
+                            handlePosition(result.position.lng, result.position.lat, acc, 'amap');
                         } else {
                             locateFail((result && result.message) || status || 'unknown');
                         }

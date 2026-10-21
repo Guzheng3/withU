@@ -1728,8 +1728,15 @@ const addLoversMarkers = (map, lovers) => {
     const lover1 = lovers[0];
     const lover2 = lovers[1];
     // 坐标优先级：实时定位上报（与头像位置/天气共用同一位置，来自高德定位 SDK）> map-all.json 配置坐标
-    const live1 = (window.WithULiveGeo && window.WithULiveGeo.slotCoords(1)) || null;
-    const live2 = (window.WithULiveGeo && window.WithULiveGeo.slotCoords(2)) || null;
+    // 面板左右顺序会随登录身份变化，实时坐标必须按 lover.role 取，不能按数组下标取
+    const liveCoordsForLover = (lover, fallbackSlot) => {
+        if (lover && lover.placeholder) return null;
+        const role = lover && lover.role;
+        const slot = role === 'user2' ? 2 : (role === 'user1' ? 1 : fallbackSlot);
+        return (window.WithULiveGeo && window.WithULiveGeo.slotCoords(slot)) || null;
+    };
+    const live1 = liveCoordsForLover(lover1, 1);
+    const live2 = liveCoordsForLover(lover2, 2);
     const lover1Coords = live1 || extractCoordinatePair(lover1.coords);
     const lover2Coords = live2 || extractCoordinatePair(lover2.coords);
     const lover1Located = lover1.located !== false && !!lover1Coords;

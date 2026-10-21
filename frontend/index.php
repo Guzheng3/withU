@@ -209,7 +209,7 @@ try {
                 'title'     => (string) $r['title'],
                 'excerpt'   => $excerpt,
                 'author'    => (string) ($r['nickname'] ?? ''),
-                'avatar'    => upload_url((string) ($r['avatar'] ?? '')) ?: '/assets/images/default-avatar.svg',
+                'avatar'    => upload_url((string) ($r['avatar'] ?? '')) ?: 'https://q1.qlogo.cn/g?b=qq&nk=10000&s=640',
                 'date'      => $ts ? date('Y-m-d H:i', $ts) : '',
                 'city'      => (string) ($r['location_name'] ?? ''),
                 'weather'   => (string) ($r['weather'] ?? ''),
@@ -263,7 +263,7 @@ try {
                 'count'   => (int) ($r['image_count'] ?? 0),
                 'cover'   => upload_url((string) ($r['cover_image'] ?? '')),
                 'author'  => (string) ($r['nickname'] ?? ''),
-                'avatar'  => upload_url((string) ($r['avatar'] ?? '')) ?: '/assets/images/default-avatar.svg',
+                'avatar'  => upload_url((string) ($r['avatar'] ?? '')) ?: 'https://q1.qlogo.cn/g?b=qq&nk=10000&s=640',
                 'date'    => withu_home_cn_date((string) $r['created_at']),
                 'code'    => $homeAlbumCodes[(string) $r['name']] ?? '',
             ];
@@ -553,8 +553,8 @@ try {
 <!-- 足迹地图配置（懒加载，点击才初始化） -->
         <script src="/assets/js/withu-shared-1916a4be.js"></script>
 <script src="assets/js/app.js"></script>
-<script src="/assets/js/withu-location.js?v=20261007"></script>
-<script src="/assets/js/head-avatar-location.js?v=20261007e"></script>
+<script src="/assets/js/withu-location.js?v=20261022"></script>
+<script src="/assets/js/head-avatar-location.js?v=20261021"></script>
 <?php if (!empty($loggedIn)): ?>
 <!-- 对方正在看邀请气泡（头像区） -->
 <script src="/assets/js/head-avatar-watch-bubble.js"></script>
@@ -564,7 +564,7 @@ try {
 <!-- 礼花效果已迁移到 components.js 的 ConfettiEffect 模块 -->
 
 <script src="assets/js/pjax.js"></script><script>if(window.WithUPjax&&typeof window.WithUPjax.init==="function")window.WithUPjax.init();</script>
-<link rel="stylesheet" href="/assets/css/withu-shared-6790eb7e.css">
+<link rel="stylesheet" href="/assets/css/withu-shared-6790eb7e.css?v=20261021">
 <link rel="stylesheet" href="Style/css/motion-effects.css?v=20261007a">
 <script src="Style/js/motion-effects.js?v=20261007a" defer></script>
 
@@ -827,7 +827,7 @@ try {
                         <!-- 顶部：用户 + 时间 -->
                         <div class="withu-home-weather-row-top">
                             <div class="withu-home-weather-user-pill">
-                                <img src="<?php echo htmlspecialchars(function_exists('upload_url') ? (upload_url((string) ($__cfgWeather['maleAvatar'] ?? '')) ?: '/assets/images/default-avatar.svg') : '/assets/images/default-avatar.svg', ENT_QUOTES, 'UTF-8'); ?>"
+                                <img src="<?php echo htmlspecialchars(function_exists('upload_url') ? (upload_url((string) ($__cfgWeather['maleAvatar'] ?? '')) ?: 'https://q1.qlogo.cn/g?b=qq&nk=10000&s=640') : 'https://q1.qlogo.cn/g?b=qq&nk=10000&s=640', ENT_QUOTES, 'UTF-8'); ?>"
                                     class="withu-home-weather-avatar" alt="<?php echo htmlspecialchars((string) ($__cfgWeather['maleName'] ?? '我'), ENT_QUOTES, 'UTF-8'); ?>">
                                 <span class="withu-home-weather-username"><?php echo htmlspecialchars((string) ($__cfgWeather['maleName'] ?? '我'), ENT_QUOTES, 'UTF-8'); ?></span>
                             </div>
@@ -872,7 +872,7 @@ try {
 
                         <div class="withu-home-weather-row-top">
                             <div class="withu-home-weather-user-pill">
-                                <img src="<?php echo htmlspecialchars(function_exists('upload_url') ? (upload_url((string) ($__cfgWeather['femaleAvatar'] ?? '')) ?: '/assets/images/default-avatar.svg') : '/assets/images/default-avatar.svg', ENT_QUOTES, 'UTF-8'); ?>"
+                                <img src="<?php echo htmlspecialchars(function_exists('upload_url') ? (upload_url((string) ($__cfgWeather['femaleAvatar'] ?? '')) ?: 'https://q1.qlogo.cn/g?b=qq&nk=10000&s=640') : 'https://q1.qlogo.cn/g?b=qq&nk=10000&s=640', ENT_QUOTES, 'UTF-8'); ?>"
                                     class="withu-home-weather-avatar" alt="<?php echo htmlspecialchars((string) ($__cfgWeather['femaleName'] ?? '你'), ENT_QUOTES, 'UTF-8'); ?>">
                                 <span class="withu-home-weather-username"><?php echo htmlspecialchars((string) ($__cfgWeather['femaleName'] ?? '你'), ENT_QUOTES, 'UTF-8'); ?></span>
                             </div>

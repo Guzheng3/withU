@@ -37,7 +37,7 @@ $withuStateIcons = ['online' => 'wifi', 'away' => 'clock', 'offline' => 'wifi-of
             <div class="img-male">
                 <div class="avatarArea withu-head-avatar-boy">
                     <img draggable="false" class="avatarFrame lazy" data-src='https://s1.locimg.com/2024/10/18/db01c99842e69.png' style='transform: scale(1.6);top: 2px;left: 2px;'>
-                    <img draggable="false" class="aiv_touxiang" data-src="<?php echo $boyAvatar ?? '/assets/images/default-avatar.svg'; ?>">
+                    <img draggable="false" class="aiv_touxiang" data-src="<?php echo $boyAvatar ?? '/_qqavatar.php?qq=10000&s=640'; ?>">
                     <div class="withu-head-avatar-mask">
                         <div class="withu-head-avatar-top withu-head-avatar-anim-item">
                             <div class="withu-head-avatar-gender-icon" data-gender="<?php echo $withuBoyGender; ?>"><i data-lucide="<?php echo $withuBoyGender === 'female' ? 'venus' : 'mars'; ?>"></i></div>
@@ -57,17 +57,17 @@ $withuStateIcons = ['online' => 'wifi', 'away' => 'clock', 'offline' => 'wifi-of
                         </div>
                     </div>
                 </div>
-                <span class="shadow-blur"><?php echo htmlspecialchars($boyName ?? 'Ki.', ENT_QUOTES, 'UTF-8'); ?></span>
+                <span class="shadow-blur"><?php echo htmlspecialchars($boyName ?? '', ENT_QUOTES, 'UTF-8'); ?></span>
             </div>
             <div class="love-icon">
                 <div class="love-info-wrapper">
-                    <div class="distance-bubble" onclick="if(window.WithUMap)WithUMap.open({mode:'lovers'})" style="cursor:pointer">
+                    <div class="distance-bubble" data-live-distance="1" onclick="if(window.WithUMap)WithUMap.open({mode:'lovers'})" style="cursor:pointer">
                         <div class="distance-icon-box">
                             <i class="ph-fill ph-navigation-arrow"></i>
                         </div>
                         <div class="distance-text">
                             <span class="distance-text-sm">相距</span>
-                            <span class="km-value">546.9</span>
+                            <span class="km-value">--</span>
                             <span class="distance-text-sm">km</span>
                         </div>
                     </div>
@@ -77,7 +77,7 @@ $withuStateIcons = ['online' => 'wifi', 'away' => 'clock', 'offline' => 'wifi-of
             <div class="img-female">
                 <div class="avatarArea withu-head-avatar-girl">
                     <img draggable="false" class="avatarFrame lazy" data-src='https://s1.locimg.com/2024/10/18/db01c99842e69.png' style='transform: scale(1.6);top: 2px;left: 2px;'>
-                    <img draggable="false" class="aiv_touxiang" data-src="<?php echo $girlAvatar ?? '/assets/images/default-avatar.svg'; ?>">
+                    <img draggable="false" class="aiv_touxiang" data-src="<?php echo $girlAvatar ?? '/_qqavatar.php?qq=10000&s=640'; ?>">
                     <div class="withu-head-avatar-mask">
                         <div class="withu-head-avatar-top withu-head-avatar-anim-item">
                             <div class="withu-head-avatar-gender-icon" data-gender="<?php echo $withuGirlGender; ?>"><i data-lucide="<?php echo $withuGirlGender === 'male' ? 'mars' : 'venus'; ?>"></i></div>
@@ -97,7 +97,7 @@ $withuStateIcons = ['online' => 'wifi', 'away' => 'clock', 'offline' => 'wifi-of
                         </div>
                     </div>
                 </div>
-                <span class="shadow-blur"><?php echo htmlspecialchars($girlName ?? 'Really', ENT_QUOTES, 'UTF-8'); ?></span>
+                <span class="shadow-blur"><?php echo htmlspecialchars($girlName ?? '', ENT_QUOTES, 'UTF-8'); ?></span>
             </div>
         </div>
     </div>

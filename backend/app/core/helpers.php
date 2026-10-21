@@ -1867,8 +1867,9 @@ function migrate_withu_v1($db): void {
  */
 function withu_home_carousel_defaults(): array {
     return [
-        '/Lovefolder/20260408044229_69d56c35d59a9841528398.webp',
-        '/Lovefolder/20260408044228_69d56c34421f3439264035.webp',
+        '/assets/images/home-banners/01-camping-starry-night.webp',
+        '/assets/images/home-banners/02-alpine-lake-village.webp',
+        '/assets/images/home-banners/03-sunset-friends.webp',
     ];
 }
 

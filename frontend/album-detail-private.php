@@ -1,5 +1,12 @@
 <?php require __DIR__ . '/inc/auth.php'; ?>
 <?php require __DIR__ . '/inc/config.php'; ?>
+<?php
+$__cfg = json_decode($withuConfigJson ?? '{}', true) ?: [];
+$__privateMaleName = (string) ($__cfg['maleName'] ?? '');
+$__privateMaleAvatar = (string) (($__cfg['maleAvatar'] ?? '') ?: '/_qqavatar.php?qq=10000&s=640');
+$__privateFemaleName = (string) ($__cfg['femaleName'] ?? '');
+$__privateFemaleAvatar = (string) (($__cfg['femaleAvatar'] ?? '') ?: '/_qqavatar.php?qq=10000&s=640');
+?>
 
 <meta name="x-withu-license-instance" content="858ee1d099b9">
 
@@ -243,8 +250,8 @@
 <!-- 足迹地图配置（懒加载，点击才初始化） -->
         <script src="/assets/js/withu-shared-1916a4be.js"></script>
 <script src="/assets/js/app.js?wm=4c668768&v=1.0.74"></script>
-<script src="/assets/js/withu-location.js?v=20261007"></script>
-<script src="/assets/js/head-avatar-location.js?v=20261007e"></script>
+<script src="/assets/js/withu-location.js?v=20261022"></script>
+<script src="/assets/js/head-avatar-location.js?v=20261021"></script>
 <script src="/assets/js/components.js?v=20261007?wm=4c668768&v=1.0.74"></script>
 
 <!-- 礼花效果已迁移到 components.js 的 ConfettiEffect 模块 -->
@@ -451,10 +458,10 @@
 
         <!-- 底部头像区域 -->
                 <div class="withu-private-avatars">
-                        <div class="withu-private-avatar-item" title="Ki.">
+                        <div class="withu-private-avatar-item" title="<?php echo htmlspecialchars($__privateMaleName, ENT_QUOTES, 'UTF-8'); ?>">
                 <div class="withu-private-avatar-img-box">
-                    <img src="https://love-really.kikiw.cn/Lovefolder/20260411043037_69d95ded97293201118237.webp"
-                        draggable="false" alt="Ki.">
+                    <img src="<?php echo htmlspecialchars($__privateMaleAvatar, ENT_QUOTES, 'UTF-8'); ?>"
+                        draggable="false" alt="<?php echo htmlspecialchars($__privateMaleName, ENT_QUOTES, 'UTF-8'); ?>">
                 </div>
             </div>
             
@@ -462,10 +469,10 @@
                 <span class="withu-private-glow-dot"></span>
             </div>
 
-                        <div class="withu-private-avatar-item" title="Really">
+                        <div class="withu-private-avatar-item" title="<?php echo htmlspecialchars($__privateFemaleName, ENT_QUOTES, 'UTF-8'); ?>">
                 <div class="withu-private-avatar-img-box">
-                    <img src="https://love-really.kikiw.cn/Lovefolder/20260411043046_69d95df639c33274072975.webp"
-                        draggable="false" alt="Really">
+                    <img src="<?php echo htmlspecialchars($__privateFemaleAvatar, ENT_QUOTES, 'UTF-8'); ?>"
+                        draggable="false" alt="<?php echo htmlspecialchars($__privateFemaleName, ENT_QUOTES, 'UTF-8'); ?>">
                 </div>
             </div>
                     </div>

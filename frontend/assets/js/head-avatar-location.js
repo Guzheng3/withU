@@ -95,6 +95,56 @@
         return coords[1].toFixed(2) + ', ' + coords[0].toFixed(2);
     }
 
+    // 球面距离（km）
+    function distanceKm(lat1, lng1, lat2, lng2) {
+        var R = 6371;
+        var toRad = function (v) { return v * Math.PI / 180; };
+        var dLat = toRad(lat2 - lat1);
+        var dLng = toRad(lng2 - lng1);
+        var a = Math.sin(dLat / 2) * Math.sin(dLat / 2)
+            + Math.cos(toRad(lat1)) * Math.cos(toRad(lat2))
+            * Math.sin(dLng / 2) * Math.sin(dLng / 2);
+        return R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+    }
+
+    // 首页情侣头像之间的「相距」气泡：使用双方实时定位，不再显示写死数值
+    function updateDistanceBubble() {
+        var bubble = document.querySelector('.distance-bubble[data-live-distance="1"]');
+        if (!bubble) return;
+        var textEl = bubble.querySelector('.distance-text');
+        if (!textEl) return;
+
+        var c1 = slotLiveCoords(1);
+        var c2 = slotLiveCoords(2);
+        if (!c1 || !c2) {
+            textEl.innerHTML = '<span class="distance-text-sm">相距</span><span class="km-value">--</span><span class="distance-text-sm">km</span>';
+            return;
+        }
+
+        var km = distanceKm(c1[1], c1[0], c2[1], c2[0]);
+        if (!isFinite(km)) {
+            textEl.innerHTML = '<span class="distance-text-sm">相距</span><span class="km-value">--</span><span class="distance-text-sm">km</span>';
+            return;
+        }
+        if (km < 0.01) {
+            textEl.innerHTML = '<span class="km-value">就在身边</span>';
+            return;
+        }
+
+        var value, unit;
+        if (km < 1) {
+            value = Math.round(km * 1000);
+            unit = 'm';
+        } else if (km < 100) {
+            value = km.toFixed(1);
+            unit = 'km';
+        } else {
+            value = Math.round(km);
+            unit = 'km';
+        }
+        textEl.innerHTML = '<span class="distance-text-sm">相距</span><span class="km-value">' + value + '</span><span class="distance-text-sm">' + unit + '</span>';
+    }
+
     // 坐标反查地名（AMap.Geocoder 逆地理编码，需 SDK 已加载）
     function reverseGeocode(lng, lat, callback) {
         try {
@@ -151,8 +201,8 @@
     function tryInit() {
         if (_initialized) return;
         _initialized = true;
-        // 先取双方实时位置（有上报则用实时坐标），再更新地名
-        var kick = function () { updateLocations(); };
+        // 先取双方实时位置（有上报则用实时坐标），再更新地名和相距距离
+        var kick = function () { updateLocations(); updateDistanceBubble(); };
         if (window.WithULiveGeo) {
             window.WithULiveGeo.refresh().then(kick).catch(kick);
             // 兜底：实时位置拉取慢时不阻塞地名显示
@@ -161,6 +211,12 @@
             kick();
         }
     }
+
+    // 实时位置缓存 60s，这里每 65s 刷新一次距离气泡
+    setInterval(function () {
+        if (!window.WithULiveGeo) return;
+        window.WithULiveGeo.refresh().then(updateDistanceBubble).catch(function () {});
+    }, 65000);
 
     if (document.readyState === 'loading') {
         document.addEventListener('DOMContentLoaded', function () {

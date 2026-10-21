@@ -97,7 +97,7 @@ try {
             'id'               => $id,
             'title'            => (string) ($row['title'] ?? ''),
             'nickname'         => (string) ($row['nickname'] ?? ''),
-            'avatar'           => (string) ($row['avatar'] ?? '/assets/images/default-avatar.svg'),
+            'avatar'           => (string) ($row['avatar'] ?? 'https://q1.qlogo.cn/g?b=qq&nk=10000&s=640'),
             'created_at_text'  => formatDate($row['created_at'] ?? date('Y-m-d H:i:s'), 'Y-m-d H:i'),
             'is_encrypted'     => $isEncrypted ? 1 : 0,
             'visibility'       => $visibility,
@@ -181,7 +181,7 @@ try {
             'description'  => $guestLocked ? '' : (string) ($row['description'] ?? ''),
             'image_count'  => $imageCount,
             'nickname'     => (string) ($row['nickname'] ?? ''),
-            'avatar'       => (string) ($row['avatar'] ?? '/assets/images/default-avatar.svg'),
+            'avatar'       => (string) ($row['avatar'] ?? 'https://q1.qlogo.cn/g?b=qq&nk=10000&s=640'),
             'images'       => $previewImages,
         ];
     }
@@ -195,7 +195,7 @@ try {
     $rows = $db->fetchAll(
         "SELECT m.*,
                 COALESCE(u.nickname, m.guest_nickname, '匿名用户') AS nickname,
-                COALESCE(u.avatar, m.guest_avatar, '/assets/images/default-avatar.svg') AS avatar
+                COALESCE(u.avatar, m.guest_avatar, 'https://q1.qlogo.cn/g?b=qq&nk=10000&s=640') AS avatar
          FROM messages m
          LEFT JOIN users u ON m.user_id = u.id
          WHERE m.status = 'published' AND m.is_public = 1
@@ -208,7 +208,7 @@ try {
         $latestMessages[] = [
             'id'         => (int) ($row['id'] ?? 0),
             'nickname'   => (string) ($row['nickname'] ?? '匿名用户'),
-            'avatar'     => (string) ($row['avatar'] ?: '/assets/images/default-avatar.svg'),
+            'avatar'     => (string) ($row['avatar'] ?: 'https://q1.qlogo.cn/g?b=qq&nk=10000&s=640'),
             'content'    => mb_substr($contentText, 0, 60),
             'time_ago'   => timeAgo($row['created_at'] ?? date('Y-m-d H:i:s')),
         ];

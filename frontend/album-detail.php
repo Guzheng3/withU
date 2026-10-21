@@ -102,8 +102,12 @@ if (!function_exists('__withu_album_ago')) {
 
 // 创建者信息（公开相册头部展示用）
 $__cfg = json_decode($withuConfigJson ?? '{}', true);
-$__albumAuthorName = (string) ($__cfg['maleName'] ?? ($__cfg['boy'] ?? 'Ki.'));
-$__albumAuthorAvatar = (string) ($__cfg['maleAvatar'] ?? '');
+$__albumAuthorName = (string) (($__cfg['maleName'] ?? '') ?: ($__cfg['boy'] ?? ''));
+$__albumAuthorAvatar = (string) (($__cfg['maleAvatar'] ?? '') ?: '/_qqavatar.php?qq=10000&s=640');
+$__privateMaleName = (string) ($__cfg['maleName'] ?? '');
+$__privateMaleAvatar = (string) (($__cfg['maleAvatar'] ?? '') ?: '/_qqavatar.php?qq=10000&s=640');
+$__privateFemaleName = (string) ($__cfg['femaleName'] ?? '');
+$__privateFemaleAvatar = (string) (($__cfg['femaleAvatar'] ?? '') ?: '/_qqavatar.php?qq=10000&s=640');
 ?>
 
 <meta name="x-withu-license-instance" content="858ee1d099b9">
@@ -350,14 +354,14 @@ $__albumAuthorAvatar = (string) ($__cfg['maleAvatar'] ?? '');
 <!-- 足迹地图配置（懒加载，点击才初始化） -->
         <script src="/assets/js/withu-shared-3a9d9473.js"></script>
 <script src="/assets/js/app.js"></script>
-<script src="/assets/js/withu-location.js?v=20261007"></script>
-<script src="/assets/js/head-avatar-location.js?v=20261007e"></script>
+<script src="/assets/js/withu-location.js?v=20261022"></script>
+<script src="/assets/js/head-avatar-location.js?v=20261021"></script>
 <script src="/assets/js/components.js?v=20261007"></script>
 
 <!-- 礼花效果已迁移到 components.js 的 ConfettiEffect 模块 -->
 
 <script src="/assets/js/pjax.js"></script><script>if(window.WithUPjax&&typeof window.WithUPjax.init==="function")window.WithUPjax.init();</script>
-<link rel="stylesheet" href="/assets/css/withu-shared-6790eb7e.css">
+<link rel="stylesheet" href="/assets/css/withu-shared-6790eb7e.css?v=20261021">
 <link rel="stylesheet" href="Style/css/motion-effects.css?v=20261007a">
 <script src="Style/js/motion-effects.js?v=20261007a" defer></script>
 
@@ -671,10 +675,10 @@ $__albumAuthorAvatar = (string) ($__cfg['maleAvatar'] ?? '');
 
         <!-- 底部头像区域 -->
                 <div class="withu-private-avatars">
-                        <div class="withu-private-avatar-item" title="Ki.">
+                        <div class="withu-private-avatar-item" title="<?php echo htmlspecialchars($__privateMaleName, ENT_QUOTES, 'UTF-8'); ?>">
                 <div class="withu-private-avatar-img-box">
-                    <img src="/Lovefolder/20260411043037_69d95ded97293201118237.webp"
-                        draggable="false" alt="Ki.">
+                    <img src="<?php echo htmlspecialchars($__privateMaleAvatar, ENT_QUOTES, 'UTF-8'); ?>"
+                        draggable="false" alt="<?php echo htmlspecialchars($__privateMaleName, ENT_QUOTES, 'UTF-8'); ?>">
                 </div>
             </div>
             
@@ -682,10 +686,10 @@ $__albumAuthorAvatar = (string) ($__cfg['maleAvatar'] ?? '');
                 <span class="withu-private-glow-dot"></span>
             </div>
 
-                        <div class="withu-private-avatar-item" title="Really">
+                        <div class="withu-private-avatar-item" title="<?php echo htmlspecialchars($__privateFemaleName, ENT_QUOTES, 'UTF-8'); ?>">
                 <div class="withu-private-avatar-img-box">
-                    <img src="/Lovefolder/20260411043046_69d95df639c33274072975.webp"
-                        draggable="false" alt="Really">
+                    <img src="<?php echo htmlspecialchars($__privateFemaleAvatar, ENT_QUOTES, 'UTF-8'); ?>"
+                        draggable="false" alt="<?php echo htmlspecialchars($__privateFemaleName, ENT_QUOTES, 'UTF-8'); ?>">
                 </div>
             </div>
                     </div>

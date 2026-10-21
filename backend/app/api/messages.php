@@ -34,7 +34,7 @@ try {
         $sql = "
             SELECT m.*,
                    COALESCE(u.nickname, m.guest_nickname, '匿名用户') AS nickname,
-                   COALESCE(u.avatar, m.guest_avatar, '/assets/images/default-avatar.svg') AS avatar
+                   COALESCE(u.avatar, m.guest_avatar, 'https://q1.qlogo.cn/g?b=qq&nk=10000&s=640') AS avatar
             FROM messages m
             LEFT JOIN users u ON m.user_id = u.id
             WHERE m.status = 'published'
@@ -47,7 +47,7 @@ try {
         $sql = "
             SELECT m.*,
                    COALESCE(u.nickname, m.guest_nickname, '匿名用户') AS nickname,
-                   COALESCE(u.avatar, m.guest_avatar, '/assets/images/default-avatar.svg') AS avatar
+                   COALESCE(u.avatar, m.guest_avatar, 'https://q1.qlogo.cn/g?b=qq&nk=10000&s=640') AS avatar
             FROM messages m
             LEFT JOIN users u ON m.user_id = u.id
             WHERE m.status = 'published'
@@ -76,7 +76,7 @@ foreach ($rows as $row) {
     $items[] = [
         'id'           => (int) ($row['id'] ?? 0),
         'nickname'     => (string) ($row['nickname'] ?? '匿名用户'),
-        'avatar'       => (string) ($row['avatar'] ?: '/assets/images/default-avatar.svg'),
+        'avatar'       => (string) ($row['avatar'] ?: 'https://q1.qlogo.cn/g?b=qq&nk=10000&s=640'),
         'content_html' => nl2br(e($row['content'] ?? '')),
         'time_ago'     => timeAgo($row['created_at'] ?? date('Y-m-d H:i:s')),
         'location'     => $location,

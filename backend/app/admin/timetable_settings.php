@@ -519,7 +519,7 @@ include __DIR__ . '/header.php';
         $settings = $user['settings'];
         $avatar = trim((string)($user['avatar'] ?? ''));
         if ($avatar === '') {
-            $avatar = '/assets/images/default-avatar.svg';
+            $avatar = 'https://q1.qlogo.cn/g?b=qq&nk=10000&s=640';
         }
     ?>
     <div class="admin-card">

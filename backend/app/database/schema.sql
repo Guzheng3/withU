@@ -304,8 +304,8 @@ CREATE TABLE IF NOT EXISTS `settings` (
 
 -- 插入默认设置
 INSERT IGNORE INTO `settings` (`key`, `value`, `description`) VALUES
-('love_date', '', '恋爱开始日期'),
-('site_title', 'I Love Day', '网站标题'),
+('love_date', '2025-12-13 17:20:52', '恋爱开始日期'),
+('site_title', 'withu的浪漫时光', '网站标题'),
 ('site_description', '从相遇到相守，把每一个平凡的日子都写成只属于我们的浪漫。', '网站描述'),
 ('video_upload_ignore_site_limit', '0', '视频上传是否忽略站点单文件大小限制（仅受服务器限制）'),
 ('turnstile_enabled', '0', '是否启用 Cloudflare Turnstile 登录验证'),

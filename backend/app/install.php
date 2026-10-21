@@ -8,15 +8,26 @@ header('Content-Type: text/html; charset=UTF-8');
 mb_internal_encoding('UTF-8');
 mb_http_output('UTF-8');
 
-// 先判断是否已安装：已安装时禁止访问安装页面，直接跳转到首页
-if (file_exists(__DIR__ . '/.installed')) {
-    header('Location: /');
-    exit;
-}
+// 安装完成后的清理请求（删除 lock / install.php）需要在 .installed 存在时仍可访问
+$installLockFile  = __DIR__ . '/enable_install.lock';
+$cleanupTokenFile = __DIR__ . '/runtime/install-cleanup.token';
+$isCleanupRequest = ($_SERVER['REQUEST_METHOD'] === 'POST' && (int) ($_POST['step'] ?? 0) === 4);
 
-// 再检查安装解锁文件：没有 enable_install.lock 时禁止访问安装脚本
-$installLockFile = __DIR__ . '/enable_install.lock';
-if (!file_exists($installLockFile)) {
+// 已安装：普通访问跳首页，仅允许携带有效令牌的清理请求
+if (file_exists(__DIR__ . '/.installed')) {
+    if ($isCleanupRequest) {
+        $savedToken = is_file($cleanupTokenFile) ? trim((string) file_get_contents($cleanupTokenFile)) : '';
+        $givenToken = (string) ($_POST['cleanup_token'] ?? '');
+        if ($savedToken === '' || $givenToken === '' || !hash_equals($savedToken, $givenToken)) {
+            header('Location: /');
+            exit;
+        }
+    } else {
+        header('Location: /');
+        exit;
+    }
+} elseif (!file_exists($installLockFile)) {
+    // 未安装时仍需安装解锁文件
     http_response_code(403);
     echo '安装未解锁。请在网站根目录创建 enable_install.lock 文件后再访问本页面。';
     exit;
@@ -101,10 +112,52 @@ require_once __DIR__ . '/core/helpers.php';
 
 $error = '';
 $success = '';
+
+/**
+ * 统计当前数据库配置下的活跃用户数。
+ * 直接使用 PDO，避免 Database 单例在安装过程中缓存旧配置。
+ */
+function install_active_user_count(): int
+{
+    $configFile = __DIR__ . '/config/database.php';
+    if (!is_file($configFile)) {
+        return 0;
+    }
+    try {
+        $cfg = include $configFile;
+        if (!is_array($cfg) || empty($cfg['dbname'])) {
+            return 0;
+        }
+        $dsn = sprintf(
+            'mysql:host=%s;port=%d;dbname=%s;charset=%s',
+            $cfg['host'] ?? 'localhost',
+            (int) ($cfg['port'] ?? 3306),
+            $cfg['dbname'],
+            $cfg['charset'] ?? 'utf8mb4'
+        );
+        $pdo = new PDO($dsn, $cfg['username'] ?? '', $cfg['password'] ?? '', [
+            PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
+        ]);
+        return (int) $pdo->query("SELECT COUNT(*) FROM users WHERE status = 'active'")->fetchColumn();
+    } catch (Throwable $e) {
+        return 0;
+    }
+}
+
 // 优先从 POST 中读取步骤（因为表单是 POST 提交），再回退到 GET，最后默认为 1
 $step = isset($_POST['step'])
     ? intval($_POST['step'])
     : (isset($_GET['step']) ? intval($_GET['step']) : 1);
+
+$installHasAdmin = install_active_user_count() > 0;
+if ($installHasAdmin) {
+    // 已创建管理员：默认进入站点信息；直接访问账号步骤也自动跳过
+    if (!isset($_GET['step']) && !isset($_POST['step'])) {
+        $step = 3;
+    } elseif ($_SERVER['REQUEST_METHOD'] === 'GET' && $step === 2) {
+        $step = 3;
+    }
+}
 
 // 引导顺序约束：先创建管理员账号，才允许进入站点信息步骤
 if ($step === 3 && is_file(__DIR__ . '/config/database.php')) {
@@ -170,7 +223,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && $step === 1) {
             }
         }
         
-        $step = 2;
+        // 目标数据库已有管理员时，跳过账号创建步骤
+        $step = install_active_user_count() > 0 ? 3 : 2;
     } catch (PDOException $e) {
         $error = '数据库连接失败：' . $e->getMessage();
     }
@@ -214,30 +268,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && $step === 1) {
         }
     }
 } elseif ($_SERVER['REQUEST_METHOD'] === 'POST' && $step === 3) {
-    // 第三步：设置网站基础信息、反代域名、备案号与在一起的时间
+    // 第三步：设置网站基础信息、备案号与在一起的时间
     require_once __DIR__ . '/core/Database.php';
     $db = Database::getInstance();
 
     $siteTitle       = trim($_POST['site_title'] ?? '');
     $siteDescription = trim($_POST['site_description'] ?? '');
-    $siteDomain      = trim($_POST['site_domain'] ?? '');
     $icpBeian        = trim($_POST['icp_beian'] ?? '');
     $loveDate        = trim($_POST['love_date'] ?? '');
 
     if ($siteTitle === '') {
         $siteTitle = SITE_NAME;
-    }
-
-    // 反代域名：允许只填域名，自动补 https://；留空则沿用当前访问地址
-    if ($siteDomain !== '') {
-        if (!preg_match('#^https?://#i', $siteDomain)) {
-            $siteDomain = 'https://' . $siteDomain;
-        }
-        $siteDomain  = rtrim($siteDomain, '/');
-        $domainParts = parse_url($siteDomain);
-        if (!$domainParts || empty($domainParts['host']) || !filter_var($siteDomain, FILTER_VALIDATE_URL)) {
-            $error = '反代域名格式不正确，请填写如 https://love.example.com';
-        }
     }
 
     if ($error === '') {
@@ -254,7 +295,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && $step === 1) {
             $settingsToSave = [
                 'site_title'       => $siteTitle,
                 'site_description' => $siteDescription,
-                'site_domain'      => $siteDomain,
                 'icp_beian'        => $icpBeian,
                 'love_date'        => $loveDate,
             ];
@@ -276,42 +316,53 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && $step === 1) {
                 }
             }
 
-            // 反代域名写入站点配置：邀请、分享、上传等绝对链接统一使用正式域名
-            $configUpdated = false;
-            if ($siteDomain !== '' && is_file($configPath) && is_writable($configPath)) {
-                $configSource = (string) file_get_contents($configPath);
-                $newSource = preg_replace_callback(
-                    "/define\(\s*['\"]BASE_URL['\"]\s*,[^;\n]*\);/",
-                    function () use ($siteDomain) {
-                        return "define('BASE_URL', " . var_export($siteDomain, true) . ");";
-                    },
-                    $configSource,
-                    1
-                );
-                if (is_string($newSource) && $newSource !== $configSource) {
-                    $configUpdated = (bool) file_put_contents($configPath, $newSource);
-                }
-            }
-
             // 标记安装完成
             file_put_contents(__DIR__ . '/.installed', date('Y-m-d H:i:s'));
-            // 安装完成后，删除安装解锁文件，避免长期遗留提升误操作风险
-            if (file_exists($installLockFile)) {
-                @unlink($installLockFile);
+
+            // 生成一次性清理令牌，完成页由用户选择是否删除 lock / install.php
+            try {
+                $cleanupToken = bin2hex(random_bytes(16));
+            } catch (Throwable $e) {
+                $cleanupToken = md5(uniqid('', true));
             }
-            $success = '安装完成！';
-            if ($siteDomain !== '') {
-                $success .= ' 站点反代域名：' . $siteDomain;
-                if (!$configUpdated) {
-                    $success .= '（配置文件不可写，BASE_URL 未自动更新，请手动检查 config/config.php）';
+            $runtimeDir = __DIR__ . '/runtime';
+            if (!is_dir($runtimeDir)) {
+                @mkdir($runtimeDir, 0755, true);
+            }
+            if (@file_put_contents($cleanupTokenFile, $cleanupToken) === false) {
+                // 令牌无法写入时退回自动删除 lock，避免完成页无法提交
+                $cleanupToken = '';
+                if (file_exists($installLockFile)) {
+                    @unlink($installLockFile);
                 }
+            } else {
+                @chmod($cleanupTokenFile, 0600);
             }
+
+            $success = '安装完成！';
             $step = 4;
         } catch (Exception $e) {
             $error = '保存网站信息失败：' . $e->getMessage();
             $step  = 3;
         }
     }
+} elseif ($_SERVER['REQUEST_METHOD'] === 'POST' && $step === 4) {
+    // 安装完成后的可选清理（默认删除 lock）
+    $savedToken = is_file($cleanupTokenFile) ? trim((string) file_get_contents($cleanupTokenFile)) : '';
+    $givenToken = (string) ($_POST['cleanup_token'] ?? '');
+    if ($savedToken === '' || $givenToken === '' || !hash_equals($savedToken, $givenToken)) {
+        header('Location: /');
+        exit;
+    }
+
+    if (isset($_POST['delete_lock']) && file_exists($installLockFile)) {
+        @unlink($installLockFile);
+    }
+    if (isset($_POST['delete_installer'])) {
+        @unlink(__FILE__);
+    }
+    @unlink($cleanupTokenFile);
+    $step = 5;
 }
 ?>
 <!DOCTYPE html>
@@ -364,17 +415,34 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && $step === 1) {
     .qq-avatar img{width:100%;height:100%;object-fit:cover;display:block;}
     .qq-input-row input[type="text"]{flex:1;min-width:0;}
     /* 角色选择 */
-    .role-toggle{display:flex;justify-content:center;gap:14px;}
-    .role-toggle .role-option{flex:0 1 132px;min-width:0;cursor:pointer;}
+    .role-toggle{display:flex;justify-content:center;align-items:stretch;gap:16px;}
+    .role-toggle .role-option{display:block;flex:0 1 200px;min-width:0;margin-bottom:0;color:inherit;cursor:pointer;}
     .role-toggle .role-option input{display:none;}
     .role-toggle .role-option-inner{display:flex;flex-direction:column;align-items:center;justify-content:center;
-      min-height:76px;padding:12px 8px;gap:4px;border:1.5px solid #e3e6f0;border-radius:12px;transition:.2s;text-align:center;}
-    .role-toggle .role-option input:checked+.role-option-inner{border-color:var(--brand);background:#fff5f8;
-      color:var(--brand);box-shadow:0 4px 12px rgba(231,84,128,.12);}
-    .role-toggle .role-option-inner i{font-size:24px;}
-    .role-toggle .role-option-inner .role-text-main{font-size:14px;font-weight:700;}
+      width:100%;box-sizing:border-box;min-height:76px;padding:10px 16px;gap:4px;border:1.5px solid #e3e6f0;border-radius:14px;
+      background:#fbfcfe;color:#374151;transition:border-color .2s,background .2s,box-shadow .2s,transform .2s;text-align:center;}
+    .role-toggle .role-option:hover .role-option-inner{border-color:#f2b8ca;background:#fffafc;transform:translateY(-1px);}
+    .role-toggle .role-option input:checked+.role-option-inner{border-color:var(--brand);
+      background:linear-gradient(180deg,#fff9fb,#fff0f5);color:var(--brand);
+      box-shadow:0 6px 16px rgba(231,84,128,.14);}
+    .role-toggle .role-option-inner i{width:34px;height:34px;border-radius:50%;display:flex;align-items:center;
+      justify-content:center;font-size:18px;background:#eef4fb;transition:background .2s,color .2s;}
+    .role-toggle .role-option-inner .role-female-icon{background:#fdeef4;}
+    .role-toggle .role-option input:checked+.role-option-inner i{background:#fff;}
+    .role-toggle .role-option-inner .role-text-main{font-size:15px;font-weight:700;letter-spacing:.02em;}
     .role-male-icon{color:#5dade2;}
     .role-female-icon{color:var(--brand);}
+    /* 在一起的时间：分段输入 */
+    .form-group .datetime-seg{display:flex;align-items:center;gap:6px;}
+    .form-group .datetime-seg input{flex:1 1 0;width:auto;min-width:0;text-align:center;padding:11px 4px;
+      font-variant-numeric:tabular-nums;letter-spacing:.02em;}
+    .form-group .datetime-seg .seg-year{flex:1.5 1 0;}
+    .datetime-seg .seg-sep{color:#b0b6c6;font-weight:700;flex-shrink:0;}
+    .datetime-seg .seg-gap{width:6px;}
+    @media (max-width:480px){
+      .form-group .datetime-seg{gap:4px;}
+      .form-group .datetime-seg input{padding:10px 2px;font-size:13px;}
+    }
     /* 按钮 */
     .btn-row{display:flex;gap:12px;margin-top:8px;}
     .btn{flex:1;padding:12px;border:none;border-radius:10px;font-size:15px;font-weight:700;cursor:pointer;transition:.2s;
@@ -399,6 +467,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && $step === 1) {
     .done-note{background:#fff8fa;border:1px solid #ffdce8;color:#9b5672;border-radius:10px;padding:12px 14px;
       font-size:12.5px;line-height:1.7;margin:18px 0 20px;text-align:left;}
     .done-note code{background:#ffe9f1;color:#c23b64;padding:1px 6px;border-radius:5px;font-size:11.5px;}
+    .done-note .cleanup-option{display:flex;align-items:flex-start;gap:8px;margin:10px 0;font-size:13px;line-height:1.6;cursor:pointer;}
+    .done-note .cleanup-option input[type="checkbox"]{margin-top:3px;accent-color:var(--brand);flex-shrink:0;}
+    .done-note .btn-row{margin-top:14px;}
     .footer-note{text-align:center;margin-top:18px;font-size:12px;color:#b0b5c4;}
     @media (prefers-reduced-motion: reduce){*{transition:none !important;}}
     @media (max-width:480px){.install-body{padding:20px 18px 24px;}.install-head{padding:28px 18px 22px;}}
@@ -408,7 +479,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && $step === 1) {
 <div class="install-card">
     <div class="install-head">
         <h2><i class="fas fa-heart"></i>安装向导</h2>
-        <p>三步完成数据库配置、管理员账号创建与站点信息设置（含反代域名、备案号、在一起的时间）</p>
+        <p>三步完成数据库配置、管理员账号创建与站点信息设置（含备案号、在一起的时间）</p>
     </div>
     <div class="install-body">
         <?php
@@ -445,6 +516,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && $step === 1) {
         <?php endif; ?>
 
         <?php if ($step === 1): ?>
+        <?php if ($installHasAdmin): ?>
+        <div class="alert alert-success"><i class="fas fa-check-circle"></i>检测到当前数据库已有管理员账号，下一步将直接进入站点信息。</div>
+        <?php endif; ?>
         <form method="POST" novalidate>
             <input type="hidden" name="step" value="1">
             <div class="form-group">
@@ -469,7 +543,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && $step === 1) {
                 <input type="password" name="password" placeholder="本地开发默认留空">
             </div>
             <div class="btn-row">
-                <button type="submit" class="btn btn-primary"><i class="fas fa-arrow-right"></i>下一步：创建账号</button>
+                <button type="submit" class="btn btn-primary"><i class="fas fa-arrow-right"></i><?php echo $installHasAdmin ? '下一步：站点信息' : '下一步：创建账号'; ?></button>
             </div>
         </form>
         <?php elseif ($step === 2): ?>
@@ -540,6 +614,26 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && $step === 1) {
         })();
         </script>
         <?php elseif ($step === 3): ?>
+        <?php
+        // 回填「在一起的时间」分段输入
+        $loveRaw    = isset($_POST['love_date']) ? trim((string) $_POST['love_date']) : '2025-12-13 17:20:52';
+        $loveSeg    = ['year' => '', 'month' => '', 'day' => '', 'hour' => '', 'minute' => '', 'second' => ''];
+        $loveHidden = '';
+        if ($loveRaw !== '') {
+            $loveDt = date_create(str_replace(' ', 'T', $loveRaw));
+            if ($loveDt instanceof DateTime) {
+                $loveSeg = [
+                    'year'   => $loveDt->format('Y'),
+                    'month'  => $loveDt->format('m'),
+                    'day'    => $loveDt->format('d'),
+                    'hour'   => $loveDt->format('H'),
+                    'minute' => $loveDt->format('i'),
+                    'second' => $loveDt->format('s'),
+                ];
+                $loveHidden = $loveDt->format('Y-m-d H:i:s');
+            }
+        }
+        ?>
         <form method="POST" novalidate>
             <input type="hidden" name="step" value="3">
             <div class="form-group">
@@ -551,14 +645,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && $step === 1) {
             <div class="form-group">
                 <label><i class="fas fa-align-left"></i>网站描述</label>
                 <textarea name="site_description"
-                          placeholder="简单介绍一下你们的故事～"><?php echo isset($_POST['site_description']) ? e($_POST['site_description']) : ''; ?></textarea>
-            </div>
-            <div class="form-group">
-                <label><i class="fas fa-globe"></i>反代域名</label>
-                <input type="text" name="site_domain"
-                       value="<?php echo isset($_POST['site_domain']) ? e($_POST['site_domain']) : ''; ?>"
-                       placeholder="例如：https://love.example.com" autocomplete="url">
-                <div class="hint">用于生成邀请、分享、上传等站内绝对链接。可只填域名，系统会自动补全 https://；留空则沿用当前访问域名。</div>
+                          placeholder="简单介绍一下你们的故事～"><?php echo isset($_POST['site_description']) ? e($_POST['site_description']) : '从相遇到相守，把每一个平凡的日子都写成只属于我们的浪漫。'; ?></textarea>
             </div>
             <div class="form-group">
                 <label><i class="fas fa-shield-halved"></i>网站备案号（选填）</label>
@@ -569,25 +656,125 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && $step === 1) {
             </div>
             <div class="form-group">
                 <label><i class="fas fa-calendar-days"></i>在一起的时间</label>
-                <input type="datetime-local" name="love_date"
-                       value="<?php echo isset($_POST['love_date']) ? e($_POST['love_date']) : ''; ?>"
-                       placeholder="未设置" step="1">
+                <div class="datetime-seg" id="installLoveSeg">
+                    <input type="text" class="seg-year" data-part="year" inputmode="numeric" maxlength="4" placeholder="YYYY" aria-label="年" value="<?php echo e($loveSeg['year']); ?>" autocomplete="off">
+                    <span class="seg-sep">-</span>
+                    <input type="text" data-part="month" inputmode="numeric" maxlength="2" placeholder="MM" aria-label="月" value="<?php echo e($loveSeg['month']); ?>" autocomplete="off">
+                    <span class="seg-sep">-</span>
+                    <input type="text" data-part="day" inputmode="numeric" maxlength="2" placeholder="DD" aria-label="日" value="<?php echo e($loveSeg['day']); ?>" autocomplete="off">
+                    <span class="seg-sep seg-gap"></span>
+                    <input type="text" data-part="hour" inputmode="numeric" maxlength="2" placeholder="HH" aria-label="时" value="<?php echo e($loveSeg['hour']); ?>" autocomplete="off">
+                    <span class="seg-sep">:</span>
+                    <input type="text" data-part="minute" inputmode="numeric" maxlength="2" placeholder="mm" aria-label="分" value="<?php echo e($loveSeg['minute']); ?>" autocomplete="off">
+                    <span class="seg-sep">:</span>
+                    <input type="text" data-part="second" inputmode="numeric" maxlength="2" placeholder="ss" aria-label="秒" value="<?php echo e($loveSeg['second']); ?>" autocomplete="off">
+                </div>
+                <input type="hidden" name="love_date" id="installLoveDateValue" value="<?php echo e($loveHidden); ?>">
                 <div class="hint">用于计算在一起的天数，支持精确到秒（可留空，未设置时默认按当前日期开始计算）。</div>
             </div>
             <div class="btn-row">
-                <a href="?step=2" class="btn btn-ghost"><i class="fas fa-arrow-left"></i>上一步</a>
+                <a href="?step=<?php echo $installHasAdmin ? '1' : '2'; ?>" class="btn btn-ghost"><i class="fas fa-arrow-left"></i>上一步</a>
                 <button type="submit" class="btn btn-primary"><i class="fas fa-check-circle"></i>保存并完成安装</button>
             </div>
         </form>
+        <script>
+        (function () {
+            var wrap = document.getElementById('installLoveSeg');
+            var hidden = document.getElementById('installLoveDateValue');
+            if (!wrap || !hidden) return;
+            var parts = Array.prototype.slice.call(wrap.querySelectorAll('input[data-part]'));
+            var max = { year: 4, month: 2, day: 2, hour: 2, minute: 2, second: 2 };
+
+            function digits(v, n) { return (v || '').replace(/\D/g, '').slice(0, n); }
+            function pad(v, n) { return v ? String(v).padStart(n, '0') : ''; }
+            function sync() {
+                var v = {};
+                parts.forEach(function (el) { v[el.dataset.part] = digits(el.value, max[el.dataset.part]); });
+                var out = '';
+                if (v.year.length === 4 && v.month !== '' && v.day !== '') {
+                    out = v.year + '-' + pad(v.month, 2) + '-' + pad(v.day, 2);
+                    if (v.hour !== '' && v.minute !== '') {
+                        out += ' ' + pad(v.hour, 2) + ':' + pad(v.minute, 2);
+                        if (v.second !== '') out += ':' + pad(v.second, 2);
+                    }
+                }
+                hidden.value = out;
+            }
+
+            parts.forEach(function (el, i) {
+                el.addEventListener('input', function () {
+                    var n = max[el.dataset.part];
+                    var v = digits(this.value, n);
+                    if (this.value !== v) this.value = v;
+                    if (v.length >= n && parts[i + 1]) parts[i + 1].focus();
+                    sync();
+                });
+                el.addEventListener('keydown', function (e) {
+                    if (e.key === 'Backspace' && this.value === '' && i > 0) {
+                        e.preventDefault();
+                        parts[i - 1].focus();
+                    }
+                });
+                el.addEventListener('blur', function () {
+                    if (this.value !== '') this.value = pad(this.value, max[el.dataset.part]);
+                    sync();
+                });
+                el.addEventListener('focus', function () { this.select(); });
+            });
+
+            // 支持整段粘贴：2024-05-20 13:14:00 / 2024-05-20T13:14
+            wrap.addEventListener('paste', function (e) {
+                var text = (e.clipboardData || window.clipboardData).getData('text') || '';
+                var m = text.match(/(\d{4})\D*(\d{1,2})\D*(\d{1,2})(?:\D+(\d{1,2})\D*(\d{1,2})(?:\D*(\d{1,2}))?)?/);
+                if (!m) return;
+                e.preventDefault();
+                parts[0].value = m[1];
+                parts[1].value = pad(m[2], 2);
+                parts[2].value = pad(m[3], 2);
+                parts[3].value = m[4] ? pad(m[4], 2) : '';
+                parts[4].value = m[5] ? pad(m[5], 2) : '';
+                parts[5].value = m[6] ? pad(m[6], 2) : '';
+                sync();
+            });
+
+            sync();
+        })();
+        </script>
         <?php elseif ($step === 4): ?>
         <div class="done-wrap">
             <div class="done-icon"><i class="fas fa-check"></i></div>
             <h3>安装完成！</h3>
             <p>系统已成功安装，现在可以开始使用了。</p>
+            <?php if ($cleanupToken !== ''): ?>
             <div class="done-note">
-                出于安全考虑，建议删除站点根目录下的 <code>enable_install.lock</code> 文件
-                （如无特殊需要，也可以备份后删除 <code>install.php</code>）。
+                <form method="POST" action="?step=4">
+                    <input type="hidden" name="step" value="4">
+                    <input type="hidden" name="cleanup_token" value="<?php echo e($cleanupToken); ?>">
+                    <label class="cleanup-option">
+                        <input type="checkbox" name="delete_lock" value="1" checked>
+                        <span>删除安装锁文件 <code>enable_install.lock</code>（推荐）</span>
+                    </label>
+                    <label class="cleanup-option">
+                        <input type="checkbox" name="delete_installer" value="1">
+                        <span>同时删除安装脚本 <code>install.php</code></span>
+                    </label>
+                    <div class="btn-row">
+                        <button type="submit" class="btn btn-primary"><i class="fas fa-check-circle"></i>完成</button>
+                    </div>
+                </form>
             </div>
+            <?php else: ?>
+            <div class="done-note">安装锁文件已自动处理，可以直接进入站点。</div>
+            <div class="btn-row">
+                <a href="/login.php" class="btn btn-primary"><i class="fas fa-sign-in-alt"></i>前往登录</a>
+            </div>
+            <?php endif; ?>
+        </div>
+        <?php elseif ($step === 5): ?>
+        <div class="done-wrap">
+            <div class="done-icon"><i class="fas fa-check"></i></div>
+            <h3>清理完成</h3>
+            <p>安装已完成，站点可以开始使用了。</p>
             <div class="btn-row">
                 <a href="/login.php" class="btn btn-primary"><i class="fas fa-sign-in-alt"></i>前往登录</a>
             </div>

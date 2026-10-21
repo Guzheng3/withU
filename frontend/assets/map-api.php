@@ -5,6 +5,7 @@
  * 支持 module=album_photos 查询相册照片
  */
 header('Content-Type: application/json; charset=utf-8');
+header('Cache-Control: no-store, no-cache, must-revalidate, max-age=0');
 
 require_once __DIR__ . '/../services/message-common.php';
 
@@ -119,16 +120,21 @@ try {
     $rootPath = dirname(__DIR__, 2) . '/backend/app';
     if (is_file($rootPath . '/config/database.php') && is_file($rootPath . '/.installed')) {
         require_once $rootPath . '/core/Database.php';
+        require_once $rootPath . '/core/Auth.php';
         $db = Database::getInstance();
+        $mapAuth = new Auth();
+        $mapCurrentUser = $mapAuth->getCurrentUser();
+        $mapCurrentRole = (string) ($mapCurrentUser['role'] ?? '');
         $users = $db->fetchAll("SELECT nickname, avatar, role FROM users WHERE status='active' ORDER BY FIELD(role,'user1','user2')");
         $boy = null; $girl = null;
         foreach ($users as $u) {
             if (($u['role'] ?? '') === 'user1' && !$boy) $boy = $u;
             if (($u['role'] ?? '') === 'user2' && !$girl) $girl = $u;
         }
-        if ($boy && $girl) {
-            $jsonLovers = $mapData['lovers'] ?? [];
-            $pickCoords = function (array $user) use ($jsonLovers) {
+        if ($boy || $girl) {
+            $jsonLovers    = $mapData['lovers'] ?? [];
+            $defaultAvatar = '/_qqavatar.php?qq=10000&s=640';
+            $pickMeta = function (array $user) use ($jsonLovers) {
                 $nickname = trim((string)($user['nickname'] ?? ''));
                 $avatarFile = strtolower(pathinfo(parse_url((string)($user['avatar'] ?? ''), PHP_URL_PATH) ?? '', PATHINFO_BASENAME));
                 foreach ($jsonLovers as $lover) {
@@ -137,17 +143,51 @@ try {
                     $lAvatarFile = strtolower(pathinfo(parse_url((string)($lover['avatar'] ?? ''), PHP_URL_PATH) ?? '', PATHINFO_BASENAME));
                     if (($avatarFile !== '' && $lAvatarFile === $avatarFile)
                         || ($nickname !== '' && trim((string)($lover['name'] ?? '')) === $nickname)) {
-                        return array_slice($c, 0, 2);
+                        return [
+                            'coords' => array_slice($c, 0, 2),
+                            'label'  => (string) ($lover['label'] ?? ''),
+                        ];
                     }
                 }
                 return null;
             };
-            $boyCoords = $pickCoords($boy) ?? ($jsonLovers[0]['coords'] ?? [116.39, 39.90]);
-            $girlCoords = $pickCoords($girl) ?? ($jsonLovers[1]['coords'] ?? [116.39, 39.90]);
-            $lovers = [
-                ['name' => $boy['nickname'] ?? '', 'label' => $jsonLovers[0]['label'] ?? '', 'role' => 'user1', 'coords' => $boyCoords, 'avatar' => $boy['avatar'] ?? ''],
-                ['name' => $girl['nickname'] ?? '', 'label' => $jsonLovers[1]['label'] ?? '', 'role' => 'user2', 'coords' => $girlCoords, 'avatar' => $girl['avatar'] ?? ''],
-            ];
+
+            if ($boy && $girl) {
+                // 两位实际用户都存在：头像、昵称、位置全部来自真实账号
+                $boyMeta  = $pickMeta($boy);
+                $girlMeta = $pickMeta($girl);
+                $lovers = [
+                    ['name' => $boy['nickname'] ?? '', 'label' => $boyMeta['label'] ?? '未知', 'role' => 'user1', 'coords' => $boyMeta['coords'] ?? null, 'avatar' => ($boy['avatar'] ?? '') ?: $defaultAvatar],
+                    ['name' => $girl['nickname'] ?? '', 'label' => $girlMeta['label'] ?? '未知', 'role' => 'user2', 'coords' => $girlMeta['coords'] ?? null, 'avatar' => ($girl['avatar'] ?? '') ?: $defaultAvatar],
+                ];
+                // 面板左「我」右「TA」：登录者是 user2 时交换顺序，保证头像与登录身份对应
+                if ($mapCurrentRole === 'user2') {
+                    $lovers = [$lovers[1], $lovers[0]];
+                }
+            } else {
+                // 只有一位实际用户：左侧显示真实账号，右侧用「等待加入」占位，避免套用旧演示情侣
+                $only     = $boy ?: $girl;
+                $onlyRole = $boy ? 'user1' : 'user2';
+                $onlyName = trim((string) ($only['nickname'] ?? ''));
+                $onlyMeta = $pickMeta($only);
+                $lovers = [
+                    [
+                        'name'   => $onlyName,
+                        'label'  => $onlyMeta['label'] ?? '未知',
+                        'role'   => $onlyRole,
+                        'coords' => $onlyMeta['coords'] ?? null,
+                        'avatar' => ($only['avatar'] ?? '') ?: $defaultAvatar,
+                    ],
+                    [
+                        'name'        => 'TA',
+                        'label'       => '等待加入',
+                        'role'        => 'user2',
+                        'coords'      => null,
+                        'avatar'      => $defaultAvatar,
+                        'placeholder' => true,
+                    ],
+                ];
+            }
         }
     }
 } catch (Throwable $e) {

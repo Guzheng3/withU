@@ -1,25 +1,6 @@
 {
-    "lovers": [
-        {
-            "name": "Really",
-            "label": "甲子公园",
-            "coords": [
-                116.075335,
-                22.869156
-            ],
-            "avatar": "https://love-really.kikiw.cn/Lovefolder/20260411043046_69d95df639c33274072975.webp"
-        },
-        {
-            "name": "Ki.",
-            "label": "潘州公园",
-            "coords": [
-                110.856708,
-                21.915454
-            ],
-            "avatar": "https://love-really.kikiw.cn/Lovefolder/20260411043037_69d95ded97293201118237.webp"
-        }
-    ],
-    "loveStartDate": "2023-07-19 00:00:00",
+    "lovers": [],
+    "loveStartDate": "",
     "milestones": [],
     "moments": [],
     "messages": [],

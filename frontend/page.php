@@ -244,14 +244,14 @@
 <!-- 足迹地图配置（懒加载，点击才初始化） -->
         <script src="/assets/js/withu-shared-3a9d9473.js"></script>
 <script src="/assets/js/app.js"></script>
-<script src="/assets/js/withu-location.js?v=20261007"></script>
-<script src="/assets/js/head-avatar-location.js?v=20261007e"></script>
+<script src="/assets/js/withu-location.js?v=20261022"></script>
+<script src="/assets/js/head-avatar-location.js?v=20261021"></script>
 <script src="/assets/js/components.js?v=20261007"></script>
 
 <!-- 礼花效果已迁移到 components.js 的 ConfettiEffect 模块 -->
 
 <script src="/assets/js/pjax.js"></script><script>if(window.WithUPjax&&typeof window.WithUPjax.init==="function")window.WithUPjax.init();</script>
-<link rel="stylesheet" href="/assets/css/withu-shared-6790eb7e.css">
+<link rel="stylesheet" href="/assets/css/withu-shared-6790eb7e.css?v=20261021">
 <link rel="stylesheet" href="Style/css/motion-effects.css?v=20261007a">
 <script src="Style/js/motion-effects.js?v=20261007a" defer></script>
 
@@ -497,7 +497,7 @@
     $__artLat = $__art['latitude'] ?? null;
     $__artHasCoords = $__artLng !== null && $__artLat !== null && is_numeric($__artLng) && is_numeric($__artLat);
     $__artAuthorName = $withuArticleAuthor['name'] !== '' ? $withuArticleAuthor['name'] : 'withU';
-    $__artAuthorAvatar = function_exists('upload_url') ? (upload_url($withuArticleAuthor['avatar']) ?: '/assets/images/default-avatar.svg') : '/assets/images/default-avatar.svg';
+    $__artAuthorAvatar = function_exists('upload_url') ? (upload_url($withuArticleAuthor['avatar']) ?: 'https://q1.qlogo.cn/g?b=qq&nk=10000&s=640') : 'https://q1.qlogo.cn/g?b=qq&nk=10000&s=640';
     $__artContent = (string) ($__art['content'] ?? '');
     // 聊天/块模式（edit_mode=chat）：全文按块存在 article_blocks 表，content 字段可能为空，按 block_index 拼接
     $__chatBlockRows = [];
@@ -823,7 +823,7 @@
                                         </div>
                                         <div class="withu-detail-nav-title"><?php echo htmlspecialchars((string) $withuArticlePrev['title'], ENT_QUOTES, 'UTF-8'); ?></div>
                                         <div class="withu-detail-nav-footer">
-                                            <img src="<?php echo htmlspecialchars(function_exists('upload_url') ? (upload_url((string) ($withuArticlePrev['avatar'] ?? '')) ?: '/assets/images/default-avatar.svg') : '/assets/images/default-avatar.svg', ENT_QUOTES, 'UTF-8'); ?>" alt="<?php echo htmlspecialchars((string) ($withuArticlePrev['nickname'] ?? ''), ENT_QUOTES, 'UTF-8'); ?>">
+                                            <img src="<?php echo htmlspecialchars(function_exists('upload_url') ? (upload_url((string) ($withuArticlePrev['avatar'] ?? '')) ?: 'https://q1.qlogo.cn/g?b=qq&nk=10000&s=640') : 'https://q1.qlogo.cn/g?b=qq&nk=10000&s=640', ENT_QUOTES, 'UTF-8'); ?>" alt="<?php echo htmlspecialchars((string) ($withuArticlePrev['nickname'] ?? ''), ENT_QUOTES, 'UTF-8'); ?>">
                                             <span><?php echo htmlspecialchars((string) ($withuArticlePrev['nickname'] ?? ''), ENT_QUOTES, 'UTF-8'); ?></span>
                                             <span>·</span>
                                             <span><?php echo date('m月d日', strtotime((string) $withuArticlePrev['created_at']) ?: time()); ?></span>
@@ -839,7 +839,7 @@
                                         </div>
                                         <div class="withu-detail-nav-title"><?php echo htmlspecialchars((string) $withuArticleNext['title'], ENT_QUOTES, 'UTF-8'); ?></div>
                                         <div class="withu-detail-nav-footer">
-                                            <img src="<?php echo htmlspecialchars(function_exists('upload_url') ? (upload_url((string) ($withuArticleNext['avatar'] ?? '')) ?: '/assets/images/default-avatar.svg') : '/assets/images/default-avatar.svg', ENT_QUOTES, 'UTF-8'); ?>" alt="<?php echo htmlspecialchars((string) ($withuArticleNext['nickname'] ?? ''), ENT_QUOTES, 'UTF-8'); ?>">
+                                            <img src="<?php echo htmlspecialchars(function_exists('upload_url') ? (upload_url((string) ($withuArticleNext['avatar'] ?? '')) ?: 'https://q1.qlogo.cn/g?b=qq&nk=10000&s=640') : 'https://q1.qlogo.cn/g?b=qq&nk=10000&s=640', ENT_QUOTES, 'UTF-8'); ?>" alt="<?php echo htmlspecialchars((string) ($withuArticleNext['nickname'] ?? ''), ENT_QUOTES, 'UTF-8'); ?>">
                                             <span><?php echo htmlspecialchars((string) ($withuArticleNext['nickname'] ?? ''), ENT_QUOTES, 'UTF-8'); ?></span>
                                             <span>·</span>
                                             <span><?php echo date('m月d日', strtotime((string) $withuArticleNext['created_at']) ?: time()); ?></span>

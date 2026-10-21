@@ -6,13 +6,13 @@
  */
 
 // 默认静态配置（数据库不可用时兜底）
-$withuConfigJson = '{"title":"withU","boy":"Ki.","girl":"Really","startTime":"2023-07-19 00:00:00","version":"2.2.5","pageBackgroundBlur":0,"pageBackgroundFrost":0,"pcCarouselHeight":"80vh","mobileCarouselHeight":"50vh","pcPhotoCoverHeight":"80vh","mobilePhotoCoverHeight":"60vh","pcImgMaxHeight":"450px","mobileImgMaxHeight":"260px","maleName":"Ki.","maleAvatar":"/Lovefolder/20260411043037_69d95ded97293201118237.webp","femaleName":"Really","femaleAvatar":"/Lovefolder/20260411043046_69d95df639c33274072975.webp","siteBase":"","assetBase":"","imageErrorFallback":"/Style/img/file-placeholder.svg","owoBase":"/OwO","soloMode":false,"weatherEnabled":true,"weatherToken":"","weatherType":"qweather","amapKey":"","weatherLocMode":"auto","weatherLocCity":"","weatherLocLat":null,"weatherLocLng":null,"weatherLocName":"","soloOwnerGeo":{"lat":21.915454,"lng":110.856708},"boyCoords":[116.39,39.90],"girlCoords":[116.39,39.90],"bannedChars":"操屌","endpoints":{"mapApi":"/assets/map-api.php","weatherNow":"/services/weather.php","interaction":"/services/interaction.php","accessBeacon":"/services/access-beacon.php","messageList":"/services/message-list.php","messageSubmit":"/services/message.php","infoService":"/services/info-service.php","weatherApi":"/services/weather.php"}}';
+$withuConfigJson = '{"title":"withU","boy":"","girl":"","startTime":"","version":"2.2.5","pageBackgroundBlur":0,"pageBackgroundFrost":0,"pcCarouselHeight":"80vh","mobileCarouselHeight":"50vh","pcPhotoCoverHeight":"80vh","mobilePhotoCoverHeight":"60vh","pcImgMaxHeight":"450px","mobileImgMaxHeight":"260px","maleName":"","maleAvatar":"","femaleName":"","femaleAvatar":"","siteBase":"","assetBase":"","imageErrorFallback":"/Style/img/file-placeholder.svg","owoBase":"/OwO","soloMode":false,"weatherEnabled":true,"weatherToken":"","weatherType":"qweather","amapKey":"","weatherLocMode":"auto","weatherLocCity":"","weatherLocLat":null,"weatherLocLng":null,"weatherLocName":"","soloOwnerGeo":null,"boyCoords":null,"girlCoords":null,"bannedChars":"操屌","endpoints":{"mapApi":"/assets/map-api.php","weatherNow":"/services/weather.php","interaction":"/services/interaction.php","accessBeacon":"/services/access-beacon.php","messageList":"/services/message-list.php","messageSubmit":"/services/message.php","infoService":"/services/info-service.php","weatherApi":"/services/weather.php"}}';
 
 // 站点标题（供页面 <title> 等使用；数据库可用时取 settings.site_title，否则用默认值）
 $withuSiteTitle = 'withU';
 
 // 首页「Together Since」起始日展示文案（数据库不可用时兜底）
-$withuStartDateDisplay = '2023-07-19 00:00';
+$withuStartDateDisplay = '';
 
 try {
     $rootPath = dirname(__DIR__, 2) . '/backend/app';
@@ -31,10 +31,10 @@ try {
         if ($role === 'user2' && !$user2) $user2 = $u;
     }
 
-    $boyName = $user1['nickname'] ?? 'Ki.';
-    $girlName = $user2['nickname'] ?? 'Really';
-    $boyAvatar = $user1['avatar'] ?? '/assets/images/default-avatar.svg';
-    $girlAvatar = $user2['avatar'] ?? '/assets/images/default-avatar.svg';
+    $boyName = $user1['nickname'] ?? '';
+    $girlName = $user2['nickname'] ?? '';
+    $boyAvatar = $user1['avatar'] ?? '/_qqavatar.php?qq=10000&s=640';
+    $girlAvatar = $user2['avatar'] ?? '/_qqavatar.php?qq=10000&s=640';
 
     // 性别与最近上线时间（头像区徽标用），老库缺列时保持 null
     $boyGender = in_array($user1['gender'] ?? '', ['male', 'female'], true) ? $user1['gender'] : null;
@@ -44,7 +44,7 @@ try {
 
     // 站长自己的坐标（头像区「我」的兜底位置）：settings.solo_owner_geo 优先，
     // 未配置时用演示默认值；格式 {lat, lng}，与 lovers[].coords 的 [lng, lat] 不同
-    $soloOwnerGeo = ['lat' => 21.915454, 'lng' => 110.856708];
+    $soloOwnerGeo = null;
     $ownerGeoRow = $db->fetch("SELECT value FROM settings WHERE `key`='solo_owner_geo'");
     if ($ownerGeoRow && !empty($ownerGeoRow['value'])) {
         $ownerGeoParsed = json_decode($ownerGeoRow['value'], true);
@@ -55,8 +55,8 @@ try {
 
     // 读取情侣坐标（从 map-all.json）
     // 优先按头像文件名 / 昵称匹配 lovers，避免 lovers 数组顺序与 boy/girl 顺序不一致时位置挂反
-    $boyCoords = [116.39, 39.90];
-    $girlCoords = [116.39, 39.90];
+    $boyCoords = null;
+    $girlCoords = null;
     $boyCoordsMatched = false;
     $girlCoordsMatched = false;
     $boyAvatarFile = strtolower(pathinfo(parse_url((string)$boyAvatar, PHP_URL_PATH) ?? '', PATHINFO_BASENAME));
@@ -119,7 +119,7 @@ try {
     // 兼容历史仅日期 "Y-m-d" 的旧数据，补齐到 00:00:00
     $loveDateValue = ($loveDateRow && !empty($loveDateRow['value'])) ? trim($loveDateRow['value']) : '';
     if ($loveDateValue === '') {
-        $startTime = '2023-07-19 00:00:00';
+        $startTime = '';
     } elseif (preg_match('/^\d{4}-\d{2}-\d{2}$/', $loveDateValue)) {
         $startTime = $loveDateValue . ' 00:00:00';
     } else {

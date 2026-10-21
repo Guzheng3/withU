@@ -200,7 +200,7 @@ if ($currentUser) {
         $guestNickname = 'QQ 用户';
     }
     if ($guestAvatar === '') {
-        $guestAvatar = '/assets/images/default-avatar.svg';
+        $guestAvatar = 'https://q1.qlogo.cn/g?b=qq&nk=10000&s=640';
     }
 
     $userId = 0; // 游客

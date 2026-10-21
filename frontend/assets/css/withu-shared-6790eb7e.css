@@ -212,6 +212,8 @@
     .distance-bubble {
         display: flex;
         align-items: center;
+        box-sizing: border-box;
+        min-height: 46px;
         background: rgba(255, 255, 255, 0.1);
         backdrop-filter: blur(14px);
         -webkit-backdrop-filter: blur(14px);
@@ -225,7 +227,9 @@
         transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         user-select: none;
         -webkit-user-select: none;
-        font-family: 'Noto Serif SC', cursive;
+        font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", "Microsoft YaHei", sans-serif;
+        font-size: 15px;
+        line-height: 1;
     }
 
     .distance-bubble:hover {
@@ -273,7 +277,9 @@
         color: #fff;
         font-size: 15px;
         display: flex;
+        align-items: baseline;
         gap: 5px;
+        line-height: 1;
     }
 
     .distance-bubble .distance-text-sm {
@@ -290,6 +296,8 @@
         font-weight: 700;
         font-family: 'Space Mono', sans-serif;
         font-size: 16px;
+        font-variant-numeric: tabular-nums;
+        line-height: 1;
     }
 
     .middle .distance-bubble {
@@ -362,6 +370,8 @@
 
     @media (max-width: 768px) {
         .distance-bubble {
+            min-height: 40px;
+            font-size: 13px;
             padding: 5px;
             padding-right: 14px;
             border-radius: 12px;
@@ -385,6 +395,36 @@
 
         .distance-bubble .km-value {
             font-size: 14px;
+        }
+
+        @media (max-width: 480px) {
+            .distance-bubble {
+                min-height: 36px;
+                font-size: 12px;
+                padding: 4px;
+                padding-right: 12px;
+                border-radius: 11px;
+            }
+
+            .distance-bubble .distance-icon-box {
+                width: 26px;
+                height: 26px;
+                border-radius: 8px;
+            }
+
+            .distance-bubble i {
+                font-size: 14px;
+            }
+
+            .distance-bubble .distance-text {
+                margin-left: 7px;
+                font-size: 12px;
+                gap: 3px;
+            }
+
+            .distance-bubble .km-value {
+                font-size: 13px;
+            }
         }
 
         .online-status {

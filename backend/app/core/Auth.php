@@ -333,7 +333,7 @@ class Auth
             'nickname'   => $nickname,
             'role'       => $role,
             'gender'     => $gender,
-            'avatar'     => '/assets/images/default-avatar.svg',
+            'avatar'     => 'https://q1.qlogo.cn/g?b=qq&nk=10000&s=640',
             'status'     => 'active',
             'created_at' => date('Y-m-d H:i:s')
         ];

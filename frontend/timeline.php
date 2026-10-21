@@ -248,14 +248,14 @@
 <!-- 足迹地图配置（懒加载，点击才初始化） -->
         <script src="/assets/js/withu-shared-3a9d9473.js"></script>
 <script src="/assets/js/app.js"></script>
-<script src="/assets/js/withu-location.js?v=20261007"></script>
-<script src="/assets/js/head-avatar-location.js?v=20261007e"></script>
+<script src="/assets/js/withu-location.js?v=20261022"></script>
+<script src="/assets/js/head-avatar-location.js?v=20261021"></script>
 <script src="/assets/js/components.js?v=20261007"></script>
 
 <!-- 礼花效果已迁移到 components.js 的 ConfettiEffect 模块 -->
 
 <script src="/assets/js/pjax.js"></script><script>if(window.WithUPjax&&typeof window.WithUPjax.init==="function")window.WithUPjax.init();</script>
-<link rel="stylesheet" href="/assets/css/withu-shared-6790eb7e.css">
+<link rel="stylesheet" href="/assets/css/withu-shared-6790eb7e.css?v=20261021">
 <link rel="stylesheet" href="Style/css/motion-effects.css?v=20261007a">
 <script src="Style/js/motion-effects.js?v=20261007a" defer></script>
 

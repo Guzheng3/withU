@@ -143,6 +143,16 @@ try {
         $lat = floatval($_POST['lat'] ?? $_GET['lat'] ?? 0);
         $lng = floatval($_POST['lng'] ?? $_GET['lng'] ?? 0);
         $acc = floatval($_POST['acc'] ?? $_GET['acc'] ?? 0);
+        $source = trim((string)($_POST['source'] ?? $_GET['source'] ?? 'unknown'));
+        if (!in_array($source, ['browser', 'amap', 'ip'], true)) {
+            $source = 'unknown';
+        }
+        // 精度差到 100 公里以上的坐标没有定位意义（如浏览器返回城市级错误坐标），拒绝落盘
+        if ($acc > 100000) {
+            http_response_code(400);
+            echo json_encode(['code' => 400, 'message' => 'accuracy_too_low']);
+            exit;
+        }
         if ($lat < -90 || $lat > 90 || $lng < -180 || $lng > 180 || ($lat === 0.0 && $lng === 0.0)) {
             http_response_code(400);
             echo json_encode(['code' => 400, 'message' => 'invalid_coords']);
@@ -154,7 +164,7 @@ try {
             'lng' => $lng,
             'acc' => $acc,
             'ts' => time(),
-            'source' => 'amap',
+            'source' => $source,
         ]);
         echo json_encode(['code' => $ok ? 200 : 500, 'message' => $ok ? 'ok' : 'store_failed']);
         exit;

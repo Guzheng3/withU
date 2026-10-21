@@ -246,7 +246,7 @@ body{background:linear-gradient(135deg,#ffeef5 0%,#f4f6fb 60%,#eef2ff 100%);
       <input type="hidden" name="redirect" value="<?php echo e($redirectTo); ?>">
 
       <div class="form-group">
-        <label><i class="fas fa-user"></i> 用户名</label>
+        <label><i class="fas fa-user"></i> QQ号</label>
         <input type="text" name="username" maxlength="32" autocomplete="username" value="<?php echo e($oldLoginName); ?>" autofocus>
       </div>
 

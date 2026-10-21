@@ -98,7 +98,7 @@ $album = [
     'location' => (string) ($albumRow['city'] ?? ''),
     'desc'     => (string) ($albumRow['desc'] ?? ''),
     'cover'    => $cover,
-    'author'   => (string) ($cfg['maleName'] ?? ($cfg['boy'] ?? 'Ki.')),
+    'author'   => (string) (($cfg['maleName'] ?? '') ?: ($cfg['boy'] ?? '')),
 ];
 
 if (!function_exists('photolist_ago')) {

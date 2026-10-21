@@ -3,11 +3,11 @@
         <!-- 吸顶 Logo（滚动吸顶后出现，与导航岛吸顶时机一致） -->
         <div class="withu-header-left-avatar">
             <div class="stuck-logo stuck-logo--en-v7">
-                <span class="stuck-logo__name" data-withu-tip="<?php echo htmlspecialchars($boyName ?? 'Ki.', ENT_QUOTES, 'UTF-8'); ?>"><?php echo htmlspecialchars($boyName ?? 'Ki.', ENT_QUOTES, 'UTF-8'); ?></span>
+                <span class="stuck-logo__name" data-withu-tip="<?php echo htmlspecialchars($boyName ?? '', ENT_QUOTES, 'UTF-8'); ?>"><?php echo htmlspecialchars($boyName ?? '', ENT_QUOTES, 'UTF-8'); ?></span>
                 <span class="stuck-logo__redline-l"></span>
                 <span class="stuck-logo__heart"><svg width="20" height="20" viewBox="0 0 256 256" fill="currentColor"><path d="M240,94c0,70-103.79,126.66-108.21,129a8,8,0,0,1-7.58,0C119.79,220.66,16,164,16,94A62.07,62.07,0,0,1,78,32c20.65,0,38.73,8.88,50,23.89C139.27,40.88,157.35,32,178,32A62.07,62.07,0,0,1,240,94Z"/></svg></span>
                 <span class="stuck-logo__redline-r"></span>
-                <span class="stuck-logo__name" data-withu-tip="<?php echo htmlspecialchars($girlName ?? 'Really', ENT_QUOTES, 'UTF-8'); ?>"><?php echo htmlspecialchars($girlName ?? 'Really', ENT_QUOTES, 'UTF-8'); ?></span>
+                <span class="stuck-logo__name" data-withu-tip="<?php echo htmlspecialchars($girlName ?? '', ENT_QUOTES, 'UTF-8'); ?>"><?php echo htmlspecialchars($girlName ?? '', ENT_QUOTES, 'UTF-8'); ?></span>
             </div>
         </div>
         <div class="logo" style="margin-right:auto;margin-left:3%">
@@ -47,9 +47,9 @@
 <?php if ($loggedIn): ?>
 <div class="withu-couple-avatars-right">
                 <div class="withu-avatar-group">
-                    <img src="<?php echo htmlspecialchars($girlAvatar ?? '/assets/images/default-avatar.svg', ENT_QUOTES, 'UTF-8'); ?>"
+                    <img src="<?php echo htmlspecialchars($girlAvatar ?? '/_qqavatar.php?qq=10000&s=640', ENT_QUOTES, 'UTF-8'); ?>"
                         class="avatar-male" alt="She">
-                                        <img src="<?php echo htmlspecialchars($boyAvatar ?? '/assets/images/default-avatar.svg', ENT_QUOTES, 'UTF-8'); ?>"
+                                        <img src="<?php echo htmlspecialchars($boyAvatar ?? '/_qqavatar.php?qq=10000&s=640', ENT_QUOTES, 'UTF-8'); ?>"
                         class="avatar-female" alt="He">
                                     </div>
                                 <span class="withu-right-heart"></span>
@@ -110,11 +110,11 @@
         <!-- stuck-logo 展示 -->
         <div class="withu-header-more-identity">
                                 <div class="stuck-logo stuck-logo--en-v7">
-                        <span class="stuck-logo__name" data-withu-tip="<?php echo htmlspecialchars($boyName ?? 'Ki.', ENT_QUOTES, 'UTF-8'); ?>"><?php echo htmlspecialchars($boyName ?? 'Ki.', ENT_QUOTES, 'UTF-8'); ?></span>
+                        <span class="stuck-logo__name" data-withu-tip="<?php echo htmlspecialchars($boyName ?? '', ENT_QUOTES, 'UTF-8'); ?>"><?php echo htmlspecialchars($boyName ?? '', ENT_QUOTES, 'UTF-8'); ?></span>
                         <span class="stuck-logo__redline-l"></span>
                         <span class="stuck-logo__heart"><svg width="20" height="20" viewBox="0 0 256 256" fill="currentColor"><path d="M240,94c0,70-103.79,126.66-108.21,129a8,8,0,0,1-7.58,0C119.79,220.66,16,164,16,94A62.07,62.07,0,0,1,78,32c20.65,0,38.73,8.88,50,23.89C139.27,40.88,157.35,32,178,32A62.07,62.07,0,0,1,240,94Z"/></svg></span>
                         <span class="stuck-logo__redline-r"></span>
-                        <span class="stuck-logo__name" data-withu-tip="<?php echo htmlspecialchars($girlName ?? 'Really', ENT_QUOTES, 'UTF-8'); ?>"><?php echo htmlspecialchars($girlName ?? 'Really', ENT_QUOTES, 'UTF-8'); ?></span>
+                        <span class="stuck-logo__name" data-withu-tip="<?php echo htmlspecialchars($girlName ?? '', ENT_QUOTES, 'UTF-8'); ?>"><?php echo htmlspecialchars($girlName ?? '', ENT_QUOTES, 'UTF-8'); ?></span>
                     </div>
                         </div>
 

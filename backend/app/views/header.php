@@ -197,7 +197,7 @@ $heroDays = isset($daysTogether) && $loveDateSet ? (int)$daysTogether : null;
 $heroTagline = $siteDescription !== '' ? $siteDescription : '把平凡的日子，过成只属于我们的浪漫。';
 
 // Hero 即使在只完成一位用户配置时也保持完整展示；第二位用户注册后自动使用真实资料。
-$heroAvatarFallback = '/assets/images/default-avatar.svg';
+$heroAvatarFallback = 'https://q1.qlogo.cn/g?b=qq&nk=10000&s=640';
 if ($headerUser1 && empty($headerUser1['avatar'])) {
     $headerUser1['avatar'] = $heroAvatarFallback;
 }
