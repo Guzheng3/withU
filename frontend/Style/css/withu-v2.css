@@ -1468,7 +1468,21 @@ html.withu-subpage #homePage .bg-wrap.central.limg {
    ------------------------------------------------------------ */
 body.bg-pdot-vignette {
     background-color: #faf9f8 !important;
-    background-image: none !important;
+    background-image: linear-gradient(
+        120deg,
+        rgba(217, 79, 109, 0.16) 0%,
+        rgba(185, 133, 95, 0.13) 30%,
+        rgba(63, 143, 109, 0.10) 62%,
+        rgba(217, 79, 109, 0.16) 100%
+    ) !important;
+    background-size: 300% 300% !important;
+    background-attachment: fixed !important;
+    animation: withuBgFlow 24s ease-in-out infinite !important;
+}
+
+@keyframes withuBgFlow {
+    0%, 100% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
 }
 
 body.bg-pdot-vignette::before {
@@ -1496,4 +1510,11 @@ body.bg-pdot-vignette::after {
     mix-blend-mode: multiply !important;
     pointer-events: none !important;
     z-index: -1 !important;
+}
+
+
+@media (prefers-reduced-motion: reduce) {
+    body.bg-pdot-vignette {
+        animation: none !important;
+    }
 }
