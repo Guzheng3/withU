@@ -164,11 +164,21 @@
             if (!grid) return;
             const loadingEl = document.getElementById('withu-article-list-loading');
             if (loadingEl) loadingEl.remove();
+            const loggedIn = !!(window.WITHU_CONFIG && window.WITHU_CONFIG.loggedIn);
             grid.innerHTML = `
-                <div style="text-align:center;padding:4.5rem 1rem 5rem;color:#b08fa4;">
-                    <i class="ph ph-notebook" style="font-size:2.2rem;"></i>
-                    <p style="margin:.9rem 0 .3rem;font-size:.95rem;">${msg || '这里还没有文章或日记'}</p>
-                    <span style="font-size:.8rem;opacity:.75;">发布的内容会实时显示在这里</span>
+                <div class="withu-no-data withu-article-empty" style="float:none;width:100%;margin:0 auto;max-width:760px;">
+                    <div class="withu-no-data-wrap"><div class="withu-no-data-content">
+                        <div class="withu-no-data-icon">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2Z"/><path d="M9 7h7M9 11h5"/></svg>
+                        </div>
+                        <h3 class="withu-no-data-title">${msg || '这里还没有文章或日记'}</h3>
+                        <p class="withu-no-data-desc">把今天的心情、一次见面或一句想说的话写下来，慢慢就会长成只属于我们的故事。</p>
+                        <div class="withu-no-data-actions">
+                            <a class="withu-no-data-btn withu-no-data-btn-primary" href="${loggedIn ? '/admin/articles.php' : '/login.php'}">
+                                ${loggedIn ? '去写下第一篇' : '登录后记录'}
+                            </a>
+                        </div>
+                    </div></div>
                 </div>`;
         },
 

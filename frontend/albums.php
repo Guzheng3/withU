@@ -161,43 +161,7 @@
 </div>
 
 <?php include __DIR__ . '/inc/header.php'; ?>
-<div id="homePage" class="wrap" data-Fullscreen>
-        <ul class="list mask_black">
-                    <li class="item active">
-                <img class="lazy CarouselImage" data-src="/Lovefolder/20260408044229_69d56c35d59a9841528398.webp" draggable="false">
-            </li>
-                    <li class="item">
-                <img class="lazy CarouselImage" data-src="/Lovefolder/20260408044228_69d56c34421f3439264035.webp" draggable="false">
-            </li>
-            </ul>
-
-    <?php include __DIR__ . '/inc/head-avatars.php'; ?>
-
-
-    <svg class="waves" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
-        viewBox="0 24 150 28" preserveAspectRatio="none" shape-rendering="auto">
-        <defs>
-            <path id="gentle-wave" d="M-160 44c30 0 58-18 88-18s 58 18 88 18 58-18 88-18 58 18 88 18 v44h-352z" />
-        </defs>
-        <g class="parallax">
-            <use xlink:href="#gentle-wave" x="48" y="0" fill="rgba(255,255,255,0.7" />
-            <use xlink:href="#gentle-wave" x="48" y="3" fill="rgba(255,255,255,0.5)" />
-            <use xlink:href="#gentle-wave" x="48" y="5" fill="rgba(255,255,255,0.3)" />
-            <use xlink:href="#gentle-wave" x="48" y="7" fill="#fff" />
-        </g>
-    </svg>
-
-    <ul class="pointList">
-                    <li class="point active" data-index="0"></li>
-                    <li class="point " data-index="1"></li>
-                    <li class="point " data-index="2"></li>
-                    <li class="point " data-index="3"></li>
-                    <li class="point " data-index="4"></li>
-                    <li class="point " data-index="5"></li>
-                    <li class="point " data-index="6"></li>
-                    <li class="point " data-index="7"></li>
-            </ul>
-</div>
+<?php include __DIR__ . '/inc/hero.php'; ?>
 
 <div class="Width_limit_10rem">
     <div class="withu-sticky-sentinel" id="withuStickySentinel"></div>
@@ -284,6 +248,14 @@
     <title>相册 — <?php echo htmlspecialchars($withuSiteTitle, ENT_QUOTES, 'UTF-8'); ?></title>
     <meta name="description" content="withU 是一个适合记录恋爱日常与纪念时刻的情侣小站，支持相册、时间轴、点滴文章、留言互动和邀请页面，让每一段关系都能拥有自己的专属回忆空间。">
     <meta name="keywords" content="情侣网站,恋爱记录,祝福留言,情侣相册,恋爱清单,爱情纪念,情侣头像框,祝福语句,情侣互动,爱情相册,情侣事件记录,情侣留言,爱情故事,情感交流,用户互动,祝福卡片,音乐分享,甜蜜瞬间,情侣活动,爱情动态,withU">
+<script>
+(function(){var p=(location.pathname||'/').replace(/\/+$/,'');var home=p===''||p==='/'||/\/index\.php$/.test(p);var d=document.documentElement;d.classList.add('withu-v2');if(!home)d.classList.add('withu-subpage');})();
+</script>
+<!-- withU v2 关键首屏样式（完整样式由页脚统一加载，避免布局跳动） -->
+<style>
+html.withu-subpage #homePage.wrap{height:clamp(300px,38vh,460px)!important;min-height:300px;margin-top:0!important;overflow:hidden;background:linear-gradient(135deg,#fff1f4,#ffe3e9)}
+@media(max-width:768px){html.withu-subpage #homePage.wrap{height:clamp(220px,32vh,300px)!important;min-height:220px}html.withu-subpage #homePage .bg-wrap.central.limg{display:none!important}}
+</style>
 </head>
 
 <body class="bg-pdot-vignette">
@@ -449,10 +421,21 @@
             <?php if (empty($withuAlbumCards)): ?>
                 <div class="withu-masonry-col" data-aos="fade-up" data-aos-delay="0">
                     <div class="withu-card">
-                        <div class="withu-content" style="text-align:center;padding:2.5rem 1rem;">
-                            <i class="ph-fill ph-camera" style="font-size:2.2rem;color:#c5c5c5;"></i>
-                            <h3 class="withu-title" style="margin-top:.75rem;"><?php echo $withuAlbumDbReady ? '还没有相册' : '相册暂时无法加载'; ?></h3>
-                            <p style="font-size:.85rem;color:#9ca3af;margin-top:.35rem;"><?php echo $withuAlbumDbReady ? '去后台上传第一组照片吧～' : '请检查数据库连接后重试'; ?></p>
+                        <div class="withu-content withu-no-data" style="text-align:center;padding:3.2rem 1.4rem;">
+                            <div class="withu-no-data-wrap"><div class="withu-no-data-content">
+                                <div class="withu-no-data-icon">
+                                    <i class="ph-fill ph-camera" style="font-size:1.7rem;"></i>
+                                </div>
+                                <h3 class="withu-no-data-title"><?php echo $withuAlbumDbReady ? '还没有相册' : '相册暂时无法加载'; ?></h3>
+                                <p class="withu-no-data-desc"><?php echo $withuAlbumDbReady ? '第一组照片，是故事开始的地方。从一次见面、一顿饭或一场旅行开始收藏吧。' : '请检查数据库连接后再试，已有内容不会丢失。'; ?></p>
+                                <?php if ($withuAlbumDbReady): ?>
+                                <div class="withu-no-data-actions">
+                                    <a class="withu-no-data-btn withu-no-data-btn-primary" href="<?php echo $loggedIn ? '/admin/albums.php' : '/login.php'; ?>">
+                                        <?php echo $loggedIn ? '去创建第一本相册' : '登录后上传照片'; ?>
+                                    </a>
+                                </div>
+                                <?php endif; ?>
+                            </div></div>
                         </div>
                     </div>
                 </div>
@@ -884,7 +867,7 @@
     </div>
 </div>
 <!-- ============ /足迹地图弹窗 ============ -->
-<script src="/assets/js/map.js?v=20261027-loc"></script>
+<script src="/assets/js/map.js?v=20261027-loc2"></script>
 
 <div id="pjax-container">
 

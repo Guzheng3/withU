@@ -1,3 +1,4 @@
+<a href="#pjax-container" class="wu-skip-link">跳到主要内容</a>
 <div class="header-wrap">
     <div class="header">
         <!-- 吸顶 Logo（滚动吸顶后出现，与导航岛吸顶时机一致） -->

@@ -223,43 +223,7 @@ try {
 </div>
 
 <?php include __DIR__ . '/inc/header.php'; ?>
-<div id="homePage" class="wrap" data-Fullscreen>
-        <ul class="list mask_black">
-                    <li class="item active">
-                <img class="lazy CarouselImage" data-src="/Lovefolder/20260408044229_69d56c35d59a9841528398.webp" draggable="false">
-            </li>
-                    <li class="item">
-                <img class="lazy CarouselImage" data-src="/Lovefolder/20260408044228_69d56c34421f3439264035.webp" draggable="false">
-            </li>
-            </ul>
-
-    <?php include __DIR__ . '/inc/head-avatars.php'; ?>
-
-
-    <svg class="waves" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
-        viewBox="0 24 150 28" preserveAspectRatio="none" shape-rendering="auto">
-        <defs>
-            <path id="gentle-wave" d="M-160 44c30 0 58-18 88-18s 58 18 88 18 58-18 88-18 58 18 88 18 v44h-352z" />
-        </defs>
-        <g class="parallax">
-            <use xlink:href="#gentle-wave" x="48" y="0" fill="rgba(255,255,255,0.7" />
-            <use xlink:href="#gentle-wave" x="48" y="3" fill="rgba(255,255,255,0.5)" />
-            <use xlink:href="#gentle-wave" x="48" y="5" fill="rgba(255,255,255,0.3)" />
-            <use xlink:href="#gentle-wave" x="48" y="7" fill="#fff" />
-        </g>
-    </svg>
-
-    <ul class="pointList">
-                    <li class="point active" data-index="0"></li>
-                    <li class="point " data-index="1"></li>
-                    <li class="point " data-index="2"></li>
-                    <li class="point " data-index="3"></li>
-                    <li class="point " data-index="4"></li>
-                    <li class="point " data-index="5"></li>
-                    <li class="point " data-index="6"></li>
-                    <li class="point " data-index="7"></li>
-            </ul>
-</div>
+<?php include __DIR__ . '/inc/hero.php'; ?>
 
 <div class="Width_limit_10rem">
     <div class="withu-sticky-sentinel" id="withuStickySentinel"></div>
@@ -344,6 +308,14 @@ try {
     <meta name="author" content="Ki">
     <meta name="love-theme" content="withU-情侣小站">
     <meta name="copyright" content="2024 withU Web All Rights Reserved">
+<script>
+(function(){var p=(location.pathname||'/').replace(/\/+$/,'');var home=p===''||p==='/'||/\/index\.php$/.test(p);var d=document.documentElement;d.classList.add('withu-v2');if(!home)d.classList.add('withu-subpage');})();
+</script>
+<!-- withU v2 关键首屏样式（完整样式由页脚统一加载，避免布局跳动） -->
+<style>
+html.withu-subpage #homePage.wrap{height:clamp(300px,38vh,460px)!important;min-height:300px;margin-top:0!important;overflow:hidden;background:linear-gradient(135deg,#fff1f4,#ffe3e9)}
+@media(max-width:768px){html.withu-subpage #homePage.wrap{height:clamp(220px,32vh,300px)!important;min-height:220px}html.withu-subpage #homePage .bg-wrap.central.limg{display:none!important}}
+</style>
 </head>
 
 <body class="bg-pdot-vignette">
@@ -472,6 +444,22 @@ try {
                         <div class="query_data"></div>
 
                         <div id="list_data">
+                            <?php if (empty($lovelistItems)): ?>
+                                <div class="withu-no-data">
+                                    <div class="withu-no-data-wrap"><div class="withu-no-data-content">
+                                        <div class="withu-no-data-icon">
+                                            <i class="ph-fill ph-list-heart" style="font-size:1.7rem;"></i>
+                                        </div>
+                                        <h3 class="withu-no-data-title">还没有写下心愿</h3>
+                                        <p class="withu-no-data-desc">想一起去看的海、想一起吃的小店、想在某个季节完成的事，都可以先放进这里。</p>
+                                        <div class="withu-no-data-actions">
+                                            <a class="withu-no-data-btn withu-no-data-btn-primary" href="<?php echo $loggedIn ? '/admin/events.php' : '/login.php'; ?>">
+                                                <?php echo $loggedIn ? '去添加第一个心愿' : '登录后添加心愿'; ?>
+                                            </a>
+                                        </div>
+                                    </div></div>
+                                </div>
+                            <?php endif; ?>
                                                             <?php foreach ($lovelistItems as $__li => $__item): ?>
                                                             <div class="love-card" id="event-<?php echo (int) $__item['id']; ?>" data-aos="fade-up" data-aos-delay="<?php echo (int) $__li * 50; ?>">
                                     <div class="card-header">
@@ -845,7 +833,7 @@ try {
     </div>
 </div>
 <!-- ============ /足迹地图弹窗 ============ -->
-<script src="/assets/js/map.js?v=20261027-loc"></script>
+<script src="/assets/js/map.js?v=20261027-loc2"></script>
 
 <div id="pjax-container">
 

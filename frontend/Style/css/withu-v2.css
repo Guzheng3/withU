@@ -1,0 +1,1463 @@
+/* ============================================================
+   withU v2 — 全站视觉升级层
+   ------------------------------------------------------------
+   设计方向：晨雾玫瑰 / 香槟微光
+   - 统一的颜色、圆角、阴影、间距与缓动令牌
+   - 内页 Hero 压缩为首屏横幅，解决“空白 80vh”问题
+   - 卡片、导航、空状态、按钮、骨架屏统一质感
+   - 克制的动效：滚动揭示、悬停上浮、点击波纹、图片缓推
+   - 完整支持 prefers-reduced-motion / 键盘焦点 / 触控尺寸
+   本文件在既有样式之后加载，只做覆盖与增强，不改变业务布局。
+   ============================================================ */
+
+:root {
+    /* 色板 */
+    --wu-rose-50: #fff1f4;
+    --wu-rose-100: #ffe3e9;
+    --wu-rose-200: #ffc9d5;
+    --wu-rose-300: #ffa3b8;
+    --wu-rose-400: #fb7185;
+    --wu-rose-500: #f4587a;
+    --wu-rose-600: #e23e63;
+    --wu-rose-700: #be2f50;
+    --wu-blush: #fff7f9;
+    --wu-champagne: #f7efe4;
+    --wu-sand: #efe6da;
+    --wu-ink: #2a2226;
+    --wu-ink-soft: #5d5360;
+    --wu-ink-muted: #8f8490;
+    --wu-line: rgba(42, 34, 38, 0.08);
+    --wu-line-strong: rgba(42, 34, 38, 0.14);
+    --wu-paper: #ffffff;
+    --wu-paper-soft: rgba(255, 255, 255, 0.72);
+
+    /* 渐变 */
+    --wu-grad-rose: linear-gradient(135deg, #ff9db1 0%, #f4587a 52%, #d93a62 100%);
+    --wu-grad-rose-soft: linear-gradient(135deg, #fff1f4 0%, #ffe3e9 50%, #fff7f9 100%);
+    --wu-grad-champagne: linear-gradient(135deg, #fdf6ec 0%, #f7e8d8 50%, #f3ddc9 100%);
+    --wu-grad-ink: linear-gradient(135deg, #3a2c33 0%, #241c21 100%);
+    --wu-grad-text: linear-gradient(100deg, #e23e63 0%, #f4587a 38%, #c9a26b 100%);
+
+    /* 字体 */
+    --wu-font-serif: "Noto Serif SC", "Noto Serif CJK SC", "Songti SC", "STSong", "SimSun", serif;
+    --wu-font-sans: "Inter", "HarmonyOS Sans SC", "PingFang SC", "Microsoft YaHei", system-ui, -apple-system, sans-serif;
+    --wu-font-display: "Playfair Display", "Noto Serif SC", serif;
+    --wu-font-script: "Dancing Script", "Noto Serif SC", cursive;
+
+    /* 圆角 */
+    --wu-radius-xs: 10px;
+    --wu-radius-sm: 14px;
+    --wu-radius-md: 18px;
+    --wu-radius-lg: 24px;
+    --wu-radius-xl: 30px;
+    --wu-radius-pill: 999px;
+
+    /* 阴影 */
+    --wu-shadow-xs: 0 1px 2px rgba(42, 34, 38, 0.04);
+    --wu-shadow-sm: 0 2px 10px rgba(42, 34, 38, 0.05), 0 1px 2px rgba(42, 34, 38, 0.03);
+    --wu-shadow-md: 0 14px 34px -14px rgba(42, 34, 38, 0.18), 0 4px 12px -6px rgba(42, 34, 38, 0.06);
+    --wu-shadow-lg: 0 28px 60px -24px rgba(42, 34, 38, 0.24), 0 10px 24px -12px rgba(42, 34, 38, 0.08);
+    --wu-shadow-rose: 0 18px 40px -18px rgba(244, 88, 122, 0.42);
+
+    /* 缓动 */
+    --wu-ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+    --wu-ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+    --wu-ease-soft: cubic-bezier(0.25, 0.8, 0.25, 1);
+
+    /* 兼容旧变量 */
+    --withu-font-serif: var(--wu-font-serif);
+    --withu-font-sans: var(--wu-font-sans);
+    --withu-font-display: var(--wu-font-display);
+    --withu-color-rose: var(--wu-rose-600);
+    --withu-color-text: var(--wu-ink);
+    --withu-color-text-muted: var(--wu-ink-muted);
+}
+
+html {
+    -webkit-text-size-adjust: 100%;
+    text-size-adjust: 100%;
+}
+
+body {
+    font-family: var(--wu-font-sans);
+    color: var(--wu-ink);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+}
+
+::selection {
+    background: rgba(244, 88, 122, 0.24);
+    color: var(--wu-rose-700);
+}
+
+/* 键盘焦点：只在键盘操作时出现，鼠标点击不打扰 */
+:focus-visible {
+    outline: 2px solid var(--wu-rose-400);
+    outline-offset: 3px;
+    border-radius: 6px;
+}
+
+/* 细滚动条 */
+* {
+    scrollbar-width: thin;
+    scrollbar-color: rgba(244, 88, 122, 0.35) transparent;
+}
+
+*::-webkit-scrollbar {
+    width: 9px;
+    height: 9px;
+}
+
+*::-webkit-scrollbar-thumb {
+    background: linear-gradient(180deg, rgba(244, 88, 122, 0.42), rgba(217, 58, 98, 0.42));
+    border-radius: 999px;
+    border: 2px solid transparent;
+    background-clip: padding-box;
+}
+
+*::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+/* ------------------------------------------------------------
+   1. 内页 Hero：从 80vh 空白压缩为 38vh 首屏横幅
+   ------------------------------------------------------------ */
+html.withu-subpage #homePage.wrap,
+html.withu-subpage body #homePage.wrap {
+    height: clamp(300px, 38vh, 460px) !important;
+    min-height: 300px;
+    margin-top: 0 !important;
+    background: var(--wu-grad-rose-soft);
+    overflow: hidden;
+}
+
+html.withu-subpage #homePage.wrap .list {
+    box-shadow: none;
+}
+
+html.withu-subpage #homePage.wrap .item::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background:
+        linear-gradient(180deg, rgba(31, 22, 28, 0.18) 0%, rgba(31, 22, 28, 0) 26%),
+        linear-gradient(0deg, rgba(31, 22, 28, 0.42) 0%, rgba(31, 22, 28, 0) 46%);
+    pointer-events: none;
+    z-index: 1;
+}
+
+html.withu-subpage #homePage.wrap .item img {
+    object-fit: cover;
+    width: 100%;
+    height: 100%;
+}
+
+html.withu-subpage #homePage.wrap .item.active img {
+    animation: withuHeroDrift 22s ease-in-out infinite alternate;
+}
+
+@keyframes withuHeroDrift {
+    from { transform: scale(1.02) translate3d(0, 0, 0); }
+    to { transform: scale(1.1) translate3d(-1.2%, -1%, 0); }
+}
+
+html.withu-subpage #homePage .bg-wrap.central.limg {
+    transform: translate(-50%, -50%) scale(0.82);
+}
+
+html.withu-subpage #homePage .bg-wrap.central.limg .middle {
+    background: rgba(255, 255, 255, 0.32);
+    border: 1px solid rgba(255, 255, 255, 0.45);
+    box-shadow: 0 24px 60px -30px rgba(31, 22, 28, 0.55);
+    backdrop-filter: blur(18px) saturate(140%);
+    -webkit-backdrop-filter: blur(18px) saturate(140%);
+}
+
+html.withu-subpage #homePage .bg-wrap.central.limg .bg-img img {
+    width: 8rem;
+    height: 8rem;
+}
+
+html.withu-subpage #homePage .bg-wrap.central.limg .love-icon img {
+    width: 5.4rem;
+    height: 5.4rem;
+}
+
+html.withu-subpage #homePage .bg-wrap.central.limg .img-male span,
+html.withu-subpage #homePage .bg-wrap.central.limg .img-female span {
+    font-size: 1.1rem;
+    color: rgba(255, 255, 255, 0.94);
+    text-shadow: 0 2px 10px rgba(0, 0, 0, 0.28);
+}
+
+html.withu-subpage #homePage .waves {
+    height: 6rem;
+    z-index: 5;
+}
+
+html.withu-subpage #homePage .pointList {
+    position: absolute;
+    bottom: 1.15rem;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 8;
+    display: flex;
+    gap: 7px;
+}
+
+html.withu-subpage #homePage .pointList .point {
+    width: 18px;
+    height: 3px;
+    background: rgba(255, 255, 255, 0.42);
+    border-radius: 999px;
+    transition: width 0.35s var(--wu-ease-out), background 0.35s ease;
+}
+
+html.withu-subpage #homePage .pointList .point.active {
+    width: 34px;
+    background: rgba(255, 255, 255, 0.94);
+    box-shadow: 0 0 14px rgba(255, 255, 255, 0.7);
+}
+
+/* 移动端：隐藏大头像区，保留沉浸式横幅 */
+@media (max-width: 768px) {
+    html.withu-subpage #homePage.wrap {
+        height: clamp(220px, 32vh, 300px) !important;
+        min-height: 220px;
+    }
+
+    html.withu-subpage #homePage .bg-wrap.central.limg {
+        display: none !important;
+    }
+
+    html.withu-subpage #homePage .waves {
+        height: 4.5rem;
+    }
+}
+
+/* ------------------------------------------------------------
+   2. 页面标题区
+   ------------------------------------------------------------ */
+.withu-page-header {
+    padding: 1.9rem 0 0.6rem;
+    position: relative;
+}
+
+.withu-page-header::after {
+    content: "";
+    display: block;
+    width: 52px;
+    height: 2px;
+    margin: 1.15rem auto 0;
+    border-radius: 999px;
+    background: var(--wu-grad-rose);
+    opacity: 0.55;
+}
+
+.withu-meta-tag {
+    font-family: var(--wu-font-display);
+    color: var(--wu-ink-muted);
+    font-size: 12px;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    padding: 6px 16px;
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.66);
+    border: 1px solid var(--wu-line);
+    box-shadow: var(--wu-shadow-xs);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+}
+
+.withu-meta-icon {
+    color: var(--wu-rose-400);
+    font-size: 8px;
+}
+
+.withu-meta-line {
+    width: 64px;
+    background: linear-gradient(90deg, transparent, rgba(244, 88, 122, 0.5), transparent);
+}
+
+.withu-hero-title {
+    font-family: var(--wu-font-serif);
+    font-weight: 600;
+    color: var(--wu-ink);
+    letter-spacing: 0.06em;
+    text-shadow: 0 18px 36px rgba(42, 34, 38, 0.06);
+}
+
+.withu-hero-title .char {
+    background: linear-gradient(180deg, #352a30 0%, #4a3941 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+/* 详情页隐藏标题时不显示装饰线 */
+.withu-page-header[style*="display: none"]::after {
+    display: none;
+}
+
+/* ------------------------------------------------------------
+   3. 导航岛：更细腻的玻璃与悬浮反馈
+   ------------------------------------------------------------ */
+.withu-nav-island-container {
+    background: rgba(255, 255, 255, 0.72);
+    border: 1px solid rgba(255, 255, 255, 0.72);
+    box-shadow:
+        0 0 0 1px rgba(42, 34, 38, 0.035),
+        0 10px 30px -18px rgba(42, 34, 38, 0.28);
+    backdrop-filter: blur(22px) saturate(180%);
+    -webkit-backdrop-filter: blur(22px) saturate(180%);
+}
+
+.withu-nav-island-container.withu-is-stuck {
+    background: rgba(255, 255, 255, 0.82);
+    box-shadow: 0 12px 32px -20px rgba(42, 34, 38, 0.32);
+}
+
+.withu-nav-island-item {
+    color: var(--wu-ink-soft);
+    font-weight: 500;
+    letter-spacing: 0.02em;
+    transition:
+        padding 0.25s ease-out,
+        font-size 0.25s ease-out,
+        gap 0.25s ease-out,
+        color 0.2s ease,
+        background-color 0.2s ease,
+        transform 0.25s var(--wu-ease-out);
+}
+
+.withu-nav-island-item:not(.active):hover {
+    background-color: rgba(244, 88, 122, 0.08);
+    color: var(--wu-rose-600);
+    transform: translateY(-1px);
+}
+
+.withu-nav-island-item i {
+    transition: transform 0.3s var(--wu-ease-spring), color 0.2s ease;
+}
+
+.withu-nav-island-item:hover i {
+    transform: translateY(-1px) scale(1.06);
+}
+
+.withu-nav-indicator {
+    background: var(--wu-grad-rose);
+    box-shadow:
+        0 6px 16px -6px rgba(244, 88, 122, 0.65),
+        inset 0 1px 0 rgba(255, 255, 255, 0.35);
+}
+
+.withu-nav-indicator::before {
+    opacity: 0.42;
+    filter: blur(0.75rem);
+    top: 3px;
+    left: 3px;
+}
+
+.withu-nav-island-item.nav-home::before,
+.withu-nav-island-item.nav-home::after {
+    background-color: rgba(42, 34, 38, 0.09);
+}
+
+/* 移动端底部导航 */
+.withu-tab-template-v5-container.withu-glass-panel {
+    background: rgba(255, 255, 255, 0.86);
+    border: 1px solid rgba(255, 255, 255, 0.7);
+    box-shadow: 0 18px 40px -22px rgba(42, 34, 38, 0.4);
+    backdrop-filter: blur(22px) saturate(180%);
+    -webkit-backdrop-filter: blur(22px) saturate(180%);
+}
+
+.withu-base-nav-item.active,
+.withu-base-nav-item:hover {
+    color: var(--wu-rose-600);
+}
+
+/* ------------------------------------------------------------
+   4. 卡片与列表：统一为“纸感 + 微光”
+   ------------------------------------------------------------ */
+.withu-card {
+    background: linear-gradient(180deg, rgba(255, 255, 255, 0.96), rgba(255, 253, 254, 0.98));
+    border: 1px solid var(--wu-line);
+    border-radius: var(--wu-radius-lg);
+    box-shadow: var(--wu-shadow-sm);
+    transition:
+        transform 0.4s var(--wu-ease-out),
+        box-shadow 0.4s var(--wu-ease-out),
+        border-color 0.4s ease;
+}
+
+.withu-card:hover {
+    transform: translateY(-5px);
+    border-color: rgba(244, 88, 122, 0.18);
+    box-shadow: var(--wu-shadow-lg), 0 0 0 1px rgba(244, 88, 122, 0.06);
+}
+
+.withu-card .withu-media {
+    border-radius: var(--wu-radius-md);
+    overflow: hidden;
+}
+
+.withu-card .withu-media img,
+.withu-card .withu-photo {
+    transition: transform 0.7s var(--wu-ease-out), filter 0.5s ease;
+}
+
+.withu-card:hover .withu-media img,
+.withu-card:hover .withu-photo {
+    transform: scale(1.035);
+}
+
+.withu-card .withu-title {
+    font-family: var(--wu-font-serif);
+    letter-spacing: 0.04em;
+    color: var(--wu-ink);
+}
+
+.withu-card .withu-header-action {
+    border-color: var(--wu-line);
+    color: var(--wu-ink-muted);
+    transition: all 0.3s var(--wu-ease-out);
+}
+
+.withu-card .withu-header-action:hover {
+    background: var(--wu-grad-rose);
+    border-color: transparent;
+    color: #fff;
+    box-shadow: var(--wu-shadow-rose);
+    transform: translateX(3px) scale(1.04);
+}
+
+.withu-card .withu-file-size {
+    background: rgba(31, 22, 28, 0.55);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    border-radius: 999px;
+    padding: 3px 9px;
+    font-size: 0.68rem;
+}
+
+.withu-card .withu-footer {
+    border-top: 1px solid var(--wu-line);
+    padding-top: 12px;
+}
+
+.withu-card .withu-location-tag {
+    color: var(--wu-ink-soft);
+    background: var(--wu-rose-50);
+    border: 1px solid var(--wu-rose-100);
+    border-radius: 999px;
+    padding: 4px 10px;
+    transition: all 0.25s ease;
+}
+
+.withu-card .withu-location-tag:hover {
+    background: var(--wu-rose-100);
+    color: var(--wu-rose-700);
+}
+
+/* 文章卡片 */
+.withu-article-card-base {
+    border: 1px solid var(--wu-line);
+    border-radius: var(--wu-radius-lg);
+    box-shadow: var(--wu-shadow-sm);
+    transition:
+        transform 0.4s var(--wu-ease-out),
+        box-shadow 0.4s var(--wu-ease-out),
+        border-color 0.4s ease;
+}
+
+.withu-article-card-base:hover {
+    transform: translateY(-5px);
+    border-color: rgba(244, 88, 122, 0.2);
+    box-shadow: var(--wu-shadow-lg);
+}
+
+.withu-article-card-title {
+    font-family: var(--wu-font-serif);
+    color: var(--wu-ink);
+    letter-spacing: 0.02em;
+}
+
+.withu-article-card-desc {
+    color: var(--wu-ink-soft);
+    line-height: 1.85;
+}
+
+.withu-article-action-btn {
+    border-radius: 999px;
+    transition: background 0.25s ease, color 0.25s ease, transform 0.25s var(--wu-ease-out);
+}
+
+.withu-article-action-btn:hover {
+    transform: translateY(-1px);
+}
+
+/* 时间轴卡片 */
+.withu-time-line-card {
+    border-radius: var(--wu-radius-lg);
+    border: 1px solid var(--wu-line);
+    box-shadow: var(--wu-shadow-md);
+    transition:
+        transform 0.45s var(--wu-ease-out),
+        box-shadow 0.45s var(--wu-ease-out);
+}
+
+.withu-time-line-card:hover {
+    transform: translateY(-4px);
+    box-shadow: var(--wu-shadow-lg);
+}
+
+.withu-time-line-card-title {
+    font-family: var(--wu-font-serif);
+    color: var(--wu-ink);
+}
+
+.withu-time-line-meta-item {
+    border-radius: 999px;
+    background: rgba(244, 88, 122, 0.06);
+    color: var(--wu-ink-soft);
+}
+
+/* 留言卡片 */
+.MessageCard {
+    border: 1px solid var(--wu-line);
+    border-radius: var(--wu-radius-lg);
+    box-shadow: var(--wu-shadow-sm);
+    transition:
+        transform 0.4s var(--wu-ease-out),
+        box-shadow 0.4s var(--wu-ease-out),
+        border-color 0.4s ease;
+}
+
+.MessageCard:hover {
+    transform: translateY(-4px);
+    border-color: rgba(244, 88, 122, 0.16);
+    box-shadow: var(--wu-shadow-md);
+}
+
+.MessageCard .MsgContent {
+    color: var(--wu-ink-soft);
+    line-height: 1.9;
+}
+
+.MessageCard .UserName h1 {
+    font-family: var(--wu-font-serif);
+    color: var(--wu-ink);
+}
+
+/* 愿望清单卡片 */
+.love-card {
+    border: 1px solid var(--wu-line);
+    border-radius: var(--wu-radius-lg);
+    box-shadow: var(--wu-shadow-sm);
+    transition:
+        transform 0.4s var(--wu-ease-out),
+        box-shadow 0.4s var(--wu-ease-out),
+        border-color 0.4s ease;
+}
+
+.love-card:hover {
+    transform: translateY(-4px);
+    border-color: rgba(244, 88, 122, 0.18);
+    box-shadow: var(--wu-shadow-md);
+}
+
+.love-card .event-name {
+    font-family: var(--wu-font-serif);
+    color: var(--wu-ink);
+}
+
+.love-card .status-dot.com {
+    box-shadow: 0 0 0 4px rgba(244, 88, 122, 0.12);
+}
+
+/* 相册灯箱触发器 */
+.withu-photo-box {
+    border-radius: var(--wu-radius-md);
+    overflow: hidden;
+}
+
+/* ------------------------------------------------------------
+   5. 按钮 / 链接 / 表单
+   ------------------------------------------------------------ */
+.withu-message-submit-btn,
+.withumsg-load-more-btn,
+.withu-no-data-btn,
+.withu-btn {
+    border-radius: 999px !important;
+    transition:
+        transform 0.25s var(--wu-ease-out),
+        box-shadow 0.25s var(--wu-ease-out),
+        filter 0.25s ease;
+}
+
+.withu-message-submit-btn:hover,
+.withumsg-load-more-btn:hover,
+.withu-no-data-btn:hover,
+.withu-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--wu-shadow-rose);
+}
+
+.withu-message-submit-btn:active,
+.withumsg-load-more-btn:active,
+.withu-no-data-btn:active,
+.withu-btn:active {
+    transform: translateY(0) scale(0.98);
+}
+
+.withu-link-more {
+    background: var(--wu-grad-rose);
+    box-shadow: var(--wu-shadow-rose);
+}
+
+.withu-link-more:hover {
+    transform: translateY(-2px) scale(1.06);
+    box-shadow: 0 18px 36px -14px rgba(244, 88, 122, 0.6);
+}
+
+.withu-link-more:active {
+    transform: scale(0.96);
+}
+
+input,
+textarea,
+select,
+[contenteditable="true"] {
+    font-family: var(--wu-font-sans);
+}
+
+input:focus-visible,
+textarea:focus-visible,
+select:focus-visible,
+[contenteditable="true"]:focus-visible {
+    outline: none;
+    border-color: rgba(244, 88, 122, 0.45) !important;
+    box-shadow: 0 0 0 4px rgba(244, 88, 122, 0.1);
+}
+
+/* 点击波纹（由 withu-v2.js 注入） */
+.wu-ripple-host {
+    position: relative;
+    overflow: hidden;
+    -webkit-tap-highlight-color: transparent;
+}
+
+.wu-ripple {
+    position: absolute;
+    border-radius: 50%;
+    transform: scale(0);
+    background: rgba(255, 255, 255, 0.52);
+    pointer-events: none;
+    animation: wuRipple 0.65s var(--wu-ease-out) forwards;
+    z-index: 3;
+}
+
+@keyframes wuRipple {
+    to {
+        transform: scale(2.6);
+        opacity: 0;
+    }
+}
+
+/* ------------------------------------------------------------
+   6. 空状态：从“灰色一句话”升级为有情绪的留白
+   ------------------------------------------------------------ */
+.withu-no-data,
+.withumsg-empty,
+.withu-empty-state {
+    position: relative;
+    padding: 3.2rem 1.4rem 3.6rem;
+    text-align: center;
+    border-radius: var(--wu-radius-xl);
+    background:
+        radial-gradient(circle at 50% 0%, rgba(255, 227, 233, 0.55), transparent 62%),
+        rgba(255, 255, 255, 0.55);
+    border: 1px dashed rgba(244, 88, 122, 0.24);
+    overflow: hidden;
+}
+
+.withu-no-data::before,
+.withumsg-empty::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background-image: radial-gradient(rgba(244, 88, 122, 0.16) 1px, transparent 1px);
+    background-size: 18px 18px;
+    opacity: 0.5;
+    pointer-events: none;
+    -webkit-mask-image: radial-gradient(circle at 50% 40%, #000 0%, transparent 72%);
+    mask-image: radial-gradient(circle at 50% 40%, #000 0%, transparent 72%);
+}
+
+.withu-no-data-wrap,
+.withu-no-data-content {
+    position: relative;
+    z-index: 1;
+}
+
+.withu-no-data-icon {
+    width: 64px;
+    height: 64px;
+    margin: 0 auto 1rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--wu-rose-500);
+    background: #fff;
+    border: 1px solid var(--wu-rose-100);
+    border-radius: 22px;
+    box-shadow: var(--wu-shadow-rose);
+    animation: wuFloat 4.5s ease-in-out infinite;
+}
+
+.withu-no-data-icon svg {
+    width: 26px;
+    height: 26px;
+}
+
+.withu-no-data-title {
+    font-family: var(--wu-font-serif);
+    font-size: 1.12rem;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    color: var(--wu-ink);
+}
+
+.withu-no-data-desc {
+    margin-top: 0.45rem;
+    font-size: 0.84rem;
+    line-height: 1.7;
+    color: var(--wu-ink-muted);
+}
+
+.withu-no-data-actions {
+    margin-top: 1.1rem;
+}
+
+.withu-no-data-btn {
+    padding: 0.55rem 1.2rem;
+    font-size: 0.82rem;
+}
+
+@keyframes wuFloat {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-6px); }
+}
+
+/* 页面自带的简易空状态（如 albums 内联样式）也做统一衬托 */
+.withu-masonry-grid > .withu-masonry-col:only-child .withu-card {
+    background:
+        radial-gradient(circle at 50% 0%, rgba(255, 227, 233, 0.5), transparent 60%),
+        rgba(255, 255, 255, 0.7);
+    border: 1px dashed rgba(244, 88, 122, 0.22);
+}
+
+.withu-masonry-grid > .withu-masonry-col:only-child .withu-card:hover {
+    transform: none;
+}
+
+/* ------------------------------------------------------------
+   7. 骨架屏 / 加载
+   ------------------------------------------------------------ */
+.withumsg-skeleton,
+.withu-skeleton-screen-card,
+.withu-article-list-loading {
+    position: relative;
+    overflow: hidden;
+}
+
+.withumsg-skeleton-line,
+.withu-skeleton-screen-anim {
+    background: linear-gradient(90deg,
+        rgba(244, 88, 122, 0.06) 0%,
+        rgba(244, 88, 122, 0.12) 40%,
+        rgba(244, 88, 122, 0.06) 80%);
+    background-size: 200% 100%;
+    animation: wuShimmer 1.6s linear infinite;
+    border-radius: 999px;
+}
+
+@keyframes wuShimmer {
+    from { background-position: 180% 0; }
+    to { background-position: -80% 0; }
+}
+
+/* ------------------------------------------------------------
+   8. 页脚 / 浮动按钮 / 桌宠
+   ------------------------------------------------------------ */
+.footer-warp {
+    color: var(--wu-ink-muted);
+}
+
+.footer-warp .github-badge {
+    border-radius: 999px;
+    overflow: hidden;
+    box-shadow: var(--wu-shadow-xs);
+    transition: transform 0.25s var(--wu-ease-out), box-shadow 0.25s ease;
+}
+
+.footer-warp .github-badge:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--wu-shadow-sm);
+}
+
+#scrollTopBtn {
+    transition: transform 0.3s var(--wu-ease-spring), box-shadow 0.3s ease, opacity 0.3s ease;
+}
+
+#scrollTopBtn:hover {
+    transform: translateY(-3px) scale(1.05);
+    box-shadow: var(--wu-shadow-rose);
+}
+
+/* 顶部滚动进度条（由 withu-v2.js 注入） */
+.withu-scroll-progress {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 3px;
+    z-index: 100000;
+    pointer-events: none;
+    background: transparent;
+}
+
+.withu-scroll-progress__bar {
+    height: 100%;
+    width: 0;
+    background: var(--wu-grad-rose);
+    box-shadow: 0 0 12px rgba(244, 88, 122, 0.55);
+    border-radius: 0 999px 999px 0;
+    transition: width 0.08s linear;
+}
+
+/* ------------------------------------------------------------
+   9. 入场与滚动揭示
+   ------------------------------------------------------------ */
+@keyframes wuPageEnter {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+/* 页面入场：只作用在容器自身，避免覆盖子元素（弹窗遮罩）的 opacity，
+   也避免 transform 成为 position: fixed 的包含块。 */
+#pjax-container.wu-page-enter {
+    animation: wuPageEnter 0.45s var(--wu-ease-out) both;
+}
+
+/* JS 观察后添加的揭示动画 */
+.wu-reveal {
+    opacity: 0;
+    transform: translateY(26px);
+    transition:
+        opacity 0.7s var(--wu-ease-out),
+        transform 0.7s var(--wu-ease-out);
+    will-change: opacity, transform;
+}
+
+.wu-reveal.wu-in {
+    opacity: 1;
+    transform: none;
+    will-change: auto;
+}
+
+/* 已存在的 AOS 元素在关闭 AOS 时兜底 */
+html.wu-aos-off [data-aos] {
+    opacity: 1 !important;
+    transform: none !important;
+}
+
+/* 卡片 3D 倾斜（指针设备） */
+@media (hover: hover) and (pointer: fine) {
+    .withu-card,
+    .withu-article-card-base {
+        transform-style: preserve-3d;
+    }
+
+    .withu-card.wu-tilting,
+    .withu-article-card-base.wu-tilting {
+        transition: transform 0.12s linear, box-shadow 0.4s ease;
+        will-change: transform;
+    }
+}
+
+/* ------------------------------------------------------------
+   10. 无障碍与降级
+   ------------------------------------------------------------ */
+@media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+        animation-duration: 0.001ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.001ms !important;
+        scroll-behavior: auto !important;
+    }
+
+    .wu-reveal {
+        opacity: 1;
+        transform: none;
+    }
+
+    html.withu-subpage #homePage.wrap .item.active img {
+        animation: none;
+    }
+}
+
+/* 触控设备保证可点击区域 */
+@media (pointer: coarse) {
+    .withu-nav-island-item,
+    .withu-header-map,
+    .withu-header-more-btn,
+    .withu-message-tb-btn,
+    .withu-chat-ctrl-btn {
+        min-height: 44px;
+    }
+}
+
+/* 高对比度模式 */
+@media (prefers-contrast: more) {
+    :root {
+        --wu-ink-soft: #3f3540;
+        --wu-ink-muted: #6b606c;
+        --wu-line: rgba(42, 34, 38, 0.2);
+    }
+}
+
+/* ------------------------------------------------------------
+   11. 页面级细节：清单 / 留言 / 关于 / 详情
+   ------------------------------------------------------------ */
+
+/* 相册空状态占满整行 */
+.withu-masonry-grid > .withu-masonry-col:only-child {
+    width: 100% !important;
+    max-width: 720px;
+    margin: 0 auto;
+    float: none;
+}
+
+.withu-masonry-grid > .withu-masonry-col:only-child .withu-card {
+    padding: 3.2rem 1.6rem !important;
+}
+
+/* 清单：筛选 Tab 与搜索 */
+.LgLoveList-tab-container {
+    background: rgba(255, 255, 255, 0.62) !important;
+    border: 1px solid var(--wu-line);
+    border-radius: 999px !important;
+    padding: 5px !important;
+    box-shadow: var(--wu-shadow-xs);
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+}
+
+.LgLoveList-tab-slider {
+    top: 5px !important;
+    height: calc(100% - 10px) !important;
+    background: var(--wu-grad-rose) !important;
+    border-radius: 999px !important;
+    box-shadow: var(--wu-shadow-rose);
+}
+
+.LgLoveList-tab {
+    border-radius: 999px !important;
+    padding: 8px 18px !important;
+    color: var(--wu-ink-soft) !important;
+    font-weight: 500 !important;
+    transition: color 0.25s ease, transform 0.25s var(--wu-ease-out) !important;
+}
+
+.LgLoveList-tab-active {
+    color: #fff !important;
+    font-weight: 600 !important;
+}
+
+.LgLoveList-tab:hover:not(.LgLoveList-tab-active) {
+    color: var(--wu-rose-600) !important;
+    transform: translateY(-1px);
+}
+
+.LgLoveList-tab .tab-badge {
+    border-radius: 999px !important;
+    background: rgba(42, 34, 38, 0.07) !important;
+    color: var(--wu-ink-muted) !important;
+    font-size: 0.68rem !important;
+    min-width: 20px;
+    padding: 1px 6px !important;
+}
+
+.LgLoveList-tab-active .tab-badge {
+    background: rgba(255, 255, 255, 0.22) !important;
+    color: #fff !important;
+}
+
+.Search_warp #search {
+    background: rgba(255, 255, 255, 0.82) !important;
+    border: 1px solid var(--wu-line) !important;
+    box-shadow: var(--wu-shadow-sm) !important;
+    color: var(--wu-ink) !important;
+    font-family: var(--wu-font-sans) !important;
+    padding-right: 7.5rem !important;
+}
+
+.Search_warp #search::placeholder {
+    color: var(--wu-ink-muted);
+}
+
+.Search_warp #search:focus {
+    border-color: rgba(244, 88, 122, 0.4) !important;
+    box-shadow: 0 0 0 4px rgba(244, 88, 122, 0.1), var(--wu-shadow-sm) !important;
+}
+
+.Search_warp #search_btn {
+    background: var(--wu-grad-rose) !important;
+    box-shadow: var(--wu-shadow-rose);
+    font-family: var(--wu-font-sans) !important;
+    letter-spacing: 0.04em;
+}
+
+.Search_warp #search_btn:hover {
+    filter: brightness(1.04);
+    transform: translateY(-50%) scale(1.03);
+}
+
+.scope-tag {
+    background: var(--wu-rose-50) !important;
+    border: 1px solid var(--wu-rose-100) !important;
+    color: var(--wu-rose-600) !important;
+    border-radius: 999px !important;
+}
+
+/* 留言卡片：可读性与留白 */
+.Message_Wrap .Message_Main {
+    row-gap: 20px;
+}
+
+.MessageCard {
+    padding: 1.6rem 1.75rem !important;
+    background: linear-gradient(180deg, rgba(255, 255, 255, 0.96), rgba(255, 253, 254, 0.98)) !important;
+}
+
+.MessageCard .MsgContent p {
+    font-size: 0.95rem !important;
+    line-height: 1.9 !important;
+    color: var(--wu-ink-soft) !important;
+}
+
+.MessageCard .MsgTime span {
+    border-radius: 999px !important;
+    background: rgba(42, 34, 38, 0.05) !important;
+    color: var(--wu-ink-muted) !important;
+    padding: 3px 10px !important;
+    font-size: 0.72rem !important;
+}
+
+.MessageCard .MsgFooter {
+    border-top: 1px dashed var(--wu-line) !important;
+    padding-top: 12px;
+}
+
+.MessageCard .InfoItem {
+    color: var(--wu-ink-muted) !important;
+}
+
+.withumsg-load-more-wrap {
+    margin: 2rem auto !important;
+}
+
+.withumsg-load-more-btn {
+    background: rgba(255, 255, 255, 0.9) !important;
+    border: 1px solid var(--wu-rose-100) !important;
+    color: var(--wu-rose-600) !important;
+    padding: 0.7rem 1.6rem !important;
+}
+
+/* 关于页：聊天回放配色 */
+.withu-chat-wrapper {
+    --chat-blue: #f4587a;
+}
+
+.withu-chat-device {
+    border-radius: 28px !important;
+    box-shadow: 0 40px 90px -50px rgba(42, 34, 38, 0.5), 0 10px 30px -20px rgba(42, 34, 38, 0.2) !important;
+}
+
+.withu-chat-header {
+    background: linear-gradient(135deg, #fff6f8, #ffe9ee) !important;
+    border-bottom: 1px solid var(--wu-rose-100) !important;
+}
+
+.withu-chat-status-dot {
+    background: var(--wu-rose-500) !important;
+    box-shadow: 0 0 0 4px rgba(244, 88, 122, 0.12);
+}
+
+.withu-chat-bubble-self,
+.withu-chat-message.self .withu-chat-bubble {
+    background: var(--wu-grad-rose) !important;
+    color: #fff !important;
+}
+
+.withu-chat-controls {
+    background: rgba(255, 255, 255, 0.86) !important;
+    border: 1px solid var(--wu-line);
+    box-shadow: var(--wu-shadow-md);
+}
+
+.withu-chat-play-btn {
+    background: var(--wu-grad-rose) !important;
+    color: #fff !important;
+}
+
+/* 详情页：正文与侧栏 */
+.withu-detail-card {
+    border-radius: var(--wu-radius-lg) !important;
+    border-color: var(--wu-line) !important;
+    box-shadow: var(--wu-shadow-sm) !important;
+}
+
+.withu-detail-header-card {
+    overflow: hidden;
+}
+
+.withu-detail-rail-btn {
+    border-radius: 16px !important;
+    transition: transform 0.25s var(--wu-ease-out), background 0.25s ease !important;
+}
+
+.withu-detail-rail-btn:hover {
+    transform: translateY(-2px);
+}
+
+.withu-detail-toc-link:hover,
+.withu-detail-toc-link.active {
+    color: var(--wu-rose-600) !important;
+}
+
+/* 通用页面主标题 */
+.withu-title,
+.love-card .event-name,
+.withu-article-card-title,
+.withu-time-line-card-title {
+    text-wrap: balance;
+}
+
+.withu-card .withu-title,
+.withu-article-card-title,
+.withu-time-line-card-title,
+.withu-detail-header-title {
+    text-wrap: pretty;
+}
+
+/* 页脚与内容之间留白 */
+.footer-warp {
+    padding-top: 1.5rem;
+    padding-bottom: 1rem;
+}
+
+/* 移动端：内容边距与卡片 */
+@media (max-width: 640px) {
+    .withu-page-container {
+        padding: 0 14px;
+        margin-top: 10px;
+    }
+
+    .withu-card {
+        padding: 18px;
+        border-radius: var(--wu-radius-md);
+    }
+
+    .MessageCard {
+        padding: 1.2rem 1.15rem !important;
+    }
+
+    .withu-page-header {
+        padding-top: 1.3rem;
+    }
+
+    .withu-page-header::after {
+        margin-top: 0.85rem;
+    }
+
+    .withu-hero-title {
+        letter-spacing: 0.03em;
+    }
+
+    .withu-no-data {
+        padding: 2.4rem 1rem 2.8rem;
+    }
+
+    .withu-scroll-progress {
+        height: 2px;
+    }
+}
+
+/* 空状态与主按钮补充 */
+.withu-no-data-btn-primary {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    background: var(--wu-grad-rose) !important;
+    color: #fff !important;
+    border: none !important;
+    box-shadow: var(--wu-shadow-rose);
+    text-decoration: none;
+}
+
+.withu-no-data-btn-primary:hover {
+    color: #fff !important;
+    filter: brightness(1.04);
+}
+
+.withu-article-empty {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 340px;
+    margin: 1rem auto 2rem;
+}
+
+/* 相册空状态嵌在卡片内时去掉二次边框 */
+.withu-card .withu-content.withu-no-data {
+    border: none;
+    background: transparent;
+    padding: 2.4rem 1rem !important;
+}
+
+.withu-card .withu-content.withu-no-data::before {
+    display: none;
+}
+
+/* 空状态图标内部光斑统一为玫瑰色（覆盖旧版蓝色变体） */
+.withu-no-data-icon::before,
+.withu-no-data-icon::after {
+    background: rgba(244, 88, 122, 0.16) !important;
+}
+
+.withu-no-data-icon--orange,
+.withu-no-data-icon--pink,
+.withu-no-data-icon--search {
+    background: #fff !important;
+    border-color: var(--wu-rose-100) !important;
+    color: var(--wu-rose-500) !important;
+    box-shadow: var(--wu-shadow-rose) !important;
+}
+
+.withu-no-data::after {
+    background: radial-gradient(circle, rgba(244, 88, 122, 0.16), transparent 68%) !important;
+}
+
+/* 页面内搜索条 */
+.wu-page-search {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    width: min(720px, calc(100% - 2rem));
+    margin: 0 auto 1.5rem;
+    padding: 7px 10px 7px 16px;
+    background: rgba(255, 255, 255, 0.82);
+    border: 1px solid var(--wu-line);
+    border-radius: 999px;
+    box-shadow: var(--wu-shadow-sm);
+    backdrop-filter: blur(16px) saturate(140%);
+    -webkit-backdrop-filter: blur(16px) saturate(140%);
+    transition: border-color 0.25s ease, box-shadow 0.25s ease, background 0.25s ease;
+}
+
+.wu-page-search:focus-within {
+    background: rgba(255, 255, 255, 0.96);
+    border-color: rgba(244, 88, 122, 0.36);
+    box-shadow: 0 0 0 4px rgba(244, 88, 122, 0.09), var(--wu-shadow-sm);
+}
+
+.wu-page-search__icon {
+    display: inline-flex;
+    color: var(--wu-rose-500);
+    font-size: 1.05rem;
+    flex-shrink: 0;
+}
+
+.wu-page-search__input {
+    flex: 1;
+    min-width: 0;
+    border: none !important;
+    outline: none !important;
+    background: transparent !important;
+    box-shadow: none !important;
+    font-size: 0.9rem;
+    color: var(--wu-ink);
+    height: 36px;
+    padding: 0;
+}
+
+.wu-page-search__input::placeholder {
+    color: var(--wu-ink-muted);
+}
+
+.wu-page-search__count {
+    flex-shrink: 0;
+    font-size: 0.72rem;
+    color: var(--wu-ink-muted);
+    letter-spacing: 0.02em;
+}
+
+.wu-page-search__clear {
+    flex-shrink: 0;
+    width: 26px;
+    height: 26px;
+    border: none;
+    border-radius: 50%;
+    background: rgba(42, 34, 38, 0.06);
+    color: var(--wu-ink-soft);
+    font-size: 1rem;
+    line-height: 1;
+    cursor: pointer;
+    transition: background 0.2s ease, color 0.2s ease, transform 0.2s var(--wu-ease-out);
+}
+
+.wu-page-search__clear:hover {
+    background: var(--wu-rose-100);
+    color: var(--wu-rose-700);
+    transform: scale(1.06);
+}
+
+.wu-page-search__hint {
+    flex-shrink: 0;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 22px;
+    height: 22px;
+    padding: 0 5px;
+    border-radius: 6px;
+    border: 1px solid var(--wu-line);
+    background: rgba(255, 255, 255, 0.7);
+    color: var(--wu-ink-muted);
+    font-family: var(--wu-font-sans);
+    font-size: 0.68rem;
+    line-height: 1;
+}
+
+@media (max-width: 640px) {
+    .wu-page-search {
+        width: calc(100% - 1.5rem);
+        margin-bottom: 1rem;
+    }
+
+    .wu-page-search__hint {
+        display: none;
+    }
+}
+
+/* 内页 Hero：去掉大面积磨砂面板，让头像直接落在画面上 */
+html.withu-subpage #homePage .bg-wrap.central.limg .middle {
+    background: transparent !important;
+    border-color: transparent !important;
+    box-shadow: none !important;
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+    padding: 1.2rem 3rem 0 !important;
+}
+
+html.withu-subpage #homePage .bg-wrap.central.limg {
+    transform: translate(-50%, -50%) scale(0.72);
+}
+
+@media (max-width: 768px) {
+    html.withu-subpage #homePage .bg-wrap.central.limg {
+        display: none !important;
+    }
+}
+
+/* 关于页：对话气泡改为玫瑰色系 */
+.withu-chat-msg-row.right .withu-chat-bubble {
+    background: var(--wu-grad-rose) !important;
+    color: #fff !important;
+    box-shadow: 0 10px 22px -14px rgba(244, 88, 122, 0.7) !important;
+}
+
+.withu-chat-msg-row.left .withu-chat-bubble {
+    background: rgba(255, 255, 255, 0.92) !important;
+    color: var(--wu-ink) !important;
+    border: 1px solid var(--wu-line);
+}
+
+/* 留言页只有一条时居中，避免半宽悬空 */
+.Message_Main:has(> .MessageCard:only-child) > .MessageCard {
+    width: min(760px, 100%) !important;
+    margin-left: auto !important;
+    margin-right: auto !important;
+    float: none !important;
+}
+
+
+/* 跳转到主要内容（键盘用户） */
+.wu-skip-link {
+    position: fixed;
+    top: -60px;
+    left: 16px;
+    z-index: 100002;
+    padding: 10px 18px;
+    border-radius: 0 0 12px 12px;
+    background: var(--wu-grad-rose);
+    color: #fff;
+    font-size: 0.85rem;
+    text-decoration: none;
+    box-shadow: var(--wu-shadow-rose);
+    transition: top 0.25s var(--wu-ease-out);
+}
+
+.wu-skip-link:focus {
+    top: 0;
+    color: #fff;
+}
+
+/* 移动端底部安全区 */
+.withu-mobile-nav-root {
+    padding-bottom: env(safe-area-inset-bottom, 0px);
+}
+
+/* 不支持 backdrop-filter 时的玻璃降级 */
+@supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+    .withu-nav-island-container,
+    .wu-page-search,
+    .withu-tab-template-v5-container.withu-glass-panel {
+        background: rgba(255, 255, 255, 0.97);
+    }
+}
+
+/* 只有一条留言时居中 */
+.Message_Main.wu-single-message > .MessageCard {
+    width: min(760px, 100%) !important;
+    margin-left: auto !important;
+    margin-right: auto !important;
+    float: none !important;
+}
+
+/* 单张相册卡（含空状态）居中，避免半宽悬空 */
+.withu-masonry-grid.wu-single-card {
+    max-width: 760px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.withu-masonry-grid.wu-single-card > .withu-masonry-col {
+    width: 100% !important;
+    max-width: 100%;
+    float: none;
+    padding-left: 0;
+    padding-right: 0;
+    margin-left: auto;
+    margin-right: auto;
+}

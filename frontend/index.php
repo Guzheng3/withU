@@ -477,7 +477,11 @@ try {
     <ul class="list mask_black">
                 <?php foreach ($homeCarouselImages as $homeCarouselIndex => $homeCarouselImg): ?>
                 <li class="item<?php echo $homeCarouselIndex === 0 ? ' active' : ''; ?>">
-                    <img class="lazy CarouselImage" data-src="<?php echo e($homeCarouselImg); ?>" draggable="false">
+                    <img class="lazy CarouselImage"
+                         data-src="<?php echo e($homeCarouselImg); ?>"
+                         src="<?php echo e($homeCarouselImg); ?>"
+                         <?php echo $homeCarouselIndex === 0 ? 'fetchpriority="high"' : ''; ?>
+                         alt="" draggable="false">
                 </li>
                 <?php endforeach; ?>
             </ul>
@@ -590,6 +594,14 @@ try {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title><?php echo htmlspecialchars($withuSiteTitle, ENT_QUOTES, 'UTF-8'); ?></title>
 
+<script>
+(function(){var p=(location.pathname||'/').replace(/\/+$/,'');var home=p===''||p==='/'||/\/index\.php$/.test(p);var d=document.documentElement;d.classList.add('withu-v2');if(!home)d.classList.add('withu-subpage');})();
+</script>
+<!-- withU v2 关键首屏样式（完整样式由页脚统一加载，避免布局跳动） -->
+<style>
+html.withu-subpage #homePage.wrap{height:clamp(300px,38vh,460px)!important;min-height:300px;margin-top:0!important;overflow:hidden;background:linear-gradient(135deg,#fff1f4,#ffe3e9)}
+@media(max-width:768px){html.withu-subpage #homePage.wrap{height:clamp(220px,32vh,300px)!important;min-height:220px}html.withu-subpage #homePage .bg-wrap.central.limg{display:none!important}}
+</style>
 </head>
 
 <body class="bg-pdot-vignette">
@@ -1616,7 +1628,7 @@ try {
     </div>
 </div>
 <!-- ============ /足迹地图弹窗 ============ -->
-<script src="assets/js/map.js?v=20261027-loc"></script>
+<script src="assets/js/map.js?v=20261027-loc2"></script>
 
 <div id="pjax-container">
 

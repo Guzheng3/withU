@@ -1734,7 +1734,7 @@ const addLoversMarkers = (map, lovers) => {
             && cfg.weatherLocLng !== null && cfg.weatherLocLng !== undefined && cfg.weatherLocLng !== '') {
             const lat = Number(cfg.weatherLocLat);
             const lng = Number(cfg.weatherLocLng);
-            if (isFinite(lat) && isFinite(lng)) adminCoords = [lng, lat];
+            adminCoords = normalizeCoordinatePair(lng, lat);
         }
 
         if (liveCoords) {

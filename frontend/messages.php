@@ -161,43 +161,7 @@
 </div>
 
 <?php include __DIR__ . '/inc/header.php'; ?>
-<div id="homePage" class="wrap" data-Fullscreen>
-        <ul class="list mask_black">
-                    <li class="item active">
-                <img class="lazy CarouselImage" data-src="/Lovefolder/20260408044229_69d56c35d59a9841528398.webp" draggable="false">
-            </li>
-                    <li class="item">
-                <img class="lazy CarouselImage" data-src="/Lovefolder/20260408044228_69d56c34421f3439264035.webp" draggable="false">
-            </li>
-            </ul>
-
-    <?php include __DIR__ . '/inc/head-avatars.php'; ?>
-
-
-    <svg class="waves" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
-        viewBox="0 24 150 28" preserveAspectRatio="none" shape-rendering="auto">
-        <defs>
-            <path id="gentle-wave" d="M-160 44c30 0 58-18 88-18s 58 18 88 18 58-18 88-18 58 18 88 18 v44h-352z" />
-        </defs>
-        <g class="parallax">
-            <use xlink:href="#gentle-wave" x="48" y="0" fill="rgba(255,255,255,0.7" />
-            <use xlink:href="#gentle-wave" x="48" y="3" fill="rgba(255,255,255,0.5)" />
-            <use xlink:href="#gentle-wave" x="48" y="5" fill="rgba(255,255,255,0.3)" />
-            <use xlink:href="#gentle-wave" x="48" y="7" fill="#fff" />
-        </g>
-    </svg>
-
-    <ul class="pointList">
-                    <li class="point active" data-index="0"></li>
-                    <li class="point " data-index="1"></li>
-                    <li class="point " data-index="2"></li>
-                    <li class="point " data-index="3"></li>
-                    <li class="point " data-index="4"></li>
-                    <li class="point " data-index="5"></li>
-                    <li class="point " data-index="6"></li>
-                    <li class="point " data-index="7"></li>
-            </ul>
-</div>
+<?php include __DIR__ . '/inc/hero.php'; ?>
 
 <div class="Width_limit_10rem">
     <div class="withu-sticky-sentinel" id="withuStickySentinel"></div>
@@ -281,6 +245,14 @@
     <meta charset="utf-8" />
     <title>留言 — <?php echo htmlspecialchars($withuSiteTitle, ENT_QUOTES, 'UTF-8'); ?></title>
     <link rel="stylesheet" href="/Style/css/message.css">
+<script>
+(function(){var p=(location.pathname||'/').replace(/\/+$/,'');var home=p===''||p==='/'||/\/index\.php$/.test(p);var d=document.documentElement;d.classList.add('withu-v2');if(!home)d.classList.add('withu-subpage');})();
+</script>
+<!-- withU v2 关键首屏样式（完整样式由页脚统一加载，避免布局跳动） -->
+<style>
+html.withu-subpage #homePage.wrap{height:clamp(300px,38vh,460px)!important;min-height:300px;margin-top:0!important;overflow:hidden;background:linear-gradient(135deg,#fff1f4,#ffe3e9)}
+@media(max-width:768px){html.withu-subpage #homePage.wrap{height:clamp(220px,32vh,300px)!important;min-height:220px}html.withu-subpage #homePage .bg-wrap.central.limg{display:none!important}}
+</style>
 </head>
 
 <body class="bg-pdot-vignette">
@@ -783,7 +755,7 @@
     </div>
 </div>
 <!-- ============ /足迹地图弹窗 ============ -->
-<script src="/assets/js/map.js?v=20261027-loc"></script>
+<script src="/assets/js/map.js?v=20261027-loc2"></script>
 
 <div id="pjax-container">
 
