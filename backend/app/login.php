@@ -183,62 +183,134 @@ foreach (($themeConfig['colors'] ?? []) as $themeName => $themeValue) $themeInli
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title><?php echo $activeTab === 'register' ? '注册' : '登录'; ?> - <?php echo e(SITE_NAME); ?></title>
 <link rel="stylesheet" href="/admin-assets/vendor/fontawesome/css/all.min.css">
+
 <style>
-:root{--brand:#e75480;--brand-dark:#c23b64;}
+:root{--brand:#d94f6d;--brand-dark:#be3a58;--ink:#2b2327;--ink-2:#6d6167;--ink-3:#9b8e94;--line:#eadfe2;--surface:#fffdfd;--soft:#fbf7f8;}
 *{box-sizing:border-box;}
-body{background:linear-gradient(135deg,#ffeef5 0%,#f4f6fb 60%,#eef2ff 100%);
-  font-family:"Nunito","Microsoft YaHei","PingFang SC",sans-serif;margin:0;min-height:100vh;display:flex;align-items:center;justify-content:center;}
-.login-card{width:420px;max-width:92vw;background:#fff;border-radius:18px;box-shadow:0 18px 50px rgba(180,60,110,.15);overflow:hidden;position:relative;}
-.login-head{background:linear-gradient(135deg,#e75480,#c23b64);color:#fff;padding:36px 30px 28px;text-align:center;}
-.login-head h3{margin:0 0 4px;font-weight:800;font-size:22px;letter-spacing:.5px;}
-.login-head p{margin:0;opacity:.85;font-size:13px;line-height:1.6;}
-.login-body{padding:28px 30px 30px;}
-.login-body .form-group{margin-bottom:16px;}
-.login-body label{font-size:13px;color:#555;font-weight:600;margin-bottom:6px;display:block;}
-.login-body label i{color:var(--brand);margin-right:4px;}
-.login-body input[type="text"],.login-body input[type="password"],.login-body input[type="email"]{width:100%;padding:11px 14px;border:1.5px solid #e3e6f0;border-radius:10px;font-size:14px;outline:none;transition:.2s;font-family:inherit;}
-.login-body input:focus{border-color:var(--brand);box-shadow:0 0 0 3px rgba(231,84,128,.12);}
-.login-body .btn{width:100%;padding:12px;border:none;border-radius:10px;background:linear-gradient(135deg,#e75480,#c23b64);color:#fff;font-size:15px;font-weight:700;cursor:pointer;transition:.2s;font-family:inherit;}
-.login-body .btn:hover{filter:brightness(1.08);transform:translateY(-1px);box-shadow:0 4px 14px rgba(231,84,128,.3);}
-.login-body .btn i{margin-right:6px;}
-.login-tip{margin-top:14px;font-size:12px;color:#999;text-align:center;line-height:1.7;}
-.login-err{background:#fff1f1;color:#c0392b;border:1px solid #ffd6d6;padding:9px 12px;border-radius:8px;font-size:13px;margin-bottom:14px;display:block;}
-.login-success{background:#f0faf0;color:#27ae60;border:1px solid #d5f5d5;padding:9px 12px;border-radius:8px;font-size:13px;margin-bottom:14px;display:block;}
-.auth-tabs{display:flex;gap:4px;margin-bottom:18px;background:#f6f7fb;padding:4px;border-radius:12px;}
-.auth-tabs .tab-btn{flex:1;padding:9px 0;border:none;border-radius:9px;background:transparent;cursor:pointer;font-size:14px;color:#888;transition:.2s;font-family:inherit;font-weight:600;}
-.auth-tabs .tab-btn:hover:not(.active){color:var(--brand);}
-.auth-tabs .tab-btn.active{background:linear-gradient(135deg,var(--brand),var(--brand-dark));color:#fff;box-shadow:0 3px 10px rgba(231,84,128,.3);}
+body{
+  margin:0;min-height:100vh;display:flex;align-items:center;justify-content:center;padding:28px 18px;
+  color:var(--ink);font-family:"Inter","HarmonyOS Sans SC","PingFang SC","Microsoft YaHei",system-ui,sans-serif;
+  background-color:#f6f2f2;
+  background-image:
+    radial-gradient(820px 520px at 10% -8%,rgba(217,79,109,.10),transparent 60%),
+    radial-gradient(760px 520px at 100% 0%,rgba(185,133,95,.10),transparent 62%),
+    radial-gradient(900px 680px at 50% 118%,rgba(63,143,109,.07),transparent 66%);
+  background-attachment:fixed;
+  -webkit-font-smoothing:antialiased;
+}
+body::before{
+  content:"";position:fixed;inset:0;pointer-events:none;z-index:-1;
+  background-image:radial-gradient(rgba(43,35,39,.05) 1px,transparent 1px);
+  background-size:22px 22px;
+  -webkit-mask-image:radial-gradient(circle at 50% 40%,#000 0%,transparent 74%);
+  mask-image:radial-gradient(circle at 50% 40%,#000 0%,transparent 74%);
+}
+.login-card{
+  width:880px;max-width:100%;display:grid;grid-template-columns:0.82fr 1fr;
+  background:var(--surface);border:1px solid var(--line);border-radius:26px;overflow:hidden;
+  box-shadow:0 40px 90px -50px rgba(43,35,39,.55),0 2px 6px rgba(43,35,39,.04);
+  position:relative;
+}
+.login-card::before{
+  content:"";position:absolute;top:0;left:0;right:0;height:3px;z-index:2;
+  background:linear-gradient(90deg,#e9708b,#d94f6d 45%,#b9855f);
+}
+.login-head{
+  position:relative;display:flex;flex-direction:column;align-items:flex-start;justify-content:center;
+  padding:54px 46px;color:#fff;overflow:hidden;
+  background:linear-gradient(155deg,#412a32 0%,#6b3746 46%,#a84a63 100%);
+}
+.login-head::before{
+  content:"♥";display:flex;align-items:center;justify-content:center;
+  width:46px;height:46px;border-radius:16px;margin-bottom:26px;
+  background:rgba(255,255,255,.14);border:1px solid rgba(255,255,255,.22);
+  color:#ffd9e2;font-size:18px;backdrop-filter:blur(6px);
+}
+.login-head::after{
+  content:"把平凡的日子，收进只属于我们的地方。";
+  margin-top:26px;font-size:12.5px;line-height:1.9;color:rgba(255,255,255,.62);
+  letter-spacing:.06em;max-width:15em;
+}
+.login-head h3{
+  margin:0 0 10px;font-family:"Noto Serif SC","Noto Serif CJK SC","Songti SC",serif;
+  font-size:30px;font-weight:650;letter-spacing:.04em;line-height:1.2;
+}
+.login-head p{margin:0;max-width:17em;color:rgba(255,255,255,.78);font-size:13px;line-height:1.8;}
+.login-body{padding:52px 48px 44px;background:var(--surface);}
+.login-body .form-group{margin-bottom:18px;}
+.login-body label{font-size:12.5px;color:var(--ink-2);font-weight:600;margin-bottom:7px;display:block;letter-spacing:.01em;}
+.login-body label i{color:var(--brand);margin-right:5px;}
+.login-body input[type="text"],.login-body input[type="password"],.login-body input[type="email"]{
+  width:100%;height:46px;padding:0 15px;border:1px solid #ddccd1;border-radius:12px;
+  background:var(--soft);font-size:14px;color:var(--ink);outline:none;transition:.2s;font-family:inherit;
+}
+.login-body input::placeholder{color:var(--ink-3);}
+.login-body input:focus{background:#fff;border-color:rgba(217,79,109,.5);box-shadow:0 0 0 4px rgba(217,79,109,.09);}
+.login-body .btn{
+  width:100%;height:48px;border:none;border-radius:12px;cursor:pointer;font-family:inherit;
+  background:linear-gradient(135deg,#e0607c,#d94f6d 55%,#be3a58);color:#fff;
+  font-size:14.5px;font-weight:650;letter-spacing:.04em;transition:.2s;
+  box-shadow:0 12px 26px -14px rgba(217,79,109,.8);
+}
+.login-body .btn:hover{filter:brightness(1.04);transform:translateY(-1px);box-shadow:0 16px 30px -14px rgba(217,79,109,.85);}
+.login-body .btn:active{transform:translateY(0) scale(.99);}
+.login-body .btn i{margin-right:7px;}
+.login-tip{margin-top:16px;font-size:12px;color:var(--ink-3);text-align:center;line-height:1.75;}
+.login-err{background:#fdeeee;color:#a33a3a;border:1px solid rgba(196,69,69,.2);padding:10px 13px;border-radius:11px;font-size:12.5px;margin-bottom:16px;display:block;line-height:1.6;}
+.login-success{background:#eaf5f0;color:#276b52;border:1px solid rgba(63,143,109,.2);padding:10px 13px;border-radius:11px;font-size:12.5px;margin-bottom:16px;display:block;line-height:1.6;}
+.auth-tabs{display:flex;gap:4px;margin-bottom:22px;background:#f4eeee;padding:4px;border-radius:999px;border:1px solid var(--line);}
+.auth-tabs .tab-btn{flex:1;min-height:38px;border:none;border-radius:999px;background:transparent;cursor:pointer;font-size:13px;color:var(--ink-2);transition:.2s;font-family:inherit;font-weight:600;}
+.auth-tabs .tab-btn:hover:not(.active){color:var(--brand-dark);}
+.auth-tabs .tab-btn.active{background:#fff;color:var(--brand-dark);box-shadow:0 4px 12px -8px rgba(43,35,39,.4);border:1px solid var(--line);}
 .label-row{display:flex;align-items:center;justify-content:space-between;}
-.qq-avatar-preview{width:22px;height:22px;border-radius:50%;object-fit:cover;border:1.5px solid #f3c1d3;display:none;}
-.field-error{color:#c0392b;font-size:12px;margin-top:5px;display:none;}
-.input-error{border-color:#e74c3c !important;box-shadow:0 0 0 3px rgba(231,76,60,.1) !important;}
+.qq-avatar-preview{width:24px;height:24px;border-radius:50%;object-fit:cover;border:2px solid #fff;box-shadow:0 0 0 1px var(--line);display:none;}
+.field-error{color:#a33a3a;font-size:11.5px;margin-top:5px;display:none;}
+.input-error{border-color:#c44545 !important;box-shadow:0 0 0 4px rgba(196,69,69,.08) !important;}
 .role-toggle{display:flex;gap:10px;}
 .role-toggle .role-option{flex:1;cursor:pointer;}
 .role-toggle .role-option input{display:none;}
-.role-toggle .role-option-inner{display:flex;flex-direction:column;align-items:center;padding:10px;border:1.5px solid #e3e6f0;border-radius:10px;transition:.2s;text-align:center;}
-.role-toggle .role-option input:checked+.role-option-inner{border-color:var(--brand);background:#fff5f8;color:var(--brand);}
-.role-toggle .role-option-inner i{font-size:22px;margin-bottom:4px;}
-.role-toggle .role-option-inner .role-text-main{font-size:14px;font-weight:600;}
-.role-toggle .role-option-inner .role-text-sub{font-size:11px;color:#999;}
-.role-male-icon{color:#5dade2;}
+.role-toggle .role-option-inner{
+  display:flex;flex-direction:column;align-items:center;padding:12px 10px;border:1px solid #ddccd1;
+  border-radius:12px;transition:.2s;text-align:center;background:var(--soft);
+}
+.role-toggle .role-option input:checked+.role-option-inner{border-color:rgba(217,79,109,.45);background:#fdeef2;color:var(--brand-dark);box-shadow:0 0 0 3px rgba(217,79,109,.06);}
+.role-toggle .role-option-inner i{font-size:21px;margin-bottom:5px;}
+.role-toggle .role-option-inner .role-text-main{font-size:13px;font-weight:600;}
+.role-toggle .role-option-inner .role-text-sub{font-size:10.5px;color:var(--ink-3);margin-top:1px;}
+.role-male-icon{color:#4f7fa8;}
 .role-female-icon{color:var(--brand);}
-.form-hint{font-size:13px;color:#999;text-align:center;margin:12px 0;}
-.invite-hero{background:linear-gradient(135deg,#fff5f8,#f0f6ff);border:1px solid #ffdce8;border-radius:12px;
-  padding:16px 18px;margin-bottom:18px;text-align:center;}
-.invite-hero .invite-poem{margin:0 0 10px;font-size:13.5px;color:#8a5a68;line-height:1.8;}
-.invite-hero .invite-line{margin:0 0 6px;font-size:15px;color:#333;font-weight:600;line-height:1.7;}
+.form-hint{font-size:12px;color:var(--ink-3);text-align:center;margin:13px 0;line-height:1.7;}
+.invite-hero{
+  background:linear-gradient(135deg,#fdf5f7,#f8f2ea);border:1px solid #f0dde2;
+  border-radius:14px;padding:18px 18px;margin-bottom:20px;text-align:center;
+}
+.invite-hero .invite-poem{margin:0 0 10px;font-size:13px;color:#8a5a68;line-height:1.85;}
+.invite-hero .invite-line{margin:0 0 6px;font-size:14px;color:var(--ink);font-weight:600;line-height:1.75;}
 .invite-hero .invite-line strong{color:var(--brand);}
-.invite-hero .invite-expire{margin:0;font-size:12px;color:#b0b5c4;}
-.auth-footer{text-align:center;margin-top:16px;padding-top:16px;border-top:1px solid #f0f0f0;}
-.auth-footer a{color:#999;text-decoration:none;font-size:13px;transition:.2s;}
-.auth-footer a:hover{color:var(--brand);}
+.invite-hero .invite-expire{margin:0;font-size:11.5px;color:var(--ink-3);}
+.auth-footer{text-align:center;margin-top:20px;padding-top:18px;border-top:1px solid #f2eaec;}
+.auth-footer a{color:var(--ink-3);text-decoration:none;font-size:12.5px;transition:.2s;}
+.auth-footer a:hover{color:var(--brand-dark);}
 .form-group-hidden{display:none;}
+@media (max-width:820px){
+  body{padding:18px 14px;align-items:flex-start;}
+  .login-card{grid-template-columns:1fr;width:440px;border-radius:22px;margin-top:4vh;}
+  .login-head{padding:30px 26px 26px;align-items:center;text-align:center;}
+  .login-head::before{margin-bottom:16px;width:40px;height:40px;border-radius:14px;}
+  .login-head::after{display:none;}
+  .login-head h3{font-size:25px;}
+  .login-head p{max-width:22em;font-size:12.5px;}
+  .login-body{padding:28px 24px 30px;}
+}
+@media (prefers-reduced-motion:reduce){
+  *{transition:none !important;animation:none !important;}
+}
 </style>
 </head>
 <body>
 <div class="login-card">
   <div class="login-head">
-    <h3>💗 withU</h3>
+    <h3>withU</h3>
     <p id="authSubtitle"><?php echo $activeTab === 'register' ? ($isInvited ? '接受邀请，开启你们的浪漫时光' : '创建你们的账号，开启情侣空间') : '登录你的账号，记录你们的点点滴滴'; ?></p>
   </div>
   <div class="login-body">

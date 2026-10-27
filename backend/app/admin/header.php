@@ -65,16 +65,17 @@ foreach (($themeConfig['colors'] ?? []) as $themeName => $themeValue) {
 		<!-- Font Awesome 备用（本地） -->
 		<link rel="stylesheet" href="/admin-assets/vendor/fontawesome/css/all.min.css">
 	<link rel="stylesheet" href="/admin-assets/css/motion-effects.css?v=20261007a">
+	<link rel="stylesheet" href="/admin-assets/css/admin_v4.css?v=4.0.8">
 	<script src="/admin-assets/js/motion-effects.js?v=20261007a" defer></script>
 </head>
-<body class="admin-v3 admin-ui-<?php echo e($adminUiMode); ?><?php echo !empty($adminNarrow) ? ' admin-narrow' : ''; ?>">
+<body class="admin-v3 admin-v4 admin-ui-<?php echo e($adminUiMode); ?><?php echo !empty($adminNarrow) ? ' admin-narrow' : ''; ?>">
 <div class="admin-drawer-backdrop" aria-hidden="true"></div>
 <aside class="admin-drawer" id="admin-drawer" aria-label="后台导航">
     <div class="admin-drawer-header">
         <div>
-            <div class="admin-drawer-title"><?php echo function_exists('e') ? e('我们的情侣小站') : '我们的情侣小站'; ?></div>
-            <div style="font-size:0.8rem;color:var(--text-light);margin-top:0.15rem;">
-                管理中心
+            <div class="admin-drawer-title">withU</div>
+            <div style="font-size:0.68rem;color:var(--text-light);margin-top:0.15rem;white-space:nowrap;letter-spacing:0.12em;">
+                情侣小站 · 管理中心
             </div>
         </div>
         <button class="admin-icon-btn" type="button" data-admin-toggle="drawer" aria-label="关闭菜单" aria-controls="admin-drawer" aria-expanded="false">
@@ -145,6 +146,9 @@ foreach (($themeConfig['colors'] ?? []) as $themeName => $themeValue) {
 <header class="admin-appbar">
     <div class="admin-appbar-inner">
         <div class="admin-appbar-left">
+            <button class="admin-icon-btn admin-sidebar-toggle" type="button" id="adminSidebarToggle" aria-label="折叠侧栏" aria-expanded="true" title="折叠侧栏">
+                <i class="ti ti-layout-sidebar-left-collapse"></i>
+            </button>
             <button class="admin-icon-btn" type="button" data-admin-toggle="drawer" aria-label="打开菜单" aria-controls="admin-drawer" aria-expanded="false">
                 <i class="ti ti-menu-2"></i>
             </button>
@@ -157,12 +161,21 @@ foreach (($themeConfig['colors'] ?? []) as $themeName => $themeValue) {
             </div>
         </div>
         <div class="admin-appbar-actions">
+            <button type="button" class="admin-icon-btn admin-command-trigger" id="adminCommandTrigger" title="快速跳转 (Ctrl / ⌘ + K)" aria-label="快速跳转">
+                <i class="ti ti-search"></i><kbd>⌘K</kbd>
+            </button>
             <a href="/" class="admin-icon-btn" title="前台">
                 <i class="ti ti-world"></i>
             </a>
-            <img src="<?php echo e($currentUser['avatar']); ?>"
-                 alt="<?php echo e($currentUser['nickname']); ?>"
-                 class="admin-user-avatar">
+            <div class="admin-user-chip">
+                <img src="<?php echo e($currentUser['avatar']); ?>"
+                     alt="<?php echo e($currentUser['nickname']); ?>"
+                     class="admin-user-avatar">
+                <div class="admin-user-meta">
+                    <strong><?php echo e($currentUser['nickname'] ?? $currentUser['username']); ?></strong>
+                    <span><?php echo e($currentUser['role'] === 'user2' ? 'User 2' : 'User 1'); ?></span>
+                </div>
+            </div>
         </div>
     </div>
 </header>
