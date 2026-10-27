@@ -845,7 +845,7 @@ try {
     </div>
 </div>
 <!-- ============ /足迹地图弹窗 ============ -->
-<script src="/assets/js/map.js?v=20261026"></script>
+<script src="/assets/js/map.js?v=20261027-loc"></script>
 
 <div id="pjax-container">
 

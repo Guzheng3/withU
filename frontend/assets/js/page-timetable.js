@@ -65,6 +65,116 @@
         return weeks;
     }
 
+    /* ---------- 课程天气（周视图 compact 密度，对照 qhkb 天气行） ---------- */
+    const WEATHER_SEVERITY = {
+        0: 0, 1: 1, 2: 2, 3: 3, 45: 4, 48: 4,
+        51: 5, 53: 5, 55: 5, 56: 6, 57: 6,
+        61: 7, 63: 8, 65: 9, 66: 10, 67: 10,
+        80: 11, 81: 11, 82: 12,
+        71: 13, 73: 14, 75: 15, 77: 16, 85: 17, 86: 17,
+        95: 18, 96: 19, 99: 19
+    };
+    const WEATHER_LABELS = {
+        0: '晴', 1: '晴间多云', 2: '多云', 3: '阴', 45: '雾', 48: '雾',
+        51: '毛毛雨', 53: '毛毛雨', 55: '毛毛雨', 56: '冻毛毛雨', 57: '冻毛毛雨',
+        61: '小雨', 63: '中雨', 65: '大雨', 66: '冻雨', 67: '冻雨',
+        80: '阵雨', 81: '阵雨', 82: '强阵雨',
+        71: '小雪', 73: '中雪', 75: '大雪', 77: '米雪', 85: '阵雪', 86: '阵雪',
+        95: '雷阵雨', 96: '雷暴冰雹', 99: '雷暴冰雹'
+    };
+
+    /** 某一侧（我/对方）的天气显示设置；未注入时按 App 默认值 */
+    function weatherDisplayConfig(side) {
+        const displays = window.WITHU_TT_PREVIEW && window.WITHU_TT_PREVIEW.displays;
+        const raw = displays && typeof displays === 'object' && displays[side] && typeof displays[side] === 'object'
+            ? displays[side]
+            : {};
+        return {
+            showOnWeekCard: raw.showOnWeekCard !== false,
+            showPhenomenon: raw.showPhenomenon !== false,
+            showTemperature: raw.showTemperature !== false,
+            showProbability: raw.showProbability === true
+        };
+    }
+
+    function weatherIconClass(code) {
+        if (code >= 95) return 'ph-fill ph-cloud-lightning';
+        if ((code >= 71 && code <= 77) || (code >= 85 && code <= 86)) return 'ph-fill ph-snowflake';
+        if ((code >= 51 && code <= 67) || (code >= 80 && code <= 82)) return 'ph-fill ph-cloud-rain';
+        if (code === 45 || code === 48) return 'ph-fill ph-cloud-fog';
+        if (code === 3) return 'ph-fill ph-cloud';
+        if (code === 1 || code === 2) return 'ph-fill ph-cloud-sun';
+        return 'ph-fill ph-sun';
+    }
+
+    function weatherSeverity(code) {
+        return Object.prototype.hasOwnProperty.call(WEATHER_SEVERITY, code) ? WEATHER_SEVERITY[code] : 0;
+    }
+
+    function formatDateKey(date) {
+        return date.getFullYear() + '-' + pad2(date.getMonth() + 1) + '-' + pad2(date.getDate());
+    }
+
+    function formatDateTimeKey(date) {
+        return formatDateKey(date) + 'T' + pad2(date.getHours()) + ':' + pad2(date.getMinutes());
+    }
+
+    function combineDateAndTime(date, time) {
+        const match = /^(\d{1,2}):(\d{2})$/.exec(String(time || '').trim());
+        if (!match) return null;
+        const value = new Date(date.getFullYear(), date.getMonth(), date.getDate(),
+            parseInt(match[1], 10), parseInt(match[2], 10));
+        return isNaN(value.getTime()) ? null : value;
+    }
+
+    /**
+     * 课程时段内的天气汇总：温度取平均，现象取最恶劣，降水概率取最大。
+     * 与 qhkb 的 summarizeCourseWeather 同口径；窗口为 [开始, 结束+1 小时)。
+     */
+    function summarizeCourseWeather(hourly, date, startTime, endTime) {
+        if (!hourly || !Array.isArray(hourly.time) || hourly.time.length === 0) return null;
+        const start = combineDateAndTime(date, startTime);
+        const end = combineDateAndTime(date, endTime);
+        if (!start || !end || end <= start) return null;
+        const windowEnd = new Date(end.getTime() + 3600000);
+        const startKey = formatDateTimeKey(start);
+        const endKey = formatDateTimeKey(windowEnd);
+
+        let temperatureSum = 0;
+        let temperatureCount = 0;
+        let probability = null;
+        let code = 0;
+        let codeSeverity = -1;
+        for (let i = 0; i < hourly.time.length; i++) {
+            const time = String(hourly.time[i] || '');
+            if (time < startKey) continue;
+            if (time >= endKey) break;
+            const temp = Number(hourly.temperature_2m ? hourly.temperature_2m[i] : null);
+            if (isFinite(temp)) {
+                temperatureSum += temp;
+                temperatureCount++;
+            }
+            const pop = Number(hourly.precipitation_probability ? hourly.precipitation_probability[i] : null);
+            if (isFinite(pop)) {
+                probability = probability === null ? pop : Math.max(probability, pop);
+            }
+            const pointCode = Number(hourly.weather_code ? hourly.weather_code[i] : 0);
+            if (isFinite(pointCode)) {
+                const severity = weatherSeverity(pointCode);
+                if (severity > codeSeverity) {
+                    code = pointCode;
+                    codeSeverity = severity;
+                }
+            }
+        }
+        if (temperatureCount === 0) return null;
+        return {
+            code: code,
+            temperature: Math.round(temperatureSum / temperatureCount),
+            probability: probability === null ? null : Math.max(0, Math.min(100, Math.round(probability)))
+        };
+    }
+
     /** 冲突索引：同一天、节次重叠、且在某个候选周内同时上课（对照 buildConflictMap） */
     function buildConflictMap(courses) {
         const map = new Map();
@@ -267,6 +377,8 @@
         _bgKeyHandler: null,
         _historyModalEl: null,
         _historyBtnHandler: null,
+        _weather: null,
+        _weatherPromise: null,
 
         init() {
             if (this._inited) return;
@@ -552,6 +664,8 @@
             this._payload = null;
             this._els = null;
             this._timetables = { mine: null, partner: null };
+            this._weather = null;
+            this._weatherPromise = null;
             if (this._popEl) {
                 this._popEl.remove();
                 this._popEl = null;
@@ -598,6 +712,50 @@
             this._buildTabs();
             this._render();
             if (this._els.section) this._els.section.style.display = '';
+
+            // 天气慢一步到达：先渲染课表，拿到逐小时预报后再补画课程卡天气行。
+            this._fetchWeather().then(() => {
+                if (this._weather) this._render();
+            });
+        },
+
+        /** 逐小时预报（168h）：与 qhkb 共用 /api/timetable.php?action=weather。 */
+        async _fetchWeather() {
+            if (this._weatherPromise) return this._weatherPromise;
+            const cfg = window.WITHU_CONFIG || {};
+            // 空字符串经 Number() 会变成 0（几内亚湾），必须显式排除
+            const latRaw = cfg.weatherLocLat;
+            const lngRaw = cfg.weatherLocLng;
+            if (latRaw === '' || latRaw == null || lngRaw === '' || lngRaw == null) return null;
+            const lat = Number(latRaw);
+            const lng = Number(lngRaw);
+            if (!isFinite(lat) || !isFinite(lng)) return null;
+
+            const params = new URLSearchParams({
+                action: 'weather',
+                mode: 'hourly',
+                hours: '168',
+                lat: String(lat),
+                lng: String(lng)
+            });
+            if (cfg.weatherLocName) params.set('label', String(cfg.weatherLocName));
+
+            this._weatherPromise = (async () => {
+                try {
+                    const res = await fetch((cfg.siteBase || '') + 'api/timetable.php?' + params.toString(), {
+                        headers: { 'Accept': 'application/json' },
+                        credentials: 'same-origin'
+                    });
+                    if (!res.ok) return null;
+                    const data = await res.json();
+                    if (!data || data.success !== true || !data.data || !data.data.hourly) return null;
+                    this._weather = data.data.hourly;
+                    return this._weather;
+                } catch (_) {
+                    return null;
+                }
+            })();
+            return this._weatherPromise;
         },
 
         _resolveCurrentWeek(active) {
@@ -782,17 +940,57 @@
 
             if (courses.length === 0) return '';
 
+            // 课卡日期：用于把课程时段映射到逐小时预报（未设置开学日时无日期，不画天气）
+            const monday = data.semesterStartDate
+                ? new Date(startOfWeek(data.semesterStartDate).getTime() + (week - 1) * 7 * 86400000)
+                : null;
+            const date = monday ? new Date(monday.getTime() + (day - 1) * 86400000) : null;
+
             let html = '';
             for (const c of courses) {
                 const top = (c.startSection - 1) * SECTION_HEIGHT + CARD_GAP;
                 const height = (c.endSection - c.startSection + 1) * SECTION_HEIGHT - CARD_GAP * 2;
                 const isConflict = conflictMap.has(String(c.id));
-                html += this._courseCardHtml(c, top, height, isConflict);
+                html += this._courseCardHtml(c, top, height, isConflict, date, data);
             }
             return html;
         },
 
-        _courseCardHtml(c, top, height, isConflict) {
+        /** 课程时段天气：与 qhkb 周视图 compact 密度一致（图标 + 温度优先的一项文字）。 */
+        _courseWeather(course, date, data) {
+            if (!date || !this._weather) return null;
+            const display = weatherDisplayConfig(this._side);
+            if (!display.showOnWeekCard) return null;
+            if (!display.showPhenomenon && !display.showTemperature && !display.showProbability) return null;
+
+            const sections = Array.isArray(data.sections) ? data.sections : [];
+            const startSection = clampInt(course.startSection, 1, sections.length, 1);
+            const endSection = clampInt(course.endSection, 1, sections.length, startSection);
+            const startTime = (course.startTime && String(course.startTime).trim())
+                || (sections[startSection - 1] && sections[startSection - 1].startTime) || '';
+            const endTime = (course.endTime && String(course.endTime).trim())
+                || (sections[endSection - 1] && sections[endSection - 1].endTime) || '';
+
+            const summary = summarizeCourseWeather(this._weather, date, startTime, endTime);
+            if (!summary) return null;
+
+            let icon = 'ph-fill ph-drop';
+            if (display.showPhenomenon) icon = weatherIconClass(summary.code);
+            else if (display.showTemperature) icon = 'ph-fill ph-thermometer';
+
+            let text = '';
+            if (display.showTemperature) {
+                text = summary.temperature + '°';
+            } else if (display.showPhenomenon) {
+                text = WEATHER_LABELS[summary.code] || '';
+            } else if (display.showProbability && summary.probability !== null) {
+                text = summary.probability + '%';
+            }
+            if (!text && !display.showPhenomenon) return null;
+            return { icon: icon, text: text };
+        },
+
+        _courseCardHtml(c, top, height, isConflict, date, data) {
             const color = typeof c.color === 'string' && /^#([0-9a-f]{6})$/i.test(c.color) ? c.color : '#2196F3';
             // 与 App 实心卡一致：色值 → 提亮 8%，冲突时整体压暗到 0.7
             const gradient = 'linear-gradient(135deg, ' +
@@ -808,6 +1006,11 @@
             if (c.location && c.location.trim()) subs.push(['withu-tt-course__sub', c.location]);
             for (const [cls, text] of subs.slice(0, 2)) {
                 lines += '<div class="' + cls + '">' + escapeHtml(text) + '</div>';
+            }
+            const weather = this._courseWeather(c, date, data);
+            if (weather) {
+                lines += '<div class="withu-tt-course__weather"><i class="' + weather.icon + '"></i>' +
+                    (weather.text ? '<span>' + escapeHtml(weather.text) + '</span>' : '') + '</div>';
             }
 
             return (

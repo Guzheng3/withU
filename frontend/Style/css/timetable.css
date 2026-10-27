@@ -526,6 +526,31 @@
     opacity: 0.85;
 }
 
+/* 课程时段天气（周视图 compact 密度：图标 + 温度优先的一项文字） */
+.withu-tt-course__weather {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 1px;
+    max-width: 100%;
+    font-size: 8px;
+    line-height: 1.1;
+    white-space: nowrap;
+    opacity: 0.95;
+}
+
+.withu-tt-course__weather i {
+    font-size: 9px;
+    line-height: 1;
+    flex: none;
+}
+
+.withu-tt-course__weather span {
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
 /* 同日冲突课：背景压暗（App timetableConflictCourseOpacity=0.7，由渐变透明度实现），
    名称上方加「冲突」小字，右上角红色角标 */
 .withu-tt-course__over {

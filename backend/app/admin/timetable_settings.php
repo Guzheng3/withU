@@ -226,6 +226,11 @@ function withu_tt_users(Database $db, Auth $auth): array
             $decoded = json_decode((string)$user['settings_row']['content'], true);
             $user['settings'] = is_array($decoded) ? $decoded : null;
         }
+        $user['history'] = withu_tt_history_for_user(
+            $db,
+            $uid,
+            is_array($user['timetable_row']) ? (string)($user['timetable_row']['content'] ?? '') : null
+        );
     }
     unset($user);
     return $users;
@@ -242,6 +247,403 @@ function withu_tt_size(?string $content): string
     $bytes = strlen((string)$content);
     if ($bytes < 1024) return $bytes . ' B';
     return round($bytes / 1024, 1) . ' KB';
+}
+
+/* ============================================================
+ * 历史版本 diff
+ * 历史表存的是「每次变更前的快照」，因此第 i 条记录描述的变化是
+ * 快照 i → 快照 i+1（最后一条与当前课表比较）。
+ * ============================================================ */
+
+function withu_tt_decode_package($content): ?array
+{
+    if (!is_string($content) || trim($content) === '') return null;
+    $decoded = json_decode($content, true);
+    if (!is_array($decoded) || array_is_list($decoded)) return null;
+    return $decoded;
+}
+
+function withu_tt_course_identity(array $course): string
+{
+    $id = $course['id'] ?? null;
+    if (is_scalar($id) && trim((string)$id) !== '') {
+        return 'id:' . trim((string)$id);
+    }
+    // 旧格式没有课程 id：按「名称 + 星期 + 节次」匹配，避免数组顺序变化造成误判
+    return 'c:' . md5(json_encode([
+        $course['name'] ?? ($course['title'] ?? ''),
+        $course['dayOfWeek'] ?? '',
+        $course['startSection'] ?? '',
+        $course['endSection'] ?? '',
+    ], JSON_UNESCAPED_UNICODE));
+}
+
+function withu_tt_course_name(array $course): string
+{
+    $name = $course['name'] ?? ($course['title'] ?? '');
+    $name = is_scalar($name) ? trim((string)$name) : '';
+    return $name !== '' ? $name : '未命名课程';
+}
+
+function withu_tt_day_text($value): string
+{
+    $names = [1 => '周一', 2 => '周二', 3 => '周三', 4 => '周四', 5 => '周五', 6 => '周六', 7 => '周日'];
+    $day = is_numeric($value) ? (int)$value : 0;
+    return $names[$day] ?? '周' . ($day > 0 ? $day : '?');
+}
+
+function withu_tt_week_text(array $course): string
+{
+    $custom = array_values(array_filter(array_map('intval', (array)($course['customWeeks'] ?? []))));
+    if ($custom) {
+        $text = '第' . implode('、', $custom) . '周';
+    } else {
+        $start = is_numeric($course['startWeek'] ?? null) ? (int)$course['startWeek'] : 1;
+        $end = is_numeric($course['endWeek'] ?? null) ? (int)$course['endWeek'] : 16;
+        if (!empty($course['isOddWeek'])) {
+            $text = '第' . $start . '-' . $end . '周（单周）';
+        } elseif (!empty($course['isEvenWeek'])) {
+            $text = '第' . $start . '-' . $end . '周（双周）';
+        } elseif ($start === $end) {
+            $text = '第' . $start . '周';
+        } else {
+            $text = '第' . $start . '-' . $end . '周';
+        }
+    }
+    $suspended = array_values(array_filter(array_map('intval', (array)($course['suspendedWeeks'] ?? []))));
+    if ($suspended) {
+        $text .= '，停课：' . implode('、', $suspended);
+    }
+    return $text;
+}
+
+function withu_tt_scalar_text($value): string
+{
+    if (is_bool($value)) return $value ? '是' : '否';
+    if ($value === null) return '空';
+    if (is_scalar($value)) {
+        $text = trim((string)$value);
+        return $text === '' ? '空' : $text;
+    }
+    return '已调整';
+}
+
+function withu_tt_scheme_name(array $package): string
+{
+    $settings = is_array($package['settings'] ?? null) ? $package['settings'] : [];
+    $schemes = is_array($package['timeSchemes'] ?? null) ? $package['timeSchemes'] : [];
+    $activeId = $settings['activeTimeSchemeId'] ?? '';
+    $activeId = is_scalar($activeId) ? (string)$activeId : '';
+    foreach ($schemes as $scheme) {
+        if (!is_array($scheme)) continue;
+        $schemeId = $scheme['id'] ?? '';
+        $schemeId = is_scalar($schemeId) ? (string)$schemeId : '';
+        if ($schemeId === $activeId) {
+            $name = $scheme['name'] ?? '';
+            return is_scalar($name) && trim((string)$name) !== '' ? trim((string)$name) : '未命名模板';
+        }
+    }
+    return $activeId === '' ? '默认节次' : '未知模板';
+}
+
+/** 单门课程对比：返回形如「地点 教1 → 教2」的细节列表。 */
+function withu_tt_course_diff_details(array $before, array $after): array
+{
+    $details = [];
+
+    $nameBefore = withu_tt_course_name($before);
+    $nameAfter = withu_tt_course_name($after);
+    if ($nameBefore !== $nameAfter) {
+        $details[] = '课程名 ' . $nameBefore . ' → ' . $nameAfter;
+    }
+
+    foreach (['teacher' => '教师', 'location' => '地点'] as $key => $label) {
+        $a = withu_tt_scalar_text($before[$key] ?? '');
+        $b = withu_tt_scalar_text($after[$key] ?? '');
+        if ($a !== $b) $details[] = $label . ' ' . $a . ' → ' . $b;
+    }
+
+    $dayA = (int)($before['dayOfWeek'] ?? 0);
+    $dayB = (int)($after['dayOfWeek'] ?? 0);
+    if ($dayA !== $dayB) {
+        $details[] = '星期 ' . withu_tt_day_text($dayA) . ' → ' . withu_tt_day_text($dayB);
+    }
+
+    $secA = (int)($before['startSection'] ?? 0) . '-' . (int)($before['endSection'] ?? 0);
+    $secB = (int)($after['startSection'] ?? 0) . '-' . (int)($after['endSection'] ?? 0);
+    if ($secA !== $secB) {
+        $details[] = '节次 第' . $secA . '节 → 第' . $secB . '节';
+    }
+
+    $weekA = withu_tt_week_text($before);
+    $weekB = withu_tt_week_text($after);
+    if ($weekA !== $weekB) {
+        $details[] = '周次 ' . $weekA . ' → ' . $weekB;
+    }
+
+    $timeA = withu_tt_scalar_text($before['startTime'] ?? '') . '-' . withu_tt_scalar_text($before['endTime'] ?? '');
+    $timeB = withu_tt_scalar_text($after['startTime'] ?? '') . '-' . withu_tt_scalar_text($after['endTime'] ?? '');
+    if ($timeA !== $timeB) {
+        $details[] = '时间 ' . $timeA . ' → ' . $timeB;
+    }
+
+    $simple = [
+        'shortName' => '简称',
+        'note' => '备注',
+        'description' => '简介',
+        'courseNature' => '课程性质',
+        'timeSchemeIdOverride' => '时间模板',
+    ];
+    foreach ($simple as $key => $label) {
+        $a = withu_tt_scalar_text($before[$key] ?? '');
+        $b = withu_tt_scalar_text($after[$key] ?? '');
+        if ($a !== $b) $details[] = $label . '已调整';
+    }
+
+    $colorA = withu_tt_scalar_text($before['color'] ?? '') . '|' . withu_tt_scalar_text($before['textColor'] ?? '');
+    $colorB = withu_tt_scalar_text($after['color'] ?? '') . '|' . withu_tt_scalar_text($after['textColor'] ?? '');
+    if ($colorA !== $colorB) $details[] = '课程颜色已调整';
+
+    if (array_key_exists('sessionNotes', $before) || array_key_exists('sessionNotes', $after)) {
+        if (json_encode($before['sessionNotes'] ?? null) !== json_encode($after['sessionNotes'] ?? null)) {
+            $details[] = '节次备注已调整';
+        }
+    }
+
+    return $details;
+}
+
+function withu_tt_trim_text(string $text, int $limit = 180): string
+{
+    if (function_exists('mb_strlen') && mb_strlen($text, 'UTF-8') > $limit) {
+        return mb_substr($text, 0, $limit, 'UTF-8') . '…';
+    }
+    if (!function_exists('mb_strlen') && strlen($text) > $limit * 3) {
+        return substr($text, 0, $limit * 3) . '…';
+    }
+    return $text;
+}
+
+/**
+ * 两份课表快照的差异摘要。
+ *
+ * @return array{summary:string,added:array,removed:array,modified:array,settings:array,created:bool,cleared:bool}
+ */
+function withu_tt_diff_packages(?array $before, ?array $after): array
+{
+    $result = [
+        'summary' => '',
+        'added' => [],
+        'removed' => [],
+        'modified' => [],
+        'settings' => [],
+        'created' => false,
+        'cleared' => false,
+    ];
+
+    if ($before === null && $after === null) {
+        $result['summary'] = '空课表，无变化';
+        return $result;
+    }
+    if ($before === null) {
+        $count = count((array)($after['courses'] ?? []));
+        $result['created'] = true;
+        $result['summary'] = '创建课表（' . $count . ' 门课程）';
+        return $result;
+    }
+    if ($after === null) {
+        $count = count((array)($before['courses'] ?? []));
+        $result['cleared'] = true;
+        $result['summary'] = '清空课表（原 ' . $count . ' 门课程）';
+        return $result;
+    }
+
+    // 传输元数据（packageId / exportedAt）每次导出都会变，不参与「是否有变化」判断
+    $semanticBefore = $before;
+    $semanticAfter = $after;
+    unset($semanticBefore['packageId'], $semanticBefore['exportedAt']);
+    unset($semanticAfter['packageId'], $semanticAfter['exportedAt']);
+    if (json_encode($semanticBefore, JSON_UNESCAPED_UNICODE) === json_encode($semanticAfter, JSON_UNESCAPED_UNICODE)) {
+        $result['summary'] = '无实质变化';
+        return $result;
+    }
+
+    $beforeCourses = [];
+    foreach ((array)($before['courses'] ?? []) as $course) {
+        if (is_array($course)) $beforeCourses[withu_tt_course_identity($course)] = $course;
+    }
+    $afterCourses = [];
+    foreach ((array)($after['courses'] ?? []) as $course) {
+        if (is_array($course)) $afterCourses[withu_tt_course_identity($course)] = $course;
+    }
+
+    foreach ($afterCourses as $key => $course) {
+        if (!isset($beforeCourses[$key])) {
+            $result['added'][] = withu_tt_course_name($course);
+        }
+    }
+    foreach ($beforeCourses as $key => $course) {
+        if (!isset($afterCourses[$key])) {
+            $result['removed'][] = withu_tt_course_name($course);
+        }
+    }
+    foreach ($afterCourses as $key => $course) {
+        if (!isset($beforeCourses[$key])) continue;
+        $details = withu_tt_course_diff_details($beforeCourses[$key], $course);
+        if ($details) {
+            $result['modified'][] = [
+                'name' => withu_tt_course_name($course),
+                'details' => $details,
+            ];
+        }
+    }
+
+    // 课表级字段
+    $profileA = withu_tt_scalar_text($before['profileName'] ?? '');
+    $profileB = withu_tt_scalar_text($after['profileName'] ?? '');
+    if ($profileA !== $profileB) {
+        $result['settings'][] = '课表名 ' . $profileA . ' → ' . $profileB;
+    }
+
+    $weekA = is_numeric($before['currentWeek'] ?? null) ? (int)$before['currentWeek'] : 0;
+    $weekB = is_numeric($after['currentWeek'] ?? null) ? (int)$after['currentWeek'] : 0;
+    if ($weekA !== $weekB) {
+        $result['settings'][] = '当前周 ' . ($weekA > 0 ? $weekA : '空') . ' → ' . ($weekB > 0 ? $weekB : '空');
+    }
+
+    $settingsA = is_array($before['settings'] ?? null) ? $before['settings'] : [];
+    $settingsB = is_array($after['settings'] ?? null) ? $after['settings'] : [];
+
+    $startA = $settingsA['semesterStartDate'] ?? null;
+    $startB = $settingsB['semesterStartDate'] ?? null;
+    $startAText = is_numeric($startA) ? withu_tt_millis_date($startA) : withu_tt_scalar_text($startA);
+    $startBText = is_numeric($startB) ? withu_tt_millis_date($startB) : withu_tt_scalar_text($startB);
+    if ($startAText !== $startBText) {
+        $result['settings'][] = '开学日期 ' . $startAText . ' → ' . $startBText;
+    }
+
+    $semesterWeeksA = is_numeric($settingsA['semesterWeekCount'] ?? null) ? (int)$settingsA['semesterWeekCount'] : 0;
+    $semesterWeeksB = is_numeric($settingsB['semesterWeekCount'] ?? null) ? (int)$settingsB['semesterWeekCount'] : 0;
+    if ($semesterWeeksA !== $semesterWeeksB) {
+        $result['settings'][] = '学期周数 ' . $semesterWeeksA . ' → ' . $semesterWeeksB;
+    }
+
+    $schemeA = withu_tt_scheme_name($before);
+    $schemeB = withu_tt_scheme_name($after);
+    if ($schemeA !== $schemeB) {
+        $result['settings'][] = '激活模板 ' . $schemeA . ' → ' . $schemeB;
+    }
+
+    $sectionsA = is_array($settingsA['sections'] ?? null) ? count($settingsA['sections']) : 0;
+    $sectionsB = is_array($settingsB['sections'] ?? null) ? count($settingsB['sections']) : 0;
+    if ($sectionsA !== $sectionsB) {
+        $result['settings'][] = '节次时间 ' . $sectionsA . ' → ' . $sectionsB . ' 段';
+    }
+
+    $schemesA = is_array($before['timeSchemes'] ?? null) ? $before['timeSchemes'] : [];
+    $schemesB = is_array($after['timeSchemes'] ?? null) ? $after['timeSchemes'] : [];
+    $schemeNamesA = [];
+    foreach ($schemesA as $scheme) {
+        if (is_array($scheme)) $schemeNamesA[] = withu_tt_scalar_text($scheme['name'] ?? '');
+    }
+    $schemeNamesB = [];
+    foreach ($schemesB as $scheme) {
+        if (is_array($scheme)) $schemeNamesB[] = withu_tt_scalar_text($scheme['name'] ?? '');
+    }
+    if ($schemeNamesA !== $schemeNamesB) {
+        $result['settings'][] = '时间模板 ' . count($schemeNamesA) . ' → ' . count($schemeNamesB) . ' 套';
+    }
+
+    // 其余标量设置项：只报数量与键名，避免整段 JSON 淹没摘要
+    $ignored = ['sections', 'activeTimeSchemeId', 'semesterWeekCount', 'semesterStartDate'];
+    $changedKeys = [];
+    foreach (array_unique(array_merge(array_keys($settingsA), array_keys($settingsB))) as $key) {
+        if (in_array($key, $ignored, true)) continue;
+        $valueA = $settingsA[$key] ?? null;
+        $valueB = $settingsB[$key] ?? null;
+        if (is_array($valueA) || is_array($valueB)) continue;
+        if (withu_tt_scalar_text($valueA) !== withu_tt_scalar_text($valueB)) {
+            $changedKeys[] = (string)$key;
+        }
+    }
+    if ($changedKeys) {
+        $shownKeys = array_slice($changedKeys, 0, 4);
+        $result['settings'][] = '其他设置 ' . count($changedKeys) . ' 项变化（' . implode('、', $shownKeys) . (count($changedKeys) > 4 ? ' 等' : '') . '）';
+    }
+
+    $parts = [];
+    if ($result['added']) {
+        $names = array_slice($result['added'], 0, 3);
+        $parts[] = '新增 ' . count($result['added']) . ' 门（' . implode('、', $names) . (count($result['added']) > 3 ? ' 等' : '') . '）';
+    }
+    if ($result['removed']) {
+        $names = array_slice($result['removed'], 0, 3);
+        $parts[] = '删除 ' . count($result['removed']) . ' 门（' . implode('、', $names) . (count($result['removed']) > 3 ? ' 等' : '') . '）';
+    }
+    if ($result['modified']) {
+        $first = $result['modified'][0];
+        $detailText = implode('；', array_slice($first['details'], 0, 2));
+        $parts[] = '修改 ' . count($result['modified']) . ' 门（' . $first['name'] . '：' . $detailText . (count($result['modified']) > 1 ? ' 等' : '') . '）';
+    }
+    if ($result['settings']) {
+        $parts[] = implode('；', $result['settings']);
+    }
+    if (!$parts) {
+        $parts[] = '内容有更新（未检测到课程与设置差异）';
+    }
+
+    $result['summary'] = withu_tt_trim_text(implode('；', $parts), 220);
+    return $result;
+}
+
+/** 某个账号的历史记录（含与下一版本/当前课表的 diff 摘要），按时间倒序。 */
+function withu_tt_history_for_user(Database $db, int $userId, ?string $currentContent): array
+{
+    $rows = $db->fetchAll(
+        'SELECT id, content, change_type, profile_name, course_count,
+                current_week, semester_start_date, created_at
+         FROM timetable_history
+         WHERE user_id = :user_id
+         ORDER BY id ASC',
+        ['user_id' => $userId]
+    );
+    if (!$rows) return [];
+
+    $entries = [];
+    $total = count($rows);
+    for ($i = 0; $i < $total; $i++) {
+        $before = withu_tt_decode_package($rows[$i]['content'] ?? null);
+        if ($i + 1 < $total) {
+            $after = withu_tt_decode_package($rows[$i + 1]['content'] ?? null);
+        } else {
+            $after = withu_tt_decode_package($currentContent);
+        }
+        $diff = withu_tt_diff_packages($before, $after);
+        $entries[] = [
+            'id' => (int)$rows[$i]['id'],
+            'change_type' => (string)($rows[$i]['change_type'] ?? 'save'),
+            'profile_name' => (string)($rows[$i]['profile_name'] ?? ''),
+            'course_count' => (int)($rows[$i]['course_count'] ?? 0),
+            'current_week' => (int)($rows[$i]['current_week'] ?? 0),
+            'created_at' => (string)($rows[$i]['created_at'] ?? ''),
+            'summary' => $diff['summary'],
+            'added' => count($diff['added']),
+            'removed' => count($diff['removed']),
+            'modified' => count($diff['modified']),
+        ];
+    }
+    return array_reverse($entries);
+}
+
+/** 历史记录的变更来源标签。 */
+function withu_tt_change_type_label(string $type): string
+{
+    $labels = [
+        'save' => 'App 回传',
+        'admin_import' => '后台导入',
+        'rollback' => '历史回退',
+    ];
+    return $labels[$type] ?? $type;
 }
 
 function withu_tt_iso_local($value): string
@@ -380,6 +782,34 @@ if (($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'POST' && (string)($_POST['action'
 $users = withu_tt_users($db, $auth);
 $currentId = (int)($auth->getCurrentUser()['id'] ?? 0);
 
+/* ---------- 一键删除某一条修改记录 ---------- */
+$deleteNotice = null;
+if (($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'POST' && (string)($_POST['action'] ?? '') === 'delete_history') {
+    if (!csrf_verify($_POST['_token'] ?? null)) {
+        $deleteNotice = ['type' => 'error', 'text' => '表单已过期，请刷新页面后重试。'];
+    } else {
+        $historyId = (int)($_POST['history_id'] ?? 0);
+        $allowedUserIds = array_map('intval', array_column($users, 'id'));
+        $historyRow = $historyId > 0 ? $db->fetch(
+            'SELECT id, user_id FROM timetable_history WHERE id = :id LIMIT 1',
+            ['id' => $historyId]
+        ) : null;
+        if (!$historyRow || !in_array((int)$historyRow['user_id'], $allowedUserIds, true)) {
+            $deleteNotice = ['type' => 'error', 'text' => '修改记录不存在或无权删除。'];
+        } else {
+            $db->query(
+                'DELETE FROM timetable_history WHERE id = :id AND user_id = :user_id',
+                ['id' => $historyId, 'user_id' => (int)$historyRow['user_id']]
+            );
+            header('Location: /admin/timetable_settings.php?deleted=1');
+            exit;
+        }
+    }
+}
+if (!$deleteNotice && (int)($_GET['deleted'] ?? 0) === 1) {
+    $deleteNotice = ['type' => 'success', 'text' => '已删除 1 条修改记录，当前课表不受影响。'];
+}
+
 // 导入成功后重定向回来，把成功提示渲染出来（提示里带上账号名）
 if (!$importNotice && (int)($_GET['imported'] ?? 0) > 0) {
     $importedId = (int)$_GET['imported'];
@@ -458,6 +888,25 @@ include __DIR__ . '/header.php';
 .tt-warn { margin-top: 0.7rem; }
 .tt-warn .admin-alert { margin-bottom: 0.4rem; }
 .tt-subblock .admin-alert { margin-bottom: 0; }
+
+/* ── 修改记录（diff） ── */
+.tt-history { list-style: none; margin: 0; padding: 0; display: grid; gap: 0.55rem; }
+.tt-history-item { display: flex; align-items: flex-start; gap: 0.75rem; padding: 0.65rem 0.75rem; border: 1px solid var(--v3-border); border-radius: var(--v3-radius-sm); background: var(--v3-surface-soft); }
+.tt-history-main { flex: 1 1 auto; min-width: 0; }
+.tt-history-head { display: flex; flex-wrap: wrap; align-items: center; gap: 0.45rem; font-size: 0.74rem; color: var(--v3-text-3); }
+.tt-history-time { font-weight: 600; color: var(--v3-text-2); font-variant-numeric: tabular-nums; }
+.tt-history-type { padding: 0.05rem 0.45rem; border-radius: 999px; font-weight: 650; background: rgba(79, 168, 224, 0.12); color: #1d4ed8; }
+.tt-history-type[data-type="admin_import"] { background: var(--v3-pink-glass); color: var(--v3-pink-deep); }
+.tt-history-type[data-type="rollback"] { background: var(--v3-green-glass); color: var(--v3-green-deep); }
+.tt-history-summary { margin-top: 0.32rem; font-size: 0.82rem; line-height: 1.6; color: var(--v3-text); word-break: break-word; }
+.tt-history-meta { margin-top: 0.2rem; font-size: 0.7rem; color: var(--v3-text-3); }
+.tt-history-delete { flex: none; }
+.tt-history-delete .btn { white-space: nowrap; }
+.tt-history-delete .btn i { margin-right: 0.2rem; }
+@media (max-width: 580px) {
+    .tt-history-item { flex-direction: column; }
+    .tt-history-delete { align-self: flex-end; }
+}
 @media (max-width: 900px) {
     .tt-stats { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 }
@@ -469,9 +918,16 @@ include __DIR__ . '/header.php';
 </style>
 
 <section class="admin-page-title">
-    <h1>课表设置 · 回传看板</h1>
-    <p>只读看板：课表由清涵课表 App（qhkb，兼容旧版 mikcb）修改后回传，这里查看双方最近一次回传的内容与格式健康度；编辑请在 App 内完成。</p>
+    <h1>课表设置 · 双方课表与修改记录</h1>
+    <p>课表由清涵课表 App（qhkb，兼容旧版 mikcb）修改后回传。这里可以查看双方完整课表与课程天气、逐次修改的差异摘要，并删除某一条修改记录；编辑课表请在 App 内完成。</p>
 </section>
+
+<?php if ($deleteNotice): ?>
+<div class="admin-alert admin-alert-<?php echo $deleteNotice['type'] === 'success' ? 'success' : 'error'; ?>" data-aos="fade-up">
+    <i class="ti ti-<?php echo $deleteNotice['type'] === 'success' ? 'circle-check' : 'alert-triangle'; ?>" aria-hidden="true"></i>
+    <?php echo e($deleteNotice['text']); ?>
+</div>
+<?php endif; ?>
 
 <section class="admin-grid">
     <div class="admin-card tt-import-card">
@@ -545,6 +1001,7 @@ include __DIR__ . '/header.php';
         $timetable = $user['timetable'];
         $settingsRow = $user['settings_row'];
         $settings = $user['settings'];
+        $history = is_array($user['history'] ?? null) ? $user['history'] : [];
         $avatar = trim((string)($user['avatar'] ?? ''));
         if ($avatar === '') {
             $avatar = 'https://q1.qlogo.cn/g?b=qq&nk=10000&s=640';
@@ -645,6 +1102,44 @@ include __DIR__ . '/header.php';
                 <div class="tt-kv-item"><span class="tt-kv-label">内容哈希（前 8 位）</span><span class="tt-kv-value" title="<?php echo e((string)($settingsRow['content_hash'] ?? '')); ?>"><?php echo e(withu_tt_hash8($settingsRow['content_hash'] ?? null)); ?></span></div>
                 <div class="tt-kv-item"><span class="tt-kv-label">内容大小</span><span class="tt-kv-value"><?php echo e(withu_tt_size($settingsRow['content'] ?? '')); ?></span></div>
             </div>
+            <?php endif; ?>
+        </div>
+
+        <div class="tt-subblock">
+            <div class="tt-block-title">
+                近期修改记录
+                <span class="tt-pill tt-pill-ok" style="margin-left:0.35rem;">保留 <?php echo count($history); ?>/<?php echo (int)withu_timetable_history_limit(); ?> 条</span>
+            </div>
+            <?php if (!$history): ?>
+            <div class="tt-empty" style="padding:1rem;">
+                <i class="ti ti-history-off" aria-hidden="true"></i>
+                <strong>暂无修改记录</strong>
+                <span>App 回传、后台导入或历史回退后，会在这里按时间倒序记录每次改动，并自动总结差异。</span>
+            </div>
+            <?php else: ?>
+            <ul class="tt-history">
+                <?php foreach ($history as $entry): ?>
+                <li class="tt-history-item">
+                    <div class="tt-history-main">
+                        <div class="tt-history-head">
+                            <span class="tt-history-time"><?php echo e((string)$entry['created_at']); ?></span>
+                            <span class="tt-history-type" data-type="<?php echo e((string)$entry['change_type']); ?>"><?php echo e(withu_tt_change_type_label((string)$entry['change_type'])); ?></span>
+                            <span><?php echo (int)$entry['course_count']; ?> 门课程<?php if ((int)$entry['current_week'] > 0): ?> · 第 <?php echo (int)$entry['current_week']; ?> 周<?php endif; ?></span>
+                        </div>
+                        <div class="tt-history-summary"><?php echo e((string)$entry['summary']); ?></div>
+                        <div class="tt-history-meta">修改前快照 · 记录 #<?php echo (int)$entry['id']; ?></div>
+                    </div>
+                    <form method="post" class="tt-history-delete" onsubmit="return confirm('删除这条修改记录？删除后只影响历史列表，不会改动当前课表。');">
+                        <input type="hidden" name="action" value="delete_history">
+                        <input type="hidden" name="history_id" value="<?php echo (int)$entry['id']; ?>">
+                        <?php echo csrf_field(); ?>
+                        <button type="submit" class="btn btn-secondary btn-sm" title="删除这条修改记录">
+                            <i class="ti ti-trash" aria-hidden="true"></i>删除
+                        </button>
+                    </form>
+                </li>
+                <?php endforeach; ?>
+            </ul>
             <?php endif; ?>
         </div>
     </div>

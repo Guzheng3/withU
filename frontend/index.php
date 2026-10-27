@@ -366,7 +366,7 @@ try {
 <link rel="stylesheet" href="Style/css/tooltip.css">
 <link rel="stylesheet" href="Style/css/interaction.css">
 <link rel="stylesheet" href="Style/css/withu-home-style.css?v=20261007g">
-<link rel="stylesheet" href="Style/css/timetable.css?v=20260907-3">
+<link rel="stylesheet" href="Style/css/timetable.css?v=20261027-weather">
 <link rel="stylesheet" href="Style/css/withu-detail.css?v=1.0.80">
 <link rel="stylesheet" href="Style/css/mobile-nav.css?v=1.0.1-flush">
 <link rel="stylesheet" href="Style/css/header.css">
@@ -1487,7 +1487,7 @@ try {
 <script src="Style/LoveListStyle/fancybox.umd.js"></script>
 <script src="assets/js/page-lovelist.js"></script>
 <script src="assets/js/page-index.js?v=20261026gps"></script>
-<script src="assets/js/page-timetable.js?v=20260907-3"></script>
+<script src="assets/js/page-timetable.js?v=20261027-weather"></script>
 <script src="assets/js/page-detail.js"></script>
 <script src="assets/js/page-album-detail.js"></script>
 <script src="assets/js/html2canvas.min.js"></script>
@@ -1616,7 +1616,7 @@ try {
     </div>
 </div>
 <!-- ============ /足迹地图弹窗 ============ -->
-<script src="assets/js/map.js?v=20261026"></script>
+<script src="assets/js/map.js?v=20261027-loc"></script>
 
 <div id="pjax-container">
 

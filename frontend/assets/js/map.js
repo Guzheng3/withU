@@ -1718,9 +1718,41 @@ const addLoversMarkers = (map, lovers) => {
 
     const lover1 = lovers[0];
     const lover2 = lovers[1];
-    // 坐标只使用配置数据（map-all.json / 数据库位置），不再使用前台实时定位
-    const lover1Coords = extractCoordinatePair(lover1.coords);
-    const lover2Coords = extractCoordinatePair(lover2.coords);
+    // 坐标优先级与首页头像/天气一致：实时定位上报（按账号角色）> 地图配置坐标 > 后台「位置」兜底
+    // 面板左右顺序会随登录身份变化，实时坐标必须按 lover.role 取，不能按数组下标取
+    const resolveLoverGeo = (lover, fallbackSlot) => {
+        if (!lover || lover.placeholder) {
+            return { coords: null, label: (lover && lover.label) || '等待加入' };
+        }
+        const role = lover.role;
+        const slot = role === 'user2' ? 2 : (role === 'user1' ? 1 : fallbackSlot);
+        const liveCoords = (window.WithULiveGeo && window.WithULiveGeo.slotCoords(slot)) || null;
+        const mapCoords = extractCoordinatePair(lover.coords);
+        const cfg = window.WITHU_CONFIG || {};
+        let adminCoords = null;
+        if (cfg.weatherLocLat !== null && cfg.weatherLocLat !== undefined && cfg.weatherLocLat !== ''
+            && cfg.weatherLocLng !== null && cfg.weatherLocLng !== undefined && cfg.weatherLocLng !== '') {
+            const lat = Number(cfg.weatherLocLat);
+            const lng = Number(cfg.weatherLocLng);
+            if (isFinite(lat) && isFinite(lng)) adminCoords = [lng, lat];
+        }
+
+        if (liveCoords) {
+            return { coords: liveCoords, label: (lover.label && lover.label !== '未知') ? lover.label : '' };
+        }
+        if (mapCoords) {
+            return { coords: mapCoords, label: lover.label || '' };
+        }
+        if (adminCoords) {
+            const adminName = (typeof cfg.weatherLocName === 'string' && cfg.weatherLocName.trim()) || '';
+            return { coords: adminCoords, label: adminName };
+        }
+        return { coords: null, label: lover.label || '' };
+    };
+    const geo1 = resolveLoverGeo(lover1, 1);
+    const geo2 = resolveLoverGeo(lover2, 2);
+    const lover1Coords = geo1.coords;
+    const lover2Coords = geo2.coords;
     const lover1Located = lover1.located !== false && !!lover1Coords;
     const lover2Located = lover2.located !== false && !!lover2Coords;
     const bothLocated = lover1Located && lover2Located;
@@ -1737,36 +1769,16 @@ const addLoversMarkers = (map, lovers) => {
 
     // 更新顶部情侣面板信息
     const loversPanel = document.getElementById('lovers-panel');
-    // 面板位置文字：与标记坐标同源（实时上报优先），实时坐标生效时按坐标反查地名，回退配置 label
-    const loverLocationLabel = (lover, coords, slot) => {
-        const isLive = (slot === 1 ? live1 : live2) !== null;
-        if (!isLive) return lover.label || '未知';
-        if (!window.AMap || !window.AMap.Geocoder) return lover.label || '未知';
-        try {
-            AMap.plugin('AMap.Geocoder', function () {
-                try {
-                    const geocoder = new AMap.Geocoder({ extensions: 'base' });
-                    geocoder.getAddress([coords[0], coords[1]], function (status, result) {
-                        if (status !== 'complete' || !result || !result.regeocode) return;
-                        const comp = result.regeocode.addressComponent || {};
-                        let name = comp.township || comp.district || '';
-                        if (name) name = name.replace(/街道$/, '');
-                        const locEl = document.getElementById(slot === 1 ? 'lover-left-location' : 'lover-right-location');
-                        if (locEl && name) locEl.textContent = name;
-                    });
-                } catch (e) { /* 反查失败保持配置 label */ }
-            });
-        } catch (e) { /* 插件失败保持配置 label */ }
-        return lover.label || '未知';
-    };
+    // 面板位置文字与标记坐标同源：优先使用已知地名，实时/兜底坐标由天气反查补齐
+    const loverLocationLabel = (geo) => geo.label || '未知';
     if (loversPanel) {
         document.getElementById('lover-left-avatar').src = lover1.avatar;
         document.getElementById('lover-left-name').textContent = lover1.name;
-        document.getElementById('lover-left-location').textContent = loverLocationLabel(lover1, lover1Coords, 1);
+        document.getElementById('lover-left-location').textContent = loverLocationLabel(geo1);
 
         document.getElementById('lover-right-avatar').src = lover2.avatar;
         document.getElementById('lover-right-name').textContent = lover2.name;
-        document.getElementById('lover-right-location').textContent = loverLocationLabel(lover2, lover2Coords, 2);
+        document.getElementById('lover-right-location').textContent = loverLocationLabel(geo2);
 
         // 点击左侧头像/卡片，定位到"我"的位置
         const leftCard = document.getElementById('lover-left');

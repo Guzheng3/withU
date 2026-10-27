@@ -56,7 +56,7 @@ foreach (($themeConfig['colors'] ?? []) as $themeName => $themeValue) {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>管理后台 - <?php echo e(SITE_NAME); ?></title>
 <link rel="stylesheet" href="/admin-assets/css/style.css?v=withu-logo-20260718">
-	<link rel="stylesheet" href="/admin-assets/css/admin_v3.css?v=20260831-admin-album-layout">
+	<link rel="stylesheet" href="/admin-assets/css/admin_v3.css?v=20261027-admin-drawer-link">
 	<link rel="stylesheet" href="/admin-assets/css/admin_v2.css?v=ui-polish-3">
 	<link rel="stylesheet" href="/admin-assets/css/theme.css?v=withu-theme-20260724-1">
 	<link rel="stylesheet" href="/admin-assets/css/admin_pages.css?v=player-art-polish-1">
