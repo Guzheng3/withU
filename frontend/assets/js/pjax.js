@@ -578,7 +578,7 @@
          */
         init() {
             // 配置 PJAX
-            $(document).pjax('a[target!=_blank]', '#pjax-container', {
+            $(document).pjax('a[target!=_blank]:not([data-pjax="false"]):not([href*="watch"])', '#pjax-container', {
                 fragment: '#pjax-container',
                 timeout: 15000,
                 scrollTo: false

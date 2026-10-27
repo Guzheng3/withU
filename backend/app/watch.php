@@ -388,7 +388,7 @@ if (file_exists($headerPath)) {
 ?>
 <div id="watchLoading" class="watch-loading"><span class="watch-spinner"></span><span>正在加载影视库</span></div>
 
-<div class="page" id="pjax-container">
+<div class="page" id="main-content">
   <div class="main-col">
     <section class="section" id="recent" style="--sec-accent:var(--pink);--sec-soft:var(--pink-soft)">
       <div class="section-head"><span class="sec-accent"></span><h2>最近播放</h2><a class="sec-more" href="/watch_history.php?from=<?php echo urlencode($_SERVER['REQUEST_URI']); ?>">全部历史 ›</a></div>

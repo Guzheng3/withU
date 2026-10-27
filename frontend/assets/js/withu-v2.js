@@ -481,9 +481,23 @@
         }
     }
 
+    /* ---------- 跳转主内容锚点 ---------- */
+    function ensureSkipTarget() {
+        if (document.getElementById('main-content')) return;
+        var container = document.getElementById('pjax-container');
+        if (!container || !container.parentNode) return;
+        var anchor = document.createElement('span');
+        anchor.id = 'main-content';
+        anchor.tabIndex = -1;
+        anchor.setAttribute('aria-hidden', 'true');
+        anchor.style.cssText = 'display:block;width:0;height:0;overflow:hidden;';
+        container.parentNode.insertBefore(anchor, container);
+    }
+
     /* ---------- 初始化与 PJAX 重绑定 ---------- */
     function initPage() {
         updatePageMode();
+        ensureSkipTarget();
         playPageEnter();
         initHeroFallback();
         initScrollProgress();
