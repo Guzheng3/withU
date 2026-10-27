@@ -655,6 +655,266 @@ body{padding-top:54px!important}
 ::-webkit-scrollbar-thumb{background:rgba(135,135,135,.4);border-radius:13.14px}
 ::-webkit-scrollbar-thumb:hover{background:#727272}
 ::-webkit-scrollbar-corner{background:unset}
+
+/* ===== 影片简介与推荐 · admin v4 风格 ===== */
+@keyframes md4-rise{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+.media-detail.media-detail-v4{
+  position:relative!important;
+  display:grid!important;
+  grid-template-columns:176px minmax(0,1fr)!important;
+  grid-template-areas:"md4-label md4-label" "md4-poster md4-copy" "md4-recotitle md4-recotitle" "md4-reco md4-reco"!important;
+  gap:16px 24px!important;
+  align-items:start!important;
+  margin:18px 0 0!important;
+  padding:22px 24px 24px!important;
+  background:#fffdfd!important;
+  border:1px solid #eadfe2!important;
+  border-radius:20px!important;
+  box-shadow:0 1px 2px rgba(43,35,39,.035),0 18px 44px -30px rgba(43,35,39,.3)!important;
+  color:#2b2327!important;
+  overflow:hidden!important;
+  isolation:isolate;
+  animation:md4-rise .5s cubic-bezier(.22,1,.36,1) both;
+}
+.media-detail.media-detail-v4::after{
+  content:"";position:absolute;right:-90px;top:-110px;width:260px;height:260px;border-radius:50%;
+  background:radial-gradient(circle,rgba(217,79,109,.08),transparent 68%);pointer-events:none;z-index:0;
+}
+.media-detail.media-detail-v4>*{position:relative;z-index:1}
+.media-detail.media-detail-v4 .strm-detail-backdrop{display:none!important}
+.media-detail.media-detail-v4 .media-detail-kicker{
+  grid-area:md4-label!important;
+  justify-self:start!important;
+  display:inline-flex!important;align-items:center;gap:6px!important;
+  width:auto!important;height:26px!important;padding:0 12px!important;
+  border-radius:999px!important;
+  background:#fdeef2!important;color:#be3a58!important;
+  font-size:.7rem!important;font-weight:650!important;letter-spacing:.12em!important;
+  text-transform:uppercase!important;line-height:1!important;
+}
+.media-detail.media-detail-v4 .media-detail-kicker::before{
+  content:"";width:5px;height:5px;border-radius:50%;background:#d94f6d;flex:none;
+}
+.media-detail.media-detail-v4 .poster-badge-wrap{
+  grid-area:md4-poster!important;
+  display:block!important;width:176px!important;height:auto!important;
+  align-self:start!important;position:relative!important;
+}
+.media-detail.media-detail-v4 .media-detail-poster{
+  display:block!important;width:176px!important;height:264px!important;
+  aspect-ratio:auto!important;object-fit:cover!important;
+  border-radius:16px!important;background:#f4eeee!important;
+  box-shadow:0 16px 34px -20px rgba(43,35,39,.45)!important;
+}
+.media-detail.media-detail-v4 .media-detail-copy{
+  grid-area:md4-copy!important;
+  display:flex!important;flex-direction:column!important;gap:12px!important;
+  min-width:0!important;max-width:100%!important;align-self:stretch!important;
+  overflow:visible!important;
+}
+.media-detail.media-detail-v4 .media-detail-titlebar{
+  display:flex!important;align-items:center!important;flex-wrap:wrap!important;
+  gap:8px 12px!important;width:100%!important;height:auto!important;min-height:0!important;
+  padding:0 0 10px!important;border:0!important;border-bottom:1px solid #f2eaec!important;
+  border-radius:0!important;background:transparent!important;box-shadow:none!important;
+  overflow:visible!important;
+}
+.media-detail.media-detail-v4 .media-detail-titlebar h2{
+  flex:0 1 auto!important;max-width:100%!important;margin:0!important;
+  font-family:"Noto Serif SC","Noto Serif CJK SC","Songti SC","STSong",serif!important;
+  font-size:clamp(1.25rem,1.08rem + .5vw,1.55rem)!important;
+  font-weight:650!important;line-height:1.3!important;letter-spacing:.01em!important;
+  color:#2b2327!important;white-space:normal!important;overflow:visible!important;text-overflow:clip!important;
+}
+.media-detail.media-detail-v4 .media-detail-facts{
+  display:flex!important;align-items:center!important;gap:6px!important;flex-wrap:wrap!important;
+  min-width:0!important;margin:0!important;font-size:.72rem!important;overflow:visible!important;
+}
+.media-detail.media-detail-v4 .media-detail-titlebar .media-detail-facts span{
+  max-width:none!important;min-width:0!important;
+  padding:3px 9px!important;border:1px solid #eadfe2!important;border-radius:999px!important;
+  background:#fbf8f8!important;color:#6d6167!important;
+  white-space:nowrap!important;overflow:visible!important;text-overflow:clip!important;
+  font-size:.7rem!important;font-weight:550!important;line-height:1.5!important;
+}
+.media-detail.media-detail-v4 .media-detail-summary{
+  width:100%!important;max-width:100%!important;min-height:0!important;box-sizing:border-box!important;
+  margin:0!important;padding:16px 18px!important;
+  border:1px solid #f2eaec!important;border-radius:14px!important;
+  background:#fbf8f8!important;color:#5d5360!important;
+  font-size:.88rem!important;line-height:1.85!important;white-space:normal!important;
+  overflow:visible!important;box-shadow:none!important;
+}
+.media-detail.media-detail-v4 .media-summary-body{
+  line-height:1.85!important;white-space:pre-line!important;color:inherit!important;
+}
+.media-detail.media-detail-v4 .media-cast-row{
+  display:flex!important;align-items:center!important;gap:8px!important;
+  width:100%!important;margin:0 0 10px!important;padding-bottom:10px!important;
+  border-bottom:1px dashed #eadfe2!important;overflow:hidden!important;line-height:1.6!important;
+}
+.media-detail.media-detail-v4 .media-cast-text{
+  flex:1 1 auto!important;min-width:0!important;
+  white-space:nowrap!important;overflow:hidden!important;text-overflow:ellipsis!important;
+  font-size:.78rem!important;color:#6d6167!important;
+}
+.media-detail.media-detail-v4 .media-cast-toggle{
+  flex:0 0 auto!important;height:26px!important;padding:0 10px!important;
+  border:1px solid #eadfe2!important;border-radius:999px!important;
+  background:#fff!important;color:#be3a58!important;
+  font-family:inherit!important;font-size:.7rem!important;font-weight:600!important;cursor:pointer!important;
+  transition:background .2s,border-color .2s!important;
+}
+.media-detail.media-detail-v4 .media-cast-toggle:hover{
+  background:#fdeef2!important;border-color:rgba(217,79,109,.24)!important;
+}
+.media-detail.media-detail-v4 .media-detail-summary.is-cast-open .media-cast-text{
+  white-space:normal!important;max-height:86px!important;overflow-y:auto!important;overflow-x:hidden!important;
+  text-overflow:clip!important;line-height:1.7!important;
+}
+.media-detail.media-detail-v4 .media-detail-recommend-title{
+  grid-area:md4-recotitle!important;
+  justify-self:stretch!important;
+  display:flex!important;align-items:center!important;gap:8px!important;
+  width:100%!important;margin:4px 0 0!important;padding:16px 0 0!important;
+  border:0!important;border-top:1px solid #f2eaec!important;border-radius:0!important;
+  background:transparent!important;box-shadow:none!important;
+  font-family:"Noto Serif SC","Noto Serif CJK SC","Songti SC","STSong",serif!important;
+  font-size:.98rem!important;font-weight:650!important;letter-spacing:.02em!important;
+  color:#2b2327!important;text-transform:none!important;
+}
+.media-detail.media-detail-v4 .media-detail-recommend-title::before{
+  content:"";width:4px;height:15px;flex:none;border-radius:999px;
+  background:linear-gradient(180deg,#e9708b,#be3a58);
+}
+.media-detail.media-detail-v4 .media-detail-recommend-title::after{
+  content:"为你挑选";margin-left:auto;font-family:"Inter","PingFang SC",system-ui,sans-serif;
+  font-size:.66rem;font-weight:500;letter-spacing:.04em;color:#9b8e94;
+}
+.media-detail.media-detail-v4 .media-detail-recommend{
+  grid-area:md4-reco!important;display:block!important;
+  min-width:0!important;width:100%!important;align-self:start!important;
+}
+.media-detail.media-detail-v4 .media-detail-recommend-list{
+  display:grid!important;
+  grid-template-columns:repeat(5,minmax(0,168px))!important;
+  gap:12px!important;width:100%!important;align-items:stretch!important;justify-content:start!important;
+}
+.media-detail.media-detail-v4 .media-detail-recommend-item{
+  display:flex!important;flex-direction:column!important;gap:0!important;
+  width:auto!important;min-width:0!important;box-sizing:border-box!important;
+  padding:8px!important;border:1px solid #eadfe2!important;border-radius:14px!important;
+  background:#fff!important;color:#2b2327!important;text-decoration:none!important;
+  box-shadow:0 1px 2px rgba(43,35,39,.03)!important;
+  transition:transform .25s cubic-bezier(.22,1,.36,1),border-color .25s,box-shadow .25s!important;
+}
+.media-detail.media-detail-v4 .media-detail-recommend-item:hover{
+  transform:translateY(-3px)!important;
+  border-color:rgba(217,79,109,.24)!important;
+  box-shadow:0 16px 32px -24px rgba(43,35,39,.42)!important;
+}
+.media-detail.media-detail-v4 .mdr-poster{
+  display:block!important;width:100%!important;height:auto!important;aspect-ratio:2/3!important;
+  flex:0 0 auto!important;border-radius:9px!important;overflow:hidden!important;
+  background:linear-gradient(135deg,#fff3f6,#f5ece8)!important;box-shadow:none!important;
+}
+.media-detail.media-detail-v4 .mdr-poster img{
+  display:block!important;width:100%!important;height:100%!important;object-fit:cover!important;
+  transition:transform .4s cubic-bezier(.22,1,.36,1)!important;
+}
+.media-detail.media-detail-v4 .mdr-poster:empty{
+  display:flex!important;align-items:center!important;justify-content:center!important;
+  background:linear-gradient(135deg,#fff3f6,#f3e8e4)!important;color:#d94f6d!important;
+  font-size:1.25rem!important;
+}
+.media-detail.media-detail-v4 .mdr-poster:empty::before{
+  content:"▶";
+}
+.media-detail.media-detail-v4 .media-detail-recommend-item:hover .mdr-poster img{
+  transform:scale(1.05);
+}
+.media-detail.media-detail-v4 .mdr-copy{
+  display:flex!important;flex-direction:column!important;gap:2px!important;
+  min-width:0!important;padding:8px 2px 2px!important;flex:1 1 auto!important;text-align:left!important;
+}
+.media-detail.media-detail-v4 .mdr-title{
+  font-size:.8rem!important;font-weight:600!important;line-height:1.4!important;text-align:left!important;
+  color:#2b2327!important;white-space:nowrap!important;overflow:hidden!important;text-overflow:ellipsis!important;
+}
+.media-detail.media-detail-v4 .mdr-year{
+  font-size:.68rem!important;color:#9b8e94!important;text-align:left!important;letter-spacing:.02em!important;
+}
+.media-detail.media-detail-v4.no-poster{
+  grid-template-columns:minmax(0,1fr)!important;
+  grid-template-areas:"md4-label" "md4-copy" "md4-recotitle" "md4-reco"!important;
+}
+.media-detail.media-detail-v4.no-poster .poster-badge-wrap{display:none!important}
+.media-detail.media-detail-v4.no-poster .media-detail-copy{grid-area:md4-copy!important}
+
+@media(max-width:980px){
+  .media-detail.media-detail-v4 .media-detail-recommend,
+  .media-detail.media-detail-v4 .media-detail-recommend-title{display:flex!important}
+  .media-detail.media-detail-v4 .media-detail-recommend{display:block!important}
+  .media-detail.media-detail-v4 .media-detail-recommend-list{grid-template-columns:repeat(2,minmax(0,1fr))!important}
+}
+@media(max-width:760px){
+  .media-detail.media-detail-v4{
+    grid-template-columns:132px minmax(0,1fr)!important;
+    gap:14px 18px!important;padding:18px!important;border-radius:18px!important;
+  }
+  .media-detail.media-detail-v4 .poster-badge-wrap{width:132px!important}
+  .media-detail.media-detail-v4 .media-detail-poster{width:132px!important;height:198px!important}
+  .media-detail.media-detail-v4 .media-detail-summary{padding:13px 14px!important;font-size:.84rem!important;line-height:1.8!important}
+  .media-detail.media-detail-v4 .media-detail-recommend-title::after{display:none}
+}
+@media(max-width:520px){
+  .media-detail.media-detail-v4{
+    grid-template-columns:104px minmax(0,1fr)!important;
+    gap:12px 14px!important;padding:15px!important;
+  }
+  .media-detail.media-detail-v4 .poster-badge-wrap{width:104px!important}
+  .media-detail.media-detail-v4 .media-detail-poster{width:104px!important;height:156px!important;border-radius:12px!important}
+  .media-detail.media-detail-v4 .media-detail-titlebar{gap:5px 8px!important;padding-bottom:8px!important}
+  .media-detail.media-detail-v4 .media-detail-titlebar h2{font-size:1.08rem!important}
+  .media-detail.media-detail-v4 .media-detail-titlebar .media-detail-facts span{font-size:.64rem!important;padding:2px 7px!important}
+  .media-detail.media-detail-v4 .media-detail-summary{font-size:.8rem!important;padding:11px 12px!important}
+  .media-detail.media-detail-v4 .media-detail-recommend-list{gap:10px!important}
+}
+@media(prefers-reduced-motion:reduce){
+  .media-detail.media-detail-v4{animation:none!important}
+  .media-detail.media-detail-v4 .media-detail-recommend-item,
+  .media-detail.media-detail-v4 .mdr-poster img{transition:none!important}
+}
+/* 深色模式跟随页面既有主题 */
+html[data-withu-mode="dark"] .media-detail.media-detail-v4{
+  background:rgba(17,24,39,.78)!important;border-color:rgba(255,255,255,.1)!important;
+  color:#edf5f2!important;box-shadow:0 20px 54px rgba(0,0,0,.28)!important;
+}
+html[data-withu-mode="dark"] .media-detail.media-detail-v4 .media-detail-titlebar{border-bottom-color:rgba(255,255,255,.1)!important}
+html[data-withu-mode="dark"] .media-detail.media-detail-v4 .media-detail-titlebar h2{color:#f8fafc!important}
+html[data-withu-mode="dark"] .media-detail.media-detail-v4 .media-detail-titlebar .media-detail-facts span{
+  background:rgba(255,255,255,.06)!important;border-color:rgba(255,255,255,.1)!important;color:#d8e3df!important;
+}
+html[data-withu-mode="dark"] .media-detail.media-detail-v4 .media-detail-summary{
+  background:rgba(255,255,255,.05)!important;border-color:rgba(255,255,255,.1)!important;color:#aeb8c7!important;
+}
+html[data-withu-mode="dark"] .media-detail.media-detail-v4 .media-cast-row{border-bottom-color:rgba(255,255,255,.1)!important}
+html[data-withu-mode="dark"] .media-detail.media-detail-v4 .media-cast-text{color:#aeb8c7!important}
+html[data-withu-mode="dark"] .media-detail.media-detail-v4 .media-cast-toggle{
+  background:rgba(255,255,255,.06)!important;border-color:rgba(255,255,255,.12)!important;color:#f5b6c8!important;
+}
+html[data-withu-mode="dark"] .media-detail.media-detail-v4 .media-detail-recommend-title{
+  color:#f8fafc!important;border-top-color:rgba(255,255,255,.1)!important;
+}
+html[data-withu-mode="dark"] .media-detail.media-detail-v4 .media-detail-recommend-title::after{color:#9aa7b4}
+html[data-withu-mode="dark"] .media-detail.media-detail-v4 .media-detail-recommend-item{
+  background:rgba(255,255,255,.05)!important;border-color:rgba(255,255,255,.1)!important;
+}
+html[data-withu-mode="dark"] .media-detail.media-detail-v4 .mdr-title{color:#f8fafc!important}
+html[data-withu-mode="dark"] .media-detail.media-detail-v4 .mdr-year{color:#9aa7b4!important}
+html[data-withu-mode="dark"] .media-detail.media-detail-v4 .mdr-poster{background:rgba(255,255,255,.06)!important}
+
+
 </style>
 </head>
 <body>
@@ -671,7 +931,7 @@ if (file_exists($headerPath)) {
 <main class="player-shell" id="pjax-container">
   <div id="status" class="player-status">正在读取播放器…</div>
   <div class="player-layout"><section class="player-stage"><div id="gesture" class="player-gesture"><div id="playerContainer" class="player-container"><div id="playerTopBar" class="withu-player-topbar is-solo" aria-live="polite"><span class="withu-player-topbar-left"><img class="withu-player-topbar-logo" src="<?php echo e($playerLogoUrl); ?>" alt="withU"><span id="playerTopTitle" class="withu-player-topbar-title"><?php echo e($media['series_name'] ?: $media['file_name']); ?></span></span><span id="playerTopWatch" class="withu-player-topbar-watch">一起看<span class="withu-player-topbar-heart">❤</span><span id="playerTopOnlineText">宝宝离线中</span></span><span class="withu-player-topbar-right"><button id="togetherExit" type="button" hidden title="一起看" aria-label="一起看" aria-pressed="false">一起看</button><span id="playerNetSpeed" class="withu-player-topbar-speed">网速 --</span><span id="playerTopTime" class="withu-player-topbar-time">--:--</span></span></div><div id="playerWatermark" class="player-watermark" aria-live="polite"><span id="watermarkMark" class="watermark-mark"><img src="<?php echo e($playerLogoUrl); ?>" alt="withU"><span class="watermark-heart" aria-hidden="true">♥</span></span><span id="watermarkOnline" class="watermark-online" hidden>宝宝在线中</span></div><div id="switchLoading" class="withu-switch-loading" hidden aria-live="polite"><div class="withu-switch-loading-box"><img class="withu-switch-loading-gif" src="/Style/img/switch-loading.gif" alt="" aria-hidden="true"><span id="switchLoadingText">正在切换选集…</span></div></div></div><span id="gestureValue" class="gesture-value"></span></div></section><section class="episode-panel" aria-labelledby="episodeListHeading"><div class="episode-panel-header"><h2 id="episodeListHeading">选集列表</h2><div class="episode-panel-controls"><button type="button" class="episode-toggle" data-episode-toggle="columns" aria-label="切换选集排版"><span class="episode-toggle-label">排版</span><span class="episode-toggle-option" data-episode-columns-state="2">双排</span><span class="episode-toggle-option" data-episode-columns-state="1">单排</span></button><button type="button" class="episode-toggle" data-episode-toggle="order" aria-label="切换选集排序"><span class="episode-toggle-label">排序</span><span class="episode-toggle-option" data-episode-order-state="asc">正序</span><span class="episode-toggle-option" data-episode-order-state="desc">倒序</span></button></div></div><div id="episodeListOutside" class="episode-list" data-columns="2"></div></section></div>
-  <section class="media-detail<?php echo ($strmMode && !empty($strmRecommendations)) ? ' has-recommend' : ''; ?><?php echo empty($strmMeta['posterUrl'] ?? '') ? ' no-poster' : ''; ?>" aria-label="影片简介"><div class="media-detail-kicker">简介</div><span class="poster-badge-wrap"<?php echo (empty($strmMeta['posterUrl'] ?? '')) ? ' style="display:none"' : ''; ?>><img id="detailPoster" class="media-detail-poster" src="<?php echo e($strmMeta['posterUrl'] ?? ''); ?>" alt=""><span id="detailResolutionBadge"></span></span><div class="media-detail-copy"><div class="media-detail-titlebar"><h2 id="detailTitle"><?php echo e($media['series_name'] ?: $media['file_name']); ?></h2><div id="detailFacts" class="media-detail-facts"></div></div><div id="detailSummary" class="media-detail-summary"><div class="media-summary-body"><?php echo e($media['summary'] ?? '正在读取评分、简介和演职员信息…'); ?></div></div></div><?php if ($strmMode && !empty($strmRecommendations)): ?><h3 class="media-detail-recommend-title">推荐视频</h3><div class="media-detail-recommend"><div class="media-detail-recommend-list"><?php foreach ($strmRecommendations as $strmRec): ?><?php $strmImg = $strmRec['poster'] !== '' ? $strmRec['poster'] : $strmRec['backdrop']; ?><a class="media-detail-recommend-item" href="/watch_play.php?source=strm&amp;id=<?php echo (int)$strmRec['id']; ?>" title="<?php echo e($strmRec['title']); ?>"><span class="mdr-poster"><?php if ($strmImg !== ''): ?><img loading="lazy" src="<?php echo e($strmImg); ?>" alt=""><?php endif; ?></span><span class="mdr-copy"><span class="mdr-title"><?php echo e($strmRec['title']); ?></span><?php if ($strmRec['year'] !== ''): ?><span class="mdr-year"><?php echo e($strmRec['year']); ?></span><?php endif; ?></span></a><?php endforeach; ?></div></div><?php endif; ?></section>
+  <section class="media-detail media-detail-v4<?php echo ($strmMode && !empty($strmRecommendations)) ? ' has-recommend' : ''; ?><?php echo empty($strmMeta['posterUrl'] ?? '') ? ' no-poster' : ''; ?>" aria-label="影片简介"><div class="media-detail-kicker">简介</div><span class="poster-badge-wrap"<?php echo (empty($strmMeta['posterUrl'] ?? '')) ? ' style="display:none"' : ''; ?>><img id="detailPoster" class="media-detail-poster" src="<?php echo e($strmMeta['posterUrl'] ?? ''); ?>" alt=""><span id="detailResolutionBadge"></span></span><div class="media-detail-copy"><div class="media-detail-titlebar"><h2 id="detailTitle"><?php echo e($media['series_name'] ?: $media['file_name']); ?></h2><div id="detailFacts" class="media-detail-facts"></div></div><div id="detailSummary" class="media-detail-summary"><div class="media-summary-body"><?php echo e($media['summary'] ?? '正在读取评分、简介和演职员信息…'); ?></div></div></div><?php if ($strmMode && !empty($strmRecommendations)): ?><h3 class="media-detail-recommend-title">推荐视频</h3><div class="media-detail-recommend"><div class="media-detail-recommend-list"><?php foreach ($strmRecommendations as $strmRec): ?><?php $strmImg = $strmRec['poster'] !== '' ? $strmRec['poster'] : $strmRec['backdrop']; ?><a class="media-detail-recommend-item" href="/watch_play.php?source=strm&amp;id=<?php echo (int)$strmRec['id']; ?>" title="<?php echo e($strmRec['title']); ?>"><span class="mdr-poster"><?php if ($strmImg !== ''): ?><img loading="lazy" src="<?php echo e($strmImg); ?>" alt=""><?php endif; ?></span><span class="mdr-copy"><span class="mdr-title"><?php echo e($strmRec['title']); ?></span><?php if ($strmRec['year'] !== ''): ?><span class="mdr-year"><?php echo e($strmRec['year']); ?></span><?php endif; ?></span></a><?php endforeach; ?></div></div><?php endif; ?></section>
   <?php if (!$strmMode): ?><section class="recommend-panel" aria-labelledby="recommendHeading"><div class="recommend-panel-header"><div class="recommend-panel-titleline"><h2 id="recommendHeading">猜你想看</h2></div><a class="recommend-more" href="/watch.php">显示更多</a></div><div id="recommendList" class="recommend-list"></div></section><?php endif; ?>
 </main>
 <div id="choiceModal" class="watch-choice" hidden><div class="watch-choice-box"><h2>另一位正在观影</h2><p id="choiceText">检测到另一位已进入 WithU Watch。</p><div class="watch-choice-actions"><button id="chooseTogether" class="btn btn-primary">一起看</button><button id="chooseSolo" class="btn btn-secondary">自己看</button></div></div></div>
