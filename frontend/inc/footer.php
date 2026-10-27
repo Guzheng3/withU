@@ -106,8 +106,8 @@ foreach (preg_split('/[\r\n,，;；]+/u', $withuBeianRaw) as $withuBeianItem) {
         </div>
     </div>
 </div>
-<link rel="stylesheet" href="/Style/css/withu-v2.css?v=2.0.8">
-<script src="/assets/js/withu-v2.js?v=2.0.8" defer></script>
+<link rel="stylesheet" href="/Style/css/withu-v2.css?v=2.0.9">
+<script src="/assets/js/withu-v2.js?v=2.0.9" defer></script>
 
 <!-- withU 桌宠（一二 & 布布）：位于 PJAX 容器之外，整页只加载一次，跨页常驻 -->
 <link rel="stylesheet" href="/assets/css/withu-pet.css?v=1.0.84">
