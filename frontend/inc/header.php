@@ -1,3 +1,7 @@
+<style id="withu-skip-link-style">
+.wu-skip-link{position:fixed;top:-64px;left:16px;z-index:100002;display:inline-flex;align-items:center;padding:10px 18px;border-radius:0 0 12px 12px;background:linear-gradient(135deg,#e9708b,#d94f6d);color:#fff;font-size:.85rem;text-decoration:none;box-shadow:0 14px 30px -14px rgba(217,79,109,.7);transition:top .25s cubic-bezier(.22,1,.36,1)}
+.wu-skip-link:focus{top:0;color:#fff;outline:2px solid #fff;outline-offset:-4px}
+</style>
 <a href="#pjax-container" class="wu-skip-link">跳到主要内容</a>
 <div class="header-wrap">
     <div class="header">

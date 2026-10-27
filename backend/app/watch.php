@@ -214,6 +214,166 @@ body.watch-page a{color:inherit}
 .card-strm:hover{border-color:#a78bfa;transform:translateY(-6px)}
 .card-strm .rate{right:.55rem;top:.55rem;left:auto;bottom:auto;background:linear-gradient(135deg,#a78bfa,#8b5cf6)}
 
+/* ===== v4 后台同款风格（仅最近播放 / 电影 / 电视剧区域） ===== */
+#recent,#strm{
+  margin:1.5rem 0 1.75rem;
+  padding:1.35rem 1.45rem 1.5rem;
+  background:#fffdfd;
+  border:1px solid #eadfe2;
+  border-radius:18px;
+  box-shadow:0 1px 2px rgba(43,35,39,.035),0 18px 42px -30px rgba(43,35,39,.3);
+}
+#recent .section-head,#strm .section-head{
+  padding-bottom:.95rem;
+  margin-bottom:1.1rem;
+  border-bottom:1px solid #f2eaec;
+}
+#recent .section-head h2,#strm .section-head h2{
+  font-family:"Noto Serif SC","Noto Serif CJK SC","Songti SC","STSong",serif;
+  font-size:1.28rem;
+  font-weight:650;
+  letter-spacing:.01em;
+  color:#2b2327;
+}
+#recent .sec-accent,#strm .sec-accent{
+  width:6px;
+  height:1.15em;
+  border-radius:999px;
+  background:linear-gradient(180deg,#e9708b,#be3a58);
+  box-shadow:0 4px 12px -4px rgba(217,79,109,.55);
+}
+#recent .sec-more{
+  padding:.32rem .75rem;
+  border:1px solid #eadfe2;
+  border-radius:999px;
+  background:#fff;
+  font-size:.74rem;
+  color:#6d6167;
+  text-decoration:none;
+  transition:background .2s,border-color .2s,color .2s;
+}
+#recent .sec-more:hover{
+  color:#be3a58;
+  border-color:rgba(217,79,109,.28);
+  background:#fdeef2;
+}
+.strm-group-title{
+  gap:.55rem;
+  font-size:1rem;
+  font-weight:650;
+  color:#2b2327;
+}
+.strm-group-title::before{
+  content:"";
+  width:4px;
+  height:15px;
+  flex:none;
+  border-radius:999px;
+  background:linear-gradient(180deg,#e9708b,#be3a58);
+}
+.strm-group-title::after{
+  background:linear-gradient(90deg,#eadfe2,transparent);
+}
+#recent .card,#strm .card{
+  border:1px solid rgba(234,223,226,.9);
+  border-radius:16px;
+  box-shadow:0 2px 8px rgba(43,35,39,.04),0 14px 30px -24px rgba(43,35,39,.28);
+}
+#recent .card:hover,#strm .card:hover{
+  border-color:rgba(217,79,109,.24);
+  box-shadow:0 4px 10px rgba(43,35,39,.05),0 22px 44px -26px rgba(43,35,39,.35);
+  transform:translateY(-5px);
+}
+#strm .card-strm:hover{border-color:rgba(217,79,109,.24)}
+#recent .card .rate,#strm .card .rate,
+#strm .card-strm .rate{
+  background:linear-gradient(135deg,#e9708b,#d94f6d);
+  box-shadow:0 6px 14px rgba(217,79,109,.35);
+}
+#recent .card .play-btn,#strm .card .play-btn{
+  color:#d94f6d;
+  box-shadow:0 10px 24px rgba(217,79,109,.4);
+}
+#recent .card .mask,#strm .card .mask{
+  background:linear-gradient(0deg,rgba(43,35,39,.74),transparent);
+}
+#recent .card .ph,#strm .card .ph{
+  position:absolute;
+  inset:0;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  background:linear-gradient(135deg,#fff3f6,#f5ece8);
+  color:#d94f6d;
+  font-size:1.6rem;
+  opacity:.92;
+}
+.rail .progress-bar i{
+  background:linear-gradient(90deg,#d94f6d,#b9855f);
+}
+.rail-arrow{
+  border-color:rgba(217,79,109,.28);
+  color:#d94f6d;
+  box-shadow:0 8px 20px rgba(217,79,109,.2);
+}
+.rail-arrow:hover{background:#fff}
+
+/* 空状态：与后台 v4 一致的虚线卡片 + 心形图标 */
+.empty{
+  grid-column:1 / -1;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  gap:.45rem;
+  min-height:210px;
+  padding:2.4rem 1.4rem;
+  border:1px dashed #ddccd1;
+  border-radius:18px;
+  background:radial-gradient(circle at 50% 0%,rgba(217,79,109,.05),transparent 62%),#fffdfd;
+  color:#9b8e94;
+  font-size:.84rem;
+  line-height:1.7;
+  text-align:center;
+  box-shadow:none;
+}
+.empty::before{
+  content:"♡";
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  width:54px;
+  height:54px;
+  margin-bottom:.35rem;
+  border-radius:18px;
+  background:#fdeef2;
+  color:#d94f6d;
+  font-size:22px;
+}
+.empty--loading::before{
+  content:"";
+  width:22px;
+  height:22px;
+  border-radius:50%;
+  background:transparent;
+  border:2px solid #fdeef2;
+  border-top-color:#d94f6d;
+  animation:watch-spin .8s linear infinite;
+}
+.empty--error::before{
+  content:"!";
+  background:#fdeeee;
+  color:#c44545;
+  font-size:20px;
+  font-weight:700;
+}
+#recent .empty{min-height:190px}
+@media(max-width:760px){
+  #recent,#strm{padding:1.05rem 1rem 1.15rem;border-radius:16px;margin:1.1rem 0 1.3rem}
+  #recent .section-head h2,#strm .section-head h2{font-size:1.12rem}
+  .empty{min-height:180px;padding:2rem 1rem}
+}
+
 </style>
 </head>
 <body class="watch-page">
@@ -228,7 +388,7 @@ if (file_exists($headerPath)) {
 ?>
 <div id="watchLoading" class="watch-loading"><span class="watch-spinner"></span><span>正在加载影视库</span></div>
 
-<div class="page">
+<div class="page" id="pjax-container">
   <div class="main-col">
     <section class="section" id="recent" style="--sec-accent:var(--pink);--sec-soft:var(--pink-soft)">
       <div class="section-head"><span class="sec-accent"></span><h2>最近播放</h2><a class="sec-more" href="/watch_history.php?from=<?php echo urlencode($_SERVER['REQUEST_URI']); ?>">全部历史 ›</a></div>
@@ -259,11 +419,11 @@ if (file_exists($headerPath)) {
       </div>
       <div class="strm-group">
         <h3 class="strm-group-title">电影</h3>
-        <div class="grid" id="strmGridMovie"><div class="empty">正在加载电影…</div></div>
+        <div class="grid" id="strmGridMovie"><div class="empty empty--loading">正在加载电影…</div></div>
       </div>
       <div class="strm-group">
         <h3 class="strm-group-title">电视剧</h3>
-        <div class="grid" id="strmGridTv"><div class="empty">正在加载剧集…</div></div>
+        <div class="grid" id="strmGridTv"><div class="empty empty--loading">正在加载剧集…</div></div>
       </div>
       <div id="strmNote" class="sec-note" style="margin-top:.6rem" hidden></div>
     </section>
@@ -298,12 +458,12 @@ if (file_exists($headerPath)) {
   }
   function loadStrmGroup(type, grid, emptyMsg, kw){
     if(!grid) return Promise.resolve();
-    grid.innerHTML='<div class="empty">正在加载…</div>';
+    grid.innerHTML='<div class="empty empty--loading">正在加载…</div>';
     var url='/api/strm.php?action=media&page=1&pageSize=50&type='+type+(kw?'&keyword='+encodeURIComponent(kw):'');
     return fetch(url,{credentials:'same-origin'})
       .then(function(r){return r.json();})
       .then(function(d){
-        if(!d || !d.success){ grid.innerHTML='<div class="empty">'+(d&&d.message?esc(d.message):'媒体库加载失败')+'</div>'; return 0; }
+        if(!d || !d.success){ grid.innerHTML='<div class="empty empty--error">'+(d&&d.message?esc(d.message):'媒体库加载失败')+'</div>'; return 0; }
         var items=(d.data||{}).items||[];
         strmRenderGroup(grid, items, emptyMsg);
         if(!strmPosterWarm && items.some(function(it){return !(it.posterUrl||'');})){
@@ -315,7 +475,7 @@ if (file_exists($headerPath)) {
         }
         return items.length;
       })
-      .catch(function(){ grid.innerHTML='<div class="empty">媒体库加载失败</div>'; return 0; });
+      .catch(function(){ grid.innerHTML='<div class="empty empty--error">媒体库加载失败</div>'; return 0; });
   }
   function loadStrm(kw){
     var q=kw||'';
@@ -395,11 +555,8 @@ if (file_exists($headerPath)) {
       var loading=document.getElementById('watchLoading');
       if(loading) loading.classList.add('is-hidden');
       revealIn(document.getElementById('recentRail')||document.body);
-      placeNav();
     });
   });
-  window.addEventListener('load',placeNav);
-
   /* ============ 与首页一致的头部行为（lucide 图标 / 返回胶囊 / 更多面板 / 访客天气） ============ */
   // jQuery 是 app.js / components.js 的依赖，先于二者加载
   var jq = document.createElement('script');
