@@ -1020,13 +1020,15 @@
         _pendingRequest: null,
         _cachePayload: null,
         _cacheAt: 0,
+        _noLocationTimer: null,
+        _usingAdminLocation: false,
         _geoCity: '',
+        _handleLocationReady: null,
         _handleDocumentClick: null,
         _handleToggleClick: null,
         _handleKeydown: null,
         _handleScroll: null,
         _handleResize: null,
-        _handleLocationReady: null,
 
         init() {
             if (window.WITHU_CONFIG && window.WITHU_CONFIG.weatherEnabled === false) {
@@ -1044,26 +1046,22 @@
             }
 
             this._bindEvents();
-            // 访客定位是异步的，首次 _refresh() 只能拿到服务端 IP 定位；
-            // 定位就绪后清掉缓存重取一次，天气才真正跟随访客位置
-            this._handleLocationReady = (ev) => {
-                var geo = (ev && ev.detail) || (window.WithULocation && window.WithULocation.get()) || null;
-                if (!geo || !geo.lat || !geo.lng) {
-                    return;
-                }
+            // GPS 优先，后台「位置」在定位失败/未授权时兜底
+            this._handleLocationReady = () => {
                 this._cachePayload = null;
                 this._cacheAt = 0;
-                // 上一次请求可能是不带城市名的，等它结束后再取，避免竞态导致城市名丢失
-                if (this._pendingRequest) {
-                    this._pendingRequest.finally(() => this._refresh());
-                    return;
-                }
                 this._refresh();
             };
             window.addEventListener('withu:location-ready', this._handleLocationReady);
+
             this._setLoading(true);
             this._refresh();
             this._timerId = setInterval(() => this._refresh(), 10 * 60 * 1000);
+            if (!(window.WithULocation && window.WithULocation.get())) {
+                if (window.WithULocation && typeof window.WithULocation.request === 'function') {
+                    window.WithULocation.request();
+                }
+            }
             this._initialized = true;
         },
 
@@ -1076,6 +1074,7 @@
                 window.removeEventListener('withu:location-ready', this._handleLocationReady);
                 this._handleLocationReady = null;
             }
+            this._clearNoLocationFallback();
             this._unbindEvents();
             this._initialized = false;
         },
@@ -1095,22 +1094,46 @@
                 this._setLoading(true);
                 var _siteBase = (window.WITHU_CONFIG && window.WITHU_CONFIG.siteBase) || '';
 
-                // 坐标优先级：后台固定位置 > 访客实时定位 > 服务端 IP 定位
-                var locLat = window.WITHU_CONFIG && window.WITHU_CONFIG.weatherLocLat;
-                var locLng = window.WITHU_CONFIG && window.WITHU_CONFIG.weatherLocLng;
-                var geoParams = 'mode=ip';
+                var cfg = window.WITHU_CONFIG || {};
+                var coords = null;
+                this._usingAdminLocation = false;
                 this._geoCity = '';
 
-                if (locLat && locLng) {
-                    geoParams = 'mode=geo&lat=' + locLat + '&lng=' + locLng;
-                } else {
-                    var visitorGeo = (window.WithULocation && window.WithULocation.get()) || null;
-                    if (visitorGeo && visitorGeo.lat && visitorGeo.lng) {
-                        geoParams = 'mode=geo&lat=' + visitorGeo.lat + '&lng=' + visitorGeo.lng;
+                // 1) 访客 GPS（浏览器定位，和风按 WGS-84 查询更准确）
+                var visitorGeo = (window.WithULocation && window.WithULocation.get()) || null;
+                if (visitorGeo) {
+                    var gLat = visitorGeo.wgsLat != null ? visitorGeo.wgsLat : visitorGeo.lat;
+                    var gLng = visitorGeo.wgsLng != null ? visitorGeo.wgsLng : visitorGeo.lng;
+                    if (isFinite(gLat) && isFinite(gLng)) {
+                        coords = [gLat, gLng];
+                        this._geoCity = visitorGeo.city || '';
                     }
-                    // 定位模块已逆地理编码出城市名，服务端缓存按经纬度命中拿不到，这里本地覆盖
-                    this._geoCity = visitorGeo && visitorGeo.city ? visitorGeo.city : '';
                 }
+
+                // 2) 后台固定位置兜底
+                if (!coords) {
+                    var locLat = cfg.weatherLocLat;
+                    var locLng = cfg.weatherLocLng;
+                    var latNum = Number(locLat);
+                    var lngNum = Number(locLng);
+                    if (locLat !== null && locLat !== undefined && locLat !== ''
+                        && locLng !== null && locLng !== undefined && locLng !== ''
+                        && isFinite(latNum) && isFinite(lngNum)) {
+                        coords = [latNum, lngNum];
+                        this._usingAdminLocation = true;
+                    }
+                }
+
+                if (!coords) {
+                    // 等待定位模块回调；9 秒后仍无位置再显示未定位
+                    this._setLoading(true);
+                    this._textEl.textContent = '定位中…';
+                    this._scheduleNoLocationFallback();
+                    return;
+                }
+                this._clearNoLocationFallback();
+
+                var geoParams = 'mode=geo&lat=' + coords[0] + '&lng=' + coords[1];
 
                 this._pendingRequest = fetch(_siteBase + 'services/weather.php?' + geoParams, {
                     method: 'GET',
@@ -1123,23 +1146,11 @@
                         }
                         return response.json();
                     })
-                    .catch(() => fetch(_siteBase + 'services/weather.json', {
-                        method: 'GET',
-                        cache: 'default'
-                    }))
-                    .then(response => {
-                        if (!response || !response.ok) {
-                            throw new Error('HTTP_' + (response ? response.status : 'FAIL'));
-                        }
-                        return response.json();
-                    })
                     .then(payload => {
                         const data = payload && payload.code === 200 ? payload.data : null;
-                        if (!data || typeof data !== 'object') {
-                            throw new Error('INVALID_PAYLOAD');
-                        }
-                        if (this._geoCity) {
-                            data.city = this._geoCity;
+                        if (!data || typeof data !== 'object' || data.available === false) {
+                            // 天气未获取到时不再回退模拟数据，按失败处理
+                            throw new Error('WEATHER_UNAVAILABLE');
                         }
                         this._cachePayload = data;
                         this._cacheAt = Date.now();
@@ -1168,6 +1179,39 @@
             }
         },
 
+        _scheduleNoLocationFallback() {
+            if (this._noLocationTimer) {
+                return;
+            }
+            this._noLocationTimer = setTimeout(() => {
+                this._noLocationTimer = null;
+                if (window.WithULocation && window.WithULocation.get()) {
+                    this._refresh();
+                    return;
+                }
+                this._setLoading(false);
+                this._iconEl.className = 'qi-999-fill withu-header-weather-icon';
+                this._textEl.textContent = '未定位';
+                this._renderPanel({
+                    city: '未定位',
+                    temp: '--',
+                    desc: '请允许浏览器定位或在后台设置位置',
+                    feelsLike: '--',
+                    humidity: '--',
+                    windDir: '--',
+                    windScale: '',
+                    vis: '--'
+                });
+            }, 9000);
+        },
+
+        _clearNoLocationFallback() {
+            if (this._noLocationTimer) {
+                clearTimeout(this._noLocationTimer);
+                this._noLocationTimer = null;
+            }
+        },
+
         _applyPayload(data) {
             this._setLoading(false);
             const iconCodeRaw = String(data.icon || '999').replace(/[^\d]/g, '');
@@ -1180,12 +1224,14 @@
             const descText = String(data.desc || '天气');
             this._textEl.textContent = `${descText} ${tempText}`;
 
-            // 对接后台「位置」设置：设置了固定位置（名称与经纬度齐全）时，
-            // 面板位置直接显示后台保存的名称，避免展示 IP 兜底的城市名
+            // 固定位置模式下显示后台保存的名称；GPS 模式下使用服务端反查的城市，
+            // 服务端没解析出城市时退回 GPS 模块本地反查结果。
             const cfg = window.WITHU_CONFIG || {};
             const fixedLocName = typeof cfg.weatherLocName === 'string' ? cfg.weatherLocName.trim() : '';
-            if (fixedLocName !== '' && cfg.weatherLocLat && cfg.weatherLocLng) {
+            if (this._usingAdminLocation && fixedLocName !== '' && cfg.weatherLocLat && cfg.weatherLocLng) {
                 data.city = fixedLocName;
+            } else if (!data.city && this._geoCity) {
+                data.city = this._geoCity;
             }
 
             this._renderPanel(data);

@@ -67,6 +67,26 @@ define('ROOT_PATH', dirname(__DIR__));
 // 应用 URL：根据当前请求自动生成（包含协议）
 $scheme = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') ? 'https' : 'http';
 $host   = $_SERVER['HTTP_HOST'] ?? 'localhost';
+// 反向代理终止 TLS 时 PHP 侧看到的是 http；同机 / 内网反代传来的
+// X-Forwarded-Proto / X-Forwarded-Host 用于还原用户实际访问的地址。
+$remoteAddr = (string)($_SERVER['REMOTE_ADDR'] ?? '');
+$trustProxy = getenv('TRUST_PROXY_IP_HEADERS') === '1'
+    || $remoteAddr === '::1'
+    || strpos($remoteAddr, '127.') === 0
+    || strpos($remoteAddr, '10.') === 0
+    || strpos($remoteAddr, '192.168.') === 0
+    || preg_match('#^172\.(1[6-9]|2[0-9]|3[0-1])\.#', $remoteAddr) === 1;
+$forwardedProto = strtolower(trim(explode(',', (string)($_SERVER['HTTP_X_FORWARDED_PROTO'] ?? ''))[0]));
+if ($forwardedProto === 'https' || ($forwardedProto === 'http' && $trustProxy)) {
+    $scheme = $forwardedProto;
+}
+if ($trustProxy) {
+    $forwardedHost = trim(explode(',', (string)($_SERVER['HTTP_X_FORWARDED_HOST'] ?? ''))[0]);
+    if ($forwardedHost !== ''
+        && preg_match('/^(?:\[[0-9a-f:.]+\]|[a-z0-9.-]+)(?::\d{1,5})?$/i', $forwardedHost)) {
+        $host = $forwardedHost;
+    }
+}
 define('BASE_URL', $scheme . '://' . $host);
 
 // Session 设置

@@ -265,7 +265,7 @@ HTTP 状态码约定：
 
 | action | 方法 | 参数 | 响应 |
 |---|---|---|---|
-| weather | GET | `lat`（float）、`lng`（float） | `{success, cached, data:<open-meteo 原始 JSON>}` |
+| weather | GET | `lat`（float）、`lng`（float） | `{success, cached, data:<Open-Meteo 形状 JSON>}`；数据源已切换为和风天气，字段形状保持不变 |
 | geocode | GET | `q`（string 必填） | `{success, items:[<nominatim JSON>]}`（最多 5 条） |
 | plan | POST | JSON+CSRF：`destination`（必填）、`prompt`、`start_date`、`end_date` | `{success, id, source:"ai"\|"local", plan:{summary, itinerary, weather_alerts, tickets, packing}}` |
 

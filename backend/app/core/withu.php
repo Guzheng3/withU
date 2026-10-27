@@ -60,12 +60,114 @@ if (!function_exists('withu_now')) {
     function withu_now(): string { return date('Y-m-d H:i:s'); }
 }
 
+if (!function_exists('withu_valid_http_host')) {
+    /** 校验 Host 头（可带端口，兼容 IPv6 方括号写法），避免把非法值写进绝对链接。 */
+    function withu_valid_http_host(string $host): bool
+    {
+        if ($host === '' || strlen($host) > 255) {
+            return false;
+        }
+        return preg_match('/^(?:\[[0-9a-f:.]+\]|[a-z0-9.-]+)(?::\d{1,5})?$/i', $host) === 1;
+    }
+}
+
+if (!function_exists('withu_request_from_trusted_proxy')) {
+    /**
+     * 请求是否来自可信反向代理。
+     *
+     * 同机 / 内网反代（BT 面板、nginx、Caddy 等）在 PHP 侧看到的 REMOTE_ADDR
+     * 是回环或私网地址；公网直连一律不信任 X-Forwarded-*。部署在特殊网络时
+     * 也可以设置环境变量 TRUST_PROXY_IP_HEADERS=1 强制信任。
+     */
+    function withu_request_from_trusted_proxy(): bool
+    {
+        if (getenv('TRUST_PROXY_IP_HEADERS') === '1') {
+            return true;
+        }
+        $remote = (string)($_SERVER['REMOTE_ADDR'] ?? '');
+        if ($remote === '' || !filter_var($remote, FILTER_VALIDATE_IP)) {
+            return false;
+        }
+        return $remote === '::1'
+            || strpos($remote, '127.') === 0
+            || strpos($remote, '10.') === 0
+            || strpos($remote, '192.168.') === 0
+            || preg_match('#^172\.(1[6-9]|2[0-9]|3[0-1])\.#', $remote) === 1;
+    }
+}
+
+if (!function_exists('withu_public_base_url')) {
+    /**
+     * 当前请求实际对外的站点根地址。
+     *
+     * 安装向导生成的 config.php 用 $_SERVER['HTTPS'] 计算 BASE_URL；反向代理
+     * 终止 TLS 时 PHP 侧看到的是 http，BASE_URL 会变成 http://...。课表 App
+     * 的更新检查要求下载地址与 API 同源，自定义域名下 http 会被客户端拒绝，
+     * 因此这里按可信代理头修正协议与 Host。无代理头时与 BASE_URL 等价。
+     */
+    function withu_public_base_url(): string
+    {
+        $scheme = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') ? 'https' : 'http';
+        $host = trim((string)($_SERVER['HTTP_HOST'] ?? ''));
+
+        // 只接受「升级到 https」的转发声明（CDN / 隧道也应生效）；降级到 http
+        // 只在可信反代下采纳，避免被伪造头把下载地址降级。
+        $forwardedProto = strtolower(trim(explode(',', (string)($_SERVER['HTTP_X_FORWARDED_PROTO'] ?? ''))[0]));
+        if ($forwardedProto === 'https') {
+            $scheme = 'https';
+        } elseif ($forwardedProto === 'http' && withu_request_from_trusted_proxy()) {
+            $scheme = 'http';
+        }
+
+        if (withu_request_from_trusted_proxy()) {
+            $forwardedHost = trim(explode(',', (string)($_SERVER['HTTP_X_FORWARDED_HOST'] ?? ''))[0]);
+            if (withu_valid_http_host($forwardedHost)) {
+                $host = $forwardedHost;
+            }
+        }
+
+        if (!withu_valid_http_host($host)) {
+            return rtrim(BASE_URL, '/');
+        }
+        return $scheme . '://' . $host;
+    }
+}
+
+if (!function_exists('withu_public_url')) {
+    /** 把以 BASE_URL 开头的绝对链接改写成当前请求的对外地址。 */
+    function withu_public_url(string $url): string
+    {
+        if (defined('BASE_URL') && BASE_URL !== '' && strpos($url, BASE_URL) === 0) {
+            return withu_public_base_url() . substr($url, strlen(BASE_URL));
+        }
+        return $url;
+    }
+}
+
 if (!function_exists('withu_token')) {
     function withu_token(int $bytes = 24): string { return bin2hex(random_bytes($bytes)); }
 }
 
 if (!function_exists('withu_hash_token')) {
     function withu_hash_token(string $token): string { return hash('sha256', $token); }
+}
+
+if (!function_exists('withu_timetable_is_full_backup')) {
+    /**
+     * 是否为「完整备份」包（多份课表 profiles）。
+     *
+     * 云端情侣同步只接受单份课表：完整备份写入 timetables 后，对方 App 的
+     * partner 拉取会报 partner_import_requires_single_profile，直接失败。
+     */
+    function withu_timetable_is_full_backup(array $content): bool
+    {
+        if (($content['backupType'] ?? null) === 'full') {
+            return true;
+        }
+        return ($content['packageType'] ?? null) === 'transfer'
+            && ($content['scope'] ?? null) === 'all_data'
+            && is_array($content['profiles'] ?? null);
+    }
 }
 
 if (!function_exists('withu_timetable_history_limit')) {

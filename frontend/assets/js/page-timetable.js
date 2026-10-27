@@ -1,7 +1,7 @@
 /**
- * withU 首页课表模块（与轻屿课表 App 周视图一致）
+ * withU 首页课表模块（与清涵课表 App 周视图一致）
  * 数据源：/api/timetable.php?action=bootstrap（返回双方课表）
- * 布局参数对照 mikcb：表头 40 / 节次行 68 / 时间列 34 / 卡片圆角 8
+ * 布局参数对照 qhkb（旧版标识 mikcb）：表头 40 / 节次行 68 / 时间列 34 / 卡片圆角 8
  */
 
 ;(function(window, $) {
@@ -108,10 +108,15 @@
         return fallback || null;
     }
 
+    /** App 课表包标识：新版清涵课表为 qhkb，旧版轻屿课表为 mikcb。 */
+    function isAppPackage(raw) {
+        return raw && (raw.app === 'qhkb' || raw.app === 'mikcb');
+    }
+
     /** 旧版 withU 课表（{week, courses:[{title,day,start,end}]}）转 App 格式 */
     function normalizeContent(raw) {
         if (!raw || typeof raw !== 'object') return null;
-        if (raw.app !== 'mikcb') {
+        if (!isAppPackage(raw)) {
             // 兼容旧部署：只有课程列表的紧凑格式
             const legacyCourses = Array.isArray(raw.courses) ? raw.courses : [];
             if (legacyCourses.length === 0) return null;
@@ -660,7 +665,7 @@
             body.innerHTML =
                 '<div class="withu-tt-empty">' +
                 '  <i class="ph-fill ph-calendar-blank withu-tt-empty-icon"></i>' +
-                '  <div><b>' + escapeHtml(name) + '</b> 还没有同步课表<br>在轻屿课表 App 中登录 withU 后会自动同步</div>' +
+                '  <div><b>' + escapeHtml(name) + '</b> 还没有同步课表<br>在清涵课表 App 中登录 withU 后会自动同步</div>' +
                 '</div>';
             if (this._els.loading) this._els.loading.style.display = 'none';
         },

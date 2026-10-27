@@ -1246,7 +1246,7 @@ function migrate_schema_if_needed(): void {
 
     // Avoid rerunning dozens of SHOW/ALTER/CREATE statements on every PHP
     // request, including each high-frequency watch poll.
-    $schemaVersion = '20261004-05';
+    $schemaVersion = '20261026-01';
     $runtimeDir = dirname(ROOT_PATH) . DIRECTORY_SEPARATOR . 'runtime';
     $markerPath = $runtimeDir . DIRECTORY_SEPARATOR . 'schema-version';
     $lockPath = $runtimeDir . DIRECTORY_SEPARATOR . 'schema-migration.lock';
@@ -1851,6 +1851,16 @@ function migrate_withu_v1($db): void {
         ['player_auto_next_enabled', '1', '播放器结束后自动播放下一集'],
         ['page_bg_blur_px', '0', '页面背景高斯模糊强度（像素）'],
         ['page_bg_frost_percent', '0', '页面背景磨砂亮度（百分比）'],
+        ['qweather_api_host', '', '和风天气 API Host'],
+        ['qweather_auth_type', 'auto', '和风认证方式：auto/apikey/jwt'],
+        ['qweather_api_key', '', '和风 API Key'],
+        ['qweather_jwt_token', '', '和风静态 JWT Token'],
+        ['qweather_jwt_key_id', '', '和风 JWT Key ID'],
+        ['qweather_jwt_developer_id', '', '和风 JWT Developer ID（iss）'],
+        ['qweather_jwt_project_id', '', '和风 JWT Project ID'],
+        ['qweather_jwt_private_key', '', '和风 JWT Ed25519 私钥'],
+        ['qweather_lang', 'zh', '和风天气语言'],
+        ['qweather_unit', 'm', '和风天气单位'],
     ];
     foreach ($settings as $setting) {
         try {

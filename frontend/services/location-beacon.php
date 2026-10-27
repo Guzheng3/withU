@@ -40,7 +40,9 @@ function geoSaveRole($role, $entry) {
     if (!is_dir($dir)) return false;
     $all = geoLoadAll();
     $all[$role] = $entry;
-    return @file_put_contents(geoStoreFile(), json_encode($all, JSON_UNESCAPED_UNICODE), LOCK_EX) !== false;
+    $ok = @file_put_contents(geoStoreFile(), json_encode($all, JSON_UNESCAPED_UNICODE), LOCK_EX) !== false;
+    if ($ok) { @chmod(geoStoreFile(), 0600); }
+    return $ok;
 }
 
 function geoOutEntry($entry) {
@@ -66,54 +68,6 @@ try {
     require_once $rootPath . '/config/config.php';
     require_once $rootPath . '/core/Database.php';
     require_once $rootPath . '/core/Auth.php';
-
-    // 高德 IP 定位：解析来访 IP 的城市级位置（真实定位失败时的兜底）
-    if (($_GET['action'] ?? '') === 'ip') {
-        $ip = $_SERVER['HTTP_X_FORWARDED_FOR'] ?? ($_SERVER['REMOTE_ADDR'] ?? '');
-        $ip = trim(explode(',', (string)$ip)[0]);
-        // 内网/回环地址高德解析不出，直接返回失败
-        if ($ip === '' || filter_var($ip, FILTER_VALIDATE_IP, FILTER_FLAG_NO_PRIV_RANGE | FILTER_FLAG_NO_RES_RANGE) === false) {
-            echo json_encode(['code' => 404, 'message' => 'ip_not_locatable']);
-            exit;
-        }
-        $key = '';
-        try {
-            $db = Database::getInstance();
-            $row = $db->fetch("SELECT value FROM settings WHERE `key`='amap_weather_key'");
-            $key = ($row && !empty($row['value'])) ? $row['value'] : '';
-        } catch (Throwable $e) {}
-        if ($key === '') {
-            echo json_encode(['code' => 404, 'message' => 'no_key']);
-            exit;
-        }
-        $url = 'https://restapi.amap.com/v3/ip?key=' . $key . '&ip=' . urlencode($ip);
-        $ctx = @stream_context_create(['http' => ['timeout' => 6]]);
-        $raw = @file_get_contents($url, false, $ctx);
-        $data = $raw ? json_decode($raw, true) : null;
-        $adcode = (is_array($data) && ($data['status'] ?? '') === '1' && !empty($data['adcode'])) ? $data['adcode'] : '';
-        if ($adcode === '' || empty($data['rectangle'])) {
-            echo json_encode(['code' => 404, 'message' => 'ip_not_located']);
-            exit;
-        }
-        // rectangle "lng1,lat1;lng2,lat2" 取中点作为城市级坐标
-        $pts = explode(';', $data['rectangle']);
-        $p1 = explode(',', $pts[0]);
-        $p2 = explode(',', $pts[1] ?? $pts[0]);
-        $lng = (floatval($p1[0]) + floatval($p2[0])) / 2;
-        $lat = (floatval($p1[1]) + floatval($p2[1])) / 2;
-        echo json_encode([
-            'code' => 200,
-            'data' => [
-                'lng' => $lng,
-                'lat' => $lat,
-                'province' => is_array($data['province'] ?? null) ? '' : (string)($data['province'] ?? ''),
-                'city' => is_array($data['city'] ?? null) ? '' : (string)($data['city'] ?? ''),
-                'adcode' => $adcode,
-                'source' => 'ip',
-            ],
-        ], JSON_UNESCAPED_UNICODE);
-        exit;
-    }
 
     if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         // 上报：必须登录，身份按会话角色（user1/user2）区分

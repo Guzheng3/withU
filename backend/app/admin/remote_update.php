@@ -409,9 +409,9 @@ function withu_remote_update_download_url(?array $row): string {
         return '';
     }
     if (preg_match('#^https?://#i', $apkUrl)) {
-        return BASE_URL . '/api/app_update_download.php?id=' . (int)$row['id'];
+        return withu_public_base_url() . '/api/app_update_download.php?id=' . (int)$row['id'];
     }
-    return upload_url($apkUrl);
+    return withu_public_url(upload_url($apkUrl));
 }
 
 function withu_remote_update_local_path(?array $row): string {

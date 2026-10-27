@@ -30,6 +30,14 @@ $withuGirlGender = ($girlGender ?? null) === 'male' ? 'male' : 'female';
 list($withuBoyState, $withuBoyStateText) = withu_head_online_state($boyLastLogin ?? null);
 list($withuGirlState, $withuGirlStateText) = withu_head_online_state($girlLastLogin ?? null);
 $withuStateIcons = ['online' => 'wifi', 'away' => 'clock', 'offline' => 'wifi-off'];
+// 头像位置与天气共用后台「位置」设置；未设置时直接显示占位文案，避免一直停在「加载中」
+$withuHeadLocationName = trim((string)($locName ?? ''));
+if ($withuHeadLocationName === '') {
+    $withuHeadLocationName = '未设置位置';
+}
+$withuHeadHasLocation = isset($locLat, $locLng)
+    && $locLat !== null && $locLng !== null
+    && $locLat !== '' && $locLng !== '';
 ?>
 <div class="bg-wrap central limg" data-avatar-swap="1">
     <div class="bg-img">
@@ -52,7 +60,7 @@ $withuStateIcons = ['online' => 'wifi', 'away' => 'clock', 'offline' => 'wifi-of
                         <div class="withu-head-avatar-bottom withu-head-avatar-anim-item">
                             <div class="withu-head-avatar-location" data-location-slot="1">
                                 <i data-lucide="map-pin"></i>
-                                <em>加载中...</em>
+                                <em><?php echo htmlspecialchars($withuHeadLocationName, ENT_QUOTES, 'UTF-8'); ?></em>
                             </div>
                         </div>
                     </div>
@@ -66,9 +74,13 @@ $withuStateIcons = ['online' => 'wifi', 'away' => 'clock', 'offline' => 'wifi-of
                             <i class="ph-fill ph-navigation-arrow"></i>
                         </div>
                         <div class="distance-text">
-                            <span class="distance-text-sm">相距</span>
-                            <span class="km-value">--</span>
-                            <span class="distance-text-sm">km</span>
+                            <?php if ($withuHeadHasLocation): ?>
+                                <span class="km-value">就在身边</span>
+                            <?php else: ?>
+                                <span class="distance-text-sm">相距</span>
+                                <span class="km-value">--</span>
+                                <span class="distance-text-sm">km</span>
+                            <?php endif; ?>
                         </div>
                     </div>
                 </div>
@@ -92,7 +104,7 @@ $withuStateIcons = ['online' => 'wifi', 'away' => 'clock', 'offline' => 'wifi-of
                         <div class="withu-head-avatar-bottom withu-head-avatar-anim-item">
                             <div class="withu-head-avatar-location" data-location-slot="2">
                                 <i data-lucide="map-pin"></i>
-                                <em>加载中...</em>
+                                <em><?php echo htmlspecialchars($withuHeadLocationName, ENT_QUOTES, 'UTF-8'); ?></em>
                             </div>
                         </div>
                     </div>

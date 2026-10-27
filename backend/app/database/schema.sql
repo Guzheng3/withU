@@ -12,6 +12,7 @@ CREATE TABLE IF NOT EXISTS `users` (
   `avatar` varchar(255) DEFAULT NULL COMMENT '头像地址',
   `avatar_source` varchar(20) DEFAULT 'upload' COMMENT '头像来源',
   `status` enum('active','inactive') NOT NULL DEFAULT 'active' COMMENT '状态',
+  `last_login_at` datetime DEFAULT NULL COMMENT '最后登录时间',
   `created_at` datetime NOT NULL COMMENT '创建时间',
   `updated_at` datetime DEFAULT NULL COMMENT '更新时间',
   PRIMARY KEY (`id`),
@@ -332,7 +333,17 @@ INSERT IGNORE INTO `settings` (`key`, `value`, `description`) VALUES
 ('watch_heartbeat_interval_ms', '2500', '一起看心跳间隔（毫秒）'),
 ('watch_autoplay_enabled', '1', '一起看与个人观看默认自动播放'),
 ('player_default_speed', '1', '播放器默认倍速'),
-('player_auto_next_enabled', '1', '播放器结束后自动播放下一集');
+('player_auto_next_enabled', '1', '播放器结束后自动播放下一集'),
+('qweather_api_host', '', '和风天气 API Host'),
+('qweather_auth_type', 'auto', '和风认证方式：auto/apikey/jwt'),
+('qweather_api_key', '', '和风 API Key'),
+('qweather_jwt_token', '', '和风静态 JWT Token'),
+('qweather_jwt_key_id', '', '和风 JWT Key ID'),
+('qweather_jwt_developer_id', '', '和风 JWT Developer ID（iss）'),
+('qweather_jwt_project_id', '', '和风 JWT Project ID'),
+('qweather_jwt_private_key', '', '和风 JWT Ed25519 私钥'),
+('qweather_lang', 'zh', '和风天气语言'),
+('qweather_unit', 'm', '和风天气单位');
 
 -- withU 扩展表：设备、媒体库、同步房间、观影历史和审核记录
 CREATE TABLE IF NOT EXISTS `couple_invites` (
@@ -350,6 +361,61 @@ CREATE TABLE IF NOT EXISTS `trusted_devices` (
   `created_at` datetime NOT NULL, `revoked_at` datetime DEFAULT NULL,
   PRIMARY KEY (`id`), UNIQUE KEY `uk_device_token` (`device_token_hash`), KEY `idx_device_user` (`user_id`,`revoked_at`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- 清涵课表（qhkb）同步：双方课表、历史版本与个人设置
+CREATE TABLE IF NOT EXISTS `timetables` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `user_id` int(11) NOT NULL COMMENT 'User ID',
+  `content` mediumtext NOT NULL COMMENT 'Timetable transfer package JSON',
+  `content_hash` char(64) NOT NULL COMMENT 'SHA-256 content hash',
+  `updated_at` datetime NOT NULL COMMENT 'Last update time',
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `uniq_user` (`user_id`),
+  KEY `idx_content_hash` (`content_hash`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='Couple timetable sharing';
+
+CREATE TABLE IF NOT EXISTS `timetable_history` (
+  `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
+  `user_id` int(11) NOT NULL COMMENT 'User ID',
+  `content` mediumtext NULL COMMENT 'Pre-change timetable package JSON',
+  `content_hash` char(64) NOT NULL COMMENT 'SHA-256 pre-change content hash',
+  `change_type` varchar(32) NOT NULL DEFAULT 'save' COMMENT 'Change source',
+  `profile_name` varchar(190) NOT NULL DEFAULT '' COMMENT 'Profile name when captured',
+  `course_count` int(11) NOT NULL DEFAULT 0 COMMENT 'Course count when captured',
+  `current_week` int(11) NOT NULL DEFAULT 0 COMMENT 'Current week when captured',
+  `semester_start_date` varchar(32) NOT NULL DEFAULT '' COMMENT 'Semester start date when captured',
+  `created_at` datetime NOT NULL COMMENT 'Capture time',
+  PRIMARY KEY (`id`),
+  KEY `idx_user_id_created` (`user_id`,`created_at`),
+  KEY `idx_user_id_id` (`user_id`,`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='Couple timetable modification history';
+
+CREATE TABLE IF NOT EXISTS `user_settings` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `user_id` int(11) NOT NULL COMMENT 'User ID',
+  `content` mediumtext NOT NULL COMMENT 'Personal app settings JSON',
+  `content_hash` char(64) NOT NULL COMMENT 'SHA-256 content hash',
+  `updated_at` datetime NOT NULL COMMENT 'Last update time',
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `uniq_user_settings_user` (`user_id`),
+  KEY `idx_user_settings_hash` (`content_hash`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='Personal app settings backup';
+
+CREATE TABLE IF NOT EXISTS `remote_updates` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `version` varchar(32) NOT NULL,
+  `title` varchar(120) NOT NULL DEFAULT '版本更新',
+  `body` text,
+  `apk_url` varchar(512) NOT NULL,
+  `sha256` char(64) NOT NULL,
+  `size_bytes` bigint(20) unsigned NOT NULL DEFAULT 0,
+  `force_update` tinyint(1) NOT NULL DEFAULT 0,
+  `enabled` tinyint(1) NOT NULL DEFAULT 0,
+  `published_at` datetime DEFAULT NULL,
+  `updated_at` datetime NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `idx_enabled_id` (`enabled`,`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='Remote app updates';
 
 
 CREATE TABLE IF NOT EXISTS `watch_rooms` (

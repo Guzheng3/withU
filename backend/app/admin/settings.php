@@ -8,6 +8,8 @@ require_once __DIR__ . '/../config/config.php';
 require_once __DIR__ . '/../core/Database.php';
 require_once __DIR__ . '/../core/Auth.php';
 require_once __DIR__ . '/../core/helpers.php';
+require_once __DIR__ . '/../core/withu.php';
+require_once __DIR__ . '/../core/Weather.php';
 
 $auth = new Auth();
 $auth->requireLogin();
@@ -22,6 +24,17 @@ $settings     = $db->fetchAll("SELECT `key`, `value` FROM settings");
 $settingsData = [];
 foreach ($settings as $setting) {
     $settingsData[$setting['key']] = $setting['value'];
+}
+
+// 后台位置选择器复用前台地图的高德 JS Key（map-config.json 为密钥来源）
+$withuAdminMapCfg = ['amapKey' => '', 'securityJsCode' => ''];
+$withuMapConfigPath = __DIR__ . '/../../server/data/map-config.json';
+if (is_file($withuMapConfigPath)) {
+    $withuMapConfigData = json_decode((string) @file_get_contents($withuMapConfigPath), true);
+    if (is_array($withuMapConfigData)) {
+        $withuAdminMapCfg['amapKey'] = trim((string) ($withuMapConfigData['amapKey'] ?? ''));
+        $withuAdminMapCfg['securityJsCode'] = trim((string) ($withuMapConfigData['securityJsCode'] ?? ''));
+    }
 }
 
 // PRG 成功提示
@@ -218,6 +231,94 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             }
         }
 
+        // 位置坐标校验：允许全部为空（未设置），但只要有一个坐标就必须成对且合法
+        $hasLocationField = isset($_POST['settings']) && is_array($_POST['settings'])
+            && (array_key_exists('weather_loc_lat', $_POST['settings'])
+                || array_key_exists('weather_loc_lng', $_POST['settings'])
+                || array_key_exists('weather_loc_name', $_POST['settings']));
+        if (!$error && $hasLocationField) {
+            $locLatRaw  = trim((string)($_POST['settings']['weather_loc_lat'] ?? ''));
+            $locLngRaw  = trim((string)($_POST['settings']['weather_loc_lng'] ?? ''));
+            $locNameRaw = trim((string)($_POST['settings']['weather_loc_name'] ?? ''));
+            if (mb_strlen($locNameRaw, 'UTF-8') > 120) {
+                $error = '位置名称不能超过 120 个字符';
+            } elseif ($locLatRaw === '' && $locLngRaw === '') {
+                $_POST['settings']['weather_loc_lat']   = '';
+                $_POST['settings']['weather_loc_lng']   = '';
+                $_POST['settings']['weather_loc_name']  = '';
+            } elseif ($locLatRaw === '' || $locLngRaw === '') {
+                $error = '位置经纬度必须同时填写';
+            } else {
+                $locLatVal = (float)$locLatRaw;
+                $locLngVal = (float)$locLngRaw;
+                if ($locLatVal < -90 || $locLatVal > 90 || $locLngVal < -180 || $locLngVal > 180) {
+                    $error = '位置经纬度超出有效范围';
+                } else {
+                    $_POST['settings']['weather_loc_lat']  = (string)$locLatVal;
+                    $_POST['settings']['weather_loc_lng']  = (string)$locLngVal;
+                    $_POST['settings']['weather_loc_name'] = $locNameRaw;
+                }
+            }
+        }
+
+        // 和风天气配置：归一化 API Host、认证方式、语言/单位，并校验 JWT 私钥完整性
+        if (!$error && isset($_POST['settings']) && is_array($_POST['settings'])) {
+            $qweatherKeys = [
+                'qweather_api_host', 'qweather_auth_type', 'qweather_api_key',
+                'qweather_jwt_token', 'qweather_jwt_key_id', 'qweather_jwt_developer_id',
+                'qweather_jwt_project_id', 'qweather_jwt_private_key', 'qweather_lang', 'qweather_unit',
+            ];
+            $hasQweatherField = false;
+            foreach ($qweatherKeys as $qweatherKey) {
+                if (array_key_exists($qweatherKey, $_POST['settings'])) {
+                    $hasQweatherField = true;
+                    break;
+                }
+            }
+
+            if ($hasQweatherField) {
+                $rawHost = trim((string)($_POST['settings']['qweather_api_host'] ?? ''));
+                $normalizedHost = withu_weather_normalize_host($rawHost);
+                if ($rawHost !== '' && $normalizedHost === '') {
+                    $error = '和风 API Host 格式不正确，请填写控制台分配的地址，例如 abcxyz.re.qweatherapi.com';
+                }
+                $_POST['settings']['qweather_api_host'] = $normalizedHost;
+
+                $authType = strtolower(trim((string)($_POST['settings']['qweather_auth_type'] ?? 'auto')));
+                if (!in_array($authType, ['auto', 'apikey', 'jwt'], true)) {
+                    $authType = 'auto';
+                }
+                $_POST['settings']['qweather_auth_type'] = $authType;
+
+                foreach (['qweather_api_key', 'qweather_jwt_token', 'qweather_jwt_key_id', 'qweather_jwt_developer_id', 'qweather_jwt_project_id'] as $secretKey) {
+                    $_POST['settings'][$secretKey] = trim((string)($_POST['settings'][$secretKey] ?? ''));
+                }
+                $_POST['settings']['qweather_jwt_private_key'] = withu_weather_private_key_normalize(
+                    (string)($_POST['settings']['qweather_jwt_private_key'] ?? '')
+                );
+
+                $_POST['settings']['qweather_lang'] = withu_weather_sanitize_lang(
+                    $_POST['settings']['qweather_lang'] ?? 'zh'
+                );
+                $_POST['settings']['qweather_unit'] = withu_weather_sanitize_unit(
+                    $_POST['settings']['qweather_unit'] ?? 'm'
+                );
+
+                $jwtToken = $_POST['settings']['qweather_jwt_token'];
+                $jwtKid = $_POST['settings']['qweather_jwt_key_id'];
+                $jwtIss = $_POST['settings']['qweather_jwt_developer_id'];
+                $jwtSub = $_POST['settings']['qweather_jwt_project_id'];
+                $jwtPrivateKey = $_POST['settings']['qweather_jwt_private_key'];
+                if (!$error && $jwtToken === '' && ($jwtKid !== '' || $jwtIss !== '' || $jwtSub !== '' || $jwtPrivateKey !== '')) {
+                    if ($jwtKid === '' || $jwtIss === '' || $jwtSub === '' || $jwtPrivateKey === '') {
+                        $error = 'JWT 自动签发需要同时填写 Key ID、Developer ID、Project ID 与 Ed25519 私钥';
+                    } elseif (withu_weather_ed25519_seed($jwtPrivateKey) === null) {
+                        $error = 'Ed25519 私钥格式不正确，请粘贴完整的 PRIVATE KEY PEM';
+                    }
+                }
+            }
+        }
+
         // 上传大小设置单独校验（单位：MB，范围 1~50）
         if (isset($_POST['settings']['max_upload_size_mb'])) {
             $maxUploadMb = (int) $_POST['settings']['max_upload_size_mb'];
@@ -369,6 +470,33 @@ include __DIR__ . '/header.php';
 .banner-lightbox-next{right:18px}
 .banner-lightbox-nav[hidden]{display:none}
 .banner-lightbox-count{position:absolute;bottom:16px;left:50%;transform:translateX(-50%);color:rgba(255,255,255,.85);font-size:.8rem;letter-spacing:.05em}
+
+/* 后台位置选择器（天气与头像共用） */
+.withu-loc-picker{position:relative}
+.withu-loc-search-row{display:flex;gap:.5rem;align-items:stretch;flex-wrap:wrap}
+.withu-loc-search-wrap{position:relative;flex:1 1 240px;min-width:0}
+.withu-loc-search-wrap>i{position:absolute;left:.7rem;top:50%;transform:translateY(-50%);color:#94a3b8;font-size:1rem;pointer-events:none}
+.withu-loc-search-wrap input{width:100%;padding:.55rem .75rem .55rem 2.05rem;border-radius:.75rem;border:1px solid rgba(148,163,184,.6);font-size:.9rem;background:#fff}
+.withu-loc-search-row .btn{white-space:nowrap;display:inline-flex;align-items:center;gap:.35rem}
+.withu-loc-results{position:absolute;top:calc(100% + .35rem);left:0;right:0;z-index:120;background:#fff;border:1px solid rgba(148,163,184,.3);border-radius:.75rem;max-height:320px;overflow-y:auto;box-shadow:0 12px 32px rgba(15,23,42,.16)}
+.withu-loc-results[hidden]{display:none}
+.withu-loc-item{padding:.6rem .8rem;cursor:pointer;border-bottom:1px solid rgba(148,163,184,.16);line-height:1.35}
+.withu-loc-item:last-child{border-bottom:0}
+.withu-loc-item:hover{background:#f8fafc}
+.withu-loc-item-name{font-size:.88rem;font-weight:600;color:#0f172a}
+.withu-loc-item-addr{font-size:.78rem;color:#64748b;margin-top:.1rem;word-break:break-all}
+.withu-loc-item-meta{font-size:.72rem;color:#94a3b8;margin-top:.12rem}
+.withu-loc-empty{padding:.8rem;color:#94a3b8;font-size:.82rem;text-align:center}
+.withu-loc-selected{margin-top:.45rem;font-size:.8rem;line-height:1.5}
+.withu-loc-selected strong{font-weight:600}
+.withu-loc-selected-addr{color:#64748b;font-size:.76rem;display:block;margin-top:.1rem;word-break:break-all}
+.withu-loc-map{margin-top:.55rem;height:240px;border-radius:.75rem;overflow:hidden;border:1px solid rgba(148,163,184,.35);background:#eef2f7}
+.withu-loc-map[hidden]{display:none}
+.withu-loc-actions{display:flex;align-items:center;gap:.6rem;margin-top:.45rem;flex-wrap:wrap}
+.withu-loc-clear{padding:4px 12px;border-radius:6px;border:1px solid #e2e8f0;background:#fff;font-size:.78rem;cursor:pointer;color:#64748b}
+.withu-loc-clear:hover{color:#dc2626;border-color:#fecaca}
+.withu-loc-hint{flex:1 1 220px;min-width:0;font-size:.8rem;line-height:1.5;color:#64748b}
+.withu-loc-hint.is-error{color:#dc2626}
 </style>
 
     <section class="admin-page-title">
@@ -468,36 +596,137 @@ include __DIR__ . '/header.php';
                         style="width:100%;min-height:80px;padding:0.55rem 0.75rem;border-radius:0.75rem;border:1px solid rgba(148,163,184,0.6);font-size:0.9rem;resize:vertical;"><?php echo e($siteDescriptionValue); ?></textarea>
                 </div>
 
+                <?php
+                $qwHost = (string)($settingsData['qweather_api_host'] ?? '');
+                $qwAuthType = (string)($settingsData['qweather_auth_type'] ?? 'auto');
+                if (!in_array($qwAuthType, ['auto', 'apikey', 'jwt'], true)) $qwAuthType = 'auto';
+                $qwLang = (string)($settingsData['qweather_lang'] ?? 'zh');
+                $qwUnit = (string)($settingsData['qweather_unit'] ?? 'm');
+                $qwLangOptions = ['zh' => '中文', 'en' => 'English', 'ja' => '日本語', 'ko' => '한국어'];
+                if (!isset($qwLangOptions[$qwLang])) $qwLang = 'zh';
+                if (!in_array($qwUnit, ['m', 'i'], true)) $qwUnit = 'm';
+                ?>
                 <div class="form-group" style="margin-bottom:0.75rem;">
-                    <label style="display:block;font-size:0.85rem;margin-bottom:0.25rem;">天气 API Key（高德）</label>
-                    <input type="text" name="settings[amap_weather_key]" value="<?php echo e($settingsData['amap_weather_key'] ?? ''); ?>" placeholder="高德 Web服务 Key，用于天气查询，可留空" style="width:100%;padding:.55rem .75rem;border-radius:.75rem;border:1px solid rgba(148,163,184,.6);font-size:.9rem;">
-                    <small style="color:#888;">使用高德地图同款 Key 即可，留空则使用 IP 定位天气</small>
+                    <label style="display:block;font-size:0.85rem;margin-bottom:0.25rem;">天气服务（和风天气）</label>
+                    <small style="display:block;color:#888;margin-bottom:.5rem;">API Key、Token 与私钥只保存在服务端，不会下发到网页或课表 App。网站与课表 App 共用同一套配置。</small>
+
+                    <div style="display:grid;grid-template-columns:1.4fr 1fr;gap:.6rem;">
+                        <div>
+                            <label style="display:block;font-size:.8rem;margin-bottom:.2rem;">API Host</label>
+                            <input type="text" name="settings[qweather_api_host]" value="<?php echo e($qwHost); ?>" placeholder="abcxyz.re.qweatherapi.com" style="width:100%;padding:.55rem .75rem;border-radius:.75rem;border:1px solid rgba(148,163,184,.6);font-size:.9rem;">
+                            <small style="color:#888;">和风控制台项目里的 API Host，可只填域名，自动补 https://。</small>
+                        </div>
+                        <div>
+                            <label style="display:block;font-size:.8rem;margin-bottom:.2rem;">认证方式</label>
+                            <select name="settings[qweather_auth_type]" id="qweatherAuthType" style="width:100%;padding:.55rem .75rem;border-radius:.75rem;border:1px solid rgba(148,163,184,.6);font-size:.9rem;">
+                                <option value="auto" <?php echo $qwAuthType === 'auto' ? 'selected' : ''; ?>>自动（Token 优先）</option>
+                                <option value="apikey" <?php echo $qwAuthType === 'apikey' ? 'selected' : ''; ?>>API Key</option>
+                                <option value="jwt" <?php echo $qwAuthType === 'jwt' ? 'selected' : ''; ?>>JWT / Token</option>
+                            </select>
+                            <small style="color:#888;">自动：静态 Token → API Key → JWT 私钥。</small>
+                        </div>
+                    </div>
+
+                    <div data-qweather-auth="apikey" style="margin-top:.7rem;padding:.7rem;border:1px dashed rgba(148,163,184,.5);border-radius:.75rem;">
+                        <label style="display:block;font-size:.8rem;margin-bottom:.2rem;">API Key</label>
+                        <input type="text" name="settings[qweather_api_key]" value="<?php echo e($settingsData['qweather_api_key'] ?? ''); ?>" placeholder="和风控制台创建的 API Key" autocomplete="off" style="width:100%;padding:.55rem .75rem;border-radius:.75rem;border:1px solid rgba(148,163,184,.6);font-size:.9rem;">
+                    </div>
+
+                    <div data-qweather-auth="jwt" style="margin-top:.7rem;padding:.7rem;border:1px dashed rgba(148,163,184,.5);border-radius:.75rem;">
+                        <label style="display:block;font-size:.8rem;margin-bottom:.2rem;">静态 Token（可选）</label>
+                        <textarea name="settings[qweather_jwt_token]" rows="3" spellcheck="false" placeholder="填写后优先使用；留空则用下方私钥自动签发" style="width:100%;padding:.55rem .75rem;border-radius:.75rem;border:1px solid rgba(148,163,184,.6);font-size:.85rem;resize:vertical;font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;"><?php echo e($settingsData['qweather_jwt_token'] ?? ''); ?></textarea>
+
+                        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:.6rem;margin-top:.55rem;">
+                            <div>
+                                <label style="display:block;font-size:.8rem;margin-bottom:.2rem;">Key ID（kid）</label>
+                                <input type="text" name="settings[qweather_jwt_key_id]" value="<?php echo e($settingsData['qweather_jwt_key_id'] ?? ''); ?>" placeholder="JWT 凭据 ID" autocomplete="off" style="width:100%;padding:.55rem .75rem;border-radius:.75rem;border:1px solid rgba(148,163,184,.6);font-size:.9rem;">
+                            </div>
+                            <div>
+                                <label style="display:block;font-size:.8rem;margin-bottom:.2rem;">Developer ID（iss）</label>
+                                <input type="text" name="settings[qweather_jwt_developer_id]" value="<?php echo e($settingsData['qweather_jwt_developer_id'] ?? ''); ?>" placeholder="Q 开头的开发者 ID" autocomplete="off" style="width:100%;padding:.55rem .75rem;border-radius:.75rem;border:1px solid rgba(148,163,184,.6);font-size:.9rem;">
+                            </div>
+                            <div>
+                                <label style="display:block;font-size:.8rem;margin-bottom:.2rem;">Project ID（sub）</label>
+                                <input type="text" name="settings[qweather_jwt_project_id]" value="<?php echo e($settingsData['qweather_jwt_project_id'] ?? ''); ?>" placeholder="项目 ID" autocomplete="off" style="width:100%;padding:.55rem .75rem;border-radius:.75rem;border:1px solid rgba(148,163,184,.6);font-size:.9rem;">
+                            </div>
+                        </div>
+
+                        <label style="display:block;font-size:.8rem;margin:.55rem 0 .2rem;">Ed25519 私钥</label>
+                        <textarea name="settings[qweather_jwt_private_key]" rows="6" spellcheck="false" placeholder="-----BEGIN PRIVATE KEY-----&#10;...&#10;-----END PRIVATE KEY-----" style="width:100%;padding:.55rem .75rem;border-radius:.75rem;border:1px solid rgba(148,163,184,.6);font-size:.78rem;resize:vertical;font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;"><?php echo e($settingsData['qweather_jwt_private_key'] ?? ''); ?></textarea>
+                        <small style="color:#888;">静态 Token 留空时，服务端用私钥自动签发 15 分钟 JWT；私钥仅保存在服务端数据库。</small>
+                    </div>
+
+                    <div style="display:grid;grid-template-columns:1fr 1fr;gap:.6rem;margin-top:.7rem;">
+                        <div>
+                            <label style="display:block;font-size:.8rem;margin-bottom:.2rem;">语言</label>
+                            <select name="settings[qweather_lang]" style="width:100%;padding:.55rem .75rem;border-radius:.75rem;border:1px solid rgba(148,163,184,.6);font-size:.9rem;">
+                                <?php foreach ($qwLangOptions as $code => $label): ?>
+                                <option value="<?php echo e($code); ?>" <?php echo $qwLang === $code ? 'selected' : ''; ?>><?php echo e($label); ?></option>
+                                <?php endforeach; ?>
+                            </select>
+                        </div>
+                        <div>
+                            <label style="display:block;font-size:.8rem;margin-bottom:.2rem;">单位</label>
+                            <select name="settings[qweather_unit]" style="width:100%;padding:.55rem .75rem;border-radius:.75rem;border:1px solid rgba(148,163,184,.6);font-size:.9rem;">
+                                <option value="m" <?php echo $qwUnit === 'm' ? 'selected' : ''; ?>>公制（°C / km）</option>
+                                <option value="i" <?php echo $qwUnit === 'i' ? 'selected' : ''; ?>>英制（°F / mile）</option>
+                            </select>
+                        </div>
+                    </div>
                 </div>
+                <script>
+                (function () {
+                    var select = document.getElementById('qweatherAuthType');
+                    if (!select) { return; }
+                    function syncQweatherAuth() {
+                        var value = select.value;
+                        document.querySelectorAll('[data-qweather-auth]').forEach(function (el) {
+                            var target = el.getAttribute('data-qweather-auth');
+                            el.hidden = !(value === 'auto' || value === target);
+                        });
+                    }
+                    select.addEventListener('change', syncQweatherAuth);
+                    syncQweatherAuth();
+                })();
+                </script>
 
                 <div class="form-group" style="margin-bottom:0.75rem;">
-                    <label style="display:block;font-size:0.85rem;margin-bottom:0.25rem;">位置</label>
+                    <label style="display:block;font-size:0.85rem;margin-bottom:0.25rem;">位置（天气与头像共用）</label>
                     <?php
                     $locLat  = $settingsData['weather_loc_lat'] ?? '';
                     $locLng  = $settingsData['weather_loc_lng'] ?? '';
                     $locName = $settingsData['weather_loc_name'] ?? '';
                     $hasLoc  = $locLat !== '' && $locLng !== '';
                     ?>
-                    <div style="position:relative;">
-                        <input type="text" id="weather_loc_search" placeholder="搜索城市或地址..." value="<?php echo e($locName); ?>" autocomplete="off"
-                               style="width:100%;padding:.55rem .75rem;border-radius:.75rem;border:1px solid rgba(148,163,184,.6);font-size:.9rem;">
-                        <div id="weather_loc_results" style="display:none;position:absolute;top:100%;left:0;right:0;z-index:100;background:#fff;border:1px solid rgba(148,163,184,.3);border-radius:.75rem;max-height:240px;overflow-y:auto;box-shadow:0 8px 24px rgba(0,0,0,.12);"></div>
+                    <div class="withu-loc-picker">
+                        <div class="withu-loc-search-row">
+                            <div class="withu-loc-search-wrap">
+                                <i class="ti ti-search" aria-hidden="true"></i>
+                                <input type="text" id="weather_loc_search" placeholder="搜索城市、街道、小区或地标..." value="<?php echo e($locName); ?>" autocomplete="off">
+                                <div id="weather_loc_results" class="withu-loc-results" hidden></div>
+                            </div>
+                            <button type="button" class="btn btn-secondary" id="weather_loc_locate">
+                                <i class="ti ti-current-location" aria-hidden="true"></i>获取当前位置
+                            </button>
+                        </div>
+                        <input type="hidden" name="settings[weather_loc_lat]" id="weather_loc_lat" value="<?php echo e($locLat); ?>">
+                        <input type="hidden" name="settings[weather_loc_lng]" id="weather_loc_lng" value="<?php echo e($locLng); ?>">
+                        <input type="hidden" name="settings[weather_loc_name]" id="weather_loc_name" value="<?php echo e($locName); ?>">
+                        <div id="weather_loc_selected" class="withu-loc-selected" style="color:<?php echo $hasLoc ? '#16a34a' : '#94a3b8'; ?>;">
+                            <?php if ($hasLoc): ?>
+                                ✅ 已选择：<strong><?php echo e($locName !== '' ? $locName : '未命名位置'); ?></strong>
+                                <span class="withu-loc-selected-addr">经纬度：<?php echo e($locLat); ?>, <?php echo e($locLng); ?></span>
+                            <?php else: ?>
+                                未选择位置。设置后前台天气与头像位置都会使用这里的地点。
+                            <?php endif; ?>
+                        </div>
+                        <div id="weather_loc_map" class="withu-loc-map" hidden></div>
+                        <div class="withu-loc-actions">
+                            <button type="button" class="withu-loc-clear" id="weather_loc_clear">清除位置</button>
+                            <span id="weather_loc_hint" class="withu-loc-hint" role="status" aria-live="polite">支持搜索详细地址，也可以点「获取当前位置」使用本机定位。</span>
+                        </div>
+                        <small style="color:#888;display:block;margin-top:.35rem;">前台不再使用 GPS / IP 自动定位；天气与头像位置都固定使用这里设置的地点。</small>
                     </div>
-                    <input type="hidden" name="settings[weather_loc_lat]" id="weather_loc_lat" value="<?php echo e($locLat); ?>">
-                    <input type="hidden" name="settings[weather_loc_lng]" id="weather_loc_lng" value="<?php echo e($locLng); ?>">
-                    <input type="hidden" name="settings[weather_loc_name]" id="weather_loc_name" value="<?php echo e($locName); ?>">
-                    <div id="weather_loc_selected" style="margin-top:.35rem;font-size:.8rem;color:<?php echo $hasLoc ? '#16a34a' : '#888'; ?>;">
-                        <?php if ($hasLoc): ?>
-                            ✅ 已选择：<?php echo e($locName); ?>（<?php echo e($locLat); ?>, <?php echo e($locLng); ?>）
-                        <?php else: ?>
-                            未选择位置，天气将使用默认数据
-                        <?php endif; ?>
-                    </div>
-                    <small style="color:#888;">头像位置与天气共用同一位置，均来自高德定位 SDK；此处可搜索选择固定位置，留空则使用高德实时定位</small>
                 </div>
 
             </div>
@@ -1439,130 +1668,544 @@ include __DIR__ . '/header.php';
         render();
     }());
 
-    // 位置搜索自动完成：weather_loc（全站统一「位置」：头像区与天气共用，均来自高德定位 SDK）
+    // 位置选择器：天气与头像共用；前台不再使用 GPS / IP 自动定位
+    window.WITHU_MAP_CONFIG = window.WITHU_MAP_CONFIG || {};
+    window.WITHU_MAP_CONFIG.amapKey = <?php echo json_encode($withuAdminMapCfg['amapKey'], JSON_UNESCAPED_SLASHES); ?>;
+    <?php if ($withuAdminMapCfg['securityJsCode'] !== ''): ?>
+    window._AMapSecurityConfig = { securityJsCode: <?php echo json_encode($withuAdminMapCfg['securityJsCode'], JSON_UNESCAPED_SLASHES); ?> };
+    <?php endif; ?>
     (function () {
-        var _amapLoading = false;
-        var _amapQueue = [];
+        var searchInput = document.getElementById('weather_loc_search');
+        var resultsDiv = document.getElementById('weather_loc_results');
+        var latInput = document.getElementById('weather_loc_lat');
+        var lngInput = document.getElementById('weather_loc_lng');
+        var nameInput = document.getElementById('weather_loc_name');
+        var selectedDiv = document.getElementById('weather_loc_selected');
+        var mapEl = document.getElementById('weather_loc_map');
+        var locateBtn = document.getElementById('weather_loc_locate');
+        var clearBtn = document.getElementById('weather_loc_clear');
+        var hintEl = document.getElementById('weather_loc_hint');
+        if (!searchInput || !resultsDiv || !latInput || !lngInput || !nameInput || !selectedDiv) {
+            return;
+        }
+
+        var DEFAULT_HINT = '支持搜索详细地址，也可以点「获取当前位置」使用本机定位。';
+        var EMPTY_TEXT = '未选择位置。设置后前台天气与头像位置都会使用这里的地点。';
+        var amapLoading = false;
+        var amapQueue = [];
+        var placeSearch = null;
+        var geocoder = null;
+        var map = null;
+        var marker = null;
+        var searchTimer = null;
+        var searchSeq = 0;
+        var lastResults = [];
+
+        function esc(value) {
+            return String(value == null ? '' : value).replace(/[&<>"']/g, function (ch) {
+                return ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[ch];
+            });
+        }
+
+        function setHint(text, isError) {
+            if (!hintEl) return;
+            hintEl.textContent = text || DEFAULT_HINT;
+            hintEl.classList.toggle('is-error', !!isError);
+        }
+
+        // 取消尚未返回的搜索，避免清空输入或重新定位后旧结果覆盖提示与下拉列表
+        function cancelPendingSearch() {
+            searchSeq += 1;
+            if (searchTimer) {
+                clearTimeout(searchTimer);
+                searchTimer = null;
+            }
+            resultsDiv.hidden = true;
+            if (hintEl && hintEl.textContent === '正在搜索…') {
+                setHint(DEFAULT_HINT);
+            }
+        }
+
+        function failAMap(message) {
+            setHint(message, true);
+            var queue = amapQueue.slice();
+            amapQueue = [];
+            amapLoading = false;
+            queue.forEach(function (cb) { try { cb(false); } catch (e) {} });
+        }
+
         function loadAMap(callback) {
-            if (window.AMap && window.AMap.Autocomplete) { callback(true); return; }
-            _amapQueue.push(callback);
-            if (_amapLoading) return;
-            _amapLoading = true;
+            if (window.AMap && window.AMap.Map) {
+                callback(true);
+                return;
+            }
+            amapQueue.push(callback);
+            if (amapLoading) return;
+            if (!window.WITHU_MAP_CONFIG || !window.WITHU_MAP_CONFIG.amapKey) {
+                failAMap('未配置高德地图 Key，无法搜索或获取定位。请先配置地图 Key。');
+                return;
+            }
+            amapLoading = true;
             var script = document.createElement('script');
             script.src = '/assets/js/map-sdk.js';
             script.onload = function () {
-                var check = setInterval(function () {
-                    if (window.AMap && window.AMap.Autocomplete) {
-                        clearInterval(check);
-                        _amapLoading = false;
-                        _amapQueue.forEach(function (cb) { try { cb(true); } catch (e) {} });
-                        _amapQueue = [];
+                var tries = 0;
+                var timer = setInterval(function () {
+                    tries += 1;
+                    if (window.AMap && window.AMap.Map) {
+                        clearInterval(timer);
+                        amapLoading = false;
+                        var queue = amapQueue.slice();
+                        amapQueue = [];
+                        queue.forEach(function (cb) { try { cb(true); } catch (e) {} });
+                    } else if (tries > 60) {
+                        clearInterval(timer);
+                        failAMap('地图 SDK 加载超时，请刷新页面重试。');
                     }
-                }, 200);
+                }, 100);
             };
             script.onerror = function () {
-                console.warn('AMap SDK 加载失败，位置搜索不可用');
-                _amapLoading = false;
-                _amapQueue.forEach(function (cb) { try { cb(false); } catch (e) {} });
-                _amapQueue = [];
+                failAMap('地图 SDK 加载失败，请检查网络或地图 Key。');
             };
             document.head.appendChild(script);
         }
 
-        function selectLocation(picker, item) {
-            var lng = item.location.lng;
-            var lat = item.location.lat;
-            var name = item.name || '';
-            if (item.district && item.district !== name && name.indexOf(item.district) === -1) {
-                name = item.district + ' ' + name;
-            }
-            if (item.city && name.indexOf(item.city) === -1) {
-                name = item.city + ' ' + name;
-            }
-            picker.latInput.value = lat;
-            picker.lngInput.value = lng;
-            picker.nameInput.value = name;
-            picker.searchInput.value = name;
-            picker.selectedDiv.innerHTML = '已选择：' + name + '（' + lat + ', ' + lng + '）';
-            picker.selectedDiv.style.color = '#16a34a';
-            picker.resultsDiv.style.display = 'none';
-        }
-
-        function setupPicker(prefix, emptyText) {
-            var searchInput = document.getElementById(prefix + '_search');
-            var resultsDiv = document.getElementById(prefix + '_results');
-            var latInput = document.getElementById(prefix + '_lat');
-            var lngInput = document.getElementById(prefix + '_lng');
-            var nameInput = document.getElementById(prefix + '_name');
-            var selectedDiv = document.getElementById(prefix + '_selected');
-            if (!searchInput || !resultsDiv || !latInput || !lngInput || !nameInput || !selectedDiv) return;
-            var picker = { searchInput: searchInput, resultsDiv: resultsDiv, latInput: latInput, lngInput: lngInput, nameInput: nameInput, selectedDiv: selectedDiv };
-            var searchTimer = null;
-
-            searchInput.addEventListener('input', function () {
-                var val = this.value.trim();
-                if (!val || val.length < 1) {
-                    resultsDiv.style.display = 'none';
+        function ensurePlugins(callback) {
+            loadAMap(function (ok) {
+                if (!ok) return;
+                if (placeSearch && geocoder) {
+                    callback(true);
                     return;
                 }
-                if (searchTimer) clearTimeout(searchTimer);
-                searchTimer = setTimeout(function () {
-                    loadAMap(function (ok) {
-                        if (!ok) return;
+                var settled = false;
+                var finish = function (success) {
+                    if (settled) return;
+                    settled = true;
+                    callback(success);
+                };
+                var guard = setTimeout(function () {
+                    setHint('地图插件加载超时，请刷新页面重试。', true);
+                    finish(false);
+                }, 12000);
+                try {
+                    AMap.plugin(['AMap.PlaceSearch', 'AMap.Geocoder'], function () {
+                        clearTimeout(guard);
                         try {
-                            AMap.plugin('AMap.Autocomplete', function () {
-                                var auto = new AMap.Autocomplete({ citylimit: false });
-                                auto.search(val, function (status, result) {
-                                    if (status === 'complete' && result.tips) {
-                                        var tips = result.tips.filter(function (t) {
-                                            return t.location && t.location.lng && t.location.lat;
-                                        });
-                                        if (tips.length === 0) {
-                                            resultsDiv.innerHTML = '<div style="padding:10px;color:#888;">未找到结果</div>';
-                                        } else {
-                                            resultsDiv.innerHTML = tips.map(function (t, i) {
-                                                var n = t.name || '';
-                                                if (t.district && t.district !== n) n = t.district + ' ' + n;
-                                                return '<div class="loc-result-item" data-index="' + i + '" style="padding:8px 12px;cursor:pointer;border-bottom:1px solid #f0f0f0;font-size:.85rem;" onmouseover="this.style.background=\'#f8fafc\'" onmouseout="this.style.background=\'\'">' + n + '</div>';
-                                            }).join('');
-                                            resultsDiv.querySelectorAll('.loc-result-item').forEach(function (el) {
-                                                el.addEventListener('click', function () {
-                                                    var idx = parseInt(this.getAttribute('data-index'), 10);
-                                                    selectLocation(picker, tips[idx]);
-                                                });
-                                            });
-                                        }
-                                        resultsDiv.style.display = 'block';
-                                    }
+                            if (!placeSearch) {
+                                placeSearch = new AMap.PlaceSearch({
+                                    pageSize: 20,
+                                    pageIndex: 1,
+                                    extensions: 'all',
+                                    citylimit: false
                                 });
-                            });
-                        } catch (e) { console.warn('位置搜索失败:', e); }
+                            }
+                            if (!geocoder) {
+                                geocoder = new AMap.Geocoder({ extensions: 'all' });
+                            }
+                            finish(true);
+                        } catch (e) {
+                            console.warn('[withU] 地图插件初始化失败', e);
+                            setHint('地图插件初始化失败，请刷新页面重试。', true);
+                            finish(false);
+                        }
                     });
-                }, 300);
-            });
-
-            document.addEventListener('click', function (e) {
-                if (!searchInput.contains(e.target) && !resultsDiv.contains(e.target)) {
-                    resultsDiv.style.display = 'none';
+                } catch (e) {
+                    clearTimeout(guard);
+                    console.warn('[withU] 地图插件加载失败', e);
+                    setHint('地图插件加载失败，请刷新页面重试。', true);
+                    finish(false);
                 }
             });
+        }
 
-            var clearBtn = document.createElement('button');
-            clearBtn.type = 'button';
-            clearBtn.textContent = '清除';
-            clearBtn.style.cssText = 'margin-top:.35rem;padding:4px 12px;border-radius:6px;border:1px solid #e2e8f0;background:#fff;font-size:.78rem;cursor:pointer;color:#888;';
+        function joinLocationParts(parts, fallback) {
+            var out = [];
+            parts.forEach(function (part) {
+                part = String(part || '').trim();
+                if (part && out.indexOf(part) === -1) out.push(part);
+            });
+            return out.join(' · ') || (fallback || '');
+        }
+
+        function normalizePoi(poi) {
+            if (!poi || !poi.location) return null;
+            var lng = Number(poi.location.lng);
+            var lat = Number(poi.location.lat);
+            if (!isFinite(lng) || !isFinite(lat) || (lng === 0 && lat === 0)) return null;
+            var region = [];
+            [poi.pname, poi.cityname, poi.adname].forEach(function (value) {
+                value = String(value || '').trim();
+                if (value && region.indexOf(value) === -1) region.push(value);
+            });
+            var address = region.join('') + String(poi.address || '');
+            var name = String(poi.name || '').trim();
+            if (!name) {
+                name = joinLocationParts([poi.cityname, poi.adname, poi.address], address);
+            }
+            var meta = [];
+            if (poi.type) {
+                var typeParts = String(poi.type).split(';');
+                meta.push(typeParts[typeParts.length - 1] || String(poi.type));
+            }
+            if (poi.tel && typeof poi.tel === 'string') meta.push(poi.tel);
+            return {
+                name: name,
+                address: address || name,
+                meta: meta.join(' · '),
+                lng: lng,
+                lat: lat
+            };
+        }
+
+        function normalizeGeocode(geo) {
+            if (!geo || !geo.location) return null;
+            var lng = Number(geo.location.lng);
+            var lat = Number(geo.location.lat);
+            if (!isFinite(lng) || !isFinite(lat) || (lng === 0 && lat === 0)) return null;
+            var comp = geo.addressComponent || {};
+            var address = String(geo.formattedAddress || '').trim();
+            if (!address) {
+                address = [comp.province, comp.city, comp.district, comp.township, comp.street, comp.streetNumber].join('');
+            }
+            var shortName = joinLocationParts(
+                [comp.city || comp.province, comp.district, comp.township],
+                address
+            );
+            return {
+                name: shortName || address,
+                address: address,
+                meta: geo.level ? ('行政区划：' + geo.level) : '',
+                lng: lng,
+                lat: lat
+            };
+        }
+
+        function normalizeRegeo(regeo, lng, lat) {
+            var comp = regeo.addressComponent || {};
+            var address = String(regeo.formattedAddress || '').trim();
+            if (!address) {
+                address = [comp.province, comp.city, comp.district, comp.township, comp.street, comp.streetNumber].join('');
+            }
+            var shortName = joinLocationParts(
+                [comp.city || comp.province, comp.district, comp.township || comp.street],
+                address
+            );
+            var meta = '';
+            var pois = regeo.pois || [];
+            if (pois.length && pois[0].name) meta = '附近：' + pois[0].name;
+            return {
+                name: shortName || address || (lat.toFixed(6) + ', ' + lng.toFixed(6)),
+                address: address,
+                meta: meta,
+                lng: lng,
+                lat: lat
+            };
+        }
+
+        function renderResults(items) {
+            lastResults = items || [];
+            if (!lastResults.length) {
+                resultsDiv.innerHTML = '<div class="withu-loc-empty">没有找到匹配的地点，换个关键词试试（例如「广州市天河区」）。</div>';
+                resultsDiv.hidden = false;
+                return;
+            }
+            resultsDiv.innerHTML = lastResults.map(function (item, index) {
+                return '<div class="withu-loc-item" data-index="' + index + '">'
+                    + '<div class="withu-loc-item-name">' + esc(item.name || '未命名地点') + '</div>'
+                    + (item.address && item.address !== item.name
+                        ? '<div class="withu-loc-item-addr">' + esc(item.address) + '</div>'
+                        : '')
+                    + (item.meta ? '<div class="withu-loc-item-meta">' + esc(item.meta) + '</div>' : '')
+                    + '</div>';
+            }).join('');
+            resultsDiv.hidden = false;
+            resultsDiv.querySelectorAll('.withu-loc-item').forEach(function (el) {
+                el.addEventListener('click', function () {
+                    var item = lastResults[parseInt(this.getAttribute('data-index'), 10)];
+                    if (item) selectLocation(item);
+                });
+            });
+        }
+
+        function searchLocation(keyword) {
+            keyword = String(keyword || '').trim();
+            if (!keyword) {
+                resultsDiv.hidden = true;
+                return;
+            }
+            var seq = ++searchSeq;
+            setHint('正在搜索…');
+            ensurePlugins(function (ok) {
+                if (!ok || seq !== searchSeq) return;
+                var poiItems = [];
+                var geoItems = [];
+                var pending = 2;
+                var done = function () {
+                    pending -= 1;
+                    if (pending > 0 || seq !== searchSeq) return;
+                    // POI（具体地点）优先展示，行政区划结果排在后面，和地图搜索的排序一致
+                    var items = poiItems.concat(geoItems);
+                    var seen = {};
+                    var merged = [];
+                    items.forEach(function (item) {
+                        if (!item) return;
+                        var key = item.lng.toFixed(5) + ',' + item.lat.toFixed(5) + '|' + item.name;
+                        if (seen[key]) return;
+                        seen[key] = true;
+                        merged.push(item);
+                    });
+                    setHint(DEFAULT_HINT);
+                    renderResults(merged.slice(0, 20));
+                };
+                try {
+                    placeSearch.search(keyword, function (status, result) {
+                        if (status === 'complete' && result && result.poiList && result.poiList.pois) {
+                            result.poiList.pois.forEach(function (poi) {
+                                var item = normalizePoi(poi);
+                                if (item) poiItems.push(item);
+                            });
+                        }
+                        done();
+                    });
+                } catch (e) {
+                    console.warn('[withU] 地点搜索失败', e);
+                    done();
+                }
+                try {
+                    geocoder.getLocation(keyword, function (status, result) {
+                        if (status === 'complete' && result && result.geocodes) {
+                            result.geocodes.forEach(function (geo) {
+                                var item = normalizeGeocode(geo);
+                                if (item) geoItems.push(item);
+                            });
+                        }
+                        done();
+                    });
+                } catch (e) {
+                    console.warn('[withU] 行政区搜索失败', e);
+                    done();
+                }
+            });
+        }
+
+        function updateSelectedDiv(item) {
+            if (!item) {
+                selectedDiv.style.color = '#94a3b8';
+                selectedDiv.innerHTML = EMPTY_TEXT;
+                return;
+            }
+            selectedDiv.style.color = '#16a34a';
+            selectedDiv.innerHTML = '✅ 已选择：<strong>' + esc(item.name || '未命名位置') + '</strong>'
+                + (item.address ? '<span class="withu-loc-selected-addr">' + esc(item.address) + '</span>' : '')
+                + '<span class="withu-loc-selected-addr">经纬度：' + Number(item.lat).toFixed(6) + ', ' + Number(item.lng).toFixed(6) + '</span>';
+        }
+
+        function setSelectedFields(item) {
+            latInput.value = Number(item.lat).toFixed(6);
+            lngInput.value = Number(item.lng).toFixed(6);
+            nameInput.value = item.name || item.address || '';
+            searchInput.value = item.name || item.address || '';
+        }
+
+        function showMap(lng, lat) {
+            if (!mapEl) return;
+            mapEl.hidden = false;
+            ensurePlugins(function (ok) {
+                if (!ok) {
+                    mapEl.hidden = true;
+                    return;
+                }
+                var center = [lng, lat];
+                if (!map) {
+                    map = new AMap.Map(mapEl, {
+                        zoom: 16,
+                        center: center,
+                        resizeEnable: true,
+                        viewMode: '2D'
+                    });
+                    marker = new AMap.Marker({
+                        position: center,
+                        draggable: true,
+                        cursor: 'move',
+                        anchor: 'bottom-center'
+                    });
+                    map.add(marker);
+                    marker.on('dragend', function (event) {
+                        var pos = event.lnglat;
+                        applyCoordsFromMap(pos.getLng(), pos.getLat());
+                    });
+                    map.on('click', function (event) {
+                        marker.setPosition(event.lnglat);
+                        applyCoordsFromMap(event.lnglat.getLng(), event.lnglat.getLat());
+                    });
+                } else {
+                    map.setCenter(center);
+                    marker.setPosition(center);
+                }
+                setTimeout(function () {
+                    try { map.resize(); } catch (e) {}
+                }, 80);
+            });
+        }
+
+        function selectLocation(item) {
+            if (!item) return;
+            cancelPendingSearch();
+            setSelectedFields(item);
+            updateSelectedDiv(item);
+            resultsDiv.hidden = true;
+            setHint(DEFAULT_HINT);
+            showMap(item.lng, item.lat);
+        }
+
+        function applyCoordsFromMap(lng, lat) {
+            lng = Number(lng);
+            lat = Number(lat);
+            if (!isFinite(lng) || !isFinite(lat)) return;
+            cancelPendingSearch();
+            var provisional = {
+                name: lat.toFixed(6) + ', ' + lng.toFixed(6),
+                address: '正在解析地址…',
+                lng: lng,
+                lat: lat
+            };
+            setSelectedFields(provisional);
+            updateSelectedDiv(provisional);
+            setHint('正在解析该位置的详细地址…');
+            ensurePlugins(function (ok) {
+                if (!ok) return;
+                geocoder.getAddress([lng, lat], function (status, result) {
+                    if (status === 'complete' && result && result.regeocode) {
+                        var item = normalizeRegeo(result.regeocode, lng, lat);
+                        if (item) {
+                            setSelectedFields(item);
+                            updateSelectedDiv(item);
+                            setHint(DEFAULT_HINT);
+                            return;
+                        }
+                    }
+                    setHint('已选择坐标，但地址解析失败，可继续保存。', true);
+                });
+            });
+        }
+
+        searchInput.addEventListener('input', function () {
+            var value = this.value.trim();
+            if (searchTimer) clearTimeout(searchTimer);
+            if (!value) {
+                cancelPendingSearch();
+                lastResults = [];
+                return;
+            }
+            searchTimer = setTimeout(function () {
+                searchLocation(value);
+            }, 350);
+        });
+
+        searchInput.addEventListener('keydown', function (event) {
+            if (event.key === 'Enter' || event.keyCode === 13) {
+                event.preventDefault();
+                if (searchTimer) clearTimeout(searchTimer);
+                searchLocation(this.value.trim());
+            }
+        });
+
+        document.addEventListener('click', function (event) {
+            if (!searchInput.contains(event.target) && !resultsDiv.contains(event.target)) {
+                resultsDiv.hidden = true;
+            }
+        });
+
+        if (locateBtn) {
+            locateBtn.addEventListener('click', function () {
+                if (!navigator.geolocation) {
+                    setHint('当前浏览器不支持定位，请手动搜索地点。', true);
+                    return;
+                }
+                if (window.isSecureContext === false) {
+                    setHint('当前页面不是 HTTPS，浏览器定位不可用，请手动搜索地点。', true);
+                    return;
+                }
+                cancelPendingSearch();
+                locateBtn.disabled = true;
+                setHint('正在获取本机位置…');
+                navigator.geolocation.getCurrentPosition(function (position) {
+                    var lng = position.coords.longitude;
+                    var lat = position.coords.latitude;
+                    ensurePlugins(function (ok) {
+                        if (!ok) {
+                            locateBtn.disabled = false;
+                            return;
+                        }
+                        try {
+                            AMap.convertFrom([lng, lat], 'gps', function (status, result) {
+                                locateBtn.disabled = false;
+                                if (status === 'complete' && result && result.locations && result.locations.length) {
+                                    var point = result.locations[0];
+                                    applyCoordsFromMap(point.lng, point.lat);
+                                    showMap(point.lng, point.lat);
+                                } else {
+                                    applyCoordsFromMap(lng, lat);
+                                    showMap(lng, lat);
+                                }
+                            });
+                        } catch (e) {
+                            locateBtn.disabled = false;
+                            applyCoordsFromMap(lng, lat);
+                            showMap(lng, lat);
+                        }
+                    });
+                }, function (error) {
+                    locateBtn.disabled = false;
+                    var message = '定位失败，请手动搜索地点。';
+                    if (error && error.code === 1) {
+                        message = '定位权限被拒绝，请允许浏览器定位或手动搜索。';
+                    } else if (error && error.code === 2) {
+                        message = '当前位置不可用，请手动搜索地点。';
+                    } else if (error && error.code === 3) {
+                        message = '定位超时，请重试或手动搜索。';
+                    }
+                    setHint(message, true);
+                }, { enableHighAccuracy: true, timeout: 10000, maximumAge: 0 });
+            });
+        }
+
+        if (clearBtn) {
             clearBtn.addEventListener('click', function () {
+                cancelPendingSearch();
                 latInput.value = '';
                 lngInput.value = '';
                 nameInput.value = '';
                 searchInput.value = '';
-                selectedDiv.innerHTML = emptyText;
-                selectedDiv.style.color = '#888';
+                resultsDiv.hidden = true;
+                resultsDiv.innerHTML = '';
+                lastResults = [];
+                updateSelectedDiv(null);
+                setHint(DEFAULT_HINT);
+                if (mapEl) mapEl.hidden = true;
             });
-            searchInput.parentNode.parentNode.appendChild(clearBtn);
         }
 
-        setupPicker('weather_loc', '未选择位置，天气将使用默认数据');
+        // 已有位置时只在地图上展示，不主动请求浏览器定位
+        var existingLat = Number(latInput.value);
+        var existingLng = Number(lngInput.value);
+        if (latInput.value !== '' && lngInput.value !== ''
+            && isFinite(existingLat) && isFinite(existingLng)
+            && !(existingLat === 0 && existingLng === 0)) {
+            showMap(existingLng, existingLat);
+        }
+
+        // 若页面从「主题/高级」分段进入，基础信息面板初始是隐藏的；
+        // 切回基础信息时补一次 resize，避免地图尺寸为 0
+        var basicPanel = document.getElementById('basic-settings');
+        if (basicPanel && typeof MutationObserver !== 'undefined') {
+            new MutationObserver(function () {
+                if (!map || basicPanel.hidden) return;
+                setTimeout(function () {
+                    try { map.resize(); } catch (e) {}
+                }, 80);
+            }).observe(basicPanel, { attributes: true, attributeFilter: ['hidden'] });
+        }
     })();
     </script>
 

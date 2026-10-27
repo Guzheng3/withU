@@ -363,16 +363,7 @@ window.WithUMap = (function () {
             await validateAmapKey();
             mapDebugLog('API Key 验证通过');
             await waitForMapContainerReady();
-            // 刷新双方实时定位（与头像位置/天气共用同一位置来源；60s 内缓存，不重复请求）。
-            // 必须带超时兜底：定位刷新慢/挂起时不能阻塞地图初始化，超时后按配置坐标展示
-            if (window.WithULiveGeo) {
-                try {
-                    await Promise.race([
-                        window.WithULiveGeo.refresh(),
-                        new Promise(resolve => setTimeout(resolve, 3000)),
-                    ]);
-                } catch (e) { /* 失败时按配置坐标展示 */ }
-            }
+            // 地图位置只使用后台/配置文件里的坐标，不再请求前台实时定位
             _mapInstance = await initializeApp();
 
             // 如果有待执行的定位操作
@@ -1727,18 +1718,9 @@ const addLoversMarkers = (map, lovers) => {
 
     const lover1 = lovers[0];
     const lover2 = lovers[1];
-    // 坐标优先级：实时定位上报（与头像位置/天气共用同一位置，来自高德定位 SDK）> map-all.json 配置坐标
-    // 面板左右顺序会随登录身份变化，实时坐标必须按 lover.role 取，不能按数组下标取
-    const liveCoordsForLover = (lover, fallbackSlot) => {
-        if (lover && lover.placeholder) return null;
-        const role = lover && lover.role;
-        const slot = role === 'user2' ? 2 : (role === 'user1' ? 1 : fallbackSlot);
-        return (window.WithULiveGeo && window.WithULiveGeo.slotCoords(slot)) || null;
-    };
-    const live1 = liveCoordsForLover(lover1, 1);
-    const live2 = liveCoordsForLover(lover2, 2);
-    const lover1Coords = live1 || extractCoordinatePair(lover1.coords);
-    const lover2Coords = live2 || extractCoordinatePair(lover2.coords);
+    // 坐标只使用配置数据（map-all.json / 数据库位置），不再使用前台实时定位
+    const lover1Coords = extractCoordinatePair(lover1.coords);
+    const lover2Coords = extractCoordinatePair(lover2.coords);
     const lover1Located = lover1.located !== false && !!lover1Coords;
     const lover2Located = lover2.located !== false && !!lover2Coords;
     const bothLocated = lover1Located && lover2Located;

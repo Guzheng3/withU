@@ -312,7 +312,7 @@ class Auth
         );
 
         if ($existing) {
-            return ['success' => false, 'message' => '用户名已存在'];
+            return ['success' => false, 'message' => '该 QQ 号已被使用'];
         }
 
         // 检查角色是否已被使用（user1 / user2 只能各有一人）
@@ -354,6 +354,30 @@ class Auth
      */
     public function logout(): bool
     {
+        // API 端点可能已通过 withu_require_json_csrf() 执行 session_write_close()。
+        // 只关闭而不销毁时，PHPSESSID 在服务端仍然有效，持有旧 Cookie 的客户端
+        // 可以继续以该账号访问；这里重新打开会话后再真正销毁。
+        if (session_status() === PHP_SESSION_NONE) {
+            @session_start();
+        }
+        // session_destroy() 只删除服务端会话，不会让客户端 Cookie 失效。
+        // 无论会话是否成功重开，都让 PHPSESSID 过期，避免残留 Cookie 继续指向
+        // 一个仍然存在的服务端会话。
+        $cookieParams = session_get_cookie_params();
+        $cookieOptions = [
+            'expires'  => time() - 42000,
+            'path'     => ($cookieParams['path'] ?? '') !== '' ? $cookieParams['path'] : '/',
+            'secure'   => !empty($cookieParams['secure']),
+            'httponly' => !empty($cookieParams['httponly']),
+        ];
+        if (!empty($cookieParams['domain'])) {
+            $cookieOptions['domain'] = $cookieParams['domain'];
+        }
+        if (!empty($cookieParams['samesite'])) {
+            $cookieOptions['samesite'] = $cookieParams['samesite'];
+        }
+        setcookie(session_name(), '', $cookieOptions);
+
         if (session_status() === PHP_SESSION_ACTIVE) {
             $_SESSION = [];
             session_destroy();
@@ -467,8 +491,21 @@ class Auth
                 'partner_role' => $partnerRole,
             ]
         );
+        if ($partner) {
+            return $partner;
+        }
 
-        return $partner;
+        // 兼容旧部署：站点本身只有 user1 / user2 两个角色，已有双账号但邀请记录
+        // 缺失（旧版本数据、迁移后清理等）时，仍应按互补角色配对。否则课表 App
+        // 登录后永远拿不到 partner，情侣课表同步会一直显示未绑定。
+        return $this->db->fetch(
+            "SELECT *
+             FROM users
+             WHERE status = 'active' AND role = :partner_role
+             ORDER BY created_at ASC, id ASC
+             LIMIT 1",
+            ['partner_role' => $partnerRole]
+        );
     }
 
     /**

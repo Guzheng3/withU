@@ -32,8 +32,11 @@ $inviteRow = null;
 if ($inviteToken !== '') {
     try {
         $inviteRow = $db->fetch(
-            "SELECT id, inviter_id, status, expires_at FROM couple_invites
-             WHERE invite_token_hash = :token AND status = 'pending' AND expires_at >= :now LIMIT 1",
+            "SELECT ci.id, ci.inviter_id, ci.status, ci.expires_at,
+                    u.nickname AS inviter_name, u.avatar AS inviter_avatar
+             FROM couple_invites ci
+             LEFT JOIN users u ON u.id = ci.inviter_id
+             WHERE ci.invite_token_hash = :token AND ci.status = 'pending' AND ci.expires_at >= :now LIMIT 1",
             ['token' => hash('sha256', $inviteToken), 'now' => date('Y-m-d H:i:s')]
         );
     } catch (Throwable $e) { $inviteRow = null; }
@@ -41,6 +44,18 @@ if ($inviteToken !== '') {
 $needsSetup      = ($activeUserCount === 0);               // 首次部署：还没有任何账号
 $isInvited       = ($activeUserCount === 1 && $inviteRow); // 已有 1 个账号且带有效邀请链接
 $registerEnabled = $needsSetup || $isInvited;
+
+// 邀请文案数据：邀请人昵称、站点标题与站点描述（浪漫语句）
+$inviterName     = trim((string)($inviteRow['inviter_name'] ?? ''));
+if ($inviterName === '') $inviterName = '对方';
+$inviteSiteTitle = '';
+$invitePoem      = '从相遇到相守，把每一个平凡的日子都写成只属于我们的浪漫。';
+try {
+    $inviteSiteTitle = trim((string)($db->fetch("SELECT value FROM settings WHERE `key`='site_title'")['value'] ?? ''));
+    $invitePoem      = trim((string)($db->fetch("SELECT value FROM settings WHERE `key`='site_description'")['value'] ?? ''));
+} catch (Throwable $e) { /* 设置读取失败时使用默认文案 */ }
+if ($inviteSiteTitle === '') $inviteSiteTitle = SITE_NAME;
+if ($invitePoem === '') $invitePoem = '从相遇到相守，把每一个平凡的日子都写成只属于我们的浪漫。';
 
 // 重定向后的成功提示
 if (isset($_GET['success']) && $_GET['success'] === 'register') {
@@ -76,19 +91,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             if (!$registerEnabled) {
                 $error = $activeUserCount === 1 ? '请使用情侣邀请链接注册第二个账号' : '当前已注册满两位用户，已关闭注册';
             } else {
-                $username = trim((string) ($_POST['username'] ?? ''));
-                $qq       = trim((string) ($_POST['qq'] ?? '')); // QQ 号仅用于获取头像
+                $qq       = trim((string) ($_POST['qq'] ?? '')); // QQ 号即登录账号
                 $password = (string) ($_POST['password'] ?? '');
                 $confirm  = (string) ($_POST['password_confirm'] ?? '');
                 $nickname = trim((string) ($_POST['nickname'] ?? ''));
 
                 if ($activeUserCount === 1 && !$inviteRow) {
                     $error = '邀请链接无效或已过期';
-                } elseif ($username === '' || $password === '' || $confirm === '' || $nickname === '') {
+                } elseif ($qq === '' || $password === '' || $confirm === '' || $nickname === '') {
                     $error = '请填写所有必填项';
-                } elseif (!preg_match('/^[a-zA-Z0-9]{3,32}$/', $username)) {
-                    $error = '用户名格式不正确（仅限字母和数字，3~32 位）';
-                } elseif ($qq !== '' && !preg_match('/^[1-9][0-9]{4,10}$/', $qq)) {
+                } elseif (!preg_match('/^[1-9][0-9]{4,10}$/', $qq)) {
                     $error = 'QQ 号格式不正确（应为 5~11 位数字）';
                 } elseif ($password !== $confirm) {
                     $error = '两次输入的密码不一致';
@@ -122,6 +134,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 }
 
                 if (!$error) {
+                    // QQ 号直接作为 username，与安装向导保持一致
+                    $username = $qq;
                     $result = $auth->register($username, $password, $nickname, $role, $gender, $qq);
                     if (!empty($result['success'])) {
                         if ($activeUserCount === 1 && $inviteRow) {
@@ -146,7 +160,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 // 提交失败后停留在原表单并回填已填内容（密码不回填）
 $lastAction   = (string) ($_POST['action'] ?? '');
 $oldLoginName = $lastAction === 'login' ? trim((string) ($_POST['username'] ?? '')) : '';
-$oldUsername  = $lastAction === 'register' ? trim((string) ($_POST['username'] ?? '')) : '';
 $oldQq        = $lastAction === 'register' ? trim((string) ($_POST['qq'] ?? '')) : '';
 $oldNickname  = $lastAction === 'register' ? trim((string) ($_POST['nickname'] ?? '')) : '';
 // 默认落在哪个表单：首装（还没账号）或凭邀请注册时直接显示注册，其余只显示登录。
@@ -210,6 +223,12 @@ body{background:linear-gradient(135deg,#ffeef5 0%,#f4f6fb 60%,#eef2ff 100%);
 .role-male-icon{color:#5dade2;}
 .role-female-icon{color:var(--brand);}
 .form-hint{font-size:13px;color:#999;text-align:center;margin:12px 0;}
+.invite-hero{background:linear-gradient(135deg,#fff5f8,#f0f6ff);border:1px solid #ffdce8;border-radius:12px;
+  padding:16px 18px;margin-bottom:18px;text-align:center;}
+.invite-hero .invite-poem{margin:0 0 10px;font-size:13.5px;color:#8a5a68;line-height:1.8;}
+.invite-hero .invite-line{margin:0 0 6px;font-size:15px;color:#333;font-weight:600;line-height:1.7;}
+.invite-hero .invite-line strong{color:var(--brand);}
+.invite-hero .invite-expire{margin:0;font-size:12px;color:#b0b5c4;}
 .auth-footer{text-align:center;margin-top:16px;padding-top:16px;border-top:1px solid #f0f0f0;}
 .auth-footer a{color:#999;text-decoration:none;font-size:13px;transition:.2s;}
 .auth-footer a:hover{color:var(--brand);}
@@ -220,7 +239,7 @@ body{background:linear-gradient(135deg,#ffeef5 0%,#f4f6fb 60%,#eef2ff 100%);
 <div class="login-card">
   <div class="login-head">
     <h3>💗 withU</h3>
-    <p id="authSubtitle"><?php echo $activeTab === 'register' ? '创建你们的账号，开启情侣空间' : '登录你的账号，记录你们的点点滴滴'; ?></p>
+    <p id="authSubtitle"><?php echo $activeTab === 'register' ? ($isInvited ? '接受邀请，开启你们的浪漫时光' : '创建你们的账号，开启情侣空间') : '登录你的账号，记录你们的点点滴滴'; ?></p>
   </div>
   <div class="login-body">
 
@@ -232,10 +251,18 @@ body{background:linear-gradient(135deg,#ffeef5 0%,#f4f6fb 60%,#eef2ff 100%);
     <div class="login-success"><i class="fas fa-check-circle"></i> <?php echo e($success); ?></div>
     <?php endif; ?>
 
+    <?php if ($isInvited): ?>
+    <div class="invite-hero">
+      <p class="invite-poem"><?php echo e($invitePoem); ?></p>
+      <p class="invite-line"><strong><?php echo e($inviterName); ?></strong> 邀请你加入 <strong><?php echo e($inviteSiteTitle); ?></strong></p>
+      <p class="invite-expire">邀请有效期至 <?php echo e(date('m月d日 H:i', strtotime((string)($inviteRow['expires_at'] ?? '')))); ?></p>
+    </div>
+    <?php endif; ?>
+
     <?php if ($registerEnabled && !$needsSetup): ?>
     <div class="auth-tabs" role="tablist">
       <button type="button" class="tab-btn<?php echo $activeTab === 'login' ? ' active' : ''; ?>" data-tab="login" onclick="toggleForm('login')">登 录</button>
-      <button type="button" class="tab-btn<?php echo $activeTab === 'register' ? ' active' : ''; ?>" data-tab="register" onclick="toggleForm('register')">注 册</button>
+      <button type="button" class="tab-btn<?php echo $activeTab === 'register' ? ' active' : ''; ?>" data-tab="register" onclick="toggleForm('register')"><?php echo $isInvited ? '接受邀请' : '注 册'; ?></button>
     </div>
     <?php endif; ?>
 
@@ -266,15 +293,11 @@ body{background:linear-gradient(135deg,#ffeef5 0%,#f4f6fb 60%,#eef2ff 100%);
       <input type="hidden" name="redirect" value="<?php echo e($redirectTo); ?>">
 
       <div class="form-group">
-        <label><i class="fas fa-user"></i> 用户名</label>
-        <input type="text" name="username" maxlength="32" placeholder="字母和数字，3~32 位，用于登录" value="<?php echo e($oldUsername); ?>" autocomplete="username" required>
-      </div>
-      <div class="form-group">
         <label class="label-row">
-          <span><i class="fab fa-qq"></i> QQ号（可选，用于获取头像）</span>
+          <span><i class="fab fa-qq"></i> QQ号（登录账号）</span>
           <img class="qq-avatar-preview" id="qqAvatarPreview" alt="QQ 头像预览">
         </label>
-        <input type="text" name="qq" inputmode="numeric" maxlength="11" placeholder="选填，仅用于获取头像" value="<?php echo e($oldQq); ?>">
+        <input type="text" name="qq" inputmode="numeric" maxlength="11" placeholder="输入 5~11 位 QQ 号，自动获取头像和昵称" value="<?php echo e($oldQq); ?>" required>
       </div>
       <div class="form-group">
         <label><i class="fas fa-user-tag"></i> 昵称</label>
@@ -313,10 +336,10 @@ body{background:linear-gradient(135deg,#ffeef5 0%,#f4f6fb 60%,#eef2ff 100%);
         </div>
       </div>
       <?php else: ?>
-      <p class="form-hint">这是邀请注册，账号会自动加入情侣空间。你的性别由对方决定（自动设为相反性别），无需选择。</p>
+      <p class="form-hint">这是邀请注册，账号会自动加入情侣空间。你的性别会自动设为对方的相反性别，无需选择。</p>
       <?php endif; ?>
 
-      <button type="submit" class="btn"><i class="fas fa-user-plus"></i> 注 册</button>
+      <button type="submit" class="btn"><i class="fas fa-user-plus"></i> <?php echo $isInvited ? '接受邀请并注册' : '注 册'; ?></button>
     </form>
     <?php endif; ?>
 
@@ -329,7 +352,7 @@ body{background:linear-gradient(135deg,#ffeef5 0%,#f4f6fb 60%,#eef2ff 100%);
 <script>
 var AUTH_SUBTITLES = {
   login: '登录你的账号，记录你们的点点滴滴',
-  register: '创建你们的账号，开启情侣空间'
+  register: '<?php echo $isInvited ? '接受邀请，开启你们的浪漫时光' : '创建你们的账号，开启情侣空间'; ?>'
 };
 
 function toggleForm(tab) {
@@ -353,10 +376,22 @@ function toggleForm(tab) {
   var confirmInput = document.getElementById('passwordConfirm');
   var confirmError = document.getElementById('confirmError');
   var fetchedQq    = '';
+  var fetchTimer   = null;
+  var nicknamePlaceholder = '填写 QQ 号后可自动获取';
 
-  // 填完 QQ 号后自动带出头像与昵称（昵称仅在未填写时填充）
-  qqInput.addEventListener('change', function () {
-    var qq = qqInput.value.trim();
+  // QQ 号输入时立即预览头像（本地代理，无外部依赖）
+  function showAvatar(qq) {
+    if (!preview) return;
+    if (!/^[1-9][0-9]{4,10}$/.test(qq)) {
+      preview.style.display = 'none';
+      return;
+    }
+    preview.src = '/_qqavatar.php?qq=' + encodeURIComponent(qq) + '&s=100';
+    preview.style.display = 'inline-block';
+  }
+
+  // 拉取昵称：能取到就自动填；取不到则提示手动填写（不阻塞注册）
+  function fetchProfile(qq) {
     if (!/^[1-9][0-9]{4,10}$/.test(qq) || qq === fetchedQq) return;
     fetchedQq = qq;
     fetch('/api/qq_profile.php?qq=' + encodeURIComponent(qq), { credentials: 'same-origin' })
@@ -367,11 +402,32 @@ function toggleForm(tab) {
           preview.src = d.avatar_url;
           preview.style.display = 'inline-block';
         }
-        if (d.nickname && nicknameInput && !nicknameInput.value.trim()) {
-          nicknameInput.value = d.nickname;
+        if (nicknameInput && !nicknameInput.value.trim()) {
+          if (d.nickname) {
+            nicknameInput.value = d.nickname;
+            nicknameInput.placeholder = nicknamePlaceholder;
+          } else {
+            nicknameInput.placeholder = '未能自动获取昵称，请手动填写';
+          }
         }
       })
       .catch(function () { /* 获取失败不影响注册 */ });
+  }
+
+  // 输入即预览头像 + 防抖 500ms 拉取昵称；失焦时再兜底拉一次
+  qqInput.addEventListener('input', function () {
+    var qq = this.value.replace(/\D/g, '').slice(0, 11);
+    if (this.value !== qq) this.value = qq;
+    showAvatar(qq);
+    if (nicknameInput && !nicknameInput.value.trim()) {
+      nicknameInput.placeholder = nicknamePlaceholder;
+    }
+    clearTimeout(fetchTimer);
+    fetchTimer = setTimeout(function () { fetchProfile(qqInput.value.trim()); }, 500);
+  });
+  qqInput.addEventListener('change', function () {
+    showAvatar(this.value.trim());
+    fetchProfile(this.value.trim());
   });
 
   function validateConfirm() {

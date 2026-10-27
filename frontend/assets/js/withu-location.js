@@ -120,15 +120,25 @@
                   try {
                       localStorage.setItem('withu_geo_last_report', JSON.stringify({ ts: Date.now(), lat: lat, lng: lng, source: source }));
                   } catch (e) {}
+                  // 服务端已保存最新坐标，通知头像/天气刷新双方实时位置
+                  window.dispatchEvent(new CustomEvent('withu:geo-reported', {
+                      detail: { lat: lat, lng: lng, source: source }
+                  }));
               }
           })
           .catch(function () {});
     }
 
-    function handlePosition(lng, lat, acc, source) {
+    function handlePosition(lng, lat, acc, source, wgs) {
         _requesting = false;
         source = source || 'unknown';
         var geo = { lat: lat, lng: lng, ts: Date.now(), source: source };
+        // 浏览器原生定位给的是 WGS-84；地图/信标需要 GCJ-02，但和风天气按
+        // WGS-84 查询更准确。同时保留两份坐标，天气侧优先用 wgsLng/wgsLat。
+        if (wgs && isFinite(wgs.lng) && isFinite(wgs.lat)) {
+            geo.wgsLng = wgs.lng;
+            geo.wgsLat = wgs.lat;
+        }
         _cachedGeo = geo;
         saveCache(geo);
 
@@ -148,7 +158,6 @@
         window.dispatchEvent(new CustomEvent('withu:location-ready', { detail: geo }));
     }
 
-    var _ipFallbackTried = false;
     var MAX_ACCURACY_M = 5000; // 浏览器/高德插件定位精度超过 5km 视为不可靠，回退下一级定位
 
     // 使用本地缓存的位置兜底
@@ -163,30 +172,16 @@
 
     function locateFail(reason) {
         _requesting = false;
-        console.warn('[WithULocation] 高德定位失败: ' + reason);
-        // IP 定位兜底：解析来访 IP 的城市级位置（成功后随登录一起上报）
-        if (!_ipFallbackTried) {
-            _ipFallbackTried = true;
-            var cfg = window.WITHU_CONFIG;
-            var beacon = (cfg && cfg.endpoints && cfg.endpoints.locationBeacon) || '/services/location-beacon.php';
-            fetch(beacon + '?action=ip', { headers: { 'Accept': 'application/json' }, cache: 'no-store' })
-                .then(function (r) { return r.json(); })
-                .then(function (data) {
-                    if (data && data.code === 200 && data.data && data.data.lng) {
-                        handlePosition(data.data.lng, data.data.lat, 30000, 'ip');
-                    } else {
-                        useCachedGeo();
-                    }
-                })
-                .catch(function () { useCachedGeo(); });
-            return;
-        }
+        console.warn('[WithULocation] 定位失败: ' + reason);
+        // 不再使用 IP 定位（已切换到和风天气，且 IP 级精度对天气/距离没有意义）；
+        // 优先使用本地缓存的 GPS，天气端再回退后台固定位置。
         useCachedGeo();
     }
 
     // WGS-84（浏览器原生定位）-> 高德 GCJ-02 坐标
     function toAmapCoords(lng, lat, acc, source) {
-        var done = function (a, b) { handlePosition(a, b, acc, source); };
+        var wgs = { lng: lng, lat: lat };
+        var done = function (a, b) { handlePosition(a, b, acc, source, wgs); };
         var convert = function () {
             try {
                 AMap.convertFrom([lng, lat], 'gps', function (status, result) {
@@ -319,12 +314,8 @@
         }
     };
 
-    // 自动初始化（仅当后台未设置固定位置时启用）
+    // 自动初始化：GPS 始终是首选，后台「位置」只在定位失败/未授权时兜底。
     function shouldAutoLocate() {
-        var cfg = window.WITHU_CONFIG;
-        if (!cfg) return true;
-        // 如果后台设置了固定位置，不再触发浏览器定位
-        if (cfg.weatherLocLat && cfg.weatherLocLng) return false;
         return true;
     }
 

@@ -27,13 +27,15 @@ function withu_remote_update_payload(?array $row): array {
 
     $isExternalUrl = (bool)preg_match('#^https?://#i', $apkUrl);
     if ($isExternalUrl) {
-        $downloadUrl = BASE_URL . '/api/app_update_download.php?id=' . (int)$row['id'];
+        // 课表 App 会校验下载地址与 API 同源；反代终止 TLS 时 BASE_URL 可能是
+        // http，必须按当前请求的协议 / Host 生成，否则更新会被客户端丢弃。
+        $downloadUrl = withu_public_base_url() . '/api/app_update_download.php?id=' . (int)$row['id'];
     } else {
         $localPath = UPLOAD_DIR . '/' . ltrim($apkUrl, '/');
         if (!is_file($localPath)) {
             return ['success' => true, 'has_update' => false];
         }
-        $downloadUrl = upload_url($apkUrl);
+        $downloadUrl = withu_public_url(upload_url($apkUrl));
     }
 
     return [

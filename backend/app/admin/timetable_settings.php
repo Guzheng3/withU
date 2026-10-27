@@ -78,16 +78,21 @@ function withu_tt_capture_history(Database $db, int $userId, ?array $currentRow,
     $decoded = $content === null ? null : json_decode($content, true);
     $package = is_array($decoded) ? $decoded : [];
     $settings = is_array($package['settings'] ?? null) ? $package['settings'] : [];
+    // 与 API 侧一致：只接受标量，避免异常数据触发 Array to string 警告。
+    $profileName = $package['profileName'] ?? '';
+    $profileName = is_scalar($profileName) ? (string)$profileName : '';
+    $semesterStart = $settings['semesterStartDate'] ?? '';
+    $semesterStart = is_scalar($semesterStart) ? (string)$semesterStart : '';
 
     $db->insert('timetable_history', [
         'user_id' => $userId,
         'content' => $content,
         'content_hash' => (string)$contentHash,
         'change_type' => substr($changeType, 0, 32),
-        'profile_name' => substr((string)($package['profileName'] ?? ''), 0, 190),
+        'profile_name' => substr($profileName, 0, 190),
         'course_count' => count((array)($package['courses'] ?? [])),
         'current_week' => is_numeric($package['currentWeek'] ?? null) ? (int)$package['currentWeek'] : 0,
-        'semester_start_date' => (string)($settings['semesterStartDate'] ?? ''),
+        'semester_start_date' => $semesterStart,
         'created_at' => withu_now(),
     ]);
 
@@ -149,6 +154,9 @@ function withu_tt_import(Database $db, string $rawJson, $targetUserId, ?string $
     $knownKeys = ['courses', 'settings', 'timeSchemes', 'profileName'];
     if (!array_intersect($knownKeys, array_keys($decoded))) {
         return ['ok' => false, 'message' => '这看起来不是课表包：至少需要 courses / settings / timeSchemes / profileName 之一。'];
+    }
+    if (withu_timetable_is_full_backup($decoded)) {
+        return ['ok' => false, 'message' => '这是包含多份课表的完整备份，无法作为单份课表导入；请在 App 内导出当前课表后再试。'];
     }
 
     $content = json_encode($decoded, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
@@ -259,12 +267,19 @@ function withu_tt_millis_date($value): string
 function withu_tt_health(array $content): array
 {
     $warnings = [];
+
+    // 清涵课表 App 更名后写出 app=qhkb；旧版轻屿课表仍写 app=mikcb，
+    // 两种标识的包结构一致，读取侧保持兼容。
+    $app = $content['app'] ?? null;
+    if (!in_array($app, ['qhkb', 'mikcb'], true)) {
+        $shown = is_scalar($app) ? var_export($app, true) : (is_array($app) ? '非标量' : '缺失');
+        $warnings[] = 'app 为 ' . $shown . '，预期 qhkb（兼容旧版 mikcb）';
+    }
+
     $expected = [
-        'app' => 'mikcb',
         'packageType' => 'transfer',
         'schemaVersion' => 1,
         'scope' => 'current_timetable',
-        'channel' => 'file',
     ];
     foreach ($expected as $key => $expectedValue) {
         $actual = $content[$key] ?? null;
@@ -272,6 +287,12 @@ function withu_tt_health(array $content): array
             $shown = is_scalar($actual) ? var_export($actual, true) : (is_array($actual) ? '非标量' : '缺失');
             $warnings[] = $key . ' 为 ' . $shown . '，预期 ' . var_export($expectedValue, true);
         }
+    }
+
+    $channel = $content['channel'] ?? null;
+    if (!in_array($channel, ['file', 'cloud'], true)) {
+        $shown = is_scalar($channel) ? var_export($channel, true) : (is_array($channel) ? '非标量' : '缺失');
+        $warnings[] = 'channel 为 ' . $shown . '，预期 file 或 cloud';
     }
 
     $packageId = $content['packageId'] ?? null;
@@ -300,11 +321,18 @@ function withu_tt_active_scheme(array $content): array
 {
     $settings = (array)($content['settings'] ?? []);
     $schemes = (array)($content['timeSchemes'] ?? []);
-    $activeId = (string)($settings['activeTimeSchemeId'] ?? '');
+    $activeId = $settings['activeTimeSchemeId'] ?? '';
+    $activeId = is_scalar($activeId) ? (string)$activeId : '';
     foreach ($schemes as $scheme) {
         if (!is_array($scheme)) continue;
-        if ((string)($scheme['id'] ?? '') === $activeId) {
-            return [(string)($scheme['name'] ?? '未命名模板'), count((array)($scheme['sections'] ?? []))];
+        $schemeId = $scheme['id'] ?? '';
+        $schemeId = is_scalar($schemeId) ? (string)$schemeId : '';
+        if ($schemeId === $activeId) {
+            $schemeName = $scheme['name'] ?? '未命名模板';
+            return [
+                is_scalar($schemeName) ? (string)$schemeName : '未命名模板',
+                count((array)($scheme['sections'] ?? [])),
+            ];
         }
     }
     return ['默认节次', count((array)($settings['sections'] ?? []))];
@@ -442,7 +470,7 @@ include __DIR__ . '/header.php';
 
 <section class="admin-page-title">
     <h1>课表设置 · 回传看板</h1>
-    <p>只读看板：课表由轻屿课表 App 修改后回传，这里查看双方最近一次回传的内容与格式健康度；编辑请在 App 内完成。</p>
+    <p>只读看板：课表由清涵课表 App（qhkb，兼容旧版 mikcb）修改后回传，这里查看双方最近一次回传的内容与格式健康度；编辑请在 App 内完成。</p>
 </section>
 
 <section class="admin-grid">
@@ -491,7 +519,7 @@ include __DIR__ . '/header.php';
             </div>
 
             <textarea class="tt-json-input" name="json" rows="10" spellcheck="false"
-                      placeholder="粘贴课表 JSON，例如：&#10;{ &quot;app&quot;: &quot;mikcb&quot;, &quot;courses&quot;: [ ... ], &quot;settings&quot;: { ... } }"><?php echo e($importDraft); ?></textarea>
+                      placeholder="粘贴课表 JSON，例如：&#10;{ &quot;app&quot;: &quot;qhkb&quot;, &quot;courses&quot;: [ ... ], &quot;settings&quot;: { ... } }"><?php echo e($importDraft); ?></textarea>
 
             <div class="tt-import-foot">
                 <div class="tt-import-preview" id="tt-preview" data-state="idle" aria-live="polite"></div>
@@ -663,6 +691,12 @@ include __DIR__ . '/header.php';
         var known = ['courses', 'settings', 'timeSchemes', 'profileName'].some(function (key) {
             return Object.prototype.hasOwnProperty.call(data, key);
         });
+        var isFullBackup = data.backupType === 'full'
+            || (data.packageType === 'transfer' && data.scope === 'all_data' && Array.isArray(data.profiles));
+        if (isFullBackup) {
+            show('bad', '这是包含多份课表的完整备份，请在 App 内导出「当前课表」后再导入。');
+            return;
+        }
         var parts = [];
         if (data.profileName) { parts.push('课表名 ' + data.profileName); }
         parts.push('课程 ' + (Array.isArray(data.courses) ? data.courses.length : 0) + ' 门');
@@ -678,7 +712,8 @@ include __DIR__ . '/header.php';
             show('bad', '已解析，但缺少 courses / settings / timeSchemes / profileName，提交会被拒绝。');
             return;
         }
-        show('ok', '识别为课表：' + parts.join(' · ') + (data.app && data.app !== 'mikcb' ? ' · ⚠ app=' + data.app : ''));
+        var appOk = !data.app || data.app === 'qhkb' || data.app === 'mikcb';
+        show('ok', '识别为课表：' + parts.join(' · ') + (appOk ? '' : ' · ⚠ app=' + data.app));
     }
 
     function readFile(file) {

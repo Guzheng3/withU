@@ -132,9 +132,6 @@ try {
     $siteTitle = ($siteTitleRow && !empty($siteTitleRow['value'])) ? $siteTitleRow['value'] : 'withU';
     $withuSiteTitle = $siteTitle;
 
-    $weatherKeyRow = $db->fetch("SELECT value FROM settings WHERE `key`='amap_weather_key'");
-    $weatherKey = ($weatherKeyRow && !empty($weatherKeyRow['value'])) ? $weatherKeyRow['value'] : '';
-
     $locModeRow = $db->fetch("SELECT value FROM settings WHERE `key`='weather_loc_mode'");
     $locMode = ($locModeRow && !empty($locModeRow['value'])) ? $locModeRow['value'] : 'auto';
 
@@ -172,12 +169,10 @@ try {
         'owoBase' => '/OwO', 'soloMode' => false,
         'loggedIn' => (bool)($loggedIn ?? false),
         'weatherEnabled' => true,
-        // 不再下发天气 Key：服务端 weather.php 自行读取 settings.amap_weather_key，
-        // 前端拼的 &_wt= 参数服务端从来不读，白白把 Web服务 Key 暴露在页面源码里
+        // 天气统一由服务端和风天气接口获取，网页不接触 Key / Token / 私钥。
         'weatherToken' => '',
-        'weatherType' => $weatherKey ? 'amap' : 'qweather',
-        // 地图用的是 WITHU_MAP_CONFIG.amapKey（Web端 JS API Key），
-        // 这里的 Web服务 Key 前端没有任何消费方，不下发
+        'weatherType' => 'qweather',
+        // 地图用的是 WITHU_MAP_CONFIG.amapKey（Web端 JS API Key），天气 Key 不下发
         'amapKey' => '',
         'weatherLocMode' => $locMode,
         'weatherLocCity' => $locCity,
@@ -190,7 +185,6 @@ try {
         'bannedChars' => '操屌',
         'endpoints' => [
             'mapApi' => '/assets/map-api.php', 'weatherNow' => '/services/weather.php',
-            'locationBeacon' => '/services/location-beacon.php',
             'interaction' => '/services/interaction.php', 'accessBeacon' => '/services/access-beacon.php',
             'messageList' => '/services/message-list.php', 'messageSubmit' => '/services/message.php',
             'infoService' => '/services/info-service.php', 'weatherApi' => '/services/weather.php',

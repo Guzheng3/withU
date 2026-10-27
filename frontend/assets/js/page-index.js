@@ -662,8 +662,6 @@
             apiBase: 'services/weather.php'
         },
         _refreshTimer: null,
-        _geocoderReady: false,
-        _geocoderQueue: [],
 
         init() {
             if (config.weatherEnabled === false) {
@@ -678,35 +676,74 @@
             this._refreshAll();
             // 每5分钟自动刷新
             TimerManager.setInterval('weatherRefresh', () => this._refreshAll(), 5 * 60 * 1000);
+
+            // 双方实时 GPS 上报是异步的：上报成功后强制重拉位置并刷新天气
+            this._geoReportedHandler = () => {
+                if (!window.WithULiveGeo) {
+                    this._refreshAll();
+                    return;
+                }
+                window.WithULiveGeo.refresh(true)
+                    .then(() => this._refreshAll())
+                    .catch(() => this._refreshAll());
+            };
+            window.addEventListener('withu:geo-reported', this._geoReportedHandler);
+
+            // 首次加载时若已有实时位置上报，先拉一次再渲染
+            if (window.WithULiveGeo) {
+                window.WithULiveGeo.refresh()
+                    .then(() => this._refreshAll())
+                    .catch(() => {});
+            }
         },
 
         destroy() {
             TimerManager.clearInterval('weatherRefresh');
+            if (this._geoReportedHandler) {
+                window.removeEventListener('withu:geo-reported', this._geoReportedHandler);
+                this._geoReportedHandler = null;
+            }
         },
 
         _buildUrl(cardEl) {
-            const base = (window.WITHU_CONFIG && window.WITHU_CONFIG.siteBase) || '';
+            const cfg = window.WITHU_CONFIG || {};
+            const base = cfg.siteBase || '';
             const u = new URL(base + this._config.apiBase, window.location.origin);
             const slot = cardEl.getAttribute('data-weather-slot') || '1';
             u.searchParams.set('mode', 'couple');
             u.searchParams.set('slot', slot);
-            // 坐标优先级：实时定位上报 > 卡片头像匹配的 map 坐标 > 后台配置坐标
-            const lover = this._getCardLover(cardEl);
+
+            // 坐标优先级：双方实时 GPS 上报 > 地图情侣坐标 > 后台「位置」兜底
             const liveCoords = (window.WithULiveGeo && window.WithULiveGeo.slotCoords(slot)) || null;
-            const coords = liveCoords || (lover && lover.coords) || this._getLoverCoords(slot);
+            const lover = this._getCardLover(cardEl);
+            const mapCoords = (lover && Array.isArray(lover.coords) && lover.coords.length >= 2)
+                ? lover.coords : null;
+            const adminCoords = (liveCoords || mapCoords) ? null : this._getAdminCoords();
+            const coords = liveCoords || mapCoords || adminCoords;
             if (coords && coords.length >= 2) {
                 u.searchParams.set('lng', coords[0]);
                 u.searchParams.set('lat', coords[1]);
             }
-            const nameEl = cardEl.querySelector('.withu-home-weather-username');            const name = liveCoords
-                ? ((nameEl && nameEl.textContent) || '')
-                : ((lover && lover.name) || (nameEl && nameEl.textContent) || '');
-            if (name) u.searchParams.set('name', String(name).trim());
-            // 实时坐标下地标不再可靠，交由逆地理编码显示实际位置
-            if (!liveCoords && lover && lover.label) u.searchParams.set('label', lover.label);
-            const wt = (window.WITHU_CONFIG && window.WITHU_CONFIG.weatherToken) || '';
-            if (wt) u.searchParams.set('_wt', wt);
+
+            // 实时 GPS 坐标交给服务端按坐标反查真实城市；固定坐标才使用预设地名
+            if (!liveCoords) {
+                const fixedName = (mapCoords && lover && lover.label)
+                    || (adminCoords && typeof cfg.weatherLocName === 'string' ? cfg.weatherLocName.trim() : '')
+                    || '';
+                if (fixedName) u.searchParams.set('label', fixedName);
+            }
             return u.toString();
+        },
+
+        _getAdminCoords() {
+            const cfg = window.WITHU_CONFIG || {};
+            const hasCoords = cfg.weatherLocLat !== null && cfg.weatherLocLat !== undefined && cfg.weatherLocLat !== ''
+                && cfg.weatherLocLng !== null && cfg.weatherLocLng !== undefined && cfg.weatherLocLng !== '';
+            if (!hasCoords) return null;
+            const lat = Number(cfg.weatherLocLat);
+            const lng = Number(cfg.weatherLocLng);
+            if (!isFinite(lat) || !isFinite(lng)) return null;
+            return [lng, lat];
         },
 
         // 通过卡片头像文件名匹配 map-all.json 中的lover（头像与坐标一一对应，不受昵称影响）
@@ -745,50 +782,38 @@
             return data.data;
         },
 
-        // 逆地理编码获取具体位置
-        _reverseGeocodeLocation(lng, lat, callback) {
-            const run = () => {
-                try {
-                    AMap.plugin('AMap.Geocoder', function () {
-                        try {
-                            var geocoder = new AMap.Geocoder({ extensions: 'base' });
-                            geocoder.getAddress([lng, lat], function (status, result) {
-                                if (status === 'complete' && result.regeocode) {
-                                    var comp = result.regeocode.addressComponent || {};
-                                    var name = comp.township || comp.district || '';
-                                    if (name) {
-                                        name = name.replace(/街道$/, '');
-                                        callback(name);
-                                        return;
-                                    }
-                                }
-                                callback(null);
-                            });
-                        } catch (e) { callback(null); }
-                    });
-                } catch (e) { callback(null); }
-            };
-            if (window.AMap) {
-                run();
-            } else if (window.WithUAMapLoader) {
-                window.WithUAMapLoader.ensure(function (ok) {
-                    ok ? run() : callback(null);
-                });
-            } else {
-                callback(null);
+        // 天气未获取到时卡片保留在原位，只重置为诚实的空态（--），不编造数据
+        _renderUnavailable(cardEl) {
+            if (!cardEl) return;
+            const timeTag = cardEl.querySelector('.withu-home-weather-time-tag');
+            if (timeTag) timeTag.textContent = '--';
+
+            const tempEl = cardEl.querySelector('.withu-home-weather-text-temp');
+            if (tempEl) tempEl.textContent = '--°';
+
+            const statusEl = cardEl.querySelector('.withu-home-weather-text-status');
+            if (statusEl) statusEl.textContent = '未获取';
+
+            const iconEl = cardEl.querySelector('.withu-home-weather-icon-main');
+            if (iconEl) iconEl.className = 'qi-999-fill withu-home-weather-icon-main';
+
+            const humidityEl = cardEl.querySelector('.stat-humidity');
+            const visEl = cardEl.querySelector('.stat-vis');
+            const feelsEl = cardEl.querySelector('.stat-feels');
+            if (humidityEl) humidityEl.textContent = '--';
+            if (visEl) visEl.textContent = '--';
+            if (feelsEl) feelsEl.textContent = '--';
+
+            const cityEl = cardEl.querySelector('.withu-home-weather-text-city');
+            if (cityEl) cityEl.textContent = '--';
+        },
+
+        _renderCard(cardEl, payload) {
+            if (!payload || payload.available === false || payload.temp === '--') {
+                this._renderUnavailable(cardEl);
+                return;
             }
-        },
-
-        // 获取情侣坐标
-        _getLoverCoords(slot) {
-            var cfg = window.WITHU_CONFIG;
-            if (!cfg) return null;
-            if (slot === 1) return cfg.boyCoords || null;
-            if (slot === 2) return cfg.girlCoords || null;
-            return null;
-        },
-
-        _renderCard(cardEl, payload) {            const timeTag = cardEl.querySelector('.withu-home-weather-time-tag');
+            const timeTag = cardEl.querySelector('.withu-home-weather-time-tag');
             if (timeTag) timeTag.textContent = this._getRelativeTime(payload.obsTime);
 
             const tempEl = cardEl.querySelector('.withu-home-weather-text-temp');
@@ -812,26 +837,12 @@
             if (visEl) visEl.textContent = (payload.vis ?? '--') + 'km';
             if (feelsEl) feelsEl.textContent = (payload.feelsLike ?? '--') + '°';
 
-            // 城市名：优先用逆地理编码，回退到天气 API 返回的城市
+            // 城市名：天气接口返回的地名优先（后台固定位置已作为 label 传入），否则回退后台位置名
             const cityEl = cardEl.querySelector('.withu-home-weather-text-city');
             if (cityEl) {
-                const slot = parseInt(cardEl.getAttribute('data-weather-slot') || '1', 10);
-                const lover = this._getCardLover(cardEl);
-                const coords = (window.WithULiveGeo && window.WithULiveGeo.slotCoords(slot))
-                    || (lover && lover.coords)
-                    || this._getLoverCoords(slot);
-                const self = this;
-                if (coords && coords.length >= 2) {
-                    this._reverseGeocodeLocation(coords[0], coords[1], function (locName) {
-                        if (locName) {
-                            cityEl.textContent = locName;
-                        } else {
-                            cityEl.textContent = payload.city || '--';
-                        }
-                    });
-                } else {
-                    cityEl.textContent = payload.city || '--';
-                }
+                const fixedName = (window.WITHU_CONFIG && typeof window.WITHU_CONFIG.weatherLocName === 'string')
+                    ? window.WITHU_CONFIG.weatherLocName.trim() : '';
+                cityEl.textContent = payload.city || fixedName || '--';
             }
         },
 
@@ -844,8 +855,8 @@
                 return true;
             } catch (e) {
                 console.error('Weather update failed:', e);
-                const statusEl = cardEl.querySelector('.withu-home-weather-text-status');
-                if (statusEl) statusEl.textContent = '离线';
+                // 请求失败：卡片保留，重置为诚实空态
+                this._renderUnavailable(cardEl);
                 return false;
             }
         },
@@ -861,10 +872,7 @@
                     ]);
                 } catch (e) { /* 地图数据失败时仍按配置坐标请求 */ }
             }
-            // 刷新双方实时定位（60s 内缓存，不重复请求）
-            if (window.WithULiveGeo) {
-                try { await window.WithULiveGeo.refresh(); } catch (e) { /* 失败时按配置坐标请求 */ }
-            }
+            // 位置统一由后台设置提供，不再刷新 GPS / IP 实时定位
             const weatherCards = document.querySelectorAll('.withu-home-weather-card');
             await Promise.all(Array.from(weatherCards).map(card => this._updateCard(card)));
         }

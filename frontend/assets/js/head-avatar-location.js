@@ -45,24 +45,35 @@
     var _liveGeoData = null;
     var _liveGeoTs = 0;
     var _liveGeoFetching = null;
+    var _liveGeoSeq = 0;
 
-    function fetchLiveGeo() {
+    function fetchLiveGeo(force) {
         var now = Date.now();
-        if (_liveGeoData && (now - _liveGeoTs) < LIVE_GEO_TTL) {
+        if (!force && _liveGeoData && (now - _liveGeoTs) < LIVE_GEO_TTL) {
             return Promise.resolve(_liveGeoData);
         }
-        if (_liveGeoFetching) return _liveGeoFetching;
+        if (_liveGeoFetching && !force) return _liveGeoFetching;
         var base = (window.WITHU_CONFIG && window.WITHU_CONFIG.siteBase) || '';
-        _liveGeoFetching = fetch(base + '/services/location-beacon.php', { headers: { 'Accept': 'application/json' }, cache: 'no-store' })
+        var seq = ++_liveGeoSeq;
+        var promise = fetch(base + '/services/location-beacon.php', { headers: { 'Accept': 'application/json' }, cache: 'no-store' })
             .then(function (r) { return r.json(); })
             .then(function (data) {
-                _liveGeoData = (data && data.code === 200 && data.data) ? data.data : null;
-                _liveGeoTs = Date.now();
+                // 只让最新一次请求写缓存，避免 GPS 上报前的旧请求晚到覆盖新坐标
+                if (seq === _liveGeoSeq) {
+                    _liveGeoData = (data && data.code === 200 && data.data) ? data.data : null;
+                    _liveGeoTs = Date.now();
+                }
                 return _liveGeoData;
             })
             .catch(function () { return null; })
-            .then(function (v) { _liveGeoFetching = null; return v; });
-        return _liveGeoFetching;
+            .then(function (v) {
+                if (seq === _liveGeoSeq) {
+                    _liveGeoFetching = null;
+                }
+                return v;
+            });
+        _liveGeoFetching = promise;
+        return promise;
     }
 
     function slotLiveCoords(slot) {
@@ -84,8 +95,16 @@
     function getCoords(slot) {
         var cfg = window.WITHU_CONFIG;
         if (!cfg) return null;
-        if (slot === 1) return cfg.boyCoords || null;
-        if (slot === 2) return cfg.girlCoords || null;
+        if (slot === 1 && cfg.boyCoords) return cfg.boyCoords;
+        if (slot === 2 && cfg.girlCoords) return cfg.girlCoords;
+        // 没有地图坐标时，用后台「位置」兜底（两个头像同一地点）
+        if (cfg.weatherLocLat && cfg.weatherLocLng) {
+            var lat = Number(cfg.weatherLocLat);
+            var lng = Number(cfg.weatherLocLng);
+            if (isFinite(lat) && isFinite(lng)) {
+                return [lng, lat];
+            }
+        }
         return null;
     }
 
@@ -114,8 +133,9 @@
         var textEl = bubble.querySelector('.distance-text');
         if (!textEl) return;
 
-        var c1 = slotLiveCoords(1);
-        var c2 = slotLiveCoords(2);
+        // 实时 GPS 上报优先；没有上报时用地图/后台配置坐标兜底
+        var c1 = slotLiveCoords(1) || getCoords(1);
+        var c2 = slotLiveCoords(2) || getCoords(2);
         if (!c1 || !c2) {
             textEl.innerHTML = '<span class="distance-text-sm">相距</span><span class="km-value">--</span><span class="distance-text-sm">km</span>';
             return;
@@ -167,7 +187,7 @@
         } catch (e) { callback(''); }
     }
 
-    function updateLocations() {
+    function updateLocations(force) {
         var cfg = window.WITHU_CONFIG || {};
         var locEls = document.querySelectorAll('.withu-head-avatar-location[data-location-slot]');
         locEls.forEach(function (locEl) {
@@ -180,9 +200,9 @@
                 em.textContent = '未知';
                 return;
             }
-            // 已有地名（非占位文案、非坐标格式）不重复反查
+            // 已有地名（非占位文案、非坐标格式）不重复反查；实时位置更新时强制刷新
             var current = em.textContent || '';
-            if (current && current !== '未知' && current !== '加载中...' && current.indexOf(',') === -1) {
+            if (!force && current && current !== '未知' && current !== '加载中...' && current.indexOf(',') === -1) {
                 return;
             }
             // 坐标反查地名
@@ -211,6 +231,15 @@
             kick();
         }
     }
+
+    // 当前设备 GPS 上报成功后，强制重新拉取双方位置，刷新地名与距离
+    window.addEventListener('withu:geo-reported', function () {
+        if (!window.WithULiveGeo) return;
+        window.WithULiveGeo.refresh(true).then(function () {
+            updateLocations(true);
+            updateDistanceBubble();
+        }).catch(function () {});
+    });
 
     // 实时位置缓存 60s，这里每 65s 刷新一次距离气泡
     setInterval(function () {

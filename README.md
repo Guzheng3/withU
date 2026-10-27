@@ -311,9 +311,24 @@ Windows 环境可参考 `deploy-local/start-withu.cjs`（Windows 栈用 3307/331
 
 ## 课表数据导入
 
-withU 的课表数据由轻屿课表 App（mikcb）回传，也可以直接用本站脚本导入：
+withU 的课表数据由清涵课表 App（qhkb，旧版标识 mikcb）回传，也可以直接用本站脚本导入：
 
+- **App 同步接口**：`/api/timetable.php`，支持 `login` / `logout` / `bootstrap` / `partner` / `save` / `history` / `rollback` / `save_settings`，使用 PHP Session + `withu_device` 可信设备 Cookie，写操作需 CSRF token。
 - **课表导入**：`php scripts/import-timetable.php [--csv 文件]` 把解析脚本产出的课表 CSV 转成 App 回传同构的 JSON 包并写入 `timetables` 表（哈希去重、旧内容自动入 `timetable_history`，App 内可回滚）。
+- **版本更新接口**：`/api/app_update.php` 供 App 检查更新；本地上传或外链安装包都会返回与 API 同源的下载地址（反代终止 TLS 时自动按 `X-Forwarded-Proto/Host` 还原 https 地址）。
+
+## 天气服务
+
+天气统一由服务端和风天气（QWeather）获取，withU 网页与清涵课表 App 共用同一套凭据：
+
+- 后台「设置 → 基础信息 → 天气服务」配置 API Host 与认证方式。
+- **API Key**：填写和风控制台的 API Key。
+- **JWT / Token**：可填写静态 Token；也可以填写 Key ID、Developer ID（iss）、Project ID（sub）与 Ed25519 私钥，由服务端自动签发短时 JWT。
+- 所有 Key、Token、私钥只保存在服务端数据库，不会下发到网页或 App。
+- 网站接口：`GET /services/weather.php?mode=geo&lat=..&lng=..`（保持原 `{code:200,data}` 契约）。
+- 课表接口：`GET /api/timetable.php?action=weather&mode=now|hourly|daily|lookup&lat=..&lng=..`（需登录，详见 [`docs/weather-api.md`](./docs/weather-api.md)）。
+- 旅行/地图天气接口沿用原 Open-Meteo 字段形状，底层数据源同样切换到和风。
+- 服务端缓存：实况 5 分钟、逐小时 30 分钟、逐日 60 分钟、城市查询 24 小时；上游异常时回退 24 小时内的旧缓存。
 
 ## 安全说明
 

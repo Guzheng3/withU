@@ -1,7 +1,7 @@
 <?php
 /**
  * withU 课表导入脚本：把「解析脚本仓库」（qingyu_warehouse）产出的课表 CSV
- * 转成与轻屿课表 App 回传完全同构的 JSON 包，写入 timetables 表。
+ * 转成与清涵课表 App（qhkb；旧版标识 mikcb）回传完全同构的 JSON 包，写入 timetables 表。
  *
  * 哈希算法、历史保留与写入方式与 backend/app/api/timetable.php 的 action=save
  * 及后台「课表设置 · 回传看板」的导入完全一致：
@@ -9,7 +9,7 @@
  *   - 内容与当前一致时跳过（幂等，重复执行无副作用）；
  *   - 变更时把旧内容写入 timetable_history（change_type=script_import，App 内可回滚）。
  *
- * CSV 格式（mikcb 课程表 CSV，UTF-8 或 GBK，支持 BOM）：
+ * CSV 格式（qhkb / 旧版 mikcb 课程表 CSV，UTF-8 或 GBK，支持 BOM）：
  *   课程名,星期,开始节,结束节,上课周,教师,教室
  *   概率论与数理统计[29],1,3,4,1-14,韩东方,11号楼 11312
  *   上课周支持 1-14 / 9-16(双) / 1-16(单) / 1-3,5-8 / 14-14 等表达式，
@@ -257,7 +257,7 @@ foreach (['课程名', '星期', '开始节', '结束节'] as $required) {
             }
         }
         if (!$found) {
-            return tt_fail("CSV 缺少必要列「{$required}」，请确认是 mikcb 课程表 CSV 格式。");
+            return tt_fail("CSV 缺少必要列「{$required}」，请确认是 qhkb 课程表 CSV 格式。");
         }
     }
 }
@@ -345,7 +345,7 @@ if ($semesterStartMs === false) {
 $semesterStartMs *= 1000;
 
 $package = [
-    'app' => 'mikcb',
+    'app' => 'qhkb',
     'packageType' => 'transfer',
     'schemaVersion' => 1,
     'packageId' => 'withu-couple-timetable',

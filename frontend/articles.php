@@ -124,129 +124,17 @@
 <script>
     window.WITHU_CONFIG = <?php echo $withuConfigJson; ?>;
 
-    // AOS 动画配置（供 app.js 的 AOSManager 使用）
+    // AOS 动画配置（供 app.js?v=20261026 的 AOSManager 使用）
     window.WITHU_AOS_CONFIG = {"enabled":true,"animation":"fade-up","duration":800,"delay":0,"interval":50,"maxDelay":300,"easing":"ease-out-cubic","offset":50,"once":true,"mirror":true,"anchorPlacement":"top-bottom"};
 
-    window.WithUVisitorGeoCache = window.WithUVisitorGeoCache || (function () {
-        var storageKey = 'withu_visitor_geo_v1';
-        var cookieKey = 'withu_visitor_geo';
-        var maxAgeMs = 6 * 60 * 60 * 1000;
-
-        function normalize(payload) {
-            if (!payload || typeof payload !== 'object') {
-                return null;
-            }
-
-            var lat = Number(payload.lat);
-            var lng = Number(payload.lng);
-            var ts = Number(payload.ts || Date.now());
-            var city = typeof payload.city === 'string' ? payload.city.trim() : '';
-
-            if (!isFinite(lat) || !isFinite(lng)) {
-                return null;
-            }
-
-            if (lat < -90 || lat > 90 || lng < -180 || lng > 180 || (lat === 0 && lng === 0)) {
-                return null;
-            }
-
-            if (!isFinite(ts) || ts <= 0) {
-                ts = Date.now();
-            }
-
-            return {
-                lat: Number(lat.toFixed(6)),
-                lng: Number(lng.toFixed(6)),
-                ts: ts,
-                city: city
-            };
-        }
-
-        function writeCookie(payload) {
-            var normalized = normalize(payload);
-            if (!normalized) {
-                return;
-            }
-
-            document.cookie = cookieKey + '=' + encodeURIComponent(JSON.stringify(normalized))
-                + '; path=/; max-age=' + String(Math.floor(maxAgeMs / 1000))
-                + '; SameSite=Lax';
-        }
-
-        function clear() {
-            try {
-                window.localStorage.removeItem(storageKey);
-            } catch (err) {}
-
-            document.cookie = cookieKey + '=; path=/; max-age=0; SameSite=Lax';
-        }
-
-        function getCached() {
-            try {
-                var raw = window.localStorage.getItem(storageKey);
-                if (!raw) {
-                    return null;
-                }
-
-                var parsed = JSON.parse(raw);
-                var normalized = normalize(parsed);
-                if (!normalized) {
-                    return null;
-                }
-
-                if ((Date.now() - normalized.ts) > maxAgeMs) {
-                    clear();
-                    return null;
-                }
-
-                return normalized;
-            } catch (err) {
-                return null;
-            }
-        }
-
-        function save(payload) {
-            var normalized = normalize(payload);
-            if (!normalized) {
-                return null;
-            }
-
-            try {
-                window.localStorage.setItem(storageKey, JSON.stringify(normalized));
-            } catch (err) {}
-
-            writeCookie(normalized);
-            return normalized;
-        }
-
-        function syncCookieFromCache() {
-            var cached = getCached();
-            if (cached) {
-                writeCookie(cached);
-            }
-            return cached;
-        }
-
-        return {
-            storageKey: storageKey,
-            cookieKey: cookieKey,
-            maxAgeMs: maxAgeMs,
-            getCached: getCached,
-            save: save,
-            clear: clear,
-            syncCookieFromCache: syncCookieFromCache
-        };
-    })();
-
-    window.WithUVisitorGeoCache.syncCookieFromCache();
 </script>
 
 <!-- 足迹地图配置（懒加载，点击才初始化） -->
         <script src="/assets/js/withu-shared-3a9d9473.js"></script>
-<script src="/assets/js/app.js"></script>
-<script src="/assets/js/withu-location.js?v=20261022"></script>
-<script src="/assets/js/head-avatar-location.js?v=20261021"></script>
-<script src="/assets/js/components.js?v=20261007"></script>
+<script src="/assets/js/app.js?v=20261026"></script>
+<script src="/assets/js/withu-location.js?v=20261026gps"></script>
+<script src="/assets/js/head-avatar-location.js?v=20261026gps"></script>
+<script src="/assets/js/components.js?v=20261026gps"></script>
 
 <!-- 礼花效果已迁移到 components.js 的 ConfettiEffect 模块 -->
 
@@ -256,7 +144,7 @@
 <script src="Style/js/motion-effects.js?v=20261007a" defer></script>
 
 <script>
-    // 倒计时、高度调整、轮播图、导航栏等功能已迁移到 app.js 和 components.js
+    // 倒计时、高度调整、轮播图、导航栏等功能已迁移到 app.js?v=20261026 和 components.js
     // 保留必要的全局变量供旧代码兼容
     var pcCarouselHeight = "80vh";
     var mobileCarouselHeight = "50vh";
@@ -581,7 +469,7 @@
     <link rel="stylesheet" href="/assets/fonts/pacifico.css">
 
 <script src="/Style/vendor/confetti/confetti.browser.min.js"></script>
-<script src="/assets/js/page-messages.js"></script>
+<script src="/assets/js/page-messages.js?v=20261026"></script>
 <script src="/Style/toastify/lucide.min.js"></script>
 <script src="/Style/toastify/toastify.js"></script>
 <script>if(typeof lucide!=='undefined')lucide.createIcons();</script>
@@ -594,7 +482,7 @@
 <script src="/Style/LoveListStyle/carousel.thumbs.umd.js"></script>
 <script src="/Style/LoveListStyle/fancybox.umd.js"></script>
 <script src="/assets/js/page-lovelist.js"></script>
-<script src="/assets/js/page-index.js"></script>
+<script src="/assets/js/page-index.js?v=20261026gps"></script>
 <script src="/assets/js/page-detail.js"></script>
 <script src="/assets/js/page-album-detail.js"></script>
 <script src="/assets/js/html2canvas.min.js"></script>
@@ -723,7 +611,7 @@
     </div>
 </div>
 <!-- ============ /足迹地图弹窗 ============ -->
-<script src="/assets/js/map.js?v=1.0.87"></script>
+<script src="/assets/js/map.js?v=20261026"></script>
 
 <div id="pjax-container">
 

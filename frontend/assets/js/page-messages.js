@@ -1161,6 +1161,8 @@
                 '</div>'
             );
             if (typeof lucide !== 'undefined') lucide.createIcons();
+            // 后台未设置位置时隐藏归属地标签
+            $('#withumsgTagLocation').closest('.withu-message-v-tag').toggle(!!VisitorDetect.location);
             // 异步获取天气
             VisitorDetect._fetchWeather();
         },
@@ -2489,37 +2491,17 @@
         },
 
         _fetchLocation: function() {
-            var self = this;
-            // 优先复用 WithUVisitorGeoCache（head.php 中缓存的 IP 定位）
-            if (window.WithUVisitorGeoCache) {
-                var cached = window.WithUVisitorGeoCache.getCached();
-                if (cached && cached.city) {
-                    self.location = cached.city;
-                    self.lat = cached.lat || null;
-                    self.lng = cached.lng || null;
-                    $('#withumsgTagLocation').text(self.location);
-                    return;
-                }
-            }
-            $('#withumsgTagLocation').text('定位中...');
-            $.ajax({
-                url: endpoints.infoService || 'services/info-service.php',
-                type: 'POST',
-                dataType: 'json',
-                data: { action: 'geo' },
-                timeout: 5000,
-                success: function(data) {
-                    var city = data.city || '';
-                    self.location = city || '未知';
-                    self.lat = data.lat || null;
-                    self.lng = data.lng || null;
-                    $('#withumsgTagLocation').text(self.location);
-                },
-                error: function() {
-                    self.location = '未知';
-                    $('#withumsgTagLocation').text('未知');
-                }
-            });
+            // 位置统一使用后台「位置」设置，不再使用访客 GPS / IP
+            var cfg = window.WITHU_CONFIG || {};
+            var locName = typeof cfg.weatherLocName === 'string' ? cfg.weatherLocName.trim() : '';
+            var hasCoords = cfg.weatherLocLat !== null && cfg.weatherLocLat !== undefined && cfg.weatherLocLat !== ''
+                && cfg.weatherLocLng !== null && cfg.weatherLocLng !== undefined && cfg.weatherLocLng !== '';
+            this.location = locName;
+            this.lat = hasCoords ? Number(cfg.weatherLocLat) : null;
+            this.lng = hasCoords ? Number(cfg.weatherLocLng) : null;
+            var $locTag = $('#withumsgTagLocation');
+            $locTag.text(locName || '');
+            $locTag.closest('.withu-message-v-tag').toggle(!!locName);
         },
 
         _fetchWeather: function() {
@@ -2533,19 +2515,27 @@
                 this._applyWeatherData(cached.data);
                 return;
             }
+            var cfg = window.WITHU_CONFIG || {};
+            if (cfg.weatherLocLat === null || cfg.weatherLocLat === undefined || cfg.weatherLocLat === ''
+                || cfg.weatherLocLng === null || cfg.weatherLocLng === undefined || cfg.weatherLocLng === '') {
+                this.weather = '';
+                this.weatherIcon = '';
+                $('#withumsgTagWeather').parent('.withu-message-v-tag').hide();
+                return;
+            }
             $('#withumsgTagWeather').text('获取中...');
             var self = this;
             var _siteBase = (window.WITHU_CONFIG && window.WITHU_CONFIG.siteBase) || '';
-            var weatherUrl = (endpoints.weatherApi || (_siteBase + 'services/weather.php')) + '&mode=ip';
-            var wToken = (window.WITHU_CONFIG && window.WITHU_CONFIG.weatherToken) || '';
-            if (wToken) weatherUrl += '&_wt=' + encodeURIComponent(wToken);
+            var weatherUrl = (endpoints.weatherApi || (_siteBase + 'services/weather.php'))
+                + '?mode=geo&lat=' + encodeURIComponent(cfg.weatherLocLat)
+                + '&lng=' + encodeURIComponent(cfg.weatherLocLng);
             $.ajax({
                 url: weatherUrl,
                 type: 'GET',
                 dataType: 'json',
                 timeout: 8000,
                 success: function(res) {
-                    if (res.code === 200 && res.data) {
+                    if (res.code === 200 && res.data && res.data.available !== false && res.data.temp !== '--') {
                         var temp = res.data.temp || '--';
                         var desc = res.data.desc || '';
                         self.weather = (temp !== '--' ? temp + '°C' : '') + (desc ? ' ' + desc : '');
@@ -2555,6 +2545,7 @@
                         var iconCode = String(res.data.icon || '999').replace(/[^\d]/g, '') || '999';
                         $('#withumsgWeatherIcon').attr('class', 'qi-' + iconCode + '-fill');
                     } else {
+                        // 天气未获取到：隐藏标签，不带模拟数据
                         self.weather = '';
                         self.weatherIcon = '';
                         $('#withumsgTagWeather').parent('.withu-message-v-tag').hide();
@@ -2569,6 +2560,13 @@
         },
 
         _applyWeatherData: function(data) {
+            if (!data || data.available === false || data.temp === '--') {
+                // 复用缓存但天气不可用：隐藏标签
+                this.weather = '';
+                this.weatherIcon = '';
+                $('#withumsgTagWeather').parent('.withu-message-v-tag').hide();
+                return;
+            }
             var temp = data.temp || '--';
             var desc = data.desc || '';
             this.weather = (temp !== '--' ? temp + '°C' : '') + (desc ? ' ' + desc : '');
@@ -2723,6 +2721,7 @@
             $('#withumsgTagOS').text(os);
             $('#withumsgTagBrowser').text(browser);
             $('#withumsgTagLocation').text(loc);
+            $('#withumsgTagLocation').closest('.withu-message-v-tag').toggle(!!VisitorDetect.location);
             // 天气延迟到弹窗打开时获取，避免与 header 天气组件重复请求
         },
 
