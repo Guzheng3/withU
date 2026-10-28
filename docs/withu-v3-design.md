@@ -106,18 +106,20 @@
 回退到基线：`git checkout home-bg-baseline-v3 -- frontend/Style/css/withu-v3.css frontend/inc/footer.php`
 或整体切换：`git switch main`（实验分支为 `feat/home-watch-gradient`）。
 
-## 8. 清单页空状态柔雾（v3.4）
+## 8. 清单页空状态：宽羽化背景（v3.5）
 
 - 作用域：`#list_data > .withu-no-data`（仅 `lovelist.php` 的清单空状态）
-- 去掉虚线边框、卡片底、阴影和 `backdrop-filter`，消除矩形轮廓
-- `::before` 改为从中心向四周渐隐的柔白雾面，`::after` 的玫瑰柔光改为居中
+- 去掉虚线边框、阴影和 `backdrop-filter`，消除矩形硬边
+- 保留柔白 / 浅玫瑰背景面板，用 `blur(22px)` 做宽幅羽化，边缘缓慢过渡到页面底色
+- `::after` 的玫瑰柔光居中，避免偏在角落形成色块
 - 位置：`withu-v3.css` 第 16 节
 
 ### 版本与回退
 
 | 标签 | 含义 |
 | --- | --- |
-| `lovelist-empty-soft-v1` | 清单页空状态无边界柔雾第一版 |
+| `lovelist-empty-soft-v1` | 无背景版本（按“不要框框”的第一版，已弃用） |
+| `lovelist-empty-soft-v2` | 保留背景 + 宽羽化边缘（当前） |
 
 回退：`git revert <commit>`，或
-`git checkout lovelist-empty-soft-v1^ -- frontend/Style/css/withu-v3.css frontend/inc/footer.php`。
+`git checkout lovelist-empty-soft-v2^ -- frontend/Style/css/withu-v3.css frontend/inc/footer.php`。

@@ -1740,11 +1740,12 @@ html:not(.withu-subpage) .footer-warp {
 }
 
 /* ============================================================
-   16. 清单页空状态：无边框柔雾（按用户反馈）
+   16. 清单页空状态：保留柔雾背景 + 大范围羽化边缘
    ------------------------------------------------------------
    - 只作用于 lovelist.php 的 #list_data > .withu-no-data
-   - 去掉虚线边框、卡片底、阴影与 backdrop-filter 的矩形边界
-   - 背景改为中心柔白雾面，向四周渐隐，边缘无可见轮廓
+   - 去掉虚线边框、阴影与 backdrop-filter 的矩形硬边
+   - 保留柔白 / 浅玫瑰背景面板，用 blur 做宽幅羽化，
+     边缘缓慢过渡到页面底色，而不是取消背景
    ============================================================ */
 
 #list_data > .withu-no-data {
@@ -1753,31 +1754,36 @@ html:not(.withu-subpage) .footer-warp {
     box-shadow: none !important;
     backdrop-filter: none !important;
     -webkit-backdrop-filter: none !important;
+    /* 允许羽化光晕自然溢出圆角，避免裁切出新的硬边 */
+    overflow: visible !important;
 }
 
-/* 柔白雾面：中心柔亮，向外自然消失 */
+/* 背景面板：内缩一点再做大半径模糊，四周形成宽羽化 */
 #list_data > .withu-no-data::before {
+    inset: 2px 6px !important;
+    border-radius: 44px !important;
     background-image:
-        radial-gradient(ellipse 50% 50% at 50% 46%,
-            rgba(255, 253, 251, 0.84) 0%,
-            rgba(255, 250, 246, 0.52) 46%,
-            rgba(255, 249, 245, 0) 100%) !important;
+        radial-gradient(ellipse 72% 58% at 50% 0%, rgba(255, 236, 243, 0.45), transparent 72%),
+        linear-gradient(180deg, rgba(255, 253, 251, 0.95) 0%, rgba(255, 247, 242, 0.9) 100%) !important;
     background-size: 100% 100% !important;
+    filter: blur(22px);
     opacity: 1 !important;
-    -webkit-mask-image: radial-gradient(ellipse 52% 52% at 50% 50%, #000 36%, transparent 100%) !important;
-    mask-image: radial-gradient(ellipse 52% 52% at 50% 50%, #000 36%, transparent 100%) !important;
+    -webkit-mask-image: none !important;
+    mask-image: none !important;
+    pointer-events: none !important;
 }
 
-/* 玫瑰柔光改为居中，避免偏在角落形成色块 */
+/* 玫瑰柔光居中，叠加在羽化面板内侧 */
 #list_data > .withu-no-data::after {
     top: 46%;
     right: auto;
     bottom: auto;
     left: 50%;
-    width: 76%;
-    height: 80%;
+    width: 72%;
+    height: 76%;
     transform: translate(-50%, -50%);
-    background: radial-gradient(ellipse at center, rgba(244, 88, 122, 0.1), transparent 70%) !important;
+    background: radial-gradient(ellipse at center, rgba(244, 88, 122, 0.09), transparent 70%) !important;
     filter: blur(24px);
-    opacity: 0.7 !important;
+    opacity: 0.75 !important;
+    pointer-events: none !important;
 }
