@@ -1839,3 +1839,35 @@ html body.bg-pdot-vignette #pjax-container .withu-home :is(
     border-color: var(--wu3-edge-hairline-hover) !important;
     box-shadow: var(--wu3-edge-shadow-hover) !important;
 }
+
+/* ============================================================
+   18. 空状态边缘统一（v3.8）
+   ------------------------------------------------------------
+   - 巡检发现各页空状态仍是金色/粉色虚线框，与统一后的卡片边缘不一致
+   - 改为与内容卡相同的 24px 圆角、白色发丝边框、柔和阴影
+   - 卡片内嵌的空状态保持无框透明，避免出现“卡片套卡片”
+   ============================================================ */
+
+html body.bg-pdot-vignette #pjax-container .withu-no-data:not(.withu-content),
+html body.bg-pdot-vignette #pjax-container .withumsg-empty,
+html body.bg-pdot-vignette #pjax-container .withu-empty-state {
+    border: 1px solid var(--wu3-edge-hairline) !important;
+    border-radius: var(--wu3-edge-radius) !important;
+    box-shadow: var(--wu3-edge-shadow) !important;
+}
+
+/* 相册等卡片内部已经有一层卡片边缘，内层空状态不再重复描边 */
+html body.bg-pdot-vignette #pjax-container .withu-card .withu-no-data {
+    border: 0 !important;
+    background: transparent !important;
+    box-shadow: none !important;
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+}
+
+/* 窄屏：页脚底部多留一点空间，让版权徽章落在桌宠上方，避免文字被遮挡 */
+@media (max-width: 520px) {
+    html body.bg-pdot-vignette .footer-warp {
+        padding-bottom: calc(7rem + 64px) !important;
+    }
+}
