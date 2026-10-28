@@ -1080,6 +1080,13 @@ select:focus {
     padding-bottom: 1.4rem;
 }
 
+/* 桌面端：备案与版权信息不要贴底，留出一段呼吸空间 */
+@media (min-width: 769px) {
+    .footer-warp {
+        padding-bottom: 4rem !important;
+    }
+}
+
 .footer-warp::before {
     content: "";
     position: absolute;
