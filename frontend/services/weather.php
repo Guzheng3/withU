@@ -16,6 +16,9 @@ $lat  = isset($_GET['lat']) && is_numeric($_GET['lat']) ? (float)$_GET['lat'] : 
 $lng  = isset($_GET['lng']) && is_numeric($_GET['lng']) ? (float)$_GET['lng'] : null;
 $city = trim((string)($_GET['city'] ?? ''));
 $slot = (int)($_GET['slot'] ?? 1);
+// 仅当详情弹层请求时才附带预报，避免卡片轮询额外消耗和风额度
+$includeRaw = strtolower(trim((string)($_GET['include'] ?? '')));
+$wantForecast = $includeRaw !== '' && in_array('forecast', array_map('trim', explode(',', $includeRaw)), true);
 
 /** 拿不到真实天气时如实返回「不可用」，不再使用模拟数据。 */
 function outputFallback(): void
@@ -147,6 +150,19 @@ if (is_array($coupleData)) {
     if ($cityText !== '') {
         $data['city'] = $cityText;
     }
+}
+
+// 详情弹层：按需附带 24 小时与 7 天预报（服务端已有缓存）
+if ($wantForecast) {
+    $hourlyForecast = withu_weather_hourly($lat, $lng, ['label' => $label, 'hours' => 24]);
+    if (!empty($hourlyForecast['success']) && !empty($hourlyForecast['data']['hourly'])) {
+        $data['hourly'] = $hourlyForecast['data']['hourly'];
+    }
+    $dailyForecast = withu_weather_daily($lat, $lng, ['label' => $label, 'days' => 7]);
+    if (!empty($dailyForecast['success']) && !empty($dailyForecast['data']['daily'])) {
+        $data['daily'] = $dailyForecast['data']['daily'];
+    }
+    $data['forecast'] = true;
 }
 
 echo json_encode(['code' => 200, 'data' => $data], JSON_UNESCAPED_UNICODE);

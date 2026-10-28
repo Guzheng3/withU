@@ -1,0 +1,523 @@
+/* ============================================================
+   withU 天气详情弹层
+   ------------------------------------------------------------
+   - 点击首页天气卡片后打开，手机天气应用风格的详情面板
+   - 桌面端为居中大卡片，移动端为全屏面板
+   - 仅首页加载，不影响其他页面与页头天气气泡
+   - 字体统一为 system-ui
+   ============================================================ */
+
+.wu-weather-modal {
+    --wu-wm-font: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+    position: fixed;
+    inset: 0;
+    z-index: 10050;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 24px;
+    font-family: var(--wu-wm-font);
+    color: #fff;
+    visibility: hidden;
+    opacity: 0;
+    transition: opacity 0.28s ease, visibility 0.28s ease;
+}
+
+.wu-weather-modal.is-open {
+    visibility: visible;
+    opacity: 1;
+}
+
+.wu-weather-modal__backdrop {
+    position: absolute;
+    inset: 0;
+    background: rgba(12, 20, 34, 0.38);
+    backdrop-filter: blur(10px) saturate(120%);
+    -webkit-backdrop-filter: blur(10px) saturate(120%);
+}
+
+.wu-weather-modal__sheet {
+    position: relative;
+    width: min(440px, calc(100vw - 40px));
+    max-height: min(88vh, 820px);
+    padding: 22px 20px calc(18px + env(safe-area-inset-bottom, 0px));
+    border-radius: 34px;
+    overflow-x: hidden;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    scrollbar-width: none;
+    box-shadow:
+        0 40px 100px -30px rgba(9, 16, 30, 0.65),
+        inset 0 1px 0 rgba(255, 255, 255, 0.25);
+    transform: translateY(18px) scale(0.97);
+    transition: transform 0.32s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.wu-weather-modal__sheet::-webkit-scrollbar {
+    display: none;
+}
+
+.wu-weather-modal.is-open .wu-weather-modal__sheet {
+    transform: translateY(0) scale(1);
+}
+
+.wu-weather-modal__sheet--blue {
+    background:
+        radial-gradient(120% 80% at 18% 0%, rgba(147, 197, 253, 0.5), transparent 55%),
+        radial-gradient(90% 60% at 100% 100%, rgba(30, 64, 175, 0.55), transparent 62%),
+        linear-gradient(165deg, #3b82f6 0%, #2563eb 48%, #1e3a8a 100%);
+}
+
+.wu-weather-modal__sheet--orange {
+    background:
+        radial-gradient(120% 80% at 18% 0%, rgba(254, 215, 170, 0.48), transparent 55%),
+        radial-gradient(90% 60% at 100% 100%, rgba(154, 52, 18, 0.52), transparent 62%),
+        linear-gradient(165deg, #fb923c 0%, #ea580c 52%, #9a3412 100%);
+}
+
+.wu-weather-modal__sheet::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 320px;
+    background:
+        radial-gradient(58% 42% at 82% 6%, rgba(255, 255, 255, 0.2), transparent 72%),
+        radial-gradient(46% 34% at 8% 62%, rgba(255, 255, 255, 0.1), transparent 72%);
+    pointer-events: none;
+}
+
+.wu-weather-modal__top {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 12px;
+    min-width: 0;
+}
+
+.wu-weather-modal__top > div {
+    flex: 1 1 auto;
+    min-width: 0;
+}
+
+.wu-weather-modal__city {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    min-width: 0;
+    margin: 0;
+    font-size: 15px;
+    font-weight: 650;
+    letter-spacing: 0.01em;
+    line-height: 1.3;
+}
+
+.wu-weather-modal__city i {
+    flex-shrink: 0;
+    opacity: 0.85;
+}
+
+.wu-weather-modal__city span {
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.wu-weather-modal__date {
+    margin: 4px 0 0;
+    font-size: 12px;
+    line-height: 1.35;
+    color: rgba(255, 255, 255, 0.68);
+}
+
+.wu-weather-modal__close {
+    flex-shrink: 0;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 34px;
+    height: 34px;
+    border: 1px solid rgba(255, 255, 255, 0.22);
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.14);
+    color: #fff;
+    font-size: 16px;
+    cursor: pointer;
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    transition: background 0.2s ease, transform 0.2s ease;
+}
+
+.wu-weather-modal__close:hover {
+    background: rgba(255, 255, 255, 0.24);
+    transform: scale(1.05);
+}
+
+.wu-weather-modal__close:focus-visible {
+    outline: 2px solid #fff;
+    outline-offset: 2px;
+}
+
+.wu-weather-modal__now {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 22px 4px 18px;
+}
+
+.wu-weather-modal__now-main {
+    min-width: 0;
+}
+
+.wu-weather-modal__temp {
+    display: flex;
+    align-items: flex-start;
+    font-size: clamp(64px, 15vw, 86px);
+    font-weight: 200;
+    line-height: 0.95;
+    letter-spacing: -0.06em;
+    font-variant-numeric: tabular-nums;
+}
+
+.wu-weather-modal__temp sup {
+    margin-top: 0.14em;
+    font-size: 0.42em;
+    font-weight: 300;
+    line-height: 1;
+}
+
+.wu-weather-modal__desc {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    margin-top: 4px;
+    font-size: 15px;
+    font-weight: 600;
+    line-height: 1.3;
+}
+
+.wu-weather-modal__range {
+    margin-top: 4px;
+    font-size: 12px;
+    line-height: 1.35;
+    color: rgba(255, 255, 255, 0.72);
+}
+
+.wu-weather-modal__now-icon {
+    flex-shrink: 0;
+    padding-right: 4px;
+    line-height: 1;
+}
+
+.wu-weather-modal__now-icon i {
+    font-size: clamp(64px, 14vw, 86px);
+    line-height: 1;
+    opacity: 0.95;
+    filter: drop-shadow(0 10px 20px rgba(0, 0, 0, 0.18));
+}
+
+.wu-weather-modal__section {
+    position: relative;
+    z-index: 1;
+    margin-top: 12px;
+    padding: 14px;
+    border: 1px solid rgba(255, 255, 255, 0.18);
+    border-radius: 24px;
+    background: rgba(255, 255, 255, 0.12);
+    backdrop-filter: blur(18px) saturate(140%);
+    -webkit-backdrop-filter: blur(18px) saturate(140%);
+}
+
+.wu-weather-modal__section-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    margin-bottom: 10px;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: rgba(255, 255, 255, 0.66);
+}
+
+.wu-weather-modal__section-head span:last-child {
+    font-weight: 500;
+    letter-spacing: 0.04em;
+    text-transform: none;
+    color: rgba(255, 255, 255, 0.5);
+    white-space: nowrap;
+}
+
+.wu-weather-modal__hourly {
+    display: flex;
+    gap: 8px;
+    overflow-x: auto;
+    padding-bottom: 2px;
+    scrollbar-width: none;
+    -webkit-overflow-scrolling: touch;
+}
+
+.wu-weather-modal__hourly::-webkit-scrollbar {
+    display: none;
+}
+
+.wu-weather-modal__hour {
+    flex: 0 0 58px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+    padding: 8px 4px;
+    border: 1px solid transparent;
+    border-radius: 16px;
+    background: rgba(255, 255, 255, 0.08);
+    text-align: center;
+}
+
+.wu-weather-modal__hour.is-now {
+    border-color: rgba(255, 255, 255, 0.24);
+    background: rgba(255, 255, 255, 0.2);
+}
+
+.wu-weather-modal__hour-time {
+    font-size: 11px;
+    line-height: 1.2;
+    color: rgba(255, 255, 255, 0.72);
+    white-space: nowrap;
+}
+
+.wu-weather-modal__hour i {
+    font-size: 22px;
+    line-height: 1;
+}
+
+.wu-weather-modal__hour-temp {
+    font-size: 14px;
+    font-weight: 650;
+    line-height: 1.2;
+    font-variant-numeric: tabular-nums;
+}
+
+.wu-weather-modal__hour-pop {
+    min-height: 12px;
+    font-size: 10px;
+    line-height: 1.2;
+    color: #c7e6ff;
+    white-space: nowrap;
+}
+
+.wu-weather-modal__daily {
+    display: flex;
+    flex-direction: column;
+}
+
+.wu-weather-modal__day {
+    display: grid;
+    grid-template-columns: 48px 26px minmax(0, 1fr) auto;
+    align-items: center;
+    gap: 10px;
+    padding: 9px 2px;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    font-size: 13px;
+    line-height: 1.3;
+}
+
+.wu-weather-modal__day:first-child {
+    border-top: 0;
+}
+
+.wu-weather-modal__day-name {
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    font-weight: 600;
+    color: rgba(255, 255, 255, 0.88);
+    white-space: nowrap;
+}
+
+.wu-weather-modal__day i {
+    font-size: 20px;
+    text-align: center;
+}
+
+.wu-weather-modal__day-desc {
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    color: rgba(255, 255, 255, 0.72);
+}
+
+.wu-weather-modal__day-temp {
+    display: flex;
+    align-items: baseline;
+    gap: 8px;
+    font-variant-numeric: tabular-nums;
+    white-space: nowrap;
+}
+
+.wu-weather-modal__day-temp b {
+    font-weight: 650;
+}
+
+.wu-weather-modal__day-temp em {
+    font-style: normal;
+    color: rgba(255, 255, 255, 0.6);
+}
+
+.wu-weather-modal__details {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 8px;
+}
+
+.wu-weather-modal__detail {
+    min-width: 0;
+    padding: 10px 12px;
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    border-radius: 16px;
+    background: rgba(255, 255, 255, 0.08);
+}
+
+.wu-weather-modal__detail-label {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 10px;
+    line-height: 1.3;
+    letter-spacing: 0.04em;
+    color: rgba(255, 255, 255, 0.62);
+    white-space: nowrap;
+}
+
+.wu-weather-modal__detail-value {
+    margin-top: 3px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    font-size: 15px;
+    font-weight: 650;
+    line-height: 1.25;
+    font-variant-numeric: tabular-nums;
+}
+
+.wu-weather-modal__loading,
+.wu-weather-modal__empty {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 2px;
+    font-size: 12px;
+    line-height: 1.4;
+    color: rgba(255, 255, 255, 0.7);
+}
+
+.wu-weather-spinner {
+    flex-shrink: 0;
+    width: 14px;
+    height: 14px;
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    border-top-color: #fff;
+    border-radius: 50%;
+    animation: wu-weather-spin 0.8s linear infinite;
+}
+
+@keyframes wu-weather-spin {
+    to { transform: rotate(360deg); }
+}
+
+.wu-weather-modal__foot {
+    position: relative;
+    z-index: 1;
+    margin: 14px 0 0;
+    text-align: center;
+    font-size: 10px;
+    line-height: 1.4;
+    letter-spacing: 0.06em;
+    color: rgba(255, 255, 255, 0.48);
+}
+
+/* 打开时锁定页面滚动，避免背景跟随 */
+html.wu-weather-modal-open,
+html.wu-weather-modal-open body {
+    overflow: hidden !important;
+}
+
+/* 彩带/花瓣画布层级很高，弹层打开时隐藏，避免飘过天气界面 */
+html.wu-weather-modal-open #confetti-canvas {
+    opacity: 0 !important;
+    visibility: hidden !important;
+}
+
+html.wu-weather-modal-open .withu-scroll-progress {
+    opacity: 0 !important;
+}
+
+/* 移动端：全屏，贴近手机天气应用 */
+@media (max-width: 640px) {
+    .wu-weather-modal {
+        padding: 0;
+        align-items: stretch;
+    }
+
+    .wu-weather-modal__backdrop {
+        background: rgba(10, 16, 28, 0.2);
+        backdrop-filter: none;
+        -webkit-backdrop-filter: none;
+    }
+
+    .wu-weather-modal__sheet {
+        width: 100%;
+        max-width: none;
+        height: 100vh;
+        height: 100dvh;
+        max-height: 100vh;
+        max-height: 100dvh;
+        border-radius: 0;
+        padding: calc(env(safe-area-inset-top, 0px) + 18px) 16px calc(env(safe-area-inset-bottom, 0px) + 18px);
+        transform: translateY(24px);
+    }
+
+    .wu-weather-modal__temp {
+        font-size: clamp(64px, 22vw, 92px);
+    }
+
+    .wu-weather-modal__now-icon i {
+        font-size: clamp(64px, 20vw, 84px);
+    }
+
+    .wu-weather-modal__section {
+        padding: 12px;
+        border-radius: 22px;
+    }
+}
+
+@media (max-width: 360px) {
+    .wu-weather-modal__day {
+        grid-template-columns: 42px 22px minmax(0, 1fr) auto;
+        gap: 8px;
+    }
+
+    .wu-weather-modal__details {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .wu-weather-modal,
+    .wu-weather-modal__sheet {
+        transition: none;
+    }
+
+    .wu-weather-spinner {
+        animation: none;
+    }
+}

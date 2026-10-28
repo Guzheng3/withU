@@ -662,6 +662,12 @@
             apiBase: 'services/weather.php'
         },
         _refreshTimer: null,
+        _cardEventsBound: false,
+        _modalEl: null,
+        _sheetEl: null,
+        _activeCard: null,
+        _lastFocus: null,
+        _forecastRequestId: 0,
 
         init() {
             if (config.weatherEnabled === false) {
@@ -673,6 +679,7 @@
                 return;
             }
 
+            this._bindCards(weatherCards);
             this._refreshAll();
             // 每5分钟自动刷新
             TimerManager.setInterval('weatherRefresh', () => this._refreshAll(), 5 * 60 * 1000);
@@ -699,6 +706,8 @@
 
         destroy() {
             TimerManager.clearInterval('weatherRefresh');
+            this.closeDetail();
+            this._forecastRequestId++;
             if (this._geoReportedHandler) {
                 window.removeEventListener('withu:geo-reported', this._geoReportedHandler);
                 this._geoReportedHandler = null;
@@ -785,6 +794,7 @@
         // 天气未获取到时卡片保留在原位，只重置为诚实的空态（--），不编造数据
         _renderUnavailable(cardEl) {
             if (!cardEl) return;
+            cardEl._wuWeatherData = null;
             const timeTag = cardEl.querySelector('.withu-home-weather-time-tag');
             if (timeTag) timeTag.textContent = '--';
 
@@ -809,6 +819,7 @@
         },
 
         _renderCard(cardEl, payload) {
+            if (cardEl) cardEl._wuWeatherData = payload || null;
             if (!payload || payload.available === false || payload.temp === '--') {
                 this._renderUnavailable(cardEl);
                 return;
@@ -859,6 +870,367 @@
                 this._renderUnavailable(cardEl);
                 return false;
             }
+        },
+
+        /* ---------- 天气详情弹层 ---------- */
+        _escapeHtml(text) {
+            return String(text)
+                .replace(/&/g, '&amp;')
+                .replace(/</g, '&lt;')
+                .replace(/>/g, '&gt;')
+                .replace(/"/g, '&quot;')
+                .replace(/'/g, '&#039;');
+        },
+
+        _bindCards(cards) {
+            Array.prototype.forEach.call(cards, (card) => {
+                card.setAttribute('role', 'button');
+                card.setAttribute('tabindex', '0');
+                card.setAttribute('aria-haspopup', 'dialog');
+                const nameEl = card.querySelector('.withu-home-weather-username');
+                const name = nameEl ? nameEl.textContent.trim() : '';
+                card.setAttribute('aria-label', `查看${name ? name + '的' : ''}天气详情`);
+            });
+
+            if (this._cardEventsBound) return;
+            this._cardEventsBound = true;
+
+            this._onCardActivate = (event) => {
+                const card = event.target && event.target.closest
+                    ? event.target.closest('.withu-home-weather-card')
+                    : null;
+                if (!card) return;
+                if (event.type === 'keydown') {
+                    if (event.key !== 'Enter' && event.key !== ' ') return;
+                    event.preventDefault();
+                }
+                this.openDetail(card);
+            };
+
+            document.addEventListener('click', this._onCardActivate);
+            document.addEventListener('keydown', this._onCardActivate);
+        },
+
+        _ensureModal() {
+            if (this._modalEl) return this._modalEl;
+
+            const modal = document.createElement('div');
+            modal.className = 'wu-weather-modal';
+            modal.id = 'wuWeatherModal';
+            modal.setAttribute('aria-hidden', 'true');
+            modal.innerHTML = `
+                <div class="wu-weather-modal__backdrop" data-wu-weather-close></div>
+                <div class="wu-weather-modal__sheet" role="dialog" aria-modal="true" aria-label="天气详情" tabindex="-1"></div>
+            `;
+            document.body.appendChild(modal);
+
+            this._modalEl = modal;
+            this._sheetEl = modal.querySelector('.wu-weather-modal__sheet');
+
+            modal.addEventListener('click', (event) => {
+                if (event.target.closest('[data-wu-weather-close]')) {
+                    this.closeDetail();
+                }
+            });
+
+            document.addEventListener('keydown', (event) => {
+                if (!this._modalEl || !this._modalEl.classList.contains('is-open')) return;
+                if (event.key === 'Escape') {
+                    event.preventDefault();
+                    this.closeDetail();
+                    return;
+                }
+                if (event.key !== 'Tab') return;
+                const focusables = this._sheetEl.querySelectorAll(
+                    'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
+                );
+                if (!focusables.length) return;
+                const first = focusables[0];
+                const last = focusables[focusables.length - 1];
+                if (event.shiftKey && document.activeElement === first) {
+                    event.preventDefault();
+                    last.focus();
+                } else if (!event.shiftKey && document.activeElement === last) {
+                    event.preventDefault();
+                    first.focus();
+                }
+            });
+
+            return modal;
+        },
+
+        openDetail(card) {
+            if (!card) return;
+            const modal = this._ensureModal();
+            this._activeCard = card;
+            this._lastFocus = document.activeElement;
+
+            const current = this._readCardData(card);
+            const isOrange = card.classList.contains('orange');
+            this._sheetEl.classList.toggle('wu-weather-modal__sheet--orange', isOrange);
+            this._sheetEl.classList.toggle('wu-weather-modal__sheet--blue', !isOrange);
+            this._renderShell(current);
+
+            modal.classList.add('is-open');
+            modal.setAttribute('aria-hidden', 'false');
+            document.documentElement.classList.add('wu-weather-modal-open');
+
+            const closeBtn = this._sheetEl.querySelector('.wu-weather-modal__close');
+            if (closeBtn) closeBtn.focus({ preventScroll: true });
+
+            this._loadForecast(card, current);
+        },
+
+        closeDetail() {
+            if (!this._modalEl) return;
+            this._modalEl.classList.remove('is-open');
+            this._modalEl.setAttribute('aria-hidden', 'true');
+            document.documentElement.classList.remove('wu-weather-modal-open');
+
+            const focusTarget = this._activeCard || this._lastFocus;
+            this._activeCard = null;
+            if (focusTarget && document.contains(focusTarget)) {
+                try { focusTarget.focus({ preventScroll: true }); } catch (e) { /* ignore */ }
+            }
+        },
+
+        _readCardData(card) {
+            const payload = card._wuWeatherData || {};
+            const text = (sel) => {
+                const el = card.querySelector(sel);
+                return el ? el.textContent.trim() : '';
+            };
+            const iconEl = card.querySelector('.withu-home-weather-icon-main');
+            const iconMatch = iconEl ? String(iconEl.className).match(/qi-[0-9]+-fill/) : null;
+            const dash = (value) => value === undefined || value === null || value === '' || value === '--';
+
+            return {
+                city: !dash(payload.city) ? payload.city : (text('.withu-home-weather-text-city') || card.getAttribute('data-location-name') || '当前位置'),
+                temp: !dash(payload.temp) ? `${payload.temp}°` : (text('.withu-home-weather-text-temp') || '--°'),
+                desc: !dash(payload.desc) ? payload.desc : (text('.withu-home-weather-text-status') || '天气数据暂不可用'),
+                icon: iconMatch ? iconMatch[0] : 'qi-999-fill',
+                feels: !dash(payload.feelsLike) ? `${payload.feelsLike}°` : (text('.stat-feels') || '--'),
+                humidity: !dash(payload.humidity) ? `${payload.humidity}%` : (text('.stat-humidity') || '--'),
+                vis: !dash(payload.vis) ? `${payload.vis} km` : (text('.stat-vis') || '--'),
+                wind: !dash(payload.windDir)
+                    ? `${payload.windDir}${!dash(payload.windScale) ? ' ' + payload.windScale + '级' : ''}`
+                    : '—',
+                obsTime: payload.obsTime || '',
+                updated: text('.withu-home-weather-time-tag') || '--'
+            };
+        },
+
+        _renderShell(current) {
+            const dateText = this._formatModalDate(current.obsTime, current.updated);
+            const tempValue = String(current.temp).replace('°', '');
+            const icon = this._escapeHtml(current.icon);
+
+            this._sheetEl.innerHTML = `
+                <header class="wu-weather-modal__top">
+                    <div>
+                        <p class="wu-weather-modal__city"><i class="ph-fill ph-map-pin"></i><span>${this._escapeHtml(current.city)}</span></p>
+                        <p class="wu-weather-modal__date">${this._escapeHtml(dateText)}</p>
+                    </div>
+                    <button type="button" class="wu-weather-modal__close" data-wu-weather-close aria-label="关闭天气详情"><i class="ph ph-x"></i></button>
+                </header>
+                <section class="wu-weather-modal__now">
+                    <div class="wu-weather-modal__now-main">
+                        <div class="wu-weather-modal__temp">${this._escapeHtml(tempValue)}<sup>°</sup></div>
+                        <div class="wu-weather-modal__desc"><i class="${icon}"></i><span>${this._escapeHtml(current.desc)}</span></div>
+                        <div class="wu-weather-modal__range" data-wu-weather-range>预报加载中…</div>
+                    </div>
+                    <div class="wu-weather-modal__now-icon"><i class="${icon}"></i></div>
+                </section>
+                <section class="wu-weather-modal__section">
+                    <div class="wu-weather-modal__section-head"><span>逐小时预报</span><span>未来 24 小时</span></div>
+                    <div class="wu-weather-modal__hourly" data-wu-weather-hourly>
+                        <div class="wu-weather-modal__loading"><span class="wu-weather-spinner"></span><span>正在获取逐小时天气…</span></div>
+                    </div>
+                </section>
+                <section class="wu-weather-modal__section">
+                    <div class="wu-weather-modal__section-head"><span>未来 7 天</span><span>每日预报</span></div>
+                    <div class="wu-weather-modal__daily" data-wu-weather-daily>
+                        <div class="wu-weather-modal__loading"><span class="wu-weather-spinner"></span><span>正在获取每日预报…</span></div>
+                    </div>
+                </section>
+                <section class="wu-weather-modal__section">
+                    <div class="wu-weather-modal__section-head"><span>天气详情</span></div>
+                    <div class="wu-weather-modal__details" data-wu-weather-details>
+                        ${this._detailItem('ph-thermometer-simple', '体感温度', current.feels)}
+                        ${this._detailItem('ph-drop', '湿度', current.humidity)}
+                        ${this._detailItem('ph-wind', '风力', current.wind)}
+                        ${this._detailItem('ph-eye', '能见度', current.vis)}
+                    </div>
+                </section>
+                <p class="wu-weather-modal__foot">数据来自和风天气 · 仅供日常参考</p>
+            `;
+        },
+
+        async _loadForecast(card, current) {
+            const requestId = ++this._forecastRequestId;
+            try {
+                const url = this._buildUrl(card) + '&include=forecast';
+                const resp = await fetch(url, { headers: { 'Accept': 'application/json' }, cache: 'no-store' });
+                if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
+                const json = await resp.json().catch(() => null);
+                if (requestId !== this._forecastRequestId) return;
+                if (!json || json.code !== 200 || !json.data) throw new Error('No Data');
+                this._hydrateForecast(json.data, current);
+            } catch (e) {
+                if (requestId !== this._forecastRequestId) return;
+                this._showForecastEmpty();
+            }
+        },
+
+        _hydrateForecast(data, current) {
+            const daily = Array.isArray(data.daily) ? data.daily.slice(0, 7) : [];
+            const hourly = data.hourly && Array.isArray(data.hourly.time) ? data.hourly : null;
+            const today = daily[0] || null;
+            const dash = (value) => value === undefined || value === null || value === '' || value === '--';
+
+            if (!dash(data.temp)) {
+                const tempEl = this._sheetEl.querySelector('.wu-weather-modal__temp');
+                if (tempEl) tempEl.innerHTML = `${this._escapeHtml(String(data.temp))}<sup>°</sup>`;
+            }
+            if (!dash(data.desc)) {
+                const descEl = this._sheetEl.querySelector('.wu-weather-modal__desc span');
+                if (descEl) descEl.textContent = data.desc;
+            }
+            if (!dash(data.icon)) {
+                const iconClass = `qi-${String(data.icon).replace(/[^\d]/g, '')}-fill`;
+                const iconEls = this._sheetEl.querySelectorAll('.wu-weather-modal__desc i, .wu-weather-modal__now-icon i');
+                Array.prototype.forEach.call(iconEls, (el) => { el.className = iconClass; });
+            }
+            if (!dash(data.city)) {
+                const cityEl = this._sheetEl.querySelector('.wu-weather-modal__city span');
+                if (cityEl) cityEl.textContent = data.city;
+            }
+            if (!dash(data.obsTime)) {
+                const dateEl = this._sheetEl.querySelector('.wu-weather-modal__date');
+                if (dateEl) dateEl.textContent = this._formatModalDate(data.obsTime, current.updated);
+            }
+
+            const rangeEl = this._sheetEl.querySelector('[data-wu-weather-range]');
+            if (rangeEl) {
+                rangeEl.textContent = (today && !dash(today.tempMax) && !dash(today.tempMin))
+                    ? `最高 ${today.tempMax}° · 最低 ${today.tempMin}°`
+                    : '当前天气';
+            }
+
+            const hourlyEl = this._sheetEl.querySelector('[data-wu-weather-hourly]');
+            if (hourlyEl) {
+                if (hourly && hourly.time.length) {
+                    const times = hourly.time.slice(0, 24);
+                    hourlyEl.innerHTML = times.map((time, index) => {
+                        const temp = hourly.temperature_2m ? hourly.temperature_2m[index] : null;
+                        const code = hourly.weather_code ? hourly.weather_code[index] : null;
+                        const pop = hourly.precipitation_probability ? hourly.precipitation_probability[index] : null;
+                        const popText = !dash(pop) && Number(pop) > 0 ? `${pop}%` : '';
+                        return `<div class="wu-weather-modal__hour${index === 0 ? ' is-now' : ''}">
+                            <span class="wu-weather-modal__hour-time">${this._escapeHtml(this._formatHour(time, index))}</span>
+                            <i class="ph-fill ${this._iconForWmo(code)}"></i>
+                            <span class="wu-weather-modal__hour-temp">${dash(temp) ? '--°' : Math.round(Number(temp)) + '°'}</span>
+                            <span class="wu-weather-modal__hour-pop">${popText}</span>
+                        </div>`;
+                    }).join('');
+                } else {
+                    hourlyEl.innerHTML = '<div class="wu-weather-modal__empty">暂无逐小时预报数据</div>';
+                }
+            }
+
+            const dailyEl = this._sheetEl.querySelector('[data-wu-weather-daily]');
+            if (dailyEl) {
+                if (daily.length) {
+                    dailyEl.innerHTML = daily.map((item, index) => {
+                        const iconCode = String(item.iconDay || '').replace(/[^\d]/g, '');
+                        const iconClass = iconCode ? `qi-${iconCode}-fill` : 'qi-999-fill';
+                        const max = dash(item.tempMax) ? '--°' : `${item.tempMax}°`;
+                        const min = dash(item.tempMin) ? '--°' : `${item.tempMin}°`;
+                        return `<div class="wu-weather-modal__day">
+                            <span class="wu-weather-modal__day-name">${this._escapeHtml(this._formatDay(item.fxDate, index))}</span>
+                            <i class="${iconClass}"></i>
+                            <span class="wu-weather-modal__day-desc">${this._escapeHtml(item.textDay || '')}</span>
+                            <span class="wu-weather-modal__day-temp"><b>${max}</b><em>${min}</em></span>
+                        </div>`;
+                    }).join('');
+                } else {
+                    dailyEl.innerHTML = '<div class="wu-weather-modal__empty">暂无每日预报数据</div>';
+                }
+            }
+
+            const detailsEl = this._sheetEl.querySelector('[data-wu-weather-details]');
+            if (detailsEl) {
+                const items = [
+                    this._detailItem('ph-thermometer-simple', '体感温度', !dash(data.feelsLike) ? `${data.feelsLike}°` : current.feels),
+                    this._detailItem('ph-drop', '湿度', !dash(data.humidity) ? `${data.humidity}%` : current.humidity),
+                    this._detailItem('ph-wind', '风力', !dash(data.windDir)
+                        ? `${data.windDir}${!dash(data.windScale) ? ' ' + data.windScale + '级' : ''}`
+                        : current.wind),
+                    this._detailItem('ph-eye', '能见度', !dash(data.vis) ? `${data.vis} km` : current.vis)
+                ];
+                if (today && !dash(today.pressure)) items.push(this._detailItem('ph-gauge', '气压', `${today.pressure} hPa`));
+                if (today && !dash(today.uvIndex)) items.push(this._detailItem('ph-sun', '紫外线', today.uvIndex));
+                detailsEl.innerHTML = items.join('');
+            }
+        },
+
+        _showForecastEmpty() {
+            const hourlyEl = this._sheetEl.querySelector('[data-wu-weather-hourly]');
+            const dailyEl = this._sheetEl.querySelector('[data-wu-weather-daily]');
+            const rangeEl = this._sheetEl.querySelector('[data-wu-weather-range]');
+            if (hourlyEl) hourlyEl.innerHTML = '<div class="wu-weather-modal__empty">暂无逐小时预报数据</div>';
+            if (dailyEl) dailyEl.innerHTML = '<div class="wu-weather-modal__empty">暂无每日预报数据</div>';
+            if (rangeEl) rangeEl.textContent = '当前天气';
+        },
+
+        _detailItem(icon, label, value) {
+            return `<div class="wu-weather-modal__detail">
+                <span class="wu-weather-modal__detail-label"><i class="ph ${icon}"></i>${this._escapeHtml(label)}</span>
+                <span class="wu-weather-modal__detail-value">${this._escapeHtml(String(value))}</span>
+            </div>`;
+        },
+
+        _formatModalDate(obsTime, fallback) {
+            const date = obsTime ? new Date(obsTime) : new Date();
+            if (isNaN(date.getTime())) {
+                return fallback && fallback !== '--' ? `更新于 ${fallback}` : '刚刚更新';
+            }
+            const week = ['周日', '周一', '周二', '周三', '周四', '周五', '周六'][date.getDay()];
+            const day = `${date.getMonth() + 1}月${date.getDate()}日 ${week}`;
+            const hh = String(date.getHours()).padStart(2, '0');
+            const mm = String(date.getMinutes()).padStart(2, '0');
+            return `${day} · ${hh}:${mm} 更新`;
+        },
+
+        _formatHour(time, index) {
+            if (index === 0) return '现在';
+            const date = new Date(time);
+            if (isNaN(date.getTime())) return '--';
+            return `${String(date.getHours()).padStart(2, '0')}:00`;
+        },
+
+        _formatDay(fxDate, index) {
+            if (index === 0) return '今天';
+            if (index === 1) return '明天';
+            const date = new Date(`${fxDate}T00:00:00`);
+            if (isNaN(date.getTime())) return fxDate || '--';
+            return ['周日', '周一', '周二', '周三', '周四', '周五', '周六'][date.getDay()];
+        },
+
+        _iconForWmo(code) {
+            const value = Number(code);
+            if (!isFinite(value)) return 'ph-cloud';
+            if (value === 0) return 'ph-sun';
+            if (value <= 2) return 'ph-cloud-sun';
+            if (value === 3) return 'ph-cloud';
+            if (value === 45 || value === 48) return 'ph-cloud-fog';
+            if (value >= 51 && value <= 57) return 'ph-cloud-drizzle';
+            if (value >= 61 && value <= 67) return 'ph-cloud-rain';
+            if (value >= 71 && value <= 77) return 'ph-snowflake';
+            if (value >= 80 && value <= 82) return 'ph-cloud-rain';
+            if (value >= 85 && value <= 86) return 'ph-snowflake';
+            if (value >= 95) return 'ph-cloud-lightning';
+            return 'ph-cloud';
         },
 
         async _refreshAll() {

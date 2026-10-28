@@ -5438,6 +5438,7 @@ body.bg-grad-grid::before {
 
 /* --- 天气卡片主体 --- */
 .withu-home .withu-home-weather-card {
+    --wu-weather-font: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
     position: relative;
     border-radius: 24px;
     padding: 18px;
@@ -5449,8 +5450,16 @@ body.bg-grad-grid::before {
     display: flex;
     flex-direction: column;
     justify-content: space-between;
-    transition: transform 0.3s ease;
-    font-family: 'Inter', sans-serif;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    font-family: var(--wu-weather-font);
+    cursor: pointer;
+    touch-action: manipulation;
+    -webkit-tap-highlight-color: transparent;
+}
+
+.withu-home .withu-home-weather-card:focus-visible {
+    outline: 2px solid rgba(255, 255, 255, 0.92);
+    outline-offset: 3px;
 }
 
 .withu-home .withu-home-weather-card:hover {
@@ -5823,10 +5832,15 @@ body.bg-grad-grid::before {
     display: flex;
     justify-content: space-between;
     align-items: center;
+    gap: 8px;
+    min-width: 0;
 }
 
 /* 玻璃拟态用户胶囊 */
 .withu-home .withu-home-weather-user-pill {
+    min-width: 0;
+    max-width: calc(100% - 80px);
+    flex-shrink: 1;
     background: rgba(255, 255, 255, 0.25);
     backdrop-filter: blur(8px);
     -webkit-backdrop-filter: blur(8px);
@@ -5849,13 +5863,16 @@ body.bg-grad-grid::before {
 }
 
 .withu-home .withu-home-weather-username {
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
     font-size: 13px;
     font-weight: 700;
     letter-spacing: 0.025em;
     line-height: 1;
-    white-space: nowrap;
     color: #ffffff;
-    font-family: system-ui, sans-serif;
+    font-family: var(--wu-weather-font);
 }
 
 /* 时间标签 */
@@ -5870,7 +5887,9 @@ body.bg-grad-grid::before {
     color: rgba(255, 255, 255, 0.9);
     cursor: default;
     transition: background 0.2s;
-    font-family: 'Inter', sans-serif;
+    font-family: var(--wu-weather-font);
+    white-space: nowrap;
+    flex-shrink: 0;
 }
 
 .withu-home .withu-home-weather-time-tag:hover {
@@ -5895,7 +5914,7 @@ body.bg-grad-grid::before {
     letter-spacing: -0.05em;
     margin-left: -2px;
     text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
-    font-family: 'Inter', sans-serif;
+    font-family: var(--wu-weather-font);
 }
 
 .withu-home .withu-home-weather-icon-main {
@@ -5913,6 +5932,7 @@ body.bg-grad-grid::before {
     display: flex;
     align-items: center;
     gap: 5px;
+    min-width: 0;
     opacity: 0.95;
     margin-bottom: 12px;
     padding-left: 2px;
@@ -5920,25 +5940,36 @@ body.bg-grad-grid::before {
 
 .withu-home .withu-home-weather-icon-pin {
     font-size: 12px;
+    flex-shrink: 0;
 }
 
 .withu-home .withu-home-weather-text-city {
+    flex: 0 1 auto;
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
     font-size: 13px;
     font-weight: 700;
+    line-height: 1.3;
     letter-spacing: 0.025em;
-    font-family: 'Inter', sans-serif;
+    font-family: var(--wu-weather-font);
 }
 
 .withu-home .withu-home-weather-dot-divider {
     font-size: 11px;
     opacity: 0.6;
     padding: 0 2px;
+    flex-shrink: 0;
 }
 
 .withu-home .withu-home-weather-text-status {
     font-size: 13px;
     font-weight: 500;
-    font-family: 'Inter', sans-serif;
+    line-height: 1.3;
+    font-family: var(--wu-weather-font);
+    white-space: nowrap;
+    flex-shrink: 0;
 }
 
 /* --- 第四行：底部指标网格 --- */
@@ -5975,7 +6006,8 @@ body.bg-grad-grid::before {
 .withu-home .withu-home-weather-text-stat {
     font-size: 11px;
     font-weight: 700;
-    font-family: 'Inter', sans-serif;
+    font-family: var(--wu-weather-font);
+    white-space: nowrap;
 }
 
 /* 响应式 */

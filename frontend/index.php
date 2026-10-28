@@ -365,7 +365,8 @@ try {
 <link rel="stylesheet" href="Style/vendor/remixicon/remixicon.css">
 <link rel="stylesheet" href="Style/css/tooltip.css">
 <link rel="stylesheet" href="Style/css/interaction.css">
-<link rel="stylesheet" href="Style/css/withu-home-style.css?v=20261007g">
+<link rel="stylesheet" href="Style/css/withu-home-style.css?v=20261028weather">
+<link rel="stylesheet" href="Style/css/withu-weather-modal.css?v=20261028b">
 <link rel="stylesheet" href="Style/css/timetable.css?v=20261027-weather">
 <link rel="stylesheet" href="Style/css/withu-detail.css?v=1.0.80">
 <link rel="stylesheet" href="Style/css/mobile-nav.css?v=1.0.1-flush">
@@ -1503,7 +1504,7 @@ html.withu-subpage #homePage.wrap{height:clamp(300px,38vh,460px)!important;min-h
 <script src="Style/LoveListStyle/carousel.thumbs.umd.js"></script>
 <script src="Style/LoveListStyle/fancybox.umd.js"></script>
 <script src="assets/js/page-lovelist.js"></script>
-<script src="assets/js/page-index.js?v=20261026gps"></script>
+<script src="assets/js/page-index.js?v=20261028weather2"></script>
 <script src="assets/js/page-timetable.js?v=20261027-weather"></script>
 <script src="assets/js/page-detail.js"></script>
 <script src="assets/js/page-album-detail.js"></script>
