@@ -85,3 +85,53 @@
 - 回滚内容：分区标题/图标/徽章颜色、倒计时数字与卡片、天气卡、清单卡、纪念日卡、点滴/相册/事件/留言卡、结尾卡、空状态、智能卡遮罩、更多按钮
 - 未回滚：字号、字距、图标、间距、动效，以及顶部导航、页脚和其他页面
 - 位置：`withu-v3.css` 第 14 节，便于后续单独调整或整体删除
+
+## 7. 全站背景：观影界面渐变融合（v3.6）
+
+- 作用域：`body.bg-pdot-vignette`（全部前台页面，v3.6 起由首页扩展到全站）
+- 底色与柔光取自观影页 `backend/app/watch.php`：`#fff7fa` + 蓝 `#7ec8e3`、粉 `#f78da7`、绿 `#7fbf9d`
+- 保留原点阵与颗粒层，密度 26px 不变，点色改为观影页墨色 `#3d3038`，颗粒透明度降至 0.24
+- 流动周期 42s，移动端与 `prefers-reduced-motion` 下关闭
+- 页脚：所有前台页面取消纯白底与全宽分隔线，让渐变与点阵穿透，仅保留 v3 居中的香槟金发丝线
+- 位置：`withu-v3.css` 第 15 节，便于后续扩展或整体删除
+
+### 版本与回退
+
+| 标签 | 含义 |
+| --- | --- |
+| `home-bg-baseline-v3` | 首页背景实验前的基线（玫瑰 / 香槟 / 鼠尾草 + 点阵颗粒） |
+| `home-bg-watch-fusion-v1` | 首页画布融合观影渐变的第一版 |
+| `home-bg-watch-fusion-v2` | 让首页页脚背景透明并融入渐变 |
+| `site-unify-watch-v1` | v3.6：背景扩展到全站，并统一空状态与卡片边缘 |
+| `keep-bg-drop-feather-v1` | v3.7：保留全站背景与卡片边缘，撤回空状态羽化 |
+
+回退到基线：`git checkout home-bg-baseline-v3 -- frontend/Style/css/withu-v3.css frontend/inc/footer.php`
+或整体切换：`git switch main`（实验分支为 `feat/home-watch-gradient`）。
+
+## 8. 空状态羽化已撤回（v3.7）
+
+- 根据用户反馈，空状态不再使用羽化背景
+- `withu-v3.css` 第 16 节的羽化规则已整段移除
+- 空状态恢复 v3 原有的虚线卡片样式（首页沿用第 14 节的浅玫瑰虚线；子页为香槟金虚线）
+- 全站观影渐变背景与第 17 节卡片边缘统一保持不变
+
+### 版本与回退
+
+| 标签 | 含义 |
+| --- | --- |
+| `lovelist-empty-soft-v1` | 无背景版本（已弃用） |
+| `lovelist-empty-soft-v2` | 仅清单页：保留背景 + 22px 羽化（已弃用） |
+| `site-unify-watch-v1` | v3.6：全站背景 + 卡片边缘 + 空状态 15px 羽化 |
+| `keep-bg-drop-feather-v1` | v3.7：保留背景与卡片边缘，撤回空状态羽化（当前） |
+
+如需重新取回羽化版本：
+`git checkout site-unify-watch-v1 -- frontend/Style/css/withu-v3.css frontend/inc/footer.php`。
+
+## 9. 全站卡片边缘统一（v3.6 起保留）
+
+- 作用域：`html body.bg-pdot-vignette #pjax-container ...`（前台全部页面）
+- 统一为 24px 圆角、1px 白色发丝边框、同一组柔和扩散阴影
+- 悬停只加深阴影与发丝线亮度，不再切换到金色边框
+- 覆盖：`.withu-card`、`.withu-article-card-base`、`.withu-time-line-card`、`.love-card`、`.MessageCard`、`.withu-detail-*`、`.withu-chat-device`，以及首页事件、点滴、相册、留言、倒计时、智能卡、天气、清单、纪念日卡片
+- 首页卡片使用更高优先级覆盖第 14 节的回滚阴影
+- 位置：`withu-v3.css` 第 17 节
