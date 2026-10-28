@@ -85,3 +85,21 @@
 - 回滚内容：分区标题/图标/徽章颜色、倒计时数字与卡片、天气卡、清单卡、纪念日卡、点滴/相册/事件/留言卡、结尾卡、空状态、智能卡遮罩、更多按钮
 - 未回滚：字号、字距、图标、间距、动效，以及顶部导航、页脚和其他页面
 - 位置：`withu-v3.css` 第 14 节，便于后续单独调整或整体删除
+
+## 7. 首页背景：观影界面渐变融合（v3.2）
+
+- 作用域：`html:not(.withu-subpage) body.bg-pdot-vignette`（仅首页画布）
+- 底色与柔光取自观影页 `backend/app/watch.php`：`#fff7fa` + 蓝 `#7ec8e3`、粉 `#f78da7`、绿 `#7fbf9d`
+- 保留原点阵与颗粒层，密度 26px 不变，点色改为观影页墨色 `#3d3038`，颗粒透明度降至 0.24
+- 流动周期 42s，移动端与 `prefers-reduced-motion` 下关闭
+- 位置：`withu-v3.css` 第 15 节，便于后续扩展或整体删除
+
+### 版本与回退
+
+| 标签 | 含义 |
+| --- | --- |
+| `home-bg-baseline-v3` | 首页背景实验前的基线（玫瑰 / 香槟 / 鼠尾草 + 点阵颗粒） |
+| `home-bg-watch-fusion-v1` | 首页融合观影渐变的第一版 |
+
+回退到基线：`git checkout home-bg-baseline-v3 -- frontend/Style/css/withu-v3.css frontend/inc/footer.php`
+或整体切换：`git switch main`（实验分支为 `feat/home-watch-gradient`）。
