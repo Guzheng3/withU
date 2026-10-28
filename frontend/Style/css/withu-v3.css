@@ -1720,6 +1720,13 @@ html:not(.withu-subpage) body.bg-pdot-vignette::after {
     opacity: 0.24 !important;
 }
 
+/* 页脚：去掉 index.php 内联的纯白底与全宽分隔线，
+   让渐变、点阵与颗粒自然延伸到页面底部 */
+html:not(.withu-subpage) .footer-warp {
+    background: transparent !important;
+    border-top-color: transparent !important;
+}
+
 @media (max-width: 768px) {
     html:not(.withu-subpage) body.bg-pdot-vignette {
         animation: none !important;
