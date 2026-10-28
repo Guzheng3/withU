@@ -1738,3 +1738,46 @@ html:not(.withu-subpage) .footer-warp {
         animation: none !important;
     }
 }
+
+/* ============================================================
+   16. 清单页空状态：无边框柔雾（按用户反馈）
+   ------------------------------------------------------------
+   - 只作用于 lovelist.php 的 #list_data > .withu-no-data
+   - 去掉虚线边框、卡片底、阴影与 backdrop-filter 的矩形边界
+   - 背景改为中心柔白雾面，向四周渐隐，边缘无可见轮廓
+   ============================================================ */
+
+#list_data > .withu-no-data {
+    background: none !important;
+    border: 0 !important;
+    box-shadow: none !important;
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+}
+
+/* 柔白雾面：中心柔亮，向外自然消失 */
+#list_data > .withu-no-data::before {
+    background-image:
+        radial-gradient(ellipse 50% 50% at 50% 46%,
+            rgba(255, 253, 251, 0.84) 0%,
+            rgba(255, 250, 246, 0.52) 46%,
+            rgba(255, 249, 245, 0) 100%) !important;
+    background-size: 100% 100% !important;
+    opacity: 1 !important;
+    -webkit-mask-image: radial-gradient(ellipse 52% 52% at 50% 50%, #000 36%, transparent 100%) !important;
+    mask-image: radial-gradient(ellipse 52% 52% at 50% 50%, #000 36%, transparent 100%) !important;
+}
+
+/* 玫瑰柔光改为居中，避免偏在角落形成色块 */
+#list_data > .withu-no-data::after {
+    top: 46%;
+    right: auto;
+    bottom: auto;
+    left: 50%;
+    width: 76%;
+    height: 80%;
+    transform: translate(-50%, -50%);
+    background: radial-gradient(ellipse at center, rgba(244, 88, 122, 0.1), transparent 70%) !important;
+    filter: blur(24px);
+    opacity: 0.7 !important;
+}
