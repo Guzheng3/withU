@@ -86,6 +86,11 @@ foreach (preg_split('/[\r\n,，;；]+/u', $withuBeianRaw) as $withuBeianItem) {
 <div class="div_marb_7rem-none">
     <div class="footer-warp">
         <div class="footer">
+            <div class="wu-footer-signature" aria-hidden="true">
+                <span class="wu-footer-signature__mark">♥</span>
+                <span class="wu-footer-signature__name">withU</span>
+                <span class="wu-footer-signature__note">把日常写成我们的故事</span>
+            </div>
             <?php foreach ($withuBeianBadges as $withuBadge): ?>
                 <p><a class="github-badge" href="<?php echo htmlspecialchars($withuBadge['href'], ENT_QUOTES, 'UTF-8'); ?>" target="_blank" rel="noopener noreferrer" title="<?php echo htmlspecialchars($withuBadge['title'], ENT_QUOTES, 'UTF-8'); ?>">
                     <span class="badge-subject"><img src="Style/img/icp/<?php echo htmlspecialchars($withuBadge['icon'], ENT_QUOTES, 'UTF-8'); ?>" alt=""></span>
@@ -107,7 +112,9 @@ foreach (preg_split('/[\r\n,，;；]+/u', $withuBeianRaw) as $withuBeianItem) {
     </div>
 </div>
 <link rel="stylesheet" href="/Style/css/withu-v2.css?v=2.1.0">
+<link rel="stylesheet" href="/Style/css/withu-v3.css?v=3.1.0">
 <script src="/assets/js/withu-v2.js?v=2.1.0" defer></script>
+<script src="/assets/js/withu-v3.js?v=3.1.0" defer></script>
 
 <!-- withU 桌宠（一二 & 布布）：位于 PJAX 容器之外，整页只加载一次，跨页常驻 -->
 <link rel="stylesheet" href="/assets/css/withu-pet.css?v=1.0.84">

@@ -1,0 +1,1673 @@
+/* ============================================================
+   withU v3 — 纸感玫瑰金精修层
+   ------------------------------------------------------------
+   设计方向：晨雾玫瑰 × 香槟金 × 手账纸感
+   - 在 v2 之上统一色温、层级与留白，不改动业务布局
+   - 重点精修：首屏 Hero、页面标题、分区标题、卡片、空状态、
+     留言/清单/相册、移动端底部导航、页脚与登录页
+   - 动效克制，全部支持 prefers-reduced-motion
+   加载顺序：withu-v2.css 之后，仅做覆盖与增强
+   ============================================================ */
+
+:root {
+    --wu3-rose: #d94f6d;
+    --wu3-rose-deep: #b23a55;
+    --wu3-rose-soft: #fdeef2;
+    --wu3-gold: #c9a26b;
+    --wu3-gold-deep: #a9834f;
+    --wu3-gold-soft: #f5e9d8;
+    --wu3-sage: #5e8f7d;
+    --wu3-ink: #2b2327;
+    --wu3-ink-2: #6d6167;
+    --wu3-ink-3: #9b8e94;
+    --wu3-line: rgba(43, 35, 39, 0.08);
+    --wu3-line-gold: rgba(201, 162, 107, 0.24);
+    --wu3-paper: #fffdfb;
+    --wu3-paper-2: #fbf6f1;
+    --wu3-ease: cubic-bezier(0.22, 1, 0.36, 1);
+    --wu3-ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+    --wu3-shadow-sm: 0 2px 10px rgba(43, 35, 39, 0.04), 0 1px 2px rgba(43, 35, 39, 0.03);
+    --wu3-shadow-md: 0 18px 42px -22px rgba(43, 35, 39, 0.24), 0 4px 12px -6px rgba(43, 35, 39, 0.06);
+    --wu3-shadow-lg: 0 32px 70px -32px rgba(43, 35, 39, 0.3), 0 12px 28px -14px rgba(43, 35, 39, 0.1);
+}
+
+/* ------------------------------------------------------------
+   0. 统一 .withu-home 内部令牌（v1 把 serif 指到了 system-ui）
+   ------------------------------------------------------------ */
+.withu-home {
+    --withu-font-serif: var(--wu-font-serif);
+    --withu-font-sans: var(--wu-font-sans);
+    --withu-color-rose: var(--wu3-rose);
+    --withu-color-text: var(--wu3-ink);
+    --withu-color-text-muted: var(--wu3-ink-2);
+    --withu-color-border: var(--wu3-line);
+}
+
+/* ------------------------------------------------------------
+   1. 画布：暖纸底 + 三层柔光 + 细点阵与颗粒
+   ------------------------------------------------------------ */
+html {
+    background-color: #faf7f4;
+}
+
+body.bg-pdot-vignette {
+    background-color: #faf7f4 !important;
+    background-image:
+        radial-gradient(52% 46% at 8% 0%, rgba(217, 79, 109, 0.1), transparent 64%),
+        radial-gradient(48% 42% at 96% 4%, rgba(201, 162, 107, 0.12), transparent 66%),
+        radial-gradient(56% 52% at 50% 108%, rgba(94, 143, 125, 0.07), transparent 68%),
+        linear-gradient(115deg, #fbf8f5 0%, #f6f0ec 42%, #f9f5f1 72%, #fbf8f5 100%) !important;
+    background-size: 180% 180%, 180% 180%, 180% 180%, 220% 220% !important;
+    background-attachment: fixed !important;
+    animation: wu3CanvasFlow 34s ease-in-out infinite !important;
+}
+
+@keyframes wu3CanvasFlow {
+    0%, 100% {
+        background-position: 0% 0%, 100% 0%, 50% 100%, 0% 50%;
+    }
+    50% {
+        background-position: 18% 8%, 82% 6%, 48% 92%, 100% 50%;
+    }
+}
+
+body.bg-pdot-vignette::before {
+    background-image: radial-gradient(circle at 1px 1px, rgba(43, 35, 39, 0.085) 1px, transparent 0) !important;
+    background-size: 26px 26px !important;
+    opacity: 0.62 !important;
+}
+
+body.bg-pdot-vignette::after {
+    opacity: 0.3 !important;
+}
+
+/* ------------------------------------------------------------
+   2. 顶部栏与导航岛
+   ------------------------------------------------------------ */
+.header-wrap {
+    background: linear-gradient(180deg, rgba(255, 252, 249, 0.9), rgba(255, 249, 245, 0.66)) !important;
+    border-bottom: 1px solid rgba(201, 162, 107, 0.16) !important;
+    box-shadow: 0 12px 34px -30px rgba(43, 35, 39, 0.5) !important;
+    backdrop-filter: blur(26px) saturate(170%) !important;
+    -webkit-backdrop-filter: blur(26px) saturate(170%) !important;
+}
+
+.header-wrap::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: -1px;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(201, 162, 107, 0.5), transparent);
+    pointer-events: none;
+}
+
+.header-wrap.wu3-scrolled {
+    background: linear-gradient(180deg, rgba(255, 252, 249, 0.96), rgba(255, 249, 245, 0.86)) !important;
+    box-shadow: 0 18px 40px -30px rgba(43, 35, 39, 0.55) !important;
+}
+
+.header-wrap .logo img {
+    filter: drop-shadow(0 3px 10px rgba(217, 79, 109, 0.16));
+    transition: transform 0.35s var(--wu3-ease-spring);
+}
+
+.header-wrap .logo img:hover {
+    transform: translateY(-1px) scale(1.04);
+}
+
+.withu-header-poem {
+    color: var(--wu3-ink-2) !important;
+}
+
+.withu-header-map,
+.withu-header-weather {
+    border-radius: 999px;
+    transition:
+        background-color 0.25s ease,
+        color 0.25s ease,
+        transform 0.25s var(--wu3-ease),
+        box-shadow 0.25s ease;
+}
+
+.withu-header-map:hover,
+.withu-header-weather:hover {
+    background: rgba(217, 79, 109, 0.07);
+    color: var(--wu3-rose-deep) !important;
+    transform: translateY(-1px);
+    box-shadow: 0 8px 20px -16px rgba(217, 79, 109, 0.5);
+}
+
+.withu-couple-avatars-right img {
+    border: 2px solid rgba(255, 253, 251, 0.95);
+    box-shadow: 0 8px 20px -12px rgba(43, 35, 39, 0.45);
+}
+
+.withu-nav-island-container {
+    background: linear-gradient(180deg, rgba(255, 253, 251, 0.94), rgba(255, 247, 242, 0.84)) !important;
+    border: 1px solid rgba(255, 255, 255, 0.96) !important;
+    box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, 0.9),
+        0 0 0 1px rgba(201, 162, 107, 0.1),
+        0 20px 42px -28px rgba(43, 35, 39, 0.42) !important;
+    backdrop-filter: blur(26px) saturate(170%) !important;
+    -webkit-backdrop-filter: blur(26px) saturate(170%) !important;
+}
+
+.withu-nav-island-item {
+    border-radius: 999px;
+    color: var(--wu3-ink-2);
+}
+
+.withu-nav-island-item:not(.active):hover {
+    background-color: rgba(217, 79, 109, 0.07) !important;
+    color: var(--wu3-rose-deep) !important;
+}
+
+.withu-nav-island-item.active {
+    color: #fff !important;
+    text-shadow: 0 1px 3px rgba(120, 30, 50, 0.24);
+}
+
+.withu-nav-island-item.active i {
+    filter: drop-shadow(0 2px 6px rgba(120, 30, 50, 0.28));
+}
+
+.withu-nav-indicator {
+    background: linear-gradient(135deg, #ef8298 0%, #d94f6d 48%, #b23a55 100%) !important;
+    box-shadow:
+        0 8px 20px -8px rgba(217, 79, 109, 0.75),
+        inset 0 1px 0 rgba(255, 255, 255, 0.42) !important;
+}
+
+.withu-nav-indicator::after {
+    content: "";
+    position: absolute;
+    inset: 3px;
+    border-radius: inherit;
+    background: linear-gradient(180deg, rgba(255, 255, 255, 0.28), transparent 58%);
+    pointer-events: none;
+}
+
+/* 移动端底部导航：黑色指示器改为玫瑰金 */
+.withu-tab-template-v5-container.withu-glass-panel {
+    background: linear-gradient(180deg, rgba(255, 253, 251, 0.95), rgba(255, 246, 241, 0.9)) !important;
+    border: 1px solid rgba(201, 162, 107, 0.22) !important;
+    border-bottom: none !important;
+    box-shadow: 0 -20px 44px -30px rgba(43, 35, 39, 0.45) !important;
+    backdrop-filter: blur(24px) saturate(170%) !important;
+    -webkit-backdrop-filter: blur(24px) saturate(170%) !important;
+}
+
+.withu-tab-template-v5-indicator {
+    background: linear-gradient(135deg, #ef8298 0%, #d94f6d 52%, #b23a55 100%) !important;
+    box-shadow: 0 10px 24px -10px rgba(217, 79, 109, 0.85) !important;
+}
+
+.withu-tab-template-v5-container .withu-base-nav-item {
+    color: var(--wu3-ink-3);
+    transition: color 0.25s ease, transform 0.25s var(--wu3-ease);
+}
+
+.withu-tab-template-v5-container .withu-base-nav-item:hover {
+    color: var(--wu3-rose-deep);
+}
+
+.withu-tab-template-v5-container .withu-base-nav-item.active {
+    color: #fff !important;
+}
+
+.withu-tab-template-v5-container .withu-base-nav-item.active i {
+    transform: scale(1.06);
+}
+
+/* ------------------------------------------------------------
+   3. 内页 Hero 与页面标题
+   ------------------------------------------------------------ */
+html.withu-subpage #homePage.wrap {
+    box-shadow:
+        inset 0 0 0 1px rgba(255, 255, 255, 0.06),
+        inset 0 -60px 80px -70px rgba(25, 18, 22, 0.55);
+}
+
+html.withu-subpage #homePage.wrap .item img {
+    filter: saturate(0.94) contrast(1.02) brightness(0.99);
+}
+
+html.withu-subpage #homePage.wrap .item::after {
+    background:
+        linear-gradient(180deg, rgba(28, 20, 25, 0.3) 0%, rgba(28, 20, 25, 0) 30%),
+        radial-gradient(120% 80% at 50% 110%, rgba(28, 20, 25, 0.42), transparent 60%),
+        linear-gradient(0deg, rgba(28, 20, 25, 0.38) 0%, rgba(28, 20, 25, 0) 42%) !important;
+}
+
+html.withu-subpage #homePage .pointList .point {
+    background: rgba(255, 255, 255, 0.46);
+}
+
+html.withu-subpage #homePage .pointList .point.active {
+    background: linear-gradient(90deg, #fff, #ffe6d8);
+}
+
+.withu-page-header {
+    position: relative;
+    padding: 2.5rem 0 0.8rem;
+    isolation: isolate;
+}
+
+.withu-page-header::before {
+    content: "";
+    position: absolute;
+    left: 50%;
+    top: -54px;
+    width: min(780px, 92vw);
+    height: 250px;
+    transform: translateX(-50%);
+    background:
+        radial-gradient(ellipse at 50% 40%, rgba(217, 79, 109, 0.13), rgba(201, 162, 107, 0.07) 42%, transparent 72%);
+    filter: blur(12px);
+    z-index: -1;
+    pointer-events: none;
+}
+
+.withu-page-header::after {
+    width: 72px;
+    height: 3px;
+    margin-top: 1.05rem;
+    border-radius: 999px;
+    background: linear-gradient(90deg, transparent, var(--wu3-gold), var(--wu3-rose), transparent) !important;
+    opacity: 0.8 !important;
+    transform-origin: center;
+}
+
+html.wu3-js .withu-page-header::after {
+    transform: scaleX(0);
+}
+
+html.wu3-js .withu-page-header.wu3-inview::after {
+    transform: scaleX(1);
+    transition: transform 0.9s var(--wu3-ease) 0.12s;
+}
+
+.withu-meta-tag {
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.9), rgba(253, 246, 238, 0.82)) !important;
+    border: 1px solid rgba(201, 162, 107, 0.32) !important;
+    color: #8a6a52 !important;
+    box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, 0.9),
+        0 10px 26px -20px rgba(120, 80, 50, 0.45) !important;
+}
+
+.withu-meta-icon {
+    color: var(--wu3-gold) !important;
+}
+
+.withu-meta-line {
+    background: linear-gradient(90deg, transparent, rgba(201, 162, 107, 0.65), transparent) !important;
+}
+
+.withu-hero-title {
+    font-size: clamp(1.9rem, 3vw, 2.55rem);
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    line-height: 1.42;
+}
+
+.withu-hero-title .char {
+    background: linear-gradient(178deg, #34272d 0%, #4c3540 54%, #7d4d5c 100%) !important;
+    -webkit-background-clip: text !important;
+    background-clip: text !important;
+    filter: drop-shadow(0 10px 20px rgba(43, 35, 39, 0.08));
+}
+
+/* ------------------------------------------------------------
+   4. 分区标题：香槟金细线 + 低饱和宝石色
+   ------------------------------------------------------------ */
+.withu-home .withu-section {
+    margin-bottom: 4.2rem;
+}
+
+.withu-home .withu-section-header {
+    align-items: flex-end;
+    margin-bottom: 2rem;
+    padding-bottom: 1.05rem;
+    border-bottom: 1px solid rgba(201, 162, 107, 0.2);
+}
+
+.withu-home .withu-section-header::after {
+    width: 4.75rem;
+    height: 2px;
+    background: linear-gradient(90deg, var(--wu3-accent, var(--wu3-rose)), transparent) !important;
+    opacity: 0.9;
+    transform-origin: left center;
+}
+
+.withu-home .withu-section-header--rose {
+    --wu3-accent: #b23a55;
+}
+
+.withu-home .withu-section-header--blue {
+    --wu3-accent: #4f6f88;
+}
+
+.withu-home .withu-section-header--orange {
+    --wu3-accent: #a96d42;
+}
+
+.withu-home .withu-section-header--teal {
+    --wu3-accent: #3f7a68;
+}
+
+.withu-home .withu-section-header--purple {
+    --wu3-accent: #775580;
+}
+
+.withu-home .withu-section-header--indigo {
+    --wu3-accent: #5b648f;
+}
+
+html.wu3-js .withu-home .withu-section-header::after {
+    transform: scaleX(0);
+}
+
+html.wu3-js .withu-home .withu-section-header.wu3-inview::after {
+    transform: scaleX(1);
+    transition: transform 1s var(--wu3-ease) 0.1s;
+}
+
+.withu-home .withu-section-header__left {
+    gap: 0.2rem;
+}
+
+.withu-home .withu-section-header__left::before {
+    font-family: var(--wu-font-sans);
+    font-size: 0.58rem;
+    font-weight: 700;
+    letter-spacing: 0.26em;
+    text-transform: uppercase;
+    color: #8a7d83;
+    line-height: 1.2;
+    margin-bottom: 0.2rem;
+}
+
+.withu-home .withu-section-header--rose .withu-section-header__left::before {
+    content: "WISH LIST";
+}
+
+.withu-home .withu-section-header--purple .withu-section-header__left::before {
+    content: "OUR SPECIAL DAYS";
+}
+
+.withu-home .withu-section-header--blue .withu-section-header__left::before {
+    content: "DAILY NOTES";
+}
+
+.withu-home .withu-section-header--orange .withu-section-header__left::before {
+    content: "PHOTO KEEPSAKES";
+}
+
+.withu-home .withu-section-header--teal .withu-section-header__left::before {
+    content: "KIND WORDS";
+}
+
+.withu-home .withu-section-title {
+    font-size: 1.62rem;
+    font-weight: 600;
+    letter-spacing: 0.05em;
+}
+
+.withu-home .withu-section-title-color-rose {
+    color: #b23a55;
+}
+
+.withu-home .withu-section-title-color-blue {
+    color: #4f6f88;
+}
+
+.withu-home .withu-section-title-color-orange {
+    color: #a96d42;
+}
+
+.withu-home .withu-section-title-color-teal {
+    color: #3f7a68;
+}
+
+.withu-home .withu-section-title-color-purple {
+    color: #775580;
+}
+
+.withu-home .withu-section-title-color-indigo {
+    color: #5b648f;
+}
+
+.withu-home .withu-section-icon-box {
+    position: relative;
+    width: 2.7rem;
+    height: 2.7rem;
+    border-radius: 14px;
+    margin-right: 0.8rem;
+    overflow: hidden;
+    box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, 0.38),
+        0 10px 22px -12px var(--wu3-accent-shadow, rgba(178, 58, 85, 0.5));
+}
+
+.withu-home .withu-section-icon-box::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(155deg, rgba(255, 255, 255, 0.34), transparent 52%);
+    pointer-events: none;
+}
+
+.withu-home .withu-section-icon-box--rose {
+    background: linear-gradient(135deg, #d76a7f 0%, #b23a55 100%) !important;
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.38), 0 10px 22px -12px rgba(178, 58, 85, 0.55) !important;
+}
+
+.withu-home .withu-section-icon-box--blue {
+    background: linear-gradient(135deg, #7b9bb2 0%, #4f6f88 100%) !important;
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.38), 0 10px 22px -12px rgba(79, 111, 136, 0.55) !important;
+}
+
+.withu-home .withu-section-icon-box--orange {
+    background: linear-gradient(135deg, #d3a077 0%, #a96d42 100%) !important;
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.38), 0 10px 22px -12px rgba(169, 109, 66, 0.55) !important;
+}
+
+.withu-home .withu-section-icon-box--teal {
+    background: linear-gradient(135deg, #74a895 0%, #3f7a68 100%) !important;
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.38), 0 10px 22px -12px rgba(63, 122, 104, 0.55) !important;
+}
+
+.withu-home .withu-section-icon-box--purple {
+    background: linear-gradient(135deg, #a184aa 0%, #775580 100%) !important;
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.38), 0 10px 22px -12px rgba(119, 85, 128, 0.55) !important;
+}
+
+.withu-home .withu-badge-new {
+    background: rgba(255, 252, 248, 0.86) !important;
+    color: var(--wu3-accent, var(--wu3-rose-deep)) !important;
+    border: 1px solid rgba(201, 162, 107, 0.34);
+    box-shadow: 0 4px 10px -8px rgba(169, 109, 66, 0.6);
+    letter-spacing: 0.12em;
+    font-size: 0.52rem;
+    opacity: 0.82;
+}
+
+.withu-home .withu-link-more {
+    width: 2.5rem;
+    height: 2.5rem;
+    background: linear-gradient(135deg, #ef8298 0%, #d94f6d 52%, #b23a55 100%) !important;
+    box-shadow: 0 14px 28px -14px rgba(217, 79, 109, 0.75) !important;
+}
+
+.withu-home .withu-link-more:hover {
+    transform: translateY(-2px) scale(1.07) !important;
+    box-shadow: 0 18px 34px -14px rgba(217, 79, 109, 0.85) !important;
+}
+
+.withu-home .withu-link-more:hover i {
+    transform: translateX(2px) !important;
+}
+
+/* ------------------------------------------------------------
+   5. 首页顶部：倒计时、智能卡、天气、清单
+   ------------------------------------------------------------ */
+.withu-day-fusion-card {
+    background:
+        radial-gradient(120% 100% at 100% 0%, rgba(255, 255, 255, 0.75), transparent 55%),
+        linear-gradient(180deg, #fffdfb 0%, #fff8f3 100%) !important;
+    border: 1px solid rgba(201, 162, 107, 0.26) !important;
+    box-shadow:
+        inset 0 1px 0 #fff,
+        0 34px 80px -46px rgba(120, 80, 50, 0.45) !important;
+}
+
+.withu-day-ambient-light {
+    animation: wu3Ambient 9s ease-in-out infinite alternate;
+}
+
+@keyframes wu3Ambient {
+    from { transform: translate3d(0, 0, 0) scale(1); opacity: 0.75; }
+    to { transform: translate3d(-14px, -10px, 0) scale(1.08); opacity: 1; }
+}
+
+.withu-day-main-days-number {
+    background: linear-gradient(180deg, #3a2b32 0%, #6b3f4d 62%, #9a5d67 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    filter: drop-shadow(0 10px 18px rgba(43, 35, 39, 0.1));
+}
+
+.withu-day-start-date-capsule {
+    background: linear-gradient(135deg, rgba(255, 244, 246, 0.92), rgba(250, 240, 231, 0.9)) !important;
+    border: 1px solid rgba(201, 162, 107, 0.2);
+    box-shadow: inset 0 1px 0 #fff;
+}
+
+.withu-home .withu-smart-card {
+    border: 1px solid rgba(255, 255, 255, 0.24);
+    box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, 0.16),
+        0 30px 70px -38px rgba(25, 18, 22, 0.65);
+}
+
+.withu-home .withu-smart-card__overlay {
+    background:
+        radial-gradient(90% 70% at 50% 110%, rgba(25, 18, 22, 0.52), transparent 62%),
+        linear-gradient(to bottom, rgba(0, 0, 0, 0.24) 0%, transparent 38%, rgba(0, 0, 0, 0.82) 100%) !important;
+}
+
+.withu-home .withu-smart-card__title {
+    font-family: var(--wu-font-serif);
+    letter-spacing: 0.03em;
+    text-wrap: balance;
+}
+
+.withu-home .withu-smart-card__album-link {
+    background: rgba(255, 255, 255, 0.14) !important;
+    border: 1px solid rgba(255, 255, 255, 0.28);
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+}
+
+.withu-home .withu-smart-card__switch-btn {
+    background: rgba(255, 255, 255, 0.16) !important;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+}
+
+.withu-home .withu-home-weather-card {
+    border: 1px solid rgba(255, 255, 255, 0.22);
+    box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, 0.22),
+        0 24px 52px -32px rgba(43, 35, 39, 0.55) !important;
+}
+
+.withu-home .withu-home-weather-card::before {
+    content: "";
+    position: absolute;
+    top: -36%;
+    right: -18%;
+    width: 74%;
+    aspect-ratio: 1;
+    border-radius: 50%;
+    border: 1px solid rgba(255, 255, 255, 0.18);
+    background: radial-gradient(circle at 32% 32%, rgba(255, 255, 255, 0.24), transparent 62%);
+    pointer-events: none;
+}
+
+.withu-home .withu-home-weather-card.blue {
+    background: linear-gradient(140deg, #709db7 0%, #46748f 52%, #325a74 100%) !important;
+}
+
+.withu-home .withu-home-weather-card.orange {
+    background: linear-gradient(140deg, #d9a06d 0%, #bd7947 52%, #9d5c33 100%) !important;
+}
+
+.withu-home .withu-home-weather-card:hover {
+    transform: translateY(-4px) scale(1.01) !important;
+    box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, 0.24),
+        0 30px 60px -30px rgba(43, 35, 39, 0.6) !important;
+}
+
+.withu-home .withu-home-weather-icon-main {
+    animation: wu3WeatherFloat 6.5s ease-in-out infinite;
+    filter: drop-shadow(0 8px 16px rgba(20, 40, 60, 0.22));
+}
+
+@keyframes wu3WeatherFloat {
+    0%, 100% { transform: translateY(0) rotate(0deg); }
+    50% { transform: translateY(-5px) rotate(-2deg); }
+}
+
+.withu-home .withu-home-weather-stat-pill {
+    background: rgba(255, 255, 255, 0.18) !important;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+}
+
+/* 清单卡：从灰色石板改为玫瑰香槟 */
+.withu-home .withu-widget--lovelist {
+    background:
+        radial-gradient(rgba(255, 255, 255, 0.13) 1px, transparent 1px),
+        radial-gradient(120% 120% at 100% 0%, rgba(255, 255, 255, 0.24), transparent 55%),
+        linear-gradient(135deg, #d76a7f 0%, #b23a55 52%, #8e4f51 100%) !important;
+    background-size: 18px 18px, 100% 100%, 100% 100% !important;
+    border: 1px solid rgba(255, 255, 255, 0.26);
+    box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, 0.28),
+        0 28px 58px -30px rgba(178, 58, 85, 0.62) !important;
+}
+
+.withu-home .withu-widget--lovelist .withu-card-title-lg {
+    font-family: var(--wu-font-serif);
+    letter-spacing: 0.08em;
+}
+
+.withu-home .withu-lovelist-fraction {
+    font-family: var(--wu-font-display);
+    letter-spacing: 0.02em;
+}
+
+.withu-home .withu-widget--lovelist .withu-progress {
+    background: rgba(255, 255, 255, 0.2) !important;
+    box-shadow: inset 0 1px 2px rgba(80, 20, 36, 0.18);
+}
+
+.withu-home .withu-widget--lovelist .withu-progress__bar {
+    background: linear-gradient(90deg, #fff 0%, #ffe9dc 52%, #ffd6c2 100%) !important;
+    box-shadow: 0 0 18px rgba(255, 255, 255, 0.55);
+}
+
+/* ------------------------------------------------------------
+   6. 列表卡片：事件 / 纪念日 / 点滴 / 相册 / 留言
+   ------------------------------------------------------------ */
+.withu-home .withu-event-card {
+    border: 1px solid rgba(201, 162, 107, 0.18) !important;
+    box-shadow: var(--wu3-shadow-sm);
+}
+
+.withu-home .withu-event-card:hover {
+    transform: translateY(-5px) !important;
+    box-shadow: var(--wu3-shadow-lg) !important;
+}
+
+.withu-home .withu-event-card--has-img .withu-event-overlay {
+    background:
+        linear-gradient(to top, rgba(28, 20, 25, 0.82) 0%, rgba(28, 20, 25, 0.18) 52%, transparent 78%) !important;
+}
+
+.withu-home .withu-event-title {
+    font-family: var(--wu-font-serif);
+    letter-spacing: 0.03em;
+}
+
+.withu-home .withu-widget--loveday-past {
+    background:
+        radial-gradient(100% 100% at 100% 0%, rgba(255, 255, 255, 0.22), transparent 58%),
+        linear-gradient(135deg, #cc9166 0%, #a96d42 55%, #8d5732 100%) !important;
+    border: 1px solid rgba(255, 255, 255, 0.22);
+    box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, 0.26),
+        0 24px 50px -28px rgba(141, 87, 50, 0.55) !important;
+}
+
+.withu-home .withu-widget--loveday-future {
+    background:
+        radial-gradient(100% 100% at 100% 0%, rgba(255, 255, 255, 0.22), transparent 58%),
+        linear-gradient(135deg, #7298b0 0%, #4f6f88 55%, #3b5266 100%) !important;
+    border: 1px solid rgba(255, 255, 255, 0.22);
+    box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, 0.26),
+        0 24px 50px -28px rgba(59, 82, 102, 0.55) !important;
+}
+
+.withu-home .withu-widget--loveday-past .withu-loveday-sup-label,
+.withu-home .withu-widget--loveday-future .withu-loveday-sup-label {
+    background: rgba(40, 24, 28, 0.34) !important;
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border-left: 1px solid rgba(255, 255, 255, 0.16);
+    letter-spacing: 0.18em !important;
+}
+
+.withu-home .withu-loveday-count {
+    font-family: var(--wu-font-display);
+    letter-spacing: 0.01em;
+}
+
+.withu-home .withu-journal-card {
+    background: linear-gradient(180deg, #fffdfb 0%, #fff9f5 100%) !important;
+    border: 1px solid rgba(201, 162, 107, 0.16);
+    box-shadow: inset 0 2px 0 rgba(201, 162, 107, 0.22), var(--wu3-shadow-sm) !important;
+}
+
+.withu-home .withu-journal-card:hover {
+    transform: translateY(-5px) !important;
+    border-color: rgba(217, 79, 109, 0.24) !important;
+    box-shadow: inset 0 2px 0 rgba(217, 79, 109, 0.3), var(--wu3-shadow-lg) !important;
+}
+
+.withu-home .withu-journal-title {
+    font-family: var(--wu-font-serif);
+    letter-spacing: 0.02em;
+}
+
+.withu-home .withu-watermark {
+    font-family: var(--wu-font-display);
+    color: rgba(178, 58, 85, 0.08) !important;
+}
+
+.withu-home .withu-mosaic-item {
+    border-radius: 1.6rem;
+    border: 1px solid rgba(255, 255, 255, 0.22);
+    box-shadow: 0 24px 54px -34px rgba(43, 35, 39, 0.55);
+}
+
+.withu-home .withu-mosaic-overlay {
+    background:
+        radial-gradient(110% 80% at 50% 110%, rgba(25, 18, 22, 0.55), transparent 66%),
+        linear-gradient(to top, rgba(0, 0, 0, 0.78) 0%, transparent 58%) !important;
+}
+
+.withu-home .withu-mosaic-title {
+    font-family: var(--wu-font-serif);
+    letter-spacing: 0.04em;
+}
+
+.withu-home .withu-mosaic-item:hover {
+    box-shadow: 0 32px 70px -32px rgba(43, 35, 39, 0.6);
+}
+
+.withu-home .withu-home-message-card {
+    background: linear-gradient(180deg, #fffdfb 0%, #fff8f4 100%) !important;
+    border: 1px solid rgba(201, 162, 107, 0.18);
+    border-top: 3px solid rgba(217, 79, 109, 0.32);
+    box-shadow: 0 16px 38px -30px rgba(43, 35, 39, 0.32) !important;
+}
+
+.withu-home .withu-home-message-card:hover {
+    transform: translateY(-4px);
+    border-top-color: rgba(217, 79, 109, 0.58);
+    box-shadow: 0 26px 54px -30px rgba(43, 35, 39, 0.4) !important;
+}
+
+.withu-home .withu-home-message-avatar {
+    border: 2px solid #fff;
+    box-shadow: 0 0 0 2px rgba(201, 162, 107, 0.18);
+}
+
+.withu-home .withu-home-message-user-name {
+    font-family: var(--wu-font-serif);
+    letter-spacing: 0.02em;
+}
+
+.withu-home .withu-home-message-content {
+    color: var(--wu3-ink-2);
+    line-height: 1.85;
+}
+
+.withu-home .withu-home-message-divider {
+    background: linear-gradient(90deg, rgba(201, 162, 107, 0.3), transparent) !important;
+}
+
+/* 结尾卡片 */
+.withu-epilogue__card {
+    background:
+        radial-gradient(120% 90% at 50% 0%, rgba(255, 255, 255, 0.9), transparent 58%),
+        linear-gradient(180deg, #fffdfb 0%, #fbf4ec 100%) !important;
+    border: 1px solid rgba(201, 162, 107, 0.26) !important;
+    box-shadow: var(--wu3-shadow-md) !important;
+}
+
+.withu-epilogue__quote-text {
+    font-family: var(--wu-font-serif);
+    letter-spacing: 0.04em;
+}
+
+/* ------------------------------------------------------------
+   7. 空状态：从“几乎透明”提升为有温度的纸卡
+   ------------------------------------------------------------ */
+.withu-no-data,
+.withumsg-empty,
+.withu-empty-state {
+    background:
+        radial-gradient(circle at 50% 0%, rgba(217, 79, 109, 0.1), transparent 58%),
+        linear-gradient(180deg, rgba(255, 253, 251, 0.94), rgba(255, 248, 243, 0.94)) !important;
+    border: 1px dashed rgba(201, 162, 107, 0.42) !important;
+    box-shadow:
+        inset 0 1px 0 #fff,
+        0 22px 50px -40px rgba(120, 80, 50, 0.4) !important;
+}
+
+.withu-no-data::before,
+.withumsg-empty::before {
+    opacity: 0.34 !important;
+}
+
+.withu-no-data-title {
+    font-family: var(--wu-font-serif);
+    color: #3a2c33 !important;
+    font-size: 1.16rem !important;
+    letter-spacing: 0.05em;
+}
+
+.withu-no-data-icon i {
+    font-size: 26px;
+    line-height: 1;
+}
+
+.withu-no-data-desc {
+    color: #7d6f76 !important;
+    font-size: 0.86rem !important;
+}
+
+/* 首页空状态的图标由页面结构提供，保持与子页一致 */
+
+/* ------------------------------------------------------------
+   8. 子页卡片、搜索与列表
+   ------------------------------------------------------------ */
+.withu-page-container {
+    position: relative;
+}
+
+.withu-card,
+.withu-article-card-base,
+.withu-time-line-card,
+.love-card {
+    background: linear-gradient(180deg, rgba(255, 253, 251, 0.98), rgba(255, 249, 245, 0.98)) !important;
+    border-color: rgba(201, 162, 107, 0.17) !important;
+    box-shadow: var(--wu3-shadow-sm) !important;
+}
+
+.withu-card:hover,
+.withu-article-card-base:hover,
+.withu-time-line-card:hover,
+.love-card:hover {
+    border-color: rgba(217, 79, 109, 0.24) !important;
+    box-shadow: var(--wu3-shadow-lg) !important;
+}
+
+.MessageCard {
+    background: linear-gradient(180deg, rgba(255, 253, 251, 0.98), rgba(255, 248, 244, 0.98)) !important;
+    border-color: rgba(201, 162, 107, 0.18) !important;
+    box-shadow: var(--wu3-shadow-sm) !important;
+}
+
+.MessageCard:hover {
+    border-color: rgba(217, 79, 109, 0.24) !important;
+    box-shadow: var(--wu3-shadow-md) !important;
+}
+
+.MessageCard .UserName h1 {
+    letter-spacing: 0.03em;
+}
+
+.MessageCard .UserAvatar img {
+    border: 2px solid #fff;
+    box-shadow: 0 0 0 2px rgba(201, 162, 107, 0.2);
+}
+
+/* 默认 QQ 头像偏蓝，统一到玫瑰色调；真实头像不受影响 */
+.MessageCard .UserAvatar img[src*="qq=10000"],
+.withu-home-message-avatar[src*="qq=10000"] {
+    filter: hue-rotate(130deg) saturate(0.82) brightness(1.05);
+}
+
+.MessageCard .MsgTime span {
+    background: rgba(201, 162, 107, 0.12) !important;
+    color: #8a6a52 !important;
+}
+
+/* 单条留言：让整块内容真正居中，而不是只居中半栏 */
+.Message_Main.wu-single-message {
+    display: flex !important;
+    flex-wrap: wrap !important;
+    justify-content: center !important;
+}
+
+.Message_Main.wu-single-message > * {
+    width: min(760px, 100%) !important;
+    float: none !important;
+    margin-left: auto !important;
+    margin-right: auto !important;
+}
+
+.wu-page-search,
+.Search_warp #search {
+    background: linear-gradient(180deg, rgba(255, 253, 251, 0.95), rgba(255, 248, 244, 0.92)) !important;
+    border-color: rgba(201, 162, 107, 0.24) !important;
+    box-shadow:
+        inset 0 1px 0 #fff,
+        var(--wu3-shadow-sm) !important;
+}
+
+.wu-page-search:focus-within,
+.Search_warp #search:focus {
+    border-color: rgba(217, 79, 109, 0.42) !important;
+    box-shadow:
+        0 0 0 4px rgba(217, 79, 109, 0.09),
+        var(--wu3-shadow-md) !important;
+}
+
+.Search_warp #search_btn {
+    background: linear-gradient(135deg, #ef8298 0%, #d94f6d 55%, #b23a55 100%) !important;
+}
+
+/* 清单筛选 */
+.LgLoveList-tab-container {
+    background: rgba(255, 252, 249, 0.8) !important;
+    border-color: rgba(201, 162, 107, 0.24) !important;
+}
+
+.LgLoveList-tab-slider {
+    background: linear-gradient(135deg, #ef8298 0%, #d94f6d 55%, #b23a55 100%) !important;
+}
+
+/* 详情页 */
+.withu-detail-card {
+    background: linear-gradient(180deg, #fffdfb, #fff9f5) !important;
+    border-color: rgba(201, 162, 107, 0.18) !important;
+}
+
+.withu-detail-header-title {
+    font-family: var(--wu-font-serif);
+    letter-spacing: 0.03em;
+}
+
+.withu-detail-rail-btn:hover {
+    background: rgba(217, 79, 109, 0.06) !important;
+    color: var(--wu3-rose-deep) !important;
+}
+
+/* 聊天回放：减少大面积空白的“漂浮感” */
+.withu-chat-device {
+    background:
+        radial-gradient(90% 60% at 50% 0%, rgba(255, 255, 255, 0.9), transparent 60%),
+        linear-gradient(180deg, #fffaf7, #fdf4ef) !important;
+}
+
+.withu-chat-body,
+.withu-chat-messages {
+    background-image:
+        radial-gradient(rgba(201, 162, 107, 0.08) 1px, transparent 1px);
+    background-size: 20px 20px;
+}
+
+/* ------------------------------------------------------------
+   9. 表单、按钮、浮动操作
+   ------------------------------------------------------------ */
+input:not([type="checkbox"]):not([type="radio"]),
+textarea,
+select,
+[contenteditable="true"] {
+    background-color: rgba(255, 252, 249, 0.92);
+    border-color: rgba(201, 162, 107, 0.26);
+}
+
+input:not([type="checkbox"]):not([type="radio"]):focus,
+textarea:focus,
+select:focus {
+    background-color: #fffdfb;
+    border-color: rgba(217, 79, 109, 0.48) !important;
+    box-shadow: 0 0 0 4px rgba(217, 79, 109, 0.09) !important;
+}
+
+.withu-message-submit-btn,
+.withumsg-load-more-btn,
+.withu-no-data-btn,
+.withu-btn,
+.withu-no-data-btn-primary {
+    position: relative;
+    overflow: hidden;
+}
+
+.withu-message-submit-btn::after,
+.withumsg-load-more-btn::after,
+.withu-no-data-btn::after,
+.withu-btn::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: -80%;
+    width: 55%;
+    height: 100%;
+    background: linear-gradient(100deg, transparent, rgba(255, 255, 255, 0.42), transparent);
+    transform: skewX(-18deg);
+    transition: left 0.65s var(--wu3-ease);
+    pointer-events: none;
+}
+
+.withu-message-submit-btn:hover::after,
+.withumsg-load-more-btn:hover::after,
+.withu-no-data-btn:hover::after,
+.withu-btn:hover::after {
+    left: 125%;
+}
+
+.withu-message-submit-btn,
+.withu-no-data-btn-primary,
+#scrollTopBtn {
+    background: linear-gradient(135deg, #ef8298 0%, #d94f6d 52%, #b23a55 100%) !important;
+    box-shadow: 0 16px 32px -16px rgba(217, 79, 109, 0.8) !important;
+}
+
+#scrollTopBtn {
+    position: fixed;
+    overflow: visible;
+}
+
+#scrollTopBtn::before {
+    content: "";
+    position: absolute;
+    inset: -4px;
+    border-radius: inherit;
+    background: conic-gradient(
+        from -90deg,
+        var(--wu3-gold) calc(var(--wu3-progress, 0) * 1%),
+        rgba(201, 162, 107, 0.12) 0
+    );
+    -webkit-mask: radial-gradient(farthest-side, transparent calc(100% - 3px), #000 calc(100% - 2px));
+    mask: radial-gradient(farthest-side, transparent calc(100% - 3px), #000 calc(100% - 2px));
+    pointer-events: none;
+}
+
+/* 浮动留言按钮统一玫瑰色 */
+.message_btn .mesly,
+#mes .mesly {
+    background: linear-gradient(135deg, #ef8298 0%, #d94f6d 55%, #b23a55 100%) !important;
+    box-shadow: 0 18px 36px -18px rgba(217, 79, 109, 0.85) !important;
+}
+
+.withu-scroll-progress__bar {
+    background: linear-gradient(90deg, var(--wu3-gold) 0%, #ef8298 48%, var(--wu3-rose) 100%) !important;
+    box-shadow: 0 0 14px rgba(217, 79, 109, 0.55) !important;
+}
+
+/* ------------------------------------------------------------
+   10. 页脚
+   ------------------------------------------------------------ */
+.footer-warp {
+    position: relative;
+    padding-top: 2.2rem;
+    padding-bottom: 1.4rem;
+}
+
+.footer-warp::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 50%;
+    width: min(680px, 84vw);
+    height: 1px;
+    transform: translateX(-50%);
+    background: linear-gradient(90deg, transparent, rgba(201, 162, 107, 0.42), transparent);
+}
+
+.wu-footer-signature {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.3rem;
+    margin-bottom: 1.1rem;
+    text-align: center;
+}
+
+.wu-footer-signature__mark {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 34px;
+    height: 34px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #fff5f7, #fdeef2);
+    border: 1px solid rgba(217, 79, 109, 0.2);
+    color: var(--wu3-rose);
+    font-size: 0.9rem;
+    box-shadow: 0 10px 24px -16px rgba(217, 79, 109, 0.6);
+}
+
+.wu-footer-signature__name {
+    font-family: var(--wu-font-serif);
+    font-size: 0.92rem;
+    letter-spacing: 0.22em;
+    color: var(--wu3-ink);
+}
+
+.wu-footer-signature__note {
+    font-size: 0.68rem;
+    letter-spacing: 0.12em;
+    color: #7f737a;
+}
+
+.footer-warp .github-badge {
+    background: rgba(255, 252, 248, 0.82);
+    border: 1px solid rgba(201, 162, 107, 0.18);
+}
+
+/* ------------------------------------------------------------
+   11. 动效与跨页过渡
+   ------------------------------------------------------------ */
+@view-transition {
+    navigation: auto;
+}
+
+::view-transition-old(root) {
+    animation: wu3FadeOut 0.18s ease both;
+}
+
+::view-transition-new(root) {
+    animation: wu3FadeIn 0.32s var(--wu3-ease) both;
+}
+
+@keyframes wu3FadeOut {
+    to { opacity: 0; }
+}
+
+@keyframes wu3FadeIn {
+    from { opacity: 0; transform: translateY(4px); }
+    to { opacity: 1; transform: none; }
+}
+
+/* 图片卡片悬停时的一层柔光 */
+.withu-home .withu-journal-card::after,
+.withu-home .withu-home-message-card::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.18), transparent 42%);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.4s ease;
+}
+
+.withu-home .withu-journal-card:hover::after,
+.withu-home .withu-home-message-card:hover::after {
+    opacity: 1;
+}
+
+/* 键盘焦点更柔和 */
+:focus-visible {
+    outline-color: var(--wu3-rose);
+    outline-offset: 3px;
+}
+
+/* ------------------------------------------------------------
+   12. 响应式
+   ------------------------------------------------------------ */
+@media (max-width: 768px) {
+    /* 移动端关闭大面积背景位移动画，避免无谓重绘 */
+    body.bg-pdot-vignette {
+        animation: none !important;
+    }
+
+    .withu-page-header {
+        padding-top: 1.65rem;
+    }
+
+    .withu-page-header::before {
+        top: -30px;
+        height: 180px;
+    }
+
+    .withu-hero-title {
+        font-size: clamp(1.55rem, 6.4vw, 2rem);
+        letter-spacing: 0.05em;
+    }
+
+    .withu-home .withu-section {
+        margin-bottom: 3.1rem;
+    }
+
+    .withu-home .withu-section-header {
+        margin-bottom: 1.35rem;
+        padding-bottom: 0.85rem;
+    }
+
+    .withu-home .withu-section-title {
+        font-size: 1.28rem;
+    }
+
+    .withu-home .withu-section-header__left::before {
+        font-size: 0.52rem;
+        letter-spacing: 0.2em;
+    }
+
+    .withu-home .withu-section-icon-box {
+        width: 2.3rem;
+        height: 2.3rem;
+        border-radius: 12px;
+        margin-right: 0.6rem;
+    }
+
+    .withu-home .withu-link-more {
+        width: 2.25rem;
+        height: 2.25rem;
+    }
+
+    .withu-day-fusion-card {
+        box-shadow: 0 24px 54px -38px rgba(120, 80, 50, 0.4) !important;
+    }
+
+    .withu-tab-template-v5-container.withu-glass-panel {
+        max-width: calc(100% - 24px);
+    }
+}
+
+@media (max-width: 640px) {
+    .withu-page-header::after {
+        margin-top: 0.8rem;
+        width: 56px;
+    }
+
+    .withu-meta-tag {
+        font-size: 10px !important;
+        padding: 5px 12px !important;
+        letter-spacing: 0.16em !important;
+    }
+
+    .withu-home .withu-section-header {
+        flex-wrap: wrap;
+    }
+
+    .withu-home .withu-section-title {
+        font-size: 1.18rem;
+    }
+
+    .withu-home .withu-smart-card {
+        border-radius: 20px;
+    }
+
+    .withu-home .withu-home-weather-card {
+        border-radius: 20px;
+    }
+
+    .withu-home .withu-widget--lovelist {
+        border-radius: 20px;
+    }
+
+    .footer-warp {
+        padding-top: 1.7rem;
+    }
+}
+
+/* ------------------------------------------------------------
+   13. 降级：尊重用户的动效偏好
+   ------------------------------------------------------------ */
+@media (prefers-reduced-motion: reduce) {
+    body.bg-pdot-vignette,
+    .withu-day-ambient-light,
+    .withu-home .withu-home-weather-icon-main,
+    .withu-no-data-icon {
+        animation: none !important;
+    }
+
+    html.wu3-js .withu-page-header::after,
+    html.wu3-js .withu-home .withu-section-header::after {
+        transform: scaleX(1) !important;
+        transition: none !important;
+    }
+
+    ::view-transition-old(root),
+    ::view-transition-new(root) {
+        animation: none !important;
+    }
+}
+
+/* 触控设备：避免 hover-only 反馈缺失 */
+@media (pointer: coarse) {
+    .withu-home .withu-home-weather-card:hover,
+    .withu-home .withu-journal-card:hover,
+    .withu-home .withu-home-message-card:hover {
+        transform: none !important;
+    }
+}
+
+/* ============================================================
+   14. 首页内容区配色回滚（按用户反馈）
+   ------------------------------------------------------------
+   只作用于首页 #pjax-container 内的 .withu-home 内容，
+   恢复 v2 的原始配色；不影响顶部导航、页脚、其他页面，
+   也不改动字号、间距、图标与动效等非配色调整。
+   ============================================================ */
+
+html:not(.withu-subpage) #pjax-container .withu-home {
+    --withu-color-rose: #e11d48;
+    --withu-color-text: #1a1a1a;
+    --withu-color-text-muted: #64748b;
+    --withu-color-border: rgba(0, 0, 0, 0.05);
+}
+
+/* 分区标题：恢复原始色板与下划线颜色 */
+html:not(.withu-subpage) #pjax-container .withu-home .withu-section-header {
+    border-bottom-color: rgba(0, 0, 0, 0.06) !important;
+}
+
+html:not(.withu-subpage) #pjax-container .withu-home .withu-section-header--purple {
+    border-bottom-color: rgba(168, 85, 247, 0.15) !important;
+}
+
+html:not(.withu-subpage) #pjax-container .withu-home .withu-section-header::after {
+    background: linear-gradient(90deg, currentColor, transparent) !important;
+}
+
+html:not(.withu-subpage) #pjax-container .withu-home .withu-section-header--rose::after {
+    background: linear-gradient(90deg, #f43f5e, transparent) !important;
+}
+
+html:not(.withu-subpage) #pjax-container .withu-home .withu-section-header--blue::after {
+    background: linear-gradient(90deg, #3b82f6, transparent) !important;
+}
+
+html:not(.withu-subpage) #pjax-container .withu-home .withu-section-header--indigo::after {
+    background: linear-gradient(90deg, #6366f1, transparent) !important;
+}
+
+html:not(.withu-subpage) #pjax-container .withu-home .withu-section-header--teal::after {
+    background: linear-gradient(90deg, #14b8a6, transparent) !important;
+}
+
+html:not(.withu-subpage) #pjax-container .withu-home .withu-section-header--orange::after {
+    background: linear-gradient(90deg, #f97316, transparent) !important;
+}
+
+html:not(.withu-subpage) #pjax-container .withu-home .withu-section-header--purple::after {
+    background: linear-gradient(90deg, #a855f7, transparent) !important;
+}
+
+html:not(.withu-subpage) #pjax-container .withu-home .withu-section-title-color-rose {
+    color: #e11d48 !important;
+}
+
+html:not(.withu-subpage) #pjax-container .withu-home .withu-section-title-color-blue {
+    color: #3b82f6 !important;
+}
+
+html:not(.withu-subpage) #pjax-container .withu-home .withu-section-title-color-orange {
+    color: #f97316 !important;
+}
+
+html:not(.withu-subpage) #pjax-container .withu-home .withu-section-title-color-teal {
+    color: #14b8a6 !important;
+}
+
+html:not(.withu-subpage) #pjax-container .withu-home .withu-section-title-color-purple {
+    color: #a855f7 !important;
+}
+
+html:not(.withu-subpage) #pjax-container .withu-home .withu-section-title-color-indigo {
+    color: transparent !important;
+    background: -webkit-linear-gradient(45deg, #6366f1, #a855f7) !important;
+    -webkit-background-clip: text !important;
+    background-clip: text !important;
+    -webkit-text-fill-color: transparent !important;
+}
+
+/* 分区图标：恢复原始纯色与阴影，关闭新增的高光层 */
+html:not(.withu-subpage) #pjax-container .withu-home .withu-section-icon-box::after {
+    display: none !important;
+}
+
+html:not(.withu-subpage) #pjax-container .withu-home .withu-section-icon-box--rose {
+    background: #e11d48 !important;
+    box-shadow: 0 4px 6px -1px rgba(225, 29, 72, 0.3) !important;
+}
+
+html:not(.withu-subpage) #pjax-container .withu-home .withu-section-icon-box--blue {
+    background: #3b82f6 !important;
+    box-shadow: 0 4px 6px -1px rgba(59, 130, 246, 0.3) !important;
+}
+
+html:not(.withu-subpage) #pjax-container .withu-home .withu-section-icon-box--orange {
+    background: #f97316 !important;
+    box-shadow: 0 4px 6px -1px rgba(249, 115, 22, 0.3) !important;
+}
+
+html:not(.withu-subpage) #pjax-container .withu-home .withu-section-icon-box--teal {
+    background: #14b8a6 !important;
+    box-shadow: 0 4px 6px -1px rgba(20, 184, 166, 0.3) !important;
+}
+
+html:not(.withu-subpage) #pjax-container .withu-home .withu-section-icon-box--purple {
+    background: #a855f7 !important;
+    box-shadow: 0 4px 16px rgba(168, 85, 247, 0.35) !important;
+}
+
+html:not(.withu-subpage) #pjax-container .withu-home .withu-section-icon-box--indigo {
+    background: linear-gradient(135deg, #6366f1 0%, #a855f7 100%) !important;
+    box-shadow: 0 4px 12px rgba(99, 102, 241, 0.3) !important;
+}
+
+/* NEW 徽章：恢复黑底琥珀字 */
+html:not(.withu-subpage) #pjax-container .withu-home .withu-badge-new {
+    background: #18181b !important;
+    color: #fbbf24 !important;
+    border-color: transparent !important;
+    box-shadow: none !important;
+    opacity: 1 !important;
+    letter-spacing: 0.08em !important;
+}
+
+/* 更多按钮：恢复 v2 玫瑰渐变 */
+html:not(.withu-subpage) #pjax-container .withu-home .withu-link-more {
+    background: var(--wu-grad-rose) !important;
+    box-shadow: var(--wu-shadow-rose) !important;
+}
+
+html:not(.withu-subpage) #pjax-container .withu-home .withu-link-more:hover {
+    box-shadow: 0 18px 36px -14px rgba(244, 88, 122, 0.6) !important;
+}
+
+/* 倒计时卡 */
+html:not(.withu-subpage) #pjax-container .withu-home .withu-day-fusion-card {
+    background: var(--withu-day-bg-card) !important;
+    border-color: rgb(227 227 227 / 60%) !important;
+    box-shadow: var(--withu-day-shadow-card) !important;
+}
+
+html:not(.withu-subpage) #pjax-container .withu-home .withu-day-main-days-number {
+    background: linear-gradient(135deg, #1A202C 0%, #4A5568 100%) !important;
+    -webkit-background-clip: text !important;
+    background-clip: text !important;
+    -webkit-text-fill-color: transparent !important;
+    color: #1A202C !important;
+    filter: none !important;
+}
+
+html:not(.withu-subpage) #pjax-container .withu-home .withu-day-start-date-capsule {
+    background: rgba(255, 255, 255, 0.6) !important;
+    border-color: rgba(0, 0, 0, 0.05) !important;
+    box-shadow: none !important;
+}
+
+html:not(.withu-subpage) #pjax-container .withu-home .withu-day-start-date-capsule:hover {
+    background: #fff !important;
+    border-color: rgba(0, 0, 0, 0.08) !important;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.06) !important;
+}
+
+/* 智能媒体卡 */
+html:not(.withu-subpage) #pjax-container .withu-home .withu-smart-card {
+    border: none !important;
+    box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.05), 0 25px 50px -12px rgba(0, 0, 0, 0.25) !important;
+}
+
+html:not(.withu-subpage) #pjax-container .withu-home .withu-smart-card__overlay {
+    background: linear-gradient(to bottom, rgba(0, 0, 0, 0.2) 0%, transparent 40%, rgba(0, 0, 0, 0.8) 100%) !important;
+}
+
+html:not(.withu-subpage) #pjax-container .withu-home .withu-smart-card__album-link {
+    background: rgba(255, 255, 255, 0.1) !important;
+    border-color: rgba(255, 255, 255, 0.2) !important;
+}
+
+html:not(.withu-subpage) #pjax-container .withu-home .withu-smart-card__switch-btn {
+    background: rgba(255, 255, 255, 0.1) !important;
+    border-color: rgba(255, 255, 255, 0.2) !important;
+}
+
+/* 天气卡：恢复原始蓝/橙渐变与阴影 */
+html:not(.withu-subpage) #pjax-container .withu-home .withu-home-weather-card {
+    border-color: transparent !important;
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05) !important;
+}
+
+html:not(.withu-subpage) #pjax-container .withu-home .withu-home-weather-card::before {
+    display: none !important;
+}
+
+html:not(.withu-subpage) #pjax-container .withu-home .withu-home-weather-card.blue {
+    background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%) !important;
+}
+
+html:not(.withu-subpage) #pjax-container .withu-home .withu-home-weather-card.orange {
+    background: linear-gradient(135deg, #fb923c 0%, #ea580c 100%) !important;
+}
+
+html:not(.withu-subpage) #pjax-container .withu-home .withu-home-weather-card:hover {
+    transform: scale(1.02) !important;
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05) !important;
+}
+
+html:not(.withu-subpage) #pjax-container .withu-home .withu-home-weather-stat-pill {
+    background: rgba(255, 255, 255, 0.2) !important;
+    border-color: rgba(255, 255, 255, 0.25) !important;
+}
+
+/* 清单卡：恢复灰色石板渐变与白色进度条 */
+html:not(.withu-subpage) #pjax-container .withu-home .withu-widget--lovelist {
+    background: var(--withu-grad-pro-slate) !important;
+    border: none !important;
+    box-shadow: var(--withu-shadow-md) !important;
+}
+
+html:not(.withu-subpage) #pjax-container .withu-home .withu-widget--lovelist .withu-progress {
+    background: rgba(0, 0, 0, 0.2) !important;
+    box-shadow: none !important;
+}
+
+html:not(.withu-subpage) #pjax-container .withu-home .withu-widget--lovelist .withu-progress__bar {
+    background: #fff !important;
+    box-shadow: none !important;
+}
+
+/* 纪念日卡：恢复原始橙/蓝渐变 */
+html:not(.withu-subpage) #pjax-container .withu-home .withu-widget--loveday-past {
+    background: var(--withu-grad-orange) !important;
+    border: none !important;
+    box-shadow: var(--withu-shadow-md) !important;
+}
+
+html:not(.withu-subpage) #pjax-container .withu-home .withu-widget--loveday-future {
+    background: var(--withu-grad-blue) !important;
+    border: none !important;
+    box-shadow: var(--withu-shadow-md) !important;
+}
+
+html:not(.withu-subpage) #pjax-container .withu-home .withu-widget--loveday-past .withu-loveday-sup-label,
+html:not(.withu-subpage) #pjax-container .withu-home .withu-widget--loveday-future .withu-loveday-sup-label {
+    background: #00000075 !important;
+    border-left: 0 !important;
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+}
+
+/* 点滴卡：恢复白底与原始阴影 */
+html:not(.withu-subpage) #pjax-container .withu-home .withu-journal-card {
+    background: #fff !important;
+    border-color: transparent !important;
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.025) !important;
+}
+
+html:not(.withu-subpage) #pjax-container .withu-home .withu-journal-card:hover {
+    border-color: transparent !important;
+    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.05), 0 8px 10px -6px rgba(0, 0, 0, 0.01) !important;
+}
+
+html:not(.withu-subpage) #pjax-container .withu-home .withu-journal-card::after {
+    display: none !important;
+}
+
+html:not(.withu-subpage) #pjax-container .withu-home .withu-watermark {
+    color: #747474 !important;
+    opacity: 0.05 !important;
+}
+
+/* 相册卡：恢复原始遮罩与无边框状态 */
+html:not(.withu-subpage) #pjax-container .withu-home .withu-mosaic-item {
+    border-color: transparent !important;
+    box-shadow: none !important;
+}
+
+html:not(.withu-subpage) #pjax-container .withu-home .withu-mosaic-item:hover {
+    box-shadow: none !important;
+}
+
+html:not(.withu-subpage) #pjax-container .withu-home .withu-mosaic-overlay {
+    background: linear-gradient(to top, rgba(0, 0, 0, 0.7) 0%, transparent 50%) !important;
+}
+
+/* 事件卡：恢复原始无边框与阴影 */
+html:not(.withu-subpage) #pjax-container .withu-home .withu-event-card {
+    border: none !important;
+    box-shadow: 0 24px 48px -12px rgba(135, 146, 161, 0.08) !important;
+}
+
+html:not(.withu-subpage) #pjax-container .withu-home .withu-event-card:hover {
+    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.05), 0 8px 10px -6px rgba(0, 0, 0, 0.01) !important;
+}
+
+html:not(.withu-subpage) #pjax-container .withu-home .withu-event-card--has-img .withu-event-overlay {
+    background: linear-gradient(to top, rgba(0, 0, 0, 0.8), transparent) !important;
+}
+
+/* 首页留言卡：恢复白底、原始阴影与灰色正文 */
+html:not(.withu-subpage) #pjax-container .withu-home .withu-home-message-card {
+    background: var(--withu-msg-card-bg) !important;
+    border: none !important;
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.025) !important;
+}
+
+html:not(.withu-subpage) #pjax-container .withu-home .withu-home-message-card:hover {
+    box-shadow: 0 16px 40px rgba(0, 0, 0, 0.06) !important;
+}
+
+html:not(.withu-subpage) #pjax-container .withu-home .withu-home-message-card::after {
+    display: none !important;
+}
+
+html:not(.withu-subpage) #pjax-container .withu-home .withu-home-message-avatar {
+    border: none !important;
+    box-shadow: none !important;
+    filter: none !important;
+}
+
+html:not(.withu-subpage) #pjax-container .withu-home .withu-home-message-content {
+    color: #9ca3af !important;
+}
+
+html:not(.withu-subpage) #pjax-container .withu-home .withu-home-message-divider {
+    background: var(--withu-msg-divider) !important;
+}
+
+/* 结尾卡：恢复原来的透明到白色渐变 */
+html:not(.withu-subpage) #pjax-container .withu-home .withu-epilogue__card {
+    background: linear-gradient(180deg,
+        rgba(255, 255, 255, 0) 0%,
+        rgba(255, 255, 255, 0.6) 60px,
+        rgba(255, 255, 255, 0.9) 100px,
+        #ffffff 140px) !important;
+    border: none !important;
+    box-shadow: none !important;
+}
+
+/* 空状态：恢复 v2 的浅玫瑰背景与虚线边框 */
+html:not(.withu-subpage) #pjax-container .withu-home .withu-no-data {
+    background:
+        radial-gradient(circle at 50% 0%, rgba(255, 227, 233, 0.55), transparent 62%),
+        rgba(255, 255, 255, 0.55) !important;
+    border: 1px dashed rgba(244, 88, 122, 0.24) !important;
+    box-shadow: none !important;
+}
+
+html:not(.withu-subpage) #pjax-container .withu-home .withu-no-data::before {
+    opacity: 0.5 !important;
+}
+
+html:not(.withu-subpage) #pjax-container .withu-home .withu-no-data-title {
+    color: var(--wu-ink) !important;
+    font-size: 1.12rem !important;
+}
+
+html:not(.withu-subpage) #pjax-container .withu-home .withu-no-data-desc {
+    color: var(--wu-ink-muted) !important;
+    font-size: 0.84rem !important;
+}

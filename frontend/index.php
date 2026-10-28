@@ -903,6 +903,7 @@ html.withu-subpage #homePage.wrap{height:clamp(300px,38vh,460px)!important;min-h
 <?php if (empty($homeListEvents)): ?>
                     <div class="withu-no-data" data-aos="fade-up" data-aos-delay="0">
                         <div class="withu-no-data-wrap"><div class="withu-no-data-content">
+                            <div class="withu-no-data-icon" aria-hidden="true"><i class="ph-fill ph-heart"></i></div>
                             <h3 class="withu-no-data-title">还没有心愿</h3>
                             <p class="withu-no-data-desc">去后台恋爱清单添加一个吧～</p>
                         </div></div>
@@ -997,6 +998,7 @@ html.withu-subpage #homePage.wrap{height:clamp(300px,38vh,460px)!important;min-h
 <?php if (empty($homeLoveDays)): ?>
                         <div class="withu-no-data" data-aos="fade-up" data-aos-delay="0">
                             <div class="withu-no-data-wrap"><div class="withu-no-data-content">
+                                <div class="withu-no-data-icon" aria-hidden="true"><i class="ph-fill ph-calendar-heart"></i></div>
                                 <h3 class="withu-no-data-title">还没有纪念日</h3>
                                 <p class="withu-no-data-desc">去后台添加一个吧～</p>
                             </div></div>
@@ -1085,6 +1087,7 @@ html.withu-subpage #homePage.wrap{height:clamp(300px,38vh,460px)!important;min-h
 <?php if (empty($homeArticles)): ?>
                     <div class="withu-no-data withu-no-data--search">
                         <div class="withu-no-data-wrap"><div class="withu-no-data-content">
+                            <div class="withu-no-data-icon" aria-hidden="true"><i class="ph-fill ph-notebook"></i></div>
                             <h3 class="withu-no-data-title">还没有点滴记录</h3>
                             <p class="withu-no-data-desc">去后台写下第一篇日常吧～</p>
                         </div></div>
@@ -1166,6 +1169,7 @@ html.withu-subpage #homePage.wrap{height:clamp(300px,38vh,460px)!important;min-h
 <?php if (empty($homeAlbums)): ?>
                     <div class="withu-no-data withu-no-data--search">
                         <div class="withu-no-data-wrap"><div class="withu-no-data-content">
+                            <div class="withu-no-data-icon" aria-hidden="true"><i class="ph-fill ph-image"></i></div>
                             <h3 class="withu-no-data-title">还没有相册</h3>
                             <p class="withu-no-data-desc">去后台上传第一组照片吧～</p>
                         </div></div>
@@ -1234,6 +1238,7 @@ html.withu-subpage #homePage.wrap{height:clamp(300px,38vh,460px)!important;min-h
 <?php if (empty($homeMessages)): ?>
                         <div class="withu-no-data withu-no-data--search">
                             <div class="withu-no-data-wrap"><div class="withu-no-data-content">
+                                <div class="withu-no-data-icon" aria-hidden="true"><i class="ph-fill ph-chat-circle-text"></i></div>
                                 <h3 class="withu-no-data-title">还没有留言</h3>
                                 <p class="withu-no-data-desc">成为第一个留下祝福的人吧～</p>
                             </div></div>
