@@ -668,6 +668,8 @@
         _activeCard: null,
         _lastFocus: null,
         _forecastRequestId: 0,
+        _hourlyResizeBound: false,
+        _hourlyNavUpdate: null,
 
         init() {
             if (config.weatherEnabled === false) {
@@ -985,6 +987,7 @@
         closeDetail() {
             if (!this._modalEl) return;
             this._forecastRequestId++;
+            this._hourlyNavUpdate = null;
             this._modalEl.classList.remove('is-open');
             this._modalEl.setAttribute('aria-hidden', 'true');
             document.documentElement.classList.remove('wu-weather-modal-open');
@@ -1047,7 +1050,14 @@
                 </div>
                 <div class="wu-weather-modal__body">
                     <section class="wu-weather-modal__section">
-                        <div class="wu-weather-modal__section-head"><span>逐小时预报</span><span>未来 24 小时</span></div>
+                        <div class="wu-weather-modal__section-head">
+                            <span>逐小时预报</span>
+                            <div class="wu-weather-modal__section-actions">
+                                <span>未来 24 小时</span>
+                                <button type="button" class="wu-weather-modal__hourly-nav" data-wu-weather-hourly-nav="prev" aria-label="查看更早的小时预报"><i class="ph ph-caret-left"></i></button>
+                                <button type="button" class="wu-weather-modal__hourly-nav" data-wu-weather-hourly-nav="next" aria-label="查看之后的小时预报"><i class="ph ph-caret-right"></i></button>
+                            </div>
+                        </div>
                         <div class="wu-weather-modal__hourly" data-wu-weather-hourly>
                             <div class="wu-weather-modal__loading"><span class="wu-weather-spinner"></span><span>正在获取逐小时天气…</span></div>
                         </div>
@@ -1184,6 +1194,7 @@
                         </div>`;
                     }).join('');
                     hourlyEl.innerHTML = `<div class="wu-weather-modal__hourly-track">${this._buildHourlyChart(temps)}<div class="wu-weather-modal__hourly-cards">${cards}</div></div>`;
+                    this._bindHourlyNav(hourlyEl);
                 } else {
                     hourlyEl.innerHTML = '<div class="wu-weather-modal__empty">暂无逐小时预报数据</div>';
                 }
@@ -1225,6 +1236,39 @@
             if (hourlyEl) hourlyEl.innerHTML = '<div class="wu-weather-modal__empty">暂无逐小时预报数据</div>';
             if (dailyEl) dailyEl.innerHTML = '<div class="wu-weather-modal__empty">暂无每日预报数据</div>';
             if (rangeEl) rangeEl.textContent = '当前天气';
+        },
+
+        _bindHourlyNav(hourlyEl) {
+            const section = hourlyEl.closest('.wu-weather-modal__section');
+            if (!section) return;
+            const prev = section.querySelector('[data-wu-weather-hourly-nav="prev"]');
+            const next = section.querySelector('[data-wu-weather-hourly-nav="next"]');
+            if (!prev || !next) return;
+
+            const update = () => {
+                const max = hourlyEl.scrollWidth - hourlyEl.clientWidth;
+                prev.disabled = hourlyEl.scrollLeft <= 1;
+                next.disabled = max <= 1 || hourlyEl.scrollLeft >= max - 1;
+            };
+            const scroll = (direction) => {
+                const amount = Math.max(120, hourlyEl.clientWidth * 0.8);
+                hourlyEl.scrollBy({ left: direction * amount, behavior: 'smooth' });
+            };
+
+            prev.onclick = () => scroll(-1);
+            next.onclick = () => scroll(1);
+            hourlyEl.onscroll = update;
+            this._hourlyNavUpdate = update;
+
+            if (!this._hourlyResizeBound) {
+                this._hourlyResizeBound = true;
+                window.addEventListener('resize', () => {
+                    if (this._hourlyNavUpdate) this._hourlyNavUpdate();
+                }, { passive: true });
+            }
+
+            window.requestAnimationFrame(update);
+            window.setTimeout(update, 120);
         },
 
         _hydrateHistory(past) {
