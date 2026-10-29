@@ -10,12 +10,13 @@
    ============================================================ */
 
 :root {
-    --wu3-rose: #d94f6d;
-    --wu3-rose-deep: #b23a55;
-    --wu3-rose-soft: #fdeef2;
+    --wu3-rose: #f87171;
+    --wu3-rose-deep: #c94f4f;
+    --wu3-rose-soft: #fdeeee;
     --wu3-gold: #c9a26b;
     --wu3-gold-deep: #a9834f;
     --wu3-gold-soft: #f5e9d8;
+    --wu3-coral: #f87171;
     --wu3-sage: #5e8f7d;
     --wu3-ink: #2b2327;
     --wu3-ink-2: #6d6167;
@@ -53,7 +54,7 @@ html {
 body.bg-pdot-vignette {
     background-color: #faf7f4 !important;
     background-image:
-        radial-gradient(52% 46% at 8% 0%, rgba(217, 79, 109, 0.1), transparent 64%),
+        radial-gradient(52% 46% at 8% 0%, rgba(248, 113, 113, 0.1), transparent 64%),
         radial-gradient(48% 42% at 96% 4%, rgba(201, 162, 107, 0.12), transparent 66%),
         radial-gradient(56% 52% at 50% 108%, rgba(94, 143, 125, 0.07), transparent 68%),
         linear-gradient(115deg, #fbf8f5 0%, #f6f0ec 42%, #f9f5f1 72%, #fbf8f5 100%) !important;
@@ -109,7 +110,7 @@ body.bg-pdot-vignette::after {
 }
 
 .header-wrap .logo img {
-    filter: drop-shadow(0 3px 10px rgba(217, 79, 109, 0.16));
+    filter: drop-shadow(0 3px 10px rgba(248, 113, 113, 0.16));
     transition: transform 0.35s var(--wu3-ease-spring);
 }
 
@@ -133,10 +134,10 @@ body.bg-pdot-vignette::after {
 
 .withu-header-map:hover,
 .withu-header-weather:hover {
-    background: rgba(217, 79, 109, 0.07);
+    background: rgba(248, 113, 113, 0.07);
     color: var(--wu3-rose-deep) !important;
     transform: translateY(-1px);
-    box-shadow: 0 8px 20px -16px rgba(217, 79, 109, 0.5);
+    box-shadow: 0 8px 20px -16px rgba(248, 113, 113, 0.5);
 }
 
 .withu-couple-avatars-right img {
@@ -161,7 +162,7 @@ body.bg-pdot-vignette::after {
 }
 
 .withu-nav-island-item:not(.active):hover {
-    background-color: rgba(217, 79, 109, 0.07) !important;
+    background-color: rgba(248, 113, 113, 0.07) !important;
     color: var(--wu3-rose-deep) !important;
 }
 
@@ -175,9 +176,9 @@ body.bg-pdot-vignette::after {
 }
 
 .withu-nav-indicator {
-    background: linear-gradient(135deg, #ef8298 0%, #d94f6d 48%, #b23a55 100%) !important;
+    background: linear-gradient(135deg, #fca5a5 0%, #f87171 48%, #e05757 100%) !important;
     box-shadow:
-        0 8px 20px -8px rgba(217, 79, 109, 0.75),
+        0 8px 20px -8px rgba(248, 113, 113, 0.75),
         inset 0 1px 0 rgba(255, 255, 255, 0.42) !important;
 }
 
@@ -201,8 +202,8 @@ body.bg-pdot-vignette::after {
 }
 
 .withu-tab-template-v5-indicator {
-    background: linear-gradient(135deg, #ef8298 0%, #d94f6d 52%, #b23a55 100%) !important;
-    box-shadow: 0 10px 24px -10px rgba(217, 79, 109, 0.85) !important;
+    background: linear-gradient(135deg, #fca5a5 0%, #f87171 52%, #e05757 100%) !important;
+    box-shadow: 0 10px 24px -10px rgba(248, 113, 113, 0.85) !important;
 }
 
 .withu-tab-template-v5-container .withu-base-nav-item {
@@ -223,33 +224,8 @@ body.bg-pdot-vignette::after {
 }
 
 /* ------------------------------------------------------------
-   3. 内页 Hero 与页面标题
+   3. 页面标题
    ------------------------------------------------------------ */
-html.withu-subpage #homePage.wrap {
-    box-shadow:
-        inset 0 0 0 1px rgba(255, 255, 255, 0.06),
-        inset 0 -60px 80px -70px rgba(25, 18, 22, 0.55);
-}
-
-html.withu-subpage #homePage.wrap .item img {
-    filter: saturate(0.94) contrast(1.02) brightness(0.99);
-}
-
-html.withu-subpage #homePage.wrap .item::after {
-    background:
-        linear-gradient(180deg, rgba(28, 20, 25, 0.3) 0%, rgba(28, 20, 25, 0) 30%),
-        radial-gradient(120% 80% at 50% 110%, rgba(28, 20, 25, 0.42), transparent 60%),
-        linear-gradient(0deg, rgba(28, 20, 25, 0.38) 0%, rgba(28, 20, 25, 0) 42%) !important;
-}
-
-html.withu-subpage #homePage .pointList .point {
-    background: rgba(255, 255, 255, 0.46);
-}
-
-html.withu-subpage #homePage .pointList .point.active {
-    background: linear-gradient(90deg, #fff, #ffe6d8);
-}
-
 .withu-page-header {
     position: relative;
     padding: 2.5rem 0 0.8rem;
@@ -265,7 +241,7 @@ html.withu-subpage #homePage .pointList .point.active {
     height: 250px;
     transform: translateX(-50%);
     background:
-        radial-gradient(ellipse at 50% 40%, rgba(217, 79, 109, 0.13), rgba(201, 162, 107, 0.07) 42%, transparent 72%);
+        radial-gradient(ellipse at 50% 40%, rgba(248, 113, 113, 0.13), rgba(201, 162, 107, 0.07) 42%, transparent 72%);
     filter: blur(12px);
     z-index: -1;
     pointer-events: none;
@@ -344,7 +320,7 @@ html.wu3-js .withu-page-header.wu3-inview::after {
 }
 
 .withu-home .withu-section-header--rose {
-    --wu3-accent: #b23a55;
+    --wu3-accent: #e05757;
 }
 
 .withu-home .withu-section-header--blue {
@@ -418,7 +394,7 @@ html.wu3-js .withu-home .withu-section-header.wu3-inview::after {
 }
 
 .withu-home .withu-section-title-color-rose {
-    color: #b23a55;
+    color: #e05757;
 }
 
 .withu-home .withu-section-title-color-blue {
@@ -462,7 +438,7 @@ html.wu3-js .withu-home .withu-section-header.wu3-inview::after {
 }
 
 .withu-home .withu-section-icon-box--rose {
-    background: linear-gradient(135deg, #d76a7f 0%, #b23a55 100%) !important;
+    background: linear-gradient(135deg, #d76a7f 0%, #e05757 100%) !important;
     box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.38), 0 10px 22px -12px rgba(178, 58, 85, 0.55) !important;
 }
 
@@ -499,13 +475,13 @@ html.wu3-js .withu-home .withu-section-header.wu3-inview::after {
 .withu-home .withu-link-more {
     width: 2.5rem;
     height: 2.5rem;
-    background: linear-gradient(135deg, #ef8298 0%, #d94f6d 52%, #b23a55 100%) !important;
-    box-shadow: 0 14px 28px -14px rgba(217, 79, 109, 0.75) !important;
+    background: linear-gradient(135deg, #fca5a5 0%, #f87171 52%, #e05757 100%) !important;
+    box-shadow: 0 14px 28px -14px rgba(248, 113, 113, 0.75) !important;
 }
 
 .withu-home .withu-link-more:hover {
     transform: translateY(-2px) scale(1.07) !important;
-    box-shadow: 0 18px 34px -14px rgba(217, 79, 109, 0.85) !important;
+    box-shadow: 0 18px 34px -14px rgba(248, 113, 113, 0.85) !important;
 }
 
 .withu-home .withu-link-more:hover i {
@@ -638,7 +614,7 @@ html.wu3-js .withu-home .withu-section-header.wu3-inview::after {
     background:
         radial-gradient(rgba(255, 255, 255, 0.13) 1px, transparent 1px),
         radial-gradient(120% 120% at 100% 0%, rgba(255, 255, 255, 0.24), transparent 55%),
-        linear-gradient(135deg, #d76a7f 0%, #b23a55 52%, #8e4f51 100%) !important;
+        linear-gradient(135deg, #d76a7f 0%, #e05757 52%, #8e4f51 100%) !important;
     background-size: 18px 18px, 100% 100%, 100% 100% !important;
     border: 1px solid rgba(255, 255, 255, 0.26);
     box-shadow:
@@ -731,8 +707,8 @@ html.wu3-js .withu-home .withu-section-header.wu3-inview::after {
 
 .withu-home .withu-journal-card:hover {
     transform: translateY(-5px) !important;
-    border-color: rgba(217, 79, 109, 0.24) !important;
-    box-shadow: inset 0 2px 0 rgba(217, 79, 109, 0.3), var(--wu3-shadow-lg) !important;
+    border-color: rgba(248, 113, 113, 0.24) !important;
+    box-shadow: inset 0 2px 0 rgba(248, 113, 113, 0.3), var(--wu3-shadow-lg) !important;
 }
 
 .withu-home .withu-journal-title {
@@ -769,13 +745,13 @@ html.wu3-js .withu-home .withu-section-header.wu3-inview::after {
 .withu-home .withu-home-message-card {
     background: linear-gradient(180deg, #fffdfb 0%, #fff8f4 100%) !important;
     border: 1px solid rgba(201, 162, 107, 0.18);
-    border-top: 3px solid rgba(217, 79, 109, 0.32);
+    border-top: 3px solid rgba(248, 113, 113, 0.32);
     box-shadow: 0 16px 38px -30px rgba(43, 35, 39, 0.32) !important;
 }
 
 .withu-home .withu-home-message-card:hover {
     transform: translateY(-4px);
-    border-top-color: rgba(217, 79, 109, 0.58);
+    border-top-color: rgba(248, 113, 113, 0.58);
     box-shadow: 0 26px 54px -30px rgba(43, 35, 39, 0.4) !important;
 }
 
@@ -819,7 +795,7 @@ html.wu3-js .withu-home .withu-section-header.wu3-inview::after {
 .withumsg-empty,
 .withu-empty-state {
     background:
-        radial-gradient(circle at 50% 0%, rgba(217, 79, 109, 0.1), transparent 58%),
+        radial-gradient(circle at 50% 0%, rgba(248, 113, 113, 0.1), transparent 58%),
         linear-gradient(180deg, rgba(255, 253, 251, 0.94), rgba(255, 248, 243, 0.94)) !important;
     border: 1px dashed rgba(201, 162, 107, 0.42) !important;
     box-shadow:
@@ -871,7 +847,7 @@ html.wu3-js .withu-home .withu-section-header.wu3-inview::after {
 .withu-article-card-base:hover,
 .withu-time-line-card:hover,
 .love-card:hover {
-    border-color: rgba(217, 79, 109, 0.24) !important;
+    border-color: rgba(248, 113, 113, 0.24) !important;
     box-shadow: var(--wu3-shadow-lg) !important;
 }
 
@@ -882,7 +858,7 @@ html.wu3-js .withu-home .withu-section-header.wu3-inview::after {
 }
 
 .MessageCard:hover {
-    border-color: rgba(217, 79, 109, 0.24) !important;
+    border-color: rgba(248, 113, 113, 0.24) !important;
     box-shadow: var(--wu3-shadow-md) !important;
 }
 
@@ -931,24 +907,152 @@ html.wu3-js .withu-home .withu-section-header.wu3-inview::after {
 
 .wu-page-search:focus-within,
 .Search_warp #search:focus {
-    border-color: rgba(217, 79, 109, 0.42) !important;
+    border-color: rgba(248, 113, 113, 0.42) !important;
     box-shadow:
-        0 0 0 4px rgba(217, 79, 109, 0.09),
+        0 0 0 4px rgba(248, 113, 113, 0.09),
         var(--wu3-shadow-md) !important;
 }
 
 .Search_warp #search_btn {
-    background: linear-gradient(135deg, #ef8298 0%, #d94f6d 55%, #b23a55 100%) !important;
+    background: linear-gradient(135deg, #fca5a5 0%, #f87171 55%, #e05757 100%) !important;
+    box-shadow: 0 16px 32px -16px rgba(248, 113, 113, 0.6) !important;
 }
 
-/* 清单筛选 */
+/* 搜索范围胶囊：沿用暖纸底与香槟金发丝边，强调色改为导航岛珊瑚红 */
+.Search_warp .scope-tag {
+    background: rgba(248, 113, 113, 0.1) !important;
+    border-color: rgba(248, 113, 113, 0.28) !important;
+    color: #c94f4f !important;
+}
+
+.Search_warp .scope-tag:hover {
+    background: rgba(248, 113, 113, 0.16) !important;
+    color: #b84545 !important;
+}
+
+.Search_warp .scope-tag.active {
+    background: #f87171 !important;
+    border-color: #f87171 !important;
+    color: #fff !important;
+}
+
+.Search_warp .scope-tag.active:hover {
+    background: #ef6464 !important;
+    border-color: #ef6464 !important;
+    color: #fff !important;
+}
+
+/* 清单筛选：沿用暖纸底与香槟金发丝边，仅强调色改为导航岛珊瑚红 */
+.Search_warp .Tab_Warp {
+    font-family: system-ui, -apple-system, "PingFang SC", "Microsoft YaHei", sans-serif;
+}
+
 .LgLoveList-tab-container {
     background: rgba(255, 252, 249, 0.8) !important;
     border-color: rgba(201, 162, 107, 0.24) !important;
 }
 
 .LgLoveList-tab-slider {
-    background: linear-gradient(135deg, #ef8298 0%, #d94f6d 55%, #b23a55 100%) !important;
+    background: #f87171 !important;
+    box-shadow:
+        0 8px 20px -8px rgba(248, 113, 113, 0.72),
+        inset 0 1px 0 rgba(255, 255, 255, 0.4) !important;
+}
+
+.LgLoveList-tab {
+    padding: 8px 16px !important;
+    font-size: clamp(12px, 0.9rem, 13.5px) !important;
+    line-height: 1.25 !important;
+    color: #5f6b76 !important;
+    transition: color 0.2s ease, background-color 0.2s ease, transform 0.2s ease !important;
+}
+
+.LgLoveList-tab i {
+    font-size: 15px !important;
+    line-height: 1 !important;
+}
+
+.LgLoveList-tab-active {
+    color: #fff !important;
+    text-shadow: 0 1px 3px rgba(120, 30, 40, 0.3);
+}
+
+.LgLoveList-tab-active i {
+    color: #fff !important;
+}
+
+.LgLoveList-tab:hover:not(.LgLoveList-tab-active) {
+    color: #c94f4f !important;
+    background-color: rgba(248, 113, 113, 0.08) !important;
+    transform: none !important;
+}
+
+.LgLoveList-tab .tab-badge {
+    min-width: 18px;
+    height: 18px;
+    padding: 0 5px !important;
+    font-family: inherit !important;
+    font-size: clamp(10px, 0.7rem, 11px) !important;
+    background: rgba(79, 111, 136, 0.1) !important;
+    color: #5f6b76 !important;
+}
+
+.LgLoveList-tab-active .tab-badge {
+    background: rgba(255, 255, 255, 0.22) !important;
+    color: #fff !important;
+}
+
+@media (max-width: 480px) {
+    .LgLoveList-tab-container {
+        padding: 4px !important;
+    }
+
+    .LgLoveList-tab-slider {
+        top: 4px !important;
+        height: calc(100% - 8px) !important;
+    }
+
+    .LgLoveList-tab {
+        padding: 7px 12px !important;
+        gap: 5px !important;
+    }
+
+    .LgLoveList-tab i {
+        font-size: 14px !important;
+    }
+
+    .LgLoveList-tab .tab-badge {
+        min-width: 17px;
+        height: 17px;
+        padding: 0 4px !important;
+    }
+}
+
+@media (max-width: 360px) {
+    .LgLoveList-tab-container {
+        padding: 3px !important;
+    }
+
+    .LgLoveList-tab-slider {
+        top: 3px !important;
+        height: calc(100% - 6px) !important;
+    }
+
+    .LgLoveList-tab {
+        padding: 7px 8px !important;
+        gap: 4px !important;
+    }
+
+    .LgLoveList-tab i {
+        font-size: 13px !important;
+    }
+
+    .LgLoveList-tab .tab-badge {
+        min-width: 15px;
+        height: 15px;
+        padding: 0 3px !important;
+        font-size: 9.5px !important;
+    }
 }
 
 /* 详情页 */
@@ -963,7 +1067,7 @@ html.wu3-js .withu-home .withu-section-header.wu3-inview::after {
 }
 
 .withu-detail-rail-btn:hover {
-    background: rgba(217, 79, 109, 0.06) !important;
+    background: rgba(248, 113, 113, 0.06) !important;
     color: var(--wu3-rose-deep) !important;
 }
 
@@ -996,8 +1100,8 @@ input:not([type="checkbox"]):not([type="radio"]):focus,
 textarea:focus,
 select:focus {
     background-color: #fffdfb;
-    border-color: rgba(217, 79, 109, 0.48) !important;
-    box-shadow: 0 0 0 4px rgba(217, 79, 109, 0.09) !important;
+    border-color: rgba(248, 113, 113, 0.48) !important;
+    box-shadow: 0 0 0 4px rgba(248, 113, 113, 0.09) !important;
 }
 
 .withu-message-submit-btn,
@@ -1035,12 +1139,14 @@ select:focus {
 .withu-message-submit-btn,
 .withu-no-data-btn-primary,
 #scrollTopBtn {
-    background: linear-gradient(135deg, #ef8298 0%, #d94f6d 52%, #b23a55 100%) !important;
-    box-shadow: 0 16px 32px -16px rgba(217, 79, 109, 0.8) !important;
+    background: linear-gradient(135deg, #fca5a5 0%, #f87171 52%, #e05757 100%) !important;
+    box-shadow: 0 16px 32px -16px rgba(248, 113, 113, 0.8) !important;
 }
 
 #scrollTopBtn {
     position: fixed;
+    /* 与 #withuFloatingActions 的 right 对齐，避免按钮溢出视口被 overflow-x 裁掉圆环 */
+    right: 1.25rem;
     overflow: visible;
 }
 
@@ -1051,8 +1157,8 @@ select:focus {
     border-radius: inherit;
     background: conic-gradient(
         from -90deg,
-        var(--wu3-gold) calc(var(--wu3-progress, 0) * 1%),
-        rgba(201, 162, 107, 0.12) 0
+        var(--wu3-coral) calc(var(--wu3-progress, 0) * 1%),
+        rgba(248, 113, 113, 0.12) 0
     );
     -webkit-mask: radial-gradient(farthest-side, transparent calc(100% - 3px), #000 calc(100% - 2px));
     mask: radial-gradient(farthest-side, transparent calc(100% - 3px), #000 calc(100% - 2px));
@@ -1085,8 +1191,8 @@ select:focus {
 }
 
 .withu-scroll-progress__bar {
-    background: linear-gradient(90deg, var(--wu3-gold) 0%, #ef8298 48%, var(--wu3-rose) 100%) !important;
-    box-shadow: 0 0 14px rgba(217, 79, 109, 0.55) !important;
+    background: linear-gradient(90deg, var(--wu3-gold) 0%, #fca5a5 48%, var(--wu3-rose) 100%) !important;
+    box-shadow: 0 0 14px rgba(248, 113, 113, 0.55) !important;
 }
 
 /* ------------------------------------------------------------
@@ -1130,10 +1236,12 @@ body.bg-pdot-vignette > .div_marb_7rem-none {
 
 .wu-footer-signature {
     display: flex;
-    flex-direction: column;
+    flex-direction: row;
     align-items: center;
-    gap: 0.3rem;
-    margin-bottom: 1.1rem;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-bottom: 1rem;
     text-align: center;
 }
 
@@ -1141,27 +1249,28 @@ body.bg-pdot-vignette > .div_marb_7rem-none {
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    width: 34px;
-    height: 34px;
-    border-radius: 50%;
-    background: linear-gradient(135deg, #fff5f7, #fdeef2);
-    border: 1px solid rgba(217, 79, 109, 0.2);
+    flex: none;
     color: var(--wu3-rose);
-    font-size: 0.9rem;
-    box-shadow: 0 10px 24px -16px rgba(217, 79, 109, 0.6);
+    font-size: 14px;
+    line-height: 1;
 }
 
 .wu-footer-signature__name {
-    font-family: var(--wu-font-serif);
-    font-size: 0.92rem;
-    letter-spacing: 0.22em;
+    font-family: system-ui, -apple-system, "PingFang SC", "Microsoft YaHei", sans-serif;
+    font-size: 14px;
+    line-height: 1.5;
+    letter-spacing: 0.06em;
     color: var(--wu3-ink);
+    white-space: nowrap;
 }
 
 .wu-footer-signature__note {
-    font-size: 0.68rem;
-    letter-spacing: 0.12em;
+    font-family: system-ui, -apple-system, "PingFang SC", "Microsoft YaHei", sans-serif;
+    font-size: 12px;
+    line-height: 1.5;
+    letter-spacing: 0.04em;
     color: #7f737a;
+    white-space: nowrap;
 }
 
 .footer-warp .github-badge {
@@ -1480,7 +1589,7 @@ html:not(.withu-subpage) #pjax-container .withu-home .withu-link-more {
 }
 
 html:not(.withu-subpage) #pjax-container .withu-home .withu-link-more:hover {
-    box-shadow: 0 18px 36px -14px rgba(244, 88, 122, 0.6) !important;
+    box-shadow: 0 18px 36px -14px rgba(248, 113, 113, 0.6) !important;
 }
 
 /* 倒计时卡 */
@@ -1689,9 +1798,9 @@ html:not(.withu-subpage) #pjax-container .withu-home .withu-epilogue__card {
 /* 空状态：恢复 v2 的浅玫瑰背景与虚线边框 */
 html:not(.withu-subpage) #pjax-container .withu-home .withu-no-data {
     background:
-        radial-gradient(circle at 50% 0%, rgba(255, 227, 233, 0.55), transparent 62%),
+        radial-gradient(circle at 50% 0%, rgba(255, 224, 224, 0.55), transparent 62%),
         rgba(255, 255, 255, 0.55) !important;
-    border: 1px dashed rgba(244, 88, 122, 0.24) !important;
+    border: 1px dashed rgba(248, 113, 113, 0.24) !important;
     box-shadow: none !important;
 }
 
@@ -1721,16 +1830,16 @@ html:not(.withu-subpage) #pjax-container .withu-home .withu-no-data-desc {
    ============================================================ */
 
 html {
-    background-color: #fff7fa;
+    background-color: #fff9f8;
 }
 
 body.bg-pdot-vignette {
-    background-color: #fff7fa !important;
+    background-color: #fff9f8 !important;
     background-image:
         radial-gradient(circle at 12% 8%, rgba(126, 200, 227, 0.22), transparent 34%),
-        radial-gradient(circle at 90% 18%, rgba(247, 141, 167, 0.22), transparent 34%),
+        radial-gradient(circle at 90% 18%, rgba(248, 113, 113, 0.18), transparent 34%),
         radial-gradient(circle at 55% 92%, rgba(127, 191, 157, 0.22), transparent 38%),
-        linear-gradient(165deg, #fffafb 0%, #fff7fa 48%, #fdf7f2 100%) !important;
+        linear-gradient(165deg, #fffafa 0%, #fff8f7 48%, #fdf7f2 100%) !important;
     background-size: 150% 150%, 150% 150%, 160% 160%, 200% 200% !important;
     background-attachment: fixed !important;
     animation: wu3WatchCanvasFlow 42s ease-in-out infinite !important;
@@ -1925,13 +2034,13 @@ html body.bg-pdot-vignette #pjax-container .withu-card .withu-no-data {
 
 html body.bg-pdot-vignette #pjax-container .withu-home .withu-home-message-card {
     background:
-        radial-gradient(circle at 50% 0%, rgba(255, 227, 233, 0.55), transparent 62%),
+        radial-gradient(circle at 50% 0%, rgba(255, 224, 224, 0.55), transparent 62%),
         rgba(255, 255, 255, 0.55) !important;
 }
 
 html body.bg-pdot-vignette #pjax-container .withu-home .withu-epilogue__card {
     background:
-        radial-gradient(circle at 50% 100%, rgba(255, 227, 233, 0.55), transparent 62%),
+        radial-gradient(circle at 50% 100%, rgba(255, 224, 224, 0.55), transparent 62%),
         linear-gradient(
             180deg,
             rgba(255, 255, 255, 0) 0%,
@@ -1963,7 +2072,7 @@ html body.bg-pdot-vignette #pjax-container :is(
     .withu-no-data:not(.withu-content)
 ) {
     background:
-        radial-gradient(circle at 50% 0%, rgba(255, 227, 233, 0.55), transparent 62%),
+        radial-gradient(circle at 50% 0%, rgba(255, 224, 224, 0.55), transparent 62%),
         rgba(255, 255, 255, 0.55) !important;
 }
 
@@ -1975,14 +2084,14 @@ html body.bg-pdot-vignette #pjax-container .withu-home :is(
     .withu-home-message-card
 ) {
     background:
-        radial-gradient(circle at 50% 0%, rgba(255, 227, 233, 0.55), transparent 62%),
+        radial-gradient(circle at 50% 0%, rgba(255, 224, 224, 0.55), transparent 62%),
         rgba(255, 255, 255, 0.55) !important;
 }
 
 /* 详情页导航卡保留悬停反馈 */
 html body.bg-pdot-vignette #pjax-container .withu-detail-nav-card:hover {
     background:
-        radial-gradient(circle at 50% 0%, rgba(255, 227, 233, 0.68), transparent 62%),
+        radial-gradient(circle at 50% 0%, rgba(255, 224, 224, 0.68), transparent 62%),
         rgba(255, 255, 255, 0.7) !important;
 }
 
@@ -2012,25 +2121,11 @@ html body.bg-pdot-vignette .withu-home .withu-home-weather-user-pill .withu-home
 }
 
 /* ============================================================
-   22. 导航岛配色：雾蓝石墨
+   22. 导航岛文字与悬停配色
    ------------------------------------------------------------
-   - 替换原来的奶油纸感 + 玫瑰粉激活态
-   - 桌面导航岛与移动端底部导航同步换色
-   - 只改颜色，不改尺寸、间距与布局
+   - 背景已按用户反馈回退为第 2 节的暖纸玻璃，这里不再覆盖
+   - 只保留文字层级与悬停色；激活指示器见第 23 节（珊瑚红）
    ============================================================ */
-
-.withu-nav-island-container {
-    background: linear-gradient(180deg, rgba(255, 255, 255, 0.94), rgba(244, 248, 251, 0.84)) !important;
-    border-color: rgba(255, 255, 255, 0.96) !important;
-    box-shadow:
-        inset 0 1px 0 rgba(255, 255, 255, 0.92),
-        0 0 0 1px rgba(79, 111, 136, 0.1),
-        0 20px 42px -28px rgba(43, 35, 39, 0.42) !important;
-}
-
-.withu-nav-island-container.withu-is-stuck {
-    background: linear-gradient(180deg, rgba(255, 255, 255, 0.97), rgba(246, 250, 253, 0.9)) !important;
-}
 
 .withu-nav-island-item {
     color: #5f6b76;
@@ -2128,7 +2223,7 @@ html body.bg-pdot-vignette .withu-home .withu-home-weather-user-pill .withu-home
    ------------------------------------------------------------
    - 按反馈把 #scrollTopBtn 的背景从玫瑰渐变改为白色
    - 图标使用与导航/留言按钮一致的珊瑚红
-   - 进度环保留香槟金，尺寸与位置不变
+   - 进度环同样改为珊瑚红，与顶部导航激活指示器一致
    ============================================================ */
 
 #scrollTopBtn {

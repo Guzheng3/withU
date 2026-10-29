@@ -39,7 +39,7 @@
 </div>
 
 <script src="/admin-assets/js/admin_v2.js?v=withu-admin-20260720-3"></script>
-<script src="/admin-assets/js/admin_v4.js?v=4.0.2" defer></script>
+<script src="/admin-assets/js/admin_v4.js?v=4.1.0" defer></script>
 <!-- withU 桌宠（一二/布布随机一只，左下角，与前台共版） -->
 <link rel="stylesheet" href="/assets/css/withu-pet.css?v=1.0.84">
 <script src="/assets/js/withu-pet-data.js?v=1.0.80"></script>

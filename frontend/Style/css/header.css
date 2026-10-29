@@ -25,6 +25,12 @@
     max-width: min(50vw, 320px);
 }
 
+/* 有居中导航岛的页面：限制吸顶标识宽度，避免与导航岛相互覆盖
+   （292px ≈ 导航岛半宽 + 安全间距，6vw 对齐本元素的 left: 6%） */
+body:has(.withu-nav-island-container) .withu-header-left-avatar {
+    max-width: min(320px, calc(50vw - 292px - 6vw));
+}
+
 .withu-header-left-avatar .stuck-logo {
     display: flex;
     align-items: center;
@@ -393,7 +399,8 @@
     font-family: 'Dancing Script', cursive;
     font-size: 22px;
     color: #1e293b;
-    line-height: 1;
+    /* 花体字下伸部需要高于 1 倍行高，否则会被 overflow:hidden 裁掉 */
+    line-height: 1.4;
 }
 
 .withu-header-left-avatar .stuck-logo--en-v7 .stuck-logo__redline-l {
@@ -413,6 +420,21 @@
     margin: 0 6px;
     display: flex;
     align-items: center;
+}
+
+/* 中等宽度：居中导航岛两侧空间不足，收起装饰线，让昵称与爱心完整显示 */
+@media (min-width: 1010px) and (max-width: 1199px) {
+    body:has(.withu-nav-island-container) .withu-header-left-avatar .stuck-logo--en-v7 .stuck-logo__redline-l,
+    body:has(.withu-nav-island-container) .withu-header-left-avatar .stuck-logo--en-v7 .stuck-logo__redline-r {
+        display: none;
+    }
+}
+
+/* 更窄的桌面宽度放不下完整情侣昵称，隐藏吸顶标识，避免被导航岛覆盖 */
+@media (min-width: 769px) and (max-width: 1009px) {
+    body:has(.withu-nav-island-container) .withu-header-left-avatar {
+        display: none !important;
+    }
 }
 
 /* Solo 模式样式 */

@@ -311,7 +311,7 @@ try {
 
 <meta name="x-withu-license-instance" content="858ee1d099b9">
 
-<link rel="icon" href="favicon.png" />
+<link rel="icon" href="/favicon.png?v=logo" />
 <meta name="viewport" content="width=device-width,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no">
 <meta name="description" content="withU 是一个适合记录恋爱日常与纪念时刻的情侣小站，支持相册、时间轴、点滴文章、留言互动和邀请页面，让每一段关系都能拥有自己的专属回忆空间。">
 <meta name="keywords" content="情侣网站,恋爱记录,祝福留言,情侣相册,恋爱清单,爱情纪念,情侣头像框,祝福语句,情侣互动,爱情相册,情侣事件记录,情侣留言,爱情故事,情感交流,用户互动,祝福卡片,音乐分享,甜蜜瞬间,情侣活动,爱情动态,withU">
@@ -365,8 +365,8 @@ try {
 <link rel="stylesheet" href="Style/vendor/remixicon/remixicon.css">
 <link rel="stylesheet" href="Style/css/tooltip.css">
 <link rel="stylesheet" href="Style/css/interaction.css">
-<link rel="stylesheet" href="Style/css/withu-home-style.css?v=20261028weather">
-<link rel="stylesheet" href="Style/css/withu-weather-modal.css?v=20261029nav1">
+<link rel="stylesheet" href="Style/css/withu-home-style.css?v=20261029duo17">
+<link rel="stylesheet" href="Style/css/withu-weather-modal.css?v=20261029coral1">
 <link rel="stylesheet" href="Style/css/timetable.css?v=20261027-weather">
 <link rel="stylesheet" href="Style/css/withu-detail.css?v=1.0.80">
 <link rel="stylesheet" href="Style/css/mobile-nav.css?v=1.0.1-flush">
@@ -600,8 +600,8 @@ try {
 </script>
 <!-- withU v2 关键首屏样式（完整样式由页脚统一加载，避免布局跳动） -->
 <style>
-html.withu-subpage #homePage.wrap{height:clamp(300px,38vh,460px)!important;min-height:300px;margin-top:0!important;overflow:hidden;background:linear-gradient(135deg,#fff1f4,#ffe3e9)}
-@media(max-width:768px){html.withu-subpage #homePage.wrap{height:clamp(220px,32vh,300px)!important;min-height:220px}html.withu-subpage #homePage .bg-wrap.central.limg{display:none!important}}
+html.withu-subpage #homePage.wrap{height:80vh;margin-top:0;background:linear-gradient(135deg,#fff1f1,#ffe0e0)}
+@media(max-width:768px){html.withu-subpage #homePage.wrap{height:50vh}}
 </style>
 </head>
 
@@ -667,188 +667,114 @@ html.withu-subpage #homePage.wrap{height:clamp(300px,38vh,460px)!important;min-h
                 </div>
             </div>
 
-            <!-- 1. Top Section: Staggered Masonry -->
+            <!-- 1. Top Section: 双人天气 -->
             <section class="withu-section">
                 <div class="withu-grid">
+                    <div class="withu-weather-duo" data-aos="fade-up" data-aos-delay="0">
 
-                    <!-- Card 1: Moment of the Day -->
-                                        <div class="withu-col-2 withu-row-2" data-aos="fade-up" data-aos-delay="0">                    <!-- 智能媒体卡片：时光碎片 -->
-                    <div id="moment-card" class="withu-smart-card">
-                        <!-- 媒体容器 -->
-                        <div class="withu-smart-card__media"></div>
-                        <!-- 遮罩层 -->
-                        <div class="withu-smart-card__overlay"></div>
+                        <!-- 天气 · 我 -->
+                        <div class="withu-home-weather-card withu-weather-duo__person blue" data-weather-slot="1" data-location-name="--">
 
-                        <!-- 顶部：发布者信息 + 相册入口 -->
-                        <div class="withu-smart-card__header">
-                            <div class="withu-smart-card__capsule">
-                                <img class="withu-smart-card__avatar lazy" src="" alt="">
-                                <div class="withu-smart-card__user-info">
-                                    <span class="withu-smart-card__name"></span>
-                                    <span class="withu-smart-card__time"></span>
+                            <!-- 装饰背景 -->
+                            <div class="withu-home-weather-bg-decoration"></div>
+
+                            <!-- 顶部：用户 + 时间 -->
+                            <div class="withu-home-weather-row-top">
+                                <div class="withu-home-weather-user-pill">
+                                    <img src="<?php echo htmlspecialchars(function_exists('upload_url') ? (upload_url((string) ($__cfgWeather['maleAvatar'] ?? '')) ?: 'https://q1.qlogo.cn/g?b=qq&nk=10000&s=640') : 'https://q1.qlogo.cn/g?b=qq&nk=10000&s=640', ENT_QUOTES, 'UTF-8'); ?>"
+                                        class="withu-home-weather-avatar" alt="<?php echo htmlspecialchars((string) ($__cfgWeather['maleName'] ?? '我'), ENT_QUOTES, 'UTF-8'); ?>">
+                                    <span class="withu-home-weather-username"><?php echo htmlspecialchars((string) ($__cfgWeather['maleName'] ?? '我'), ENT_QUOTES, 'UTF-8'); ?></span>
                                 </div>
+                                <div class="withu-home-weather-time-tag">--</div>
                             </div>
-                            <!-- 相册入口链接 -->
-                            <a href="albums.php" class="withu-smart-card__album-link">
-                                <span>进入相册</span>
-                                <i class="ph-bold ph-arrow-right"></i>
-                            </a>
-                        </div>
 
-                        <!-- 底部：内容区域 -->
-                        <div class="withu-smart-card__content">
-                            <!-- 地点胶囊 -->
-                            <div class="withu-smart-card__location-pill">
-                                <i class="ph-fill ph-map-pin"></i>
-                                <span class="withu-smart-card__location-text"></span>
+                            <!-- 核心区：温度 + 图标 -->
+                            <div class="withu-home-weather-row-main">
+                                <div class="withu-home-weather-text-temp">--°</div>
+                                <i class="qi-100-fill withu-home-weather-icon-main"></i>
                             </div>
-                            <!-- 标题 -->
-                            <h2 class="withu-smart-card__title"></h2>
-                            <!-- 元数据 -->
-                            <div class="withu-smart-card__meta">
-                                <span class="withu-smart-card__date"></span>
-                                <p class="withu-smart-card__desc"></p>
-                            </div>
-                        </div>
 
-                        <!-- 切换按钮 -->
-                        <div class="withu-smart-card__switch-btn-container">
-                            <button class="withu-smart-card__switch-btn" type="button">
-                                <i class="ph-bold ph-arrows-clockwise"></i>
-                            </button>
-                        </div>
-                    </div>
-                    </div>
-                                                            <!-- Card 2: Weather -->
-                    <div class="withu-col-2 withu-col-md-1 withu-weather-wrapper" data-aos="fade-up" data-aos-delay="50">                    <div class="withu-home-weather-card blue" data-weather-slot="1" data-location-name="--">
-
-                        <!-- 装饰背景 -->
-                        <div class="withu-home-weather-bg-decoration"></div>
-
-                        <!-- 顶部：用户 + 时间 -->
-                        <div class="withu-home-weather-row-top">
-                            <div class="withu-home-weather-user-pill">
-                                <img src="<?php echo htmlspecialchars(function_exists('upload_url') ? (upload_url((string) ($__cfgWeather['maleAvatar'] ?? '')) ?: 'https://q1.qlogo.cn/g?b=qq&nk=10000&s=640') : 'https://q1.qlogo.cn/g?b=qq&nk=10000&s=640', ENT_QUOTES, 'UTF-8'); ?>"
-                                    class="withu-home-weather-avatar" alt="<?php echo htmlspecialchars((string) ($__cfgWeather['maleName'] ?? '我'), ENT_QUOTES, 'UTF-8'); ?>">
-                                <span class="withu-home-weather-username"><?php echo htmlspecialchars((string) ($__cfgWeather['maleName'] ?? '我'), ENT_QUOTES, 'UTF-8'); ?></span>
-                            </div>
-                            <div class="withu-home-weather-time-tag">--</div>
-                        </div>
-
-                        <!-- 核心区：温度 + 图标 -->
-                        <div class="withu-home-weather-row-main">
-                            <div class="withu-home-weather-text-temp">--°</div>
-                            <i class="qi-100-fill withu-home-weather-icon-main"></i>
-                        </div>
-
-                        <!-- 地址信息 -->
-                        <div class="withu-home-weather-row-location">
-                            <i class="ph-fill ph-map-pin withu-home-weather-icon-pin"></i>
-                            <span class="withu-home-weather-text-city">--</span>
-                            <span class="withu-home-weather-dot-divider">•</span>
-                            <span class="withu-home-weather-text-status">--</span>
-                        </div>
-
-                        <!-- 底部指标 -->
-                        <div class="withu-home-weather-grid-stats">
-                            <div class="withu-home-weather-stat-pill">
-                                <i class="ph-fill ph-drop withu-home-weather-icon-stat"></i>
-                                <span class="withu-home-weather-text-stat stat-humidity">--%</span>
-                            </div>
-                            <div class="withu-home-weather-stat-pill">
-                                <i class="ph-fill ph-eye withu-home-weather-icon-stat"></i>
-                                <span class="withu-home-weather-text-stat stat-vis">--km</span>
-                            </div>
-                            <div class="withu-home-weather-stat-pill">
-                                <i class="ph-fill ph-thermometer withu-home-weather-icon-stat"></i>
-                                <span class="withu-home-weather-text-stat stat-feels">--°</span>
-                            </div>
-                        </div>
-                    </div>
-                    </div>
-                    <!-- Card 3: Weather (双人模式) -->
-                                        <div class="withu-col-2 withu-col-md-1 withu-weather-wrapper" data-aos="fade-up" data-aos-delay="100">                    <div class="withu-home-weather-card orange" data-weather-slot="2" data-location-name="--">
-
-                        <div class="withu-home-weather-bg-decoration"></div>
-
-                        <div class="withu-home-weather-row-top">
-                            <div class="withu-home-weather-user-pill">
-                                <img src="<?php echo htmlspecialchars(function_exists('upload_url') ? (upload_url((string) ($__cfgWeather['femaleAvatar'] ?? '')) ?: 'https://q1.qlogo.cn/g?b=qq&nk=10000&s=640') : 'https://q1.qlogo.cn/g?b=qq&nk=10000&s=640', ENT_QUOTES, 'UTF-8'); ?>"
-                                    class="withu-home-weather-avatar" alt="<?php echo htmlspecialchars((string) ($__cfgWeather['femaleName'] ?? '你'), ENT_QUOTES, 'UTF-8'); ?>">
-                                <span class="withu-home-weather-username"><?php echo htmlspecialchars((string) ($__cfgWeather['femaleName'] ?? '你'), ENT_QUOTES, 'UTF-8'); ?></span>
-                            </div>
-                            <div class="withu-home-weather-time-tag">--</div>
-                        </div>
-
-                        <div class="withu-home-weather-row-main">
-                            <div class="withu-home-weather-text-temp">--°</div>
-                            <i class="qi-100-fill withu-home-weather-icon-main"></i>
-                        </div>
-
-                        <div class="withu-home-weather-row-location">
-                            <i class="ph-fill ph-map-pin withu-home-weather-icon-pin"></i>
-                            <span class="withu-home-weather-text-city">--</span>
-                            <span class="withu-home-weather-dot-divider">•</span>
-                            <span class="withu-home-weather-text-status">--</span>
-                        </div>
-
-                        <div class="withu-home-weather-grid-stats">
-                            <div class="withu-home-weather-stat-pill">
-                                <i class="ph-fill ph-drop withu-home-weather-icon-stat"></i>
-                                <span class="withu-home-weather-text-stat stat-humidity">--%</span>
-                            </div>
-                            <div class="withu-home-weather-stat-pill">
-                                <i class="ph-fill ph-eye withu-home-weather-icon-stat"></i>
-                                <span class="withu-home-weather-text-stat stat-vis">--km</span>
-                            </div>
-                            <div class="withu-home-weather-stat-pill">
-                                <i class="ph-fill ph-thermometer withu-home-weather-icon-stat"></i>
-                                <span class="withu-home-weather-text-stat stat-feels">--°</span>
-                            </div>
-                        </div>
-                    </div>
-                    </div>                                        
-                    <!-- Card 4: Love List -->
-                    <div class="withu-col-2" data-aos="fade-up" data-aos-delay="150">                    <div class="withu-widget withu-widget--lovelist">
-                        <div class="withu-widget__bg-icon withu-lovelist-bg-icon">
-                            <i class="ph-fill ph-shooting-star"></i>
-                        </div>
-
-                        <div class="withu-flex-col-between-relative">
-                            <div class="withu-flex-between-center withu-mb-4">
-                                <div class="withu-flex-center-gap">
-                                    <div class="withu-icon-box-glass">
-                                        <i class="ph-bold ph-list-heart withu-icon-md-white"></i>
-                                    </div>
-                                    <div class="withu-card-title-lg">清单</div>
+                            <div class="withu-home-weather-side">
+                                <!-- 地址信息 -->
+                                <div class="withu-home-weather-row-location">
+                                    <i class="ph-fill ph-map-pin withu-home-weather-icon-pin"></i>
+                                    <span class="withu-home-weather-text-city">--</span>
+                                    <span class="withu-home-weather-dot-divider">•</span>
+                                    <span class="withu-home-weather-text-status">--</span>
                                 </div>
-                                <div class="withu-card-subtitle">Plans Together</div>
-                            </div>
 
-                            <div class="withu-lovelist-bottom">
-                                <div class="withu-lovelist-stats">
-                                    <div class="withu-lovelist-fraction withu-font-num">
-                                        <span
-                                            class="withu-lovelist-completed"><?php echo (int) $homeStats['lovelist_done']; ?></span>
-                                        <span class="withu-lovelist-divider">/</span>
-                                        <span
-                                            class="withu-lovelist-total"><?php echo (int) $homeStats['lovelist_total']; ?></span>
+                                <!-- 底部指标 -->
+                                <div class="withu-home-weather-grid-stats">
+                                    <div class="withu-home-weather-stat-pill">
+                                        <i class="ph-fill ph-drop withu-home-weather-icon-stat"></i>
+                                        <span class="withu-home-weather-text-stat stat-humidity">--%</span>
                                     </div>
-
-                                    <div class="withu-font-num withu-num-huge">
-                                        <span><?php echo $homeStats['lovelist_total'] > 0 ? (int) round($homeStats['lovelist_done'] * 100 / $homeStats['lovelist_total']) : 0; ?></span><span
-                                            class="withu-num-suffix">%</span>
+                                    <div class="withu-home-weather-stat-pill">
+                                        <i class="ph-fill ph-eye withu-home-weather-icon-stat"></i>
+                                        <span class="withu-home-weather-text-stat stat-vis">--km</span>
+                                    </div>
+                                    <div class="withu-home-weather-stat-pill">
+                                        <i class="ph-fill ph-thermometer withu-home-weather-icon-stat"></i>
+                                        <span class="withu-home-weather-text-stat stat-feels">--°</span>
                                     </div>
                                 </div>
+                            </div>
+                        </div>
 
-                                <div class="withu-progress withu-progress-sm">
-                                    <div class="withu-progress__bar withu-progress-fill-white"
-                                        style="width: <?php echo $homeStats['lovelist_total'] > 0 ? (int) round($homeStats['lovelist_done'] * 100 / $homeStats['lovelist_total']) : 0; ?>%;"></div>
+                        <div class="withu-weather-duo__seam" aria-hidden="true">
+                            <i class="ph-fill ph-heart"></i>
+                        </div>
+
+                        <!-- 天气 · 你 -->
+                        <div class="withu-home-weather-card withu-weather-duo__person orange" data-weather-slot="2" data-location-name="--">
+
+                            <!-- 装饰背景 -->
+                            <div class="withu-home-weather-bg-decoration"></div>
+
+                            <!-- 顶部：用户 + 时间 -->
+                            <div class="withu-home-weather-row-top">
+                                <div class="withu-home-weather-user-pill">
+                                    <img src="<?php echo htmlspecialchars(function_exists('upload_url') ? (upload_url((string) ($__cfgWeather['femaleAvatar'] ?? '')) ?: 'https://q1.qlogo.cn/g?b=qq&nk=10000&s=640') : 'https://q1.qlogo.cn/g?b=qq&nk=10000&s=640', ENT_QUOTES, 'UTF-8'); ?>"
+                                        class="withu-home-weather-avatar" alt="<?php echo htmlspecialchars((string) ($__cfgWeather['femaleName'] ?? '你'), ENT_QUOTES, 'UTF-8'); ?>">
+                                    <span class="withu-home-weather-username"><?php echo htmlspecialchars((string) ($__cfgWeather['femaleName'] ?? '你'), ENT_QUOTES, 'UTF-8'); ?></span>
+                                </div>
+                                <div class="withu-home-weather-time-tag">--</div>
+                            </div>
+
+                            <!-- 核心区：温度 + 图标 -->
+                            <div class="withu-home-weather-row-main">
+                                <div class="withu-home-weather-text-temp">--°</div>
+                                <i class="qi-100-fill withu-home-weather-icon-main"></i>
+                            </div>
+
+                            <div class="withu-home-weather-side">
+                                <!-- 地址信息 -->
+                                <div class="withu-home-weather-row-location">
+                                    <i class="ph-fill ph-map-pin withu-home-weather-icon-pin"></i>
+                                    <span class="withu-home-weather-text-city">--</span>
+                                    <span class="withu-home-weather-dot-divider">•</span>
+                                    <span class="withu-home-weather-text-status">--</span>
+                                </div>
+
+                                <!-- 底部指标 -->
+                                <div class="withu-home-weather-grid-stats">
+                                    <div class="withu-home-weather-stat-pill">
+                                        <i class="ph-fill ph-drop withu-home-weather-icon-stat"></i>
+                                        <span class="withu-home-weather-text-stat stat-humidity">--%</span>
+                                    </div>
+                                    <div class="withu-home-weather-stat-pill">
+                                        <i class="ph-fill ph-eye withu-home-weather-icon-stat"></i>
+                                        <span class="withu-home-weather-text-stat stat-vis">--km</span>
+                                    </div>
+                                    <div class="withu-home-weather-stat-pill">
+                                        <i class="ph-fill ph-thermometer withu-home-weather-icon-stat"></i>
+                                        <span class="withu-home-weather-text-stat stat-feels">--°</span>
+                                    </div>
                                 </div>
                             </div>
                         </div>
                     </div>
-                    </div>
+                </div>
             </section>
 
             <!-- 课表 Module（与清涵课表 App 周视图一致，仅登录可见；数据由 page-timetable.js 拉取） -->
@@ -1504,7 +1430,7 @@ html.withu-subpage #homePage.wrap{height:clamp(300px,38vh,460px)!important;min-h
 <script src="Style/LoveListStyle/carousel.thumbs.umd.js"></script>
 <script src="Style/LoveListStyle/fancybox.umd.js"></script>
 <script src="assets/js/page-lovelist.js?v=20261029-slider"></script>
-<script src="assets/js/page-index.js?v=20261029nav1"></script>
+<script src="assets/js/page-index.js?v=20261029duo"></script>
 <script src="assets/js/page-timetable.js?v=20261027-weather"></script>
 <script src="assets/js/page-detail.js"></script>
 <script src="assets/js/page-album-detail.js"></script>
@@ -1514,7 +1440,7 @@ html.withu-subpage #homePage.wrap{height:clamp(300px,38vh,460px)!important;min-h
 <script src="assets/js/visitor-hash.js"></script>
 <script src="assets/js/interaction.js"></script>
 <script src="assets/js/context-menu.js"></script>
-<script src="assets/js/sakura.js"></script>
+<script src="assets/js/sakura.js?v=20261029coral1"></script>
 
 <!-- 足迹地图弹窗 -->
 <!-- ============ 足迹地图弹窗 ============ -->

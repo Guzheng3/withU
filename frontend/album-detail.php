@@ -112,7 +112,7 @@ $__privateFemaleAvatar = (string) (($__cfg['femaleAvatar'] ?? '') ?: '/_qqavatar
 
 <meta name="x-withu-license-instance" content="858ee1d099b9">
 
-<link rel="icon" href="/favicon.png" />
+<link rel="icon" href="/favicon.png?v=logo" />
 <meta name="viewport" content="width=device-width,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no">
 <meta name="description" content="withU 是一个适合记录恋爱日常与纪念时刻的情侣小站，支持相册、时间轴、点滴文章、留言互动和邀请页面，让每一段关系都能拥有自己的专属回忆空间。">
 <meta name="keywords" content="情侣网站,恋爱记录,祝福留言,情侣相册,恋爱清单,爱情纪念,情侣头像框,祝福语句,情侣互动,爱情相册,情侣事件记录,情侣留言,爱情故事,情感交流,用户互动,祝福卡片,音乐分享,甜蜜瞬间,情侣活动,爱情动态,withU">
@@ -175,8 +175,8 @@ $__privateFemaleAvatar = (string) (($__cfg['femaleAvatar'] ?? '') ?: '/_qqavatar
 </script>
 <!-- withU v2 关键首屏样式（完整样式由页脚统一加载，避免布局跳动） -->
 <style>
-html.withu-subpage #homePage.wrap{height:clamp(300px,38vh,460px)!important;min-height:300px;margin-top:0!important;overflow:hidden;background:linear-gradient(135deg,#fff1f4,#ffe3e9)}
-@media(max-width:768px){html.withu-subpage #homePage.wrap{height:clamp(220px,32vh,300px)!important;min-height:220px}html.withu-subpage #homePage .bg-wrap.central.limg{display:none!important}}
+html.withu-subpage #homePage.wrap{height:80vh;margin-top:0;background:linear-gradient(135deg,#fff1f1,#ffe0e0)}
+@media(max-width:768px){html.withu-subpage #homePage.wrap{height:50vh}}
 </style>
 <!-- 自定义右键菜单 -->
 <link rel="stylesheet" href="/Style/css/context-menu.css">

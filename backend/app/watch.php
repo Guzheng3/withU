@@ -59,7 +59,8 @@ foreach ($historyRows as $historyRow) {
         'resolution' => '',
         'source' => 'strm',
     ];
-    $recentRows[] = array_merge($mediaRow, $historyRow);
+    // history 行自带自增 id，合并后会覆盖媒体 id；播放地址必须用 media_id
+    $recentRows[] = array_merge($mediaRow, $historyRow, ['id' => $mediaId]);
 }
 $recentSeries = [];
 foreach ($recentRows as $row) {

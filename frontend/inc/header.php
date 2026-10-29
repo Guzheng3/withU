@@ -1,5 +1,5 @@
 <style id="withu-skip-link-style">
-.wu-skip-link{position:fixed;top:-64px;left:16px;z-index:100002;display:inline-flex;align-items:center;padding:10px 18px;border-radius:0 0 12px 12px;background:linear-gradient(135deg,#e9708b,#d94f6d);color:#fff;font-size:.85rem;text-decoration:none;box-shadow:0 14px 30px -14px rgba(217,79,109,.7);transition:top .25s cubic-bezier(.22,1,.36,1)}
+.wu-skip-link{position:fixed;top:-64px;left:16px;z-index:100002;display:inline-flex;align-items:center;padding:10px 18px;border-radius:0 0 12px 12px;background:linear-gradient(135deg,#fca5a5,#f87171);color:#fff;font-size:.85rem;text-decoration:none;box-shadow:0 14px 30px -14px rgba(248,113,113,.7);transition:top .25s cubic-bezier(.22,1,.36,1)}
 .wu-skip-link:focus{top:0;color:#fff;outline:2px solid #fff;outline-offset:-4px}
 </style>
 <a href="#main-content" class="wu-skip-link">跳到主要内容</a>
@@ -16,7 +16,13 @@
             </div>
         </div>
         <div class="logo" style="margin-right:auto;margin-left:3%">
-                        <h1><a class="alogo" href="index.php" title="withU" style="display:inline-flex;align-items:center;gap:4px"><img src="assets/images/withu-logo.png" alt="withU" style="height:2.2rem;width:auto;object-fit:contain;vertical-align:middle"></a></h1>
+            <?php
+            // 子页面可覆写的 Logo 配置：$withuLogoHref / $withuLogoVariant('image'|'library-back') / $withuLogoTitle
+            $withuLogoHref = $withuLogoHref ?? 'index.php';
+            $withuLogoVariant = $withuLogoVariant ?? 'image';
+            $withuLogoTitle = $withuLogoTitle ?? 'withU';
+            ?>
+                        <h1><a class="alogo<?php echo $withuLogoVariant === 'library-back' ? ' alogo--back withu-header-map' : ''; ?>" href="<?php echo htmlspecialchars($withuLogoHref, ENT_QUOTES, 'UTF-8'); ?>" title="<?php echo htmlspecialchars($withuLogoTitle, ENT_QUOTES, 'UTF-8'); ?>"<?php if ($withuLogoVariant === 'library-back'): ?> aria-label="<?php echo htmlspecialchars($withuLogoTitle, ENT_QUOTES, 'UTF-8'); ?>"<?php endif; ?> style="display:inline-flex;align-items:center;gap:4px"><?php if ($withuLogoVariant === 'library-back'): ?><span class="withu-header-map-icon-wrap" aria-hidden="true"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5"/><path d="m12 19-7-7 7-7"/></svg></span><span class="withu-header-map-text">媒体库</span><?php else: ?><img src="assets/images/withu-logo.png" alt="withU" style="height:2.2rem;width:auto;object-fit:contain;vertical-align:middle"><?php endif; ?></a></h1>
         </div>
         <!-- 吸顶时显示的右侧区域: 情侣头像 + 功能入口 -->
         <div class="withu-header-actions" id="withuHeaderActions">

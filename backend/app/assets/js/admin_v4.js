@@ -300,3 +300,64 @@
         });
     }
 })();
+
+/* ============================================================
+   Admin v4.1 — 数值滚动与细节增强
+   ============================================================ */
+(function () {
+    'use strict';
+    if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+
+    function animateNumber(el) {
+        var raw = (el.textContent || '').trim();
+        if (!/^\d+$/.test(raw)) return;
+        var target = parseInt(raw, 10);
+        if (!isFinite(target) || target <= 0 || target > 9999999) return;
+
+        var start = performance.now();
+        var duration = 900;
+        el.textContent = '0';
+
+        function frame(now) {
+            var t = Math.min(1, (now - start) / duration);
+            var eased = 1 - Math.pow(1 - t, 3);
+            el.textContent = String(Math.round(target * eased));
+            if (t < 1) {
+                window.requestAnimationFrame(frame);
+            } else {
+                el.textContent = String(target);
+            }
+        }
+        window.requestAnimationFrame(frame);
+    }
+
+    function init() {
+        var values = document.querySelectorAll('.admin-stat-value');
+        if (!values.length) return;
+
+        if (typeof IntersectionObserver === 'undefined') {
+            Array.prototype.forEach.call(values, animateNumber);
+            return;
+        }
+
+        var observer = new IntersectionObserver(function (entries) {
+            entries.forEach(function (entry) {
+                if (!entry.isIntersecting) return;
+                observer.unobserve(entry.target);
+                animateNumber(entry.target);
+            });
+        }, { threshold: 0.35 });
+
+        Array.prototype.forEach.call(values, function (el) {
+            if (el.dataset.a4Counted === '1') return;
+            el.dataset.a4Counted = '1';
+            observer.observe(el);
+        });
+    }
+
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', init, { once: true });
+    } else {
+        init();
+    }
+})();

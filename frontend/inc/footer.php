@@ -87,8 +87,8 @@ foreach (preg_split('/[\r\n,，;；]+/u', $withuBeianRaw) as $withuBeianItem) {
     <div class="footer-warp">
         <div class="footer">
             <div class="wu-footer-signature" aria-hidden="true">
-                <span class="wu-footer-signature__mark">♥</span>
                 <span class="wu-footer-signature__name">withU</span>
+                <span class="wu-footer-signature__mark">♥</span>
                 <span class="wu-footer-signature__note">把日常写成我们的故事</span>
             </div>
             <?php foreach ($withuBeianBadges as $withuBadge): ?>
@@ -111,9 +111,9 @@ foreach (preg_split('/[\r\n,，;；]+/u', $withuBeianRaw) as $withuBeianItem) {
         </div>
     </div>
 </div>
-<link rel="stylesheet" href="/Style/css/withu-v2.css?v=2.1.0">
-<link rel="stylesheet" href="/Style/css/withu-v3.css?v=3.10.3">
-<script src="/assets/js/withu-v2.js?v=2.1.0" defer></script>
+<link rel="stylesheet" href="/Style/css/withu-v2.css?v=2.2.0">
+<link rel="stylesheet" href="/Style/css/withu-v3.css?v=3.11.3">
+<script src="/assets/js/withu-v2.js?v=2.2.0" defer></script>
 <script src="/assets/js/withu-v3.js?v=3.1.0" defer></script>
 
 <!-- withU 桌宠（一二 & 布布）：位于 PJAX 容器之外，整页只加载一次，跨页常驻 -->

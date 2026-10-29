@@ -1,55 +1,66 @@
 # withU Admin v4 — Quiet Studio
 
 > 后台视觉与交互升级说明。v4 不替换任何业务逻辑，只覆盖视觉与增强交互。
+> v4.2 起强调色改为「浅蓝 + 樱花粉」，与首页观影渐变同一色源。
 
 ## 1. 设计方向
 
-- **关键词**：暖白纸感、单一玫瑰强调色、安静的工作台
+- **关键词**：冷白纸感、浅蓝樱花粉、安静的工作台
 - **参考**：shadcn dashboard 的信息层级、Geist 的中性色阶、Linear / Notion 的紧凑侧栏
 - **原则**
-  1. 中性色负责层级，玫瑰色只负责强调；
+  1. 中性色负责层级，强调色只用浅蓝与樱花粉两族；
   2. 卡片用细边框与轻阴影，不用大面积彩色块；
   3. 表单控件统一 44px 高、12px 圆角、毛玻璃只用在浮层；
-  4. 所有动效尊重 `prefers-reduced-motion`。
+  4. 所有动效尊重 `prefers-reduced-motion`；
+  5. 页面背景保持 `theme.css` 的浅色底与点阵，不在本次配色调整范围内。
 
 ## 2. 文件
 
 | 文件 | 作用 |
 | --- | --- |
 | `backend/app/assets/css/admin_v4.css` | 后台视觉层，最后加载，覆盖 v3/v2/page 级样式 |
-| `backend/app/assets/js/admin_v4.js` | 侧栏折叠、命令面板、表格筛选、波纹 |
+| `backend/app/assets/js/admin_v4.js` | 侧栏折叠、命令面板、表格筛选、波纹、统计数值滚动 |
 | `backend/app/admin/header.php` | 引入 v4 资源、折叠按钮、搜索入口、用户胶囊 |
 | `backend/app/admin/footer.php` | 引入 v4 脚本 |
-| `backend/app/login.php` | 登录页内联样式已重做（双栏面板） |
+| `backend/app/login.php` | 登录页内联样式，配色与后台同步 |
 
 ## 3. 令牌
 
 ```css
---a-bg: #f6f2f2;          /* 页面底色 */
---a-surface: #fffdfd;     /* 卡片 */
---a-surface-2: #fbf7f8;   /* 输入框 / 次级面 */
---a-ink: #2b2327;         /* 主文字 */
---a-ink-2: #6d6167;       /* 正文 */
---a-ink-3: #9b8e94;       /* 次要信息 */
---a-line: #eadfe2;        /* 描边 */
---a-rose: #d94f6d;        /* 强调色 */
---a-rose-deep: #be3a58;
---a-rose-soft: #fdeef2;
---a-champagne: #b9855f;   /* 次强调 / 图表第二序列 */
---a-sage: #3f8f6d;        /* 成功 */
+--a-bg: #f6f2f2;          /* 页面底色（实际背景由 theme.css 控制，保持不改） */
+--a-surface: #ffffff;     /* 卡片 */
+--a-surface-2: #f7fbfd;   /* 输入框 / 次级面 */
+--a-surface-3: #eef6fb;   /* 三级面 */
+--a-ink: #2a3441;         /* 主文字 */
+--a-ink-2: #5f6b7a;       /* 正文 */
+--a-ink-3: #667585;       /* 次要信息 */
+--a-line: #e4edf4;        /* 描边 */
+--a-line-strong: #cfdee9;
+--a-rose: #e26489;        /* 樱花粉强调 */
+--a-rose-deep: #c44d72;   /* 粉底文字/激活态（白底对比 4.5:1） */
+--a-rose-soft: #fdeff4;
+--a-sakura: #f78da7;      /* 首页樱花粉 */
+--a-sky: #7ec8e3;         /* 首页浅蓝 */
+--a-blue: #3d8cae;        /* 浅蓝强调（白底对比 3.8:1） */
+--a-blue-deep: #2f7d9d;
+--a-blue-soft: #e8f6fc;
+--a-champagne: #3d8cae;   /* 旧令牌，已指向浅蓝 */
+--a-sage: #4f9d7d;        /* 成功 */
 --a-radius: 18px;
 ```
 
 ## 4. 组件
 
-- **侧栏**：256px 暖白玻璃，分组标题 10px 大写字距，当前项白底 + 左侧玫瑰短条；桌面端可折叠为 82px 图标栏，状态记忆在 `localStorage.withu_admin_sidebar_collapsed`。
-- **顶栏**：66px 毛玻璃，面包屑「分组 / 当前页」，搜索入口 `Ctrl/⌘ + K`，用户胶囊显示昵称与 User 1/2。
-- **页面标题**：衬线标题 + 左侧玫瑰竖条；描述行缩进对齐。
-- **统计卡片**：3×2 网格，白卡细边、右下柔光、悬停上浮 3px；不再使用拼接网格和彩色左边框。
-- **表单**：44px 高、12px 圆角、暖灰底，聚焦时白底 + 玫瑰 4px 光环；文件控件自定义按钮。
-- **设置页**：header、帮助文案、表单字段收进同一张卡；分段导航变为胶囊 segmented control。
-- **空状态**：虚线卡片 + 玫瑰心形图标 + 居中说明。
-- **弹窗/命令面板**：20px 圆角、深阴影、背景模糊。
+- **侧栏**：256px 冷白玻璃，分组标题 10px 大写字距，当前项淡粉渐变 + 左侧粉→蓝短条；桌面端可折叠为 82px 图标栏，状态记忆在 `localStorage.withu_admin_sidebar_collapsed`。
+- **顶栏**：66px 冷白毛玻璃 + 浅蓝发丝线，底边中央叠一条粉→蓝渐隐线；面包屑「分组 / 当前页」，搜索入口 `Ctrl/⌘ + K`，用户胶囊显示昵称与 User 1/2。
+- **页面标题**：衬线标题 + 左侧粉→蓝竖条；描述行缩进对齐。
+- **统计卡片**：3×2 网格，白卡细边、右下柔粉光、悬停上浮 3px；六张卡按粉/蓝交替使用顶线与标签圆点。
+- **表单**：44px 高、12px 圆角、冷白底，聚焦时白底 + 浅蓝描边 + 4px 浅蓝光环。
+- **按钮**：主按钮用深樱花粉渐变（保证白字对比度），描边按钮白底 + 浅蓝描边，悬停转粉。
+- **设置页**：header、帮助文案、表单字段收进同一张卡；分段导航变为胶囊 segmented control，激活态深粉文字。
+- **空状态**：浅蓝虚线卡片 + 淡粉心形图标 + 居中说明。
+- **弹窗/命令面板**：20px 圆角、冷色深阴影、背景模糊；命令项悬停淡粉。
+- **图表**：浏览量用樱花粉，独立访客用浅蓝；面积渐变由粉过渡到蓝。
 
 ## 5. 快捷操作
 
@@ -64,8 +75,25 @@
 
 ## 6. 维护注意
 
-1. 修改 `admin_v4.css` / `admin_v4.js` 后，同步递增 `header.php` / `footer.php` 的 `?v=`。
+1. 修改 `admin_v4.css` / `admin_v4.js` 后，同步递增 `header.php` / `footer.php` 的 `?v=`（当前 CSS 为 `4.2.2`）。
 2. 页面级内联样式优先级高于普通类；需要覆盖时使用 v4 命名空间 + `!important`（已在表单、文件控件中处理）。
 3. 后台旧页面仍有 `.admin-v2` / `.admin-v3` 类名，v4 通过 `body.admin-v4` 覆盖，不需要逐页改类名。
-4. 登录页不使用 `admin_v4.css`，其视觉在 `login.php` 的 `<style>` 内独立维护。
+4. 登录页不使用 `admin_v4.css`，其视觉在 `login.php` 的 `<style>` 内独立维护；改色时两处同步。
 5. 桌宠在后台已隐藏，避免遮挡侧栏底部。
+6. 页面背景由 `theme.css` 的 `body { background: var(--withu-bg) !important; }` 控制；v4.2 没有改动背景、光斑与点阵。
+
+## 7. v4.2 浅蓝樱花粉
+
+- **触发**：用户反馈 v4.1 的玫瑰金配色不好看，希望换成首页的浅蓝 / 樱花粉。
+- **色源**：首页观影渐变 `#fff7fa` + 浅蓝 `#7ec8e3` + 樱花粉 `#f78da7`。
+- **做法**：
+  1. 改写 `body.admin-v4` 的 `--v3-*` / `--a-*` 令牌，让绝大多数旧组件自动继承；
+  2. 新增 v4.2 覆盖段，替换 v4 / v4.1 中写死的玫瑰与香槟金（侧栏激活条、顶栏底线、统计卡顶线、表格、按钮、开关、命令面板、图表、空状态、移动底栏）；
+  3. 登录页 `login.php` 的 `--brand`、卡片顶线、品牌标、按钮、输入焦点、邀请卡等同步换色；
+  4. 仪表盘 SVG 流量图改粉/蓝双序列与冷色网格。
+- **未改**：页面背景、背景光斑、点阵纹理、布局尺寸、间距、动效时长。
+- **可读性**：正文/次级文字 ≥ 4.5:1；主按钮白字 ≥ 4.6:1；粉色激活文字 `#c44d72` 白底 4.5:1；浅蓝作为图标/描边时 ≥ 3:1。
+- **位置**：`backend/app/assets/css/admin_v4.css` 第 25 节（文件末尾 v4.2 段）；登录页见 `backend/app/login.php`。
+- **标签**：`admin-palette-sakura-sky-v1`。
+- **回退**：删除 v4.2 段并恢复令牌块，或
+  `git checkout <v4.2 之前的提交> -- backend/app/assets/css/admin_v4.css backend/app/login.php backend/app/admin/header.php backend/app/admin/index.php`。

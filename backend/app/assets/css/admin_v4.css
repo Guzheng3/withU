@@ -9,34 +9,36 @@
    ============================================================ */
 
 body.admin-v4 {
-    /* 覆盖 v3 变量，让旧组件自动继承新色板 */
-    --v3-pink: #d94f6d;
-    --v3-pink-deep: #be3a58;
-    --v3-pink-soft: #ffd7e1;
-    --v3-pink-glass: rgba(217, 79, 109, 0.1);
-    --v3-blue: #b9855f;
-    --v3-blue-deep: #9b6a47;
-    --v3-blue-soft: #f0dfd1;
-    --v3-blue-glass: rgba(185, 133, 95, 0.1);
-    --v3-green: #3f8f6d;
-    --v3-green-deep: #2f7557;
-    --v3-green-soft: #d9eee5;
-    --v3-green-glass: rgba(63, 143, 109, 0.09);
-    --v3-text: #2b2327;
-    --v3-text-2: #6d6167;
-    --v3-text-3: #9b8e94;
+    /* 覆盖 v3 变量，让旧组件自动继承新色板
+       色板：浅蓝（首页 #7ec8e3 系）+ 樱花粉（首页 #f78da7 系）
+       注意：--a-bg 仍保留暖底，页面背景按用户要求不改 */
+    --v3-pink: #e26489;
+    --v3-pink-deep: #c44d72;
+    --v3-pink-soft: #fbd9e3;
+    --v3-pink-glass: rgba(247, 141, 167, 0.14);
+    --v3-blue: #3d8cae;
+    --v3-blue-deep: #2f7d9d;
+    --v3-blue-soft: #dceff8;
+    --v3-blue-glass: rgba(126, 200, 227, 0.16);
+    --v3-green: #4f9d7d;
+    --v3-green-deep: #3f8568;
+    --v3-green-soft: #e3f4ec;
+    --v3-green-glass: rgba(127, 191, 157, 0.14);
+    --v3-text: #2a3441;
+    --v3-text-2: #5f6b7a;
+    --v3-text-3: #667585;
     --v3-bg: #f6f2f2;
-    --v3-surface: #fffdfd;
-    --v3-surface-soft: #faf5f6;
-    --v3-border: #eadfe2;
-    --v3-border-light: #f2eaec;
-    --v3-glass: rgba(255, 253, 253, 0.9);
-    --v3-glass-strong: rgba(255, 253, 253, 0.96);
-    --v3-glass-border: rgba(234, 223, 226, 0.9);
+    --v3-surface: #ffffff;
+    --v3-surface-soft: #f7fbfd;
+    --v3-border: #e4edf4;
+    --v3-border-light: #eff5f9;
+    --v3-glass: rgba(255, 255, 255, 0.9);
+    --v3-glass-strong: rgba(255, 255, 255, 0.96);
+    --v3-glass-border: rgba(228, 237, 244, 0.9);
     --v3-success: #2f8f6b;
     --v3-warning: #b7791f;
     --v3-danger: #c44545;
-    --v3-info: #3f6f9f;
+    --v3-info: #3d8cae;
     --v3-radius: 18px;
     --v3-radius-sm: 12px;
     --v3-radius-xs: 8px;
@@ -44,40 +46,43 @@ body.admin-v4 {
     --v3-topbar-h: 66px;
     --v3-content-max: 1160px;
     --v3-sidebar-gap: 1.25rem;
-    --v3-shadow-sm: 0 1px 2px rgba(43, 35, 39, 0.04);
-    --v3-shadow: 0 1px 2px rgba(43, 35, 39, 0.04), 0 14px 34px -24px rgba(43, 35, 39, 0.26);
-    --v3-shadow-lg: 0 20px 50px -28px rgba(43, 35, 39, 0.32);
+    --v3-shadow-sm: 0 1px 2px rgba(35, 55, 71, 0.04);
+    --v3-shadow: 0 1px 2px rgba(35, 55, 71, 0.04), 0 14px 34px -24px rgba(35, 55, 71, 0.26);
+    --v3-shadow-lg: 0 20px 50px -28px rgba(35, 55, 71, 0.32);
     --v3-ease: cubic-bezier(0.22, 1, 0.36, 1);
     --v3-ease-spring: cubic-bezier(0.34, 1.4, 0.64, 1);
 
     /* v4 自有令牌 */
     --a-bg: #f6f2f2;
-    --a-surface: #fffdfd;
-    --a-surface-2: #fbf7f8;
-    --a-surface-3: #f4eeee;
-    --a-ink: #2b2327;
-    --a-ink-2: #6d6167;
-    --a-ink-3: #9b8e94;
-    --a-line: #eadfe2;
-    --a-line-strong: #ddccd1;
-    --a-rose: #d94f6d;
-    --a-rose-deep: #be3a58;
-    --a-rose-soft: #fdeef2;
-    --a-champagne: #b9855f;
-    --a-champagne-soft: #f7eee6;
-    --a-sage: #3f8f6d;
-    --a-sage-soft: #eaf5f0;
+    --a-surface: #ffffff;
+    --a-surface-2: #f7fbfd;
+    --a-surface-3: #eef6fb;
+    --a-ink: #2a3441;
+    --a-ink-2: #5f6b7a;
+    --a-ink-3: #667585;
+    --a-line: #e4edf4;
+    --a-line-strong: #cfdee9;
+    --a-rose: #e26489;
+    --a-rose-deep: #c44d72;
+    --a-rose-soft: #fdeff4;
+    --a-champagne: #3d8cae;
+    --a-champagne-soft: #e8f6fc;
+    --a-sakura: #f78da7;
+    --a-sakura-soft: #fbd9e3;
+    --a-sky: #7ec8e3;
+    --a-sage: #4f9d7d;
+    --a-sage-soft: #e9f6ef;
     --a-amber: #b7791f;
     --a-amber-soft: #fdf4e5;
     --a-red: #c44545;
     --a-red-soft: #fdeeee;
-    --a-blue: #3f6f9f;
-    --a-blue-soft: #edf3f9;
+    --a-blue: #3d8cae;
+    --a-blue-soft: #e8f6fc;
     --a-radius: 18px;
     --a-radius-sm: 12px;
     --a-radius-xs: 9px;
-    --a-shadow: 0 1px 2px rgba(43, 35, 39, 0.035), 0 16px 38px -26px rgba(43, 35, 39, 0.28);
-    --a-shadow-hover: 0 2px 4px rgba(43, 35, 39, 0.04), 0 24px 52px -30px rgba(43, 35, 39, 0.34);
+    --a-shadow: 0 1px 2px rgba(35, 55, 71, 0.035), 0 16px 38px -26px rgba(35, 55, 71, 0.28);
+    --a-shadow-hover: 0 2px 4px rgba(35, 55, 71, 0.04), 0 24px 52px -30px rgba(35, 55, 71, 0.34);
 
     min-height: 100vh;
     color: var(--a-ink);
@@ -1841,4 +1846,573 @@ body.admin-v4 .withu-tag-toolbar {
     border: 1px solid var(--a-line);
     border-radius: var(--a-radius-sm);
     background: var(--a-surface-2);
+}
+
+/* ============================================================
+   Admin v4.1 — 玫瑰金精修
+   ------------------------------------------------------------
+   只做细节增强：纸感背景、统计卡顶线、数值渐变、表格/表单反馈
+   ============================================================ */
+
+body.admin-v4 {
+    background-color: #f7f3f1;
+    background-image:
+        radial-gradient(1100px 620px at 6% -8%, rgba(217, 79, 109, 0.075), transparent 62%),
+        radial-gradient(900px 560px at 102% 0%, rgba(201, 162, 107, 0.075), transparent 64%),
+        radial-gradient(1000px 760px at 50% 120%, rgba(94, 143, 125, 0.045), transparent 66%);
+}
+
+body.admin-v4::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    z-index: 0;
+    pointer-events: none;
+    background-image: radial-gradient(rgba(43, 35, 39, 0.045) 1px, transparent 1px);
+    background-size: 24px 24px;
+    -webkit-mask-image: radial-gradient(circle at 50% 30%, #000 0%, transparent 78%);
+    mask-image: radial-gradient(circle at 50% 30%, #000 0%, transparent 78%);
+}
+
+body.admin-v4 .admin-shell {
+    position: relative;
+    z-index: 1;
+}
+
+body.admin-v4 .admin-appbar {
+    background: linear-gradient(180deg, rgba(255, 253, 251, 0.9), rgba(250, 244, 241, 0.78)) !important;
+    border-bottom: 1px solid rgba(201, 162, 107, 0.22) !important;
+    box-shadow: 0 14px 34px -30px rgba(43, 35, 39, 0.45) !important;
+}
+
+body.admin-v4 .admin-appbar::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: -1px;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(201, 162, 107, 0.5), transparent);
+    pointer-events: none;
+}
+
+body.admin-v4 .admin-drawer {
+    background: linear-gradient(180deg, rgba(255, 253, 251, 0.94), rgba(255, 247, 243, 0.9)) !important;
+    border-right: 1px solid rgba(201, 162, 107, 0.2) !important;
+}
+
+body.admin-v4 .admin-drawer-link-active,
+body.admin-v4 .admin-drawer-link-active:hover {
+    background: linear-gradient(90deg, rgba(217, 79, 109, 0.14), rgba(217, 79, 109, 0.035)) !important;
+    color: var(--a-rose-deep) !important;
+}
+
+body.admin-v4 .admin-drawer-link-active::before {
+    background: linear-gradient(180deg, #e9708b, var(--a-rose-deep)) !important;
+    box-shadow: 0 4px 12px -4px rgba(217, 79, 109, 0.6);
+}
+
+body.admin-v4 .admin-card {
+    background: linear-gradient(180deg, rgba(255, 253, 251, 0.99), rgba(255, 250, 247, 0.99));
+    border-color: rgba(201, 162, 107, 0.18);
+}
+
+/* 统计卡：顶部一道细金线 + 数值渐变 */
+body.admin-v4 .admin-dashboard-stat-card {
+    --a4-accent: var(--a-rose);
+    position: relative;
+    background: linear-gradient(180deg, rgba(255, 253, 251, 0.99), rgba(255, 249, 245, 0.99)) !important;
+}
+
+body.admin-v4 .admin-dashboard-stat-card:nth-child(1) { --a4-accent: #d94f6d; }
+body.admin-v4 .admin-dashboard-stat-card:nth-child(2) { --a4-accent: #b9855f; }
+body.admin-v4 .admin-dashboard-stat-card:nth-child(3) { --a4-accent: #5b7c9d; }
+body.admin-v4 .admin-dashboard-stat-card:nth-child(4) { --a4-accent: #5e8f7d; }
+body.admin-v4 .admin-dashboard-stat-card:nth-child(5) { --a4-accent: #b7791f; }
+body.admin-v4 .admin-dashboard-stat-card:nth-child(6) { --a4-accent: #8a6a9e; }
+
+body.admin-v4 .admin-dashboard-stat-card::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 1.25rem;
+    right: 1.25rem;
+    height: 2px;
+    border-radius: 0 0 2px 2px;
+    background: linear-gradient(90deg, var(--a4-accent), transparent 85%);
+    opacity: 0.75;
+    pointer-events: none;
+}
+
+body.admin-v4 .admin-stat-value {
+    background: linear-gradient(180deg, #2b2327 0%, #5f4b54 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    filter: drop-shadow(0 8px 14px rgba(43, 35, 39, 0.08));
+}
+
+body.admin-v4 .admin-dashboard-stat-card .admin-card-title > i,
+body.admin-v4 .admin-card-title > i {
+    color: var(--a4-accent, var(--a-rose));
+}
+
+/* 表格：更轻的表头与行反馈 */
+body.admin-v4 .admin-card table thead th {
+    background: linear-gradient(180deg, #fffdfb, #fbf6f3) !important;
+    color: var(--a-ink-2) !important;
+    font-weight: 600;
+    border-bottom: 1px solid rgba(201, 162, 107, 0.22) !important;
+}
+
+body.admin-v4 .admin-card table tbody tr {
+    transition: background-color 0.2s ease;
+}
+
+body.admin-v4 .admin-card table tbody tr:hover {
+    background: rgba(217, 79, 109, 0.045) !important;
+}
+
+body.admin-v4 .admin-card table tbody tr:last-child td {
+    border-bottom: none;
+}
+
+/* 表单：冷白底与浅蓝焦点 */
+body.admin-v4 input:not([type="checkbox"]):not([type="radio"]),
+body.admin-v4 textarea,
+body.admin-v4 select {
+    background-color: #ffffff;
+    border-color: rgba(126, 200, 227, 0.4);
+    transition: border-color 0.2s ease, box-shadow 0.2s ease, background-color 0.2s ease;
+}
+
+body.admin-v4 input:not([type="checkbox"]):not([type="radio"]):focus,
+body.admin-v4 textarea:focus,
+body.admin-v4 select:focus {
+    background-color: #fff;
+    border-color: #3d8cae !important;
+    box-shadow: 0 0 0 4px rgba(126, 200, 227, 0.22) !important;
+}
+
+/* 按钮 */
+body.admin-v4 .btn {
+    border-radius: 10px;
+    transition:
+        transform 0.2s var(--v3-ease),
+        box-shadow 0.2s ease,
+        filter 0.2s ease,
+        background-color 0.2s ease,
+        border-color 0.2s ease;
+}
+
+body.admin-v4 .btn:active {
+    transform: translateY(1px) scale(0.99);
+}
+
+body.admin-v4 .btn-primary {
+    background: linear-gradient(135deg, #e0607c, var(--a-rose) 55%, var(--a-rose-deep)) !important;
+    border-color: transparent !important;
+    box-shadow: 0 12px 26px -14px rgba(217, 79, 109, 0.75);
+}
+
+body.admin-v4 .btn-primary:hover {
+    filter: brightness(1.04);
+    transform: translateY(-1px);
+    box-shadow: 0 16px 32px -14px rgba(217, 79, 109, 0.82);
+}
+
+body.admin-v4 .btn-outline {
+    background: rgba(255, 253, 251, 0.9);
+    border-color: rgba(201, 162, 107, 0.32) !important;
+    color: var(--a-ink-2) !important;
+}
+
+body.admin-v4 .btn-outline:hover {
+    background: #fff7f8;
+    border-color: rgba(217, 79, 109, 0.4) !important;
+    color: var(--a-rose-deep) !important;
+}
+
+body.admin-v4 .admin-command-trigger kbd {
+    background: linear-gradient(180deg, #fffdfb, #f7eee7);
+    border: 1px solid rgba(201, 162, 107, 0.3);
+    color: #8a6a52;
+}
+
+/* 移动端 tabbar */
+body.admin-v4 .admin-tabbar {
+    background: linear-gradient(180deg, rgba(255, 253, 251, 0.96), rgba(255, 246, 241, 0.94)) !important;
+    border-top: 1px solid rgba(201, 162, 107, 0.24) !important;
+    box-shadow: 0 -18px 40px -30px rgba(43, 35, 39, 0.45) !important;
+    backdrop-filter: blur(22px) saturate(160%);
+    -webkit-backdrop-filter: blur(22px) saturate(160%);
+}
+
+body.admin-v4 .admin-tab-item-active {
+    color: var(--a-rose-deep) !important;
+}
+
+body.admin-v4 .admin-tab-item-active::after {
+    background: linear-gradient(90deg, #e9708b, var(--a-rose)) !important;
+    box-shadow: 0 0 12px rgba(217, 79, 109, 0.5);
+}
+
+/* 空状态与提示 */
+body.admin-v4 .admin-empty,
+body.admin-v4 .admin-card .empty-state {
+    border-radius: var(--a-radius);
+    background:
+        radial-gradient(circle at 50% 0%, rgba(217, 79, 109, 0.07), transparent 58%),
+        linear-gradient(180deg, #fffdfb, #fff8f4);
+    border: 1px dashed rgba(201, 162, 107, 0.34);
+}
+
+@media (prefers-reduced-motion: reduce) {
+    body.admin-v4 .admin-main > *,
+    body.admin-v4 .admin-dashboard-stat-card,
+    body.admin-v4 .btn,
+    body.admin-v4 .admin-tab-item-active::after {
+        animation: none !important;
+        transition: none !important;
+    }
+}
+
+/* ============================================================
+   Admin v4.2 — 浅蓝樱花粉
+   ------------------------------------------------------------
+   色板取自首页：樱花粉 #f78da7、浅蓝 #7ec8e3
+   约束：页面背景（body.admin-v4 的 background-* 与点阵）保持不变
+   说明：本段覆盖 v4 / v4.1 中写死的暖玫瑰与香槟金
+   ============================================================ */
+
+/* 旧组件仍在使用 theme.css 的 --withu-* 令牌 */
+body.admin-v4 {
+    --withu-primary: #c44d72;
+    --withu-primary-soft: #f6b8c9;
+    --withu-secondary: #4f9d7d;
+    --withu-secondary-soft: #c9e8da;
+    --withu-accent: #3d8cae;
+    --withu-accent-soft: #cfeaf6;
+    color: var(--a-ink) !important;
+}
+
+body.admin-v4::selection {
+    background: rgba(247, 141, 167, 0.26);
+}
+
+body.admin-v4 ::-webkit-scrollbar-thumb {
+    background: rgba(107, 122, 137, 0.32);
+    border: 3px solid transparent;
+    border-radius: 999px;
+    background-clip: padding-box;
+}
+
+body.admin-v4 ::-webkit-scrollbar-thumb:hover {
+    background: rgba(226, 100, 137, 0.42);
+    background-clip: padding-box;
+    border: 3px solid transparent;
+}
+
+/* 侧栏 */
+body.admin-v4 .admin-drawer {
+    background: linear-gradient(180deg, rgba(255, 255, 255, 0.94), rgba(247, 251, 253, 0.9)) !important;
+    border-right: 1px solid rgba(126, 200, 227, 0.26) !important;
+}
+
+body.admin-v4 .admin-drawer-header > div:first-child::before {
+    background: linear-gradient(135deg, #f7a8bf, #7ec8e3);
+    box-shadow: 0 10px 22px -12px rgba(61, 140, 174, 0.65);
+}
+
+body.admin-v4 .admin-drawer-footer {
+    background: linear-gradient(180deg, transparent, rgba(247, 251, 253, 0.85));
+}
+
+body.admin-v4 .admin-drawer-link-active,
+body.admin-v4 .admin-drawer-link-active:hover {
+    background: linear-gradient(90deg, rgba(247, 141, 167, 0.18), rgba(126, 200, 227, 0.06)) !important;
+    color: var(--a-rose-deep) !important;
+    box-shadow: 0 2px 10px -6px rgba(35, 55, 71, 0.28);
+}
+
+body.admin-v4 .admin-drawer-link-active::before {
+    background: linear-gradient(180deg, #f7a8bf, #7ec8e3) !important;
+    box-shadow: 0 4px 12px -4px rgba(126, 200, 227, 0.6);
+}
+
+@media (min-width: 1100px) {
+    body.admin-v4 .admin-drawer {
+        box-shadow: 12px 0 40px -34px rgba(35, 55, 71, 0.4);
+    }
+}
+
+/* 顶栏 */
+body.admin-v4 .admin-appbar {
+    background: linear-gradient(180deg, rgba(255, 255, 255, 0.92), rgba(247, 251, 253, 0.82)) !important;
+    border-bottom: 1px solid rgba(126, 200, 227, 0.28) !important;
+    box-shadow: 0 14px 34px -30px rgba(35, 55, 71, 0.4) !important;
+}
+
+body.admin-v4 .admin-appbar::after {
+    background: linear-gradient(90deg, transparent, rgba(247, 141, 167, 0.5) 32%, rgba(126, 200, 227, 0.5) 68%, transparent);
+}
+
+body.admin-v4 .admin-user-chip {
+    background: rgba(255, 255, 255, 0.86);
+}
+
+body.admin-v4 .admin-command-trigger {
+    background: rgba(255, 255, 255, 0.78);
+}
+
+body.admin-v4 .admin-command-trigger kbd {
+    background: linear-gradient(180deg, #ffffff, #eef8fc);
+    border: 1px solid rgba(126, 200, 227, 0.38);
+    color: var(--a-blue-deep);
+}
+
+/* 页头与卡片 */
+body.admin-v4 .admin-page-title h1::before {
+    background: linear-gradient(180deg, #f7a8bf, #7ec8e3);
+    box-shadow: 0 4px 12px -4px rgba(126, 200, 227, 0.65);
+}
+
+body.admin-v4 .admin-card {
+    background: linear-gradient(180deg, #ffffff, #fbfdff);
+    border-color: rgba(126, 200, 227, 0.24);
+}
+
+body.admin-v4 .admin-card:hover {
+    border-color: rgba(126, 200, 227, 0.42);
+}
+
+/* 统计卡：粉蓝交替的顶线与圆点 */
+body.admin-v4 .admin-dashboard-stat-card {
+    background: linear-gradient(180deg, #ffffff, #fbfdff) !important;
+}
+
+body.admin-v4 .admin-dashboard-stat-card:hover {
+    border-color: rgba(247, 141, 167, 0.35) !important;
+}
+
+body.admin-v4 .admin-dashboard-stat-card::after {
+    background: radial-gradient(circle, rgba(247, 141, 167, 0.1), transparent 68%);
+}
+
+body.admin-v4 .admin-dashboard-stat-card:nth-child(1) { --a4-accent: #ef7fa0; }
+body.admin-v4 .admin-dashboard-stat-card:nth-child(2) { --a4-accent: #3d8cae; }
+body.admin-v4 .admin-dashboard-stat-card:nth-child(3) { --a4-accent: #f7a8bf; }
+body.admin-v4 .admin-dashboard-stat-card:nth-child(4) { --a4-accent: #5fb3d4; }
+body.admin-v4 .admin-dashboard-stat-card:nth-child(5) { --a4-accent: #d4567a; }
+body.admin-v4 .admin-dashboard-stat-card:nth-child(6) { --a4-accent: #2f7d9d; }
+
+body.admin-v4 .admin-stat-label::before {
+    background: var(--a4-accent, var(--a-rose));
+    box-shadow: 0 0 0 3px rgba(226, 100, 137, 0.12);
+}
+
+body.admin-v4 .admin-dashboard-stat-card:nth-child(1) .admin-stat-label::before { background: #ef7fa0; box-shadow: 0 0 0 3px rgba(239, 127, 160, 0.14); }
+body.admin-v4 .admin-dashboard-stat-card:nth-child(2) .admin-stat-label::before { background: #3d8cae; box-shadow: 0 0 0 3px rgba(61, 140, 174, 0.14); }
+body.admin-v4 .admin-dashboard-stat-card:nth-child(3) .admin-stat-label::before { background: #f7a8bf; box-shadow: 0 0 0 3px rgba(247, 168, 191, 0.18); }
+body.admin-v4 .admin-dashboard-stat-card:nth-child(4) .admin-stat-label::before { background: #5fb3d4; box-shadow: 0 0 0 3px rgba(95, 179, 212, 0.16); }
+body.admin-v4 .admin-dashboard-stat-card:nth-child(5) .admin-stat-label::before { background: #d4567a; box-shadow: 0 0 0 3px rgba(212, 86, 122, 0.14); }
+body.admin-v4 .admin-dashboard-stat-card:nth-child(6) .admin-stat-label::before { background: #2f7d9d; box-shadow: 0 0 0 3px rgba(47, 125, 157, 0.14); }
+
+body.admin-v4 .admin-stat-value {
+    background: linear-gradient(180deg, #2a3441 0%, #64748b 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    filter: drop-shadow(0 8px 14px rgba(35, 55, 71, 0.08));
+}
+
+/* 表格 */
+body.admin-v4 .admin-card table thead th {
+    background: linear-gradient(180deg, #ffffff, #f4fafd) !important;
+    color: var(--a-ink-2) !important;
+    border-bottom: 1px solid rgba(126, 200, 227, 0.3) !important;
+}
+
+body.admin-v4 .admin-card table tbody tr:hover {
+    background: #f5fbfe !important;
+}
+
+/* 表单：输入底色沿用更新后的 --a-surface-2 / --a-line-strong，这里只改焦点反馈
+   选择器需带上基础规则的 :not 链，才能压过 v4 基础输入规则的 !important */
+body.admin-v4 input:not([type="checkbox"]):not([type="radio"]):not([type="color"]):not([type="file"]):not([type="submit"]):not([type="button"]):focus,
+body.admin-v4 textarea:focus,
+body.admin-v4 select:focus {
+    background-color: #ffffff !important;
+    border-color: #3d8cae !important;
+    box-shadow: 0 0 0 4px rgba(126, 200, 227, 0.22) !important;
+}
+
+/* 无边框搜索框（命令面板 / 表格筛选）不显示焦点框 */
+body.admin-v4 .admin-palette .admin-palette-search input:not([type="checkbox"]):not([type="radio"]):not([type="color"]):not([type="file"]):not([type="submit"]):not([type="button"]),
+body.admin-v4 .admin-palette .admin-palette-search input:not([type="checkbox"]):not([type="radio"]):not([type="color"]):not([type="file"]):not([type="submit"]):not([type="button"]):focus,
+body.admin-v4 .admin-card .a4-table-filter input:not([type="checkbox"]):not([type="radio"]):not([type="color"]):not([type="file"]):not([type="submit"]):not([type="button"]),
+body.admin-v4 .admin-card .a4-table-filter input:not([type="checkbox"]):not([type="radio"]):not([type="color"]):not([type="file"]):not([type="submit"]):not([type="button"]):focus {
+    border: none !important;
+    background: transparent !important;
+    box-shadow: none !important;
+}
+
+body.admin-v4 .switch-track {
+    background: #dbe6ee;
+    border-color: rgba(61, 140, 174, 0.08);
+}
+
+body.admin-v4 .switch input:checked + .switch-track {
+    background: linear-gradient(135deg, #f7a8bf, #7ec8e3);
+}
+
+body.admin-v4 .switch input:focus-visible + .switch-track {
+    box-shadow: 0 0 0 4px rgba(126, 200, 227, 0.25);
+}
+
+/* 按钮 */
+body.admin-v4 .btn-primary {
+    background: linear-gradient(135deg, #c04669 0%, #b94364 55%, #a93d5e 100%) !important;
+    border-color: transparent !important;
+    box-shadow: 0 12px 26px -14px rgba(196, 77, 114, 0.55);
+}
+
+body.admin-v4 .btn-primary:hover {
+    filter: brightness(1.04);
+    box-shadow: 0 16px 32px -14px rgba(196, 77, 114, 0.62);
+}
+
+body.admin-v4 .btn-outline {
+    background: #ffffff !important;
+    border-color: rgba(126, 200, 227, 0.42) !important;
+    color: var(--a-ink-2) !important;
+}
+
+body.admin-v4 .btn-outline:hover {
+    background: #f4fbfe !important;
+    border-color: rgba(247, 141, 167, 0.55) !important;
+    color: var(--a-rose-deep) !important;
+}
+
+body.admin-v4 .quick-go:hover {
+    border-color: rgba(247, 141, 167, 0.42);
+}
+
+body.admin-v4 .badge-pink {
+    border-color: rgba(226, 100, 137, 0.18);
+}
+
+body.admin-v4 .badge-info {
+    border-color: rgba(61, 140, 174, 0.16);
+}
+
+body.admin-v4 .admin-alert-info {
+    border-color: rgba(61, 140, 174, 0.18);
+    color: #2f6a84;
+}
+
+/* 设置页玻璃容器 */
+body.admin-v4 .settings-tabs {
+    background: rgba(255, 255, 255, 0.86);
+}
+
+body.admin-v4 .settings-tab.is-active {
+    box-shadow: 0 4px 14px -10px rgba(35, 55, 71, 0.4);
+}
+
+body.admin-v4 .settings-savebar {
+    background: rgba(255, 255, 255, 0.94);
+}
+
+/* 命令面板与筛选 */
+body.admin-v4 .admin-palette-item.is-active,
+body.admin-v4 .admin-palette-item:hover {
+    background: rgba(247, 141, 167, 0.16);
+    border-color: rgba(226, 100, 137, 0.18);
+    color: var(--a-rose-deep);
+}
+
+body.admin-v4 .a4-table-filter:focus-within {
+    background: #ffffff;
+    border-color: #3d8cae;
+    box-shadow: 0 0 0 4px rgba(126, 200, 227, 0.16);
+}
+
+body.admin-v4 .a4-ripple {
+    background: rgba(126, 200, 227, 0.32);
+}
+
+body.admin-v4 .admin-modal-backdrop,
+body.admin-v4 .admin-palette-backdrop {
+    background: rgba(30, 44, 56, 0.34);
+}
+
+body.admin-v4 .admin-modal {
+    box-shadow: 0 40px 90px -40px rgba(35, 55, 71, 0.5);
+}
+
+body.admin-v4 .admin-palette {
+    box-shadow: 0 40px 100px -40px rgba(35, 55, 71, 0.55);
+}
+
+/* 文件与标签按钮 */
+body.admin-v4 input[type="file"]::file-selector-button:hover {
+    background: var(--a-rose-soft);
+    border-color: rgba(226, 100, 137, 0.32);
+}
+
+body.admin-v4 .withu-tag-btn:hover {
+    background: var(--a-rose-soft);
+    border-color: rgba(226, 100, 137, 0.32);
+}
+
+body.admin-v4 .withu-tag-btn-upload,
+body.admin-v4 .withu-tag-btn-author {
+    border-color: rgba(226, 100, 137, 0.26);
+}
+
+/* 流量图表 */
+body.admin-v4 .wa-hover-dot-pv {
+    background: var(--a-rose) !important;
+    border-color: #ffffff !important;
+    box-shadow: 0 0 0 4px rgba(226, 100, 137, 0.18) !important;
+}
+
+body.admin-v4 .wa-hover-dot-uv {
+    background: var(--a-blue) !important;
+    border-color: #ffffff !important;
+    box-shadow: 0 0 0 4px rgba(61, 140, 174, 0.18) !important;
+}
+
+body.admin-v4 .wa-rank-bar span {
+    background: linear-gradient(90deg, rgba(126, 200, 227, 0.85), rgba(247, 141, 167, 0.85));
+}
+
+/* 移动端底栏 */
+body.admin-v4 .admin-tabbar {
+    background: linear-gradient(180deg, rgba(255, 255, 255, 0.96), rgba(246, 251, 254, 0.94)) !important;
+    border-top: 1px solid rgba(126, 200, 227, 0.3) !important;
+    box-shadow: 0 -18px 40px -30px rgba(35, 55, 71, 0.4) !important;
+}
+
+body.admin-v4 .admin-tab-item-active::after {
+    background: linear-gradient(90deg, #f7a8bf, #7ec8e3) !important;
+    box-shadow: 0 0 12px rgba(126, 200, 227, 0.55);
+}
+
+/* 空状态内容卡：沿用普通内容卡的白底 + 浅蓝发丝边，不再使用粉色底与虚线框 */
+body.admin-v4 .admin-card:has(> p:only-child) {
+    background: linear-gradient(180deg, #ffffff, #fbfdff);
+    border-style: solid;
+    border-color: rgba(126, 200, 227, 0.24);
+    box-shadow: var(--a-shadow);
+}
+
+body.admin-v4 .admin-empty,
+body.admin-v4 .admin-card .empty-state {
+    background:
+        radial-gradient(circle at 50% 0%, rgba(247, 141, 167, 0.1), transparent 58%),
+        radial-gradient(circle at 18% 100%, rgba(126, 200, 227, 0.1), transparent 60%),
+        linear-gradient(180deg, #ffffff, #f9fcfe);
+    border: 1px dashed rgba(126, 200, 227, 0.45);
 }

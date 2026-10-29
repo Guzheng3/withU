@@ -1370,15 +1370,15 @@
             return `<svg class="wu-weather-modal__hourly-chart" viewBox="0 0 ${width} ${height}" width="${width}" height="${height}" preserveAspectRatio="none" aria-hidden="true">
                 <defs>
                     <linearGradient id="wuWeatherChartFill" x1="0" y1="0" x2="0" y2="1">
-                        <stop offset="0" stop-color="#d94f6d" stop-opacity="0.18"/>
-                        <stop offset="1" stop-color="#d94f6d" stop-opacity="0"/>
+                        <stop offset="0" stop-color="#f87171" stop-opacity="0.18"/>
+                        <stop offset="1" stop-color="#f87171" stop-opacity="0"/>
                     </linearGradient>
                 </defs>
                 <path d="${area}" fill="url(#wuWeatherChartFill)"/>
                 <path d="${line}" fill="none" stroke="#d97a8e" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
                 ${points.map(point => {
                     const [x, y] = point.split(',');
-                    return `<circle cx="${x}" cy="${y}" r="2.2" fill="#d94f6d" opacity="0.85"/>`;
+                    return `<circle cx="${x}" cy="${y}" r="2.2" fill="#f87171" opacity="0.85"/>`;
                 }).join('')}
             </svg>`;
         },
@@ -1476,9 +1476,6 @@
 
             // 初始化天气卡片
             WeatherModule.init();
-
-            // 初始化时光碎片卡片
-            this._initMomentCard();
 
             // 锁定卡片随机弥散光斑
             this._initLockedCardGlow();

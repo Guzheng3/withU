@@ -173,15 +173,6 @@ body {
         grid-column: span 2;
     }
 
-    .withu-home .withu-col-md-1 {
-        grid-column: span 1 !important;
-    }
-
-    /* 只让天气卡片包装容器在移动端占满整行 */
-    .withu-home .withu-weather-wrapper {
-        grid-column: span 2 !important;
-    }
-
     .withu-home .withu-widget--photo,
     .withu-home .withu-widget--lovelist,
     .withu-home .withu-widget--stats-vibrant-6 {
@@ -222,10 +213,6 @@ body {
 
     .withu-home .withu-row-2 {
         grid-row: span 2;
-    }
-
-    .withu-home .withu-col-md-1 {
-        grid-column: span 1 !important;
     }
 }
 
@@ -6008,6 +5995,245 @@ body.bg-grad-grid::before {
     font-weight: 700;
     font-family: var(--wu-weather-font);
     white-space: nowrap;
+}
+
+/* --- 双人天气：一张卡、两种颜色、中间一颗心 --- */
+html body #pjax-container .withu-home .withu-weather-duo {
+    grid-column: 1 / -1;
+    position: relative;
+    display: flex;
+    align-items: stretch;
+    overflow: hidden;
+    border-radius: 1.5rem;
+    border: 1px solid rgba(255, 255, 255, 0.35);
+    box-shadow:
+        0 30px 60px -42px rgba(35, 55, 90, 0.6),
+        0 14px 30px -24px rgba(160, 90, 40, 0.35);
+}
+
+html body #pjax-container .withu-home .withu-weather-duo .withu-home-weather-card.withu-weather-duo__person {
+    flex: 1 1 0;
+    min-width: 0;
+    min-height: 204px;
+    height: auto;
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    justify-content: flex-start;
+    gap: 12px;
+    padding: 20px 30px;
+    border: 0 !important;
+    border-radius: 0 !important;
+    color: #fff !important;
+    background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%) !important;
+    box-shadow: none !important;
+    transition: filter 0.25s ease;
+}
+
+html body #pjax-container .withu-home .withu-weather-duo .withu-home-weather-card.withu-weather-duo__person.orange {
+    background: linear-gradient(135deg, #fb923c 0%, #ea580c 100%) !important;
+}
+
+html body #pjax-container .withu-home .withu-weather-duo .withu-home-weather-card.withu-weather-duo__person:hover {
+    transform: none !important;
+    filter: brightness(1.04);
+}
+
+html body #pjax-container .withu-home .withu-weather-duo .withu-home-weather-card.withu-weather-duo__person::before {
+    display: none !important;
+}
+
+html body #pjax-container .withu-home .withu-weather-duo .withu-home-weather-card.withu-weather-duo__person:focus-visible {
+    outline: 2px solid rgba(255, 255, 255, 0.85) !important;
+    outline-offset: -3px;
+}
+
+html body #pjax-container .withu-home .withu-weather-duo .withu-home-weather-card.withu-weather-duo__person .withu-home-weather-bg-decoration {
+    display: block;
+    top: -46px;
+    right: -36px;
+    bottom: auto;
+    left: auto;
+    width: 170px;
+    height: 170px;
+    opacity: 0.16;
+    filter: blur(32px);
+    background: #fff;
+    z-index: 0;
+}
+
+html body #pjax-container .withu-home .withu-weather-duo .withu-home-weather-card.withu-weather-duo__person.orange .withu-home-weather-bg-decoration {
+    top: auto;
+    right: auto;
+    bottom: -52px;
+    left: -36px;
+    background: #fde047;
+    opacity: 0.22;
+}
+
+/* 顶部：玻璃胶囊 + 时间 */
+html body #pjax-container .withu-home .withu-weather-duo .withu-home-weather-user-pill {
+    background: rgba(255, 255, 255, 0.16) !important;
+    border: 1px solid rgba(255, 255, 255, 0.26) !important;
+    box-shadow: none !important;
+    padding: 4px 10px 4px 4px !important;
+    gap: 7px !important;
+}
+
+html body #pjax-container .withu-home .withu-weather-duo .withu-home-weather-avatar {
+    width: 28px !important;
+    height: 28px !important;
+    box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.38);
+}
+
+html body #pjax-container .withu-home .withu-weather-duo .withu-home-weather-username {
+    color: #fff !important;
+    font-size: 13.5px !important;
+}
+
+html body #pjax-container .withu-home .withu-weather-duo .withu-home-weather-time-tag {
+    background: rgba(0, 0, 0, 0.12) !important;
+    padding: 3px 8px !important;
+    border-radius: 8px;
+    color: rgba(255, 255, 255, 0.85) !important;
+    font-size: 10px !important;
+}
+
+/* 温度与图标 */
+html body #pjax-container .withu-home .withu-weather-duo .withu-home-weather-row-main {
+    justify-content: center;
+    align-items: center;
+    gap: 1rem;
+    margin: 4px 0 0;
+}
+
+html body #pjax-container .withu-home .withu-weather-duo .withu-home-weather-text-temp {
+    font-size: 66px;
+    color: #fff !important;
+    text-shadow: 0 2px 12px rgba(0, 0, 0, 0.14);
+}
+
+html body #pjax-container .withu-home .withu-weather-duo .withu-home-weather-icon-main {
+    font-size: 54px;
+    padding-right: 0;
+    color: #fff !important;
+    filter: drop-shadow(0 4px 10px rgba(0, 0, 0, 0.16));
+}
+
+/* 地点与指标 */
+html body #pjax-container .withu-home .withu-weather-duo .withu-home-weather-side {
+    display: contents;
+}
+
+html body #pjax-container .withu-home .withu-weather-duo .withu-home-weather-row-location {
+    justify-content: center;
+    margin: 0;
+    padding-left: 0;
+    opacity: 1;
+    color: rgba(255, 255, 255, 0.92);
+}
+
+html body #pjax-container .withu-home .withu-weather-duo .withu-home-weather-icon-pin {
+    color: rgba(255, 255, 255, 0.78);
+}
+
+html body #pjax-container .withu-home .withu-weather-duo .withu-home-weather-text-city {
+    color: #fff;
+}
+
+html body #pjax-container .withu-home .withu-weather-duo .withu-home-weather-text-status {
+    color: rgba(255, 255, 255, 0.92);
+}
+
+html body #pjax-container .withu-home .withu-weather-duo .withu-home-weather-dot-divider {
+    color: rgba(255, 255, 255, 0.6);
+}
+
+html body #pjax-container .withu-home .withu-weather-duo .withu-home-weather-grid-stats {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: auto;
+    gap: 16px;
+}
+
+html body #pjax-container .withu-home .withu-weather-duo .withu-home-weather-stat-pill {
+    padding: 0;
+    gap: 5px;
+    background: none !important;
+    border: 0 !important;
+    box-shadow: none !important;
+    color: #fff !important;
+}
+
+html body #pjax-container .withu-home .withu-weather-duo .withu-home-weather-stat-pill + .withu-home-weather-stat-pill {
+    border-left: 1px solid rgba(255, 255, 255, 0.3);
+    padding-left: 16px;
+}
+
+html body #pjax-container .withu-home .withu-weather-duo .withu-home-weather-icon-stat {
+    color: rgba(255, 255, 255, 0.9) !important;
+    font-size: 12px;
+}
+
+html body #pjax-container .withu-home .withu-weather-duo .withu-home-weather-text-stat {
+    font-size: 12px;
+    font-weight: 600;
+    color: rgba(255, 255, 255, 0.95) !important;
+}
+
+/* 中间：发丝线 + 爱心 */
+html body #pjax-container .withu-home .withu-weather-duo__seam {
+    position: relative;
+    z-index: 3;
+    flex: 0 0 1px;
+    margin: 20px 0;
+    background: linear-gradient(180deg, transparent, rgba(255, 255, 255, 0.5), transparent);
+}
+
+html body #pjax-container .withu-home .withu-weather-duo__seam i {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #fffdfb;
+    border: 0;
+    box-shadow: 0 4px 14px rgba(25, 35, 60, 0.22);
+    color: #ef6b6b;
+    font-size: 13px;
+}
+
+@media (max-width: 767px) {
+    html body #pjax-container .withu-home .withu-weather-duo {
+        flex-direction: column;
+    }
+
+    html body #pjax-container .withu-home .withu-weather-duo .withu-home-weather-card.withu-weather-duo__person {
+        flex: 0 0 auto;
+        min-height: 190px;
+        padding: 18px 22px;
+    }
+
+    html body #pjax-container .withu-home .withu-weather-duo .withu-home-weather-text-temp {
+        font-size: 56px;
+    }
+
+    html body #pjax-container .withu-home .withu-weather-duo .withu-home-weather-icon-main {
+        font-size: 46px;
+    }
+
+    html body #pjax-container .withu-home .withu-weather-duo__seam {
+        flex: 0 0 1px;
+        align-self: stretch;
+        margin: 0 20px;
+        background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.5), transparent);
+    }
 }
 
 /* 响应式 */

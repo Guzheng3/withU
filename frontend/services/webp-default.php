@@ -133,7 +133,13 @@ if ($enabled && is_array($paths)) {
             continue;
         }
         // 映射统一使用以 /uploads/ 开头的站内路径（前端按 pathname 匹配）
-        $map['/uploads/' . $rel] = '/uploads/' . $rel . '.webp';
+        // 目标文件是保留原文件名的同名 .webp（foo.jpg → foo.webp），
+        // 不能直接在完整路径后追加 .webp，否则会得到不存在的 foo.jpg.webp。
+        $webpRel = preg_replace('/\.(jpe?g|png)$/i', '.webp', $rel);
+        if ($webpRel === null || $webpRel === $rel) {
+            continue;
+        }
+        $map['/uploads/' . $rel] = '/uploads/' . $webpRel;
     }
 }
 

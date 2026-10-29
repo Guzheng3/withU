@@ -13,7 +13,7 @@
     --wu-wm-ink-2: #6d6167;
     --wu-wm-ink-3: #9b8e94;
     --wu-wm-line: rgba(43, 35, 39, 0.08);
-    --wu-wm-rose: #d94f6d;
+    --wu-wm-rose: #f87171;
     --wu-wm-gold: #c9a26b;
     position: fixed;
     inset: 0;
@@ -337,7 +337,7 @@
 }
 
 .wu-weather-modal__hourly-nav:hover {
-    background: #fdeef2;
+    background: #fdeeee;
     color: var(--wu-wm-rose);
 }
 
@@ -413,9 +413,9 @@
 }
 
 .wu-weather-modal__hour.is-now {
-    border-color: rgba(217, 79, 109, 0.22);
-    background: linear-gradient(180deg, #fff6f8, #fff1f4);
-    box-shadow: 0 8px 18px -14px rgba(217, 79, 109, 0.5);
+    border-color: rgba(248, 113, 113, 0.22);
+    background: linear-gradient(180deg, #fff6f6, #fff1f1);
+    box-shadow: 0 8px 18px -14px rgba(248, 113, 113, 0.5);
 }
 
 .wu-weather-modal__hour-time {
@@ -621,21 +621,21 @@
     padding: 12px 16px;
     border: 0;
     border-radius: 999px;
-    background: linear-gradient(135deg, #ef8298 0%, #d94f6d 52%, #b23a55 100%);
+    background: linear-gradient(135deg, #fca5a5 0%, #f87171 52%, #e05757 100%);
     color: #fff;
     font-family: inherit;
     font-size: 13px;
     font-weight: 600;
     letter-spacing: 0.04em;
     cursor: pointer;
-    box-shadow: 0 14px 28px -16px rgba(217, 79, 109, 0.7);
+    box-shadow: 0 14px 28px -16px rgba(248, 113, 113, 0.7);
     transition: transform 0.2s ease, box-shadow 0.2s ease, filter 0.2s ease;
 }
 
 .wu-weather-modal__done:hover {
     transform: translateY(-1px);
     filter: brightness(1.03);
-    box-shadow: 0 18px 32px -16px rgba(217, 79, 109, 0.8);
+    box-shadow: 0 18px 32px -16px rgba(248, 113, 113, 0.8);
 }
 
 .wu-weather-modal__done:focus-visible {

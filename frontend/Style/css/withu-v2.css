@@ -3,7 +3,7 @@
    ------------------------------------------------------------
    设计方向：晨雾玫瑰 / 香槟微光
    - 统一的颜色、圆角、阴影、间距与缓动令牌
-   - 内页 Hero 压缩为首屏横幅，解决“空白 80vh”问题
+   - 内页 Hero 与首页保持一致（桌面 80vh / 移动 50vh），完整展示头像面板
    - 卡片、导航、空状态、按钮、骨架屏统一质感
    - 克制的动效：滚动揭示、悬停上浮、点击波纹、图片缓推
    - 完整支持 prefers-reduced-motion / 键盘焦点 / 触控尺寸
@@ -12,15 +12,15 @@
 
 :root {
     /* 色板 */
-    --wu-rose-50: #fff1f4;
-    --wu-rose-100: #ffe3e9;
-    --wu-rose-200: #ffc9d5;
-    --wu-rose-300: #ffa3b8;
-    --wu-rose-400: #fb7185;
-    --wu-rose-500: #f4587a;
-    --wu-rose-600: #e23e63;
-    --wu-rose-700: #be2f50;
-    --wu-blush: #fff7f9;
+    --wu-rose-50: #fff1f1;
+    --wu-rose-100: #ffe0e0;
+    --wu-rose-200: #ffd6d6;
+    --wu-rose-300: #ffb3b3;
+    --wu-rose-400: #fb8f8f;
+    --wu-rose-500: #f87171;
+    --wu-rose-600: #c94f4f;
+    --wu-rose-700: #b03f3f;
+    --wu-blush: #fff7f7;
     --wu-champagne: #f7efe4;
     --wu-sand: #efe6da;
     --wu-ink: #2a2226;
@@ -32,11 +32,11 @@
     --wu-paper-soft: rgba(255, 255, 255, 0.72);
 
     /* 渐变 */
-    --wu-grad-rose: linear-gradient(135deg, #ff9db1 0%, #f4587a 52%, #d93a62 100%);
-    --wu-grad-rose-soft: linear-gradient(135deg, #fff1f4 0%, #ffe3e9 50%, #fff7f9 100%);
+    --wu-grad-rose: linear-gradient(135deg, #fca5a5 0%, #f87171 52%, #e05757 100%);
+    --wu-grad-rose-soft: linear-gradient(135deg, #fff1f1 0%, #ffe0e0 50%, #fff7f7 100%);
     --wu-grad-champagne: linear-gradient(135deg, #fdf6ec 0%, #f7e8d8 50%, #f3ddc9 100%);
     --wu-grad-ink: linear-gradient(135deg, #3a2c33 0%, #241c21 100%);
-    --wu-grad-text: linear-gradient(100deg, #e23e63 0%, #f4587a 38%, #c9a26b 100%);
+    --wu-grad-text: linear-gradient(100deg, #c94f4f 0%, #f87171 38%, #c9a26b 100%);
 
     /* 字体 */
     --wu-font-serif: "Noto Serif SC", "Noto Serif CJK SC", "Songti SC", "STSong", "SimSun", serif;
@@ -57,7 +57,7 @@
     --wu-shadow-sm: 0 2px 10px rgba(42, 34, 38, 0.05), 0 1px 2px rgba(42, 34, 38, 0.03);
     --wu-shadow-md: 0 14px 34px -14px rgba(42, 34, 38, 0.18), 0 4px 12px -6px rgba(42, 34, 38, 0.06);
     --wu-shadow-lg: 0 28px 60px -24px rgba(42, 34, 38, 0.24), 0 10px 24px -12px rgba(42, 34, 38, 0.08);
-    --wu-shadow-rose: 0 18px 40px -18px rgba(244, 88, 122, 0.42);
+    --wu-shadow-rose: 0 18px 40px -18px rgba(248, 113, 113, 0.42);
 
     /* 缓动 */
     --wu-ease-out: cubic-bezier(0.22, 1, 0.36, 1);
@@ -87,7 +87,7 @@ body {
 }
 
 ::selection {
-    background: rgba(244, 88, 122, 0.24);
+    background: rgba(248, 113, 113, 0.24);
     color: var(--wu-rose-700);
 }
 
@@ -101,7 +101,7 @@ body {
 /* 细滚动条 */
 * {
     scrollbar-width: thin;
-    scrollbar-color: rgba(244, 88, 122, 0.35) transparent;
+    scrollbar-color: rgba(248, 113, 113, 0.35) transparent;
 }
 
 *::-webkit-scrollbar {
@@ -110,7 +110,7 @@ body {
 }
 
 *::-webkit-scrollbar-thumb {
-    background: linear-gradient(180deg, rgba(244, 88, 122, 0.42), rgba(217, 58, 98, 0.42));
+    background: linear-gradient(180deg, rgba(248, 113, 113, 0.42), rgba(224, 87, 87, 0.42));
     border-radius: 999px;
     border: 2px solid transparent;
     background-clip: padding-box;
@@ -118,122 +118,6 @@ body {
 
 *::-webkit-scrollbar-track {
     background: transparent;
-}
-
-/* ------------------------------------------------------------
-   1. 内页 Hero：从 80vh 空白压缩为 38vh 首屏横幅
-   ------------------------------------------------------------ */
-html.withu-subpage #homePage.wrap,
-html.withu-subpage body #homePage.wrap {
-    height: clamp(300px, 38vh, 460px) !important;
-    min-height: 300px;
-    margin-top: 0 !important;
-    background: var(--wu-grad-rose-soft);
-    overflow: hidden;
-}
-
-html.withu-subpage #homePage.wrap .list {
-    box-shadow: none;
-}
-
-html.withu-subpage #homePage.wrap .item::after {
-    content: "";
-    position: absolute;
-    inset: 0;
-    background:
-        linear-gradient(180deg, rgba(31, 22, 28, 0.18) 0%, rgba(31, 22, 28, 0) 26%),
-        linear-gradient(0deg, rgba(31, 22, 28, 0.42) 0%, rgba(31, 22, 28, 0) 46%);
-    pointer-events: none;
-    z-index: 1;
-}
-
-html.withu-subpage #homePage.wrap .item img {
-    object-fit: cover;
-    width: 100%;
-    height: 100%;
-}
-
-html.withu-subpage #homePage.wrap .item.active img {
-    animation: withuHeroDrift 22s ease-in-out infinite alternate;
-}
-
-@keyframes withuHeroDrift {
-    from { transform: scale(1.02) translate3d(0, 0, 0); }
-    to { transform: scale(1.1) translate3d(-1.2%, -1%, 0); }
-}
-
-html.withu-subpage #homePage .bg-wrap.central.limg {
-    transform: translate(-50%, -50%) scale(0.82);
-}
-
-html.withu-subpage #homePage .bg-wrap.central.limg .middle {
-    background: rgba(255, 255, 255, 0.32);
-    border: 1px solid rgba(255, 255, 255, 0.45);
-    box-shadow: 0 24px 60px -30px rgba(31, 22, 28, 0.55);
-    backdrop-filter: blur(18px) saturate(140%);
-    -webkit-backdrop-filter: blur(18px) saturate(140%);
-}
-
-html.withu-subpage #homePage .bg-wrap.central.limg .bg-img img {
-    width: 8rem;
-    height: 8rem;
-}
-
-html.withu-subpage #homePage .bg-wrap.central.limg .love-icon img {
-    width: 5.4rem;
-    height: 5.4rem;
-}
-
-html.withu-subpage #homePage .bg-wrap.central.limg .img-male span,
-html.withu-subpage #homePage .bg-wrap.central.limg .img-female span {
-    font-size: 1.1rem;
-    color: rgba(255, 255, 255, 0.94);
-    text-shadow: 0 2px 10px rgba(0, 0, 0, 0.28);
-}
-
-html.withu-subpage #homePage .waves {
-    height: 6rem;
-    z-index: 5;
-}
-
-html.withu-subpage #homePage .pointList {
-    position: absolute;
-    bottom: 1.15rem;
-    left: 50%;
-    transform: translateX(-50%);
-    z-index: 8;
-    display: flex;
-    gap: 7px;
-}
-
-html.withu-subpage #homePage .pointList .point {
-    width: 18px;
-    height: 3px;
-    background: rgba(255, 255, 255, 0.42);
-    border-radius: 999px;
-    transition: width 0.35s var(--wu-ease-out), background 0.35s ease;
-}
-
-html.withu-subpage #homePage .pointList .point.active {
-    width: 34px;
-    background: rgba(255, 255, 255, 0.94);
-    box-shadow: 0 0 14px rgba(255, 255, 255, 0.7);
-}
-
-/* 移动端：隐藏大头像区，保留沉浸式横幅 */
-@media (max-width: 768px) {
-    html.withu-subpage #homePage.wrap {
-        height: clamp(220px, 32vh, 300px) !important;
-        min-height: 220px;
-    }
-
-    html.withu-subpage #homePage .bg-wrap.central.limg {
-        display: none !important;
-    }
-
-    html.withu-subpage #homePage .waves {
-        height: 4.5rem;
-    }
 }
 
 /* ------------------------------------------------------------
@@ -277,7 +161,7 @@ html.withu-subpage #homePage .pointList .point.active {
 
 .withu-meta-line {
     width: 64px;
-    background: linear-gradient(90deg, transparent, rgba(244, 88, 122, 0.5), transparent);
+    background: linear-gradient(90deg, transparent, rgba(248, 113, 113, 0.5), transparent);
 }
 
 .withu-hero-title {
@@ -332,7 +216,7 @@ html.withu-subpage #homePage .pointList .point.active {
 }
 
 .withu-nav-island-item:not(.active):hover {
-    background-color: rgba(244, 88, 122, 0.08);
+    background-color: rgba(248, 113, 113, 0.08);
     color: var(--wu-rose-600);
     transform: translateY(-1px);
 }
@@ -348,7 +232,7 @@ html.withu-subpage #homePage .pointList .point.active {
 .withu-nav-indicator {
     background: var(--wu-grad-rose);
     box-shadow:
-        0 6px 16px -6px rgba(244, 88, 122, 0.65),
+        0 6px 16px -6px rgba(248, 113, 113, 0.65),
         inset 0 1px 0 rgba(255, 255, 255, 0.35);
 }
 
@@ -394,8 +278,8 @@ html.withu-subpage #homePage .pointList .point.active {
 
 .withu-card:hover {
     transform: translateY(-5px);
-    border-color: rgba(244, 88, 122, 0.18);
-    box-shadow: var(--wu-shadow-lg), 0 0 0 1px rgba(244, 88, 122, 0.06);
+    border-color: rgba(248, 113, 113, 0.18);
+    box-shadow: var(--wu-shadow-lg), 0 0 0 1px rgba(248, 113, 113, 0.06);
 }
 
 .withu-card .withu-media {
@@ -474,7 +358,7 @@ html.withu-subpage #homePage .pointList .point.active {
 
 .withu-article-card-base:hover {
     transform: translateY(-5px);
-    border-color: rgba(244, 88, 122, 0.2);
+    border-color: rgba(248, 113, 113, 0.2);
     box-shadow: var(--wu-shadow-lg);
 }
 
@@ -520,7 +404,7 @@ html.withu-subpage #homePage .pointList .point.active {
 
 .withu-time-line-meta-item {
     border-radius: 999px;
-    background: rgba(244, 88, 122, 0.06);
+    background: rgba(248, 113, 113, 0.06);
     color: var(--wu-ink-soft);
 }
 
@@ -537,7 +421,7 @@ html.withu-subpage #homePage .pointList .point.active {
 
 .MessageCard:hover {
     transform: translateY(-4px);
-    border-color: rgba(244, 88, 122, 0.16);
+    border-color: rgba(248, 113, 113, 0.16);
     box-shadow: var(--wu-shadow-md);
 }
 
@@ -564,7 +448,7 @@ html.withu-subpage #homePage .pointList .point.active {
 
 .love-card:hover {
     transform: translateY(-4px);
-    border-color: rgba(244, 88, 122, 0.18);
+    border-color: rgba(248, 113, 113, 0.18);
     box-shadow: var(--wu-shadow-md);
 }
 
@@ -574,7 +458,7 @@ html.withu-subpage #homePage .pointList .point.active {
 }
 
 .love-card .status-dot.com {
-    box-shadow: 0 0 0 4px rgba(244, 88, 122, 0.12);
+    box-shadow: 0 0 0 4px rgba(248, 113, 113, 0.12);
 }
 
 /* 相册灯箱触发器 */
@@ -619,7 +503,7 @@ html.withu-subpage #homePage .pointList .point.active {
 
 .withu-link-more:hover {
     transform: translateY(-2px) scale(1.06);
-    box-shadow: 0 18px 36px -14px rgba(244, 88, 122, 0.6);
+    box-shadow: 0 18px 36px -14px rgba(248, 113, 113, 0.6);
 }
 
 .withu-link-more:active {
@@ -638,8 +522,8 @@ textarea:focus-visible,
 select:focus-visible,
 [contenteditable="true"]:focus-visible {
     outline: none;
-    border-color: rgba(244, 88, 122, 0.45) !important;
-    box-shadow: 0 0 0 4px rgba(244, 88, 122, 0.1);
+    border-color: rgba(248, 113, 113, 0.45) !important;
+    box-shadow: 0 0 0 4px rgba(248, 113, 113, 0.1);
 }
 
 /* 点击波纹（由 withu-v2.js 注入） */
@@ -677,9 +561,9 @@ select:focus-visible,
     text-align: center;
     border-radius: var(--wu-radius-xl);
     background:
-        radial-gradient(circle at 50% 0%, rgba(255, 227, 233, 0.55), transparent 62%),
+        radial-gradient(circle at 50% 0%, rgba(255, 224, 224, 0.55), transparent 62%),
         rgba(255, 255, 255, 0.55);
-    border: 1px dashed rgba(244, 88, 122, 0.24);
+    border: 1px dashed rgba(248, 113, 113, 0.24);
     overflow: hidden;
 }
 
@@ -688,7 +572,7 @@ select:focus-visible,
     content: "";
     position: absolute;
     inset: 0;
-    background-image: radial-gradient(rgba(244, 88, 122, 0.16) 1px, transparent 1px);
+    background-image: radial-gradient(rgba(248, 113, 113, 0.16) 1px, transparent 1px);
     background-size: 18px 18px;
     opacity: 0.5;
     pointer-events: none;
@@ -754,9 +638,9 @@ select:focus-visible,
 /* 页面自带的简易空状态（如 albums 内联样式）也做统一衬托 */
 .withu-masonry-grid > .withu-masonry-col:only-child .withu-card {
     background:
-        radial-gradient(circle at 50% 0%, rgba(255, 227, 233, 0.5), transparent 60%),
+        radial-gradient(circle at 50% 0%, rgba(255, 224, 224, 0.5), transparent 60%),
         rgba(255, 255, 255, 0.7);
-    border: 1px dashed rgba(244, 88, 122, 0.22);
+    border: 1px dashed rgba(248, 113, 113, 0.22);
 }
 
 .withu-masonry-grid > .withu-masonry-col:only-child .withu-card:hover {
@@ -776,9 +660,9 @@ select:focus-visible,
 .withumsg-skeleton-line,
 .withu-skeleton-screen-anim {
     background: linear-gradient(90deg,
-        rgba(244, 88, 122, 0.06) 0%,
-        rgba(244, 88, 122, 0.12) 40%,
-        rgba(244, 88, 122, 0.06) 80%);
+        rgba(248, 113, 113, 0.06) 0%,
+        rgba(248, 113, 113, 0.12) 40%,
+        rgba(248, 113, 113, 0.06) 80%);
     background-size: 200% 100%;
     animation: wuShimmer 1.6s linear infinite;
     border-radius: 999px;
@@ -833,7 +717,7 @@ select:focus-visible,
     height: 100%;
     width: 0;
     background: var(--wu-grad-rose);
-    box-shadow: 0 0 12px rgba(244, 88, 122, 0.55);
+    box-shadow: 0 0 12px rgba(248, 113, 113, 0.55);
     border-radius: 0 999px 999px 0;
     transition: width 0.08s linear;
 }
@@ -908,10 +792,6 @@ html.wu-aos-off [data-aos] {
     .wu-reveal {
         opacity: 1;
         transform: none;
-    }
-
-    html.withu-subpage #homePage.wrap .item.active img {
-        animation: none;
     }
 }
 
@@ -1016,8 +896,8 @@ html.wu-aos-off [data-aos] {
 }
 
 .Search_warp #search:focus {
-    border-color: rgba(244, 88, 122, 0.4) !important;
-    box-shadow: 0 0 0 4px rgba(244, 88, 122, 0.1), var(--wu-shadow-sm) !important;
+    border-color: rgba(248, 113, 113, 0.4) !important;
+    box-shadow: 0 0 0 4px rgba(248, 113, 113, 0.1), var(--wu-shadow-sm) !important;
 }
 
 .Search_warp #search_btn {
@@ -1085,7 +965,7 @@ html.wu-aos-off [data-aos] {
 
 /* 关于页：聊天回放配色 */
 .withu-chat-wrapper {
-    --chat-blue: #f4587a;
+    --chat-blue: #f87171;
 }
 
 .withu-chat-device {
@@ -1094,13 +974,13 @@ html.wu-aos-off [data-aos] {
 }
 
 .withu-chat-header {
-    background: linear-gradient(135deg, #fff6f8, #ffe9ee) !important;
+    background: linear-gradient(135deg, #fff6f6, #ffeaea) !important;
     border-bottom: 1px solid var(--wu-rose-100) !important;
 }
 
 .withu-chat-status-dot {
     background: var(--wu-rose-500) !important;
-    box-shadow: 0 0 0 4px rgba(244, 88, 122, 0.12);
+    box-shadow: 0 0 0 4px rgba(248, 113, 113, 0.12);
 }
 
 .withu-chat-bubble-self,
@@ -1242,7 +1122,7 @@ html.wu-aos-off [data-aos] {
 /* 空状态图标内部光斑统一为玫瑰色（覆盖旧版蓝色变体） */
 .withu-no-data-icon::before,
 .withu-no-data-icon::after {
-    background: rgba(244, 88, 122, 0.16) !important;
+    background: rgba(248, 113, 113, 0.16) !important;
 }
 
 .withu-no-data-icon--orange,
@@ -1255,7 +1135,7 @@ html.wu-aos-off [data-aos] {
 }
 
 .withu-no-data::after {
-    background: radial-gradient(circle, rgba(244, 88, 122, 0.16), transparent 68%) !important;
+    background: radial-gradient(circle, rgba(248, 113, 113, 0.16), transparent 68%) !important;
 }
 
 /* 页面内搜索条 */
@@ -1277,8 +1157,8 @@ html.wu-aos-off [data-aos] {
 
 .wu-page-search:focus-within {
     background: rgba(255, 255, 255, 0.96);
-    border-color: rgba(244, 88, 122, 0.36);
-    box-shadow: 0 0 0 4px rgba(244, 88, 122, 0.09), var(--wu-shadow-sm);
+    border-color: rgba(248, 113, 113, 0.36);
+    box-shadow: 0 0 0 4px rgba(248, 113, 113, 0.09), var(--wu-shadow-sm);
 }
 
 .wu-page-search__icon {
@@ -1360,31 +1240,11 @@ html.wu-aos-off [data-aos] {
     }
 }
 
-/* 内页 Hero：去掉大面积磨砂面板，让头像直接落在画面上 */
-html.withu-subpage #homePage .bg-wrap.central.limg .middle {
-    background: transparent !important;
-    border-color: transparent !important;
-    box-shadow: none !important;
-    backdrop-filter: none !important;
-    -webkit-backdrop-filter: none !important;
-    padding: 1.2rem 3rem 0 !important;
-}
-
-html.withu-subpage #homePage .bg-wrap.central.limg {
-    transform: translate(-50%, -50%) scale(0.72);
-}
-
-@media (max-width: 768px) {
-    html.withu-subpage #homePage .bg-wrap.central.limg {
-        display: none !important;
-    }
-}
-
 /* 关于页：对话气泡改为玫瑰色系 */
 .withu-chat-msg-row.right .withu-chat-bubble {
     background: var(--wu-grad-rose) !important;
     color: #fff !important;
-    box-shadow: 0 10px 22px -14px rgba(244, 88, 122, 0.7) !important;
+    box-shadow: 0 10px 22px -14px rgba(248, 113, 113, 0.7) !important;
 }
 
 .withu-chat-msg-row.left .withu-chat-bubble {
@@ -1470,10 +1330,10 @@ body.bg-pdot-vignette {
     background-color: #faf9f8 !important;
     background-image: linear-gradient(
         120deg,
-        rgba(217, 79, 109, 0.16) 0%,
+        rgba(248, 113, 113, 0.16) 0%,
         rgba(185, 133, 95, 0.13) 30%,
         rgba(63, 143, 109, 0.10) 62%,
-        rgba(217, 79, 109, 0.16) 100%
+        rgba(248, 113, 113, 0.16) 100%
     ) !important;
     background-size: 300% 300% !important;
     background-attachment: fixed !important;

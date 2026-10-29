@@ -86,11 +86,23 @@ try {
         );
 
         foreach ($rows as $row) {
+            // cover_image 存的是 uploads 下的相对路径（如 albums/xxx.jpg），
+            // 地图弹层直接把它当 URL 用，这里补全为站内绝对路径。
+            $cover = (string) ($row['cover_image'] ?? '');
+            if ($cover !== '' && !preg_match('#^https?://#i', $cover)) {
+                if (strpos($cover, 'uploads/') === 0) {
+                    $cover = '/' . $cover;
+                } elseif ($cover[0] !== '/') {
+                    $cover = '/uploads/' . $cover;
+                }
+            }
+            $lng = $row['longitude'] !== null ? (float) $row['longitude'] : null;
+            $lat = $row['latitude'] !== null ? (float) $row['latitude'] : null;
             $albums[] = [
                 'name'        => $row['name'],
                 'city'        => $row['location_name'] ?? '',
-                'coords'      => [(float)$row['longitude'], (float)$row['latitude']],
-                'image'       => $row['cover_image'] ?? '',
+                'coords'      => ($lng !== null && $lat !== null) ? [$lng, $lat] : null,
+                'image'       => $cover,
                 'thumb'       => '', // 缩略图字段待后续补充
                 'date'        => substr($row['created_at'] ?? '', 0, 10),
                 'desc'        => $row['description'] ?? '',

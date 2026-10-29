@@ -186,7 +186,7 @@ foreach (($themeConfig['colors'] ?? []) as $themeName => $themeValue) $themeInli
 
 
 <style>
-:root{--brand:#d94f6d;--brand-dark:#be3a58;--ink:#2b2327;--ink-2:#6d6167;--ink-3:#9b8e94;--line:#eadfe2;--surface:#fffdfd;--soft:#fbf8f8;--ease:cubic-bezier(.22,1,.36,1)}
+:root{--brand:#c44d72;--brand-dark:#a93d5e;--ink:#2a3441;--ink-2:#5f6b7a;--ink-3:#6b7a89;--line:#e4edf4;--surface:#ffffff;--soft:#f7fbfd;--ease:cubic-bezier(.22,1,.36,1)}
 *{box-sizing:border-box}
 body{
   margin:0;min-height:100vh;display:flex;align-items:center;justify-content:center;padding:32px 18px;
@@ -217,13 +217,18 @@ body::after{
 }
 .login-card{
   position:relative;width:440px;max-width:100%;
-  background:var(--surface);border:1px solid var(--line);border-radius:24px;overflow:hidden;
-  box-shadow:0 40px 90px -52px rgba(43,35,39,.5),0 2px 6px rgba(43,35,39,.04);
+  background:linear-gradient(180deg,#ffffff,#fbfdff);border:1px solid rgba(126,200,227,.30);border-radius:24px;overflow:hidden;
+  box-shadow:0 44px 96px -54px rgba(35,55,71,.5),0 2px 6px rgba(35,55,71,.04);
   animation:loginCardIn .55s var(--ease) both;
 }
+.login-card::after{
+  content:"";position:absolute;right:-90px;bottom:-110px;width:260px;height:260px;border-radius:50%;
+  background:radial-gradient(circle,rgba(247,141,167,.13),transparent 68%);pointer-events:none;
+}
+.login-head,.login-body{position:relative;z-index:1}
 .login-card::before{
   content:"";position:absolute;top:0;left:0;right:0;height:3px;z-index:2;
-  background:linear-gradient(90deg,#e9708b,#d94f6d 46%,#b9855f);
+  background:linear-gradient(90deg,#f7a8bf,#e26489 46%,#7ec8e3);
 }
 @keyframes loginCardIn{
   from{opacity:0;transform:translateY(16px) scale(.985)}
@@ -233,8 +238,8 @@ body::after{
 .login-brand{display:flex;align-items:center;gap:10px;margin-bottom:24px}
 .login-brand-mark{
   display:inline-flex;align-items:center;justify-content:center;width:38px;height:38px;flex:none;
-  border-radius:13px;background:#fdeef2;color:var(--brand);font-size:16px;
-  box-shadow:0 8px 18px -12px rgba(217,79,109,.65);
+  border-radius:13px;background:linear-gradient(135deg,#f7a8bf,#e26489 55%,#c44d72);color:#fff;font-size:16px;
+  box-shadow:0 12px 24px -12px rgba(196,77,114,.7);
 }
 .login-brand-name{
   font-family:"Noto Serif SC","Noto Serif CJK SC","Songti SC",serif;
@@ -254,29 +259,51 @@ body::after{
 .login-body label{font-size:.76rem;color:var(--ink-2);font-weight:600;margin-bottom:7px;display:block;letter-spacing:.01em}
 .login-body label i{color:var(--brand);margin-right:5px;font-size:.72rem}
 .login-body input[type="text"],.login-body input[type="password"],.login-body input[type="email"]{
-  width:100%;height:46px;padding:0 14px;border:1px solid #ddccd1;border-radius:12px;
+  width:100%;height:46px;padding:0 14px;border:1px solid #cfdee9;border-radius:12px;
   background:var(--soft);font-size:.88rem;color:var(--ink);outline:none;font-family:inherit;
   transition:border-color .2s,background .2s,box-shadow .2s;
 }
 .login-body input::placeholder{color:var(--ink-3)}
-.login-body input:focus{background:#fff;border-color:rgba(217,79,109,.5);box-shadow:0 0 0 4px rgba(217,79,109,.09)}
+.login-body input:focus{background:#fff;border-color:#3d8cae;box-shadow:0 0 0 4px rgba(126,200,227,.22)}
 .login-body input:-webkit-autofill{-webkit-box-shadow:0 0 0 40px var(--soft) inset;-webkit-text-fill-color:var(--ink)}
 .login-body .btn{
   width:100%;height:48px;border:none;border-radius:12px;cursor:pointer;font-family:inherit;
-  background:linear-gradient(135deg,#e0607c,#d94f6d 55%,#be3a58);color:#fff;
+  background:linear-gradient(135deg,#c04669,#b94364 55%,#a93d5e);color:#fff;
   font-size:.9rem;font-weight:650;letter-spacing:.04em;transition:transform .2s,box-shadow .2s,filter .2s;
-  box-shadow:0 14px 28px -16px rgba(217,79,109,.85);
+  box-shadow:0 14px 28px -16px rgba(196,77,114,.65);
+  position:relative;overflow:hidden;
 }
-.login-body .btn:hover{filter:brightness(1.03);transform:translateY(-1px);box-shadow:0 18px 34px -16px rgba(217,79,109,.9)}
+.login-body .btn::after{
+  content:"";position:absolute;top:0;left:-80%;width:52%;height:100%;
+  background:linear-gradient(100deg,transparent,rgba(255,255,255,.38),transparent);
+  transform:skewX(-18deg);transition:left .7s var(--ease);pointer-events:none;
+}
+.login-body .btn:hover::after{left:132%}
+.login-body .btn:hover{filter:brightness(1.03);transform:translateY(-1px);box-shadow:0 18px 34px -16px rgba(196,77,114,.7)}
 .login-body .btn:active{transform:translateY(0) scale(.99)}
-.login-body .btn i{margin-right:7px}
+.login-body .btn i{margin-right:7px;position:relative;z-index:1}
+.password-field{position:relative}
+.password-field input{padding-right:48px !important}
+.password-toggle{
+  position:absolute;right:8px;top:50%;transform:translateY(-50%);
+  width:34px;height:34px;border:0;border-radius:10px;background:transparent;color:var(--ink-3);
+  display:inline-flex;align-items:center;justify-content:center;cursor:pointer;transition:background .2s,color .2s;
+}
+.password-toggle:hover{background:#fdeff4;color:var(--brand)}
+.password-toggle:focus-visible{outline:2px solid var(--brand);outline-offset:2px}
+.login-err{animation:loginShake .45s var(--ease)}
+@keyframes loginShake{
+  0%,100%{transform:translateX(0)}
+  25%{transform:translateX(-6px)}
+  75%{transform:translateX(6px)}
+}
 .login-tip{margin-top:14px;font-size:.72rem;color:var(--ink-3);text-align:center;line-height:1.7}
 .login-err{background:#fdeeee;color:#a33a3a;border:1px solid rgba(196,69,69,.2);padding:10px 13px;border-radius:11px;font-size:.78rem;margin-bottom:16px;line-height:1.6}
 .login-success{background:#eaf5f0;color:#276b52;border:1px solid rgba(63,143,109,.2);padding:10px 13px;border-radius:11px;font-size:.78rem;margin-bottom:16px;line-height:1.6}
-.auth-tabs{display:flex;gap:4px;margin-bottom:20px;background:#f4eeee;padding:4px;border-radius:999px;border:1px solid var(--line)}
+.auth-tabs{display:flex;gap:4px;margin-bottom:20px;background:#eef6fb;padding:4px;border-radius:999px;border:1px solid var(--line)}
 .auth-tabs .tab-btn{flex:1;min-height:38px;border:1px solid transparent;border-radius:999px;background:transparent;cursor:pointer;font-size:.8rem;color:var(--ink-2);transition:.2s;font-family:inherit;font-weight:600}
 .auth-tabs .tab-btn:hover:not(.active){color:var(--brand-dark)}
-.auth-tabs .tab-btn.active{background:#fff;color:var(--brand-dark);border-color:var(--line);box-shadow:0 4px 14px -10px rgba(43,35,39,.4)}
+.auth-tabs .tab-btn.active{background:#fff;color:var(--brand-dark);border-color:var(--line);box-shadow:0 4px 14px -10px rgba(35,55,71,.4)}
 .label-row{display:flex;align-items:center;justify-content:space-between}
 .qq-avatar-preview{width:24px;height:24px;border-radius:50%;object-fit:cover;border:2px solid #fff;box-shadow:0 0 0 1px var(--line);display:none}
 .field-error{color:#a33a3a;font-size:.7rem;margin-top:5px;display:none}
@@ -285,27 +312,33 @@ body::after{
 .role-toggle .role-option{flex:1;cursor:pointer}
 .role-toggle .role-option input{display:none}
 .role-toggle .role-option-inner{
-  display:flex;flex-direction:column;align-items:center;padding:12px 10px;border:1px solid #ddccd1;
+  display:flex;flex-direction:column;align-items:center;padding:12px 10px;border:1px solid #cfdee9;
   border-radius:12px;transition:.2s;text-align:center;background:var(--soft);
 }
-.role-toggle .role-option input:checked+.role-option-inner{border-color:rgba(217,79,109,.45);background:#fdeef2;color:var(--brand-dark);box-shadow:0 0 0 3px rgba(217,79,109,.06)}
+.role-toggle .role-option input:checked+.role-option-inner{border-color:rgba(226,100,137,.45);background:#fdeff4;color:var(--brand-dark);box-shadow:0 0 0 3px rgba(247,141,167,.1)}
 .role-toggle .role-option-inner i{font-size:21px;margin-bottom:5px}
 .role-toggle .role-option-inner .role-text-main{font-size:.8rem;font-weight:600}
 .role-toggle .role-option-inner .role-text-sub{font-size:.66rem;color:var(--ink-3);margin-top:1px}
-.role-male-icon{color:#4f7fa8}
+.role-male-icon{color:#3d8cae}
 .role-female-icon{color:var(--brand)}
 .form-hint{font-size:.73rem;color:var(--ink-3);text-align:center;margin:12px 0;line-height:1.7}
 .invite-hero{
-  background:linear-gradient(135deg,#fdf5f7,#f8f2ea);border:1px solid #f0dde2;
+  background:linear-gradient(135deg,#fdf3f7,#eef8fc);border:1px solid #dbeaf4;
   border-radius:14px;padding:17px 18px;margin-bottom:18px;text-align:center;
 }
-.invite-hero .invite-poem{margin:0 0 9px;font-size:.78rem;color:#8a5a68;line-height:1.85}
+.invite-hero .invite-poem{margin:0 0 9px;font-size:.78rem;color:#9a5d75;line-height:1.85}
 .invite-hero .invite-line{margin:0 0 5px;font-size:.82rem;color:var(--ink);font-weight:600;line-height:1.7}
 .invite-hero .invite-line strong{color:var(--brand)}
 .invite-hero .invite-expire{margin:0;font-size:.68rem;color:var(--ink-3)}
-.auth-footer{text-align:center;margin-top:18px;padding-top:16px;border-top:1px solid #f2eaec}
+.auth-footer{text-align:center;margin-top:18px;padding-top:16px;border-top:1px solid #eff5f9}
 .auth-footer a{color:var(--ink-3);text-decoration:none;font-size:.74rem;transition:.2s}
 .auth-footer a:hover{color:var(--brand-dark)}
+.login-signature{
+  display:flex;align-items:center;justify-content:center;gap:6px;
+  margin-top:12px;font-size:.62rem;letter-spacing:.12em;color:#71808f;
+}
+.login-signature-heart{color:var(--brand);font-size:.7rem;animation:loginHeart 2.4s ease-in-out infinite}
+@keyframes loginHeart{0%,100%{transform:scale(1)}50%{transform:scale(1.18)}}
 .form-group-hidden{display:none}
 @media (max-width:520px){
   body{padding:20px 14px;align-items:flex-start}
@@ -319,6 +352,7 @@ body::after{
 @media (prefers-reduced-motion:reduce){
   body::before{animation:none}
   .login-card{animation:none}
+  .login-signature-heart{animation:none}
   *{transition-duration:.01ms !important}
 }
 </style>
@@ -374,7 +408,10 @@ body::after{
 
       <div class="form-group">
         <label><i class="fas fa-lock"></i> 密码</label>
-        <input type="password" name="password" autocomplete="current-password">
+        <div class="password-field">
+          <input type="password" name="password" autocomplete="current-password">
+          <button type="button" class="password-toggle" data-password-toggle aria-label="显示密码"><i class="fas fa-eye"></i></button>
+        </div>
       </div>
 
       <button type="submit" class="btn"><i class="fas fa-sign-in-alt"></i> 登 录</button>
@@ -400,11 +437,17 @@ body::after{
       </div>
       <div class="form-group">
         <label><i class="fas fa-lock"></i> 密码</label>
-        <input type="password" name="password" minlength="8" placeholder="至少 8 位" autocomplete="new-password" required>
+        <div class="password-field">
+          <input type="password" name="password" minlength="8" placeholder="至少 8 位" autocomplete="new-password" required>
+          <button type="button" class="password-toggle" data-password-toggle aria-label="显示密码"><i class="fas fa-eye"></i></button>
+        </div>
       </div>
       <div class="form-group">
         <label><i class="fas fa-check-double"></i> 确认密码</label>
-        <input type="password" name="password_confirm" minlength="8" placeholder="再输入一次密码" autocomplete="new-password" id="passwordConfirm" required>
+        <div class="password-field">
+          <input type="password" name="password_confirm" minlength="8" placeholder="再输入一次密码" autocomplete="new-password" id="passwordConfirm" required>
+          <button type="button" class="password-toggle" data-password-toggle aria-label="显示密码"><i class="fas fa-eye"></i></button>
+        </div>
         <div class="field-error" id="confirmError">两次输入的密码不一致</div>
       </div>
 
@@ -440,6 +483,10 @@ body::after{
 
     <div class="auth-footer">
       <a href="/"><i class="fas fa-arrow-left"></i> 返回首页</a>
+      <div class="login-signature" aria-hidden="true">
+        <span class="login-signature-heart">♥</span>
+        <span>withU · 把日常写成我们的故事</span>
+      </div>
     </div>
   </div>
 </div>
@@ -543,6 +590,26 @@ function toggleForm(tab) {
   });
   registerForm.addEventListener('submit', function (ev) {
     if (!validateConfirm()) ev.preventDefault();
+  });
+})();
+
+/* 密码可见性切换（登录 / 注册共用） */
+(function () {
+  document.addEventListener('click', function (event) {
+    var btn = event.target.closest ? event.target.closest('[data-password-toggle]') : null;
+    if (!btn) return;
+    var field = btn.closest('.password-field');
+    var input = field && field.querySelector('input');
+    if (!input) return;
+    var show = input.type === 'password';
+    input.type = show ? 'text' : 'password';
+    btn.setAttribute('aria-label', show ? '隐藏密码' : '显示密码');
+    var icon = btn.querySelector('i');
+    if (icon) {
+      icon.classList.toggle('fa-eye', !show);
+      icon.classList.toggle('fa-eye-slash', show);
+    }
+    input.focus({ preventScroll: true });
   });
 })();
 </script>

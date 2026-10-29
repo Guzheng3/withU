@@ -943,21 +943,21 @@ include __DIR__ . '/header.php';
                     <svg class="wa-chart-svg" viewBox="0 0 1000 220" preserveAspectRatio="none" aria-hidden="true">
                         <defs>
                             <linearGradient id="waAreaGrad" x1="0" y1="0" x2="0" y2="1">
-                                <stop offset="0%" stop-color="rgba(217,79,109,0.18)"/>
-                                <stop offset="100%" stop-color="rgba(217,79,109,0.02)"/>
+                                <stop offset="0%" stop-color="rgba(247,141,167,0.20)"/>
+                                <stop offset="100%" stop-color="rgba(126,200,227,0.03)"/>
                             </linearGradient>
                         </defs>
                         <?php foreach ($waSvg['grid'] as $g): ?>
                             <line x1="0" y1="<?php echo $g['y']; ?>" x2="1000" y2="<?php echo $g['y']; ?>"
-                                  stroke="<?php echo $g['bottom'] ? '#eadfe2' : '#f2eaec'; ?>"
+                                  stroke="<?php echo $g['bottom'] ? '#e4edf4' : '#eff5f9'; ?>"
                                   stroke-width="1"
                                   <?php echo $g['bottom'] ? '' : 'stroke-dasharray="4 6"'; ?>
                                   vector-effect="non-scaling-stroke"/>
                         <?php endforeach; ?>
                         <?php if ($waSvg['area'] !== ''): ?>
                             <polygon points="<?php echo $waSvg['area']; ?>" fill="url(#waAreaGrad)"/>
-                            <polyline points="<?php echo $waSvg['linePv']; ?>" fill="none" stroke="#d94f6d" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round" vector-effect="non-scaling-stroke"/>
-                            <polyline points="<?php echo $waSvg['lineUv']; ?>" fill="none" stroke="#b9855f" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round" vector-effect="non-scaling-stroke"/>
+                            <polyline points="<?php echo $waSvg['linePv']; ?>" fill="none" stroke="#e26489" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round" vector-effect="non-scaling-stroke"/>
+                            <polyline points="<?php echo $waSvg['lineUv']; ?>" fill="none" stroke="#3d8cae" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round" vector-effect="non-scaling-stroke"/>
                         <?php endif; ?>
                     </svg>
                     <div class="wa-guide" id="waGuide" hidden></div>

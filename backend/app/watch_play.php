@@ -530,7 +530,6 @@ body,button,input,select{font-family:'Inter','system-ui',-apple-system,BlinkMacS
   .withu-player-topbar{position:absolute;left:1.05rem;right:1.05rem;top:.9rem;z-index:10055;display:grid;grid-template-columns:minmax(0,1fr) auto minmax(0,1fr);align-items:center;gap:.55rem;min-width:0;height:42px;padding:.28rem .55rem;color:#fff;text-shadow:0 1px 3px rgba(0,0,0,.42);pointer-events:none;opacity:1;transform:translateY(0);transition:opacity 220ms var(--withu-ease-out),transform 220ms var(--withu-ease-out),visibility 0s linear 0s}
   .art-video-player.art-hide-cursor .withu-player-topbar{opacity:1;visibility:visible;transform:translateY(0)}
   .withu-player-topbar-left{display:flex;align-items:center;gap:.55rem;min-width:0;justify-self:start}
-  .withu-player-topbar-logo{flex:0 0 auto;width:34px;height:30px;padding:0;box-sizing:border-box;object-fit:contain;border-radius:13.14px;background:var(--withu-player-logo-bg,#f5b6c8);box-shadow:0 6px 14px rgba(228,134,164,.2);filter:drop-shadow(0 1px 3px rgba(0,0,0,.18))}
   .withu-player-topbar-title{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:.88rem;font-weight:900;letter-spacing:.01em}
   .withu-player-topbar-watch{justify-self:center;display:inline-flex;align-items:center;justify-content:center;gap:.24rem;height:26px;padding:0 .72rem;border:1px solid rgba(255,255,255,.28);border-radius:999px;background:transparent;font-size:.74rem;font-weight:900;white-space:nowrap;transition:background 180ms var(--withu-ease-out),border-color 180ms var(--withu-ease-out),box-shadow 180ms var(--withu-ease-out)}
   .withu-player-topbar.is-partner-online .withu-player-topbar-watch{border-color:rgba(255,196,220,.86);background:linear-gradient(135deg,rgba(245,182,200,.88),rgba(255,221,235,.72));box-shadow:0 10px 26px rgba(245,182,200,.24),inset 0 1px 0 rgba(255,255,255,.35)}
@@ -555,7 +554,7 @@ body,button,input,select{font-family:'Inter','system-ui',-apple-system,BlinkMacS
   .withu-voice-activity-bars span:nth-child(3){height:16px;animation-delay:180ms}
   .withu-voice-activity-bars span:nth-child(4){height:10px;animation-delay:270ms}
   @keyframes withu-voice-wave{0%,100%{transform:scaleY(.45);opacity:.55}50%{transform:scaleY(1);opacity:1}}
-  @media(max-width:760px){.player-icon-action{min-width:52px;min-height:50px;border-radius:13.14px}.withu-player-topbar{left:.45rem;right:.45rem;top:.45rem;height:36px;grid-template-columns:minmax(0,1fr) auto}.withu-player-topbar-left{gap:.42rem}.withu-player-topbar-logo{width:31px;height:26px;padding:0;border-radius:13.14px}.withu-player-topbar-title{font-size:.78rem}.withu-player-topbar-watch{grid-column:1/3;grid-row:2;height:22px;padding:0 .5rem;font-size:.66rem}.withu-player-topbar-right{grid-column:2;grid-row:1;justify-self:end}
+  @media(max-width:760px){.player-icon-action{min-width:52px;min-height:50px;border-radius:13.14px}.withu-player-topbar{left:.45rem;right:.45rem;top:.45rem;height:36px;grid-template-columns:minmax(0,1fr) auto}.withu-player-topbar-left{gap:.42rem}.withu-player-topbar-title{font-size:.78rem}.withu-player-topbar-watch{grid-column:1/3;grid-row:2;height:22px;padding:0 .5rem;font-size:.66rem}.withu-player-topbar-right{grid-column:2;grid-row:1;justify-self:end}
   .withu-player-topbar-speed{font-size:.64rem;padding:.08rem .4rem}
   .withu-player-topbar-time{font-size:.74rem;min-width:2.8rem}}
   html[data-withu-mode="dark"] .media-detail-kicker{color:#f5b6c8!important}
@@ -644,6 +643,21 @@ body{padding-top:54px!important}
 
 /* 头部诗句常显：吸顶后不随 withu-actions-visible 隐藏 */
 .withu-header-actions.withu-actions-visible .withu-header-poem{display:block !important}
+
+/* 头部诗句：整行横向放不下时，单独换到情侣头像 / 管理下方一行并靠右对齐，
+   其余入口保持原排列（max-width 由下方脚本按可用空间写入） */
+.withu-header-actions.withu-poem-below{
+  flex-wrap:wrap;
+  justify-content:flex-end;
+  row-gap:2px;
+  max-width:var(--withu-poem-row-max,none);
+}
+.withu-header-actions.withu-poem-below .withu-header-poem{
+  order:99;
+  flex:0 0 100%;
+  line-height:1;
+  text-align:right;
+}
 
 /* 头部实例的影片搜索框：保持自身宽度，不继承播放条内的 flex:1 / width:100% 拉伸行为 */
 .withu-header-actions .media-search-wrap{flex:0 0 auto;width:auto;min-width:min(340px,42vw)}
@@ -746,6 +760,7 @@ body{padding-top:54px!important}
   overflow:visible!important;box-shadow:none!important;
 }
 .media-detail.media-detail-v4 .media-summary-body{
+  max-width:100%!important;width:100%!important;
   line-height:1.85!important;white-space:pre-line!important;color:inherit!important;
   overflow-wrap:anywhere!important;word-break:break-word!important;
 }
@@ -782,17 +797,27 @@ body{padding-top:54px!important}
   width:100%!important;margin:4px 0 0!important;padding:16px 0 0!important;
   border:0!important;border-top:1px solid #f2eaec!important;border-radius:0!important;
   background:transparent!important;box-shadow:none!important;
-  font-family:"Noto Serif SC","Noto Serif CJK SC","Songti SC","STSong",serif!important;
-  font-size:.98rem!important;font-weight:650!important;letter-spacing:.02em!important;
+  font-family:system-ui,-apple-system,"PingFang SC","Microsoft YaHei",sans-serif!important;
+  font-size:.98rem!important;font-weight:400!important;letter-spacing:.02em!important;
   color:#2b2327!important;text-transform:none!important;
 }
 .media-detail.media-detail-v4 .media-detail-recommend-title::before{
   content:"";width:4px;height:15px;flex:none;border-radius:999px;
   background:linear-gradient(180deg,#e9708b,#be3a58);
 }
-.media-detail.media-detail-v4 .media-detail-recommend-title::after{
-  content:"为你挑选";margin-left:auto;font-family:"Inter","PingFang SC",system-ui,sans-serif;
-  font-size:.66rem;font-weight:500;letter-spacing:.04em;color:#9b8e94;
+.media-detail.media-detail-v4 .media-detail-recommend-more{
+  margin-left:auto;flex:0 0 auto;
+  display:inline-flex;align-items:center;justify-content:center;
+  height:26px;padding:0 12px;
+  border:1px solid #eadfe2;border-radius:999px;
+  background:#fff;color:#be3a58;text-decoration:none;
+  font-family:inherit!important;font-size:.7rem!important;font-weight:600!important;
+  letter-spacing:.02em!important;line-height:1!important;
+  white-space:nowrap;
+  transition:background .2s,border-color .2s,color .2s;
+}
+.media-detail.media-detail-v4 .media-detail-recommend-more:hover{
+  background:#fdeef2;border-color:rgba(217,79,109,.24);color:#a92f4c;
 }
 .media-detail.media-detail-v4 .media-detail-recommend{
   grid-area:md4-reco!important;display:block!important;
@@ -868,7 +893,6 @@ body{padding-top:54px!important}
   .media-detail.media-detail-v4 .poster-badge-wrap{width:132px!important}
   .media-detail.media-detail-v4 .media-detail-poster{width:132px!important;height:198px!important}
   .media-detail.media-detail-v4 .media-detail-summary{padding:13px 14px!important;font-size:.84rem!important;line-height:1.8!important}
-  .media-detail.media-detail-v4 .media-detail-recommend-title::after{display:none}
 }
 @media(max-width:520px){
   .media-detail.media-detail-v4{
@@ -909,7 +933,9 @@ html[data-withu-mode="dark"] .media-detail.media-detail-v4 .media-cast-toggle{
 html[data-withu-mode="dark"] .media-detail.media-detail-v4 .media-detail-recommend-title{
   color:#f8fafc!important;border-top-color:rgba(255,255,255,.1)!important;
 }
-html[data-withu-mode="dark"] .media-detail.media-detail-v4 .media-detail-recommend-title::after{color:#9aa7b4}
+html[data-withu-mode="dark"] .media-detail.media-detail-v4 .media-detail-recommend-more{
+  background:rgba(255,255,255,.06)!important;border-color:rgba(255,255,255,.12)!important;color:#f5b6c8!important;
+}
 html[data-withu-mode="dark"] .media-detail.media-detail-v4 .media-detail-recommend-item{
   background:rgba(255,255,255,.05)!important;border-color:rgba(255,255,255,.1)!important;
 }
@@ -917,6 +943,76 @@ html[data-withu-mode="dark"] .media-detail.media-detail-v4 .mdr-title{color:#f8f
 html[data-withu-mode="dark"] .media-detail.media-detail-v4 .mdr-year{color:#9aa7b4!important}
 html[data-withu-mode="dark"] .media-detail.media-detail-v4 .mdr-poster{background:rgba(255,255,255,.06)!important}
 
+/* ── 顶部左侧：返回媒体库（返回箭头 + 媒体库，沿用头部入口胶囊样式） ── */
+.header-wrap .header .logo,
+.header-wrap .header .logo h1{display:flex;align-items:center}
+.header-wrap .header .logo h1{
+  margin:0;line-height:1;
+  font-family:system-ui,-apple-system,'Segoe UI','PingFang SC','Microsoft YaHei',sans-serif;
+  font-weight:400;
+}
+.alogo.alogo--back{
+  gap:5px!important;
+  color:#334155!important;
+  font-family:system-ui,-apple-system,'Segoe UI','PingFang SC','Microsoft YaHei',sans-serif!important;
+  font-weight:400!important;
+  transition:background .2s ease,color .2s ease,box-shadow .2s ease;
+}
+.alogo.alogo--back .withu-header-map-text{
+  color:inherit!important;
+  font-family:inherit!important;
+  font-weight:400!important;
+}
+.alogo.alogo--back svg{display:block;width:16px;height:16px;transition:color .2s ease}
+.alogo.alogo--back:hover,
+.alogo.alogo--back:focus-visible{
+  background:rgba(248,113,113,.1)!important;
+  color:#d94f4f!important;
+}
+.alogo.alogo--back:focus-visible{outline:2px solid #f87171;outline-offset:2px}
+@media(max-width:900px){
+  /* 窄屏头部空间有限：收起「媒体库」文字，只保留返回图标 */
+  .alogo.alogo--back{
+    width:34px;height:34px;padding:0!important;gap:0!important;
+    justify-content:center;border-radius:50%;
+  }
+  .alogo.alogo--back .withu-header-map-text{display:none}
+}
+@media(max-width:768px){
+  /* 隐藏装饰诗句，避免与返回入口/搜索框重叠 */
+  .header-wrap .withu-header-poem{display:none!important}
+}
+
+/* ── 右侧悬浮入口：返回首页（沿用首页留言按钮的珊瑚色胶囊样式） ── */
+.withu-home-fab{
+  position:fixed;
+  right:1.25rem;bottom:2rem;
+  z-index:45; /* 低于 .watch-choice(50)，弹窗出现时不会浮在遮罩上方 */
+  display:inline-flex;align-items:center;justify-content:center;
+  width:3.25rem;height:3.25rem;
+  border-radius:1rem;
+  background:#f87171;color:#fff;
+  text-decoration:none;
+  box-shadow:0 18px 36px -18px rgba(248,113,113,.8),inset 0 1px 0 rgba(255,255,255,.32);
+  transition:background .25s ease,color .25s ease,transform .25s cubic-bezier(.23,1,.32,1),box-shadow .25s ease;
+}
+.withu-home-fab svg{display:block;width:1.6rem;height:1.6rem}
+.withu-home-fab:hover,
+.withu-home-fab:focus-visible{
+  background:#fff;color:#f87171;
+  transform:translateY(-2px) scale(1.04);
+  box-shadow:0 18px 36px -18px rgba(248,113,113,.45),0 3px 48px 8px rgba(28,31,35,.12);
+}
+.withu-home-fab:focus-visible{outline:2px solid #152e4c;outline-offset:3px}
+.withu-home-fab:active{transform:translateY(0) scale(.96)}
+@media(max-width:600px){
+  .withu-home-fab{right:1rem;bottom:1.25rem;width:2.9rem;height:2.9rem;border-radius:.95rem}
+  .withu-home-fab svg{width:1.45rem;height:1.45rem}
+}
+@media(prefers-reduced-motion:reduce){
+  .alogo.alogo--back,
+  .withu-home-fab{transition:none}
+}
 
 </style>
 </head>
@@ -926,6 +1022,9 @@ html[data-withu-mode="dark"] .media-detail.media-detail-v4 .mdr-poster{backgroun
 $withuHeaderBeforePoemHtml = '<div class="media-search-wrap"><label class="sr-only" for="mediaSearch">搜索影片</label><span class="media-search-icon" aria-hidden="true">⌕</span><input id="mediaSearch" type="search" autocomplete="off" placeholder="搜索影片…"><div id="mediaSearchResults" class="media-search-results" hidden></div></div>';
 $withuHeaderHideWeatherFootprint = true; // 本页不显示头部天气胶囊与足迹入口（header.php 条件渲染）
 $withuHeaderMediaEntryHistory = true; // 本页头部媒体入口切换为观看历史（header.php 条件渲染）
+$withuLogoHref = '/watch.php'; // 左上角入口：返回媒体库
+$withuLogoVariant = 'library-back'; // 本页用「返回箭头 + 媒体库」替代品牌 Logo
+$withuLogoTitle = '返回媒体库';
 $headerPath = __DIR__ . '/../../frontend/inc/header.php';
 if (file_exists($headerPath)) {
     include $headerPath;
@@ -933,12 +1032,16 @@ if (file_exists($headerPath)) {
 ?>
 <main class="player-shell" id="main-content">
   <div id="status" class="player-status">正在读取播放器…</div>
-  <div class="player-layout"><section class="player-stage"><div id="gesture" class="player-gesture"><div id="playerContainer" class="player-container"><div id="playerTopBar" class="withu-player-topbar is-solo" aria-live="polite"><span class="withu-player-topbar-left"><img class="withu-player-topbar-logo" src="<?php echo e($playerLogoUrl); ?>" alt="withU"><span id="playerTopTitle" class="withu-player-topbar-title"><?php echo e($media['series_name'] ?: $media['file_name']); ?></span></span><span id="playerTopWatch" class="withu-player-topbar-watch">一起看<span class="withu-player-topbar-heart">❤</span><span id="playerTopOnlineText">宝宝离线中</span></span><span class="withu-player-topbar-right"><button id="togetherExit" type="button" hidden title="一起看" aria-label="一起看" aria-pressed="false">一起看</button><span id="playerNetSpeed" class="withu-player-topbar-speed">网速 --</span><span id="playerTopTime" class="withu-player-topbar-time">--:--</span></span></div><div id="playerWatermark" class="player-watermark" aria-live="polite"><span id="watermarkMark" class="watermark-mark"><img src="<?php echo e($playerLogoUrl); ?>" alt="withU"><span class="watermark-heart" aria-hidden="true">♥</span></span><span id="watermarkOnline" class="watermark-online" hidden>宝宝在线中</span></div><div id="switchLoading" class="withu-switch-loading" hidden aria-live="polite"><div class="withu-switch-loading-box"><img class="withu-switch-loading-gif" src="/Style/img/switch-loading.gif" alt="" aria-hidden="true"><span id="switchLoadingText">正在切换选集…</span></div></div></div><span id="gestureValue" class="gesture-value"></span></div></section><section class="episode-panel" aria-labelledby="episodeListHeading"><div class="episode-panel-header"><h2 id="episodeListHeading">选集列表</h2><div class="episode-panel-controls"><button type="button" class="episode-toggle" data-episode-toggle="columns" aria-label="切换选集排版"><span class="episode-toggle-label">排版</span><span class="episode-toggle-option" data-episode-columns-state="2">双排</span><span class="episode-toggle-option" data-episode-columns-state="1">单排</span></button><button type="button" class="episode-toggle" data-episode-toggle="order" aria-label="切换选集排序"><span class="episode-toggle-label">排序</span><span class="episode-toggle-option" data-episode-order-state="asc">正序</span><span class="episode-toggle-option" data-episode-order-state="desc">倒序</span></button></div></div><div id="episodeListOutside" class="episode-list" data-columns="2"></div></section></div>
-  <section class="media-detail media-detail-v4<?php echo ($strmMode && !empty($strmRecommendations)) ? ' has-recommend' : ''; ?><?php echo empty($strmMeta['posterUrl'] ?? '') ? ' no-poster' : ''; ?>" aria-label="影片简介"><div class="media-detail-kicker">简介</div><span class="poster-badge-wrap"<?php echo (empty($strmMeta['posterUrl'] ?? '')) ? ' style="display:none"' : ''; ?>><img id="detailPoster" class="media-detail-poster" src="<?php echo e($strmMeta['posterUrl'] ?? ''); ?>" alt=""><span id="detailResolutionBadge"></span></span><div class="media-detail-copy"><div class="media-detail-titlebar"><h2 id="detailTitle"><?php echo e($media['series_name'] ?: $media['file_name']); ?></h2><div id="detailFacts" class="media-detail-facts"></div></div><div id="detailSummary" class="media-detail-summary"><div class="media-summary-body"><?php echo e($media['summary'] ?? '正在读取评分、简介和演职员信息…'); ?></div></div></div><?php if ($strmMode && !empty($strmRecommendations)): ?><h3 class="media-detail-recommend-title">推荐视频</h3><div class="media-detail-recommend"><div class="media-detail-recommend-list"><?php foreach ($strmRecommendations as $strmRec): ?><?php $strmImg = $strmRec['poster'] !== '' ? $strmRec['poster'] : $strmRec['backdrop']; ?><a class="media-detail-recommend-item" href="/watch_play.php?source=strm&amp;id=<?php echo (int)$strmRec['id']; ?>" title="<?php echo e($strmRec['title']); ?>"><span class="mdr-poster"><?php if ($strmImg !== ''): ?><img loading="lazy" src="<?php echo e($strmImg); ?>" alt=""><?php endif; ?></span><span class="mdr-copy"><span class="mdr-title"><?php echo e($strmRec['title']); ?></span><?php if ($strmRec['year'] !== ''): ?><span class="mdr-year"><?php echo e($strmRec['year']); ?></span><?php endif; ?></span></a><?php endforeach; ?></div></div><?php endif; ?></section>
+  <div class="player-layout"><section class="player-stage"><div id="gesture" class="player-gesture"><div id="playerContainer" class="player-container"><div id="playerTopBar" class="withu-player-topbar is-solo" aria-live="polite"><span class="withu-player-topbar-left"><span id="playerTopTitle" class="withu-player-topbar-title"><?php echo e($media['series_name'] ?: $media['file_name']); ?></span></span><span id="playerTopWatch" class="withu-player-topbar-watch">一起看<span class="withu-player-topbar-heart">❤</span><span id="playerTopOnlineText">宝宝离线中</span></span><span class="withu-player-topbar-right"><button id="togetherExit" type="button" hidden title="一起看" aria-label="一起看" aria-pressed="false">一起看</button><span id="playerNetSpeed" class="withu-player-topbar-speed">网速 --</span><span id="playerTopTime" class="withu-player-topbar-time">--:--</span></span></div><div id="playerWatermark" class="player-watermark" aria-live="polite"><span id="watermarkMark" class="watermark-mark"><img src="<?php echo e($playerLogoUrl); ?>" alt="withU"><span class="watermark-heart" aria-hidden="true">♥</span></span><span id="watermarkOnline" class="watermark-online" hidden>宝宝在线中</span></div><div id="switchLoading" class="withu-switch-loading" hidden aria-live="polite"><div class="withu-switch-loading-box"><img class="withu-switch-loading-gif" src="/Style/img/switch-loading.gif" alt="" aria-hidden="true"><span id="switchLoadingText">正在切换选集…</span></div></div></div><span id="gestureValue" class="gesture-value"></span></div></section><section class="episode-panel" aria-labelledby="episodeListHeading"><div class="episode-panel-header"><h2 id="episodeListHeading">选集列表</h2><div class="episode-panel-controls"><button type="button" class="episode-toggle" data-episode-toggle="columns" aria-label="切换选集排版"><span class="episode-toggle-label">排版</span><span class="episode-toggle-option" data-episode-columns-state="2">双排</span><span class="episode-toggle-option" data-episode-columns-state="1">单排</span></button><button type="button" class="episode-toggle" data-episode-toggle="order" aria-label="切换选集排序"><span class="episode-toggle-label">排序</span><span class="episode-toggle-option" data-episode-order-state="asc">正序</span><span class="episode-toggle-option" data-episode-order-state="desc">倒序</span></button></div></div><div id="episodeListOutside" class="episode-list" data-columns="2"></div></section></div>
+  <section class="media-detail media-detail-v4<?php echo ($strmMode && !empty($strmRecommendations)) ? ' has-recommend' : ''; ?><?php echo empty($strmMeta['posterUrl'] ?? '') ? ' no-poster' : ''; ?>" aria-label="影片简介"><div class="media-detail-kicker">简介</div><span class="poster-badge-wrap"<?php echo (empty($strmMeta['posterUrl'] ?? '')) ? ' style="display:none"' : ''; ?>><img id="detailPoster" class="media-detail-poster" src="<?php echo e($strmMeta['posterUrl'] ?? ''); ?>" alt=""><span id="detailResolutionBadge"></span></span><div class="media-detail-copy"><div class="media-detail-titlebar"><h2 id="detailTitle"><?php echo e($media['series_name'] ?: $media['file_name']); ?></h2><div id="detailFacts" class="media-detail-facts"></div></div><div id="detailSummary" class="media-detail-summary"><div class="media-summary-body"><?php echo e($media['summary'] ?? '正在读取评分、简介和演职员信息…'); ?></div></div></div><?php if ($strmMode && !empty($strmRecommendations)): ?><h3 class="media-detail-recommend-title">推荐视频<a class="media-detail-recommend-more" href="/watch.php">更多</a></h3><div class="media-detail-recommend"><div class="media-detail-recommend-list"><?php foreach ($strmRecommendations as $strmRec): ?><?php $strmImg = $strmRec['poster'] !== '' ? $strmRec['poster'] : $strmRec['backdrop']; ?><a class="media-detail-recommend-item" href="/watch_play.php?source=strm&amp;id=<?php echo (int)$strmRec['id']; ?>" title="<?php echo e($strmRec['title']); ?>"><span class="mdr-poster"><?php if ($strmImg !== ''): ?><img loading="lazy" src="<?php echo e($strmImg); ?>" alt=""><?php endif; ?></span><span class="mdr-copy"><span class="mdr-title"><?php echo e($strmRec['title']); ?></span><?php if ($strmRec['year'] !== ''): ?><span class="mdr-year"><?php echo e($strmRec['year']); ?></span><?php endif; ?></span></a><?php endforeach; ?></div></div><?php endif; ?></section>
   <?php if (!$strmMode): ?><section class="recommend-panel" aria-labelledby="recommendHeading"><div class="recommend-panel-header"><div class="recommend-panel-titleline"><h2 id="recommendHeading">猜你想看</h2></div><a class="recommend-more" href="/watch.php">显示更多</a></div><div id="recommendList" class="recommend-list"></div></section><?php endif; ?>
 </main>
 <div id="choiceModal" class="watch-choice" hidden><div class="watch-choice-box"><h2>另一位正在观影</h2><p id="choiceText">检测到另一位已进入 WithU Watch。</p><div class="watch-choice-actions"><button id="chooseTogether" class="btn btn-primary">一起看</button><button id="chooseSolo" class="btn btn-secondary">自己看</button></div></div></div>
 <div id="exitTogetherModal" class="watch-choice" hidden><div class="watch-choice-box"><h2>退出一起看</h2><p id="exitTogetherText">正在和宝宝一起看，确定退出吗？</p><div class="watch-choice-actions"><button id="exitTogetherConfirm" class="btn btn-primary">确定退出</button><button id="exitTogetherCancel" class="btn btn-secondary">继续观看</button></div></div></div>
+<!-- 右侧悬浮入口：回到首页（与首页留言按钮同款） -->
+<a class="withu-home-fab" href="/" title="返回首页" aria-label="返回首页">
+  <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" focusable="false"><path d="M11.47 3.84a.75.75 0 0 1 1.06 0l8.69 8.69a.75.75 0 1 0 1.06-1.06l-8.689-8.69a2.25 2.25 0 0 0-3.182 0l-8.69 8.69a.75.75 0 0 0 1.061 1.06l8.689-8.69Z"/><path d="m12 5.432 8.159 8.159c.03.03.06.058.091.086v6.198c0 1.035-.84 1.875-1.875 1.875H15a.75.75 0 0 1-.75-.75v-4.5a.75.75 0 0 0-.75-.75h-3a.75.75 0 0 0-.75.75V21a.75.75 0 0 1-.75.75H5.625a1.875 1.875 0 0 1-1.875-1.875v-6.198a2.29 2.29 0 0 0 .091-.086L12 5.432Z"/></svg>
+</a>
 <script>
 /* ============ 站点顶栏初始化（与首页/watch.php 一致） ============ */
 (function () {
@@ -974,6 +1077,54 @@ if (file_exists($headerPath)) {
   }
   window.addEventListener('scroll', onScroll, { passive: true });
   onScroll();
+
+  // 诗句宽度自适应：单行放不下时（会压到左侧返回入口）改为换行到头像 / 管理下方
+  var poemEl = document.getElementById('withuHeaderPoem');
+  var logoEl = document.querySelector('.header-wrap .header .logo');
+  var leftAvatarEl = document.querySelector('.withu-header-left-avatar');
+  var poemRowFrame = 0;
+  function fitPoemRow(){
+    poemRowFrame = 0;
+    if (!els.actions || !poemEl || !logoEl) return;
+    if (window.getComputedStyle(poemEl).display === 'none') {
+      els.actions.classList.remove('withu-poem-below');
+      return;
+    }
+    var gap = parseFloat(window.getComputedStyle(els.actions).columnGap) || 0;
+    var singleWidth = 0, itemCount = 0;
+    for (var i = 0; i < els.actions.children.length; i++) {
+      var child = els.actions.children[i];
+      var childStyle = window.getComputedStyle(child);
+      if (childStyle.display === 'none' || childStyle.position === 'absolute') continue;
+      var width;
+      if (child === poemEl) {
+        // 换行后诗句容器占满整行，需按内部文字行宽计算单行宽度
+        var line = poemEl.firstElementChild;
+        width = (line || poemEl).getBoundingClientRect().width;
+      } else {
+        width = child.getBoundingClientRect().width;
+      }
+      singleWidth += width;
+      itemCount++;
+    }
+    if (itemCount > 1) singleWidth += gap * (itemCount - 1);
+    var leftBoundary = logoEl.getBoundingClientRect().right;
+    if (leftAvatarEl && parseFloat(window.getComputedStyle(leftAvatarEl).opacity) > 0.05) {
+      leftBoundary = Math.max(leftBoundary, leftAvatarEl.getBoundingClientRect().right);
+    }
+    var available = els.actions.getBoundingClientRect().right - leftBoundary - 14;
+    els.actions.style.setProperty('--withu-poem-row-max', Math.max(0, Math.floor(available)) + 'px');
+    els.actions.classList.toggle('withu-poem-below', singleWidth > available);
+  }
+  function schedulePoemRow(){
+    if (poemRowFrame) return;
+    poemRowFrame = window.requestAnimationFrame(fitPoemRow);
+  }
+  window.addEventListener('scroll', schedulePoemRow, { passive: true });
+  window.addEventListener('resize', schedulePoemRow);
+  window.addEventListener('load', schedulePoemRow);
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(schedulePoemRow);
+  fitPoemRow();
 })();
 </script>
 <script src="/assets/vendor/hls.min.js"></script>
@@ -1030,7 +1181,7 @@ var refreshIcon='<svg fill="currentColor" xmlns="http://www.w3.org/2000/svg" hei
 function withuFormatSpeed(bps){if(!(bps>0))return '--';var by=bps/8;if(by>=1048576)return (by/1048576).toFixed(1)+' MB/s';if(by>=1024)return Math.round(by/1024)+' KB/s';return Math.round(by)+' B/s';}
  function updateWithuNetSpeed(){var el=withuNetSpeedEl;if(!el)return;var speed=-1;try{var now=performance.now();if(withuNetSpeedSampleBps>0&&now-withuNetSpeedSampleAt<5000){speed=withuNetSpeedSampleBps;}else if(withuHls&&typeof withuHls.bandwidthEstimate==='number'&&withuHls.bandwidthEstimate>0){speed=withuHls.bandwidthEstimate;}var video=mediaPlayer&&mediaPlayer.video;if(speed<0){var decoded=video&&typeof video.webkitVideoDecodedByteCount==='number'?Number(video.webkitVideoDecodedByteCount):-1;if(decoded>=0){if(withuNetSpeedDecoded.count>=0){var ddt=(now-withuNetSpeedDecoded.ts)/1000,ddelta=decoded-withuNetSpeedDecoded.count;if(ddt>0)speed=Math.max(0,ddelta)*8/ddt;}withuNetSpeedDecoded={count:decoded,ts:now};}}if(speed<0&&typeof navigator!=='undefined'&&navigator.connection&&Number(navigator.connection.downlink)>0){speed=Number(navigator.connection.downlink)*1000000;}if(speed<0){var src=video?(video.currentSrc||video.src||''):'';if(src){var all=performance.getEntriesByType('resource'),bytes=0;for(var j=0;j<all.length;j++){var entry=all[j],name=entry.name||'',isHls=src.indexOf('m3u8')>-1,match=name===src||(isHls&&/(\.m3u8|\.ts|\.m4s|\.mp4)(\?|$)/i.test(name))||(src&&name.indexOf(src)>-1);if(match)bytes+=Number(entry.transferSize||entry.encodedBodySize||0);}if(withuNetSpeedLast.ts>0){var dt=(now-withuNetSpeedLast.ts)/1000,db=bytes-withuNetSpeedLast.bytes;if(dt>0&&db>=0)speed=db*8/dt;}withuNetSpeedLast={ts:now,bytes:bytes};}}}catch(e){}el.textContent='网速 '+withuFormatSpeed(speed<0?0:speed);}
 function mountNetSpeed(){var el=document.getElementById('playerNetSpeed');if(!el){var root=mediaPlayer&&mediaPlayer.template&&mediaPlayer.template.$player;if(root)el=root.querySelector('.withu-player-topbar-speed');}withuNetSpeedEl=el||null;if(withuNetSpeedTimer){clearInterval(withuNetSpeedTimer);withuNetSpeedTimer=null;}if(!withuNetSpeedEl)return;withuNetSpeedTimer=setInterval(updateWithuNetSpeed,1000);updateWithuNetSpeed();}
-  function mountPlayerTopBar(){var node=$('playerTopBar'),root=mediaPlayer&&mediaPlayer.template&&mediaPlayer.template.$player;if(!root)return;if(!node){node=document.createElement('div');node.id='playerTopBar';node.className='withu-player-topbar is-solo';node.setAttribute('aria-live','polite');node.innerHTML='<span class="withu-player-topbar-left"><img class="withu-player-topbar-logo" src="'+esc(playerLogoUrl)+'" alt="withU"><span id="playerTopTitle" class="withu-player-topbar-title"></span></span><span id="playerTopWatch" class="withu-player-topbar-watch">一起看<span class="withu-player-topbar-heart">❤</span><span id="playerTopOnlineText">宝宝离线中</span></span><span class="withu-player-topbar-right"><button id="togetherExit" type="button" hidden title="一起看" aria-label="一起看" aria-pressed="false">一起看</button><span id="playerNetSpeed" class="withu-player-topbar-speed">网速 --</span><span id="playerTopTime" class="withu-player-topbar-time">--:--</span></span>';}if(node.parentNode!==root)root.appendChild(node);updatePlayerTopBar();}
+  function mountPlayerTopBar(){var node=$('playerTopBar'),root=mediaPlayer&&mediaPlayer.template&&mediaPlayer.template.$player;if(!root)return;if(!node){node=document.createElement('div');node.id='playerTopBar';node.className='withu-player-topbar is-solo';node.setAttribute('aria-live','polite');node.innerHTML='<span class="withu-player-topbar-left"><span id="playerTopTitle" class="withu-player-topbar-title"></span></span><span id="playerTopWatch" class="withu-player-topbar-watch">一起看<span class="withu-player-topbar-heart">❤</span><span id="playerTopOnlineText">宝宝离线中</span></span><span class="withu-player-topbar-right"><button id="togetherExit" type="button" hidden title="一起看" aria-label="一起看" aria-pressed="false">一起看</button><span id="playerNetSpeed" class="withu-player-topbar-speed">网速 --</span><span id="playerTopTime" class="withu-player-topbar-time">--:--</span></span>';}if(node.parentNode!==root)root.appendChild(node);updatePlayerTopBar();}
   function mountVoiceActivity(){var root=mediaPlayer&&mediaPlayer.template&&mediaPlayer.template.$player;if(!root)return null;var node=$('voiceActivity');if(!node){node=document.createElement('div');node.id='voiceActivity';node.className='withu-voice-activity';node.setAttribute('aria-hidden','true');node.innerHTML='<span class="withu-voice-activity-icon" aria-hidden="true"><svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor"><path d="M12 14a3 3 0 0 0 3-3V5a3 3 0 0 0-6 0v6a3 3 0 0 0 3 3Zm5-3a1 1 0 1 1 2 0 7 7 0 0 1-6 6.93V20h2a1 1 0 1 1 0 2H9a1 1 0 1 1 0-2h2v-2.07A7 7 0 0 1 5 11a1 1 0 1 1 2 0 5 5 0 0 0 10 0Z"/></svg></span><span class="withu-voice-activity-bars" aria-hidden="true"><span></span><span></span><span></span><span></span></span>';}if(node.parentNode!==root)root.appendChild(node);voiceActivityNode=node;return node;}
   function setVoiceActivityVisible(active){var node=voiceActivityNode||mountVoiceActivity();if(!node)return;node.classList.toggle('is-speaking',!!active);}
   function updatePlayerTopTime(){var node=$('playerTopTime');if(!node)return;node.textContent=new Date().toLocaleTimeString('zh-CN',{hour:'2-digit',minute:'2-digit',hour12:false});}
@@ -1271,17 +1422,22 @@ function renderSearchResults(){var input=$('mediaSearch'),target=$('mediaSearchR
 function loadMediaLibrary(options){options=options||{};var currentId=Number(options.current_id||pendingMediaId||loadedMediaId||initialMediaId||0);return jsonRequest(mediaApi,'list',{current_id:currentId},'GET').then(function(result){if(!result.success){if(!options.quiet)setStatus(result.message||'媒体库读取失败');return false;}mergeMediaItems(result.items||[],!!options.replace);recommendationGroups=result.groups||recommendationGroups||[];renderEpisodes();renderRecommendations();return true;});}
 function ensureMediaLoaded(id){var loadedInCurrentSeries=currentEpisodes.some(function(item){return Number(item.id)===Number(id);});if(findMediaItem(id)&&loadedInCurrentSeries)return Promise.resolve(true);return loadMediaLibrary({current_id:id,quiet:true}).then(function(){return !!findMediaItem(id);});}
 function loadEpisodes(){return loadMediaLibrary({current_id:initialMediaId,replace:true}).then(function(ok){if(ok)return selectMedia(initialMediaId);}).catch(function(){setStatus('媒体库读取失败，请检查服务状态。');});}
-function loadStrmEpisodes(){
-  var meta=strmMeta||{}, eps=meta.episodes||[];
+function buildStrmMediaItems(meta){
+  meta=meta||{};
+  var eps=meta.episodes||[];
   var base=Number(meta.id||strmMediaId||0);
+  var seriesName=meta.title||meta.name||'strm 媒体';
   var isMovie=(meta.mediaType==='movie')||(meta.type==='Movie');
-  if(isMovie || !eps || !eps.length){
-    mediaItems=[{id:base,file_name:meta.title||meta.name||'strm 媒体',series_name:meta.title||meta.name||'strm 媒体',series_key:'strm-'+base,episode_number:0,strmMediaId:base,strmEpisodeId:0}];
-  }else{
-    mediaItems=eps.map(function(ep){
-      return {id:Number(ep.id)||0,file_name:ep.sourceFileName||('第 '+ep.episodeNo+' 集'),series_name:meta.title||meta.name||'strm 媒体',series_key:'strm-'+base,episode_number:Number(ep.episodeNo)||0,strmMediaId:base,strmEpisodeId:Number(ep.id)||0};
-    });
+  if(isMovie || !eps.length){
+    return [{id:base,file_name:seriesName,series_name:seriesName,series_key:'strm-'+base,episode_number:0,strmMediaId:base,strmEpisodeId:0}];
   }
+  return eps.map(function(ep){
+    return {id:Number(ep.id)||0,file_name:ep.sourceFileName||('第 '+ep.episodeNo+' 集'),series_name:seriesName,series_key:'strm-'+base,episode_number:Number(ep.episodeNo)||0,strmMediaId:base,strmEpisodeId:Number(ep.id)||0};
+  });
+}
+function loadStrmEpisodes(){
+  var meta=strmMeta||{};
+  mediaItems=buildStrmMediaItems(meta);
   pendingMediaId=mediaItems[0]?mediaItems[0].id:0;
   setTogetherUi(false);localOnly=false;
   renderEpisodes();
@@ -1441,10 +1597,48 @@ function renderMeta(room){ if(strmMode){ renderStrmMeta(); return; }
 }
 function sendEvent(type,extra){var rc=localOnly?soloRoomCode:(roomJoined?code:'');if(!rc||applying)return;watchRequest('event',Object.assign({room_code:rc,event_type:type,position_ms:Math.round(desktopCurrentTime()*1000),speed:desktopSpeed(),client_timestamp_ms:Date.now()},extra||{})).catch(function(){});}
 function sendHeartbeat(){if(localOnly||!roomJoined||!code)return;watchRequest('heartbeat',{room_code:code,client_timestamp_ms:Date.now()},'POST').catch(function(){});}
+var strmSeriesRefreshKey='',strmSeriesRefreshAt=0,strmSeriesActiveKey='';
+function strmRoomSeriesKey(room){return String(Number((room&&room.media_id)||0))+'|'+String((room&&room.series_name)||'').trim();}
+function strmSeriesChanged(room){
+ var current=String((strmMeta&&(strmMeta.title||strmMeta.name))||'').trim(),next=String((room&&room.series_name)||'').trim();
+ return !!current&&!!next&&next!==current;
+}
+// 对方换剧时重新拉取该剧详情，重建详情区、选集与页面地址（不整页刷新）
+function refreshStrmSeries(room){
+ var key=strmRoomSeriesKey(room),mediaId=Number((room&&room.media_id)||0);
+ if(!mediaId||strmSeriesRefreshKey===key)return;
+ if(Date.now()-strmSeriesRefreshAt<4000)return;
+ strmSeriesRefreshAt=Date.now();
+ fetch('/api/strm.php?action=detail&id='+encodeURIComponent(mediaId),{credentials:'same-origin'}).then(function(response){return response.json();}).then(function(payload){
+  if(strmSeriesActiveKey!==key||!payload||!payload.success||!payload.data)return;
+  var data=payload.data,base=Number(data.id||mediaId)||mediaId,mediaType=String(data.mediaType||'').toLowerCase();
+  strmSeriesRefreshKey=key;
+  strmMeta=Object.assign({},data,{
+   title:String(data.name||data.title||room.series_name||'strm 媒体'),
+   releaseYear:String(data.year||''),
+   mediaType:mediaType,
+   type:mediaType==='movie'?'Movie':(mediaType==='tv'?'Series':String(data.type||''))
+  });
+  strmMediaId=base;
+  mediaItems=buildStrmMediaItems(strmMeta);
+  var episodeId=Number(room.source_episode||0),episodeNo=Number(room.episode_number||0);
+  var target=mediaItems.find(function(item){return Number(item.strmEpisodeId)===episodeId;})||mediaItems.find(function(item){return Number(item.episode_number)===episodeNo;})||mediaItems[0];
+  if(target){pendingMediaId=Number(target.id);loadedMediaId=Number(target.id);}
+  renderStrmMeta();
+  renderEpisodes();
+  document.title=strmMeta.title||room.file_name||'withU Watch';
+  var url='/watch_play.php?source=strm&id='+encodeURIComponent(base)+(episodeId>0?'&episode='+encodeURIComponent(episodeId):'');
+  if(location.pathname+location.search!==url){try{history.replaceState(null,'',url);}catch(e){}}
+ }).catch(function(){});
+}
  function applyRoom(payload){
   if(!payload||!payload.room)return;
   var room=payload.room;
-  if(room.media_id&&!findMediaItem(room.media_id)){
+  strmSeriesActiveKey=strmRoomSeriesKey(room);
+  var seriesChanged=strmMode&&!localOnly&&strmSeriesChanged(room);
+  if(seriesChanged){
+   refreshStrmSeries(room);
+  }else if(room.media_id&&!findMediaItem(room.media_id)){
    mergeMediaItems([Object.assign({},room,{id:room.media_id})],false);
    loadMediaLibrary({current_id:room.media_id,quiet:true});
   }
@@ -1453,8 +1647,7 @@ function sendHeartbeat(){if(localOnly||!roomJoined||!code)return;watchRequest('h
   pendingMediaId=Number(room.media_id);
    if(changed){
     document.title=room.file_name||'withU Watch';
-   renderEpisodes();
-   renderRecommendations();
+   if(!seriesChanged){renderEpisodes();renderRecommendations();}
     var localSwitchAutoplay=localAutoplayRequest;
     localAutoplayRequest=false;
     setPlayerSource(room.url||'',room.file_name||initialName,false,false,room.playback_state==='playing'||localSwitchAutoplay,localSwitchAutoplay);

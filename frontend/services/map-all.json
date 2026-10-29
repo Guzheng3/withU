@@ -4,6 +4,17 @@
     "milestones": [],
     "moments": [],
     "messages": [],
-    "albums": [],
+    "albums": [
+        {
+            "name": "我们的恋爱相册",
+            "code": "love-archive",
+            "image": "/uploads/albums/love-archive/2026040601.jpg",
+            "thumb": "/uploads/albums/love-archive/thumbs/2026040601.jpg",
+            "date": "2025-12-13",
+            "city": "",
+            "coords": [],
+            "desc": "从 2025 年 12 月 13 日开始，记录我们的每一次见面、日落与日常。"
+        }
+    ],
     "events": []
 }
