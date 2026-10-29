@@ -368,6 +368,11 @@ body.watch-page a{color:inherit}
   font-weight:700;
 }
 #recent .empty{min-height:190px}
+/* 媒体库空列表：不显示虚线边框（电影 / 剧集网格） */
+#strmGridMovie > .empty,
+#strmGridTv > .empty{
+  border:0;
+}
 @media(max-width:760px){
   #recent,#strm{padding:1.05rem 1rem 1.15rem;border-radius:16px;margin:1.1rem 0 1.3rem}
   #recent .section-head h2,#strm .section-head h2{font-size:1.12rem}
