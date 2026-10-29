@@ -2067,3 +2067,40 @@ html body.bg-pdot-vignette .withu-home .withu-home-weather-user-pill .withu-home
 .withu-tab-template-v5-container .withu-base-nav-item.active {
     color: #fff !important;
 }
+
+/* ============================================================
+   23. 导航激活指示器：恢复 lgnewui 珊瑚红
+   ------------------------------------------------------------
+   - 参照 lgnewui-nav-indicator 的 #f87171
+   - 只恢复强调色与悬停色，冷白玻璃底和文字层级保持不变
+   ============================================================ */
+
+.withu-nav-island-item:not(.active):hover {
+    background-color: rgba(248, 113, 113, 0.08) !important;
+    color: #c94f4f !important;
+}
+
+.withu-nav-island-item.active {
+    text-shadow: 0 1px 3px rgba(120, 30, 40, 0.3);
+}
+
+.withu-nav-island-item.active i {
+    filter: drop-shadow(0 2px 6px rgba(120, 30, 40, 0.35));
+}
+
+.withu-nav-indicator {
+    background: #f87171 !important;
+    box-shadow:
+        0 8px 20px -8px rgba(248, 113, 113, 0.72),
+        inset 0 1px 0 rgba(255, 255, 255, 0.4) !important;
+}
+
+.withu-nav-island-item.nav-home::before,
+.withu-nav-island-item.nav-home::after {
+    background-color: rgba(248, 113, 113, 0.14);
+}
+
+.withu-tab-template-v5-indicator {
+    background: #f87171 !important;
+    box-shadow: 0 10px 24px -10px rgba(248, 113, 113, 0.82) !important;
+}
