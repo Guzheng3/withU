@@ -1922,3 +1922,53 @@ html body.bg-pdot-vignette #pjax-container .withu-home .withu-epilogue__card {
             rgba(255, 255, 255, 0.55) 140px
         ) !important;
 }
+
+/* ============================================================
+   20. 全站内容卡背景统一
+   ------------------------------------------------------------
+   - 相册、留言、清单、点滴、轨迹、详情页等常规内容卡
+     统一使用相册空状态的“柔玫瑰光 + 半透明白”背景
+   - 天气、清单进度、纪念日等彩色功能卡与图片卡保持原设计
+   ============================================================ */
+
+html body.bg-pdot-vignette #pjax-container :is(
+    .withu-card,
+    .withu-article-card-base,
+    .withu-time-line-card,
+    .love-card,
+    .MessageCard,
+    .withu-detail-card,
+    .withu-detail-article-card,
+    .withu-detail-header-card,
+    .withu-detail-nav-card,
+    .withu-chat-device,
+    .withu-no-data:not(.withu-content)
+) {
+    background:
+        radial-gradient(circle at 50% 0%, rgba(255, 227, 233, 0.55), transparent 62%),
+        rgba(255, 255, 255, 0.55) !important;
+}
+
+/* 首页常规内容卡；彩色功能卡与图片卡不在此列 */
+html body.bg-pdot-vignette #pjax-container .withu-home :is(
+    .withu-event-card,
+    .withu-journal-card,
+    .withu-day-fusion-card,
+    .withu-home-message-card
+) {
+    background:
+        radial-gradient(circle at 50% 0%, rgba(255, 227, 233, 0.55), transparent 62%),
+        rgba(255, 255, 255, 0.55) !important;
+}
+
+/* 详情页导航卡保留悬停反馈 */
+html body.bg-pdot-vignette #pjax-container .withu-detail-nav-card:hover {
+    background:
+        radial-gradient(circle at 50% 0%, rgba(255, 227, 233, 0.68), transparent 62%),
+        rgba(255, 255, 255, 0.7) !important;
+}
+
+/* 详情页头图卡内部的白色底不再遮住统一背景 */
+html body.bg-pdot-vignette #pjax-container .withu-detail-header-card .withu-detail-header-bg {
+    background: transparent !important;
+}
