@@ -18,6 +18,7 @@
         _requestSeq: 0,
         _skeletonTimers: [],
         _previousVisibleSelector: '#list_data',
+        _tabResizeBound: false,
 
         /**
          * 初始化模块
@@ -45,8 +46,17 @@
                 this._initialized = true;
             }
             
-            // 初始化 iOS 风格滑块位置
+            // 初始化 iOS 风格滑块位置（PJAX 下需等样式/布局稳定）
             this._initTabSlider();
+            window.setTimeout(() => this._initTabSlider(), 120);
+            window.setTimeout(() => this._initTabSlider(), 400);
+            if (document.fonts && document.fonts.ready) {
+                document.fonts.ready.then(() => this._initTabSlider()).catch(() => {});
+            }
+            if (!this._tabResizeBound) {
+                this._tabResizeBound = true;
+                window.addEventListener('resize', () => this._initTabSlider(), { passive: true });
+            }
             
             // 每次都重新初始化轮播（延迟确保 DOM 完全渲染）
             setTimeout(() => {
@@ -281,13 +291,27 @@
         /**
          * 初始化 iOS 风格 Tab 滑块位置
          */
-        _initTabSlider() {
+        _initTabSlider(attempt = 0) {
             const activeTab = document.querySelector('.LgLoveList-tab.LgLoveList-tab-active');
             const slider = document.querySelector('.LgLoveList-tab-slider');
-            if (activeTab && slider) {
-                slider.style.width = activeTab.offsetWidth + 'px';
-                slider.style.transform = 'translateX(' + activeTab.offsetLeft + 'px)';
+            const container = document.querySelector('.LgLoveList-tab-container');
+            if (!activeTab || !slider || !container) return;
+
+            const width = activeTab.offsetWidth;
+            const maxWidth = container.clientWidth;
+            // PJAX 刚插入时样式可能尚未生效，tab 会被拉成整行，先等下一帧再测
+            if (!width || width > maxWidth) {
+                if (attempt < 40) {
+                    requestAnimationFrame(() => this._initTabSlider(attempt + 1));
+                } else {
+                    slider.style.width = '0px';
+                    slider.style.transform = 'translateX(0)';
+                }
+                return;
             }
+
+            slider.style.width = width + 'px';
+            slider.style.transform = 'translateX(' + activeTab.offsetLeft + 'px)';
         },
 
         /**
@@ -295,10 +319,14 @@
          */
         _moveSliderTo(tabEl) {
             const slider = document.querySelector('.LgLoveList-tab-slider');
-            if (slider && tabEl) {
-                slider.style.width = tabEl.offsetWidth + 'px';
-                slider.style.transform = 'translateX(' + tabEl.offsetLeft + 'px)';
-            }
+            const container = document.querySelector('.LgLoveList-tab-container');
+            if (!slider || !tabEl || !container) return;
+
+            const width = tabEl.offsetWidth;
+            if (!width || width > container.clientWidth) return;
+
+            slider.style.width = width + 'px';
+            slider.style.transform = 'translateX(' + tabEl.offsetLeft + 'px)';
         },
 
         /**

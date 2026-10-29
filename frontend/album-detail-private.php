@@ -509,7 +509,7 @@ if (typeof window.initPrivatePage === 'function') window.initPrivatePage();
 <script src="/Style/LoveListStyle/carousel.umd.js?wm=4c668768&v=1.0.74"></script>
 <script src="/Style/LoveListStyle/carousel.thumbs.umd.js?wm=4c668768&v=1.0.74"></script>
 <script src="/Style/LoveListStyle/fancybox.umd.js?wm=4c668768&v=1.0.74"></script>
-<script src="/assets/js/page-lovelist.js?wm=4c668768&v=1.0.74"></script>
+<script src="/assets/js/page-lovelist.js?wm=4c668768&v=20261029-slider"></script>
 <script src="/assets/js/page-index.js?v=20261026gps"></script>
 <script src="/assets/js/page-detail.js?wm=4c668768&v=1.0.74"></script>
 <script src="/assets/js/page-album-detail.js?wm=4c668768&v=1.0.74"></script>

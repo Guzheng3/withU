@@ -1503,7 +1503,7 @@ html.withu-subpage #homePage.wrap{height:clamp(300px,38vh,460px)!important;min-h
 <script src="Style/LoveListStyle/carousel.umd.js"></script>
 <script src="Style/LoveListStyle/carousel.thumbs.umd.js"></script>
 <script src="Style/LoveListStyle/fancybox.umd.js"></script>
-<script src="assets/js/page-lovelist.js"></script>
+<script src="assets/js/page-lovelist.js?v=20261029-slider"></script>
 <script src="assets/js/page-index.js?v=20261028weather2"></script>
 <script src="assets/js/page-timetable.js?v=20261027-weather"></script>
 <script src="assets/js/page-detail.js"></script>

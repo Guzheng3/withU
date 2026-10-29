@@ -731,7 +731,7 @@ if (typeof window.initPrivatePage === 'function') window.initPrivatePage();
 <script src="/Style/LoveListStyle/carousel.umd.js"></script>
 <script src="/Style/LoveListStyle/carousel.thumbs.umd.js"></script>
 <script src="/Style/LoveListStyle/fancybox.umd.js"></script>
-<script src="/assets/js/page-lovelist.js"></script>
+<script src="/assets/js/page-lovelist.js?v=20261029-slider"></script>
 <script src="/assets/js/page-index.js?v=20261026gps"></script>
 <script src="/assets/js/page-detail.js"></script>
 <script src="/assets/js/page-album-detail.js"></script>
