@@ -18,7 +18,9 @@ $city = trim((string)($_GET['city'] ?? ''));
 $slot = (int)($_GET['slot'] ?? 1);
 // 仅当详情弹层请求时才附带预报，避免卡片轮询额外消耗和风额度
 $includeRaw = strtolower(trim((string)($_GET['include'] ?? '')));
-$wantForecast = $includeRaw !== '' && in_array('forecast', array_map('trim', explode(',', $includeRaw)), true);
+$includeParts = $includeRaw !== '' ? array_map('trim', explode(',', $includeRaw)) : [];
+$wantForecast = in_array('forecast', $includeParts, true);
+$wantHistory = in_array('history', $includeParts, true);
 
 /** 拿不到真实天气时如实返回「不可用」，不再使用模拟数据。 */
 function outputFallback(): void
@@ -163,6 +165,26 @@ if ($wantForecast) {
         $data['daily'] = $dailyForecast['data']['daily'];
     }
     $data['forecast'] = true;
+}
+
+// 详情弹层：过去 7 天历史天气（和风时光机，可能因订阅不可用而为空）
+if ($wantHistory) {
+    $past = [];
+    for ($i = 7; $i >= 1; $i--) {
+        $historyDate = date('Ymd', strtotime("-{$i} days"));
+        $historyResult = withu_weather_historical($lat, $lng, ['date' => $historyDate]);
+        if (empty($historyResult['success'])) {
+            // 时光机未订阅或上游不可达时，不再连续等待后续日期
+            break;
+        }
+        if (!empty($historyResult['data'])) {
+            $past[] = $historyResult['data'];
+        }
+    }
+    if ($past) {
+        $data['past'] = $past;
+    }
+    $data['history'] = true;
 }
 
 echo json_encode(['code' => 200, 'data' => $data], JSON_UNESCAPED_UNICODE);

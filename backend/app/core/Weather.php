@@ -609,7 +609,7 @@ if (!function_exists('withu_weather_cached_api')) {
      * 带文件缓存的 API 请求：先读新鲜缓存，失败时回退 24h 内的旧缓存。
      * 缓存 key 不包含 Key/Token/私钥，避免凭据落盘。
      */
-    function withu_weather_cached_api(array $cfg, string $path, array $query, int $ttl): array
+    function withu_weather_cached_api(array $cfg, string $path, array $query, int $ttl, int $timeout = 8): array
     {
         $cacheKey = ($cfg['host'] ?? '') . '|' . $path . '|' . http_build_query($query, '', '&', PHP_QUERY_RFC3986);
 
@@ -620,7 +620,7 @@ if (!function_exists('withu_weather_cached_api')) {
             return $cached;
         }
 
-        $fresh = withu_weather_api($cfg, $path, $query);
+        $fresh = withu_weather_api($cfg, $path, $query, $timeout);
         if (!empty($fresh['success'])) {
             $fresh['cached'] = false;
             $fresh['stale'] = false;
@@ -1121,6 +1121,111 @@ if (!function_exists('withu_weather_daily')) {
         $response['data'] = ['daily' => $daily];
         $response['location'] = $location;
         $response['days'] = $days;
+        return $response;
+    }
+}
+
+if (!function_exists('withu_weather_historical')) {
+    /**
+     * 历史天气（和风「时光机」）。
+     * 仅支持最近 10 天且不含今天；接口要求 LocationID，因此先用坐标反查城市 ID。
+     */
+    function withu_weather_historical($lat, $lng, array $options = []): array
+    {
+        $cfg = $options['cfg'] ?? withu_weather_config();
+        if (empty($cfg['ready'])) {
+            return withu_weather_error('weather_not_configured', '天气服务尚未配置', 503);
+        }
+        if (!withu_weather_valid_coords($lat, $lng)) {
+            return withu_weather_error('weather_invalid_params', '经纬度参数不正确', 400);
+        }
+
+        $date = preg_replace('/\D/', '', (string)($options['date'] ?? ''));
+        if (strlen($date) !== 8) {
+            return withu_weather_error('weather_invalid_params', '历史日期格式不正确', 400);
+        }
+        $target = DateTimeImmutable::createFromFormat('!Ymd', $date);
+        if (!$target) {
+            return withu_weather_error('weather_invalid_params', '历史日期格式不正确', 400);
+        }
+        $today = new DateTimeImmutable('today');
+        $diffDays = (int)$today->diff($target)->format('%r%a');
+        if ($diffDays >= 0 || $diffDays < -10) {
+            return withu_weather_error('weather_invalid_params', '只能查询最近 10 天的历史天气', 400);
+        }
+
+        $lat = (float)$lat;
+        $lng = (float)$lng;
+        $lang = withu_weather_sanitize_lang($options['lang'] ?? $cfg['lang'], $cfg['lang']);
+        $unit = withu_weather_sanitize_unit($options['unit'] ?? $cfg['unit'], $cfg['unit']);
+
+        $lookup = withu_weather_lookup(withu_weather_location_param($lat, $lng), [
+            'cfg' => $cfg,
+            'number' => 1,
+            'lang' => $lang,
+        ]);
+        $locationId = (string)($lookup['data']['locations'][0]['id'] ?? '');
+        if ($locationId === '') {
+            return withu_weather_error('weather_no_location', '无法定位历史天气城市', 404);
+        }
+
+        $response = withu_weather_cached_api($cfg, '/v7/historical/weather', [
+            'location' => $locationId,
+            'date' => $date,
+            'lang' => $lang,
+            'unit' => $unit,
+        ], 86400, 4);
+        if (empty($response['success'])) {
+            return $response;
+        }
+
+        $raw = $response['data']['weatherDaily'] ?? null;
+        if (is_array($raw) && isset($raw[0])) {
+            $raw = $raw[0];
+        }
+        if (!is_array($raw)) {
+            return withu_weather_error('weather_no_data', '暂无历史天气数据', 404);
+        }
+
+        $hourly = $response['data']['weatherHourly'] ?? [];
+        $icon = '';
+        $text = '';
+        $fallbackHourly = null;
+        if (is_array($hourly)) {
+            foreach ($hourly as $item) {
+                if (!is_array($item)) {
+                    continue;
+                }
+                if ($fallbackHourly === null) {
+                    $fallbackHourly = $item;
+                }
+                $time = withu_weather_parse_time($item['time'] ?? null);
+                if ($time === null) {
+                    continue;
+                }
+                if ((int)$time->format('G') >= 12) {
+                    $icon = trim((string)($item['icon'] ?? ''));
+                    $text = trim((string)($item['text'] ?? ''));
+                    break;
+                }
+            }
+            if ($icon === '' && is_array($fallbackHourly)) {
+                $icon = trim((string)($fallbackHourly['icon'] ?? ''));
+                $text = trim((string)($fallbackHourly['text'] ?? ''));
+            }
+        }
+
+        $response['data'] = [
+            'fxDate' => $target->format('Y-m-d'),
+            'tempMax' => withu_weather_int($raw['tempMax'] ?? null),
+            'tempMin' => withu_weather_int($raw['tempMin'] ?? null),
+            'iconDay' => $icon !== '' ? $icon : '999',
+            'textDay' => $text !== '' ? $text : '—',
+            'humidity' => withu_weather_int($raw['humidity'] ?? null),
+            'precip' => withu_weather_float($raw['precip'] ?? null),
+            'pressure' => withu_weather_int($raw['pressure'] ?? null),
+        ];
+        $response['date'] = $target->format('Y-m-d');
         return $response;
     }
 }

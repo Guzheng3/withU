@@ -668,6 +668,7 @@
         _activeCard: null,
         _lastFocus: null,
         _forecastRequestId: 0,
+        _cloudMapState: null,
 
         init() {
             if (config.weatherEnabled === false) {
@@ -978,11 +979,15 @@
             const closeBtn = this._sheetEl.querySelector('.wu-weather-modal__close');
             if (closeBtn) closeBtn.focus({ preventScroll: true });
 
+            this._initCloudMap(current);
             this._loadForecast(card, current);
+            this._loadHistory(card);
         },
 
         closeDetail() {
             if (!this._modalEl) return;
+            this._stopCloudMap();
+            this._forecastRequestId++;
             this._modalEl.classList.remove('is-open');
             this._modalEl.setAttribute('aria-hidden', 'true');
             document.documentElement.classList.remove('wu-weather-modal-open');
@@ -1003,6 +1008,7 @@
             const iconEl = card.querySelector('.withu-home-weather-icon-main');
             const iconMatch = iconEl ? String(iconEl.className).match(/qi-[0-9]+-fill/) : null;
             const dash = (value) => value === undefined || value === null || value === '' || value === '--';
+            const num = (value) => (dash(value) || isNaN(Number(value))) ? null : Number(value);
 
             return {
                 city: !dash(payload.city) ? payload.city : (text('.withu-home-weather-text-city') || card.getAttribute('data-location-name') || '当前位置'),
@@ -1016,11 +1022,14 @@
                     ? `${payload.windDir}${!dash(payload.windScale) ? ' ' + payload.windScale + '级' : ''}`
                     : '—',
                 obsTime: payload.obsTime || '',
-                updated: text('.withu-home-weather-time-tag') || '--'
+                updated: text('.withu-home-weather-time-tag') || '--',
+                cloud: num(payload.cloud),
+                precip: num(payload.precip)
             };
         },
 
         _renderShell(current) {
+            this._stopCloudMap();
             const dateText = this._formatModalDate(current.obsTime, current.updated);
             const tempValue = String(current.temp).replace('°', '');
             const icon = this._escapeHtml(current.icon);
@@ -1042,6 +1051,14 @@
                     <div class="wu-weather-modal__now-icon"><i class="${icon}"></i></div>
                 </section>
                 <section class="wu-weather-modal__section">
+                    <div class="wu-weather-modal__section-head"><span>云图</span><span data-wu-weather-cloud-label>实时云图</span></div>
+                    <div class="wu-weather-cloudmap">
+                        <canvas class="wu-weather-cloudmap__canvas" data-wu-weather-cloudmap role="img" aria-label="实时云量示意图"></canvas>
+                        <div class="wu-weather-cloudmap__pin"><i class="ph-fill ph-map-pin"></i><span>当前位置</span></div>
+                        <div class="wu-weather-cloudmap__legend"><span>少云</span><span class="wu-weather-cloudmap__bar"></span><span>多云</span></div>
+                    </div>
+                </section>
+                <section class="wu-weather-modal__section">
                     <div class="wu-weather-modal__section-head"><span>逐小时预报</span><span>未来 24 小时</span></div>
                     <div class="wu-weather-modal__hourly" data-wu-weather-hourly>
                         <div class="wu-weather-modal__loading"><span class="wu-weather-spinner"></span><span>正在获取逐小时天气…</span></div>
@@ -1054,6 +1071,12 @@
                     </div>
                 </section>
                 <section class="wu-weather-modal__section">
+                    <div class="wu-weather-modal__section-head"><span>过去 7 天</span><span>历史天气</span></div>
+                    <div class="wu-weather-modal__daily" data-wu-weather-past>
+                        <div class="wu-weather-modal__loading"><span class="wu-weather-spinner"></span><span>正在获取历史天气…</span></div>
+                    </div>
+                </section>
+                <section class="wu-weather-modal__section">
                     <div class="wu-weather-modal__section-head"><span>天气详情</span></div>
                     <div class="wu-weather-modal__details" data-wu-weather-details>
                         ${this._detailItem('ph-thermometer-simple', '体感温度', current.feels)}
@@ -1062,15 +1085,22 @@
                         ${this._detailItem('ph-eye', '能见度', current.vis)}
                     </div>
                 </section>
-                <p class="wu-weather-modal__foot">数据来自和风天气 · 仅供日常参考</p>
+                <p class="wu-weather-modal__foot">数据来自和风天气 · 云图为云量示意 · 仅供日常参考</p>
+                <button type="button" class="wu-weather-modal__done" data-wu-weather-close>完成</button>
             `;
         },
 
         async _loadForecast(card, current) {
             const requestId = ++this._forecastRequestId;
+            const controller = new AbortController();
+            const timer = window.setTimeout(() => controller.abort(), 10000);
             try {
                 const url = this._buildUrl(card) + '&include=forecast';
-                const resp = await fetch(url, { headers: { 'Accept': 'application/json' }, cache: 'no-store' });
+                const resp = await fetch(url, {
+                    headers: { 'Accept': 'application/json' },
+                    cache: 'no-store',
+                    signal: controller.signal
+                });
                 if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
                 const json = await resp.json().catch(() => null);
                 if (requestId !== this._forecastRequestId) return;
@@ -1079,6 +1109,32 @@
             } catch (e) {
                 if (requestId !== this._forecastRequestId) return;
                 this._showForecastEmpty();
+            } finally {
+                window.clearTimeout(timer);
+            }
+        },
+
+        async _loadHistory(card) {
+            const requestId = this._forecastRequestId;
+            const controller = new AbortController();
+            const timer = window.setTimeout(() => controller.abort(), 12000);
+            try {
+                const url = this._buildUrl(card) + '&include=history';
+                const resp = await fetch(url, {
+                    headers: { 'Accept': 'application/json' },
+                    cache: 'no-store',
+                    signal: controller.signal
+                });
+                if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
+                const json = await resp.json().catch(() => null);
+                if (requestId !== this._forecastRequestId) return;
+                if (!json || json.code !== 200 || !json.data) throw new Error('No Data');
+                this._hydrateHistory(Array.isArray(json.data.past) ? json.data.past : []);
+            } catch (e) {
+                if (requestId !== this._forecastRequestId) return;
+                this._hydrateHistory([]);
+            } finally {
+                window.clearTimeout(timer);
             }
         },
 
@@ -1110,6 +1166,8 @@
                 if (dateEl) dateEl.textContent = this._formatModalDate(data.obsTime, current.updated);
             }
 
+            this._updateCloudMap(data);
+
             const rangeEl = this._sheetEl.querySelector('[data-wu-weather-range]');
             if (rangeEl) {
                 rangeEl.textContent = (today && !dash(today.tempMax) && !dash(today.tempMin))
@@ -1126,7 +1184,7 @@
                         const code = hourly.weather_code ? hourly.weather_code[index] : null;
                         const pop = hourly.precipitation_probability ? hourly.precipitation_probability[index] : null;
                         const popText = !dash(pop) && Number(pop) > 0 ? `${pop}%` : '';
-                        return `<div class="wu-weather-modal__hour${index === 0 ? ' is-now' : ''}">
+                        return `<div class="wu-weather-modal__hour${index === 0 ? ' is-now' : ''}" style="--i:${index}">
                             <span class="wu-weather-modal__hour-time">${this._escapeHtml(this._formatHour(time, index))}</span>
                             <i class="ph-fill ${this._iconForWmo(code)}"></i>
                             <span class="wu-weather-modal__hour-temp">${dash(temp) ? '--°' : Math.round(Number(temp)) + '°'}</span>
@@ -1146,7 +1204,7 @@
                         const iconClass = iconCode ? `qi-${iconCode}-fill` : 'qi-999-fill';
                         const max = dash(item.tempMax) ? '--°' : `${item.tempMax}°`;
                         const min = dash(item.tempMin) ? '--°' : `${item.tempMin}°`;
-                        return `<div class="wu-weather-modal__day">
+                        return `<div class="wu-weather-modal__day" style="--i:${index}">
                             <span class="wu-weather-modal__day-name">${this._escapeHtml(this._formatDay(item.fxDate, index))}</span>
                             <i class="${iconClass}"></i>
                             <span class="wu-weather-modal__day-desc">${this._escapeHtml(item.textDay || '')}</span>
@@ -1181,6 +1239,302 @@
             if (hourlyEl) hourlyEl.innerHTML = '<div class="wu-weather-modal__empty">暂无逐小时预报数据</div>';
             if (dailyEl) dailyEl.innerHTML = '<div class="wu-weather-modal__empty">暂无每日预报数据</div>';
             if (rangeEl) rangeEl.textContent = '当前天气';
+        },
+
+        _hydrateHistory(past) {
+            const pastEl = this._sheetEl.querySelector('[data-wu-weather-past]');
+            if (!pastEl) return;
+            const dash = (value) => value === undefined || value === null || value === '' || value === '--';
+
+            if (!Array.isArray(past) || !past.length) {
+                pastEl.innerHTML = '<div class="wu-weather-modal__empty">暂无历史天气数据</div>';
+                return;
+            }
+
+            const today = new Date();
+            today.setHours(0, 0, 0, 0);
+            const rows = past.slice().reverse();
+            pastEl.innerHTML = rows.map((item, index) => {
+                const iconCode = String(item.iconDay || '').replace(/[^\d]/g, '');
+                const iconClass = iconCode ? `qi-${iconCode}-fill` : 'qi-999-fill';
+                const date = new Date(`${item.fxDate}T00:00:00`);
+                let label = '—';
+                if (!isNaN(date.getTime())) {
+                    const diff = Math.round((today - date) / 86400000);
+                    if (diff === 1) label = '昨天';
+                    else if (diff === 2) label = '前天';
+                    else if (diff > 0) label = `${diff}天前`;
+                    else label = this._formatDay(item.fxDate, index);
+                }
+                const max = dash(item.tempMax) ? '--°' : `${item.tempMax}°`;
+                const min = dash(item.tempMin) ? '--°' : `${item.tempMin}°`;
+                return `<div class="wu-weather-modal__day" style="--i:${index}">
+                    <span class="wu-weather-modal__day-name">${this._escapeHtml(label)}</span>
+                    <i class="${iconClass}"></i>
+                    <span class="wu-weather-modal__day-desc">${this._escapeHtml(item.textDay || '')}</span>
+                    <span class="wu-weather-modal__day-temp"><b>${max}</b><em>${min}</em></span>
+                </div>`;
+            }).join('');
+        },
+
+        /* ---------- 云图 Canvas ---------- */
+        _cloudCoverFrom(data) {
+            const raw = data && data.cloud;
+            if (raw !== undefined && raw !== null && raw !== '' && !isNaN(Number(raw))) {
+                return Math.max(0, Math.min(100, Math.round(Number(raw))));
+            }
+            const desc = String((data && data.desc) || '');
+            if (!desc || desc === '未知' || desc === '天气数据暂不可用' || desc === '--') return null;
+            if (/晴/.test(desc)) return 15;
+            if (/多云|少云/.test(desc)) return 55;
+            if (/阴/.test(desc)) return 85;
+            if (/雨|雪|雷/.test(desc)) return 95;
+            return 60;
+        },
+
+        _updateCloudMapLabel(cover) {
+            const label = this._sheetEl.querySelector('[data-wu-weather-cloud-label]');
+            if (!label) return;
+            label.textContent = (cover !== null && cover !== undefined && !isNaN(Number(cover)))
+                ? `实时云量 ${Math.round(Number(cover))}%`
+                : '实时云图';
+        },
+
+        _initCloudMap(current) {
+            this._stopCloudMap();
+            const canvas = this._sheetEl.querySelector('[data-wu-weather-cloudmap]');
+            const ctx = canvas ? canvas.getContext('2d') : null;
+            if (!canvas || !ctx) return;
+
+            const reduced = !!(window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches);
+            const state = {
+                canvas,
+                ctx,
+                dpr: Math.min(window.devicePixelRatio || 1, 2),
+                width: 1,
+                height: 1,
+                clouds: [],
+                particles: [],
+                cloudCover: this._cloudCoverFrom(current),
+                desc: String((current && current.desc) || ''),
+                rain: /雨|雷/.test(String((current && current.desc) || '')),
+                snow: /雪/.test(String((current && current.desc) || '')),
+                t: 0,
+                last: 0,
+                raf: 0,
+                observer: null,
+                reduced
+            };
+            this._cloudMapState = state;
+
+            this._resizeCloudMap(state);
+            this._buildCloudParticles(state);
+            this._updateCloudMapLabel(state.cloudCover);
+
+            if (reduced) {
+                this._drawCloudMap(state, 0);
+            } else {
+                const loop = (ts) => {
+                    if (!this._cloudMapState || this._cloudMapState !== state) return;
+                    if (!state.last) state.last = ts;
+                    const dt = Math.min(0.05, (ts - state.last) / 1000);
+                    state.last = ts;
+                    state.t += dt;
+                    this._drawCloudMap(state, dt);
+                    state.raf = window.requestAnimationFrame(loop);
+                };
+                state.raf = window.requestAnimationFrame(loop);
+            }
+
+            if (typeof ResizeObserver !== 'undefined') {
+                state.observer = new ResizeObserver(() => {
+                    if (!this._cloudMapState || this._cloudMapState !== state) return;
+                    this._resizeCloudMap(state);
+                    this._buildCloudParticles(state);
+                    if (state.reduced) this._drawCloudMap(state, 0);
+                });
+                state.observer.observe(canvas);
+            }
+        },
+
+        _updateCloudMap(data) {
+            const state = this._cloudMapState;
+            if (!state) return;
+            const cover = this._cloudCoverFrom(data);
+            const desc = String((data && data.desc) || state.desc || '');
+            state.cloudCover = cover;
+            state.desc = desc;
+            state.rain = /雨|雷/.test(desc);
+            state.snow = /雪/.test(desc);
+            this._updateCloudMapLabel(cover);
+            if (state.reduced) this._drawCloudMap(state, 0);
+        },
+
+        _resizeCloudMap(state) {
+            const rect = state.canvas.getBoundingClientRect();
+            const width = Math.max(1, Math.round(rect.width || state.canvas.clientWidth || 0));
+            const height = Math.max(1, Math.round(rect.height || state.canvas.clientHeight || 0));
+            state.width = width;
+            state.height = height;
+            state.canvas.width = Math.round(width * state.dpr);
+            state.canvas.height = Math.round(height * state.dpr);
+            state.ctx.setTransform(state.dpr, 0, 0, state.dpr, 0, 0);
+        },
+
+        _buildCloudParticles(state) {
+            const w = state.width;
+            const h = state.height;
+            state.clouds = Array.from({ length: 20 }, () => ({
+                x: Math.random() * w,
+                y: Math.random() * h * 0.82 + h * 0.04,
+                rx: 16 + Math.random() * 34,
+                ry: 7 + Math.random() * 15,
+                alpha: 0.1 + Math.random() * 0.22,
+                speed: 3 + Math.random() * 7,
+                phase: Math.random() * Math.PI * 2
+            }));
+            state.particles = Array.from({ length: 36 }, () => ({
+                x: Math.random() * w,
+                y: Math.random() * h,
+                speed: 34 + Math.random() * 55,
+                len: 5 + Math.random() * 10,
+                alpha: 0.14 + Math.random() * 0.26,
+                size: 0.8 + Math.random() * 1.8
+            }));
+        },
+
+        _drawCloudMap(state, dt) {
+            const ctx = state.ctx;
+            const w = state.width;
+            const h = state.height;
+            if (!w || !h) return;
+            const cover = (state.cloudCover === null || state.cloudCover === undefined) ? 55 : state.cloudCover;
+
+            ctx.clearRect(0, 0, w, h);
+
+            const bg = ctx.createLinearGradient(0, 0, w, h);
+            bg.addColorStop(0, '#123e68');
+            bg.addColorStop(0.55, '#0d2b4d');
+            bg.addColorStop(1, '#071a30');
+            ctx.fillStyle = bg;
+            ctx.fillRect(0, 0, w, h);
+
+            // 抽象地图网格与陆地
+            ctx.save();
+            ctx.strokeStyle = 'rgba(173, 216, 255, 0.10)';
+            ctx.lineWidth = 1;
+            const stepX = Math.max(34, w / 12);
+            const stepY = Math.max(28, h / 6);
+            for (let x = -h; x < w + h; x += stepX) {
+                ctx.beginPath();
+                ctx.moveTo(x, 0);
+                ctx.lineTo(x + h * 0.38, h);
+                ctx.stroke();
+            }
+            for (let y = 0; y <= h; y += stepY) {
+                ctx.beginPath();
+                ctx.moveTo(0, y);
+                ctx.lineTo(w, y);
+                ctx.stroke();
+            }
+            ctx.fillStyle = 'rgba(126, 200, 227, 0.07)';
+            ctx.beginPath();
+            ctx.ellipse(w * 0.16, h * 0.72, w * 0.3, h * 0.32, -0.3, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.beginPath();
+            ctx.ellipse(w * 0.8, h * 0.32, w * 0.22, h * 0.25, 0.4, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.restore();
+
+            // 晴朗时的柔和日光
+            if (cover < 45) {
+                const sun = ctx.createRadialGradient(w * 0.82, h * 0.18, 0, w * 0.82, h * 0.18, w * 0.42);
+                sun.addColorStop(0, 'rgba(255, 226, 176, 0.28)');
+                sun.addColorStop(0.45, 'rgba(255, 226, 176, 0.08)');
+                sun.addColorStop(1, 'rgba(255, 226, 176, 0)');
+                ctx.fillStyle = sun;
+                ctx.fillRect(0, 0, w, h);
+            }
+
+            // 云层
+            const count = Math.max(1, Math.min(state.clouds.length, Math.round(1 + (cover / 100) * 17)));
+            for (let i = 0; i < count; i++) {
+                const cloud = state.clouds[i];
+                if (dt) {
+                    cloud.x += cloud.speed * dt;
+                    if (cloud.x - cloud.rx * 2 > w) cloud.x = -cloud.rx * 2;
+                }
+                const cy = cloud.y + Math.sin(state.t * 0.35 + cloud.phase) * 3;
+                const g = ctx.createRadialGradient(cloud.x, cy, 0, cloud.x, cy, cloud.rx);
+                g.addColorStop(0, `rgba(255, 255, 255, ${cloud.alpha})`);
+                g.addColorStop(0.55, `rgba(236, 246, 255, ${cloud.alpha * 0.6})`);
+                g.addColorStop(1, 'rgba(255, 255, 255, 0)');
+                ctx.fillStyle = g;
+                ctx.beginPath();
+                ctx.ellipse(cloud.x, cy, cloud.rx, cloud.ry, 0, 0, Math.PI * 2);
+                ctx.fill();
+                ctx.beginPath();
+                ctx.ellipse(cloud.x - cloud.rx * 0.55, cy + cloud.ry * 0.2, cloud.rx * 0.6, cloud.ry * 0.7, -0.2, 0, Math.PI * 2);
+                ctx.fill();
+                ctx.beginPath();
+                ctx.ellipse(cloud.x + cloud.rx * 0.5, cy + cloud.ry * 0.15, cloud.rx * 0.55, cloud.ry * 0.65, 0.2, 0, Math.PI * 2);
+                ctx.fill();
+            }
+
+            // 雨雪粒子
+            if (state.rain || state.snow) {
+                for (const p of state.particles) {
+                    if (dt) {
+                        p.y += p.speed * dt;
+                        if (p.y > h + 20) {
+                            p.y = -20;
+                            p.x = Math.random() * w;
+                        }
+                    }
+                    if (state.snow) {
+                        ctx.fillStyle = `rgba(255, 255, 255, ${p.alpha})`;
+                        ctx.beginPath();
+                        ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+                        ctx.fill();
+                    } else {
+                        ctx.strokeStyle = `rgba(180, 225, 255, ${p.alpha})`;
+                        ctx.lineWidth = 1;
+                        ctx.beginPath();
+                        ctx.moveTo(p.x, p.y);
+                        ctx.lineTo(p.x - 2, p.y + p.len);
+                        ctx.stroke();
+                    }
+                }
+            }
+
+            // 定位点脉冲
+            const cx = w * 0.5;
+            const cy = h * 0.52;
+            const pulse = 0.5 + 0.5 * Math.sin(state.t * 2);
+            ctx.strokeStyle = `rgba(255, 190, 210, ${0.25 + pulse * 0.35})`;
+            ctx.lineWidth = 1.5;
+            ctx.beginPath();
+            ctx.arc(cx, cy, 8 + pulse * 10, 0, Math.PI * 2);
+            ctx.stroke();
+            ctx.fillStyle = '#ffd7e2';
+            ctx.beginPath();
+            ctx.arc(cx, cy, 2.5, 0, Math.PI * 2);
+            ctx.fill();
+
+            // 轻微暗角
+            const vignette = ctx.createRadialGradient(w * 0.5, h * 0.5, h * 0.2, w * 0.5, h * 0.5, h * 0.9);
+            vignette.addColorStop(0, 'rgba(0, 0, 0, 0)');
+            vignette.addColorStop(1, 'rgba(0, 0, 0, 0.35)');
+            ctx.fillStyle = vignette;
+            ctx.fillRect(0, 0, w, h);
+        },
+
+        _stopCloudMap() {
+            const state = this._cloudMapState;
+            if (!state) return;
+            if (state.raf) window.cancelAnimationFrame(state.raf);
+            if (state.observer) state.observer.disconnect();
+            this._cloudMapState = null;
         },
 
         _detailItem(icon, label, value) {
