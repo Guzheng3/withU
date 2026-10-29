@@ -41,6 +41,14 @@
 - 位置：`frontend/Style/css/withu-v3.css` 第 10 节、第 18 节。
 - 验证：1600px 高度下首页、清单、相册、留言、关于页脚均贴底；1000px 与移动端滚动正常；骨架屏加载态仍能正常显示。
 
+### 6. 播放页简介右侧文字截断
+
+- 现象：`#detailSummary` 内的演职员行被 `white-space: nowrap` + `text-overflow: ellipsis` 强制单行，长名单在右侧出现省略号。
+- 修复：演职员行改为可换行（`white-space: normal`、`overflow: visible`、`text-overflow: clip`），并给演职员文本和简介正文增加 `overflow-wrap: anywhere` / `word-break: break-word`；`is-cast-open` 状态不再限制 `max-height`。
+- 位置：`backend/app/watch_play.php` 的 `.media-detail-v4` 样式段。
+- 验证：播放页需要登录，使用该页真实 v4 CSS 构建夹具验证；1280px 下演职员单行完整显示，390px 下自然换行，`scrollWidth == clientWidth`，无横向溢出、无相邻内容遮挡。
+- 标签：`watch-summary-wrap-v1`。
+
 ## 检查后保留、未改
 
 - 桌面端桌宠漂浮在正文上方：站点既有交互设计，未改动。
@@ -63,6 +71,7 @@
 | `visual-audit-v1` | 本次巡检修复完成 |
 | `footer-bottom-spacing-v1` | 桌面端页脚备案信息留白调整 |
 | `footer-sticky-bottom-v1` | 全站页脚贴底 + 隐藏骨架屏占位修复 |
+| `watch-summary-wrap-v1` | 播放页简介演职员行取消右侧截断 |
 
 回退：
 
