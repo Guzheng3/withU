@@ -34,12 +34,12 @@
 - 位置：`withu-v3.css` 第 18 节。
 - 验证：320 / 390 / 480 / 520 / 640 宽度下徽章与桌宠不重叠，页面无横向溢出。
 
-### 5. 桌面端备案信息贴底
+### 5. 页脚未贴底（短页下方留空）
 
-- 现象：1440px 下版权徽章距页面底部仅约 27px，备案/版权信息显得贴底。
-- 修复：`min-width: 769px` 时给 `.footer-warp` 增加底部留白（`padding-bottom: 4rem`），徽章距底部约 61–63px。
-- 位置：`frontend/Style/css/withu-v3.css` 第 10 节。
-- 验证：首页、清单、留言页脚一致；移动端仍使用原有安全距离，不受影响。
+- 现象：高视口下页脚停在内容末尾，下方留 138–251px 空白；清单页隐藏的骨架屏还额外撑高约 154px。
+- 修复：`body.bg-pdot-vignette` 改为纵向 flex，`.div_marb_7rem-none` 使用 `margin-top: auto`，页脚始终贴住视口底部；未激活的骨架屏 `display: none`，不再参与页面高度；桌面端保留 `4rem` 底部留白。
+- 位置：`frontend/Style/css/withu-v3.css` 第 10 节、第 18 节。
+- 验证：1600px 高度下首页、清单、相册、留言、关于页脚均贴底；1000px 与移动端滚动正常；骨架屏加载态仍能正常显示。
 
 ## 检查后保留、未改
 
@@ -62,6 +62,7 @@
 | `visual-audit-baseline-v1` | 本次巡检前基线 |
 | `visual-audit-v1` | 本次巡检修复完成 |
 | `footer-bottom-spacing-v1` | 桌面端页脚备案信息留白调整 |
+| `footer-sticky-bottom-v1` | 全站页脚贴底 + 隐藏骨架屏占位修复 |
 
 回退：
 

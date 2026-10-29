@@ -1080,7 +1080,19 @@ select:focus {
     padding-bottom: 1.4rem;
 }
 
-/* 桌面端：备案与版权信息不要贴底，留出一段呼吸空间 */
+/* 页脚贴底：内容不足一屏时，整个页脚停在视口底部 */
+body.bg-pdot-vignette {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+body.bg-pdot-vignette > .div_marb_7rem-none {
+    margin-top: auto;
+    flex-shrink: 0;
+}
+
+/* 桌面端：备案与版权信息保留一段底部呼吸空间 */
 @media (min-width: 769px) {
     .footer-warp {
         padding-bottom: 4rem !important;
@@ -1877,4 +1889,10 @@ html body.bg-pdot-vignette #pjax-container .withu-card .withu-no-data {
     html body.bg-pdot-vignette .footer-warp {
         padding-bottom: calc(7rem + 64px) !important;
     }
+}
+
+/* 清单页隐藏的骨架屏仍占绝对定位高度，会把页脚顶起；
+   仅在加载态参与布局，未激活时彻底移出页面高度 */
+.withu-skeleton-screen-wrap:not(.is-active) {
+    display: none !important;
 }
