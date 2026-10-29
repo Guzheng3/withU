@@ -1050,7 +1050,7 @@
                     </div>
                     <div class="wu-weather-modal__now-icon"><i class="${icon}"></i></div>
                 </section>
-                <section class="wu-weather-modal__section">
+                <section class="wu-weather-modal__section" data-wu-weather-cloud-section${this._hasCloudData(current) ? '' : ' hidden'}>
                     <div class="wu-weather-modal__section-head"><span>云图</span><span data-wu-weather-cloud-label>实时云图</span></div>
                     <div class="wu-weather-cloudmap">
                         <canvas class="wu-weather-cloudmap__canvas" data-wu-weather-cloudmap role="img" aria-label="实时云量示意图"></canvas>
@@ -1179,18 +1179,23 @@
             if (hourlyEl) {
                 if (hourly && hourly.time.length) {
                     const times = hourly.time.slice(0, 24);
-                    hourlyEl.innerHTML = times.map((time, index) => {
+                    const temps = times.map((time, index) => {
                         const temp = hourly.temperature_2m ? hourly.temperature_2m[index] : null;
+                        return (temp === null || temp === undefined || temp === '' || isNaN(Number(temp))) ? null : Number(temp);
+                    });
+                    const cards = times.map((time, index) => {
+                        const temp = temps[index];
                         const code = hourly.weather_code ? hourly.weather_code[index] : null;
                         const pop = hourly.precipitation_probability ? hourly.precipitation_probability[index] : null;
                         const popText = !dash(pop) && Number(pop) > 0 ? `${pop}%` : '';
                         return `<div class="wu-weather-modal__hour${index === 0 ? ' is-now' : ''}" style="--i:${index}">
                             <span class="wu-weather-modal__hour-time">${this._escapeHtml(this._formatHour(time, index))}</span>
                             <i class="ph-fill ${this._iconForWmo(code)}"></i>
-                            <span class="wu-weather-modal__hour-temp">${dash(temp) ? '--°' : Math.round(Number(temp)) + '°'}</span>
+                            <span class="wu-weather-modal__hour-temp">${temp === null ? '--°' : Math.round(temp) + '°'}</span>
                             <span class="wu-weather-modal__hour-pop">${popText}</span>
                         </div>`;
                     }).join('');
+                    hourlyEl.innerHTML = `<div class="wu-weather-modal__hourly-track">${this._buildHourlyChart(temps)}<div class="wu-weather-modal__hourly-cards">${cards}</div></div>`;
                 } else {
                     hourlyEl.innerHTML = '<div class="wu-weather-modal__empty">暂无逐小时预报数据</div>';
                 }
@@ -1199,18 +1204,8 @@
             const dailyEl = this._sheetEl.querySelector('[data-wu-weather-daily]');
             if (dailyEl) {
                 if (daily.length) {
-                    dailyEl.innerHTML = daily.map((item, index) => {
-                        const iconCode = String(item.iconDay || '').replace(/[^\d]/g, '');
-                        const iconClass = iconCode ? `qi-${iconCode}-fill` : 'qi-999-fill';
-                        const max = dash(item.tempMax) ? '--°' : `${item.tempMax}°`;
-                        const min = dash(item.tempMin) ? '--°' : `${item.tempMin}°`;
-                        return `<div class="wu-weather-modal__day" style="--i:${index}">
-                            <span class="wu-weather-modal__day-name">${this._escapeHtml(this._formatDay(item.fxDate, index))}</span>
-                            <i class="${iconClass}"></i>
-                            <span class="wu-weather-modal__day-desc">${this._escapeHtml(item.textDay || '')}</span>
-                            <span class="wu-weather-modal__day-temp"><b>${max}</b><em>${min}</em></span>
-                        </div>`;
-                    }).join('');
+                    const labels = daily.map((item, index) => this._formatDay(item.fxDate, index));
+                    dailyEl.innerHTML = this._dailyRowsHtml(daily, labels);
                 } else {
                     dailyEl.innerHTML = '<div class="wu-weather-modal__empty">暂无每日预报数据</div>';
                 }
@@ -1228,6 +1223,9 @@
                 ];
                 if (today && !dash(today.pressure)) items.push(this._detailItem('ph-gauge', '气压', `${today.pressure} hPa`));
                 if (today && !dash(today.uvIndex)) items.push(this._detailItem('ph-sun', '紫外线', today.uvIndex));
+                if (today && today.sunrise) items.push(this._detailItem('ph-sun', '日出', today.sunrise));
+                if (today && today.sunset) items.push(this._detailItem('ph-moon', '日落', today.sunset));
+                if (!dash(data.cloud)) items.push(this._detailItem('ph-cloud', '云量', `${data.cloud}%`));
                 detailsEl.innerHTML = items.join('');
             }
         },
@@ -1254,42 +1252,114 @@
             const today = new Date();
             today.setHours(0, 0, 0, 0);
             const rows = past.slice().reverse();
-            pastEl.innerHTML = rows.map((item, index) => {
-                const iconCode = String(item.iconDay || '').replace(/[^\d]/g, '');
-                const iconClass = iconCode ? `qi-${iconCode}-fill` : 'qi-999-fill';
+            const labels = rows.map((item, index) => {
                 const date = new Date(`${item.fxDate}T00:00:00`);
-                let label = '—';
-                if (!isNaN(date.getTime())) {
-                    const diff = Math.round((today - date) / 86400000);
-                    if (diff === 1) label = '昨天';
-                    else if (diff === 2) label = '前天';
-                    else if (diff > 0) label = `${diff}天前`;
-                    else label = this._formatDay(item.fxDate, index);
-                }
-                const max = dash(item.tempMax) ? '--°' : `${item.tempMax}°`;
-                const min = dash(item.tempMin) ? '--°' : `${item.tempMin}°`;
-                return `<div class="wu-weather-modal__day" style="--i:${index}">
-                    <span class="wu-weather-modal__day-name">${this._escapeHtml(label)}</span>
-                    <i class="${iconClass}"></i>
-                    <span class="wu-weather-modal__day-desc">${this._escapeHtml(item.textDay || '')}</span>
-                    <span class="wu-weather-modal__day-temp"><b>${max}</b><em>${min}</em></span>
-                </div>`;
-            }).join('');
+                if (isNaN(date.getTime())) return this._formatDay(item.fxDate, index);
+                const diff = Math.round((today - date) / 86400000);
+                if (diff === 1) return '昨天';
+                if (diff === 2) return '前天';
+                if (diff > 0) return `${diff}天前`;
+                return this._formatDay(item.fxDate, index);
+            });
+            pastEl.innerHTML = this._dailyRowsHtml(rows, labels);
+        },
+
+        _dailyRowsHtml(items, labels) {
+            const nums = [];
+            items.forEach(item => {
+                [item.tempMin, item.tempMax].forEach(value => {
+                    if (value !== undefined && value !== null && value !== '' && value !== '--' && !isNaN(Number(value))) {
+                        nums.push(Number(value));
+                    }
+                });
+            });
+            const scaleMin = nums.length ? Math.min(...nums) : null;
+            const scaleMax = nums.length ? Math.max(...nums) : null;
+            return items.map((item, index) => this._dailyRowHtml(item, labels[index] || '—', index, scaleMin, scaleMax)).join('');
+        },
+
+        _dailyRowHtml(item, label, index, scaleMin, scaleMax) {
+            const dash = (value) => value === undefined || value === null || value === '' || value === '--';
+            const iconCode = String(item.iconDay || '').replace(/[^\d]/g, '');
+            const iconClass = iconCode ? `qi-${iconCode}-fill` : 'qi-999-fill';
+            const maxVal = dash(item.tempMax) ? null : Number(item.tempMax);
+            const minVal = dash(item.tempMin) ? null : Number(item.tempMin);
+            const max = maxVal === null ? '--°' : `${maxVal}°`;
+            const min = minVal === null ? '--°' : `${minVal}°`;
+
+            let left = 0;
+            let width = 100;
+            if (minVal !== null && maxVal !== null && scaleMin !== null && scaleMax !== null && scaleMax > scaleMin) {
+                const span = scaleMax - scaleMin;
+                left = ((minVal - scaleMin) / span) * 100;
+                width = Math.max(8, ((maxVal - minVal) / span) * 100);
+                left = Math.max(0, Math.min(100 - width, left));
+            }
+
+            return `<div class="wu-weather-modal__day" style="--i:${index}">
+                <span class="wu-weather-modal__day-name">${this._escapeHtml(label)}</span>
+                <i class="${iconClass}"></i>
+                <span class="wu-weather-modal__day-desc">${this._escapeHtml(item.textDay || '')}</span>
+                <span class="wu-weather-modal__day-temp"><b>${max}</b><em>${min}</em></span>
+                <span class="wu-weather-modal__day-bar" aria-hidden="true"><i style="left:${left.toFixed(1)}%;width:${width.toFixed(1)}%"></i></span>
+            </div>`;
+        },
+
+        _buildHourlyChart(temps) {
+            const valid = temps.filter(t => t !== null && Number.isFinite(t));
+            if (!valid.length) return '';
+            const itemWidth = 58;
+            const gap = 8;
+            const height = 42;
+            const width = temps.length * itemWidth + Math.max(0, temps.length - 1) * gap;
+            const min = Math.min(...valid);
+            const max = Math.max(...valid);
+            const range = Math.max(1, max - min);
+            const points = temps.map((temp, index) => {
+                const x = index * (itemWidth + gap) + itemWidth / 2;
+                const value = temp === null ? min : temp;
+                const y = 8 + ((max - value) / range) * (height - 16);
+                return `${x.toFixed(1)},${y.toFixed(1)}`;
+            });
+            const pts = points.map(point => point.split(',').map(Number));
+            let line = `M ${pts[0][0]},${pts[0][1]}`;
+            for (let i = 0; i < pts.length - 1; i++) {
+                const p0 = pts[i - 1] || pts[i];
+                const p1 = pts[i];
+                const p2 = pts[i + 1];
+                const p3 = pts[i + 2] || p2;
+                const c1x = p1[0] + (p2[0] - p0[0]) / 6;
+                const c1y = p1[1] + (p2[1] - p0[1]) / 6;
+                const c2x = p2[0] - (p3[0] - p1[0]) / 6;
+                const c2y = p2[1] - (p3[1] - p1[1]) / 6;
+                line += ` C ${c1x.toFixed(1)},${c1y.toFixed(1)} ${c2x.toFixed(1)},${c2y.toFixed(1)} ${p2[0]},${p2[1]}`;
+            }
+            const area = `${line} L ${width},${height} L 0,${height} Z`;
+            return `<svg class="wu-weather-modal__hourly-chart" viewBox="0 0 ${width} ${height}" width="${width}" height="${height}" preserveAspectRatio="none" aria-hidden="true">
+                <defs>
+                    <linearGradient id="wuWeatherChartFill" x1="0" y1="0" x2="0" y2="1">
+                        <stop offset="0" stop-color="#ffffff" stop-opacity="0.26"/>
+                        <stop offset="1" stop-color="#ffffff" stop-opacity="0"/>
+                    </linearGradient>
+                </defs>
+                <path d="${area}" fill="url(#wuWeatherChartFill)"/>
+                <path d="${line}" fill="none" stroke="rgba(255,255,255,0.85)" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+                ${points.map(point => {
+                    const [x, y] = point.split(',');
+                    return `<circle cx="${x}" cy="${y}" r="2.2" fill="#ffffff" opacity="0.9"/>`;
+                }).join('')}
+            </svg>`;
         },
 
         /* ---------- 云图 Canvas ---------- */
-        _cloudCoverFrom(data) {
+        _hasCloudData(data) {
             const raw = data && data.cloud;
-            if (raw !== undefined && raw !== null && raw !== '' && !isNaN(Number(raw))) {
-                return Math.max(0, Math.min(100, Math.round(Number(raw))));
-            }
-            const desc = String((data && data.desc) || '');
-            if (!desc || desc === '未知' || desc === '天气数据暂不可用' || desc === '--') return null;
-            if (/晴/.test(desc)) return 15;
-            if (/多云|少云/.test(desc)) return 55;
-            if (/阴/.test(desc)) return 85;
-            if (/雨|雪|雷/.test(desc)) return 95;
-            return 60;
+            return raw !== undefined && raw !== null && raw !== '' && !isNaN(Number(raw));
+        },
+
+        _cloudCoverFrom(data) {
+            if (!this._hasCloudData(data)) return null;
+            return Math.max(0, Math.min(100, Math.round(Number(data.cloud))));
         },
 
         _updateCloudMapLabel(cover) {
@@ -1302,6 +1372,11 @@
 
         _initCloudMap(current) {
             this._stopCloudMap();
+            const section = this._sheetEl.querySelector('[data-wu-weather-cloud-section]');
+            const hasData = this._hasCloudData(current);
+            if (section) section.hidden = !hasData;
+            if (!hasData) return;
+
             const canvas = this._sheetEl.querySelector('[data-wu-weather-cloudmap]');
             const ctx = canvas ? canvas.getContext('2d') : null;
             if (!canvas || !ctx) return;
@@ -1359,8 +1434,12 @@
 
         _updateCloudMap(data) {
             const state = this._cloudMapState;
-            if (!state) return;
+            if (!state) {
+                if (this._hasCloudData(data)) this._initCloudMap(data);
+                return;
+            }
             const cover = this._cloudCoverFrom(data);
+            if (cover === null) return;
             const desc = String((data && data.desc) || state.desc || '');
             state.cloudCover = cover;
             state.desc = desc;

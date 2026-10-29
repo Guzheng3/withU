@@ -223,6 +223,10 @@
     filter: drop-shadow(0 10px 20px rgba(0, 0, 0, 0.18));
 }
 
+.wu-weather-modal__section[hidden] {
+    display: none !important;
+}
+
 .wu-weather-modal__section {
     position: relative;
     z-index: 1;
@@ -257,8 +261,7 @@
 }
 
 .wu-weather-modal__hourly {
-    display: flex;
-    gap: 8px;
+    display: block;
     overflow-x: auto;
     padding-bottom: 2px;
     scrollbar-width: none;
@@ -266,6 +269,23 @@
     /* 右侧轻微渐隐，提示还有更多小时预报可横向滑动 */
     -webkit-mask-image: linear-gradient(to right, #000 0, #000 calc(100% - 18px), transparent 100%);
     mask-image: linear-gradient(to right, #000 0, #000 calc(100% - 18px), transparent 100%);
+}
+
+.wu-weather-modal__hourly-track {
+    width: max-content;
+    min-width: 100%;
+}
+
+.wu-weather-modal__hourly-chart {
+    display: block;
+    margin: 0 0 4px;
+    animation: wu-weather-item-in 0.5s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.wu-weather-modal__hourly-cards {
+    display: flex;
+    gap: 8px;
+    padding-bottom: 2px;
 }
 
 .wu-weather-modal__hourly::-webkit-scrollbar {
@@ -325,8 +345,9 @@
 .wu-weather-modal__day {
     display: grid;
     grid-template-columns: 48px 26px minmax(0, 1fr) auto;
+    grid-template-rows: auto 4px;
     align-items: center;
-    gap: 10px;
+    gap: 6px 10px;
     padding: 9px 2px;
     border-top: 1px solid rgba(255, 255, 255, 0.1);
     font-size: 13px;
@@ -374,6 +395,22 @@
 .wu-weather-modal__day-temp em {
     font-style: normal;
     color: rgba(255, 255, 255, 0.6);
+}
+
+.wu-weather-modal__day-bar {
+    grid-column: 1 / -1;
+    height: 4px;
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.16);
+    overflow: hidden;
+}
+
+.wu-weather-modal__day-bar i {
+    display: block;
+    height: 100%;
+    border-radius: inherit;
+    background: linear-gradient(90deg, #8fd3ff, #ffd08a);
+    box-shadow: 0 0 8px rgba(255, 255, 255, 0.22);
 }
 
 .wu-weather-modal__details {
@@ -506,7 +543,7 @@ html.wu-weather-modal-open .withu-scroll-progress {
 @media (max-width: 360px) {
     .wu-weather-modal__day {
         grid-template-columns: 42px 22px minmax(0, 1fr) auto;
-        gap: 8px;
+        gap: 6px 8px;
     }
 
     .wu-weather-modal__details {
@@ -659,6 +696,7 @@ html.wu-weather-modal-open .withu-scroll-progress {
 @media (prefers-reduced-motion: reduce) {
     .wu-weather-modal__hour,
     .wu-weather-modal__day,
+    .wu-weather-modal__hourly-chart,
     .wu-weather-modal__now-icon i {
         animation: none;
     }
