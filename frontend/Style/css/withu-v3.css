@@ -1059,11 +1059,29 @@ select:focus {
     pointer-events: none;
 }
 
-/* 浮动留言按钮统一玫瑰色 */
+/* 浮动留言按钮统一珊瑚色，与导航激活指示器一致 */
 .message_btn .mesly,
 #mes .mesly {
-    background: linear-gradient(135deg, #ef8298 0%, #d94f6d 55%, #b23a55 100%) !important;
-    box-shadow: 0 18px 36px -18px rgba(217, 79, 109, 0.85) !important;
+    background: #f87171 !important;
+    box-shadow:
+        0 18px 36px -18px rgba(248, 113, 113, 0.8),
+        inset 0 1px 0 rgba(255, 255, 255, 0.32) !important;
+}
+
+.message_btn .mesly:hover,
+#mes .mesly:hover {
+    background: #fff !important;
+    box-shadow:
+        0 18px 36px -18px rgba(248, 113, 113, 0.45),
+        0 3px 48px 8px rgba(28, 31, 35, 0.12) !important;
+}
+
+.message_btn .mesly:hover svg,
+#mes .mesly:hover svg,
+.message_btn .mesly:hover .icon,
+#mes .mesly:hover .icon {
+    color: #f87171 !important;
+    fill: #f87171 !important;
 }
 
 .withu-scroll-progress__bar {
