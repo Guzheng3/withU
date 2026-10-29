@@ -74,6 +74,14 @@
 - 验证：桌面 1778px PJAX、移动端 390px PJAX、直接加载、Tab 切换后滑块宽度均等于当前 Tab（桌面 112px / 移动端 101px），无整条横条、无横向溢出。
 - 标签：`lovelist-slider-fix-v1`。
 
+### 10. 天气卡长昵称在右侧被省略
+
+- 现象：昵称被强制单行并加 `text-overflow: ellipsis`，长昵称在胶囊右侧被省略/截断。
+- 修复：昵称改为在胶囊内自然换行（`white-space: normal`、`overflow: visible`、`text-overflow: clip`、`overflow-wrap: anywhere`），头像设置 `flex-shrink: 0`，时间标签仍固定在右侧。
+- 位置：`frontend/Style/css/withu-v3.css` 第 21 节。
+- 验证：1440 / 390 / 320 下长昵称完整换行，与时间标签不重叠，无横向溢出；短昵称排版不变。
+- 标签：`weather-pill-wrap-v1`。
+
 ## 检查后保留、未改
 
 - 桌面端桌宠漂浮在正文上方：站点既有交互设计，未改动。
@@ -100,6 +108,7 @@
 | `home-cards-bg-v1` | 首页留言卡与未完待续卡背景统一 |
 | `all-cards-bg-v1` | 全站常规内容卡背景统一 |
 | `lovelist-slider-fix-v1` | PJAX 进入清单页时筛选滑块宽度修复 |
+| `weather-pill-wrap-v1` | 天气卡长昵称改为换行完整显示 |
 
 回退：
 

@@ -1972,3 +1972,23 @@ html body.bg-pdot-vignette #pjax-container .withu-detail-nav-card:hover {
 html body.bg-pdot-vignette #pjax-container .withu-detail-header-card .withu-detail-header-bg {
     background: transparent !important;
 }
+
+/* ============================================================
+   21. 天气卡昵称完整显示
+   ------------------------------------------------------------
+   - 长昵称不再单行省略，在胶囊内自然换行
+   - 头像不参与压缩，时间标签仍在右侧独立显示
+   ============================================================ */
+
+html body.bg-pdot-vignette .withu-home .withu-home-weather-user-pill .withu-home-weather-avatar {
+    flex-shrink: 0;
+}
+
+html body.bg-pdot-vignette .withu-home .withu-home-weather-user-pill .withu-home-weather-username {
+    white-space: normal !important;
+    overflow: visible !important;
+    text-overflow: clip !important;
+    overflow-wrap: anywhere;
+    word-break: break-word;
+    line-height: 1.3;
+}
