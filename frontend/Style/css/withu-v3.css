@@ -1896,3 +1896,29 @@ html body.bg-pdot-vignette #pjax-container .withu-card .withu-no-data {
 .withu-skeleton-screen-wrap:not(.is-active) {
     display: none !important;
 }
+
+/* ============================================================
+   19. 首页留言卡与结尾卡背景统一
+   ------------------------------------------------------------
+   - 留言卡与相册空状态使用同一套“柔玫瑰光 + 半透明白”背景
+   - 结尾卡保留原来的“上透明 → 下实色”半渐变，
+     只把落点颜色换成同款底色，并在底部保留柔玫瑰光
+   ============================================================ */
+
+html body.bg-pdot-vignette #pjax-container .withu-home .withu-home-message-card {
+    background:
+        radial-gradient(circle at 50% 0%, rgba(255, 227, 233, 0.55), transparent 62%),
+        rgba(255, 255, 255, 0.55) !important;
+}
+
+html body.bg-pdot-vignette #pjax-container .withu-home .withu-epilogue__card {
+    background:
+        radial-gradient(circle at 50% 100%, rgba(255, 227, 233, 0.55), transparent 62%),
+        linear-gradient(
+            180deg,
+            rgba(255, 255, 255, 0) 0%,
+            rgba(255, 247, 249, 0.3) 60px,
+            rgba(255, 247, 249, 0.45) 100px,
+            rgba(255, 255, 255, 0.55) 140px
+        ) !important;
+}
